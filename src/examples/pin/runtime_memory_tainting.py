@@ -1,11 +1,13 @@
 
 # Using: $ ./build/triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
 
-from triton  import *
+from triton  import ARCH, REG
 from pintool import *
 
 GREEN = "\033[92m"
 ENDC  = "\033[0m"
+
+Triton = getTritonContext()
 
 
 # 0x40058b: movzx eax, byte ptr [rax]
@@ -14,8 +16,8 @@ ENDC  = "\033[0m"
 # we taint the memory that RAX holds.
 def cbeforeSymProc(instruction):
     if instruction.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(REG.RAX)
-        taintMemory(rax)
+        rax = getCurrentRegisterValue(Triton.Register(REG.RAX))
+        Triton.taintMemory(rax)
 
 
 def cafter(instruction):
@@ -31,7 +33,7 @@ def cafter(instruction):
 if __name__ == '__main__':
 
     # Set architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')

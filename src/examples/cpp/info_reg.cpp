@@ -22,24 +22,22 @@ using namespace triton::arch::x86;
 
 int main(int ac, const char **av) {
 
+  triton::API api;
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 
-  std::cout << "Name        : " << TRITON_X86_REG_AH.getName() << std::endl;
-  std::cout << "Size byte   : " << TRITON_X86_REG_AH.getSize() << std::endl;
-  std::cout << "Size bit    : " << TRITON_X86_REG_AH.getBitSize() << std::endl;
-  std::cout << "Highed bit  : " << TRITON_X86_REG_AH.getHigh() << std::endl;
-  std::cout << "Lower  bit  : " << TRITON_X86_REG_AH.getLow() << std::endl;
-  std::cout << "Parent      : " << TRITON_X86_REG_AH.getParent().getName() << std::endl;
-  std::cout << "operator<<  : " << TRITON_X86_REG_AH << std::endl;
+  std::cout << "Name        : " << api.getRegister(ID_REG_AH).getName() << std::endl;
+  std::cout << "Size byte   : " << api.getRegister(ID_REG_AH).getSize() << std::endl;
+  std::cout << "Size bit    : " << api.getRegister(ID_REG_AH).getBitSize() << std::endl;
+  std::cout << "Higher bit  : " << api.getRegister(ID_REG_AH).getHigh() << std::endl;
+  std::cout << "Lower  bit  : " << api.getRegister(ID_REG_AH).getLow() << std::endl;
+  std::cout << "Parent      : " << api.getParentRegister(ID_REG_AH).getName() << std::endl;
+  std::cout << "operator<<  : " << api.getRegister(ID_REG_AH) << std::endl;
 
   std::cout << "----------------------------" << std::endl;
 
-  auto reg = api.getAllRegisters();
-  for (auto it = reg.begin(); it != reg.end(); it++) {
-    Register r = **it;
-    std::cout << r << std::endl;
-  }
+  for(auto const& kv: api.getAllRegisters())
+    std::cout << kv.second << std::endl;
 
   return 0;
 }

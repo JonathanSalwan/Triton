@@ -1,6 +1,5 @@
 
 from triton     import *
-from triton.ast import *
 from pintool    import *
 
 import sys

@@ -27,14 +27,13 @@ include(CTest)
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
 add_custom_target(test-python
-  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
+  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests --failfast)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   if(GCOV)
      add_custom_target(check
          COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
          COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
-         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
-         #COMMAND ${PYTHONPATH_CMD} ctest
+         COMMAND ${PYTHONPATH_CMD} ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh
          COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
          COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
          COMMAND genhtml coverage.info -o coverage

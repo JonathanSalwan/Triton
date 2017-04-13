@@ -18,6 +18,7 @@
 #include <triton/pythonBindings.hpp>
 
 /* Pintool */
+#include "api.hpp"
 #include "bindings.hpp"
 #include "context.hpp"
 #include "snapshot.hpp"
@@ -558,7 +559,7 @@ namespace tracer {
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
 
       /* Disassemble the instruction */
-      triton::api.disassembly(*tritonInst);
+      api.disassembly(*tritonInst);
 
       /* Execute the Python callback before the IR processing */
       if (tracer::pintool::context::mustBeExecuted == false)
@@ -576,7 +577,7 @@ namespace tracer {
       tracer::pintool::context::synchronizeContext();
 
       /* Process the IR and taint */
-      triton::api.buildSemantics(*tritonInst);
+      api.buildSemantics(*tritonInst);
 
       /* Execute the Python callback */
       if (tracer::pintool::context::mustBeExecuted == false)
@@ -635,7 +636,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      triton::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
+      api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();
     }

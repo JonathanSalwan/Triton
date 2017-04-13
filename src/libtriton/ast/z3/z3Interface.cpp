@@ -29,7 +29,7 @@ namespace triton {
 
     triton::ast::AbstractNode* Z3Interface::simplify(triton::ast::AbstractNode* node) const {
       triton::ast::TritonToZ3Ast  z3Ast{this->symbolicEngine, false};
-      triton::ast::Z3ToTritonAst  tritonAst{this->symbolicEngine};
+      triton::ast::Z3ToTritonAst  tritonAst{this->symbolicEngine, node->getContext()};
       triton::ast::Z3Result       result = z3Ast.eval(*node);
 
       /* Simplify and convert back to Triton's AST */

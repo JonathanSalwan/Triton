@@ -20,7 +20,7 @@ endif()
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     # Flags
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas -Wno-tautological-compare")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas -Wno-mismatched-tags")
     if(NOT GCOV)
       set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
     endif()
@@ -56,6 +56,7 @@ set(LIBTRITON_SOURCE_FILES
   arch/x86/x86Semantics.cpp
   arch/x86/x86Specifications.cpp
   ast/ast.cpp
+  ast/astContext.cpp
   ast/astDictionaries.cpp
   ast/astGarbageCollector.cpp
   ast/representations/astPythonRepresentation.cpp
@@ -101,7 +102,6 @@ set(LIBTRITON_SOURCE_FILES
 if(PYTHON_BINDINGS)
     set(LIBTRITON_PYTHON_SOURCE_FILES
       bindings/python/init.cpp
-      bindings/python/modules/astCallbacks.cpp
       bindings/python/modules/tritonCallbacks.cpp
       bindings/python/namespaces/initArchNamespace.cpp
       bindings/python/namespaces/initAstNodeNamespace.cpp
@@ -118,6 +118,7 @@ if(PYTHON_BINDINGS)
       bindings/python/namespaces/initVersionNamespace.cpp
       bindings/python/namespaces/initX86OpcodesNamespace.cpp
       bindings/python/namespaces/initX86PrefixesNamespace.cpp
+      bindings/python/objects/pyAstContext.cpp
       bindings/python/objects/pyAstNode.cpp
       bindings/python/objects/pyBitvector.cpp
       bindings/python/objects/pyElf.cpp
@@ -142,6 +143,7 @@ if(PYTHON_BINDINGS)
       bindings/python/objects/pySolverModel.cpp
       bindings/python/objects/pySymbolicExpression.cpp
       bindings/python/objects/pySymbolicVariable.cpp
+      bindings/python/objects/pyTritonContext.cpp
       bindings/python/pyXFunctions.cpp
       bindings/python/utils.cpp
     )

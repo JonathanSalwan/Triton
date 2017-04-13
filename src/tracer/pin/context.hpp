@@ -11,7 +11,6 @@
 #include <pin.H>
 
 /* libTriton */
-#include <triton/api.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -61,7 +60,7 @@ namespace tracer {
       void setCurrentRegisterValue(triton::arch::Register& reg);
 
       //! Sets the current register value from a Register.
-      void setCurrentRegisterValue(triton::arch::Register& reg, triton::uint512 value);
+      void setCurrentRegisterValue(triton::arch::RegisterSpec& reg, triton::uint512 value);
 
       //! Sets the current memory value from a MemoryAccess. `triton::arch::MemoryAccess::getConcreteValue()` is used to define the value.
       void setCurrentMemoryValue(triton::arch::MemoryAccess& mem);
@@ -76,7 +75,7 @@ namespace tracer {
       void executeContext(void);
 
       //! Callback to provide concrete register values only if Triton needs them - cf #376
-      void needConcreteRegisterValue(triton::arch::Register& reg);
+      void needConcreteRegisterValue(triton::arch::RegisterSpec& reg);
 
       //! Synchronize weird behavior from Pin to libTriton.
       void synchronizeContext(void);

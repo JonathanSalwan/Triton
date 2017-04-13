@@ -33,7 +33,6 @@ password  = dict()
 symVarMem = None
 
 
-
 def csym(instruction):
     # Prologue of the function
     if instruction.getAddress() == 0x400556 and isSnapshotEnabled() == False:
@@ -77,7 +76,7 @@ def cafter(instruction):
     if instruction.getAddress() == 0x400597:
         zfId    = getSymbolicRegisterId(REG.ZF)
         zfExpr  = getFullAstFromId(zfId)
-        expr    = assert_(equal(zfExpr, bvtrue())) # (assert (= zf True))
+        expr    = getAstContext().assert_(equal(zfExpr, bvtrue())) # (assert (= zf True))
         models  = getModel(expr)
         global password
         for k, v in models.items():

@@ -4,15 +4,13 @@
 ## $ ./build/triton ./src/examples/pin/ast_dictionaries.py ./src/samples/crackmes/crackme_xor elite
 ##
 
-import sys
-
 from operator   import itemgetter
 from pintool    import *
-from triton     import *
+from triton     import ARCH, MODE
 
 
 def cb_fini():
-    l = getAstDictionariesStats().items()
+    l = getTritonContext().getAstDictionariesStats().items()
     l.sort(key=itemgetter(1), reverse=True)
     print '============================================================='
     print 'AST Dictionaries Stats'
@@ -26,13 +24,13 @@ def cb_fini():
 
 if __name__ == '__main__':
     # Set arch
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start JIT at the entry point
     startAnalysisFromEntry()
 
     # Use AST Dictionaries
-    enableMode(MODE.AST_DICTIONARIES, True)
+    getTritonContext().enableMode(MODE.AST_DICTIONARIES, True)
 
     # Add callbacks
     insertCall(cb_fini, INSERT_POINT.FINI)

@@ -5,13 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/api.hpp>
-#include <triton/ast.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
-
-
+#include <triton/pythonXFunctions.hpp>
+#include <triton/register.hpp>
 
 /*! \page py_ast_page AST Representations
     \brief [**python api**] All information about the ast python module.
@@ -23,12 +21,6 @@
 
 Triton converts the x86 and the x86-64 instruction set semantics into AST representations which allows
 you to perform precise analysis and allows you to build and to modify your own symbolic expressions.
-
-~~~~~~~~~~~~~{.py}
->>> from triton import ast
->>> ast
-<module 'triton.ast' (built-in)>
-~~~~~~~~~~~~~
 
 \subsection ast_form_page AST Form
 <hr>
@@ -154,11 +146,13 @@ ref_7 = 0x400003 # Program Counter
 zfId    = getSymbolicRegisterId(REG.ZF)
 zfExpr  = getFullAst(getSymbolicExpressionFromId(zfId).getAst())
 
+astCtxt = triton_context.getAstContext()
+
 # (assert (= zf True))
-newExpr = ast.assert_(
-            ast.equal(
+newExpr = astCtxt.assert_(
+            astCtxt.equal(
                 zfExpr,
-                ast.bvtrue()
+                astCtxt.bvtrue()
             )
           )
 
@@ -172,7 +166,7 @@ models  = getModel(newExpr)
 ~~~~~~~~~~~~~{.py}
 # Node information
 
->>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
+>>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
 >>> print type(node)
 <type 'AstNode'>
 
@@ -190,11 +184,11 @@ models  = getModel(newExpr)
 
 # Node modification
 
->>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
+>>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
 >>> print node
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
 
->>> node.setChild(0, bv(123, 8))
+>>> node.setChild(0, astCtxt.bv(123, 8))
 >>> print node
 (bvadd (_ bv123 8) (bvxor (_ bv10 8) (_ bv20 8)))
 ~~~~~~~~~~~~~
@@ -432,26 +426,24 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 */
 
 
-
 namespace triton {
   namespace bindings {
     namespace python {
 
-
-      static PyObject* ast_assert(PyObject* self, PyObject* expr) {
+      static PyObject* AstContext_assert(PyObject* self, PyObject* expr) {
         if (!PyAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected an AstNode as first argument");
 
         try {
-          return PyAstNode(triton::ast::assert_(PyAstNode_AsAstNode(expr)));
+          // FIXME : should we Check the context is the same?
+          return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(expr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bv(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -465,15 +457,14 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as second argument");
 
         try {
-          return PyAstNode(triton::ast::bv(PyLong_AsUint512(op1), PyLong_AsUint32(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bv(PyLong_AsUint512(op1), PyLong_AsUint32(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bvadd(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvadd(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -487,15 +478,15 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          // FIXME: Should we check all astContext are sames
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bvand(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvand(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -509,15 +500,15 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          // FIXME: Should we check all astContext are sames
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bvashr(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvashr(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -531,30 +522,38 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          // FIXME: Should we check all astContext are sames
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bvdecl(PyObject* self, PyObject* size) {
+      static PyObject* AstContext_bvdecl(PyObject* self, PyObject* size) {
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
 
         try {
-          return PyAstNode(triton::ast::bvdecl(PyLong_AsUint32(size)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvdecl(PyLong_AsUint32(size)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      static PyObject* ast_bvfalse(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvfalse(PyObject* self, PyObject* args) {
         try {
-          return PyAstNode(triton::ast::bvfalse());
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvfalse());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+      static PyObject* AstContext_bvtrue(PyObject* self, PyObject* args) {
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvtrue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -562,7 +561,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvlshr(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvlshr(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -576,7 +575,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvlshr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvlshr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -584,7 +583,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvmul(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvmul(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -598,7 +597,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvmul(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvmul(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvmul(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -606,7 +605,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvnand(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvnand(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -620,7 +619,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvnand(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvnand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvnand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -628,12 +627,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvneg(PyObject* self, PyObject* op1) {
+      static PyObject* AstContext_bvneg(PyObject* self, PyObject* op1) {
         if (!PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvneg(): expected a AstNode as first argument");
 
         try {
-          return PyAstNode(triton::ast::bvneg(PyAstNode_AsAstNode(op1)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvneg(PyAstNode_AsAstNode(op1)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -641,7 +640,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvnor(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvnor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -655,7 +654,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvnor(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -663,12 +662,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvnot(PyObject* self, PyObject* op1) {
+      static PyObject* AstContext_bvnot(PyObject* self, PyObject* op1) {
         if (!PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvnot(): expected a AstNode as first argument");
 
         try {
-          return PyAstNode(triton::ast::bvnot(PyAstNode_AsAstNode(op1)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvnot(PyAstNode_AsAstNode(op1)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -676,7 +675,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvor(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -690,7 +689,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvor(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -698,7 +697,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvror(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvror(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -712,7 +711,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvror(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvror(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -720,7 +719,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvrol(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvrol(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -734,7 +733,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvrol(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvrol(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -742,7 +741,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsdiv(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsdiv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -756,7 +755,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsdiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsdiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -764,7 +763,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsge(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsge(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -778,7 +777,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsge(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -786,7 +785,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsgt(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsgt(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -800,7 +799,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsgt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsgt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -808,7 +807,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvshl(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvshl(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -822,7 +821,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvshl(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvshl(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvshl(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -830,7 +829,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsle(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsle(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -844,7 +843,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsle(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsle(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsle(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -852,7 +851,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvslt(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvslt(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -866,7 +865,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvslt(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvslt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvslt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -874,7 +873,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsmod(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsmod(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -888,7 +887,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsmod(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsmod(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -896,7 +895,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsrem(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsrem(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -910,7 +909,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsrem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsrem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -918,7 +917,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvsub(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvsub(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -932,7 +931,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvsub(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvsub(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvsub(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -940,17 +939,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvtrue(PyObject* self, PyObject* args) {
-        try {
-          return PyAstNode(triton::ast::bvtrue());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* ast_bvudiv(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvudiv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -964,7 +953,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvudiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvudiv(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -972,7 +961,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvuge(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvuge(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -986,7 +975,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvuge(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvuge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvuge(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -994,7 +983,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvugt(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvugt(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1008,7 +997,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvugt(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvugt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvugt(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1016,7 +1005,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvule(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvule(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1030,7 +1019,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvule(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvule(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvule(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1038,7 +1027,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvult(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvult(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1052,7 +1041,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvult(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvult(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvult(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1060,7 +1049,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvurem(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvurem(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1074,7 +1063,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvurem(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvurem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvurem(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1082,7 +1071,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvxnor(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvxnor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1096,7 +1085,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvxnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvxnor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1104,7 +1093,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_bvxor(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_bvxor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1118,7 +1107,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvxor(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::bvxor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvxor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1126,7 +1115,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_distinct(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_distinct(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1140,7 +1129,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "distinct(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::distinct(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->distinct(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1148,7 +1137,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_duplicate(PyObject* self, PyObject* expr) {
+      static PyObject* AstContext_duplicate(PyObject* self, PyObject* expr) {
         if (!PyAstNode_Check(expr))
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
@@ -1161,7 +1150,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_compound(PyObject* self, PyObject* exprsList) {
+      static PyObject* AstContext_compound(PyObject* self, PyObject* exprsList) {
         std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
@@ -1178,7 +1167,7 @@ namespace triton {
         }
 
         try {
-          return PyAstNode(triton::ast::compound(exprs));
+          return PyAstNode(PyAstContext_AsAstContext(self)->compound(exprs));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1186,7 +1175,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_concat(PyObject* self, PyObject* exprsList) {
+      static PyObject* AstContext_concat(PyObject* self, PyObject* exprsList) {
         std::vector<triton::ast::AbstractNode *> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
@@ -1203,7 +1192,7 @@ namespace triton {
         }
 
         try {
-          return PyAstNode(triton::ast::concat(exprs));
+          return PyAstNode(PyAstContext_AsAstContext(self)->concat(exprs));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1211,7 +1200,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_equal(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_equal(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1225,7 +1214,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "equal(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::equal(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->equal(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1233,7 +1222,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_extract(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_extract(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
         PyObject* op3 = nullptr;
@@ -1251,7 +1240,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "extract(): expected a AstNode as third argument");
 
         try {
-          return PyAstNode(triton::ast::extract(PyLong_AsUint32(op1), PyLong_AsUint32(op2), PyAstNode_AsAstNode(op3)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->extract(PyLong_AsUint32(op1), PyLong_AsUint32(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1259,7 +1248,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_ite(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_ite(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
         PyObject* op3 = nullptr;
@@ -1277,7 +1266,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "ite(): expected a AstNode as third argument");
 
         try {
-          return PyAstNode(triton::ast::ite(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->ite(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1285,7 +1274,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_land(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_land(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1299,7 +1288,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "land(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::land(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->land(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1307,7 +1296,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_let(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_let(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
         PyObject* op3 = nullptr;
@@ -1325,7 +1314,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "let(): expected a AstNode as third argument");
 
         try {
-          return PyAstNode(triton::ast::let(PyString_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->let(PyString_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1333,12 +1322,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_lnot(PyObject* self, PyObject* expr) {
+      static PyObject* AstContext_lnot(PyObject* self, PyObject* expr) {
         if (expr == nullptr || !PyAstNode_Check(expr))
           return PyErr_Format(PyExc_TypeError, "lnot(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::lnot(PyAstNode_AsAstNode(expr)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->lnot(PyAstNode_AsAstNode(expr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1346,7 +1335,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_lor(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_lor(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1360,7 +1349,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "lor(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::lor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->lor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1368,15 +1357,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_reference(PyObject* self, PyObject* exprId) {
-        if (!PyInt_Check(exprId) && !PyLong_Check(exprId))
-          return PyErr_Format(PyExc_TypeError, "reference(): expected an integer as argument");
-
-        if (!triton::api.isSymbolicExpressionIdExists(PyLong_AsUsize(exprId)))
-          return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
+      static PyObject* AstContext_reference(PyObject* self, PyObject* symExpr) {
+        if (!PySymbolicExpression_Check(symExpr))
+          return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
 
         try {
-          return PyAstNode(triton::ast::reference(PyLong_AsUsize(exprId)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->reference(*PySymbolicExpression_AsSymbolicExpression(symExpr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1384,12 +1370,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_string(PyObject* self, PyObject* expr) {
+      static PyObject* AstContext_string(PyObject* self, PyObject* expr) {
         if (!PyString_Check(expr))
           return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
         try {
-          return PyAstNode(triton::ast::string(PyString_AsString(expr)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->string(PyString_AsString(expr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1397,7 +1383,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_sx(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_sx(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1411,7 +1397,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "sx(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::sx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->sx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1419,12 +1405,12 @@ namespace triton {
       }
 
 
-      static PyObject* ast_variable(PyObject* self, PyObject* symVar) {
+      static PyObject* AstContext_variable(PyObject* self, PyObject* symVar) {
         if (!PySymbolicVariable_Check(symVar))
           return PyErr_Format(PyExc_TypeError, "variable(): expected a SymbolicVariable as first argument");
 
         try {
-          return PyAstNode(triton::ast::variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1432,7 +1418,7 @@ namespace triton {
       }
 
 
-      static PyObject* ast_zx(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_zx(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
@@ -1446,69 +1432,131 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "zx(): expected a AstNode as second argument");
 
         try {
-          return PyAstNode(triton::ast::zx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->zx(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
-
-      PyMethodDef astCallbacks[] = {
-        {"assert_",     (PyCFunction)ast_assert,     METH_O,           ""},
-        {"bv",          (PyCFunction)ast_bv,         METH_VARARGS,     ""},
-        {"bvadd",       (PyCFunction)ast_bvadd,      METH_VARARGS,     ""},
-        {"bvand",       (PyCFunction)ast_bvand,      METH_VARARGS,     ""},
-        {"bvashr",      (PyCFunction)ast_bvashr,     METH_VARARGS,     ""},
-        {"bvdecl",      (PyCFunction)ast_bvdecl,     METH_O,           ""},
-        {"bvfalse",     (PyCFunction)ast_bvfalse,    METH_NOARGS,      ""},
-        {"bvlshr",      (PyCFunction)ast_bvlshr,     METH_VARARGS,     ""},
-        {"bvmul",       (PyCFunction)ast_bvmul,      METH_VARARGS,     ""},
-        {"bvnand",      (PyCFunction)ast_bvnand,     METH_VARARGS,     ""},
-        {"bvneg",       (PyCFunction)ast_bvneg,      METH_O,           ""},
-        {"bvnor",       (PyCFunction)ast_bvnor,      METH_VARARGS,     ""},
-        {"bvnot",       (PyCFunction)ast_bvnot,      METH_O,           ""},
-        {"bvor",        (PyCFunction)ast_bvor,       METH_VARARGS,     ""},
-        {"bvrol",       (PyCFunction)ast_bvrol,      METH_VARARGS,     ""},
-        {"bvror",       (PyCFunction)ast_bvror,      METH_VARARGS,     ""},
-        {"bvsdiv",      (PyCFunction)ast_bvsdiv,     METH_VARARGS,     ""},
-        {"bvsge",       (PyCFunction)ast_bvsge,      METH_VARARGS,     ""},
-        {"bvsgt",       (PyCFunction)ast_bvsgt,      METH_VARARGS,     ""},
-        {"bvshl",       (PyCFunction)ast_bvshl,      METH_VARARGS,     ""},
-        {"bvsle",       (PyCFunction)ast_bvsle,      METH_VARARGS,     ""},
-        {"bvslt",       (PyCFunction)ast_bvslt,      METH_VARARGS,     ""},
-        {"bvsmod",      (PyCFunction)ast_bvsmod,     METH_VARARGS,     ""},
-        {"bvsrem",      (PyCFunction)ast_bvsrem,     METH_VARARGS,     ""},
-        {"bvsub",       (PyCFunction)ast_bvsub,      METH_VARARGS,     ""},
-        {"bvtrue",      (PyCFunction)ast_bvtrue,     METH_NOARGS,      ""},
-        {"bvudiv",      (PyCFunction)ast_bvudiv,     METH_VARARGS,     ""},
-        {"bvuge",       (PyCFunction)ast_bvuge,      METH_VARARGS,     ""},
-        {"bvugt",       (PyCFunction)ast_bvugt,      METH_VARARGS,     ""},
-        {"bvule",       (PyCFunction)ast_bvule,      METH_VARARGS,     ""},
-        {"bvult",       (PyCFunction)ast_bvult,      METH_VARARGS,     ""},
-        {"bvurem",      (PyCFunction)ast_bvurem,     METH_VARARGS,     ""},
-        {"bvxnor",      (PyCFunction)ast_bvxnor,     METH_VARARGS,     ""},
-        {"bvxor",       (PyCFunction)ast_bvxor,      METH_VARARGS,     ""},
-        {"compound",    (PyCFunction)ast_compound,   METH_O,           ""},
-        {"concat",      (PyCFunction)ast_concat,     METH_O,           ""},
-        {"distinct",    (PyCFunction)ast_distinct,   METH_VARARGS,     ""},
-        {"duplicate",   (PyCFunction)ast_duplicate,  METH_O,           ""},
-        {"equal",       (PyCFunction)ast_equal,      METH_VARARGS,     ""},
-        {"extract",     (PyCFunction)ast_extract,    METH_VARARGS,     ""},
-        {"ite",         (PyCFunction)ast_ite,        METH_VARARGS,     ""},
-        {"land",        (PyCFunction)ast_land,       METH_VARARGS,     ""},
-        {"let",         (PyCFunction)ast_let,        METH_VARARGS,     ""},
-        {"lnot",        (PyCFunction)ast_lnot,       METH_O,           ""},
-        {"lor",         (PyCFunction)ast_lor,        METH_VARARGS,     ""},
-        {"reference",   (PyCFunction)ast_reference,  METH_O,           ""},
-        {"string",      (PyCFunction)ast_string,     METH_O,           ""},
-        {"sx",          (PyCFunction)ast_sx,         METH_VARARGS,     ""},
-        {"variable",    (PyCFunction)ast_variable,   METH_O,           ""},
-        {"zx",          (PyCFunction)ast_zx,         METH_VARARGS,     ""},
-        {nullptr,       nullptr,                     0,                nullptr}
+      //! AstContext methods.
+      PyMethodDef AstContext_callbacks[] = {
+        {"assert_"  , AstContext_assert   , METH_O      , "Create a node which result should be true"},
+        {"bv"       , AstContext_bv       , METH_VARARGS, "Create a bit vector node represented as a bitsize and value"},
+        {"bvadd"    , AstContext_bvadd    , METH_VARARGS, "Create an addition node for two other nodes."},
+        {"bvand"    , AstContext_bvand    , METH_VARARGS, "Create an and node for two other nodes."},
+        {"bvashr"   , AstContext_bvashr   , METH_VARARGS, "Create an arithmetic shift on the right of the second node on the first node."},
+        {"bvdecl"   , AstContext_bvdecl   , METH_O      , "Create a bit vector node with a size but no values (see bv)."},
+        {"bvfalse"  , AstContext_bvfalse  , METH_NOARGS , "Create a bitvector of size 1 with 0 as value."},
+        {"bvtrue"   , AstContext_bvtrue   , METH_NOARGS , "Create a bitvector of size 1 with 1 as value."},
+        {"bvlshr"   , AstContext_bvlshr   , METH_VARARGS, "Create a logical shifth on the left of the second node on the first node."},
+        {"bvmul"    , AstContext_bvmul    , METH_VARARGS, "Create a multiplication node for two other nodes"},
+        {"bvnand"   , AstContext_bvnand   , METH_VARARGS, "Create a not and node on two other nodes"},
+        {"bvneg"    , AstContext_bvneg    , METH_O,       "Create a bitwise invert of a given node"},
+        {"bvnor"    , AstContext_bvnor    , METH_VARARGS, "Create a not or node on two other nodes"},
+        {"bvnot"    , AstContext_bvnot    , METH_O,       "Create a boolean invert of a given node"},
+        {"bvor"     , AstContext_bvor     , METH_VARARGS, "Create an or node of two others nodes"},
+        {"bvrol"    , AstContext_bvrol    , METH_VARARGS, "Create a left shift with reinsertion of the first bit at the end of the bit vector."},
+        {"bvror"    , AstContext_bvror    , METH_VARARGS, "Create a right shift with reinsertion of the last bit at the beginning of the bit vector."},
+        {"bvsdiv"   , AstContext_bvsdiv   , METH_VARARGS, "Create a signed division node"},
+        {"bvsge"    , AstContext_bvsge    , METH_VARARGS, "Create a signed greater or equal comparison of two other nodes."},
+        {"bvsgt"    , AstContext_bvsgt    , METH_VARARGS, "Create a signed strictly greater comparison of two other nodes"},
+        {"bvshl"    , AstContext_bvshl    , METH_VARARGS, "Create a left shift of the first node by the second node value."},
+        {"bvsle"    , AstContext_bvsle    , METH_VARARGS, "Create a signed lower or equal comparison of two other nodes."},
+        {"bvslt"    , AstContext_bvslt    , METH_VARARGS, "Create a signed strictly lower comparison of two other nodes."},
+        {"bvsmod"   , AstContext_bvsmod   , METH_VARARGS, "Create a signed modulo computation of two nodes (result is positif)"},
+        {"bvsrem"   , AstContext_bvsrem   , METH_VARARGS, "Create a signed remainder computation of two nodes (result is in [-node2:node2])"},
+        {"bvsub"    , AstContext_bvsub    , METH_VARARGS, "Create a substraction node of two other nodes."},
+        {"bvudiv"   , AstContext_bvudiv   , METH_VARARGS, "Create an unsigned divide node"},
+        {"bvuge"    , AstContext_bvuge    , METH_VARARGS, "Create an unsigned greater or equal comparison"},
+        {"bvugt"    , AstContext_bvugt    , METH_VARARGS, "Create an unsigned strictly greater comparison"},
+        {"bvule"    , AstContext_bvule    , METH_VARARGS, "Create an unsigned lower or equal comparison"},
+        {"bvult"    , AstContext_bvult    , METH_VARARGS, "Create and unsigned strictly lower comparison"},
+        {"bvurem"   , AstContext_bvurem   , METH_VARARGS, "Create an unsigned remainder computation (same as modulo as values are unsigned)"},
+        {"bvxnor"   , AstContext_bvxnor   , METH_VARARGS, "Create a bitwise not of two xored values."},
+        {"bvxor"    , AstContext_bvxor    , METH_VARARGS, "Create a xor node"},
+        {"compound" , AstContext_compound , METH_O,       "Gather a list of nodes or constraintes"},
+        {"concat"   , AstContext_concat   , METH_O,       "Create a concatenation of bit vectors."},
+        {"distinct" , AstContext_distinct , METH_VARARGS, ""},
+        {"duplicate", AstContext_duplicate, METH_O,       ""},
+        {"equal"    , AstContext_equal    , METH_VARARGS, "Create an equal comparison node"},
+        {"extract"  , AstContext_extract  , METH_VARARGS, "Create a node to extract part of a bit vector"},
+        {"ite"      , AstContext_ite      , METH_VARARGS, ""},
+        {"land"     , AstContext_land     , METH_VARARGS, "Create a logical and node"},
+        {"let"      , AstContext_let      , METH_VARARGS, "Create a "},
+        {"lnot"     , AstContext_lnot     , METH_O,       "Create a logical not"},
+        {"lor"      , AstContext_lor      , METH_VARARGS, "Create a logical or"},
+        {"reference", AstContext_reference, METH_O,       "Create a reference to an other ast (avoid full duplication of the ast)"},
+        {"string"   , AstContext_string   , METH_O,       "Create a string node"},
+        {"sx"       , AstContext_sx       , METH_VARARGS, "Create a signed extend node for another bit vector"},
+        {"variable" , AstContext_variable , METH_O,       "Create a variable node that may be evaluated later."},
+        {"zx"       , AstContext_zx       , METH_VARARGS, "Create a zero extend node for another bit vector"},
+        {nullptr    , nullptr             ,            0, nullptr}
       };
+
+
+      PyTypeObject AstContext_Type = {
+        PyObject_HEAD_INIT(&PyType_Type)
+        0,                                          /* ob_size */
+        "AstContext",                            /* tp_name */
+        sizeof(AstContext_Object),               /* tp_basicsize */
+        0,                                          /* tp_itemsize */
+        0,                                          /* tp_dealloc */
+        0,                                          /* tp_print */
+        0,                                          /* tp_getattr */
+        0,                                          /* tp_setattr */
+        0,                                          /* tp_compare */
+        0,                                          /* tp_repr */
+        0,                                          /* tp_as_number */
+        0,                                          /* tp_as_sequence */
+        0,                                          /* tp_as_mapping */
+        0,                                          /* tp_hash */
+        0,                                          /* tp_call */
+        0,                                          /* tp_str */
+        0,                                          /* tp_getattro */
+        0,                                          /* tp_setattro */
+        0,                                          /* tp_as_buffer */
+        Py_TPFLAGS_DEFAULT,                         /* tp_flags */
+        "AstContext objects",                    /* tp_doc */
+        0,                                          /* tp_traverse */
+        0,                                          /* tp_clear */
+        0,                                          /* tp_richcompare */
+        0,                                          /* tp_weaklistoffset */
+        0,                                          /* tp_iter */
+        0,                                          /* tp_iternext */
+        AstContext_callbacks,                    /* tp_methods */
+        0,                                          /* tp_members */
+        0,                                          /* tp_getset */
+        0,                                          /* tp_base */
+        0,                                          /* tp_dict */
+        0,                                          /* tp_descr_get */
+        0,                                          /* tp_descr_set */
+        0,                                          /* tp_dictoffset */
+        0,                                          /* tp_init */
+        0,                                          /* tp_alloc */
+        0,                                          /* tp_new */
+        0,                                          /* tp_free */
+        0,                                          /* tp_is_gc */
+        0,                                          /* tp_bases */
+        0,                                          /* tp_mro */
+        0,                                          /* tp_cache */
+        0,                                          /* tp_subclasses */
+        0,                                          /* tp_weaklist */
+        0,                                          /* tp_del */
+        0                                           /* tp_version_tag */
+      };
+
+
+      PyObject* PyAstContext(triton::ast::AstContext& ctxt) {
+        PyType_Ready(&AstContext_Type);
+        AstContext_Object* object = PyObject_NEW(AstContext_Object, &AstContext_Type);
+
+        if (object != nullptr)
+          object->ctxt = &ctxt;
+
+        return (PyObject*)object;
+      }
 
     }; /* python namespace */
   }; /* bindings namespace */
 }; /* triton namespace */
-

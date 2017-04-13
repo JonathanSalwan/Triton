@@ -18,26 +18,27 @@ using namespace triton::arch::x86;
 
 int main(int ac, const char **av) {
 
+  triton::API api;
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 
   /* Taint the RAX */
-  api.taintRegister(TRITON_X86_REG_AH);
+  api.taintRegister(api.getRegister(ID_REG_AH));
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(TRITON_X86_REG_RDX) << std::endl;
+  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_RDX)) << std::endl;
 
   /* Spread RAX into RDX */
-  api.taintAssignmentRegisterRegister(TRITON_X86_REG_RDX, TRITON_X86_REG_RAX);
+  api.taintAssignmentRegisterRegister(api.getRegister(ID_REG_RDX), api.getRegister(ID_REG_RAX));
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(TRITON_X86_REG_RDX) << std::endl;
+  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_RDX)) << std::endl;
 
   /* Untaint RDX */
-  api.untaintRegister(TRITON_X86_REG_RDX);
+  api.untaintRegister(api.getRegister(ID_REG_RDX));
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(TRITON_X86_REG_RDX) << std::endl;
+  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_RDX)) << std::endl;
 
   return 0;
 }

@@ -5,7 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/api.hpp>
+
 #include <iostream>
+#include "api.hpp"
 #include "snapshot.hpp"
 
 
@@ -38,23 +41,23 @@ namespace tracer {
         this->locked = false;
 
         /* 2 - Save current symbolic engine state */
-        this->snapshotSymEngine = new triton::engines::symbolic::SymbolicEngine(*triton::api.getSymbolicEngine());
+        this->snapshotSymEngine = new triton::engines::symbolic::SymbolicEngine(*api.getSymbolicEngine());
 
         /* 3 - Save current taint engine state */
-        this->snapshotTaintEngine = new triton::engines::taint::TaintEngine(*triton::api.getTaintEngine());
+        this->snapshotTaintEngine = new triton::engines::taint::TaintEngine(*api.getTaintEngine());
 
         /* 4 - Save current set of nodes */
-        this->nodesList = triton::api.getAllocatedAstNodes();
+        this->nodesList = api.getAllocatedAstNodes();
 
         /* 5 - Save current map of variables */
-        this->variablesMap = triton::api.getAstVariableNodes();
+        this->variablesMap = api.getAstVariableNodes();
 
         /* 6 - Save the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
-        this->cpu = new triton::arch::x86::x8664Cpu(*dynamic_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()));
+        this->cpu = new triton::arch::x86::x8664Cpu(*dynamic_cast<triton::arch::x86::x8664Cpu*>(api.getCpu()));
         #endif
         #if defined(__i386) || defined(_M_IX86)
-        this->cpu = new triton::arch::x86::x86Cpu(*dynamic_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()));
+        this->cpu = new triton::arch::x86::x86Cpu(*dynamic_cast<triton::arch::x86::x86Cpu*>(api.getCpu()));
         #endif
 
         /* 7 - Save Pin registers context */
@@ -75,23 +78,23 @@ namespace tracer {
         this->memory.clear();
 
         /* 2 - Restore current symbolic engine state */
-        *triton::api.getSymbolicEngine() = *this->snapshotSymEngine;
+        *api.getSymbolicEngine() = *this->snapshotSymEngine;
 
         /* 3 - Restore current taint engine state */
-        *triton::api.getTaintEngine() = *this->snapshotTaintEngine;
+        *api.getTaintEngine() = *this->snapshotTaintEngine;
 
         /* 4 - Restore current AST node state */
-        triton::api.setAllocatedAstNodes(this->nodesList);
+        api.setAllocatedAstNodes(this->nodesList);
 
         /* 5 - Restore current variables map state */
-        triton::api.setAstVariableNodes(this->variablesMap);
+        api.setAstVariableNodes(this->variablesMap);
 
         /* 6 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
-        *dynamic_cast<triton::arch::x86::x8664Cpu*>(triton::api.getCpu()) = *this->cpu;
+        *dynamic_cast<triton::arch::x86::x8664Cpu*>(api.getCpu()) = *this->cpu;
         #endif
         #if defined(__i386) || defined(_M_IX86)
-        *dynamic_cast<triton::arch::x86::x86Cpu*>(triton::api.getCpu()) = *this->cpu;
+        *dynamic_cast<triton::arch::x86::x86Cpu*>(api.getCpu()) = *this->cpu;
         #endif
 
         /* 7 - Restore Pin registers context */

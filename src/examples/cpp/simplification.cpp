@@ -35,7 +35,7 @@ ast::AbstractNode* xor_simplification(ast::AbstractNode* node) {
 
   if (node->getKind() == ast::BVXOR_NODE) {
     if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
-      return ast::bv(0, node->getBitvectorSize());
+      return node->getContext().bv(0, node->getBitvectorSize());
   }
 
   return node;
@@ -44,6 +44,7 @@ ast::AbstractNode* xor_simplification(ast::AbstractNode* node) {
 
 int main(int ac, const char **av) {
 
+  triton::API api;
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 
@@ -61,7 +62,7 @@ int main(int ac, const char **av) {
     inst.setAddress(trace[i].addr);
 
     /* optional - Update register state */
-    inst.updateContext(Register(x86::ID_REG_RAX, 12345));
+    inst.updateContext(Register(api.getRegister(ID_REG_RAX), 12345));
 
     /* Process everything */
     api.processing(inst);

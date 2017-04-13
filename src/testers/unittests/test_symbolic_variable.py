@@ -3,7 +3,7 @@
 """Test Symbolic Variable."""
 
 import unittest
-from triton import *
+from triton import TritonContext, ARCH, SYMEXPR
 
 
 class TestSymbolicVariable(unittest.TestCase):
@@ -12,10 +12,11 @@ class TestSymbolicVariable(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
-        self.v0 = newSymbolicVariable(8)
-        self.v1 = newSymbolicVariable(16)
-        self.v2 = newSymbolicVariable(32, "test com")
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.v0 = self.Triton.newSymbolicVariable(8)
+        self.v1 = self.Triton.newSymbolicVariable(16)
+        self.v2 = self.Triton.newSymbolicVariable(32, "test com")
 
     def test_id(self):
         """Test IDs"""
@@ -35,7 +36,7 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v1.getName(), "SymVar_1")
         self.assertEqual(self.v2.getName(), "SymVar_2")
 
-    def test_name(self):
+    def test_bitsize(self):
         """Test name"""
         self.assertEqual(self.v0.getBitSize(), 8)
         self.assertEqual(self.v1.getBitSize(), 16)
@@ -53,20 +54,6 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v0.getComment(), "test v0")
         self.assertEqual(self.v1.getComment(), "test v1")
         self.assertEqual(self.v2.getComment(), "test com")
-
-    def test_concrete_value(self):
-        """Test concrete value"""
-        self.assertEqual(self.v0.getConcreteValue(), 0)
-        self.assertEqual(self.v1.getConcreteValue(), 0)
-        self.assertEqual(self.v2.getConcreteValue(), 0)
-
-        self.v0.setConcreteValue(0x10)
-        self.v1.setConcreteValue(0x20)
-        self.v2.setConcreteValue(0x30)
-
-        self.assertEqual(self.v0.getConcreteValue(), 0x10)
-        self.assertEqual(self.v1.getConcreteValue(), 0x20)
-        self.assertEqual(self.v2.getConcreteValue(), 0x30)
 
     def test_str(self):
         """Test variable representation"""

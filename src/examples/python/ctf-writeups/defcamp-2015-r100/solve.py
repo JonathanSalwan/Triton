@@ -41,10 +41,12 @@
 import sys
 from triton import *
 
+Triton = TritonContext()
 
 
 # Emulate the CheckSolution() function.
 def emulate(pc):
+    astCtxt = Triton.getAstContext()
     print '[+] Starting emulation.'
     while pc:
         # Fetch opcodes
@@ -67,7 +69,7 @@ def emulate(pc):
             eax   = ast.extract(31, 0, rax.getAst())
 
             # Define constraint
-            cstr  = ast.assert_(
+            cstr  = astCtxt.assert_(
                         ast.land(
                             getPathConstraintsAst(),
                             ast.equal(eax, ast.bv(1, 32))

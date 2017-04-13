@@ -1,10 +1,8 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 
-import sys
-
 from pintool import *
-from triton  import *
+from triton  import ARCH
 
 
 def mycb(inst):
@@ -17,7 +15,7 @@ def mycb(inst):
 
 if __name__ == '__main__':
     # Set arch
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start JIT at the entry point
     startAnalysisFromEntry()

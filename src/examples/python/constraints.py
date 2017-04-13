@@ -1,89 +1,98 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 
-import sys
-from triton import *
+from triton import TritonContext, ARCH, REG, Instruction
 
 
 # Constraint using AST form
 def test1():
-    setArchitecture(ARCH.X86)
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
-    x = newSymbolicVariable(32)
-    c = ast.assert_(
-            ast.equal(
-                ast.bvsub(
-                    ast.bvxor(
-                        ast.variable(x),
-                        ast.bv(0x40, 32)
+    x = Triton.newSymbolicVariable(32)
+    c = astCtxt.assert_(
+            astCtxt.equal(
+                astCtxt.bvsub(
+                    astCtxt.bvxor(
+                        astCtxt.variable(x),
+                        astCtxt.bv(0x40, 32)
                     ),
-                    ast.bv(1, 32)
+                    astCtxt.bv(1, 32)
                 ),
-                ast.bv(0x10, 32)
+                astCtxt.bv(0x10, 32)
             )
         )
-    print 'Test 1:', getModel(c)[0]
+    print 'Test 1:', Triton.getModel(c)[0]
 
     return
 
 # Constraint using AST operator overloading
 def test2():
-    setArchitecture(ARCH.X86)
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
-    x = newSymbolicVariable(32)
-    c = ast.assert_(
-            (ast.variable(x) ^ 0x40) - 1 == 0x10
+    x = Triton.newSymbolicVariable(32)
+    c = astCtxt.assert_(
+            (astCtxt.variable(x) ^ 0x40) - 1 == 0x10
         )
-    print 'Test 2:', getModel(c)[0]
+    print 'Test 2:', Triton.getModel(c)[0]
 
     return
 
 # Logical conjunction constraints using AST operator overloading
 def test3():
-    setArchitecture(ARCH.X86)
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
-    x = newSymbolicVariable(8)
-    c = ast.assert_(
-            ast.land(
-                ast.variable(x) * ast.variable(x) - 1 == 0x20,
-                ast.variable(x) != 0x11
+    x = Triton.newSymbolicVariable(8)
+    c = astCtxt.assert_(
+            astCtxt.land(
+                astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
+                astCtxt.variable(x) != 0x11
             )
         )
-    print 'Test 3:', getModel(c)[0]
+    print 'Test 3:', Triton.getModel(c)[0]
 
     return
 
 # Several models
 def test4():
-    setArchitecture(ARCH.X86)
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
-    x = newSymbolicVariable(8)
-    c = ast.assert_(
-            ast.variable(x) * ast.variable(x) - 1 == 0x20,
+    x = Triton.newSymbolicVariable(8)
+    c = astCtxt.assert_(
+            astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
         )
-    print 'Test 4:', getModels(c, 10)
+    print 'Test 4:', Triton.getModels(c, 10)
 
     return
 
 # From instruction
 def test5():
-    setArchitecture(ARCH.X86)
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
-    convertRegisterToSymbolicVariable(REG.EAX)
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EAX))
 
     # process instruction
-    processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
+    Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
-    eaxAst = getAstFromId(getSymbolicRegisterId(REG.EAX))
+    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.Register(REG.EAX)))
 
     # constraint
-    c = ast.assert_(
+    c = astCtxt.assert_(
             eaxAst ^ 0x11223344 == 0xdeadbeaf
         )
 
-    print 'Test 5:', getModel(c)[0]
+    print 'Test 5:', Triton.getModel(c)[0]
 
     return
 

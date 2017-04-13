@@ -59,8 +59,13 @@ namespace triton {
       extern PyObject* registersDict;
 
       #if defined(__unix__) || defined(__APPLE__)
-      //! SYSCALL python dict.
-      extern PyObject* syscallsDict;
+      //! SYSCALL64 python dict.
+      extern PyObject* syscallsDict64;
+
+      #if defined(__unix__)
+      //! SYSCALL32 python dict.
+      extern PyObject* syscallsDict32;
+      #endif
       #endif
 
       //! ast python module.
@@ -71,9 +76,6 @@ namespace triton {
 
       //! triton python methods.
       extern PyMethodDef tritonCallbacks[];
-
-      //! ast python methods.
-      extern PyMethodDef astCallbacks[];
 
       //! Initializes the ARCH python namespace.
       void initArchNamespace(PyObject* archDict);

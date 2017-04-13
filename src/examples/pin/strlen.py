@@ -25,8 +25,7 @@
 ##  Possible solution: 80:09:d4:40:03:96:00:00
 ##
 
-from triton     import *
-from triton.ast import *
+from triton     import ARCH, REG, MemoryAccess, CPUSIZE
 from pintool    import *
 
 # What value you want that strlen must return?
@@ -35,14 +34,16 @@ STRLEN_ASSERT_LEN = 6
 # What number of possible solutions you want?
 SOLUTIONS = 20
 
+Triton = getTritonContext()
 
 
 def before(instruction):
     if instruction.getAddress() == 0x4005c5:
-        rax = getSymbolicRegisterId(REG.RAX)
-        raxAst = getAstFromId(rax)
-        constraint = ast.assert_(ast.equal(raxAst, ast.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
-        models = getModels(constraint, SOLUTIONS)
+        rax = Triton.getSymbolicRegisterId(Triton.Register(REG.RAX))
+        raxAst = Triton.getAstFromId(rax)
+        astCtxt = Triton.getAstContext()
+        constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
+        models = Triton.getModels(constraint, SOLUTIONS)
         for model in models:
             s = str()
             for i in range(STRLEN_ASSERT_LEN+5):
@@ -54,15 +55,15 @@ def before(instruction):
 
 def tainting(threadId):
 
-    rdi = getCurrentRegisterValue(REG.RDI) # argc
-    rsi = getCurrentRegisterValue(REG.RSI) # argv
+    rdi = getCurrentRegisterValue(Triton.Register(REG.RDI)) # argc
+    rsi = getCurrentRegisterValue(Triton.Register(REG.RSI)) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)
         offset = 0
         while offset != STRLEN_ASSERT_LEN+5:
-            taintMemory(argv + offset)
-            convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
+            Triton.taintMemory(argv + offset)
+            Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
         print '[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
         rdi -= 1
@@ -72,7 +73,7 @@ def tainting(threadId):
 
 if __name__ == '__main__':
     # Define the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')

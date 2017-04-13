@@ -12,7 +12,6 @@
 #include <pin.H>
 
 /* libTriton */
-#include <triton/api.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>

@@ -42,7 +42,7 @@
 ## -- jonathan
 
 import sys
-from   triton import *
+from   triton import TritonContext, ARCH, REG, Instruction
 
 trace_1 = [
     "\x31\xC0",                  # xor eax, eax
@@ -77,29 +77,33 @@ trace_5 = [
     "\x0F\x84\x10\x00\x00\x00",  # je 16
 ]
 
+Triton = TritonContext()
+
 
 def symbolization_init():
-    convertRegisterToSymbolicVariable(REG.EAX)
-    convertRegisterToSymbolicVariable(REG.EBX)
-    convertRegisterToSymbolicVariable(REG.ECX)
-    convertRegisterToSymbolicVariable(REG.EDX)
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EAX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EBX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.ECX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EDX))
     return
 
 def test_trace(trace):
-    setArchitecture(ARCH.X86)
+    Triton.setArchitecture(ARCH.X86)
     symbolization_init()
+
+    astCtxt = Triton.getAstContext()
 
     for opcodes in trace:
         instruction = Instruction()
         instruction.setOpcodes(opcodes)
-        processing(instruction)
+        Triton.processing(instruction)
         print instruction.getDisassembly()
 
         if instruction.isBranch():
             # Opaque Predicate AST
-            op_ast = getPathConstraintsAst()
+            op_ast = Triton.getPathConstraintsAst()
             # Try another model
-            model = getModel(ast.assert_(ast.lnot(op_ast)))
+            model = Triton.getModel(astCtxt.assert_(astCtxt.lnot(op_ast)))
             if model:
                 print "not an opaque predicate"
             else:

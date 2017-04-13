@@ -38,9 +38,6 @@ Returns the size of the symbolic variable.
 - <b>string getComment(void)</b><br>
 Returns the comment (if exists) of the symbolic variable.
 
-- <b>integer getConcreteValue(void)</b><br>
-Returns the concrete value (if exists) of the symbolic variable.
-
 - <b>integer getId(void)</b><br>
 Returns the id of the symbolic variable. This id is always unique.<br>
 e.g: `18`
@@ -140,35 +137,11 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicVariable_getConcreteValue(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint512(PySymbolicVariable_AsSymbolicVariable(self)->getConcreteValue());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
         try {
           if (!PyString_Check(comment))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setComment(): Expected a string as argument.");
           PySymbolicVariable_AsSymbolicVariable(self)->setComment(PyString_AsString(comment));
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* SymbolicVariable_setConcreteValue(PyObject* self, PyObject* value) {
-        try {
-          if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setConcretevalue(): Expected an integer as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setConcreteValue(PyLong_AsUint512(value));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -200,13 +173,11 @@ namespace triton {
       PyMethodDef SymbolicVariable_callbacks[] = {
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},
-        {"getConcreteValue",  SymbolicVariable_getConcreteValue,  METH_NOARGS,    ""},
         {"getId",             SymbolicVariable_getId,             METH_NOARGS,    ""},
         {"getKind",           SymbolicVariable_getKind,           METH_NOARGS,    ""},
         {"getKindValue",      SymbolicVariable_getKindValue,      METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
         {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
-        {"setConcreteValue",  SymbolicVariable_setConcreteValue,  METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };
 

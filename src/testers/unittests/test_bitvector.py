@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import setArchitecture, ARCH, REG
+from triton import TritonContext, ARCH, REG
 
 
 class TestRAXBitvector(unittest.TestCase):
@@ -13,8 +13,9 @@ class TestRAXBitvector(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
-        self.bv = REG.RAX.getBitvector()
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.bv = self.Triton.Register(REG.RAX).getBitvector()
 
     def test_high(self):
         """Check the highest bit."""
@@ -28,14 +29,16 @@ class TestRAXBitvector(unittest.TestCase):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 64)
 
+
 class TestCHBitvector(unittest.TestCase):
 
     """Testing the Bitvector class."""
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
-        self.bv = REG.CH.getBitvector()
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.bv = self.Triton.Register(REG.CH).getBitvector()
 
     def test_high(self):
         """Check the highest bit."""
@@ -49,14 +52,16 @@ class TestCHBitvector(unittest.TestCase):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 8)
 
+
 class TestDLBitvector(unittest.TestCase):
 
     """Testing the Bitvector class."""
 
     def setUp(self):
         """Define the arch."""
-        setArchitecture(ARCH.X86_64)
-        self.bv = REG.DL.getBitvector()
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.bv = self.Triton.Register(REG.DL).getBitvector()
 
     def test_high(self):
         """Check the highest bit."""
@@ -69,4 +74,3 @@ class TestDLBitvector(unittest.TestCase):
     def test_size(self):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 8)
-

@@ -27,7 +27,6 @@ isOpen     = False
 isRead     = None
 
 
-
 def getMemoryString(addr):
     index = 0
     s = str()
@@ -84,7 +83,7 @@ def syscallsExit(threadId, std):
 
 def fini():
     pc = getPathConstraintsAst()
-    m = getModel(ast.assert_(ast.lnot(pc)))
+    m = getModel(getAstContext().assert_(ast.lnot(pc)))
     print '[TT] Model:', m
     return
 

@@ -19,8 +19,7 @@
 
 import  sys
 
-from triton     import *
-from triton.ast import *
+from triton import TritonContext, ARCH, Instruction, REG, MemoryAccess, CPUSIZE, MODE
 
 
 # Isolated function code which must be cover. The source code
@@ -77,6 +76,8 @@ function = {
   0x4005c9: "\xc3",                           #   ret
 }
 
+Triton = TritonContext()
+
 
 
 # This function emulates the code.
@@ -92,13 +93,13 @@ def run(ip):
         inst.setAddress(ip)
 
         # Process everything
-        processing(inst)
+        Triton.processing(inst)
 
         # Display instruction
         #print inst
 
         # Next instruction
-        ip = buildSymbolicRegister(REG.RIP).evaluate()
+        ip = Triton.buildSymbolicRegister(Triton.Register(REG.RIP)).evaluate()
     return
 
 
@@ -108,25 +109,25 @@ def initContext():
     # Define the address of the serial pointer. The address of the serial pointer
     # must be the same that the one hardcoded into the targeted function. However,
     # the serial pointer (here 0x900000) is arbitrary.
-    setConcreteMemoryValue(0x601040, 0x00)
-    setConcreteMemoryValue(0x601041, 0x00)
-    setConcreteMemoryValue(0x601042, 0x90)
+    Triton.setConcreteMemoryValue(0x601040, 0x00)
+    Triton.setConcreteMemoryValue(0x601041, 0x00)
+    Triton.setConcreteMemoryValue(0x601042, 0x90)
 
     # Define the serial context. We store the serial content located on our arbitrary
     # serial pointer (0x900000).
-    setConcreteMemoryValue(0x900000, 0x31)
-    setConcreteMemoryValue(0x900001, 0x3e)
-    setConcreteMemoryValue(0x900002, 0x3d)
-    setConcreteMemoryValue(0x900003, 0x26)
-    setConcreteMemoryValue(0x900004, 0x31)
+    Triton.setConcreteMemoryValue(0x900000, 0x31)
+    Triton.setConcreteMemoryValue(0x900001, 0x3e)
+    Triton.setConcreteMemoryValue(0x900002, 0x3d)
+    Triton.setConcreteMemoryValue(0x900003, 0x26)
+    Triton.setConcreteMemoryValue(0x900004, 0x31)
 
     # Point RDI on our buffer. The address of our buffer is arbitrary. We just need
     # to point the RDI register on it as first argument of our targeted function.
-    setConcreteRegisterValue(Register(REG.RDI, 0x1000))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RDI, 0x1000))
 
     # Setup stack on an abitrary address.
-    setConcreteRegisterValue(Register(REG.RSP, 0x7fffffff))
-    setConcreteRegisterValue(Register(REG.RBP, 0x7fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, 0x7fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RBP, 0x7fffffff))
     return
 
 
@@ -137,10 +138,13 @@ def getNewInput():
     inputs = list()
 
     # Get path constraints from the last execution
-    pco = getPathConstraints()
+    pco = Triton.getPathConstraints()
+
+    # Get the astContext
+    astCtxt = Triton.getAstContext()
 
     # We start with any input. T (Top)
-    previousConstraints = equal(bvtrue(), bvtrue())
+    previousConstraints = astCtxt.equal(astCtxt.bvtrue(), astCtxt.bvtrue())
 
     # Go through the path constraints
     for pc in pco:
@@ -152,42 +156,42 @@ def getNewInput():
                 # Get the constraint of the branch which has been not taken
                 if branch['isTaken'] == False:
                     # Ask for a model
-                    models = getModel(assert_(land(previousConstraints, branch['constraint'])))
+                    models = Triton.getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
                     seed   = dict()
                     for k, v in models.items():
                         # Get the symbolic variable assigned to the model
-                        symVar = getSymbolicVariableFromId(k)
+                        symVar = Triton.getSymbolicVariableFromId(k)
                         # Save the new input as seed.
                         seed.update({symVar.getKindValue(): v.getValue()})
                     if seed:
                         inputs.append(seed)
 
         # Update the previous constraints with true branch to keep a good path.
-        previousConstraints = land(previousConstraints, pc.getTakenPathConstraintAst())
+        previousConstraints = astCtxt.land(previousConstraints, pc.getTakenPathConstraintAst())
 
     # Clear the path constraints to be clean at the next execution.
-    clearPathConstraints()
+    Triton.clearPathConstraints()
 
     return inputs
 
 
 def symbolizeInputs(seed):
     # Clean symbolic state
-    concretizeAllRegister()
-    concretizeAllMemory()
+    Triton.concretizeAllRegister()
+    Triton.concretizeAllMemory()
     for address, value in seed.items():
-        convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
-        convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
+        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
 
 
 if __name__ == '__main__':
 
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     ENTRY = 0x40056d

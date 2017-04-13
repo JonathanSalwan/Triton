@@ -1,5 +1,5 @@
 
-from triton  import *
+from triton  import ARCH, REG
 from pintool import *
 
 # Output
@@ -12,21 +12,22 @@ from pintool import *
 # -> malloc(0x20)
 # <- 0x8fc010
 
+Triton = getTritonContext()
 
 def mallocEntry(threadId):
-    sizeAllocated = getCurrentRegisterValue(REG.RDI)
+    sizeAllocated = getCurrentRegisterValue(Triton.Register(REG.RDI))
     print '-> malloc(%#x)' %(sizeAllocated)
 
 
 def mallocExit(threadId):
-    ptrAllocated = getCurrentRegisterValue(REG.RAX)
+    ptrAllocated = getCurrentRegisterValue(Triton.Register(REG.RAX))
     print '<- %#x' %(ptrAllocated)
 
 
 if __name__ == '__main__':
 
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
