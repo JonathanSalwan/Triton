@@ -10,7 +10,6 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
-#include <triton/api.hpp>
 
 /*! \page py_ast_page AST Representations
     \brief [**python api**] All information about the ast python module.
@@ -1358,15 +1357,12 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_reference(PyObject* self, PyObject* exprId) {
-        if (!PyInt_Check(exprId) && !PyLong_Check(exprId))
-          return PyErr_Format(PyExc_TypeError, "reference(): expected an integer as argument");
-
-        if (!triton::api.isSymbolicExpressionIdExists(PyLong_AsUsize(exprId)))
-          return PyErr_Format(PyExc_TypeError, "reference(): symbolic expression id not found");
+      static PyObject* AstContext_reference(PyObject* self, PyObject* symExpr) {
+        if (!PySymbolicExpression_Check(symExpr))
+          return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->reference(*triton::api.getSymbolicExpressionFromId(PyLong_AsUsize(exprId))));
+          return PyAstNode(PyAstContext_AsAstContext(self)->reference(*PySymbolicExpression_AsSymbolicExpression(symExpr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
