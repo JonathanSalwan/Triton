@@ -26,7 +26,10 @@ namespace triton {
       PyObject* registersDict         = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
       #if defined(__unix__) || defined(__APPLE__)
-      PyObject* syscallsDict          = nullptr; /* Must be global because it's updated on-the-fly */
+      PyObject* syscallsDict64        = nullptr; /* Must be global because it's updated on-the-fly */
+      #if defined(__unix__)
+      PyObject* syscallsDict32        = nullptr; /* Must be global because it's updated on-the-fly */
+      #endif
       #endif
 
 
@@ -121,8 +124,13 @@ namespace triton {
 
         /* Create the SYSCALL namespace ============================================================== */
         #if defined(__unix__) || defined(__APPLE__)
-        triton::bindings::python::syscallsDict = xPyDict_New();
-        PyObject* idSyscallsClass = xPyClass_New(nullptr, triton::bindings::python::syscallsDict, xPyString_FromString("SYSCALL"));
+        triton::bindings::python::syscallsDict64 = xPyDict_New();
+        PyObject* idSyscallsClass64 = xPyClass_New(nullptr, triton::bindings::python::syscallsDict64, xPyString_FromString("SYSCALL64"));
+        #endif
+
+        #if defined(__unix__)
+        triton::bindings::python::syscallsDict32 = xPyDict_New();
+        PyObject* idSyscallsClass32 = xPyClass_New(nullptr, triton::bindings::python::syscallsDict32, xPyString_FromString("SYSCALL32"));
         #endif
 
         /* Create the VERSION namespace ============================================================== */
@@ -149,7 +157,10 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
         #if defined(__unix__) || defined(__APPLE__)
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL",             idSyscallsClass);           /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);         /* Empty: filled on the fly */
+        #endif
+        #if defined(__unix__)
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL32",           idSyscallsClass32);         /* Empty: filled on the fly */
         #endif
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
 
