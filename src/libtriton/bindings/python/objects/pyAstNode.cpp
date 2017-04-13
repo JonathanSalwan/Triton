@@ -5,7 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/pythonObjects.hpp>
@@ -308,7 +307,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -320,7 +319,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -332,7 +331,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -344,7 +343,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvudiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvudiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -356,7 +355,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorRem(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvsrem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsrem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -368,7 +367,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvsmod(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsmod(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -380,7 +379,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(node))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorNeg(): Expected a AstNode as argument.");
-          return PyAstNode(triton::api.getAstContext().bvneg(PyAstNode_AsAstNode(node)));
+          return PyAstNode(PyAstNode_AsAstNode(node)->getContext().bvneg(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -392,7 +391,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(node))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorNot(): Expected a AstNode as argument.");
-          return PyAstNode(triton::api.getAstContext().bvnot(PyAstNode_AsAstNode(node)));
+          return PyAstNode(PyAstNode_AsAstNode(node)->getContext().bvnot(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -404,7 +403,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -416,7 +415,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -428,7 +427,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -440,7 +439,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -452,7 +451,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
-          return PyAstNode(triton::api.getAstContext().bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -465,7 +464,7 @@ namespace triton {
           triton::uint512 value = PyLong_AsUint512(*other);
           triton::uint32 size   = PyAstNode_AsAstNode(*self)->getBitvectorSize();
           if (size) {
-            *other = PyAstNode(triton::api.getAstContext().bv(value, size));
+            *other = PyAstNode(PyAstNode_AsAstNode(*self)->getContext().bv(value, size));
             Py_INCREF(*self);
             return 0;
           }
@@ -485,7 +484,7 @@ namespace triton {
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
           if (size) {
             Py_DECREF(other);
-            other = PyAstNode(triton::api.getAstContext().bv(value, size));
+            other = PyAstNode(PyAstNode_AsAstNode(self)->getContext().bv(value, size));
           }
         }
 
@@ -499,22 +498,22 @@ namespace triton {
 
           switch (op) {
             case Py_LT:
-                result = PyAstNode(triton::api.getAstContext().bvult(node1, node2));
+                result = PyAstNode(node1->getContext().bvult(node1, node2));
                 break;
             case Py_LE:
-                result = PyAstNode(triton::api.getAstContext().bvule(node1, node2));
+                result = PyAstNode(node1->getContext().bvule(node1, node2));
                 break;
             case Py_EQ:
-                result = PyAstNode(triton::api.getAstContext().equal(node1, node2));
+                result = PyAstNode(node1->getContext().equal(node1, node2));
                 break;
             case Py_NE:
-                result = PyAstNode(triton::api.getAstContext().lnot(triton::api.getAstContext().equal(node1, node2)));
+                result = PyAstNode(node1->getContext().lnot(node1->getContext().equal(node1, node2)));
                 break;
             case Py_GT:
-                result = PyAstNode(triton::api.getAstContext().bvugt(node1, node2));
+                result = PyAstNode(node1->getContext().bvugt(node1, node2));
                 break;
             case Py_GE:
-                result = PyAstNode(triton::api.getAstContext().bvuge(node1, node2));
+                result = PyAstNode(node1->getContext().bvuge(node1, node2));
                 break;
           }
         }
