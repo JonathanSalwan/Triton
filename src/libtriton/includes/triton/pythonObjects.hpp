@@ -141,10 +141,7 @@ namespace triton {
       PyObject* PyRegister(const triton::arch::Register& reg);
 
       //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue);
-
-      //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue, bool isImmutable);
+      PyObject* PyRegister(const triton::arch::RegisterSpec& reg, triton::uint512 concreteValue);
 
       //! Creates the SolverModel python class.
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);

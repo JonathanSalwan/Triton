@@ -39,7 +39,7 @@ class TestRAXRegister(unittest.TestCase):
 
     def test_parent(self):
         """Check parent register."""
-        self.assertEqual(self.reg.getParent().getName(), "rax")
+        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
 
     def test_type(self):
         """Check operand type."""
@@ -80,12 +80,12 @@ class TestAHRegister(unittest.TestCase):
 
     def test_parent(self):
         """Check parent register on multiple arch."""
-        self.assertEqual(self.reg.getParent().getName(), "rax")
+        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
 
         self.Triton.setArchitecture(ARCH.X86)
         self.reg = self.Triton.Register(REG.AH)
-        self.assertEqual(self.reg.getParent().getName(), "eax")
-        self.assertEqual(self.reg.getParent().getBitSize(), 32)
+        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "eax")
+        self.assertEqual(self.Triton.getParentRegister(self.reg).getBitSize(), 32)
 
 
 class TestXmmRegister(unittest.TestCase):

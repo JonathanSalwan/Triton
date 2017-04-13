@@ -2463,6 +2463,23 @@ namespace triton {
         }
       }
 
+
+      static PyObject* TritonContext_getParentRegister(PyObject* self, PyObject* reg) {
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Architecture is not defined.");
+
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Expects a Register as argument.");
+
+        try {
+          return PyRegister(PyTritonContext_AsTritonContext(self)->getParentRegister(PyRegister_AsRegister(reg)->getId()), 0);
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
         {"getAstContext",                       TritonContext_getAstContext,       METH_NOARGS,    ""},
@@ -2504,6 +2521,7 @@ namespace triton {
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
+        {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             "Get a new register with the upper parent spec"},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
         {"getRegisterBitSize",                  (PyCFunction)TritonContext_getRegisterBitSize,                     METH_NOARGS,        ""},

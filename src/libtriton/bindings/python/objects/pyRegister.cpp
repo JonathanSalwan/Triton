@@ -10,7 +10,6 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
-#include <triton/api.hpp>
 
 
 
@@ -44,7 +43,7 @@ ah:8 bv[15..8]
 >>> op0.getBitSize()
 8
 
->>> op0.getParent().getName()
+>>> Triton.getParentRegister(op0).getName()
 'rax'
 ~~~~~~~~~~~~~
 
@@ -82,9 +81,6 @@ Returns the concrete value assigned to this register operand.
 - <b>string getName(void)</b><br>
 Returns the name of the register.<br>
 e.g: `rbx`
-
-- <b>\ref py_Register_page getParent(void)</b><br>
-Returns the parent register.
 
 - <b>integer getSize(void)</b><br>
 Returns the size (in bytes) of the register.<br>
@@ -148,18 +144,6 @@ namespace triton {
       static PyObject* Register_getName(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("s", PyRegister_AsRegister(self)->getName().c_str());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_getParent(PyObject* self, PyObject* noarg) {
-        try {
-          // FIXME: should we care about concrete value?
-          triton::arch::Register parent = triton::arch::Register(triton::api.getParentRegister(PyRegister_AsRegister(self)->getId()));
-          return PyRegister(parent);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -293,7 +277,6 @@ namespace triton {
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
         {"getConcreteValue",  Register_getConcreteValue, METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},
-        {"getParent",         Register_getParent,        METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
         {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
@@ -366,11 +349,11 @@ namespace triton {
       }
 
 
-      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue) {
+      PyObject* PyRegister(const triton::arch::RegisterSpec& reg, triton::uint512 concreteValue) {
         PyType_Ready(&Register_Type);
         Register_Object* object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
-          object->reg = new triton::arch::Register(triton::api.getRegister(reg.getId()), concreteValue);
+          object->reg = new triton::arch::Register(reg, concreteValue);
 
         return (PyObject*)object;
       }
