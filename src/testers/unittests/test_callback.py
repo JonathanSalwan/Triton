@@ -44,6 +44,6 @@ class TestCallback(unittest.TestCase):
         self.assertFalse(flag)
 
     @staticmethod
-    def cb_flag(x):
+    def cb_flag(api, x):
         global flag
         flag = True

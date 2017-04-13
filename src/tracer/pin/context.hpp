@@ -75,7 +75,7 @@ namespace tracer {
       void executeContext(void);
 
       //! Callback to provide concrete register values only if Triton needs them - cf #376
-      void needConcreteRegisterValue(triton::arch::RegisterSpec& reg);
+      void needConcreteRegisterValue(triton::API& api, triton::arch::RegisterSpec& reg);
 
       //! Synchronize weird behavior from Pin to libTriton.
       void synchronizeContext(void);
