@@ -1,5 +1,5 @@
 
-from triton  import *
+from triton  import ARCH, SYSCALL64
 from pintool import *
 
 # Output
@@ -10,7 +10,7 @@ from pintool import *
 #
 
 def my_callback_syscall_entry(threadId, std):
-    if getSyscallNumber(std) == SYSCALL.WRITE:
+    if getSyscallNumber(std) == SYSCALL64.WRITE:
         arg0 = getSyscallArgument(std, 0)
         arg1 = getSyscallArgument(std, 1)
         arg2 = getSyscallArgument(std, 2)
@@ -20,7 +20,7 @@ def my_callback_syscall_entry(threadId, std):
 if __name__ == '__main__':
 
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()

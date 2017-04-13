@@ -1,6 +1,5 @@
 
-from triton     import *
-from triton.ast import *
+from triton     import ARCH, REG, CPUSIZE
 from pintool    import *
 
 #
@@ -45,54 +44,53 @@ from pintool    import *
 # $
 #
 
-Triton = TritonContext()
-
+Triton = getTritonContext()
 
 def cafter(instruction):
 
     # movzx  eax,BYTE PTR [rax]
     # RAX points on the user password
     if instruction.getAddress() == 0x40057b:
-        convertRegisterToSymbolicVariable(REG.RSI)
+        Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.RSI))
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
     if instruction.getAddress() == 0x4005ce:
         print '[+] Please wait, computing in progress...'
-        raxId = getSymbolicRegisterId(REG.RAX)
-        raxExpr = getFullAstFromId(raxId)
+        raxId = Triton.getSymbolicRegisterId(Triton.Register(REG.RAX))
+        raxExpr = Triton.getFullAstFromId(raxId)
 
-        SymVar_0 = getSymbolicVariableFromName('SymVar_0')
-        SymVar_1 = getSymbolicVariableFromName('SymVar_1')
-        SymVar_2 = getSymbolicVariableFromName('SymVar_2')
-        SymVar_3 = getSymbolicVariableFromName('SymVar_3')
-        SymVar_4 = getSymbolicVariableFromName('SymVar_4')
+        SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')
+        SymVar_1 = Triton.getSymbolicVariableFromName('SymVar_1')
+        SymVar_2 = Triton.getSymbolicVariableFromName('SymVar_2')
+        SymVar_3 = Triton.getSymbolicVariableFromName('SymVar_3')
+        SymVar_4 = Triton.getSymbolicVariableFromName('SymVar_4')
 
         astCtxt = Triton.getAstContext()
 
         # We want printable characters
-        expr = compound([
-                 astCtxt.assert_(bvugt(variable(SymVar_0), bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvult(variable(SymVar_0), bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvugt(variable(SymVar_1), bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvult(variable(SymVar_1), bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvugt(variable(SymVar_2), bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvult(variable(SymVar_2), bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvugt(variable(SymVar_3), bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvult(variable(SymVar_3), bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvugt(variable(SymVar_4), bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(bvult(variable(SymVar_4), bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(equal(raxExpr, bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
+        expr = astCtxt.compound([
+                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_0), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_0), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_1), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_1), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_2), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_2), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_3), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_3), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_4), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_4), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
+                 astCtxt.assert_(astCtxt.equal(raxExpr, astCtxt.bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models
-        models = getModels(expr, 20)
+        models = Triton.getModels(expr, 20)
         for model in models:
             print {k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in model.items()}
 
 
 if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
     startAnalysisFromSymbol('check')
     insertCall(cafter, INSERT_POINT.AFTER)
     runProgram()

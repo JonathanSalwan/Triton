@@ -14,7 +14,6 @@
 #include <pin.H>
 
 /* libTriton */
-#include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>

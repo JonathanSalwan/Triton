@@ -67,8 +67,6 @@ class DefCamp2015(object):
 
     def test_defcamp_2015(self):
         """Load binary, self.Triton.setup environment and solve challenge with sym eval."""
-        self.Triton = TritonContext()
-
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "defcamp-2015-r100.bin")
         self.load_binary(binary_file)
@@ -252,7 +250,6 @@ class SeedCoverage(object):
 
     def test_seed_coverage(self):
         """Found every seed so that every opcode will be use at least once."""
-        self.Triton = TritonContext()
         # Define entry point
         ENTRY = 0x40056d
 

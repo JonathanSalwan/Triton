@@ -18,6 +18,7 @@ using namespace triton::arch::x86;
 
 int main(int ac, const char **av) {
 
+  triton::API api;
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 

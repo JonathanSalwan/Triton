@@ -17,6 +17,11 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+      void TritonContext_dealloc(PyObject* self) {
+        delete PyTritonContext_AsTritonContext(self);
+        Py_DECREF(self);
+      }
+
       static PyObject* TritonContext_getAstContext(PyObject* self, PyObject* noarg) {
         try {
           return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
@@ -2647,8 +2652,20 @@ namespace triton {
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
         if (object != nullptr)
-          object->api = &triton::api;
+          object->api = new triton::API();
 
+        return (PyObject*)object;
+      }
+
+      PyObject* PyTritonContextRef(triton::API& api) {
+        PyType_Ready(&TritonContext_Type);
+        TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
+
+        if (object != nullptr)
+          object->api = &api;
+
+        Py_INCREF(object); // We don't have ownership of the API so don't call the dealloc
+        // FIXME: we should define a context without dealloc for this
         return (PyObject*)object;
       }
 

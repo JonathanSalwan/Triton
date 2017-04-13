@@ -1,5 +1,5 @@
 
-from triton  import *
+from triton  import ARCH
 from pintool import *
 
 # Output
@@ -65,7 +65,7 @@ def mycb(instruction):
 
 if __name__ == '__main__':
 
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # libc and ld-linux will be unjited
     setupImageBlacklist(["libc", "ld-linux"])

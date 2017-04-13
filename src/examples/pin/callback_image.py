@@ -1,5 +1,5 @@
 
-from triton  import *
+from triton  import ARCH
 from pintool import *
 
 # Output
@@ -29,7 +29,7 @@ def image(imagePath, imageBase, imageSize):
 
 if __name__ == '__main__':
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()

@@ -181,10 +181,6 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  /* External access to the API */
-  triton::API api;
-
-
   API::API(): arch(&this->callbacks), modes(), astCtxt{this->modes} {
   }
 

@@ -13,6 +13,7 @@
 #include <triton/tritonTypes.hpp>
 
 /* pintool */
+#include "api.hpp"
 #include "bindings.hpp"
 #include "context.hpp"
 #include "snapshot.hpp"
@@ -245,12 +246,12 @@ namespace tracer {
 
     static PyObject* pintool_runProgram(PyObject* self, PyObject* noarg) {
       /* Check if the architecture is definied */
-      if (triton::api.getArchitecture() == triton::arch::ARCH_INVALID)
+      if (api.getArchitecture() == triton::arch::ARCH_INVALID)
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::runProgram(): Architecture is not defined.");
       /* Never returns - Rock 'n roll baby \o/ */
       try {
         /* Provide concrete values only if Triton needs them - cf #376 */
-        triton::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
+        api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
         PIN_StartProgram();
       }
       catch (const std::exception& e) {
@@ -429,6 +430,15 @@ namespace tracer {
       return Py_None;
     }
 
+    static PyObject* pintool_getTritonContext(PyObject* self, PyObject* noarg) {
+        try {
+          return triton::bindings::python::PyTritonContextRef(api);
+        }
+        catch (const std::exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+    }
+
 
     PyMethodDef pintoolCallbacks[] = {
       {"checkReadAccess",           pintool_checkReadAccess,            METH_O,         ""},
@@ -442,6 +452,7 @@ namespace tracer {
       {"getSyscallArgument",        pintool_getSyscallArgument,         METH_VARARGS,   ""},
       {"getSyscallNumber",          pintool_getSyscallNumber,           METH_O,         ""},
       {"getSyscallReturn",          pintool_getSyscallReturn,           METH_O,         ""},
+      {"getTritonContext",          pintool_getTritonContext,           METH_NOARGS,    ""},
       {"insertCall",                pintool_insertCall,                 METH_VARARGS,   ""},
       {"isSnapshotEnabled",         pintool_isSnapshotEnabled,          METH_NOARGS,    ""},
       {"restoreSnapshot",           pintool_restoreSnapshot,            METH_NOARGS,    ""},

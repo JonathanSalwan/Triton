@@ -642,9 +642,6 @@ namespace triton {
         bool taintAssignmentRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc);
     };
 
-    //! The API can be accessed everywhere (WIP: will be removed).
-    extern triton::API api;
-
 /*! @} End of triton namespace */
 };
 

@@ -133,6 +133,9 @@ namespace triton {
 
       //! Creates the new TritonContext python class.
       PyObject* PyTritonContext();
+
+      //! Creates a TritonContext python class which is a reference to another Context.
+      PyObject* PyTritonContextRef(triton::API& api);
       
       //! Creates an AstContext python class.
       PyObject* PyAstContext(triton::ast::AstContext& ctxt);

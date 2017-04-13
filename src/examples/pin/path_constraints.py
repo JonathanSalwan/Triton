@@ -52,9 +52,6 @@ from pintool    import *
 
 TAINTING_SIZE = 10
 
-Triton = TritonContext()
-
-
 def tainting(threadId):
     rdi = getCurrentRegisterValue(REG.RDI) # argc
     rsi = getCurrentRegisterValue(REG.RSI) # argv
@@ -75,7 +72,7 @@ def tainting(threadId):
 
 def fini():
     pco = getPathConstraints()
-    astCtxt = Triton.getAstContext()
+    astCtxt = getAstContext()
     for pc in pco:
         if pc.isMultipleBranches():
             b1   =  pc.getBranchConstraints()[0]['constraint']

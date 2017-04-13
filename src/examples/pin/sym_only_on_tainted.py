@@ -4,16 +4,14 @@
 ## $ ./build/triton ./src/examples/pin/sym_only_on_tainted.py ./src/samples/crackmes/crackme_xor a
 ##
 
-import sys
-
 from pintool import *
-from triton  import *
+from triton  import REG, ARCH, MODE
 
 
 def cb_ir(inst):
     if inst.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(REG.RAX)
-        taintMemory(rax)
+        rax = getCurrentRegisterValue(getTritonContext().Register(REG.RAX))
+        getTritonContext().taintMemory(rax)
     return
 
 
@@ -26,13 +24,13 @@ def cb_before(inst):
 
 if __name__ == '__main__':
     # Set arch
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start JIT at the entry point
     startAnalysisFromSymbol('check')
 
     # Perform symbolic execution only on tainted instructions
-    enableMode(MODE.ONLY_ON_TAINTED, True)
+    getTritonContext().enableMode(MODE.ONLY_ON_TAINTED, True)
 
     # Add callback
     insertCall(cb_ir,       INSERT_POINT.BEFORE_SYMPROC)

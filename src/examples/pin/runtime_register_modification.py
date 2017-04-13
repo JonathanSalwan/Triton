@@ -16,12 +16,12 @@
 
 import sys
 from   pintool import *
-from   triton  import *
+from   triton  import ARCH, REG
 
 
 def cb1(inst):
     if inst.getAddress() == 0x4005e2:
-        setCurrentRegisterValue(REG.RAX, 0)
+        setCurrentRegisterValue(getTritonContext().Register(REG.RAX), 0)
 
 def cb2(inst):
     if inst.getAddress() == 0x4005e2:
@@ -31,7 +31,7 @@ def cb2(inst):
 
 
 if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
     setupImageWhitelist(['crackme'])
     startAnalysisFromSymbol('main')
     insertCall(cb1, INSERT_POINT.BEFORE_SYMPROC)
