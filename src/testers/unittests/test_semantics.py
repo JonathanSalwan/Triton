@@ -30,7 +30,7 @@ class TestIR(unittest.TestCase):
             self.assertTrue(self.Triton.processing(instruction))
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
 
         return
 
@@ -77,19 +77,19 @@ class TestIRQemu(unittest.TestCase):
     # Simulate the __libc_start_main routine
     def __libc_start_main(self):
         # Get arguments
-        main = self.Triton.getConcreteRegisterValue(REG.RDI)
+        main = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RDI))
 
         # Push the return value to jump into the main() function
-        self.Triton.concretizeRegister(REG.RSP)
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, self.Triton.getConcreteRegisterValue(REG.RSP)-CPUSIZE.QWORD))
+        self.Triton.concretizeRegister(self.Triton.Register(REG.RSP))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RSP))-CPUSIZE.QWORD))
 
-        ret2main = MemoryAccess(self.Triton.getConcreteRegisterValue(REG.RSP), CPUSIZE.QWORD, main)
+        ret2main = MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RSP)), CPUSIZE.QWORD, main)
         self.Triton.concretizeMemory(ret2main)
         self.Triton.setConcreteMemoryValue(ret2main)
 
         # Setup argc / argv
-        self.Triton.concretizeRegister(REG.RDI)
-        self.Triton.concretizeRegister(REG.RSI)
+        self.Triton.concretizeRegister(self.Triton.Register(REG.RDI))
+        self.Triton.concretizeRegister(self.Triton.Register(REG.RSI))
 
         # Setup target argvs
         argvs = list()
@@ -151,29 +151,29 @@ class TestIRQemu(unittest.TestCase):
             self.hooking_handler()
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
 
         return
 
     def hooking_handler(self):
-        pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+        pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
         for rel in self.RELO:
             if rel[2] == pc:
                 # Emulate the routine and the return value
                 ret_value = rel[1]()
-                self.Triton.concretizeRegister(REG.RAX)
+                self.Triton.concretizeRegister(self.Triton.Register(REG.RAX))
                 self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RAX, ret_value))
 
                 # Get the return address
-                ret_addr = self.Triton.getConcreteMemoryValue(MemoryAccess(self.Triton.getConcreteRegisterValue(REG.RSP), CPUSIZE.QWORD))
+                ret_addr = self.Triton.getConcreteMemoryValue(MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RSP)), CPUSIZE.QWORD))
 
                 # Hijack RIP to skip the call
-                self.Triton.concretizeRegister(REG.RIP)
+                self.Triton.concretizeRegister(self.Triton.Register(REG.RIP))
                 self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RIP, ret_addr))
 
                 # Restore RSP (simulate the ret)
-                self.Triton.concretizeRegister(REG.RSP)
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, self.Triton.getConcreteRegisterValue(REG.RSP)+CPUSIZE.QWORD))
+                self.Triton.concretizeRegister(self.Triton.Register(REG.RSP))
+                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RSP, self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RSP))+CPUSIZE.QWORD))
         return
 
     def load_binary(self, filename):

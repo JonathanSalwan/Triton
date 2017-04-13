@@ -125,8 +125,9 @@ namespace triton {
 
 
     triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(const std::string& name) const {
-      if (this->variableNodes.find(name) != this->variableNodes.end())
-        return this->variableNodes.at(name);
+      auto it = this->variableNodes.find(name);
+      if (it != this->variableNodes.end())
+        return it->second;
       return nullptr;
     }
 

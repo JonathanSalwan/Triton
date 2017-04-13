@@ -303,9 +303,10 @@ namespace triton {
 
       /* Returns the symbolic variable otherwise returns nullptr */
       SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
-        if (this->symbolicVariables.find(symVarId) == this->symbolicVariables.end())
+        auto it = this->symbolicVariables.find(symVarId);
+        if (it == this->symbolicVariables.end())
           return nullptr;
-        return this->symbolicVariables.at(symVarId);
+        return it->second;
       }
 
 
@@ -428,9 +429,10 @@ namespace triton {
 
       /* Gets the symbolic expression pointer from a symbolic id */
       SymbolicExpression* SymbolicEngine::getSymbolicExpressionFromId(triton::usize symExprId) const {
-        if (this->symbolicExpressions.find(symExprId) == this->symbolicExpressions.end())
+        auto it = this->symbolicExpressions.find(symExprId);
+        if (it == this->symbolicExpressions.end())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
-        return this->symbolicExpressions.at(symExprId);
+        return it->second;
       }
 
 

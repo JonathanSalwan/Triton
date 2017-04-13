@@ -81,10 +81,10 @@ Triton = TritonContext()
 
 
 def symbolization_init():
-    Triton.convertRegisterToSymbolicVariable(REG.EAX)
-    Triton.convertRegisterToSymbolicVariable(REG.EBX)
-    Triton.convertRegisterToSymbolicVariable(REG.ECX)
-    Triton.convertRegisterToSymbolicVariable(REG.EDX)
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EAX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EBX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.ECX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EDX))
     return
 
 def test_trace(trace):

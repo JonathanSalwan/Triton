@@ -37,7 +37,7 @@ class DefCamp2015(object):
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(REG.RAX))
+                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(self.Triton.Register(REG.RAX)))
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
@@ -51,7 +51,7 @@ class DefCamp2015(object):
                     self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
         return solution
 
     def load_binary(self, filename):
@@ -206,7 +206,7 @@ class SeedCoverage(object):
             self.Triton.processing(inst)
 
             # Next instruction
-            ip = self.Triton.buildSymbolicRegister(REG.RIP).evaluate()
+            ip = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.RIP)).evaluate()
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""
@@ -314,7 +314,7 @@ class Emu1(object):
             self.Triton.setConcreteRegisterValue(self.Triton.Register(getattr(REG, reg_name.upper()), regs[reg_name]))
 
         # run the code
-        pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+        pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
         while pc != 0x409A18:
             opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 20)
 
@@ -325,17 +325,17 @@ class Emu1(object):
             # Check if triton doesn't supports this instruction
             self.assertTrue(self.Triton.processing(instruction))
 
-            pc = self.Triton.getConcreteRegisterValue(REG.RIP)
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RIP))
 
             if concretize:
                 self.Triton.concretizeAllMemory()
                 self.Triton.concretizeAllRegister()
 
-        rax = self.Triton.getConcreteRegisterValue(REG.RAX)
-        rbx = self.Triton.getConcreteRegisterValue(REG.RBX)
-        rcx = self.Triton.getConcreteRegisterValue(REG.RCX)
-        rdx = self.Triton.getConcreteRegisterValue(REG.RDX)
-        rsi = self.Triton.getConcreteRegisterValue(REG.RSI)
+        rax = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RAX))
+        rbx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RBX))
+        rcx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RCX))
+        rdx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RDX))
+        rsi = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.RSI))
 
         self.assertEqual(rax, 0)
         self.assertEqual(rbx, 0)

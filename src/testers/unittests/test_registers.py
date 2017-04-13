@@ -15,7 +15,7 @@ class TestRAXRegister(unittest.TestCase):
         """Define arch and register to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = REG.RAX
+        self.reg = self.Triton.Register(REG.RAX)
 
     def test_name(self):
         """Check register name."""
@@ -66,7 +66,7 @@ class TestAHRegister(unittest.TestCase):
         """Define arch and register to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = REG.AH
+        self.reg = self.Triton.Register(REG.AH)
 
     def test_size(self):
         """Check register size."""
@@ -83,7 +83,7 @@ class TestAHRegister(unittest.TestCase):
         self.assertEqual(self.reg.getParent().getName(), "rax")
 
         self.Triton.setArchitecture(ARCH.X86)
-        self.reg = REG.AH
+        self.reg = self.Triton.Register(REG.AH)
         self.assertEqual(self.reg.getParent().getName(), "eax")
         self.assertEqual(self.reg.getParent().getBitSize(), 32)
 
@@ -161,11 +161,11 @@ class TestRegisterValues(unittest.TestCase):
 
     def test_overlap(self):
         """Check register overlapping."""
-        self.assertTrue(REG.AX.isOverlapWith(REG.EAX), "overlap with upper")
-        self.assertTrue(REG.AX.isOverlapWith(REG.RAX), "overlap with parent")
-        self.assertTrue(REG.RAX.isOverlapWith(REG.AX), "overlap with lower")
-        self.assertFalse(REG.AH.isOverlapWith(REG.AL))
-        self.assertTrue(REG.AX.isOverlapWith(REG.AL))
-        self.assertTrue(REG.AL.isOverlapWith(REG.AX))
-        self.assertFalse(REG.EAX.isOverlapWith(REG.EDX))
+        self.assertTrue(self.Triton.Register(REG.AX).isOverlapWith(self.Triton.Register(REG.EAX)), "overlap with upper")
+        self.assertTrue(self.Triton.Register(REG.AX).isOverlapWith(self.Triton.Register(REG.RAX)), "overlap with parent")
+        self.assertTrue(self.Triton.Register(REG.RAX).isOverlapWith(self.Triton.Register(REG.AX)), "overlap with lower")
+        self.assertFalse(self.Triton.Register(REG.AH).isOverlapWith(self.Triton.Register(REG.AL)))
+        self.assertTrue(self.Triton.Register(REG.AX).isOverlapWith(self.Triton.Register(REG.AL)))
+        self.assertTrue(self.Triton.Register(REG.AL).isOverlapWith(self.Triton.Register(REG.AX)))
+        self.assertFalse(self.Triton.Register(REG.EAX).isOverlapWith(self.Triton.Register(REG.EDX)))
 

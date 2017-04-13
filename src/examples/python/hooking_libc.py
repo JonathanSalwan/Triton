@@ -95,7 +95,7 @@ def strlenHandler():
     print '[+] Strlen hooked'
 
     # Get arguments
-    arg1 = getMemoryString(Triton.getConcreteRegisterValue(REG.RDI))
+    arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.Register(REG.RDI)))
 
     # Return value
     return len(arg1)
@@ -106,12 +106,12 @@ def printfHandler():
     print '[+] printf hooked'
 
     # Get arguments
-    arg1   = getFormatString(Triton.getConcreteRegisterValue(REG.RDI))
-    arg2   = Triton.getConcreteRegisterValue(REG.RSI)
-    arg3   = Triton.getConcreteRegisterValue(REG.RDX)
-    arg4   = Triton.getConcreteRegisterValue(REG.RCX)
-    arg5   = Triton.getConcreteRegisterValue(REG.R8)
-    arg6   = Triton.getConcreteRegisterValue(REG.R9)
+    arg1   = getFormatString(Triton.getConcreteRegisterValue(Triton.Register(REG.RDI)))
+    arg2   = Triton.getConcreteRegisterValue(Triton.Register(REG.RSI))
+    arg3   = Triton.getConcreteRegisterValue(Triton.Register(REG.RDX))
+    arg4   = Triton.getConcreteRegisterValue(Triton.Register(REG.RCX))
+    arg5   = Triton.getConcreteRegisterValue(Triton.Register(REG.R8))
+    arg6   = Triton.getConcreteRegisterValue(Triton.Register(REG.R9))
     nbArgs = arg1.count("{")
     args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
     s      = arg1.format(*args)
@@ -126,19 +126,19 @@ def libcMainHandler():
     print '[+] __libc_start_main hooked'
 
     # Get arguments
-    main = Triton.getConcreteRegisterValue(REG.RDI)
+    main = Triton.getConcreteRegisterValue(Triton.Register(REG.RDI))
 
     # Push the return value to jump into the main() function
-    Triton.concretizeRegister(REG.RSP)
-    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, Triton.getConcreteRegisterValue(REG.RSP)-CPUSIZE.QWORD))
+    Triton.concretizeRegister(Triton.Register(REG.RSP))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, Triton.getConcreteRegisterValue(Triton.Register(REG.RSP))-CPUSIZE.QWORD))
 
-    ret2main = MemoryAccess(Triton.getConcreteRegisterValue(REG.RSP), CPUSIZE.QWORD, main)
+    ret2main = MemoryAccess(Triton.getConcreteRegisterValue(Triton.Register(REG.RSP)), CPUSIZE.QWORD, main)
     Triton.concretizeMemory(ret2main)
     Triton.setConcreteMemoryValue(ret2main)
 
     # Setup argc / argv
-    Triton.concretizeRegister(REG.RDI)
-    Triton.concretizeRegister(REG.RSI)
+    Triton.concretizeRegister(Triton.Register(REG.RDI))
+    Triton.concretizeRegister(Triton.Register(REG.RSI))
 
     argvs = [
         "sample_1",      # argv[0]
@@ -174,24 +174,24 @@ customRelocation = [
 
 
 def hookingHandler():
-    pc = Triton.getConcreteRegisterValue(REG.RIP)
+    pc = Triton.getConcreteRegisterValue(Triton.Register(REG.RIP))
     for rel in customRelocation:
         if rel[2] == pc:
             # Emulate the routine and the return value
             ret_value = rel[1]()
-            Triton.concretizeRegister(REG.RAX)
+            Triton.concretizeRegister(Triton.Register(REG.RAX))
             Triton.setConcreteRegisterValue(Triton.Register(REG.RAX, ret_value))
 
             # Get the return address
-            ret_addr = Triton.getConcreteMemoryValue(MemoryAccess(Triton.getConcreteRegisterValue(REG.RSP), CPUSIZE.QWORD))
+            ret_addr = Triton.getConcreteMemoryValue(MemoryAccess(Triton.getConcreteRegisterValue(Triton.Register(REG.RSP)), CPUSIZE.QWORD))
 
             # Hijack RIP to skip the call
-            Triton.concretizeRegister(REG.RIP)
+            Triton.concretizeRegister(Triton.Register(REG.RIP))
             Triton.setConcreteRegisterValue(Triton.Register(REG.RIP, ret_addr))
 
             # Restore RSP (simulate the ret)
-            Triton.concretizeRegister(REG.RSP)
-            Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, Triton.getConcreteRegisterValue(REG.RSP)+CPUSIZE.QWORD))
+            Triton.concretizeRegister(Triton.Register(REG.RSP))
+            Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, Triton.getConcreteRegisterValue(Triton.Register(REG.RSP))+CPUSIZE.QWORD))
     return
 
 
@@ -219,7 +219,7 @@ def emulate(pc):
         hookingHandler()
 
         # Next
-        pc = Triton.getConcreteRegisterValue(REG.RIP)
+        pc = Triton.getConcreteRegisterValue(Triton.Register(REG.RIP))
 
     print '[+] Emulation done.'
     return

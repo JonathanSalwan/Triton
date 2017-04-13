@@ -402,7 +402,11 @@ namespace triton {
 
       triton::arch::RegisterSpec const& x8664Cpu::getRegister(triton::arch::registers_e id) const
       {
-        return this->registers_.at(id);
+        try {
+          return this->registers_.at(id);
+        } catch(std::out_of_range const& e) {
+          throw triton::exceptions::Cpu("x86Cpu::getRegister(): Invalid register for this architecture.");
+        }
       }
 
 
@@ -526,9 +530,10 @@ namespace triton {
 
 
       triton::uint8 x8664Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
-        if (this->memory.find(addr) == this->memory.end())
+        auto it = this->memory.find(addr);
+        if (it == this->memory.end())
           return 0x00;
-        return this->memory.at(addr);
+        return it->second;
       }
 
 

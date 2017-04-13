@@ -6,10 +6,9 @@
 */
 
 #include <triton/api.hpp>
-#include <triton/architecture.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonObjects.hpp>
-#include <triton/x86Specifications.hpp>
+#include <triton/pythonUtils.hpp>
 
 
 
@@ -336,28 +335,12 @@ namespace triton {
     namespace python {
 
       void initRegNamespace(void) {
-        if (!triton::bindings::python::initialized)
-          return;
-
         PyDict_Clear(triton::bindings::python::registersDict);
 
-        switch (api.getArchitecture()) {
-          case triton::arch::ARCH_X86_64:
 #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-            PyDict_SetItemString(triton::bindings::python::registersDict, #UPPER_NAME, PyRegister(triton::arch::Register(triton::api.getRegister(triton::arch::ID_REG_##UPPER_NAME), 0x00)));
+            PyDict_SetItemString(triton::bindings::python::registersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
 #define REG_SPEC_NO_CAPSTONE REG_SPEC
 #include "triton/x86.spec"
-            break;
-
-          case triton::arch::ARCH_X86:
-#define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-          if(X86_AVAIL)\
-            PyDict_SetItemString(triton::bindings::python::registersDict, #UPPER_NAME, PyRegister(triton::arch::Register(triton::api.getRegister(triton::arch::ID_REG_##UPPER_NAME), 0x00)));
-#define REG_SPEC_NO_CAPSTONE REG_SPEC
-#include "triton/x86.spec"
-            break;
-        } /* switch */
-
       }
 
     }; /* python namespace */

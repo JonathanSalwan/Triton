@@ -99,7 +99,7 @@ def run(ip):
         #print inst
 
         # Next instruction
-        ip = Triton.buildSymbolicRegister(REG.RIP).evaluate()
+        ip = Triton.buildSymbolicRegister(Triton.Register(REG.RIP)).evaluate()
     return
 
 
