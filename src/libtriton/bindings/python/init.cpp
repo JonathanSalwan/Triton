@@ -18,19 +18,7 @@ namespace triton {
     namespace python {
 
       /* Triton module */
-      bool      initialized           = false;
-      PyObject* astModule             = nullptr; /* Must be global because may be updated on-the-fly */
-      PyObject* cpuSizeDict           = nullptr; /* Must be global because it's updated on-the-fly */
-      PyObject* opcodesDict           = nullptr; /* Must be global because it's updated on-the-fly */
-      PyObject* prefixesDict          = nullptr; /* Must be global because it's updated on-the-fly */
-      PyObject* registersDict         = nullptr; /* Must be global because it's updated on-the-fly */
       PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
-      #if defined(__unix__) || defined(__APPLE__)
-      PyObject* syscallsDict64        = nullptr; /* Must be global because it's updated on-the-fly */
-      #if defined(__unix__)
-      PyObject* syscallsDict32        = nullptr; /* Must be global because it's updated on-the-fly */
-      #endif
-      #endif
 
 
       /* Python entry point */
@@ -74,8 +62,9 @@ namespace triton {
 
         /* Create the CPUSIZE namespace ============================================================== */
 
-        triton::bindings::python::cpuSizeDict = xPyDict_New();
-        PyObject* idCpuSizeClass = xPyClass_New(nullptr, triton::bindings::python::cpuSizeDict, xPyString_FromString("CPUSIZE"));
+        PyObject* cpuSizeDict = xPyDict_New();
+        initCpuSizeNamespace(cpuSizeDict);
+        PyObject* idCpuSizeClass = xPyClass_New(nullptr, cpuSizeDict, xPyString_FromString("CPUSIZE"));
 
         /* Create the ELF namespace ================================================================== */
 
@@ -85,8 +74,9 @@ namespace triton {
 
         /* Create the OPCODE namespace =============================================================== */
 
-        triton::bindings::python::opcodesDict = xPyDict_New();
-        PyObject* idOpcodesClass = xPyClass_New(nullptr, triton::bindings::python::opcodesDict, xPyString_FromString("OPCODE"));
+        PyObject* opcodesDict = xPyDict_New();
+        initX86OpcodesNamespace(opcodesDict);
+        PyObject* idOpcodesClass = xPyClass_New(nullptr, opcodesDict, xPyString_FromString("OPCODE"));
 
         /* Create the OPERAND namespace ============================================================== */
 
@@ -108,13 +98,15 @@ namespace triton {
 
         /* Create the PREFIX namespace =============================================================== */
 
-        triton::bindings::python::prefixesDict = xPyDict_New();
-        PyObject* idPrefixesClass = xPyClass_New(nullptr, triton::bindings::python::prefixesDict, xPyString_FromString("PREFIX"));
+        PyObject* prefixesDict = xPyDict_New();
+        initX86PrefixesNamespace(prefixesDict);
+        PyObject* idPrefixesClass = xPyClass_New(nullptr, prefixesDict, xPyString_FromString("PREFIX"));
 
         /* Create the REG namespace ================================================================== */
 
-        triton::bindings::python::registersDict = xPyDict_New();
-        PyObject* idRegClass = xPyClass_New(nullptr, triton::bindings::python::registersDict, xPyString_FromString("REG"));
+        PyObject* registersDict = xPyDict_New();
+        initRegNamespace(registersDict);
+        PyObject* idRegClass = xPyClass_New(nullptr, registersDict, xPyString_FromString("REG"));
 
         /* Create the SYMEXPR namespace ============================================================== */
 
@@ -124,13 +116,15 @@ namespace triton {
 
         /* Create the SYSCALL namespace ============================================================== */
         #if defined(__unix__) || defined(__APPLE__)
-        triton::bindings::python::syscallsDict64 = xPyDict_New();
-        PyObject* idSyscallsClass64 = xPyClass_New(nullptr, triton::bindings::python::syscallsDict64, xPyString_FromString("SYSCALL64"));
+        PyObject* syscallsDict64 = xPyDict_New();
+        initSyscall64Namespace(syscallsDict64);
+        PyObject* idSyscallsClass64 = xPyClass_New(nullptr, syscallsDict64, xPyString_FromString("SYSCALL64"));
         #endif
 
         #if defined(__unix__)
-        triton::bindings::python::syscallsDict32 = xPyDict_New();
-        PyObject* idSyscallsClass32 = xPyClass_New(nullptr, triton::bindings::python::syscallsDict32, xPyString_FromString("SYSCALL32"));
+        PyObject* syscallsDict32 = xPyDict_New();
+        initSyscall32Namespace(syscallsDict32);
+        PyObject* idSyscallsClass32 = xPyClass_New(nullptr, syscallsDict32, xPyString_FromString("SYSCALL32"));
         #endif
 
         /* Create the VERSION namespace ============================================================== */
@@ -147,24 +141,22 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);            /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "ELF",                 idElfDictClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "MODE",                idModeClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);            /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "PE",                  idPeDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);           /* Empty: filled on the fly */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);                /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
         #if defined(__unix__) || defined(__APPLE__)
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);         /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);
         #endif
         #if defined(__unix__)
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL32",           idSyscallsClass32);         /* Empty: filled on the fly */
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL32",           idSyscallsClass32);
         #endif
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
-
-        triton::bindings::python::initialized = true;
       }
 
     }; /* python namespace */

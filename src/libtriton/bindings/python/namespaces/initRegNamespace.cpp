@@ -333,11 +333,11 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      void initRegNamespace(void) {
-        PyDict_Clear(triton::bindings::python::registersDict);
+      void initRegNamespace(PyObject* registersDict) {
+        PyDict_Clear(registersDict);
 
 #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-            PyDict_SetItemString(triton::bindings::python::registersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
+            PyDict_SetItemString(registersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
 #define REG_SPEC_NO_CAPSTONE REG_SPEC
 #include "triton/x86.spec"
       }

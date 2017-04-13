@@ -43,34 +43,6 @@ namespace triton {
      *  @{
      */
 
-      //! Indicates if the python bindings is initialized.
-      extern bool initialized;
-
-      //! CPUSIZE python dict.
-      extern PyObject* cpuSizeDict;
-
-      //! OPCODE python dict.
-      extern PyObject* opcodesDict;
-
-      //! PREFIX python dict.
-      extern PyObject* prefixesDict;
-
-      //! REG python dict.
-      extern PyObject* registersDict;
-
-      #if defined(__unix__) || defined(__APPLE__)
-      //! SYSCALL64 python dict.
-      extern PyObject* syscallsDict64;
-
-      #if defined(__unix__)
-      //! SYSCALL32 python dict.
-      extern PyObject* syscallsDict32;
-      #endif
-      #endif
-
-      //! ast python module.
-      extern PyObject* astModule;
-
       //! triton python module.
       extern PyObject* tritonModule;
 
@@ -90,7 +62,7 @@ namespace triton {
       void initCallbackNamespace(PyObject* callbackDict);
 
       //! Initializes the CPUSIZE python namespace.
-      void initCpuSizeNamespace(void);
+      void initCpuSizeNamespace(PyObject* cpuSizeDict);
 
       //! Initializes the ELF python namespace.
       void initElfNamespace(PyObject* elfDict);
@@ -99,16 +71,16 @@ namespace triton {
       void initPENamespace(PyObject* peDict);
 
       //! Initializes the OPCODE python namespace.
-      void initX86OpcodesNamespace(void);
+      void initX86OpcodesNamespace(PyObject* opcodeDict);
 
       //! Initializes the PREFIX python namespace.
-      void initX86PrefixesNamespace(void);
+      void initX86PrefixesNamespace(PyObject* prefixDict);
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);
 
       //! Initializes the REG python namespace.
-      void initRegNamespace(void);
+      void initRegNamespace(PyObject* regDict);
 
       //! Initializes the MODE python namespace.
       void initModeNamespace(PyObject* modeDict);
@@ -117,8 +89,13 @@ namespace triton {
       void initSymExprNamespace(PyObject* symExprDict);
 
       #if defined(__unix__) || defined(__APPLE__)
-      //! Initializes the SYSCALL python namespace.
-      void initSyscallNamespace(void);
+      //! Initializes the SYSCALL32 python namespace.
+      void initSyscall64Namespace(PyObject* sys64Dict);
+
+      #if defined(__unix__)
+      //! Initializes the SYSCALL32 python namespace.
+      void initSyscall32Namespace(PyObject* sys32Dict);
+      #endif
       #endif
 
       //! Initializes the VERSION python namespace.

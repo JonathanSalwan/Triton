@@ -1728,15 +1728,6 @@ namespace triton {
 
         try {
           PyTritonContext_AsTritonContext(self)->setArchitecture(PyLong_AsUint32(arg));
-
-        /* Update python env ======================================================== */
-          triton::bindings::python::initRegNamespace();
-          triton::bindings::python::initCpuSizeNamespace();
-          triton::bindings::python::initX86OpcodesNamespace();
-          triton::bindings::python::initX86PrefixesNamespace();
-          #if defined(__unix__) || defined(__APPLE__)
-            triton::bindings::python::initSyscallNamespace();
-          #endif
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
