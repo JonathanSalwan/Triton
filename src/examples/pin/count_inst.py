@@ -2,7 +2,7 @@
 ## -*- coding: utf-8 -*-
 
 from pintool import *
-from triton  import *
+from triton  import ARCH
 
 count = 0
 
@@ -14,9 +14,8 @@ def fini():
     print count
 
 if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
     insertCall(mycb, INSERT_POINT.BEFORE)
     insertCall(fini, INSERT_POINT.FINI)
     runProgram()
-

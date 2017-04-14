@@ -25,12 +25,12 @@
 # Win
 # [+] Analysis done!
 
-from triton     import *
-from triton.ast import *
+from triton     import ARCH, REG
 from pintool    import *
 
 password  = dict()
 symVarMem = None
+Triton = getTritonContext()
 
 
 def csym(instruction):
@@ -43,7 +43,7 @@ def csym(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x400574:
         global symVarMem
-        rax = getCurrentRegisterValue(REG.RAX)
+        rax = getCurrentRegisterValue(Triton.Register(REG.RAX))
         symVarMem = rax
         if rax in password:
             setCurrentMemoryValue(rax, password[rax])
@@ -52,7 +52,7 @@ def csym(instruction):
 
     # Epilogue of the function
     if instruction.getAddress() == 0x4005b1:
-        rax = getCurrentRegisterValue(REG.RAX)
+        rax = getCurrentRegisterValue(Triton.Register(REG.RAX))
         # The function returns 0 if the password is valid
         # So, we restore the snapshot until this function
         # returns something else than 0.
@@ -69,15 +69,16 @@ def csym(instruction):
 def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x400574:
-        var = convertRegisterToSymbolicVariable(REG.RAX)
+        var = Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.RAX))
         return
 
     # 0x4005ae: cmp ecx, eax
     if instruction.getAddress() == 0x400597:
-        zfId    = getSymbolicRegisterId(REG.ZF)
-        zfExpr  = getFullAstFromId(zfId)
-        expr    = getAstContext().assert_(equal(zfExpr, bvtrue())) # (assert (= zf True))
-        models  = getModel(expr)
+        zfId    = Triton.getSymbolicRegisterId(Triton.Register(REG.ZF))
+        zfExpr  = Triton.getFullAstFromId(zfId)
+        astCtxt = Triton.getAstContext();
+        expr    = astCtxt.assert_(astCtxt.equal(zfExpr, astCtxt.bvtrue())) # (assert (= zf True))
+        models  = Triton.getModel(expr)
         global password
         for k, v in models.items():
             password.update({symVarMem: v.getValue()})
@@ -94,7 +95,7 @@ def fini():
 if __name__ == '__main__':
 
     # Define the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
@@ -105,4 +106,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-

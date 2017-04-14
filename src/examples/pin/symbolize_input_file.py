@@ -18,13 +18,14 @@
 import string
 import sys
 
-from triton  import *
+from triton  import ARCH, SYSCALL64, CPUSIZE, MemoryAccess
 from pintool import *
 
 targetName = "/etc/passwd"
 targetFd   = None
 isOpen     = False
 isRead     = None
+Triton = getTritonContext()
 
 
 def getMemoryString(addr):
@@ -44,13 +45,13 @@ def syscallsEntry(threadId, std):
     global isRead
     global targetFd
 
-    if getSyscallNumber(std) == SYSCALL.OPEN:
+    if getSyscallNumber(std) == SYSCALL64.OPEN:
         name = getMemoryString(getSyscallArgument(std, 0))
         if name == targetName:
             isOpen = True
             print '[TT] Target name match: %s' %(name)
 
-    elif getSyscallNumber(std) == SYSCALL.READ:
+    elif getSyscallNumber(std) == SYSCALL64.READ:
         fd   = getSyscallArgument(std, 0)
         buff = getSyscallArgument(std, 1)
         size = getSyscallArgument(std, 2)
@@ -75,22 +76,23 @@ def syscallsExit(threadId, std):
         buff = isRead['buff']
         print '[TT] Symbolizing the input file'
         for index in range(size):
-            convertMemoryToSymbolicVariable(MemoryAccess(buff+index, CPUSIZE.BYTE, getCurrentMemoryValue(buff+index)))
+            Triton.convertMemoryToSymbolicVariable(MemoryAccess(buff+index, CPUSIZE.BYTE, getCurrentMemoryValue(buff+index)))
         isRead = None
 
     return
 
 
 def fini():
-    pc = getPathConstraintsAst()
-    m = getModel(getAstContext().assert_(ast.lnot(pc)))
+    pc = Triton.getPathConstraintsAst()
+    astCtxt = Triton.getAstContext()
+    m = Triton.getModel(astCtxt.assert_(astCtxt.lnot(pc)))
     print '[TT] Model:', m
     return
 
 
 if __name__ == '__main__':
     # Set the architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
@@ -101,4 +103,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-
