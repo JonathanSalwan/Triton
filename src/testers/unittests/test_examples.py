@@ -5,8 +5,12 @@ import unittest
 import subprocess
 import os
 import glob
+import itertools
 
 EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "python")
+
+ARGS = {"small_x86-64_symbolic_emulator.py": [os.path.join(EXAMPLE_DIR, "samples", "sample_1"), "hello"],
+        "hackover-ctf-2015-r150/solve.py": [os.path.join(EXAMPLE_DIR, "ctf-writeups", "hackover-ctf-2015-r150", "rvs")]}
 
 
 class TestExample(unittest.TestCase):
@@ -14,13 +18,16 @@ class TestExample(unittest.TestCase):
     """Holder to run examples as tests."""
 
 
-for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
-    if "small_x86-64_symbolic_emulator.py" in example:
-        continue
-
+for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")),
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*.py")),
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*.py")))):
     def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        p = subprocess.Popen(["python", example_name],
+        args = [v for k, v in ARGS.items() if k in example_name]
+        assert len(args) <= 1
+        if len(args) == 1:
+            args = args[0]
+        p = subprocess.Popen(["python", example_name] + args,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         out, err = p.communicate()
@@ -29,4 +36,4 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda
     # function.
-    setattr(TestExample, "test_" + os.path.basename(example), _test_example)
+    setattr(TestExample, "test_" + str(i) + "_" + os.path.basename(example), _test_example)

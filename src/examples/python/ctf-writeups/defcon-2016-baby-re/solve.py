@@ -31,8 +31,9 @@
 ##   [+] Symbolic variable 12 = 21 (!)
 ##
 
+import os
 import sys
-from triton import *
+from triton import ARCH, REG, TritonContext, MemoryAccess, CPUSIZE, Instruction, MODE, CALLBACK
 
 # Symbolic variables with random inputs at the first iteration.
 variables = {
@@ -73,7 +74,7 @@ memoryCache = list()
 
 
 
-def load_dump(path):
+def load_dump(Triton, path):
     global memoryCache
 
     # Open the dump
@@ -87,23 +88,23 @@ def load_dump(path):
 
     # Load registers and memory into the libTriton
     print '[+] Define registers'
-    setConcreteRegisterValue(Register(REG.RAX,    regs['rax']))
-    setConcreteRegisterValue(Register(REG.RBX,    regs['rbx']))
-    setConcreteRegisterValue(Register(REG.RCX,    regs['rcx']))
-    setConcreteRegisterValue(Register(REG.RDX,    regs['rdx']))
-    setConcreteRegisterValue(Register(REG.RDI,    regs['rdi']))
-    setConcreteRegisterValue(Register(REG.RSI,    regs['rsi']))
-    setConcreteRegisterValue(Register(REG.RBP,    regs['rbp']))
-    setConcreteRegisterValue(Register(REG.RSP,    regs['rsp']))
-    setConcreteRegisterValue(Register(REG.RIP,    regs['rip']))
-    setConcreteRegisterValue(Register(REG.R8,     regs['r8']))
-    setConcreteRegisterValue(Register(REG.R9,     regs['r9']))
-    setConcreteRegisterValue(Register(REG.R10,    regs['r10']))
-    setConcreteRegisterValue(Register(REG.R11,    regs['r11']))
-    setConcreteRegisterValue(Register(REG.R12,    regs['r12']))
-    setConcreteRegisterValue(Register(REG.R13,    regs['r13']))
-    setConcreteRegisterValue(Register(REG.R14,    regs['r14']))
-    setConcreteRegisterValue(Register(REG.EFLAGS, regs['eflags']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RAX,    regs['rax']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RBX,    regs['rbx']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RCX,    regs['rcx']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RDX,    regs['rdx']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RDI,    regs['rdi']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RSI,    regs['rsi']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RBP,    regs['rbp']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP,    regs['rsp']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.RIP,    regs['rip']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R8,     regs['r8']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R9,     regs['r9']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R10,    regs['r10']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R11,    regs['r11']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R12,    regs['r12']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R13,    regs['r13']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.R14,    regs['r14']))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.EFLAGS, regs['eflags']))
 
     print '[+] Define memory areas'
     for mem in mems:
@@ -120,41 +121,41 @@ def load_dump(path):
     return
 
 
-def symbolizeInputs():
+def symbolizeInputs(Triton):
     global variables
 
     # First argument of the CheckSolution() function.
-    user_input = getConcreteRegisterValue(REG.RDI)
+    user_input = Triton.getConcreteRegisterValue(Triton.Register(REG.RDI))
 
     # Inject concrete models into the memory
-    setConcreteMemoryValue(MemoryAccess(user_input+0,  CPUSIZE.DWORD, variables[0x00]))
-    setConcreteMemoryValue(MemoryAccess(user_input+4,  CPUSIZE.DWORD, variables[0x01]))
-    setConcreteMemoryValue(MemoryAccess(user_input+8,  CPUSIZE.DWORD, variables[0x02]))
-    setConcreteMemoryValue(MemoryAccess(user_input+12, CPUSIZE.DWORD, variables[0x03]))
-    setConcreteMemoryValue(MemoryAccess(user_input+16, CPUSIZE.DWORD, variables[0x04]))
-    setConcreteMemoryValue(MemoryAccess(user_input+20, CPUSIZE.DWORD, variables[0x05]))
-    setConcreteMemoryValue(MemoryAccess(user_input+24, CPUSIZE.DWORD, variables[0x06]))
-    setConcreteMemoryValue(MemoryAccess(user_input+28, CPUSIZE.DWORD, variables[0x07]))
-    setConcreteMemoryValue(MemoryAccess(user_input+32, CPUSIZE.DWORD, variables[0x08]))
-    setConcreteMemoryValue(MemoryAccess(user_input+36, CPUSIZE.DWORD, variables[0x09]))
-    setConcreteMemoryValue(MemoryAccess(user_input+40, CPUSIZE.DWORD, variables[0x0a]))
-    setConcreteMemoryValue(MemoryAccess(user_input+44, CPUSIZE.DWORD, variables[0x0b]))
-    setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD, variables[0x0c]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+0,  CPUSIZE.DWORD, variables[0x00]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+4,  CPUSIZE.DWORD, variables[0x01]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+8,  CPUSIZE.DWORD, variables[0x02]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+12, CPUSIZE.DWORD, variables[0x03]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+16, CPUSIZE.DWORD, variables[0x04]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+20, CPUSIZE.DWORD, variables[0x05]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+24, CPUSIZE.DWORD, variables[0x06]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+28, CPUSIZE.DWORD, variables[0x07]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+32, CPUSIZE.DWORD, variables[0x08]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+36, CPUSIZE.DWORD, variables[0x09]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+40, CPUSIZE.DWORD, variables[0x0a]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+44, CPUSIZE.DWORD, variables[0x0b]))
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD, variables[0x0c]))
 
     # Create symbolic variables.
-    var01 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
-    var02 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
-    var03 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
-    var04 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+12, CPUSIZE.DWORD))
-    var05 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+16, CPUSIZE.DWORD))
-    var06 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+20, CPUSIZE.DWORD))
-    var07 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+24, CPUSIZE.DWORD))
-    var08 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+28, CPUSIZE.DWORD))
-    var09 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+32, CPUSIZE.DWORD))
-    var10 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+36, CPUSIZE.DWORD))
-    var11 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+40, CPUSIZE.DWORD))
-    var12 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+44, CPUSIZE.DWORD))
-    var13 = convertMemoryToSymbolicVariable(MemoryAccess(user_input+48, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+12, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+16, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+20, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+24, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+28, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+32, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+36, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+40, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+44, CPUSIZE.DWORD))
+    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+48, CPUSIZE.DWORD))
 
     return
 
@@ -176,7 +177,7 @@ def emulate(Triton, pc):
     print '[+] Starting emulation.'
     while pc:
         # Fetch opcodes
-        opcodes = getConcreteMemoryAreaValue(pc, 16)
+        opcodes = Triton.getConcreteMemoryAreaValue(pc, 16)
 
         # Create the Triton instruction
         instruction = Instruction()
@@ -184,7 +185,7 @@ def emulate(Triton, pc):
         instruction.setAddress(pc)
 
         # Process
-        processing(instruction)
+        Triton.processing(instruction)
         print instruction
 
         # End of the CheckSolution() function
@@ -196,21 +197,23 @@ def emulate(Triton, pc):
             break
 
         if pc in goodBranches:
-            # Slice expressions
-            rax   = getSymbolicExpressionFromId(getSymbolicRegisterId(REG.RAX))
-            eax   = ast.extract(31, 0, rax.getAst())
+
             astCtxt = Triton.getAstContext()
+
+            # Slice expressions
+            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.Register(REG.RAX)))
+            eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
             cstr  = astCtxt.assert_(
-                        ast.land(
-                            getPathConstraintsAst(),
-                            ast.equal(eax, ast.bv(goodBranches[pc], 32))
+                        astCtxt.land(
+                            Triton.getPathConstraintsAst(),
+                            astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
                         )
                     )
 
             print '[+] Asking for a model, please wait...'
-            model = getModel(cstr)
+            model = Triton.getModel(cstr)
 
             # Save new state
             for k, v in model.items():
@@ -224,55 +227,55 @@ def emulate(Triton, pc):
             Triton = initialize()
 
         # Next
-        pc = getConcreteRegisterValue(REG.RIP)
+        pc = Triton.getConcreteRegisterValue(Triton.Register(REG.RIP))
 
     print '[+] Emulation done.'
     return
 
 
 # Memory caching on the fly to speed up the dump loading.
-def memoryCaching(mem):
+def memoryCaching(Triton, mem):
     global memoryCache
 
     addr = mem.getAddress()
     size = mem.getSize()
     for index in range(size):
-        if not isMemoryMapped(addr+index):
+        if not Triton.isMemoryMapped(addr+index):
             for r in memoryCache:
                 if addr+index >= r['start'] and addr+index < r['start'] + r['size']:
                     value = ord(r['memory'][((addr+index)-r['start'])])
-                    setConcreteMemoryValue(addr+index, value)
+                    Triton.setConcreteMemoryValue(addr+index, value)
                     return
 
     return
 
 
 # Constant folding simplification.
-def constantFolding(node):
+def constantFolding(Triton, node):
     if node.isSymbolized():
         return node
-    return ast.bv(node.evaluate(), node.getBitvectorSize())
+    return Triton.getAstContext().bv(node.evaluate(), node.getBitvectorSize())
 
 
 def initialize():
 
     Triton = TritonContext()
     # Define the target architecture
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    enableMode(MODE.ALIGNED_MEMORY, True)
-    enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Define internal callbacks.
-    addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)
-    addCallback(constantFolding, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    Triton.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+    Triton.addCallback(constantFolding, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
     # Load the meory dump
-    load_dump("./baby-re.dump")
+    load_dump(Triton, os.path.join(os.path.dirname(__file__), "baby-re.dump"))
 
     # Symbolize user inputs
-    symbolizeInputs()
+    symbolizeInputs(Triton)
 
     return Triton
 
@@ -282,7 +285,7 @@ if __name__ == '__main__':
     Triton = initialize()
 
     # Emulate from the dump
-    emulate(Triton, getConcreteRegisterValue(REG.RIP))
+    emulate(Triton, Triton.getConcreteRegisterValue(Triton.Register(REG.RIP)))
 
     # Print the final solution
     solution()
