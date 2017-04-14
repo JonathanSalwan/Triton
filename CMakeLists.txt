@@ -47,7 +47,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   endif()
 else()
   add_custom_target(check
-    COMMAND ${PYTHONPATH_CMD} ctest
+    COMMAND ${PYTHONPATH_CMD} ctest --output-on-failure
     DEPENDS test-python)
 endif()
 
