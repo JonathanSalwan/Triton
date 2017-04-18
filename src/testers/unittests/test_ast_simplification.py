@@ -14,8 +14,7 @@ class TestAstSimplification(unittest.TestCase):
     def setUp(self):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.simplify_1 = lambda x: self.xor_1(x)
-        self.Triton.addCallback(self.simplify_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.Triton.addCallback(self.xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
         self.Triton.addCallback(self.xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
         self.astCtxt = self.Triton.getAstContext()
 
@@ -49,16 +48,17 @@ class TestAstSimplification(unittest.TestCase):
         return
 
     # a ^ a -> a = 0
-    def xor_1(self, node):
+    @staticmethod
+    def xor_1(api, node):
         if node.getKind() == AST_NODE.BVXOR:
             if node.getChilds()[0] == node.getChilds()[1]:
-                return self.astCtxt.bv(0, node.getBitvectorSize())
+                return api.getAstContext().bv(0, node.getBitvectorSize())
         return node
 
 
     # ((a & ~b) | (~a & b)) -> (a ^ b)
     @staticmethod
-    def xor_2(node):
+    def xor_2(api, node):
 
         def getNot(node):
             a = node.getChilds()[0]

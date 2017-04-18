@@ -9,7 +9,6 @@
 #ifndef TRITON_PYOBJECT_H
 #define TRITON_PYOBJECT_H
 
-#include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/elf.hpp>
@@ -39,6 +38,8 @@ namespace triton {
  *  \addtogroup triton
  *  @{
  */
+
+  class API;
 
   //! The Bindings namespace
   namespace bindings {

@@ -27,7 +27,7 @@ include(CTest)
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
 add_custom_target(test-python
-  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests --failfast)
+  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   if(GCOV)
      add_custom_target(check
@@ -47,7 +47,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   endif()
 else()
   add_custom_target(check
-    COMMAND ${PYTHONPATH_CMD} ctest
+    COMMAND ${PYTHONPATH_CMD} ctest --output-on-failure
     DEPENDS test-python)
 endif()
 

@@ -28,15 +28,15 @@ Triton = TritonContext()
 
 
 # a ^ a -> a = 0
-def xor_1(node):
+def xor_1(api, node):
     if node.getKind() == AST_NODE.BVXOR:
         if node.getChilds()[0] == node.getChilds()[1]:
-            return Triton.getAstContext().bv(0, node.getBitvectorSize())
+            return api.getAstContext().bv(0, node.getBitvectorSize())
     return node
 
 
 # ((a & ~b) | (~a & b)) -> (a ^ b)
-def xor_2(node):
+def xor_2(api, node):
 
     def getNot(node):
         a = node.getChilds()[0]

@@ -5,12 +5,396 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
-#include <triton/api.hpp>
+
+/*! \page py_triton_context_page Python bindings
+    \brief [**python api**] All information about the Triton Context
+    \anchor triton
+
+\section triton_py_description Description
+<hr>
+
+The Triton Triton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
+
+\section triton_py_api Python API - Classes, methods, modules and namespaces of libTriton
+<hr>
+
+By default, the libTriton contains Python bindings and can be loaded with a classical Python `import`.
+
+~~~~~~~~~~~~~{.py}
+>>> from triton import TritonContext
+~~~~~~~~~~~~~
+
+If you want to use the libTriton without Python bindings, recompile the project with the `cmake` flag `-DTRITON_PYTHON_BINDINGS=no`.
+
+\subsection triton_py_api_classes Classes
+
+- \ref py_AstNode_page
+- \ref py_Bitvector_page
+- \ref py_PathConstraint_page
+- \ref py_Register_page
+- \ref py_SolverModel_page
+- \ref py_SymbolicExpression_page
+- \ref py_SymbolicVariable_page
+
+
+\subsection triton_py_api_modules Modules
+
+- \ref ast
+
+
+\subsection triton_py_api_methods Methods
+
+- <b>void addCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+Adds a callback at specific internal points. Your callback will be called each time the point is reached.
+
+- <b>void assignSymbolicExpressionToMemory(\ref py_SymbolicExpression_page symExpr, \ref py_MemoryAccess_page mem)</b><br>
+Assigns a \ref py_SymbolicExpression_page to a \ref py_MemoryAccess_page area. **Be careful**, use this function only if you know what you are doing.
+The symbolic expression (`symExpr`) must be aligned to the memory access.
+
+- <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_REG_page reg)</b><br>
+Assigns a \ref py_SymbolicExpression_page to a \ref py_REG_page. **Be careful**, use this function only if you know what you are doing.
+The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
+to 128-bits. Otherwise, you will probably get a sort mismatch error when you will solve the expression. If you want to assign an
+expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
+
+- <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
+Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+
+- <b>\ref py_AstNode_page buildSymbolicImmediate(\ref py_Immediate_page imm)</b><br>
+Builds a symbolic immediate from a \ref py_Immediate_page.
+
+- <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
+Builds a symbolic memory cell from a \ref py_MemoryAccess_page with the SSA form.
+
+- <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_REG_page reg)</b><br>
+Builds a symbolic register from a \ref py_REG_page with the SSA form.
+
+- <b>void clearPathConstraints(void)</b><br>
+Clears the logical conjunction vector of path constraints.
+
+- <b>void concretizeAllMemory(void)</b><br>
+Concretizes all symbolic memory references.
+
+- <b>void concretizeAllRegister(void)</b><br>
+Concretizes all symbolic register references.
+
+- <b>void concretizeMemory(integer addr)</b><br>
+Concretizes a specific symbolic memory reference.
+
+- <b>void concretizeMemory(\ref py_MemoryAccess_page mem)</b><br>
+Concretizes a specific symbolic memory reference.
+
+- <b>void concretizeRegister(\ref py_REG_page reg)</b><br>
+Concretizes a specific symbolic register reference.
+
+- <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")</b><br>
+Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
+
+- <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment="")</b><br>
+Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
+
+- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")</b><br>
+Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
+
+- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
+Returns the new symbolic register expression and links this expression to the instruction.
+
+- <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment="")</b><br>
+Returns the new symbolic memory expression and links this expression to the instruction.
+
+- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
+Returns the new symbolic register expression and links this expression to the instruction.
+
+- <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
+Returns the new symbolic volatile expression and links this expression to the instruction.
+
+- <b>void disassembly(\ref py_Instruction_page inst)</b><br>
+Disassembles the instruction and setup operands. You must define an architecture before.
+
+- <b>void enableMode(\ref py_MODE_page mode, bool flag)</b><br>
+Enables or disables a specific mode.
+
+- <b>void enableSymbolicEngine(bool flag)</b><br>
+Enables or disables the symbolic execution engine.
+
+- <b>void enableTaintEngine(bool flag)</b><br>
+Enables or disables the taint engine.
+
+- <b>integer evaluateAstViaZ3(\ref py_AstNode_page node)</b><br>
+Evaluates an AST via Z3 and returns the symbolic value.
+
+- <b>[\ref py_Register_page, ...] getAllRegisters(void)</b><br>
+Returns the list of all registers. Each item of this list is a \ref py_Register_page.
+
+- <b>\ref py_ARCH_page getArchitecture(void)</b><br>
+Returns the current architecture used.
+
+- <b>dict getAstDictionariesStats(void)</b><br>
+Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
+
+- <b>\ref py_AstNode_page getAstFromId(integer symExprId)</b><br>
+Returns the partial AST from a symbolic expression id.
+
+- <b>\ref py_AST_REPRESENTATION_page getAstRepresentationMode(void)</b><br>
+Returns the current AST representation mode.
+
+- <b>bytes getConcreteMemoryAreaValue(integer baseAddr, integer size)</b><br>
+Returns the concrete value of a memory area.
+
+- <b>integer getConcreteMemoryValue(intger addr)</b><br>
+Returns the concrete value of a memory cell.
+
+- <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+Returns the concrete value of memory cells.
+
+- <b>integer getConcreteRegisterValue(\ref py_REG_page reg)</b><br>
+Returns the concrete value of a register.
+
+- <b>\ref py_AstNode_page getFullAst(\ref py_AstNode_page node)</b><br>
+Returns the full AST without SSA form from a given root node.
+
+- <b>\ref py_AstNode_page getFullAstFromId(integer symExprId)</b><br>
+Returns the full AST without SSA form from a symbolic expression id.
+
+- <b>dict getModel(\ref py_AstNode_page node)</b><br>
+Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
+
+- <b>[dict, ...] getModels(\ref py_AstNode_page node)</b><br>
+Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
+
+- <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
+Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
+
+- <b>[\ref py_PathConstraint_page, ...] getPathConstraints(void)</b><br>
+Returns the logical conjunction vector of path constraints as list of \ref py_PathConstraint_page.
+
+- <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
+Returns the logical conjunction AST of path constraints.
+
+- <b>integer getRegisterBitSize(void)</b><br>
+Returns the max size (in bit) of the CPU register (GPR).
+
+- <b>integer getRegisterSize(void)</b><br>
+Returns the max size (in byte) of the CPU register (GPR).
+
+- <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(intger symExprId)</b><br>
+Returns the symbolic expression corresponding to an id.
+
+- <b>dict getSymbolicExpressions(void)</b><br>
+Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
+
+- <b>dict getSymbolicMemory(void)</b><br>
+Returns the map of symbolic memory as {integer address : \ref py_SymbolicExpression_page expr}.
+
+- <b>integer getSymbolicMemoryId(intger addr)</b><br>
+Returns the symbolic expression id corresponding to a memory address.
+
+- <b>integer getSymbolicMemoryValue(intger addr)</b><br>
+Returns the symbolic memory value.
+
+- <b>integer getSymbolicMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+Returns the symbolic memory value.
+
+- <b>dict getSymbolicRegisters(void)</b><br>
+Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
+
+- <b>integer getSymbolicRegisterId(\ref py_REG_page reg)</b><br>
+Returns the symbolic expression id corresponding to a register.
+
+- <b>integer getSymbolicRegisterValue(\ref py_REG_page reg)</b><br>
+Returns the symbolic register value.
+
+- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromId(integer symVarId)</b><br>
+Returns the symbolic variable corresponding to a symbolic variable id.
+
+- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromName(string symVarName)</b><br>
+Returns the symbolic variable corresponding to a symbolic variable name.
+
+- <b>dict getSymbolicVariables(void)</b><br>
+Returns all symbolic variable as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
+
+- <b>[intger, ...] getTaintedMemory(void)</b><br>
+Returns the list of all tainted addresses.
+
+- <b>[\ref py_Register_page, ...] getTaintedRegisters(void)</b><br>
+Returns the list of all tainted registers.
+
+- <b>[\ref py_SymbolicExpression_page, ...] getTaintedSymbolicExpressions(void)</b><br>
+Returns the list of all tainted symbolic expressions.
+
+- <b>bool isArchitectureValid(void)</b><br>
+Returns true if the architecture is valid.
+
+- <b>bool isFlag(\ref py_REG_page reg)</b><br>
+Returns true if the register id is a flag.
+
+- <b>bool isMemoryMapped(integer baseAddr, integer size=1)</b><br>
+Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
+
+- <b>bool isMemorySymbolized(integer addr)</b><br>
+Returns true if the memory cell expression contains a symbolic variable.
+
+- <b>bool isMemorySymbolized(\ref py_MemoryAccess_page mem)</b><br>
+Returns true if memory cell expressions contain symbolic variables.
+
+- <b>bool isMemoryTainted(integer addr)</b><br>
+Returns true if the address is tainted.
+
+- <b>bool isMemoryTainted(\ref py_MemoryAccess_page mem)</b><br>
+Returns true if the memory is tainted.
+
+- <b>bool isModeEnabled(\ref py_MODE_page mode)</b><br>
+Returns true if the mode is enabled.
+
+- <b>bool isRegister(\ref py_REG_page reg)</b><br>
+Returns true if the register id is a register (see also isFlag()).
+
+- <b>bool isRegisterSymbolized(\ref py_REG_page reg)</b><br>
+Returns true if the register expression contains a symbolic variable.
+
+- <b>bool isRegisterTainted(\ref py_REG_page reg)</b><br>
+Returns true if the register is tainted.
+
+- <b>bool isRegisterValid(\ref py_REG_page reg)</b><br>
+Returns true if the register id is valid.
+
+- <b>bool isSymbolicEngineEnabled(void)</b><br>
+Returns true if the symbolic execution engine is enabled.
+
+- <b>bool isSymbolicExpressionIdExists(integer symExprId)</b><br>
+Returns true if the symbolic expression id exists.
+
+- <b>bool isTaintEngineEnabled(void)</b><br>
+Returns true if the taint engine is enabled.
+
+- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment="")</b><br>
+Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
+
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(intger varSize, string comment="")</b><br>
+Returns a new symbolic variable.
+
+- <b>bool processing(\ref py_Instruction_page inst)</b><br>
+Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+
+- <b>void removeAllCallbacks(void)</b><br>
+Removes all recorded callbacks.
+
+- <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
+Removes a recorded callback.
+
+- <b>void resetEngines(void)</b><br>
+Resets everything.
+
+- <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
+Initializes an architecture. This function must be called before any call to the rest of the API.
+
+- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)</b><br>
+Sets the AST representation mode.
+
+- <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
+
+- <b>void setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)</b><br>
+Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
+
+- <b>void setConcreteMemoryValue(integer addr, integer value)</b><br>
+Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
+
+- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
+
+- <b>void setConcreteRegisterValue(\ref py_REG_page reg)</b><br>
+Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
+the symbolic state (if it exists). You should probably use the concretize functions after this.
+
+- <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
+Sets the targeted memory as tainted or not. Returns true if the memory is still tainted.
+
+- <b>bool setTaintRegister(\ref py_REG_page reg, bool flag)</b><br>
+Sets the targeted register as tainted or not. Returns true if the register is still tainted.
+
+- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
+Calls all simplification callbacks recorded and returns a new simplified node. If the `z3` flag is
+set to True, Triton will use z3 to simplify the given `node` before to call its recorded callbacks.
+
+- <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
+Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
+
+- <b>bool taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
+Taints `memDst` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
+
+- <b>bool taintAssignmentMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `memDst` from `memSrc` with an assignment - `memDst` is tainted if `memSrc` is tainted, otherwise
+`memDst` is untained. Returns true if `memDst` is tainted.
+
+- <b>bool taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+Taints `memDst` from `regSrc` with an assignment - `memDst` is tainted if `regSrc` is tainted, otherwise
+`memDst` is untained. Return true if `memDst` is tainted.
+
+- <b>bool taintAssignmentRegisterImmediate(\ref py_REG_page regDst)</b><br>
+Taints `regDst` with an assignment - `regDst` is untained. Returns true if `reDst` is still tainted.
+
+- <b>bool taintAssignmentRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSrc` is tainted, otherwise
+`regDst` is untained. Return true if `regDst` is tainted.
+
+- <b>bool taintAssignmentRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise
+`regDst` is untained. Return true if `regDst` is tainted.
+
+- <b>bool taintMemory(intger addr)</b><br>
+Taints an address. Returns true if the address is tainted.
+
+- <b>bool taintMemory(\ref py_MemoryAccess_page mem)</b><br>
+Taints a memory. Returns true if the memory is tainted.
+
+- <b>bool taintRegister(\ref py_REG_page reg)</b><br>
+Taints a register. Returns true if the register is tainted.
+
+- <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
+Taints `memDst` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
+
+- <b>bool taintUnionMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `memDst` from `memSrc` with an union - `memDst` is tainted if `memDst` or `memSrc` are
+tainted. Returns true if `memDst` is tainted.
+
+- <b>bool taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+Taints `memDst` from `RegSrc` with an union - `memDst` is tainted if `memDst` or `regSrc` are
+tainted. Returns true if `memDst` is tainted.
+
+- <b>bool taintUnionRegisterImmediate(\ref py_REG_page regDst)</b><br>
+Taints `regDst` with an union - `regDst` does not changes. Returns true if `regDst` is tainted.
+
+- <b>bool taintUnionRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or `memSrc` are
+tainted. Returns true if `regDst` is tainted.
+
+- <b>bool taintUnionRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are
+tainted. Returns true if `regDst` is tainted.
+
+- <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
+Removes the range `[baseAddr:size]` from the internal memory representation.
+
+- <b>bool untaintMemory(intger addr)</b><br>
+Untaints an address. Returns true if the address is still tainted.
+
+- <b>bool untaintMemory(\ref py_MemoryAccess_page mem)</b><br>
+Untaints a memory. Returns true if the memory is still tainted.
+
+- <b>bool untaintRegister(\ref py_REG_page reg)</b><br>
+Untaints a register. Returns true if the register is still tainted.
+ */
 
 
 namespace triton {
@@ -97,11 +481,12 @@ namespace triton {
             // FIXME : We should incref the function object as it could be a lambda or a temporary function
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::API& api, triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
                 /* Create function args */
-                PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                PyTuple_SetItem(args, 0, triton::bindings::python::PyMemoryAccess(mem));
+                PyObject* args = triton::bindings::python::xPyTuple_New(2);
+                PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                PyTuple_SetItem(args, 1, triton::bindings::python::PyMemoryAccess(mem));
 
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(function, args);
@@ -118,11 +503,12 @@ namespace triton {
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::arch::RegisterSpec& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, triton::arch::RegisterSpec& reg){
                 /********* Lambda *********/
                   /* Create function args */
-                  PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyRegister(triton::arch::Register(reg)));
+                  PyObject* args = triton::bindings::python::xPyTuple_New(2);
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(triton::arch::Register(reg)));
 
                   /* Call the callback */
                   PyObject* ret = PyObject_CallObject(function, args);
@@ -139,10 +525,11 @@ namespace triton {
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([function](triton::ast::AbstractNode* node) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([function](triton::API& api, triton::ast::AbstractNode* node) {
                 /********* Lambda *********/
-                PyObject* args = triton::bindings::python::xPyTuple_New(1);
-                PyTuple_SetItem(args, 0, triton::bindings::python::PyAstNode(node));
+                PyObject* args = triton::bindings::python::xPyTuple_New(2);
+                PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                PyTuple_SetItem(args, 1, triton::bindings::python::PyAstNode(node));
 
                 /* Call the callback */
                 PyObject* ret = PyObject_CallObject(function, args);
@@ -1728,15 +2115,6 @@ namespace triton {
 
         try {
           PyTritonContext_AsTritonContext(self)->setArchitecture(PyLong_AsUint32(arg));
-
-        /* Update python env ======================================================== */
-          triton::bindings::python::initRegNamespace();
-          triton::bindings::python::initCpuSizeNamespace();
-          triton::bindings::python::initX86OpcodesNamespace();
-          triton::bindings::python::initX86PrefixesNamespace();
-          #if defined(__unix__) || defined(__APPLE__)
-            triton::bindings::python::initSyscallNamespace();
-          #endif
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

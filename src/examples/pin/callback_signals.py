@@ -1,5 +1,5 @@
 
-from triton  import *
+from triton  import ARCH, SYMEXPR
 from pintool import *
 
 # Output
@@ -55,18 +55,18 @@ from pintool import *
 def signals(threadId, sig):
     print 'Signal %d received on thread %d.' %(sig, threadId)
     print '========================== DUMP =========================='
-    regs = getParentRegisters()
+    regs = getTritonContext().getParentRegisters()
     for reg in regs:
         value  = getCurrentRegisterValue(reg)
-        exprId = getSymbolicRegisterId(reg)
-        print '%s:\t%#016x\t%s' %(reg.getName(), value, (getSymbolicExpressionFromId(exprId).getAst() if exprId != SYMEXPR.UNSET else 'UNSET'))
+        exprId = getTritonContext().getSymbolicRegisterId(reg)
+        print '%s:\t%#016x\t%s' %(reg.getName(), value, (getTritonContext().getSymbolicExpressionFromId(exprId).getAst() if exprId != SYMEXPR.UNSET else 'UNSET'))
     return
 
 
 if __name__ == '__main__':
 
     # Set architecture
-    setArchitecture(ARCH.X86_64)
+    getTritonContext().setArchitecture(ARCH.X86_64)
 
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()

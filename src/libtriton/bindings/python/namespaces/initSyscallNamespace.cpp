@@ -361,20 +361,19 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      void initSyscallNamespace(void) {
-        if (!triton::bindings::python::initialized)
-          return;
-
-        PyDict_Clear(triton::bindings::python::syscallsDict64);
+      void initSyscall64Namespace(PyObject* syscallsDict64) {
+        PyDict_Clear(syscallsDict64);
 
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL64; ++i)
-          PyDict_SetItemString(triton::bindings::python::syscallsDict64, triton::os::unix::syscallmap64[i], PyLong_FromUint32(i));
+          PyDict_SetItemString(syscallsDict64, triton::os::unix::syscallmap64[i], PyLong_FromUint32(i));
+      }
+
+      void initSyscall32Namespace(PyObject* syscallsDict32) {
+        PyDict_Clear(syscallsDict32);
 
 #if defined(__unix__)
-        PyDict_Clear(triton::bindings::python::syscallsDict32);
-
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
-          PyDict_SetItemString(triton::bindings::python::syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
+          PyDict_SetItemString(syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
 #endif
       }
 

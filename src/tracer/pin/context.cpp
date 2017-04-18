@@ -468,7 +468,7 @@ namespace tracer {
       }
 
 
-      void needConcreteRegisterValue(triton::arch::RegisterSpec& reg) {
+      void needConcreteRegisterValue(triton::API& api, triton::arch::RegisterSpec& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
         api.setConcreteRegisterValue(triton::arch::Register(reg, value));
       }

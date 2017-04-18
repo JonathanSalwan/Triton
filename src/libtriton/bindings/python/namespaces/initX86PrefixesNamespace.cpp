@@ -39,17 +39,14 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      void initX86PrefixesNamespace(void) {
-        if (!triton::bindings::python::initialized)
-          return;
+      void initX86PrefixesNamespace(PyObject* prefixesDict) {
+        PyDict_Clear(prefixesDict);
 
-        PyDict_Clear(triton::bindings::python::prefixesDict);
-
-        PyDict_SetItemString(triton::bindings::python::prefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
-        PyDict_SetItemString(triton::bindings::python::prefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
-        PyDict_SetItemString(triton::bindings::python::prefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
-        PyDict_SetItemString(triton::bindings::python::prefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
-        PyDict_SetItemString(triton::bindings::python::prefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
+        PyDict_SetItemString(prefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
+        PyDict_SetItemString(prefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
+        PyDict_SetItemString(prefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
+        PyDict_SetItemString(prefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
+        PyDict_SetItemString(prefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
       }
 
     }; /* python namespace */
