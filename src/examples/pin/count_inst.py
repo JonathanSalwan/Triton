@@ -11,7 +11,7 @@ def mycb(inst):
     count += 1
 
 def fini():
-    print count
+    print "Instruction count : ", count
 
 if __name__ == '__main__':
     getTritonContext().setArchitecture(ARCH.X86_64)
