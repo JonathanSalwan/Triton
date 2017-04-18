@@ -3,8 +3,8 @@ if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 
     set(TRITON_SCRIPT ${CMAKE_BINARY_DIR}/triton)
 
-    #add_test(PinToolCheckSemantic ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/check_semantics.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir)
-    #add_test(PinToolCheckSemanticQemu ${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/qemu-test-x86_64.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/qemu-test-x86_64)
+    add_test(PinToolCheckSemantic               sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/check_semantics.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
+    add_test(PinToolCheckSemanticQemu           sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/qemu-test-x86_64.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/qemu-test-x86_64| tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
     add_test(PinToolAstDict                     sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/ast_dictionaries.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor elite | tee /tmp/tester_triton_xxx && grep -nr Win /tmp/tester_triton_xxx")
     add_test(PinToolBlackList                   sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/blacklist.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor a | tee /tmp/tester_triton_xxx && grep -nr fail /tmp/tester_triton_xxx") # FAIL
     add_test(PinToolCallBackConcreteNeeds       sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/callback_concrete_needs.py ${CMAKE_SOURCE_DIR}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && grep -nr \"Need concrete register value\" /tmp/tester_triton_xxx") # WIN OR FAIL, DUNNO

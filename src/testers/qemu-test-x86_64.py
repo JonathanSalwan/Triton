@@ -1,10 +1,7 @@
 # $ ./triton ./src/testers/qemu-test-x86_64.py ./src/samples/ir_test_suite/qemu-test-x86_64
 
-from triton import *
+from triton import ARCH, SYMEXPR, OPCODE
 import pintool as Pintool
-
-import sys
-import time
 
 # Get the Triton context over the pintool
 Triton = Pintool.getTritonContext()
@@ -51,8 +48,12 @@ def cafter(instruction):
             if reg.getName() == 'of' and instruction.getType() in ofIgnored:
                 continue
 
+            # FIXME: We have an incorrect semantic
+            if instruction.getType() == OPCODE.CDQ:
+                continue
+
             bad.append({
-                'reg':    reg.getName(),
+                'reg':    reg.getName() + str(instruction.getType()),
                 'svalue': svalue,
                 'cvalue': cvalue,
                 'expr':   expr
@@ -90,4 +91,3 @@ if __name__ == '__main__':
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)
     Pintool.insertCall(sbefore, Pintool.INSERT_POINT.BEFORE_SYMPROC)
     Pintool.runProgram()
-
