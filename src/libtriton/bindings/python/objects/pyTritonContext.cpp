@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
-#include <triton/api.hpp>
 
 /*! \page py_triton_context_page Python bindings
     \brief [**python api**] All information about the Triton Context

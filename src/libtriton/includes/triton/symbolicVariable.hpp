@@ -42,8 +42,6 @@ namespace triton {
           \brief The symbolic variable class. */
       class SymbolicVariable {
 
-        using CallBackType = std::function<void(triton::uint512&)>;
-
         protected:
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
