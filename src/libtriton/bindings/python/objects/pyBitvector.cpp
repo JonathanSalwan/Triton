@@ -60,6 +60,7 @@ namespace triton {
         Py_DECREF(self);
       }
 
+
       static PyObject* Bitvector_getHigh(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyBitvector_AsHigh(self));

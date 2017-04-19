@@ -444,6 +444,7 @@ namespace triton {
         }
       }
 
+
       static PyObject* AstContext_bv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -464,6 +465,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
+
 
       static PyObject* AstContext_bvadd(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
@@ -487,6 +489,7 @@ namespace triton {
         }
       }
 
+
       static PyObject* AstContext_bvand(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -508,6 +511,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
+
 
       static PyObject* AstContext_bvashr(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
@@ -531,6 +535,7 @@ namespace triton {
         }
       }
 
+
       static PyObject* AstContext_bvdecl(PyObject* self, PyObject* size) {
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
@@ -543,6 +548,7 @@ namespace triton {
         }
       }
 
+
       static PyObject* AstContext_bvfalse(PyObject* self, PyObject* args) {
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->bvfalse());
@@ -551,6 +557,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
+
 
       static PyObject* AstContext_bvtrue(PyObject* self, PyObject* args) {
         try {
@@ -1440,67 +1447,68 @@ namespace triton {
         }
       }
 
+
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
-        {"assert_"  , AstContext_assert   , METH_O      , "Create a node which result should be true"},
-        {"bv"       , AstContext_bv       , METH_VARARGS, "Create a bit vector node represented as a bitsize and value"},
-        {"bvadd"    , AstContext_bvadd    , METH_VARARGS, "Create an addition node for two other nodes."},
-        {"bvand"    , AstContext_bvand    , METH_VARARGS, "Create an and node for two other nodes."},
-        {"bvashr"   , AstContext_bvashr   , METH_VARARGS, "Create an arithmetic shift on the right of the second node on the first node."},
-        {"bvdecl"   , AstContext_bvdecl   , METH_O      , "Create a bit vector node with a size but no values (see bv)."},
-        {"bvfalse"  , AstContext_bvfalse  , METH_NOARGS , "Create a bitvector of size 1 with 0 as value."},
-        {"bvtrue"   , AstContext_bvtrue   , METH_NOARGS , "Create a bitvector of size 1 with 1 as value."},
-        {"bvlshr"   , AstContext_bvlshr   , METH_VARARGS, "Create a logical shifth on the left of the second node on the first node."},
-        {"bvmul"    , AstContext_bvmul    , METH_VARARGS, "Create a multiplication node for two other nodes"},
-        {"bvnand"   , AstContext_bvnand   , METH_VARARGS, "Create a not and node on two other nodes"},
-        {"bvneg"    , AstContext_bvneg    , METH_O,       "Create a bitwise invert of a given node"},
-        {"bvnor"    , AstContext_bvnor    , METH_VARARGS, "Create a not or node on two other nodes"},
-        {"bvnot"    , AstContext_bvnot    , METH_O,       "Create a boolean invert of a given node"},
-        {"bvor"     , AstContext_bvor     , METH_VARARGS, "Create an or node of two others nodes"},
-        {"bvrol"    , AstContext_bvrol    , METH_VARARGS, "Create a left shift with reinsertion of the first bit at the end of the bit vector."},
-        {"bvror"    , AstContext_bvror    , METH_VARARGS, "Create a right shift with reinsertion of the last bit at the beginning of the bit vector."},
-        {"bvsdiv"   , AstContext_bvsdiv   , METH_VARARGS, "Create a signed division node"},
-        {"bvsge"    , AstContext_bvsge    , METH_VARARGS, "Create a signed greater or equal comparison of two other nodes."},
-        {"bvsgt"    , AstContext_bvsgt    , METH_VARARGS, "Create a signed strictly greater comparison of two other nodes"},
-        {"bvshl"    , AstContext_bvshl    , METH_VARARGS, "Create a left shift of the first node by the second node value."},
-        {"bvsle"    , AstContext_bvsle    , METH_VARARGS, "Create a signed lower or equal comparison of two other nodes."},
-        {"bvslt"    , AstContext_bvslt    , METH_VARARGS, "Create a signed strictly lower comparison of two other nodes."},
-        {"bvsmod"   , AstContext_bvsmod   , METH_VARARGS, "Create a signed modulo computation of two nodes (result is positif)"},
-        {"bvsrem"   , AstContext_bvsrem   , METH_VARARGS, "Create a signed remainder computation of two nodes (result is in [-node2:node2])"},
-        {"bvsub"    , AstContext_bvsub    , METH_VARARGS, "Create a substraction node of two other nodes."},
-        {"bvudiv"   , AstContext_bvudiv   , METH_VARARGS, "Create an unsigned divide node"},
-        {"bvuge"    , AstContext_bvuge    , METH_VARARGS, "Create an unsigned greater or equal comparison"},
-        {"bvugt"    , AstContext_bvugt    , METH_VARARGS, "Create an unsigned strictly greater comparison"},
-        {"bvule"    , AstContext_bvule    , METH_VARARGS, "Create an unsigned lower or equal comparison"},
-        {"bvult"    , AstContext_bvult    , METH_VARARGS, "Create and unsigned strictly lower comparison"},
-        {"bvurem"   , AstContext_bvurem   , METH_VARARGS, "Create an unsigned remainder computation (same as modulo as values are unsigned)"},
-        {"bvxnor"   , AstContext_bvxnor   , METH_VARARGS, "Create a bitwise not of two xored values."},
-        {"bvxor"    , AstContext_bvxor    , METH_VARARGS, "Create a xor node"},
-        {"compound" , AstContext_compound , METH_O,       "Gather a list of nodes or constraintes"},
-        {"concat"   , AstContext_concat   , METH_O,       "Create a concatenation of bit vectors."},
-        {"distinct" , AstContext_distinct , METH_VARARGS, ""},
-        {"duplicate", AstContext_duplicate, METH_O,       ""},
-        {"equal"    , AstContext_equal    , METH_VARARGS, "Create an equal comparison node"},
-        {"extract"  , AstContext_extract  , METH_VARARGS, "Create a node to extract part of a bit vector"},
-        {"ite"      , AstContext_ite      , METH_VARARGS, ""},
-        {"land"     , AstContext_land     , METH_VARARGS, "Create a logical and node"},
-        {"let"      , AstContext_let      , METH_VARARGS, "Create a "},
-        {"lnot"     , AstContext_lnot     , METH_O,       "Create a logical not"},
-        {"lor"      , AstContext_lor      , METH_VARARGS, "Create a logical or"},
-        {"reference", AstContext_reference, METH_O,       "Create a reference to an other ast (avoid full duplication of the ast)"},
-        {"string"   , AstContext_string   , METH_O,       "Create a string node"},
-        {"sx"       , AstContext_sx       , METH_VARARGS, "Create a signed extend node for another bit vector"},
-        {"variable" , AstContext_variable , METH_O,       "Create a variable node that may be evaluated later."},
-        {"zx"       , AstContext_zx       , METH_VARARGS, "Create a zero extend node for another bit vector"},
-        {nullptr    , nullptr             ,            0, nullptr}
+        {"assert_",       AstContext_assert,          METH_O,           "Create a node which result should be true"},
+        {"bv",            AstContext_bv,              METH_VARARGS,     "Create a bit vector node represented as a bitsize and value"},
+        {"bvadd",         AstContext_bvadd,           METH_VARARGS,     "Create an addition node for two other nodes."},
+        {"bvand",         AstContext_bvand,           METH_VARARGS,     "Create an and node for two other nodes."},
+        {"bvashr",        AstContext_bvashr,          METH_VARARGS,     "Create an arithmetic shift on the right of the second node on the first node."},
+        {"bvdecl",        AstContext_bvdecl,          METH_O,           "Create a bit vector node with a size but no values (see bv)."},
+        {"bvfalse",       AstContext_bvfalse,         METH_NOARGS,      "Create a bitvector of size 1 with 0 as value."},
+        {"bvtrue",        AstContext_bvtrue,          METH_NOARGS,      "Create a bitvector of size 1 with 1 as value."},
+        {"bvlshr",        AstContext_bvlshr,          METH_VARARGS,     "Create a logical shifth on the left of the second node on the first node."},
+        {"bvmul",         AstContext_bvmul,           METH_VARARGS,     "Create a multiplication node for two other nodes"},
+        {"bvnand",        AstContext_bvnand,          METH_VARARGS,     "Create a not and node on two other nodes"},
+        {"bvneg",         AstContext_bvneg,           METH_O,           "Create a bitwise invert of a given node"},
+        {"bvnor",         AstContext_bvnor,           METH_VARARGS,     "Create a not or node on two other nodes"},
+        {"bvnot",         AstContext_bvnot,           METH_O,           "Create a boolean invert of a given node"},
+        {"bvor",          AstContext_bvor,            METH_VARARGS,     "Create an or node of two others nodes"},
+        {"bvrol",         AstContext_bvrol,           METH_VARARGS,     "Create a left shift with reinsertion of the first bit at the end of the bit vector."},
+        {"bvror",         AstContext_bvror,           METH_VARARGS,     "Create a right shift with reinsertion of the last bit at the beginning of the bit vector."},
+        {"bvsdiv",        AstContext_bvsdiv,          METH_VARARGS,     "Create a signed division node"},
+        {"bvsge",         AstContext_bvsge,           METH_VARARGS,     "Create a signed greater or equal comparison of two other nodes."},
+        {"bvsgt",         AstContext_bvsgt,           METH_VARARGS,     "Create a signed strictly greater comparison of two other nodes"},
+        {"bvshl",         AstContext_bvshl,           METH_VARARGS,     "Create a left shift of the first node by the second node value."},
+        {"bvsle",         AstContext_bvsle,           METH_VARARGS,     "Create a signed lower or equal comparison of two other nodes."},
+        {"bvslt",         AstContext_bvslt,           METH_VARARGS,     "Create a signed strictly lower comparison of two other nodes."},
+        {"bvsmod",        AstContext_bvsmod,          METH_VARARGS,     "Create a signed modulo computation of two nodes (result is positif)"},
+        {"bvsrem",        AstContext_bvsrem,          METH_VARARGS,     "Create a signed remainder computation of two nodes (result is in [-node2:node2])"},
+        {"bvsub",         AstContext_bvsub,           METH_VARARGS,     "Create a substraction node of two other nodes."},
+        {"bvudiv",        AstContext_bvudiv,          METH_VARARGS,     "Create an unsigned divide node"},
+        {"bvuge",         AstContext_bvuge,           METH_VARARGS,     "Create an unsigned greater or equal comparison"},
+        {"bvugt",         AstContext_bvugt,           METH_VARARGS,     "Create an unsigned strictly greater comparison"},
+        {"bvule",         AstContext_bvule,           METH_VARARGS,     "Create an unsigned lower or equal comparison"},
+        {"bvult",         AstContext_bvult,           METH_VARARGS,     "Create and unsigned strictly lower comparison"},
+        {"bvurem",        AstContext_bvurem,          METH_VARARGS,     "Create an unsigned remainder computation (same as modulo as values are unsigned)"},
+        {"bvxnor",        AstContext_bvxnor ,         METH_VARARGS,     "Create a bitwise not of two xored values."},
+        {"bvxor",         AstContext_bvxor,           METH_VARARGS,     "Create a xor node"},
+        {"compound",      AstContext_compound,        METH_O,           "Gather a list of nodes or constraintes"},
+        {"concat",        AstContext_concat,          METH_O,           "Create a concatenation of bit vectors."},
+        {"distinct",      AstContext_distinct,        METH_VARARGS,     ""},
+        {"duplicate",     AstContext_duplicate,       METH_O,           ""},
+        {"equal",         AstContext_equal,           METH_VARARGS,     "Create an equal comparison node"},
+        {"extract",       AstContext_extract,         METH_VARARGS,     "Create a node to extract part of a bit vector"},
+        {"ite",           AstContext_ite,             METH_VARARGS,     ""},
+        {"land",          AstContext_land,            METH_VARARGS,     "Create a logical and node"},
+        {"let",           AstContext_let,             METH_VARARGS,     "Create a "},
+        {"lnot",          AstContext_lnot,            METH_O,           "Create a logical not"},
+        {"lor",           AstContext_lor,             METH_VARARGS,     "Create a logical or"},
+        {"reference",     AstContext_reference,       METH_O,           "Create a reference to an other ast (avoid full duplication of the ast)"},
+        {"string",        AstContext_string,          METH_O,           "Create a string node"},
+        {"sx",            AstContext_sx,              METH_VARARGS,     "Create a signed extend node for another bit vector"},
+        {"variable",      AstContext_variable,        METH_O,           "Create a variable node that may be evaluated later."},
+        {"zx",            AstContext_zx,              METH_VARARGS,     "Create a zero extend node for another bit vector"},
+        {nullptr,         nullptr,                    0,                nullptr}
       };
 
 
       PyTypeObject AstContext_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "AstContext",                            /* tp_name */
-        sizeof(AstContext_Object),               /* tp_basicsize */
+        "AstContext",                               /* tp_name */
+        sizeof(AstContext_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
         0,                                          /* tp_dealloc */
         0,                                          /* tp_print */
@@ -1518,14 +1526,14 @@ namespace triton {
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "AstContext objects",                    /* tp_doc */
+        "AstContext objects",                       /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        AstContext_callbacks,                    /* tp_methods */
+        AstContext_callbacks,                       /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */

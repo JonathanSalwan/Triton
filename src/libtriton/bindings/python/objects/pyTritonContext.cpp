@@ -137,6 +137,9 @@ Returns the list of all registers. Each item of this list is a \ref py_Register_
 - <b>\ref py_ARCH_page getArchitecture(void)</b><br>
 Returns the current architecture used.
 
+- <b>TODO getAstContext(void)</b><br>
+Returns the AST context to create and modify nodes.
+
 - <b>dict getAstDictionariesStats(void)</b><br>
 Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
 
@@ -410,15 +413,6 @@ namespace triton {
       void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
         Py_DECREF(self);
-      }
-
-      static PyObject* TritonContext_getAstContext(PyObject* self, PyObject* noarg) {
-        try {
-          return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -1183,6 +1177,16 @@ namespace triton {
 
       static PyObject* TritonContext_getArchitecture(PyObject* self, PyObject* noarg) {
         return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getArchitecture());
+      }
+
+
+      static PyObject* TritonContext_getAstContext(PyObject* self, PyObject* noarg) {
+        try {
+          return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -2873,7 +2877,6 @@ namespace triton {
 
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
-        {"getAstContext",                       TritonContext_getAstContext,                                       METH_NOARGS,        ""},
         {"Register",                            (PyCFunction)TritonContext_Register,                               METH_VARARGS,       ""},
         {"addCallback",                         (PyCFunction)TritonContext_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
@@ -2901,6 +2904,7 @@ namespace triton {
         {"evaluateAstViaZ3",                    (PyCFunction)TritonContext_evaluateAstViaZ3,                       METH_O,             ""},
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                        METH_NOARGS,        ""},
+        {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                          METH_NOARGS,        ""},
         {"getAstDictionariesStats",             (PyCFunction)TritonContext_getAstDictionariesStats,                METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)TritonContext_getAstFromId,                           METH_O,             ""},
         {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,               METH_NOARGS,        ""},
@@ -2911,8 +2915,8 @@ namespace triton {
         {"getFullAstFromId",                    (PyCFunction)TritonContext_getFullAstFromId,                       METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
-        {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             "Get a new register with the upper parent spec"},
+        {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
         {"getRegisterBitSize",                  (PyCFunction)TritonContext_getRegisterBitSize,                     METH_NOARGS,        ""},
