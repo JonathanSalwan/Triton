@@ -364,9 +364,9 @@ namespace triton {
       std::set<triton::arch::registers_e> x8664Cpu::getParentRegisters(void) const {
         std::set<triton::arch::registers_e> ret;
 
-        for (auto const& kv: this->registers_) {
+        for (const auto& kv: this->registers_) {
           auto regId = kv.first;
-          auto const& reg = kv.second;
+          const auto& reg = kv.second;
 
           /* Add GPR */
           if (reg.getSize() == this->registerSize())

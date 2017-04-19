@@ -11,6 +11,8 @@
 #include <functional>
 #include <utility>
 
+
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -47,13 +49,13 @@ namespace triton {
 
       //! Comparison of functor based on id
       template <class T>
-      bool operator==(ComparableFunctor<T> const& O) const {
+      bool operator==(const ComparableFunctor<T>& O) const {
         return this->ID_ == O.ID_;
       }
 
       //! Comparison of functor based on id
       template <class T>
-      bool operator!=(ComparableFunctor<T> const& O) const {
+      bool operator!=(const ComparableFunctor<T>& O) const {
         return !(this->ID_ == O.ID_);
       }
   };

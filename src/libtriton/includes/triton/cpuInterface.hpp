@@ -63,14 +63,17 @@ namespace triton {
         //! Returns the number of registers according to the CPU architecture.
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
-        //! Returns all registers.
-        virtual std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& getAllRegisters(void) const = 0;
-
         //! Returns all parent registers.
         virtual std::set<triton::arch::registers_e> getParentRegisters(void) const = 0;
 
+        //! Returns all registers.
+        virtual const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const = 0;
+
+        //! Gets parent register from a given one.
+        virtual const triton::arch::RegisterSpec& getParent(const triton::arch::RegisterSpec&) const = 0;
+
         //! Returns register from id
-        virtual triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const = 0;
+        virtual const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const = 0;
 
         //! Disassembles the instruction according to the architecture.
         virtual void disassembly(triton::arch::Instruction& inst) const = 0;
@@ -132,9 +135,6 @@ namespace triton {
 
         //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
         virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
-
-        //! Get parent register from a given one.
-        virtual RegisterSpec const& getParent(RegisterSpec const&) const = 0;
     };
 
   /*! @} End of arch namespace */

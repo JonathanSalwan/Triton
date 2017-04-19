@@ -23,7 +23,7 @@ namespace triton {
     }
 
 
-    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, z3::expr const& expr, AstContext& astCtxt)
+    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const z3::expr& expr, AstContext& astCtxt)
       : symbolicEngine(symbolicEngine)
         , astCtxt(astCtxt)
         , context()
@@ -43,7 +43,7 @@ namespace triton {
     }
 
 
-    AbstractNode* Z3ToTritonAst::visit(z3::expr const& expr) {
+    AbstractNode* Z3ToTritonAst::visit(const z3::expr& expr) {
       AbstractNode* node = nullptr;
 
       /* Currently, only support application node */

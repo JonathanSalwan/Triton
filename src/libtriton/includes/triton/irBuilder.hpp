@@ -17,6 +17,7 @@
 #include <triton/taintEngine.hpp>
 
 
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -40,7 +41,7 @@ namespace triton {
         triton::arch::Architecture* architecture;
 
         //! Modes API
-        triton::modes::Modes const& modes;
+        const triton::modes::Modes& modes;
 
         //! AST garbage collector API
         triton::ast::AstGarbageCollector& astGarbageCollector;

@@ -59,7 +59,7 @@ namespace triton {
           // precision on registers tainting
           //
           // FIXME: We should make sure it is the same as the one in symbolicEngine
-          triton::arch::CpuInterface const& cpu;
+          const triton::arch::CpuInterface& cpu;
 
         protected:
           //! Defines if the taint engine is enabled or disabled.

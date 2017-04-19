@@ -83,10 +83,10 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Compare two registers specifications
-        bool operator==(RegisterSpec const& r) const;
+        bool operator==(const RegisterSpec& r) const;
 
         //! Compare two registers specifications
-        bool operator!=(RegisterSpec const& r) const;
+        bool operator!=(const RegisterSpec& r) const;
     };
 
     /*! \class Register
@@ -106,16 +106,16 @@ namespace triton {
         Register();
 
         //! Constructor.
-        Register(triton::arch::CpuInterface const&, triton::arch::registers_e regId);
+        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
 
         //! Constructor.
-        Register(triton::arch::CpuInterface const&, triton::arch::registers_e regId, triton::uint512 concreteValue);
+        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId, triton::uint512 concreteValue);
 
         //! Constructor.
-        Register(RegisterSpec const& spec, triton::uint512 concreteValue);
+        Register(const RegisterSpec& spec, triton::uint512 concreteValue);
 
         //! Constructor.
-        explicit Register(RegisterSpec const& spec);
+        explicit Register(const RegisterSpec& spec);
 
         //! Returns true if the register contains a concrete value.
         bool hasConcreteValue(void) const;
@@ -127,10 +127,10 @@ namespace triton {
         void setConcreteValue(triton::uint512 concreteValue);
 
         //! Compare two registers
-        bool operator==(Register const& r) const;
+        bool operator==(const Register& reg) const;
 
         //! Compare two registers
-        bool operator!=(Register const& r) const;
+        bool operator!=(const Register& reg) const;
     };
 
     //! Displays a Register.

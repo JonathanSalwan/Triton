@@ -121,14 +121,14 @@ namespace triton {
     }
 
 
-    Register::Register(RegisterSpec const& spec)
+    Register::Register(const RegisterSpec& spec)
       : RegisterSpec(spec),
         concreteValue(0),
         concreteValueDefined(false) {
     }
 
 
-    Register::Register(triton::arch::CpuInterface const& cpu, triton::arch::registers_e regId)
+    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId)
       : Register(
           (regId == triton::arch::ID_REG_INVALID) ?
           triton::arch::RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)

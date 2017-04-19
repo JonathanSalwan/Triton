@@ -72,7 +72,7 @@ namespace triton {
     namespace symbolic {
 
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
-                                     triton::modes::Modes const& modes,
+                                     const triton::modes::Modes& modes,
                                      triton::ast::AstContext& astCtxt,
                                      triton::callbacks::Callbacks* callbacks,
                                      bool isBackup)
@@ -889,7 +889,7 @@ namespace triton {
 
 
       /* Returns the new symbolic register expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& reg, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& reg, const std::string& comment) {
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
         triton::uint32 regSize                    = reg.getSize();
@@ -945,7 +945,7 @@ namespace triton {
 
 
       /* Returns the new symbolic flag expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& flag, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& flag, const std::string& comment) {
         if (!this->architecture->isFlag(flag))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
 

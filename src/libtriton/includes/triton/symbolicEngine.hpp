@@ -111,7 +111,7 @@ namespace triton {
           triton::callbacks::Callbacks* callbacks;
 
           //! Modes API.
-          triton::modes::Modes const& modes;
+          const triton::modes::Modes& modes;
 
           //! Defines if this instance is used as a backup.
           bool backupFlag;
@@ -122,7 +122,7 @@ namespace triton {
         public:
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
           SymbolicEngine(triton::arch::Architecture* architecture,
-                         triton::modes::Modes const& modes,
+                         const triton::modes::Modes& modes,
                          triton::ast::AstContext& astCtxt,
                          triton::callbacks::Callbacks* callbacks=nullptr,
                          bool isBackup=false);
@@ -236,10 +236,10 @@ namespace triton {
           SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment="");
 
           //! Returns the new symbolic register expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& reg, const std::string& comment="");
+          SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& reg, const std::string& comment="");
 
           //! Returns the new symbolic flag expression expression and links this expression to the instruction.
-          SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& flag, const std::string& comment="");
+          SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& flag, const std::string& comment="");
 
           //! Returns the new symbolic volatile expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment="");

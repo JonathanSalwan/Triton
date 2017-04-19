@@ -41,7 +41,7 @@ namespace triton {
         triton::ast::AstContext& astCtxt;
 
         //! Vists and converts
-        triton::ast::AbstractNode* visit(z3::expr const& expr);
+        triton::ast::AbstractNode* visit(const z3::expr& expr);
 
       protected:
         //! Z3's context
@@ -55,7 +55,7 @@ namespace triton {
         Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::ast::AstContext& ctxt);
 
         //! Constructor.
-        Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, z3::expr const& expr, triton::ast::AstContext& ctxt);
+        Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const z3::expr& expr, triton::ast::AstContext& ctxt);
 
         //! Sets the expression.
         void setExpr(z3::expr& expr);

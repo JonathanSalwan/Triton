@@ -680,7 +680,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterSpec const& flag, std::string comment) {
+      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(0, 1);
 
@@ -692,7 +692,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, triton::arch::RegisterSpec const& flag, std::string comment) {
+      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(1, 1);
 
@@ -4069,7 +4069,7 @@ namespace triton {
 
         /* Destination */
         if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG) {
-          auto const& src1p  = architecture->getParentRegister(src1.getRegister());
+          const auto& src1p  = this->architecture->getParentRegister(src1.getRegister());
           expr6 = this->symbolicEngine->createSymbolicRegisterExpression(inst, node2p, src1p, "XCHG operation");
         } else
           expr6 = this->symbolicEngine->createSymbolicExpression(inst, node2, src1, "XCHG operation");

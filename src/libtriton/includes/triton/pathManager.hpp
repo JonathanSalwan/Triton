@@ -46,7 +46,7 @@ namespace triton {
       class PathManager {
         private:
           //! Modes API.
-          triton::modes::Modes const& modes;
+          const triton::modes::Modes& modes;
 
           //! AstContext API
           triton::ast::AstContext & astCtxt;
@@ -57,7 +57,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          PathManager(triton::modes::Modes const& modes, triton::ast::AstContext& astCtxt);
+          PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
 
           //! Constructor by copy.
           PathManager(const PathManager& copy);
