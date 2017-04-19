@@ -16,17 +16,18 @@
 #include <triton/x8664Cpu.hpp>
 
 
+
 namespace triton {
   namespace arch {
     namespace x86 {
 
-      x8664Cpu::x8664Cpu(triton::callbacks::Callbacks* callbacks): x86Specifications(ARCH_X86_64)
-      {   
+      x8664Cpu::x8664Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(ARCH_X86_64) {
         this->callbacks = callbacks;
         this->clear();
       }
 
-      x8664Cpu::x8664Cpu(const x8664Cpu& other): x86Specifications(ARCH_X86_64) {
+
+      x8664Cpu::x8664Cpu(const x8664Cpu& other) : x86Specifications(ARCH_X86_64) {
         this->copy(other);
       }
 
@@ -355,7 +356,7 @@ namespace triton {
       }
 
 
-      std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& x8664Cpu::getAllRegisters(void) const {
+      const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& x8664Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
@@ -400,13 +401,17 @@ namespace triton {
       }
 
 
-      triton::arch::RegisterSpec const& x8664Cpu::getRegister(triton::arch::registers_e id) const
-      {
+      const triton::arch::RegisterSpec& x8664Cpu::getRegister(triton::arch::registers_e id) const {
         try {
           return this->registers_.at(id);
-        } catch(std::out_of_range const& e) {
-          throw triton::exceptions::Cpu("x86Cpu::getRegister(): Invalid register for this architecture.");
+        } catch(const std::out_of_range& e) {
+          throw triton::exceptions::Cpu("x8664Cpu::getRegister(): Invalid register for this architecture.");
         }
+      }
+
+
+      const triton::arch::RegisterSpec& x8664Cpu::getParent(const triton::arch::RegisterSpec& reg) const {
+        return this->getRegister(reg.getParent());
       }
 
 
@@ -1179,10 +1184,6 @@ namespace triton {
           if (this->memory.find(baseAddr + index) != this->memory.end())
             this->memory.erase(baseAddr + index);
         }
-      }
-
-      RegisterSpec const& x8664Cpu::getParent(RegisterSpec const& reg) const {
-        return getRegister(reg.getParent());
       }
 
     }; /* x86 namespace */

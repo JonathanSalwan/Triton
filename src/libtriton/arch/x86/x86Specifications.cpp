@@ -22,17 +22,30 @@ namespace triton {
             throw triton::exceptions::Architecture("x86Specifications::x86Specifications(): Invalid architecture.");
 
         if(arch == triton::arch::ARCH_X86_64) {
-#define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-          registers_.emplace(ID_REG_##UPPER_NAME, triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME, #LOWER_NAME, triton::arch::ID_REG_##X86_64_PARENT, X86_64_UPPER, X86_64_LOWER));
-#define REG_SPEC_NO_CAPSTONE REG_SPEC
-#include "triton/x86.spec"
-        } else {
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+            registers_.emplace(ID_REG_##UPPER_NAME,                                                                                         \
+                               triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                                                \
+                                                          #LOWER_NAME,                                                                      \
+                                                          triton::arch::ID_REG_##X86_64_PARENT,                                             \
+                                                          X86_64_UPPER,                                                                     \
+                                                          X86_64_LOWER)                                                                     \
+                              );
+          #define REG_SPEC_NO_CAPSTONE REG_SPEC
+          #include "triton/x86.spec"
+        }
+        else {
           assert(arch == triton::arch::ARCH_X86);
-#define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-          if(X86_AVAIL)\
-            registers_.emplace(ID_REG_##UPPER_NAME, triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME, #LOWER_NAME, triton::arch::ID_REG_##X86_PARENT, X86_UPPER, X86_LOWER));
-#define REG_SPEC_NO_CAPSTONE REG_SPEC
-#include "triton/x86.spec"
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
+          if(X86_AVAIL)                                                                                     \
+            registers_.emplace(ID_REG_##UPPER_NAME,                                                         \
+                               triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                \
+                                                          #LOWER_NAME,                                      \
+                                                          triton::arch::ID_REG_##X86_PARENT,                \
+                                                          X86_UPPER,                                        \
+                                                          X86_LOWER)                                        \
+                              );
+          #define REG_SPEC_NO_CAPSTONE REG_SPEC
+          #include "triton/x86.spec"
         }
       }
 
@@ -45,12 +58,12 @@ namespace triton {
         triton::arch::registers_e tritonId = triton::arch::ID_REG_INVALID;
 
         switch (id) {
-#define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
-          case triton::extlibs::capstone::X86_REG_##UPPER_NAME:\
-            tritonId = triton::arch::ID_REG_##UPPER_NAME;\
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+          case triton::extlibs::capstone::X86_REG_##UPPER_NAME:                                                                             \
+            tritonId = triton::arch::ID_REG_##UPPER_NAME;                                                                                   \
             break;
-#define REG_SPEC_NO_CAPSTONE(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)
-#include "triton/x86.spec"
+          #define REG_SPEC_NO_CAPSTONE(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)
+          #include "triton/x86.spec"
 
           default:
             tritonId = triton::arch::ID_REG_INVALID;

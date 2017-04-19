@@ -16,16 +16,17 @@
 #include <triton/x86Cpu.hpp>
 
 
+
 namespace triton {
   namespace arch {
     namespace x86 {
 
-      x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks): x86Specifications(ARCH_X86) {
+      x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(ARCH_X86) {
         this->callbacks = callbacks;
         this->clear();
       }
 
-      x86Cpu::x86Cpu(const x86Cpu& other): x86Specifications(ARCH_X86) {
+      x86Cpu::x86Cpu(const x86Cpu& other) : x86Specifications(ARCH_X86) {
         this->copy(other);
       }
 
@@ -237,7 +238,7 @@ namespace triton {
 
 
 
-      std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& x86Cpu::getAllRegisters(void) const {
+      const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& x86Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
@@ -277,13 +278,18 @@ namespace triton {
         return ret;
       }
 
-      triton::arch::RegisterSpec const& x86Cpu::getRegister(triton::arch::registers_e id) const
-      {
+
+      const triton::arch::RegisterSpec& x86Cpu::getRegister(triton::arch::registers_e id) const {
         try {
           return this->registers_.at(id);
-        } catch(std::out_of_range const& e) {
+        } catch(const std::out_of_range& e) {
           throw triton::exceptions::Cpu("x86Cpu::getRegister(): Invalid register for this architecture.");
         }
+      }
+
+
+      const triton::arch::RegisterSpec& x86Cpu::getParent(const triton::arch::RegisterSpec& reg) const {
+        return this->getRegister(reg.getParent());
       }
 
 
@@ -860,11 +866,6 @@ namespace triton {
             this->memory.erase(baseAddr + index);
         }
       }
-
-      RegisterSpec const& x86Cpu::getParent(RegisterSpec const& reg) const {
-        return getRegister(reg.getParent());
-      }
-
 
     }; /* x86 namespace */
   }; /* arch namespace */

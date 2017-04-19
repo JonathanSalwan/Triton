@@ -295,6 +295,7 @@ namespace triton {
           //! Constructor.
           x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
+          //! Constructor by copy.
           x8664Cpu(const x8664Cpu& other);
 
           //! Destructor.
@@ -332,9 +333,10 @@ namespace triton {
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           bool isRegister(triton::arch::registers_e regId) const;
           bool isRegisterValid(triton::arch::registers_e regId) const;
-          std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& getAllRegisters() const;
+          const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters() const;
+          const triton::arch::RegisterSpec& getParent(const triton::arch::RegisterSpec&) const;
+          const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const;
           std::set<triton::arch::registers_e> getParentRegisters(void) const;
-          triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;
@@ -350,7 +352,6 @@ namespace triton {
           void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
           void setConcreteRegisterValue(const triton::arch::Register& reg);
           void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
-          RegisterSpec const& getParent(RegisterSpec const&) const;
           /* End of virtual pure inheritance ========================================== */
       };
 
