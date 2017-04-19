@@ -76,11 +76,10 @@ namespace triton {
                                      triton::ast::AstContext& astCtxt,
                                      triton::callbacks::Callbacks* callbacks,
                                      bool isBackup)
-
-        : triton::engines::symbolic::SymbolicSimplification(callbacks)
-          , triton::engines::symbolic::PathManager(modes, astCtxt)
-          , astCtxt(astCtxt)
-          , modes(modes) {
+        : triton::engines::symbolic::SymbolicSimplification(callbacks),
+          triton::engines::symbolic::PathManager(modes, astCtxt),
+          astCtxt(astCtxt),
+          modes(modes) {
 
         if (architecture == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
@@ -126,10 +125,10 @@ namespace triton {
 
 
       SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy)
-        : triton::engines::symbolic::SymbolicSimplification(copy)
-          , triton::engines::symbolic::PathManager(copy)
-          , astCtxt(copy.astCtxt)
-          , modes(copy.modes) {
+        : triton::engines::symbolic::SymbolicSimplification(copy),
+          triton::engines::symbolic::PathManager(copy),
+          astCtxt(copy.astCtxt),
+          modes(copy.modes) {
         this->copy(copy);
       }
 

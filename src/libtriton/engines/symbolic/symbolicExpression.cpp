@@ -15,7 +15,8 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::usize id, symkind_e kind, const std::string& comment) : originRegister() {
+      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::usize id, symkind_e kind, const std::string& comment)
+        : originRegister() {
         this->comment       = comment;
         this->ast           = node;
         this->id            = id;
