@@ -12,6 +12,8 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
 
+
+
 /*! \page py_triton_context_page Python bindings
     \brief [**python api**] All information about the Triton Context
     \anchor triton
@@ -317,6 +319,9 @@ the symbolic state (if it exists). You should probably use the concretize functi
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
+- <b>void setConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
+Sets the concrete value of a symbolic variable.
+
 - <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
 Sets the targeted memory as tainted or not. Returns true if the memory is still tainted.
 
@@ -395,6 +400,7 @@ Untaints a memory. Returns true if the memory is still tainted.
 - <b>bool untaintRegister(\ref py_REG_page reg)</b><br>
 Untaints a register. Returns true if the register is still tainted.
  */
+
 
 
 namespace triton {
@@ -2284,6 +2290,7 @@ namespace triton {
         return Py_None;
       }
 
+
       static PyObject* TritonContext_setConcreteSymbolicVariableValue(PyObject* self, PyObject* args) {
         PyObject* symVar = nullptr;
         PyObject* value  = nullptr;
@@ -2863,9 +2870,10 @@ namespace triton {
         }
       }
 
+
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
-        {"getAstContext",                       TritonContext_getAstContext,       METH_NOARGS,    ""},
+        {"getAstContext",                       TritonContext_getAstContext,                                       METH_NOARGS,        ""},
         {"Register",                            (PyCFunction)TritonContext_Register,                               METH_VARARGS,       ""},
         {"addCallback",                         (PyCFunction)TritonContext_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
@@ -2969,7 +2977,7 @@ namespace triton {
         {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
-        {nullptr,             nullptr,                   0,              nullptr}
+        {nullptr,                               nullptr,                                                           0,                  nullptr}
       };
 
 
@@ -3034,6 +3042,7 @@ namespace triton {
 
         return (PyObject*)object;
       }
+
 
       PyObject* PyTritonContextRef(triton::API& api) {
         PyType_Ready(&TritonContext_Type);

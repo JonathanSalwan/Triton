@@ -316,7 +316,8 @@ namespace triton {
           //! Initializes the memory access AST (LOAD and STORE).
           void initLeaAst(triton::arch::MemoryAccess& mem, bool force=false);
 
-          void setConcreteSymbolicVariableValue(SymbolicVariable const& symVar, triton::uint512 const& v);
+          //! Sets the concrete value of a symbolic variable.
+          void setConcreteSymbolicVariableValue(const SymbolicVariable& symVar, const triton::uint512& value);
       };
 
     /*! @} End of symbolic namespace */

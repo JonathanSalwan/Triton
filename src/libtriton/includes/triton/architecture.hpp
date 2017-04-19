@@ -105,19 +105,19 @@ namespace triton {
         void clearArchitecture(void);
 
         //! Returns all registers.
-        std::unordered_map<registers_e, triton::arch::RegisterSpec const>  const& getAllRegisters(void) const;
+        const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const;
 
         //! Returns all parent registers.
         std::set<triton::arch::registers_e> getParentRegisters(void) const;
 
         //! Get register from id.
-        triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const;
+        const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const;
 
         //! Get parent register from id.
-        triton::arch::RegisterSpec const& getParentRegister(triton::arch::registers_e id) const;
-        
+        const triton::arch::RegisterSpec& getParentRegister(triton::arch::registers_e id) const;
+
         //! Get parent register from register
-        triton::arch::RegisterSpec const& getParentRegister(triton::arch::RegisterSpec const& reg) const;
+        const triton::arch::RegisterSpec& getParentRegister(const triton::arch::RegisterSpec& reg) const;
 
         //! Disassembles the instruction according to the architecture.
         void disassembly(triton::arch::Instruction& inst) const;

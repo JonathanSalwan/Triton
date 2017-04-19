@@ -28,6 +28,7 @@
 #include <triton/z3Interface.hpp>
 
 
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -58,13 +59,13 @@ namespace triton {
         //! The solver engine.
         triton::engines::solver::SolverEngine* solver = nullptr;
 
-        //! The AST Context interface
+        //! The AST Context interface.
         triton::ast::AstContext astCtxt;
 
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
 
-        //! The Z3 interface between Triton and Z3
+        //! The Z3 interface between Triton and Z3.
         triton::ast::Z3Interface* z3Interface = nullptr;
 
 
@@ -110,10 +111,10 @@ namespace triton {
         bool isRegister(const triton::arch::RegisterSpec& reg) const;
 
         //! [**architecture api**] - Returns Register from regId.
-        triton::arch::RegisterSpec const& getRegister(triton::arch::registers_e id) const;
+        const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const;
 
         //! [**architecture api**] - Returns parent Register from regId.
-        triton::arch::RegisterSpec const& getParentRegister(triton::arch::registers_e id) const;
+        const triton::arch::RegisterSpec& getParentRegister(triton::arch::registers_e id) const;
 
         //! [**architecture api**] - Returns true if the regId is a register or a flag. \sa triton::arch::x86::registers_e.
         bool isRegisterValid(triton::arch::registers_e regId) const;
@@ -131,7 +132,7 @@ namespace triton {
         triton::uint32 getNumberOfRegisters(void) const;
 
         //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
-        std::unordered_map<triton::arch::registers_e, triton::arch::RegisterSpec const> const& getAllRegisters(void) const;
+        const std::unordered_map<triton::arch::registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const;
 
         //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::registers_e.
         std::set<triton::arch::registers_e> getParentRegisters(void) const;
@@ -188,7 +189,8 @@ namespace triton {
          */
         void setConcreteRegisterValue(const triton::arch::Register& reg);
 
-        void setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable & symVar, triton::uint512 const& value);
+        //! [**architecture api**] - Sets the concrete value of a symbolic variable.
+        void setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable & symVar, const triton::uint512& value);
 
         //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
         bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
@@ -206,13 +208,13 @@ namespace triton {
         //! [**proccesing api**] - Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported.
         bool processing(triton::arch::Instruction& inst);
 
-        //! [**proccesing api**] - Initialize everything.
+        //! [**proccesing api**] - Initializes everything.
         void initEngines(void);
 
-        //! [**proccesing api**] - Remove everything.
+        //! [**proccesing api**] - Removes everything.
         void removeEngines(void);
 
-        //! [**proccesing api**] - Reset everything.
+        //! [**proccesing api**] - Resets everything.
         void resetEngines(void);
 
 
@@ -225,8 +227,8 @@ namespace triton {
         //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
         bool buildSemantics(triton::arch::Instruction& inst);
 
-
-        triton::ast::AstContext& getAstContext();
+        //! [**IR builder api**] - Returns the AST context. Used as AST builder.
+        triton::ast::AstContext& getAstContext(void);
 
 
 
@@ -408,10 +410,10 @@ namespace triton {
         triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic register expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& reg, const std::string& comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& reg, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic flag expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& flag, const std::string& comment="");
+        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& flag, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic volatile expression and links this expression to the instruction.
         triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment="");

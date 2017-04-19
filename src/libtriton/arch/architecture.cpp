@@ -133,7 +133,7 @@ namespace triton {
     }
 
 
-    std::unordered_map<registers_e, triton::arch::RegisterSpec const> const& Architecture::getAllRegisters(void) const {
+    const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& Architecture::getAllRegisters(void) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
@@ -146,19 +146,22 @@ namespace triton {
       return this->cpu->getParentRegisters();
     }
 
-    triton::arch::RegisterSpec const& Architecture::getRegister(triton::arch::registers_e id) const {
+
+    const triton::arch::RegisterSpec& Architecture::getRegister(triton::arch::registers_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");
       return this->cpu->getRegister(id);
     }
 
-    triton::arch::RegisterSpec const& Architecture::getParentRegister(triton::arch::RegisterSpec const& reg) const {
+
+    const triton::arch::RegisterSpec& Architecture::getParentRegister(const triton::arch::RegisterSpec& reg) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegister(): You must define an architecture.");
       return this->cpu->getParent(reg);
     }
 
-    triton::arch::RegisterSpec const& Architecture::getParentRegister(triton::arch::registers_e id) const {
+
+    const triton::arch::RegisterSpec& Architecture::getParentRegister(triton::arch::registers_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegister(): You must define an architecture.");
       return getParentRegister(this->cpu->getRegister(id));

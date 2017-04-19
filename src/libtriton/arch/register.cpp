@@ -13,17 +13,17 @@
 
 namespace triton {
   namespace arch {
+
     ////////////////////////////////////////////
     // RegisterSpec
     ////////////////////////////////////////////
 
     RegisterSpec::RegisterSpec(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low)
-          : BitsVector(high, low)
-            , name(name)
-            , id(regId)
-            , parent(parent)
-        {
-        }
+      : BitsVector(high, low),
+        name(name),
+        id(regId),
+        parent(parent) {
+    }
 
     triton::arch::registers_e RegisterSpec::getId(void) const {
       return this->id;
@@ -64,6 +64,7 @@ namespace triton {
       return triton::arch::OP_REG;
     }
 
+
     bool RegisterSpec::isOverlapWith(const RegisterSpec& other) const {
       if (this->parent == other.parent) {
         // FIXME: doesn't handle "contains" (AH and EAX)
@@ -73,9 +74,11 @@ namespace triton {
       return false;
     }
 
+
     bool RegisterSpec::operator==(const RegisterSpec& reg1) const {
       return getId() == reg1.getId();
     }
+
 
     bool RegisterSpec::operator!=(const RegisterSpec& reg1) const {
       return !(*this == reg1);
@@ -94,44 +97,47 @@ namespace triton {
       return stream;
     }
 
+
     std::ostream& operator<<(std::ostream& stream, const RegisterSpec* reg) {
       stream << *reg;
       return stream;
     }
 
+
     ////////////////////////////////////////////
     // Register
     ////////////////////////////////////////////
 
-    Register::Register(): RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0)
-      , concreteValue(0)
-      , concreteValueDefined(false)
-    {
+    Register::Register()
+      : RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0),
+      concreteValue(0),
+      concreteValueDefined(false) {
     }
 
 
-    Register::Register(RegisterSpec const& spec, triton::uint512 concreteValue):
-      RegisterSpec(spec)
-    {
+    Register::Register(const RegisterSpec& spec, triton::uint512 concreteValue)
+      : RegisterSpec(spec) {
       this->setConcreteValue(concreteValue);
     }
 
 
-    Register::Register(RegisterSpec const& spec):
-      RegisterSpec(spec)
-      , concreteValue(0)
-      , concreteValueDefined(false)
-    {
-    }
-
-    Register::Register(triton::arch::CpuInterface const& cpu, triton::arch::registers_e regId):
-      Register((regId==triton::arch::ID_REG_INVALID)?triton::arch::RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0):cpu.getRegister(regId))
-    {
+    Register::Register(RegisterSpec const& spec)
+      : RegisterSpec(spec),
+        concreteValue(0),
+        concreteValueDefined(false) {
     }
 
 
-    Register::Register(triton::arch::CpuInterface const& cpu, triton::arch::registers_e regId, triton::uint512 concreteValue):
-      Register(cpu.getRegister(regId), concreteValue) {
+    Register::Register(triton::arch::CpuInterface const& cpu, triton::arch::registers_e regId)
+      : Register(
+          (regId == triton::arch::ID_REG_INVALID) ?
+          triton::arch::RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)
+        ) {
+    }
+
+
+    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId, triton::uint512 concreteValue)
+      : Register(cpu.getRegister(regId), concreteValue) {
     }
 
 
@@ -155,12 +161,14 @@ namespace triton {
 
 
     bool Register::operator==(const Register& reg1) const {
-      return RegisterSpec::operator==(reg1) && getConcreteValue() == reg1.getConcreteValue();
+      return (RegisterSpec::operator==(reg1) && getConcreteValue() == reg1.getConcreteValue());
     }
+
 
     bool Register::operator!=(const Register& reg1) const {
       return !(*this == reg1);
     }
+
 
     bool operator<(const Register& reg1, const Register& reg2) {
         return (reg1.getId() < reg2.getId());

@@ -21,13 +21,13 @@ namespace triton {
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
-                         triton::modes::Modes const& modes,
+                         const triton::modes::Modes& modes,
                          triton::ast::AstContext& astCtxt,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine)
-      : modes(modes)
-      , astGarbageCollector(astCtxt.getAstGarbageCollector())
-      , backupAstGarbageCollector(modes, true) {
+      : modes(modes),
+        astGarbageCollector(astCtxt.getAstGarbageCollector()),
+        backupAstGarbageCollector(modes, true) {
 
       if (architecture == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The architecture API must be defined.");

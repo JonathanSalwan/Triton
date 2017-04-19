@@ -169,7 +169,7 @@ namespace triton {
         const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
 
         //! Returns the register state which has been recorded.
-        triton::arch::Register getRegisterState(triton::arch::CpuInterface const&, triton::arch::registers_e regId);
+        triton::arch::Register getRegisterState(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
 
         //! Sets the opcodes of the instruction.
         void setOpcodes(const triton::uint8* opcodes, triton::uint32 size);

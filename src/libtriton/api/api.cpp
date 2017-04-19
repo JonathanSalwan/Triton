@@ -181,7 +181,7 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API(): callbacks(*this), arch(&this->callbacks), modes(), astCtxt{this->modes} {
+  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt{this->modes} {
   }
 
 
@@ -252,11 +252,13 @@ namespace triton {
     return this->arch.isRegister(reg);
   }
 
-  triton::arch::RegisterSpec const& API::getRegister(triton::arch::registers_e id) const {
+
+  const triton::arch::RegisterSpec& API::getRegister(triton::arch::registers_e id) const {
     return this->arch.getRegister(id);
   }
 
-  triton::arch::RegisterSpec const& API::getParentRegister(triton::arch::registers_e id) const {
+
+  const triton::arch::RegisterSpec& API::getParentRegister(triton::arch::registers_e id) const {
     return this->arch.getParentRegister(id);
   }
 
@@ -286,7 +288,7 @@ namespace triton {
   }
 
 
-  std::unordered_map<triton::arch::registers_e, triton::arch::RegisterSpec const> const& API::getAllRegisters(void) const {
+  const std::unordered_map<triton::arch::registers_e, const triton::arch::RegisterSpec>& API::getAllRegisters(void) const {
     this->checkArchitecture();
     return this->arch.getAllRegisters();
   }
@@ -404,6 +406,7 @@ namespace triton {
 
     // Use default mode again.
     this->modes = triton::modes::Modes();
+
     // Clean up the ast context
     this->astCtxt = triton::ast::AstContext{this->modes};
   }
@@ -440,10 +443,11 @@ namespace triton {
   }
 
 
-  triton::ast::AstContext& API::getAstContext() 
-  {
+  triton::ast::AstContext& API::getAstContext(void) {
     return this->astCtxt;
   }
+
+
 
   /* AST garbage collector API ====================================================================== */
 
@@ -500,6 +504,7 @@ namespace triton {
   void API::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
     this->astCtxt.getAstGarbageCollector().setAstVariableNodes(nodes);
   }
+
 
 
   /* AST representation API ========================================================================= */
@@ -695,13 +700,13 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& reg, const std::string& comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& reg, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicRegisterExpression(inst, node, reg, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::RegisterSpec const& flag, const std::string& comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& flag, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicFlagExpression(inst, node, flag, comment);
   }
@@ -787,11 +792,12 @@ namespace triton {
     return this->symbolic->getSymbolicExpressionFromId(symExprId);
   }
 
-  void API::setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable & symVar, triton::uint512 const& value)
-  {
+
+  void API::setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
     this->checkSymbolic();
     return this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
   }
+
 
   triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::usize symVarId) const {
     this->checkSymbolic();

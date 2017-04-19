@@ -184,27 +184,27 @@ namespace triton {
     }
 
 
-    void MemoryAccess::setSegmentRegister(triton::arch::Register const& segment) {
+    void MemoryAccess::setSegmentRegister(const triton::arch::Register& segment) {
       this->segmentReg = segment;
     }
 
 
-    void MemoryAccess::setBaseRegister(triton::arch::Register const& base) {
+    void MemoryAccess::setBaseRegister(const triton::arch::Register& base) {
       this->baseReg = base;
     }
 
 
-    void MemoryAccess::setIndexRegister(triton::arch::Register const& index) {
+    void MemoryAccess::setIndexRegister(const triton::arch::Register& index) {
       this->indexReg = index;
     }
 
 
-    void MemoryAccess::setDisplacement(triton::arch::Immediate& displacement) {
+    void MemoryAccess::setDisplacement(const triton::arch::Immediate& displacement) {
       this->displacement = displacement;
     }
 
 
-    void MemoryAccess::setScale(triton::arch::Immediate& scale) {
+    void MemoryAccess::setScale(const triton::arch::Immediate& scale) {
       this->scale = scale;
     }
 
@@ -214,7 +214,7 @@ namespace triton {
     }
 
 
-    void MemoryAccess::operator=(const MemoryAccess &other) {
+    void MemoryAccess::operator=(const MemoryAccess& other) {
       BitsVector::operator=(other);
       this->copy(other);
     }
