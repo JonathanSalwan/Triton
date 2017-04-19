@@ -519,7 +519,7 @@ namespace triton {
       std::string SymbolicEngine::getVariablesDeclaration(void) const {
         std::stringstream stream;
 
-        for(auto sv: this->symbolicVariables)
+        for (auto sv : this->symbolicVariables)
           stream << astCtxt.declareFunction(sv.second->getName(), astCtxt.bvdecl(sv.second->getSize()));
 
         return stream.str();

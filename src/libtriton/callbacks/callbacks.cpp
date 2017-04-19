@@ -10,10 +10,11 @@
 #include <triton/exceptions.hpp>
 
 
+
 namespace triton {
   namespace callbacks {
 
-    Callbacks::Callbacks(triton::API& api): api(api) {
+    Callbacks::Callbacks(triton::API& api) : api(api) {
       this->isDefined = false;
     }
 
@@ -90,7 +91,7 @@ namespace triton {
     void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
-           for(auto& function: this->getConcreteMemoryValueCallbacks) {
+           for (auto& function: this->getConcreteMemoryValueCallbacks) {
              // FIXME Const_cast is certainly bad
              function(api, const_cast<triton::arch::MemoryAccess&>(mem));
            }
@@ -106,7 +107,7 @@ namespace triton {
     void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::RegisterSpec& reg) const {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE: {
-           for(auto& function: this->getConcreteRegisterValueCallbacks) {
+           for (auto& function: this->getConcreteRegisterValueCallbacks) {
              // FIXME Const_cast is certainly bad
              function(api, const_cast<triton::arch::RegisterSpec&>(reg));
            }

@@ -5,4 +5,4 @@ coverage:
 
 ignore:
   - "src/tracer"  # ignore folders and all its contents
-  - "**/*.spec"         # glob accepted
+  - "**/*.spec"   # glob accepted

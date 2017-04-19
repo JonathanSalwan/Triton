@@ -38,7 +38,7 @@ namespace triton {
       void Pe::open(void) {
         std::ifstream ifs(this->path, std::ifstream::binary);
 
-        if(!ifs)
+        if (!ifs)
           throw triton::exceptions::Elf("Elf::open(): Cannot open the binary file.");
 
        ifs.unsetf(std::ios::skipws);

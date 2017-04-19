@@ -2906,8 +2906,10 @@ namespace triton {
     triton::uint512 VariableNode::hash(triton::uint32 deep) {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
-      for(char c: this->symVar.getName())
+
+      for (char c : this->symVar.getName())
         h = h ^ triton::ast::pow(c, index++);
+
       return triton::ast::rotl(h, deep);
     }
 

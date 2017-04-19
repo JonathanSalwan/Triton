@@ -21,7 +21,7 @@ namespace triton {
         if (arch != triton::arch::ARCH_X86 && arch != triton::arch::ARCH_X86_64)
             throw triton::exceptions::Architecture("x86Specifications::x86Specifications(): Invalid architecture.");
 
-        if(arch == triton::arch::ARCH_X86_64) {
+        if (arch == triton::arch::ARCH_X86_64) {
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                                                         \
                                triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                                                \
@@ -36,7 +36,7 @@ namespace triton {
         else {
           assert(arch == triton::arch::ARCH_X86);
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
-          if(X86_AVAIL)                                                                                     \
+          if (X86_AVAIL)                                                                                     \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                         \
                                triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                \
                                                           #LOWER_NAME,                                      \

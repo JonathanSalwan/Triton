@@ -54,7 +54,7 @@ namespace triton {
 
       ifs.read(reinterpret_cast<char*>(raw), sizeof(raw));
 
-      if(!ifs)
+      if (!ifs)
         throw triton::exceptions::Format("AbstractBinary::loadBinary(): Cannot read the file binary.");
 
       // Set the binary format according the magic number

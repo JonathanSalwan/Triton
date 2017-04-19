@@ -43,28 +43,29 @@ namespace triton {
       void Elf::open(void) {
         std::ifstream ifs(this->path, std::ifstream::binary);
 
-        if(!ifs)
+        if (!ifs)
           throw triton::exceptions::Elf("Elf::open(): Cannot open the binary file.");
 
-       ifs.unsetf(std::ios::skipws);
+        ifs.unsetf(std::ios::skipws);
 
-       // get its size:
-       std::streampos fileSize;
+        // get its size:
+        std::streampos fileSize;
 
-       ifs.seekg(0, std::ios::end);
-       fileSize = ifs.tellg();
-       ifs.seekg(0, std::ios::beg);
+        ifs.seekg(0, std::ios::end);
+        fileSize = ifs.tellg();
+        ifs.seekg(0, std::ios::beg);
 
-       // reserve capacity
-       this->raw.reserve(fileSize);
+        // reserve capacity
+        this->raw.reserve(fileSize);
 
-       // read the data:
-       this->raw.insert(this->raw.begin(),
-           std::istream_iterator<triton::uint8>(ifs),
-           std::istream_iterator<triton::uint8>());
+        // read the data:
+        this->raw.insert(this->raw.begin(),
+                         std::istream_iterator<triton::uint8>(ifs),
+                         std::istream_iterator<triton::uint8>()
+                        );
 
-      // FIXME : This attribute is useless
-      this->totalSize = this->raw.size();
+        // FIXME : This attribute is useless
+        this->totalSize = this->raw.size();
       }
 
 

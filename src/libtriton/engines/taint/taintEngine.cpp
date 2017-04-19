@@ -141,7 +141,7 @@ namespace triton {
       /* Returns the tainted registers */
       std::set<const triton::arch::RegisterSpec*> TaintEngine::getTaintedRegisters(void) const {
         std::set<const triton::arch::RegisterSpec*> res;
-        for(auto id: this->taintedRegisters)
+        for (auto id : this->taintedRegisters)
           res.insert(&cpu.getRegister(id));
         return res;
       }
