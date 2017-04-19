@@ -1,6 +1,6 @@
 
-from triton     import *
-from pintool    import *
+from triton import *
+import pintool as Pintool
 
 import sys
 import time
@@ -9,6 +9,10 @@ BLUE  = "\033[94m"
 ENDC  = "\033[0m"
 GREEN = "\033[92m"
 RED   = "\033[91m"
+
+
+# Get the Triton context over the pintool
+Triton = Pintool.getTritonContext()
 
 # Output
 #
@@ -32,8 +36,8 @@ RED   = "\033[91m"
 
 
 def sbefore(instruction):
-    concretizeAllMemory()
-    concretizeAllRegister()
+    Triton.concretizeAllMemory()
+    Triton.concretizeAllRegister()
     return
 
 
@@ -41,19 +45,19 @@ def cafter(instruction):
 
     good = True
     bad  = list()
-    regs = getParentRegisters()
+    regs = Triton.getParentRegisters()
 
     for reg in regs:
 
-        cvalue = getCurrentRegisterValue(reg)
-        seid   = getSymbolicRegisterId(reg)
+        cvalue = Pintool.getCurrentRegisterValue(reg)
+        seid   = Triton.getSymbolicRegisterId(reg)
 
         if seid == SYMEXPR.UNSET:
             continue
 
-        expr   = getFullAstFromId(seid)
+        expr   = Triton.getFullAstFromId(seid)
         svalue = expr.evaluate()
-        #svalue = evaluateAstViaZ3(expr)
+        #svalue = Triton.evaluateAstViaZ3(expr)
 
         # Check register
         if cvalue != svalue:
@@ -96,16 +100,16 @@ def cafter(instruction):
         pass
 
     # Reset everything
-    resetEngines()
+    Triton.resetEngines()
 
     return
 
 
 if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
-    startAnalysisFromEntry()
-    #startAnalysisFromSymbol('check')
-    insertCall(cafter,  INSERT_POINT.AFTER)
-    insertCall(sbefore, INSERT_POINT.BEFORE_SYMPROC)
-    runProgram()
+    Triton.setArchitecture(ARCH.X86_64)
+    Pintool.startAnalysisFromEntry()
+    #Pintool.startAnalysisFromSymbol('check')
+    Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)
+    Pintool.insertCall(sbefore, Pintool.INSERT_POINT.BEFORE_SYMPROC)
+    Pintool.runProgram()
 

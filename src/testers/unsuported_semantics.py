@@ -7,6 +7,7 @@ from pintool    import *
 
 
 unsuportedSemantics = dict()
+Triton              = getTritonContext()
 
 
 def cbefore(instruction):
@@ -21,7 +22,7 @@ def cbefore(instruction):
 
 
 def cafter(instruction):
-    resetEngines()
+    Triton.resetEngines()
     return
 
 
@@ -38,10 +39,10 @@ def cfini():
 
 
 if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
+    Triton.setArchitecture(ARCH.X86_64)
+
     startAnalysisFromEntry()
     insertCall(cbefore, INSERT_POINT.BEFORE)
     insertCall(cafter,  INSERT_POINT.AFTER)
     insertCall(cfini,   INSERT_POINT.FINI)
     runProgram()
-
