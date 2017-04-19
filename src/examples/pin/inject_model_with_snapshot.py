@@ -30,7 +30,7 @@ from pintool    import *
 
 password  = dict()
 symVarMem = None
-Triton = getTritonContext()
+Triton    = getTritonContext()
 
 
 def csym(instruction):
@@ -93,7 +93,6 @@ def fini():
 
 
 if __name__ == '__main__':
-
     # Define the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
