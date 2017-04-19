@@ -371,10 +371,10 @@ namespace triton {
       void initSyscall32Namespace(PyObject* syscallsDict32) {
         PyDict_Clear(syscallsDict32);
 
-#if defined(__unix__)
+        #if defined(__unix__)
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
           PyDict_SetItemString(syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
-#endif
+        #endif
       }
 
     }; /* python namespace */

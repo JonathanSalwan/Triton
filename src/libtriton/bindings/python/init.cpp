@@ -18,7 +18,7 @@ namespace triton {
     namespace python {
 
       /* Triton module */
-      PyObject* tritonModule          = nullptr; /* Must be global because may be updated on-the-fly */
+      PyObject* tritonModule = nullptr; /* Must be global because may be updated on-the-fly */
 
 
       /* Python entry point */

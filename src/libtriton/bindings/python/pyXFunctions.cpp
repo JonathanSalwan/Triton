@@ -14,7 +14,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      static void notEnoughMemory(void) {
+      static inline void notEnoughMemory(void) {
         std::cerr << "[ERROR] Not enough memory for allocation" << std::endl;
         exit(-1);
       }

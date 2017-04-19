@@ -212,20 +212,6 @@ namespace triton {
       }
 
 
-      static PyObject* triton_Pe(PyObject* self, PyObject* path) {
-        /* Check if the first arg is a integer */
-        if (path == nullptr || !PyString_Check(path))
-          return PyErr_Format(PyExc_TypeError, "Pe(): Expects a string as first argument.");
-
-        try {
-          return PyPe(PyString_AsString(path));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* triton_Immediate(PyObject* self, PyObject* args) {
         PyObject* value = nullptr;
         PyObject* size  = nullptr;
@@ -312,18 +298,38 @@ namespace triton {
         }
       }
 
+
+      static PyObject* triton_Pe(PyObject* self, PyObject* path) {
+        /* Check if the first arg is a integer */
+        if (path == nullptr || !PyString_Check(path))
+          return PyErr_Format(PyExc_TypeError, "Pe(): Expects a string as first argument.");
+
+        try {
+          return PyPe(PyString_AsString(path));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* triton_TritonContext(PyObject* self, PyObject* args) {
-        return PyTritonContext();
+        try {
+          return PyTritonContext();
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       PyMethodDef tritonCallbacks[] = {
-        {"TritonContext",                       (PyCFunction)triton_TritonContext,                          METH_VARARGS,       ""},
         {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
         {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
         {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
         {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},
         {"Pe",                                  (PyCFunction)triton_Pe,                                     METH_O,             ""},
+        {"TritonContext",                       (PyCFunction)triton_TritonContext,                          METH_VARARGS,       ""},
         {nullptr,                               nullptr,                                                    0,                  nullptr}
 
       };
