@@ -33,8 +33,8 @@ namespace triton {
   namespace engines {
     namespace symbolic {
       class SymbolicExpression;
-    }
-  }
+    };
+  };
 
   //! The AST namespace
   namespace ast {

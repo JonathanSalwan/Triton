@@ -1,12 +1,22 @@
-#include <triton/astContext.hpp>
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the BSD License.
+*/
+
 #include <triton/ast.hpp>
+#include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
+
+
 
 namespace triton {
   namespace ast {
 
-    AstContext::AstContext(triton::modes::Modes const& modes): astGarbageCollector(modes)
-    {}
+    AstContext::AstContext(const triton::modes::Modes& modes) : astGarbageCollector(modes) {
+    }
+
 
     AbstractNode* AstContext::assert_(AbstractNode* expr) {
       AbstractNode* node = new(std::nothrow) AssertNode(expr);
@@ -450,28 +460,27 @@ namespace triton {
       return astGarbageCollector.recordAstNode(node);
     }
 
-    triton::ast::AstGarbageCollector& AstContext::getAstGarbageCollector()
-    {
+
+    triton::ast::AstGarbageCollector& AstContext::getAstGarbageCollector(void) {
       return this->astGarbageCollector;
     }
 
-    triton::ast::AstGarbageCollector const& AstContext::getAstGarbageCollector() const
-    {
+
+    const triton::ast::AstGarbageCollector& AstContext::getAstGarbageCollector(void) const {
       return this->astGarbageCollector;
     }
 
-    void AstContext::initVariable(std::string const& name, triton::uint512 const& value)
-    {
-      valueMapping.insert(std::make_pair(name, value));
+
+    void AstContext::initVariable(const std::string& name, const triton::uint512& value) {
+      this->valueMapping.insert(std::make_pair(name, value));
     }
 
-    void AstContext::updateVariable(std::string const& name, triton::uint512 const& value)
-    {
-      for(auto& kv: this->astGarbageCollector.getAstVariableNodes())
-      {
-        if(kv.first == name) {
+
+    void AstContext::updateVariable(const std::string& name, const triton::uint512& value) {
+      for (auto& kv: this->astGarbageCollector.getAstVariableNodes()) {
+        if (kv.first == name) {
           assert(kv.second->getType() == triton::ast::VARIABLE_NODE);
-          valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
+          this->valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
           kv.second->init();
           return;
         }
@@ -479,11 +488,11 @@ namespace triton {
       throw triton::exceptions::Ast("AstContext::updateVariable(): Variable to update not found");
     }
 
-    triton::uint512 const& AstContext::getValueForVariable(std::string const& varName) const
-    {
+
+    const triton::uint512& AstContext::getValueForVariable(const std::string& varName) const {
       try {
-        return valueMapping.at(varName);
-      } catch(std::out_of_range const& e) {
+        return this->valueMapping.at(varName);
+      } catch(const std::out_of_range& e) {
         throw triton::exceptions::Ast("AstContext::getValueForVariable(): Variable doesn't exists");
       }
     }

@@ -9,11 +9,11 @@
 #include <new>
 
 #include <triton/ast.hpp>
+#include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
 #include <triton/z3Result.hpp>
-#include <triton/astContext.hpp>
 
 
 

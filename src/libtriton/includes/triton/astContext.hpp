@@ -7,22 +7,40 @@
 
 #ifndef TRITON_AST_CONTEXT_H
 #define TRITON_AST_CONTEXT_H
+
 #include <triton/ast.hpp>
 #include <triton/astGarbageCollector.hpp>
 
+
+
+//! The Triton namespace
 namespace triton {
+/*!
+ *  \addtogroup triton
+ *  @{
+ */
+
   namespace engines {
     namespace symbolic {
       class SymbolicExpression;
-    }
-  }
-  namespace ast {
+    };
+  };
 
+  //! The AST namespace
+  namespace ast {
+  /*!
+   *  \ingroup triton
+   *  \addtogroup ast
+   *  @{
+   */
+
+    //! \class AstContext
+    /*! \brief AST Context - Used as AST builder. */
     class AstContext {
       public:
-        AstContext(triton::modes::Modes const& modes);
+        //! Constructor
+        AstContext(const triton::modes::Modes& modes);
 
-      public:
         //! AST C++ API - bv node builder
         AbstractNode* bv(triton::uint512 value, triton::uint32 size);
 
@@ -188,19 +206,20 @@ namespace triton {
         //! AST C++ API - zx node builder
         AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
-      public:
         //! Access to the underliying garbage collector
-        triton::ast::AstGarbageCollector& getAstGarbageCollector();
-        triton::ast::AstGarbageCollector const& getAstGarbageCollector() const;
+        triton::ast::AstGarbageCollector& getAstGarbageCollector(void);
+
+        //! Access to the underliying garbage collector
+        const triton::ast::AstGarbageCollector& getAstGarbageCollector(void) const;
 
         //! Initialize a variable in the context
-        void initVariable(std::string const& name, triton::uint512 const& value);
+        void initVariable(const std::string& name, const triton::uint512& value);
 
         //! Update a variable value in this context
-        void updateVariable(std::string const& name, triton::uint512 const& value);
+        void updateVariable(const std::string& name, const triton::uint512& value);
 
         //! Access a variable value in this context
-        triton::uint512 const& getValueForVariable(std::string const& varName) const;
+        const triton::uint512& getValueForVariable(const std::string& varName) const;
 
       private:
         //! The AST garbage collector interface.
@@ -210,6 +229,8 @@ namespace triton {
         std::map<std::string, triton::uint512> valueMapping;
     };
 
-  }
-}
+  /*! @} End of ast namespace */
+  };
+/*! @} End of triton namespace */
+};
 #endif

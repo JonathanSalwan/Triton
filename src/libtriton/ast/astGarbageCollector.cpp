@@ -14,17 +14,17 @@
 namespace triton {
   namespace ast {
 
-    AstGarbageCollector::AstGarbageCollector(triton::modes::Modes const& modes, bool isBackup)
-      : triton::ast::AstDictionaries(isBackup)
-      , modes(modes) {
+    AstGarbageCollector::AstGarbageCollector(const triton::modes::Modes& modes, bool isBackup)
+      : triton::ast::AstDictionaries(isBackup),
+        modes(modes) {
 
       this->backupFlag = isBackup;
     }
 
 
     AstGarbageCollector::AstGarbageCollector(const AstGarbageCollector& other)
-      : triton::ast::AstDictionaries(other)
-      , modes(other.modes) {
+      : triton::ast::AstDictionaries(other),
+        modes(other.modes) {
       this->copy(other);
     }
 
