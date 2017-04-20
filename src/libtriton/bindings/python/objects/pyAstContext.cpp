@@ -92,16 +92,7 @@ tree but contains a reference to another subtree. Below, an example of one "part
 If you try to go through the full AST you will fail at the first reference node because a reference node does not contains child nodes.
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.
 
-~~~~~~~~~~~~~{.py}
->>> zfId = getSymbolicRegisterId(REG.ZF)
->>> partialTree = getSymbolicExpressionFromId(zfId).getAst()
->>> print partialTree
-(ite (= ref!89 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
-
->>> fullTree = getFullAst(partialTree)
->>> print fullTree
-(ite (= (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ extract 31 0) ((_ zero_extend 32) (bvxor ((_ extract 31 0) ((_ zero_extend 32) (bvsub ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) SymVar_0)))) (_ bv1 32)))) (_ bv85 32)))))) ((_ extract 31 0) ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) ((_ zero_extend 32) ((_ zero_extend 24) ((_ extract 7 0) (_ bv49 8))))))))) (_ bv0 32)) (_ bv1 1) (_ bv0 1))
-~~~~~~~~~~~~~
+\snippet pyAstContext.py Reference
 
 \subsection ast_smt_python_page The SMT or Python Syntax
 <hr>
@@ -109,100 +100,22 @@ The only way to jump from a reference node to the targeted node is to use the tr
 By default, Triton represents semantics into [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
 Triton allows you to display your AST via a Python syntax.
 
-~~~~~~~~~~~~~{.py}
->>> from triton import *
-
->>> setArchitecture(ARCH.X86_64)
->>> setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
->>> inst = Instruction()
->>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
->>> inst.setAddress(0x400000)
->>> inst.updateContext(Register(REG.RAX, 0x1122334455667788))
->>> inst.updateContext(Register(REG.RBX, 0x8877665544332211))
->>> processing(inst)
-
->>> print inst
-400000: add rax, rbx
-
->>> for expr in inst.getSymbolicExpressions():
-...     print expr
-...
-ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) # ADD operation
-ref_1 = (0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag
-ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ ref_0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) # Carry flag
-ref_3 = ((((0x1122334455667788 ^ ~0x8877665544332211) & (0x1122334455667788 ^ ref_0)) >> 63) & 0x1) # Overflow flag
-ref_4 = ((((((((0x1 ^ (((ref_0 & 0xFF) >> 0x0) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x1) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x2) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x3) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x4) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x5) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x6) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x7) & 0x1)) # Parity flag
-ref_5 = ((ref_0 >> 63) & 0x1) # Sign flag
-ref_6 = (0x1 if (ref_0 == 0x0) else 0x0) # Zero flag
-ref_7 = 0x400003 # Program Counter
-~~~~~~~~~~~~~
+\snippet pyAstContext.py SMT
 
 \section ast_py_examples_page Examples
 <hr>
 
 \subsection ast_py_examples_page_1 Get a register's expression and create an assert
 
-~~~~~~~~~~~~~{.py}
-# Get the symbolic expression of the ZF flag
-zfId    = getSymbolicRegisterId(REG.ZF)
-zfExpr  = getFullAst(getSymbolicExpressionFromId(zfId).getAst())
-
-astCtxt = triton_context.getAstContext()
-
-# (assert (= zf True))
-newExpr = astCtxt.assert_(
-            astCtxt.equal(
-                zfExpr,
-                astCtxt.bvtrue()
-            )
-          )
-
-# Get a model
-models  = getModel(newExpr)
-~~~~~~~~~~~~~
-
+\snippet pyAstContext.py example 1
 
 \subsection ast_py_examples_page_2 Play with the AST
 
-~~~~~~~~~~~~~{.py}
-# Node information
-
->>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> print type(node)
-<type 'AstNode'>
-
->>> print node
-(bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
->>> subchild = node.getChilds()[1].getChilds()[0]
->>> print subchild
-(_ bv10 8)
-
->>> print subchild.getChilds()[0].getValue()
-10
->>> print subchild.getChilds()[1].getValue()
-8
-
-# Node modification
-
->>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> print node
-(bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
->>> node.setChild(0, astCtxt.bv(123, 8))
->>> print node
-(bvadd (_ bv123 8) (bvxor (_ bv10 8) (_ bv20 8)))
-~~~~~~~~~~~~~
+\snippet pyAstContext.py example 2
 
 \subsection ast_py_examples_page_3 Python operators
 
-~~~~~~~~~~~~~{.py}
->>> a = bv(1, 8)
->>> b = bv(2, 8)
->>> c = (a & ~b) | (~a & b)
->>> print c
-(bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
-~~~~~~~~~~~~~
+\snippet pyAstContext.py example 3
 
 As we can't overload all AST's operators only these following operators are overloaded:
 

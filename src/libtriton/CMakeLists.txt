@@ -222,44 +222,6 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "
     endif()
 endif()
 
-# Find Z3
-if(NOT Z3_INCLUDE_DIRS)
-  set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
-endif()
-if(NOT STATICLIB) # Only if building dynamic library
-  if(NOT Z3_LIBRARIES)
-    set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
-  endif()
-  if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
-      find_package(Z3 REQUIRED)
-      if(NOT Z3_FOUND)
-          message(FATAL_ERROR "Z3 not found")
-      endif()
-  endif()
-endif()
-include_directories(${Z3_INCLUDE_DIRS})
-
-# Find Capstone
-if(NOT CAPSTONE_INCLUDE_DIRS)
-  set(CAPSTONE_INCLUDE_DIRS "$ENV{CAPSTONE_INCLUDE_DIRS}")
-endif()
-if(NOT STATICLIB) # Only if building dynamic library
-  if(NOT CAPSTONE_LIBRARIES)
-    set(CAPSTONE_LIBRARIES "$ENV{CAPSTONE_LIBRARIES}")
-  endif()
-  if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
-      find_package(CAPSTONE REQUIRED)
-      if(NOT CAPSTONE_FOUND)
-          message(FATAL_ERROR "Capstone not found")
-      endif()
-  endif()
-endif()
-include_directories(${CAPSTONE_INCLUDE_DIRS})
-
-# Find boost
-find_package(Boost 1.55.0 REQUIRED)
-include_directories("${Boost_INCLUDE_DIRS}")
-
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
