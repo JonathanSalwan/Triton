@@ -24,22 +24,7 @@
 
 This object is used to represent each AST node of an expression.
 
-~~~~~~~~~~~~~{.py}
->>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
->>> print type(node)
-<type 'AstNode'>
-
->>> print node
-(bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
-# Python's opertors overloaded
-
->>> a = bv(1, 8)
->>> b = bv(2, 8)
->>> c = (a & ~b) | (~a & b)
->>> print c
-(bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
-~~~~~~~~~~~~~
+\snippet pyAstNode.py Description
 
 \section AstNode_py_api Python API - Methods of the AstNode class
 <hr>

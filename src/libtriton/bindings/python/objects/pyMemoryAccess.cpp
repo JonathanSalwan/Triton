@@ -25,56 +25,11 @@ This object is used to represent a memory access.
 
 \subsection py_MemoryAccess_example Example
 
-~~~~~~~~~~~~~{.py}
->>> processing(inst)
->>> print inst
-40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
-
->>> op1 = inst.getOperands()[1]
->>> print op1
-[@0x6135a]:8 bv[7..0]
-
->>> print op1.getBaseRegister()
-rdx:64 bv[63..0]
-
->>> print op1.getIndexRegister()
-rcx:64 bv[63..0]
-
->>> print op1.getScale()
-0x2:8 bv[7..0]
-
->>> print op1.getDisplacement()
-0x100:8 bv[7..0]
-
->>> print op1.getLeaAst()
-(bvadd (_ bv397882 64) (bvadd (bvmul (_ bv16 64) (_ bv2 64)) (_ bv256 64)))
-
->>> print hex(op1.getLeaAst().evaluate())
-0x6135aL
-
->>> print hex(op1.getAddress())
-0x6135aL
-
->>> print op1.getSize()
-1
-~~~~~~~~~~~~~
+\snippet pyMemoryAccess.py Example
 
 \subsection py_MemoryAccess_constructor Constructor
 
-~~~~~~~~~~~~~{.py}
->>> mem = MemoryAccess(0x400f4d3, 8, 0x6162636465666768)
->>> print mem
-[@0x400f4d3]:64 bv[63..0]
-
->>> hex(mem.getAddress())
-'0x400f4d3'
-
->>> mem.getSize()
-8
-
->>> hex(mem.getConcreteValue())
-'0x6162636465666768L'
-~~~~~~~~~~~~~
+\snippet pyMemoryAccess.py Constructor
 
 \section MemoryAccess_py_api Python API - Methods of the MemoryAccess class
 <hr>

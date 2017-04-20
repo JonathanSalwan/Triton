@@ -23,11 +23,7 @@
 
 This object is used to represent a symbolic variable.
 
-~~~~~~~~~~~~~{.py}
->>> symvar = convertRegisterToSymbolicVariable(REG.RAX)
->>> print symvar
-SymVar_0:64
-~~~~~~~~~~~~~
+\snippet pySymbolicVariable.py Description
 
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>

@@ -23,16 +23,7 @@
 
 This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
 
-~~~~~~~~~~~~~{.py}
->>> ah = REG.AH
->>> bitvector = ah.getBitvector()
->>> bitvector.getHigh()
-15
->>> bitvector.getLow()
-8
->>> bitvector.getVectorSize()
-8
-~~~~~~~~~~~~~
+\snippet pyBitVector.py Description
 
 \section Bitvector_py_api Python API - Methods of the Bitvector class
 <hr>

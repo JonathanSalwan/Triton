@@ -12,7 +12,7 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
 
-/*! \page py_ast_page AST Representations
+/*! \page py_AstContext_page AST Context
     \brief [**python api**] All information about the ast python module.
 
 \tableofcontents

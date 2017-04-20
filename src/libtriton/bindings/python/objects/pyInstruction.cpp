@@ -23,73 +23,13 @@
 
 This object is used to represent an Instruction.
 
-~~~~~~~~~~~~~{.py}
-import  sys
-from    triton import *
-
-
-trace = [
-    (0x400000, "\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
-    (0x400007, "\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
-    (0x40000b, "\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
-    (0x400011, "\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
-    (0x400015, "\x89\xd0"),                     # mov        eax, edx
-    (0x400017, "\x80\xf4\x99"),                 # xor        ah, 0x99
-]
-
-
-if __name__ == '__main__':
-
-    #Set the arch
-    setArchitecture(ARCH.X86_64)
-
-    for (addr, opcodes) in trace:
-
-        # Build an instruction
-        inst = Instruction()
-
-        # Setup opcodes
-        inst.setOpcodes(opcodes)
-
-        # Setup Address
-        inst.setAddress(addr)
-
-        # Process everything
-        processing(inst)
-
-        print inst
-        for op in inst.getOperands():
-            print '\t', op
-            if op.getType() == OPERAND.MEM:
-                print '\t\t base  : ', op.getBaseRegister()
-                print '\t\t index : ', op.getIndexRegister()
-                print '\t\t disp  : ', op.getDisplacement()
-                print '\t\t scale : ', op.getScale()
-        print
-
-    sys.exit(0)
-~~~~~~~~~~~~~
+\snippet pyInstruction.py Instruction code
 
 \subsection py_Instruction_constructor Constructor
 
-~~~~~~~~~~~~~{.py}
->>> inst = Instruction("\x48\xC7\xC0\x01\x00\x00\x00")
->>> inst.setAddress(0x40000)
->>> processing(inst)
-True
->>> print inst
-40000: mov rax, 1
-~~~~~~~~~~~~~
+\snippet pyInstruction.py Constructor
 
-~~~~~~~~~~~~~{.py}
->>> inst = Instruction()
->>> inst.setAddress(0x40000)
->>> inst.setOpcodes("\x48\xC7\xC0\x01\x00\x00\x00")
->>> processing(inst)
-True
->>> print inst
-40000: mov rax, 1
-~~~~~~~~~~~~~
+\snippet pyInstruction.py Constructor bis
 
 \section Instruction_py_api Python API - Methods of the Instruction class
 <hr>

@@ -25,45 +25,11 @@ This object is used to represent a register operand according to the CPU archite
 
 \subsection py_Register_example Example
 
-~~~~~~~~~~~~~{.py}
->>> processing(inst)
->>> print inst
-40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
-
->>> op0 = inst.getOperands()[0]
->>> print op0
-ah:8 bv[15..8]
-
->>> op0.getName()
-'ah'
-
->>> op0.getSize()
-1
-
->>> op0.getBitSize()
-8
-
->>> Triton.getParentRegister(op0).getName()
-'rax'
-~~~~~~~~~~~~~
+\snippet pyRegister.py Example
 
 \subsection py_Register_constructor Constructor
 
-~~~~~~~~~~~~~{.py}
->>> ah = Register(REG.AH, 0x18)
->>> print ah
-ah:8 bv[15..8]
-
->>> print ah.getBitSize()
-8
-
->>> print hex(ah.getConcreteValue())
-0x18L
-
->>> regId = 1
->>> Register(regId)
-rax:64 bv[63..0]
-~~~~~~~~~~~~~
+\snippet pyRegister.py Constructor
 
 \section Register_py_api Python API - Methods of the Register class
 <hr>

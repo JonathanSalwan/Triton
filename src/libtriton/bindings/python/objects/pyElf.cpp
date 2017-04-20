@@ -18,6 +18,13 @@
 
 \tableofcontents
 
+- \ref py_ElfDynamicTable_page
+- \ref py_ElfHeader_page
+- \ref py_ElfProgramHeader_page
+- \ref py_ElfRelocationTable_page
+- \ref py_ElfSectionHeader_page
+- \ref py_ElfSymbolTable_page
+
 \section py_Elf_description Description
 <hr>
 

@@ -12,9 +12,7 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
 
-
-
-/*! \page py_triton_context_page Python bindings
+/*! \page py_TritonContext_page TritonContext
     \brief [**python api**] All information about the Triton Context
     \anchor triton
 
@@ -37,18 +35,13 @@ If you want to use the libTriton without Python bindings, recompile the project 
 \subsection triton_py_api_classes Classes
 
 - \ref py_AstNode_page
+- \ref py_AstContext_page
 - \ref py_Bitvector_page
 - \ref py_PathConstraint_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page
 - \ref py_SymbolicVariable_page
-
-
-\subsection triton_py_api_modules Modules
-
-- \ref ast
-
 
 \subsection triton_py_api_methods Methods
 

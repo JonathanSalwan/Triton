@@ -23,40 +23,7 @@
 
 This object is used to represent a model from an SMT solver.
 
-~~~~~~~~~~~~~{.py}
->>> from triton import *
->>> from ast import *
-
->>> setArchitecture(ARCH.X86_64)
->>> inst = Instruction()
->>> inst.setOpcodes("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
-
->>> symvar = convertRegisterToSymbolicVariable(REG.RAX)
->>> print symvar
-SymVar_0:64
-
->>> processing(inst)
->>> print inst
-0: xor rax, 0x11223344
-
->>> raxAst = getFullAstFromId(getSymbolicRegisterId(REG.RAX))
->>> print raxAst
-(bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
-
->>> constraint = assert_(equal(raxAst, bv(0, raxAst.getBitvectorSize())))
->>> print constraint
-(assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
-
->>> model = getModel(constraint)
->>> print model
-{0L: <SolverModel object at 0x7f30ac870b58>}
-
->>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
->>> print symvarModel
-SymVar_0 = 287454020
->>> hex(symvarModel.getValue())
-'0x11223344L'
-~~~~~~~~~~~~~
+\include pySolverModel.py
 
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
