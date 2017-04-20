@@ -47,32 +47,32 @@ namespace triton {
       class PeHeader {
         protected:
           /*!
-           * \description Location of the PE File Header.
+           * \details Location of the PE File Header.
            */
           triton::uint32 peHeaderStart;
 
           /*!
-           * \description A copy of all the bytes before the PE header, containing the DOS stub and the value of peHeaderStart at offset 0x3C.
+           * \details A copy of all the bytes before the PE header, containing the DOS stub and the value of peHeaderStart at offset 0x3C.
            */
           std::vector<triton::uint8> dosStub;
 
           /*!
-           * \description COFF File Header
+           * \details COFF File Header
            */
           PeFileHeader fileHeader;
 
           /*!
-           * \description Optional Header (mandatory for EXEs and DLLs).
+           * \details Optional Header (mandatory for EXEs and DLLs).
            */
           PeOptionalHeader optionalHeader;
 
           /*!
-           * \description Data Directory, formally part of the optional header.
+           * \details Data Directory, formally part of the optional header.
            */
           PeDataDirectory dataDirectory;
 
           /*!
-           * \description The table of section headers.
+           * \details The table of section headers.
            */
           std::vector<PeSectionHeader> sectionHeaders;
 
@@ -105,22 +105,22 @@ namespace triton {
           triton::uint32 parse(const triton::uint8* raw, triton::usize totalSize);
 
           /*!
-           * \description Returns the PE File Header.
+           * \details Returns the PE File Header.
            */
           const PeFileHeader& getFileHeader(void) const;
 
           /*!
-           * \description Returns the Optional Header.
+           * \details Returns the Optional Header.
            */
           const PeOptionalHeader& getOptionalHeader(void) const;
 
           /*!
-           * \description Returns the Data Directory table.
+           * \details Returns the Data Directory table.
            */
           const PeDataDirectory& getDataDirectory(void) const;
 
           /*!
-           * \description Returns the Section Header table.
+           * \details Returns the Section Header table.
            */
           const std::vector<PeSectionHeader>& getSectionHeaders(void) const;
 

@@ -14,14 +14,14 @@
 
 /*! \page py_TritonContext_page TritonContext
     \brief [**python api**] All information about the Triton Context
-    \anchor triton
+    \anchor tritonContext
 
 \section triton_py_description Description
 <hr>
 
 The Triton Triton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
 
-\section triton_py_api Python API - Classes, methods, modules and namespaces of libTriton
+\section tritonContext_py_api Python API - Classes, methods, modules and namespaces of libTriton
 <hr>
 
 By default, the libTriton contains Python bindings and can be loaded with a classical Python `import`.
@@ -403,7 +403,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      void TritonContext_dealloc(PyObject* self) {
+      static void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
         Py_DECREF(self);
       }
@@ -2978,13 +2978,14 @@ namespace triton {
       };
 
 
+      //! Description of the python representation of a TritonContext
       PyTypeObject TritonContext_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
         "TritonContext",                            /* tp_name */
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        0,                                          /* tp_dealloc */
+        TritonContext_dealloc,                      /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */

@@ -11,7 +11,7 @@
 #include <triton/ast.hpp>
 #include <triton/astGarbageCollector.hpp>
 
-
+#include <vector>
 
 //! The Triton namespace
 namespace triton {

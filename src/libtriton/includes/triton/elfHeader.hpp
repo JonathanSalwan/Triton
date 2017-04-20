@@ -78,79 +78,79 @@ namespace triton {
 
         protected:
           /*!
-           * \description This array of bytes specifies how to interpret the file.
+           * \details This array of bytes specifies how to interpret the file.
            */
           triton::uint8 ident[triton::format::elf::EI_NIDENT];
 
           /*!
-           * \description This member identifies the object file type.
+           * \details This member identifies the object file type.
            */
           triton::uint16 type;
 
           /*!
-           * \description This member specifies the required architecture for an individual file.
+           * \details This member specifies the required architecture for an individual file.
            */
           triton::uint16 machine;
 
           /*!
-           * \description This member identifies the file version.
+           * \details This member identifies the file version.
            */
           triton::uint32 version;
 
           /*!
-           *  \description This member gives the virtual address to which the system first transfers control,
+           *  \details This member gives the virtual address to which the system first transfers control,
            *  thus starting the process. If the file has no associated entry point, this member holds zero.
            */
           triton::uint64 entry;
 
           /*!
-           *  \description This member holds the program header table's file offset in bytes.
+           *  \details This member holds the program header table's file offset in bytes.
            *  If the file has no program header table, this member holds zero.
            */
           triton::uint64 phoff;
 
           /*!
-           *  \description This member holds the section header table's file offset in bytes.
+           *  \details This member holds the section header table's file offset in bytes.
            *  If the file has no section header table, this member holds zero.
            */
           triton::uint64 shoff;
 
           /*!
-           * \description This member holds processor-specific flags associated with the file.
+           * \details This member holds processor-specific flags associated with the file.
            */
           triton::uint32 flags;
 
           /*!
-           * \description This member holds the ELF header's size in bytes.
+           * \details This member holds the ELF header's size in bytes.
            */
           triton::uint16 ehsize;
 
           /*!
-           *  \description This member holds the size in bytes of one entry in the file's
+           *  \details This member holds the size in bytes of one entry in the file's
            *  program header table - all entries are the same size.
            */
           triton::uint16 phentsize;
 
           /*!
-           *  \description This member holds the number of entries in the program header table.
+           *  \details This member holds the number of entries in the program header table.
            *  Thus the product of e_phentsize and e_phnum gives the table's size in bytes.
            */
           triton::uint16 phnum;
 
           /*!
-           *  \description This member holds a sections header's size in bytes. A section header is one entry
+           *  \details This member holds a sections header's size in bytes. A section header is one entry
            *  in the section header table - all entries are the same size.
            */
           triton::uint16 shentsize;
 
           /*!
-           *  \description This member holds the number of entries in the section header table. Thus the product
+           *  \details This member holds the number of entries in the section header table. Thus the product
            *  of ElfHeader::shentsize and ElfHeader::shnum gives the section header table's size in bytes.
            */
           triton::uint16 shnum;
 
           /*!
-           *  \description This member holds the section header table index of the entry associated
+           *  \details This member holds the section header table index of the entry associated
            *  with the section name string table. If the file has no section name string table, this
            *  member holds the value triton::format::elf::SHN_UNDEF.
            */

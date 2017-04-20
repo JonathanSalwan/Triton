@@ -71,7 +71,7 @@ namespace triton {
           bool addendFlag;
 
           /*!
-           * \description This member gives the location at which to apply the relocation action.
+           * \details This member gives the location at which to apply the relocation action.
            * For a relocatable file, the value is the byte offset from the beginning of the section
            * to the storage unit affected by the relocation. For an executable file or shared object,
            * the value is the virtual address of the storage unit affected by the relocation.
@@ -79,7 +79,7 @@ namespace triton {
           triton::uint64 offset;
 
           /*!
-           * \description This member gives both the symbol table index with respect to which
+           * \details This member gives both the symbol table index with respect to which
            * the relocation must be made and the type of relocation to apply. Relocation types
            * are processor-specific. When the text refers to a relocation entry's relocation type
            * or symbol table index, it means the result of applying ELF[32|64]_R_TYPE or ELF[32|64]_R_SYM,
@@ -88,19 +88,19 @@ namespace triton {
           triton::uint64 info;
 
           /*!
-           * \description This member specifies a constant addend used to compute the value to
+           * \details This member specifies a constant addend used to compute the value to
            * be stored into the relocatable field.
            */
           triton::sint64 addend;
 
           /*!
-           * \description According to the ElfRelocationTable::info value, this field contains the
+           * \details According to the ElfRelocationTable::info value, this field contains the
            * type of the relocation.
            */
           triton::uint64 type;
 
           /*!
-           * \description According to the ElfRelocationTable::info value, this field contains the
+           * \details According to the ElfRelocationTable::info value, this field contains the
            * index of the corresponding symbol.
            */
           triton::uint64 symidx;

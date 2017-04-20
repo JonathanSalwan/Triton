@@ -842,7 +842,7 @@ EXCLUDE_SYMBOLS        =
 # command).
 
 EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/snippets
-EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/../src/examples
+EXAMPLE_PATH          += @CMAKE_CURRENT_SOURCE_DIR@/../src/examples
 EXAMPLE_PATH          += @CMAKE_CURRENT_BINARY_DIR@/
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
@@ -1983,7 +1983,7 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           =
+INCLUDE_PATH           = @CMAKE_SOURCE_DIR@/src/libtriton/includes
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

@@ -1417,6 +1417,7 @@ namespace triton {
       };
 
 
+      //! Python description for an ast context.
       PyTypeObject AstContext_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */

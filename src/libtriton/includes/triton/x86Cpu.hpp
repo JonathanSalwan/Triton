@@ -59,7 +59,7 @@ namespace triton {
         protected:
           /*! \brief map of address -> concrete value
            *
-           * \description
+           * \details
            * **item1**: memory address<br>
            * **item2**: concrete value
            */
@@ -184,6 +184,7 @@ namespace triton {
           //! Constructor.
           x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
+          //! Copy constructor
           x86Cpu(const x86Cpu& other);
 
           //! Destructor.

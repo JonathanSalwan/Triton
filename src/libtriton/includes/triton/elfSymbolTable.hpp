@@ -62,30 +62,30 @@ namespace triton {
 
         protected:
         /*!
-         * \description This member holds an index into the object file's symbol string table, which
+         * \details This member holds an index into the object file's symbol string table, which
          * holds the character representations of the symbol names. If the value is non-zero, it represents
          * a string table index that gives the symbol name. Otherwise, the symbol table entry has no name.
          */
         triton::uint32 idxname;
 
         /*!
-         * \description This member specifies the name of the symbol as string based on the ElfSymbolTable::idxname.
+         * \details This member specifies the name of the symbol as string based on the ElfSymbolTable::idxname.
          */
         std::string name;
 
         /*!
-         * \description This member specifies the symbol's type and binding attributes. A list of the values
+         * \details This member specifies the symbol's type and binding attributes. A list of the values
          * and meanings appears below.
          */
         triton::uint8 info;
 
         /*!
-         * \description This member currently specifies a symbol's visibility.
+         * \details This member currently specifies a symbol's visibility.
          */
         triton::uint8 other;
 
         /*!
-         * \description Every symbol table entry is defined in relation to some section. This member holds
+         * \details Every symbol table entry is defined in relation to some section. This member holds
          * the relevant section header table index. As the sh_link and sh_info interpretation table and the
          * related text describe, some section indexes indicate special meanings. If this member contains
          * SHN_XINDEX, then the actual section header index is too large to fit in this field. The actual
@@ -94,13 +94,13 @@ namespace triton {
         triton::uint16 shndx;
 
         /*!
-         * \description This member gives the value of the associated symbol. Depending on the context,
+         * \details This member gives the value of the associated symbol. Depending on the context,
          * this may be an absolute value, an address, and so on.
          */
         triton::uint64 value;
 
         /*!
-         * \description Many symbols have associated sizes. For example, a data object's size is the number
+         * \details Many symbols have associated sizes. For example, a data object's size is the number
          * of bytes contained in the object. This member holds 0 if the symbol has no size or an unknown size.
          */
         triton::uint64 size;

@@ -147,14 +147,6 @@ namespace triton {
     }
 
 
-    AssertNode::AssertNode(const AssertNode& copy) : AbstractNode(copy) {
-    }
-
-
-    AssertNode::~AssertNode() {
-    }
-
-
     void AssertNode::init(void) {
       if (this->childs.size() < 1)
         throw triton::exceptions::Ast("AssertNode::init(): Must take at least one child.");
@@ -196,14 +188,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvaddNode::BvaddNode(const BvaddNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvaddNode::~BvaddNode() {
     }
 
 
@@ -254,14 +238,6 @@ namespace triton {
     }
 
 
-    BvandNode::BvandNode(const BvandNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvandNode::~BvandNode() {
-    }
-
-
     void BvandNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvandNode::init(): Must take at least two childs.");
@@ -307,14 +283,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvashrNode::BvashrNode(const BvashrNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvashrNode::~BvashrNode() {
     }
 
 
@@ -396,14 +364,6 @@ namespace triton {
     }
 
 
-    BvdeclNode::BvdeclNode(const BvdeclNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvdeclNode::~BvdeclNode() {
-    }
-
-
     void BvdeclNode::init(void) {
       triton::uint32 size = 0;
 
@@ -460,14 +420,6 @@ namespace triton {
     }
 
 
-    BvlshrNode::BvlshrNode(const BvlshrNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvlshrNode::~BvlshrNode() {
-    }
-
-
     void BvlshrNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvlshrNode::init(): Must take at least two childs.");
@@ -512,14 +464,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvmulNode::BvmulNode(const BvmulNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvmulNode::~BvmulNode() {
     }
 
 
@@ -570,14 +514,6 @@ namespace triton {
     }
 
 
-    BvnandNode::BvnandNode(const BvnandNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvnandNode::~BvnandNode() {
-    }
-
-
     void BvnandNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvnandNode::init(): Must take at least two childs.");
@@ -624,14 +560,6 @@ namespace triton {
     }
 
 
-    BvnegNode::BvnegNode(const BvnegNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvnegNode::~BvnegNode() {
-    }
-
-
     void BvnegNode::init(void) {
       if (this->childs.size() < 1)
         throw triton::exceptions::Ast("BvnegNode::init(): Must take at least one child.");
@@ -673,14 +601,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvnorNode::BvnorNode(const BvnorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvnorNode::~BvnorNode() {
     }
 
 
@@ -730,14 +650,6 @@ namespace triton {
     }
 
 
-    BvnotNode::BvnotNode(const BvnotNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvnotNode::~BvnotNode() {
-    }
-
-
     void BvnotNode::init(void) {
       if (this->childs.size() < 1)
         throw triton::exceptions::Ast("BvnotNode::init(): Must take at least one child.");
@@ -779,14 +691,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvorNode::BvorNode(const BvorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvorNode::~BvorNode() {
     }
 
 
@@ -838,15 +742,6 @@ namespace triton {
       this->addChild(rot);
       this->addChild(expr);
       this->init();
-    }
-
-
-    BvrolNode::BvrolNode(const BvrolNode& copy) : AbstractNode(copy) {
-    }
-
-
-
-    BvrolNode::~BvrolNode() {
     }
 
 
@@ -908,14 +803,6 @@ namespace triton {
     }
 
 
-    BvrorNode::BvrorNode(const BvrorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvrorNode::~BvrorNode() {
-    }
-
-
     void BvrorNode::init(void) {
       triton::uint32 rot    = 0;
       triton::uint512 value = 0;
@@ -967,14 +854,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvsdivNode::BvsdivNode(const BvsdivNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsdivNode::~BvsdivNode() {
     }
 
 
@@ -1038,14 +917,6 @@ namespace triton {
     }
 
 
-    BvsgeNode::BvsgeNode(const BvsgeNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsgeNode::~BvsgeNode() {
-    }
-
-
     void BvsgeNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
@@ -1097,14 +968,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvsgtNode::BvsgtNode(const BvsgtNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsgtNode::~BvsgtNode() {
     }
 
 
@@ -1162,14 +1025,6 @@ namespace triton {
     }
 
 
-    BvshlNode::BvshlNode(const BvshlNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvshlNode::~BvshlNode() {
-    }
-
-
     void BvshlNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvshlNode::init(): Must take at least two childs.");
@@ -1215,15 +1070,6 @@ namespace triton {
       this->addChild(expr2);
       this->init();
     }
-
-
-    BvsleNode::BvsleNode(const BvsleNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsleNode::~BvsleNode() {
-    }
-
 
     void BvsleNode::init(void) {
       triton::sint512 op1Signed = 0;
@@ -1279,14 +1125,6 @@ namespace triton {
     }
 
 
-    BvsltNode::BvsltNode(const BvsltNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsltNode::~BvsltNode() {
-    }
-
-
     void BvsltNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
@@ -1338,14 +1176,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvsmodNode::BvsmodNode(const BvsmodNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsmodNode::~BvsmodNode() {
     }
 
 
@@ -1407,14 +1237,6 @@ namespace triton {
     }
 
 
-    BvsremNode::BvsremNode(const BvsremNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsremNode::~BvsremNode() {
-    }
-
-
     void BvsremNode::init(void) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
@@ -1473,14 +1295,6 @@ namespace triton {
     }
 
 
-    BvsubNode::BvsubNode(const BvsubNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvsubNode::~BvsubNode() {
-    }
-
-
     void BvsubNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvsubNode::init(): Must take at least two childs.");
@@ -1525,14 +1339,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvudivNode::BvudivNode(const BvudivNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvudivNode::~BvudivNode() {
     }
 
 
@@ -1587,14 +1393,6 @@ namespace triton {
     }
 
 
-    BvugeNode::BvugeNode(const BvugeNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvugeNode::~BvugeNode() {
-    }
-
-
     void BvugeNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvugeNode::init(): Must take at least two childs.");
@@ -1639,14 +1437,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvugtNode::BvugtNode(const BvugtNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvugtNode::~BvugtNode() {
     }
 
 
@@ -1697,14 +1487,6 @@ namespace triton {
     }
 
 
-    BvuleNode::BvuleNode(const BvuleNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvuleNode::~BvuleNode() {
-    }
-
-
     void BvuleNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvuleNode::init(): Must take at least two childs.");
@@ -1752,14 +1534,6 @@ namespace triton {
     }
 
 
-    BvultNode::BvultNode(const BvultNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvultNode::~BvultNode() {
-    }
-
-
     void BvultNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvultNode::init(): Must take at least two childs.");
@@ -1804,14 +1578,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    BvuremNode::BvuremNode(const BvuremNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvuremNode::~BvuremNode() {
     }
 
 
@@ -1866,14 +1632,6 @@ namespace triton {
     }
 
 
-    BvxnorNode::BvxnorNode(const BvxnorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvxnorNode::~BvxnorNode() {
-    }
-
-
     void BvxnorNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvxnorNode::init(): Must take at least two childs.");
@@ -1921,14 +1679,6 @@ namespace triton {
     }
 
 
-    BvxorNode::BvxorNode(const BvxorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvxorNode::~BvxorNode() {
-    }
-
-
     void BvxorNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("BvxorNode::init(): Must take at least two childs.");
@@ -1973,14 +1723,6 @@ namespace triton {
       this->addChild(ctxt.decimal(value));
       this->addChild(ctxt.decimal(size));
       this->init();
-    }
-
-
-    BvNode::BvNode(const BvNode& copy) : AbstractNode(copy) {
-    }
-
-
-    BvNode::~BvNode() {
     }
 
 
@@ -2043,14 +1785,6 @@ namespace triton {
     }
 
 
-    CompoundNode::CompoundNode(const CompoundNode& copy) : AbstractNode(copy) {
-    }
-
-
-    CompoundNode::~CompoundNode() {
-    }
-
-
     void CompoundNode::init(void) {
       if (this->childs.size() < 1)
         throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
@@ -2109,14 +1843,6 @@ namespace triton {
     }
 
 
-    ConcatNode::ConcatNode(const ConcatNode& copy) : AbstractNode(copy) {
-    }
-
-
-    ConcatNode::~ConcatNode() {
-    }
-
-
     void ConcatNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("ConcatNode::init(): Must take at least two childs.");
@@ -2169,15 +1895,6 @@ namespace triton {
     }
 
 
-    DecimalNode::DecimalNode(const DecimalNode& copy) : AbstractNode(copy) {
-      this->value = copy.value;
-    }
-
-
-    DecimalNode::~DecimalNode() {
-    }
-
-
     void DecimalNode::init(void) {
       /* Init attributes */
       this->eval        = 0;
@@ -2213,14 +1930,6 @@ namespace triton {
       this->addChild(this->ctxt.string(name));
       this->addChild(bvDecl);
       this->init();
-    }
-
-
-    DeclareFunctionNode::DeclareFunctionNode(const DeclareFunctionNode& copy) : AbstractNode(copy) {
-    }
-
-
-    DeclareFunctionNode::~DeclareFunctionNode() {
     }
 
 
@@ -2274,14 +1983,6 @@ namespace triton {
     }
 
 
-    DistinctNode::DistinctNode(const DistinctNode& copy) : AbstractNode(copy) {
-    }
-
-
-    DistinctNode::~DistinctNode() {
-    }
-
-
     void DistinctNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("DistinctNode::init(): Must take at least two childs.");
@@ -2323,14 +2024,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    EqualNode::EqualNode(const EqualNode& copy) : AbstractNode(copy) {
-    }
-
-
-    EqualNode::~EqualNode() {
     }
 
 
@@ -2376,14 +2069,6 @@ namespace triton {
       this->addChild(this->ctxt.decimal(low));
       this->addChild(expr);
       this->init();
-    }
-
-
-    ExtractNode::ExtractNode(const ExtractNode& copy) : AbstractNode(copy) {
-    }
-
-
-    ExtractNode::~ExtractNode() {
     }
 
 
@@ -2447,14 +2132,6 @@ namespace triton {
     }
 
 
-    IteNode::IteNode(const IteNode& copy) : AbstractNode(copy) {
-    }
-
-
-    IteNode::~IteNode() {
-    }
-
-
     void IteNode::init(void) {
       if (this->childs.size() < 3)
         throw triton::exceptions::Ast("IteNode::init(): Must take at least three childs.");
@@ -2502,14 +2179,6 @@ namespace triton {
     }
 
 
-    LandNode::LandNode(const LandNode& copy) : AbstractNode(copy) {
-    }
-
-
-    LandNode::~LandNode() {
-    }
-
-
     void LandNode::init(void) {
       if (this->childs.size() < 2)
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two childs.");
@@ -2552,14 +2221,6 @@ namespace triton {
       this->addChild(expr2);
       this->addChild(expr3);
       this->init();
-    }
-
-
-    LetNode::LetNode(const LetNode& copy) : AbstractNode(copy) {
-    }
-
-
-    LetNode::~LetNode() {
     }
 
 
@@ -2609,14 +2270,6 @@ namespace triton {
     }
 
 
-    LnotNode::LnotNode(const LnotNode& copy) : AbstractNode(copy) {
-    }
-
-
-    LnotNode::~LnotNode() {
-    }
-
-
     void LnotNode::init(void) {
       if (this->childs.size() < 1)
         throw triton::exceptions::Ast("LnotNode::init(): Must take at least one child.");
@@ -2658,14 +2311,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
       this->init();
-    }
-
-
-    LorNode::LorNode(const LorNode& copy) : AbstractNode(copy) {
-    }
-
-
-    LorNode::~LorNode() {
     }
 
 
@@ -2713,14 +2358,6 @@ namespace triton {
     }
 
 
-    ReferenceNode::ReferenceNode(const ReferenceNode& copy) : AbstractNode(copy), expr(copy.expr) {
-    }
-
-
-    ReferenceNode::~ReferenceNode() {
-    }
-
-
     void ReferenceNode::init(void) {
       /* Init attributes */
       this->eval        = this->expr.getAst()->evaluate();
@@ -2757,15 +2394,6 @@ namespace triton {
     StringNode::StringNode(std::string value, AstContext& ctxt): AbstractNode(STRING_NODE, ctxt) {
       this->value = value;
       this->init();
-    }
-
-
-    StringNode::StringNode(const StringNode& copy) : AbstractNode(copy) {
-      this->value = copy.value;
-    }
-
-
-    StringNode::~StringNode() {
     }
 
 
@@ -2807,14 +2435,6 @@ namespace triton {
       this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
       this->init();
-    }
-
-
-    SxNode::SxNode(const SxNode& copy) : AbstractNode(copy) {
-    }
-
-
-    SxNode::~SxNode() {
     }
 
 
@@ -2874,14 +2494,6 @@ namespace triton {
     }
 
 
-    VariableNode::VariableNode(const VariableNode& copy) : AbstractNode(copy), symVar(copy.symVar) {
-    }
-
-
-    VariableNode::~VariableNode() {
-    }
-
-
     void VariableNode::init(void) {
       this->size        = this->symVar.getSize();
       this->eval        = ctxt.getValueForVariable(this->symVar.getName()) & this->getBitvectorMask();
@@ -2921,14 +2533,6 @@ namespace triton {
       this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
       this->init();
-    }
-
-
-    ZxNode::ZxNode(const ZxNode& copy) : AbstractNode(copy) {
-    }
-
-
-    ZxNode::~ZxNode() {
     }
 
 

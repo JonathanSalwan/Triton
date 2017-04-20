@@ -15,6 +15,7 @@
 #include <cstdio>
 
 #ifndef __STDC_LIB_EXT1__
+//! Secure open as fopen is deprecated on windows but fopen_s is not standard
 int fopen_s(FILE** fd, const char* fn, const char* flags) {
   *fd = fopen(fn, flags);
   if(*fd == 0)

@@ -45,37 +45,37 @@ namespace triton {
           //! The PE file header structure.
           struct {
             /*!
-             * \description The number that identifies the type of target machine. See IMAGE_FILE_MACHINE_* in peEnums.hpp
+             * \details The number that identifies the type of target machine. See IMAGE_FILE_MACHINE_* in peEnums.hpp
              */
             triton::uint16 machine;
 
             /*!
-             * \description The number of sections. This indicates the size of the section table.
+             * \details The number of sections. This indicates the size of the section table.
              */
             triton::uint16 numberOfSections;
 
             /*!
-             * \description The low 32 bits of the number of seconds since 00:00 January 1, 1970 (a C run-time time_t value), that indicates when the file was created.
+             * \details The low 32 bits of the number of seconds since 00:00 January 1, 1970 (a C run-time time_t value), that indicates when the file was created.
              */
             triton::uint32 timeDateStamp;
 
             /*!
-             * \description The file offset of the COFF symbol table, or zero if no COFF symbol table is present. This value should be zero for an image because COFF debugging information is deprecated.
+             * \details The file offset of the COFF symbol table, or zero if no COFF symbol table is present. This value should be zero for an image because COFF debugging information is deprecated.
              */
             triton::uint32 pointerToSymbolTable;
 
             /*!
-             * \description The number of entries in the symbol table. This data can be used to locate the string table, which immediately follows the symbol table. This value should be zero for an image because COFF debugging information is deprecated.
+             * \details The number of entries in the symbol table. This data can be used to locate the string table, which immediately follows the symbol table. This value should be zero for an image because COFF debugging information is deprecated.
              */
             triton::uint32 numberOfSymbolTable;
 
             /*!
-             * \description The size of the optional header, which is required for executable files but not for object files. This value should be zero for an object file.
+             * \details The size of the optional header, which is required for executable files but not for object files. This value should be zero for an object file.
              */
             triton::uint16 sizeOfOptionalHeader;
 
             /*!
-             * \description The flags that indicate the attributes of the file. See peEnums.hpp
+             * \details The flags that indicate the attributes of the file. See peEnums.hpp
              */
             triton::uint16 characteristics;
           } st;

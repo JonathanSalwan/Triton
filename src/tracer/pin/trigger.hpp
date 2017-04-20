@@ -25,10 +25,12 @@ namespace tracer {
    *  @{
    */
 
-    //! \class Trigger Enable and disable the Pin's InsertCalls.
+    //! \class Trigger
+    //! Enable and disable the Pin's InsertCalls.
     class Trigger {
       protected:
-        bool state;
+        //! Wether insertCalls are enable or not
+        bool state; 
 
       public:
         //! Constructor.

@@ -43,7 +43,7 @@ To use the `libTriton`, your tracer must provide two kinds of information at eac
 - The current opcode executed.
 - A state context (register and memory).
 
-Based on these two information, Triton will translate the control flow into \ref py_ast_page. As an example, let assume that you have dumped
+Based on these two information, Triton will translate the control flow into \ref py_AstNode_page. As an example, let assume that you have dumped
 a trace into a database with all registers state and memory access - these information may come from Valgrind, Pin, Qemu or whatever. The following Python code
 uses the Triton's API to build the semantics of each instruction stored in the database.
 
@@ -672,7 +672,7 @@ namespace tracer {
     }
 
 
-    /* The pintool's entry point */
+    //! The pintool's entry point
     int main(int argc, char *argv[]) {
       PIN_InitSymbols();
       PIN_SetSyntaxIntel();
@@ -721,7 +721,7 @@ namespace tracer {
 };
 
 
-/* namespace trampoline */
+//! namespace trampoline
 int main(int argc, char *argv[]) {
   return tracer::pintool::main(argc, argv);
 }

@@ -140,7 +140,7 @@ namespace triton {
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
@@ -148,7 +148,7 @@ namespace triton {
         /*!
          * \brief [**architecture api**] - Sets the concrete value of memory cells.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
@@ -156,7 +156,7 @@ namespace triton {
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
@@ -164,7 +164,7 @@ namespace triton {
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
@@ -172,7 +172,7 @@ namespace triton {
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a register.
          *
-         * \description Note that by setting a concrete value will probably imply a desynchronization
+         * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
         void setConcreteRegisterValue(const triton::arch::Register& reg);
