@@ -5491,7 +5491,6 @@ namespace triton {
           op3 = this->astCtxt.bv(0, leaSize);
 
         /* Base with PC */
-        // FIXME : Should we use overlapWith?
         if (this->architecture->isRegisterValid(srcBase) && (architecture->getParentRegister(srcBase) == architecture->getParentRegister(ID_REG_IP)))
           op3 = this->astCtxt.bvadd(op3, this->astCtxt.bv(inst.getSize(), leaSize));
 
