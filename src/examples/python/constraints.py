@@ -79,13 +79,13 @@ def test5():
     astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
-    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.EAX))
+    Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.X86_64.EAX))
 
     # process instruction
     Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
-    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.Register(REG.EAX)))
+    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.Register(REG.X86_64.EAX)))
 
     # constraint
     c = astCtxt.assert_(

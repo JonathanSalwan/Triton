@@ -3,7 +3,7 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 # [Description]
->>> ah = ctxt.Register(REG.AH)
+>>> ah = ctxt.Register(REG.X86_64.AH)
 >>> bitvector = ah.getBitvector()
 >>> bitvector.getHigh()
 15L

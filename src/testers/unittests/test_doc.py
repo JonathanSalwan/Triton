@@ -16,7 +16,6 @@ class TestDoc(unittest.TestCase):
 for i, example in enumerate(glob.iglob(os.path.join(SNIPPET_DIR, "*.py"))):
     def _test_snippet(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        print example_name
         res = doctest.testfile(example_name, module_relative=False)
         self.assertEqual(res.failed, 0)
 

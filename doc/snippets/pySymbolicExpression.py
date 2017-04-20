@@ -8,8 +8,8 @@
 
 >>> inst.setOpcodes(opcodes)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.RAX, 12345))
->>> inst.updateContext(ctxt.Register(REG.RDX, 67890))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
 
 >>> ctxt.processing(inst)
 True

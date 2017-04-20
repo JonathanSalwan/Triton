@@ -30,7 +30,7 @@ ah:8 bv[15..8]
 # [Example]
 
 # [Constructor]
->>> ah = ctxt.Register(REG.AH, 0x18)
+>>> ah = ctxt.Register(REG.X86_64.AH, 0x18)
 >>> print ah
 ah:8 bv[15..8]
 
@@ -40,7 +40,7 @@ ah:8 bv[15..8]
 >>> print hex(ah.getConcreteValue())
 0x18L
 
->>> print ctxt.Register(REG.RAX)
+>>> print ctxt.Register(REG.X86_64.RAX)
 rax:64 bv[63..0]
 
 # [Constructor]

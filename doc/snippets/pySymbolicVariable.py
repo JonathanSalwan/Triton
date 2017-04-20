@@ -3,7 +3,7 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 # [Description]
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.RAX))
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
 >>> print symvar
 SymVar_0:64
 

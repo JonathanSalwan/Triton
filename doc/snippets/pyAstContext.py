@@ -7,8 +7,8 @@
 
 >>> inst.setOpcodes(opcodes)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.RAX, 12345))
->>> inst.updateContext(ctxt.Register(REG.RDX, 67890))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
 
 >>> ctxt.processing(inst)
 True
@@ -16,7 +16,7 @@ True
 0x400000: xor rax, rdx
 
 # [Reference]
->>> zfId = ctxt.getSymbolicRegisterId(ctxt.Register(REG.ZF))
+>>> zfId = ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.ZF))
 >>> partialTree = ctxt.getSymbolicExpressionFromId(zfId).getAst()
 >>> print partialTree
 (ite (= ((_ extract 63 0) ref!0) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
@@ -34,8 +34,8 @@ True
 >>> inst = Instruction()
 >>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.RAX, 0x1122334455667788))
->>> inst.updateContext(ctxt.Register(REG.RBX, 0x8877665544332211))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 0x1122334455667788))
+>>> inst.updateContext(ctxt.Register(REG.X86_64.RBX, 0x8877665544332211))
 >>> ctxt.processing(inst)
 True
 >>> print inst
@@ -60,7 +60,7 @@ ref_7 = 0x400003 # Program Counter
 
 # [example 1]
 >>> # Get the symbolic expression of the ZF flag
->>> zfId    = ctxt.getSymbolicRegisterId(ctxt.Register(REG.ZF))
+>>> zfId    = ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.ZF))
 >>> zfExpr  = ctxt.getFullAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
 
 >>> astCtxt = ctxt.getAstContext()

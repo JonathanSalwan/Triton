@@ -44,19 +44,19 @@ class TestMemory(unittest.TestCase):
     def test_base_register(self):
         """Check base register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getBaseRegister()))
-        self.mem.setBaseRegister(self.Triton.Register(REG.RAX))
+        self.mem.setBaseRegister(self.Triton.Register(REG.X86_64.RAX))
         self.assertEqual(self.mem.getBaseRegister().getName(), "rax")
 
     def test_index_register(self):
         """Check index register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getIndexRegister()))
-        self.mem.setIndexRegister(self.Triton.Register(REG.RCX))
+        self.mem.setIndexRegister(self.Triton.Register(REG.X86_64.RCX))
         self.assertEqual(self.mem.getIndexRegister().getName(), "rcx")
 
     def test_segment_register(self):
         """Check segment register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getSegmentRegister()))
-        self.mem.setSegmentRegister(self.Triton.Register(REG.FS))
+        self.mem.setSegmentRegister(self.Triton.Register(REG.X86_64.FS))
         self.assertEqual(self.mem.getSegmentRegister().getName(), "fs")
 
     def test_scale(self):

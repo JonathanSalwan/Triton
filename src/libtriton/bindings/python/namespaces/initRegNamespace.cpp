@@ -8,6 +8,7 @@
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 
 
 
@@ -40,8 +41,23 @@ namespace triton {
 
       void initRegNamespace(PyObject* registersDict) {
         PyDict_Clear(registersDict);
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
-          PyDict_SetItemString(registersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
+
+        PyObject* x86RegistersDict = xPyDict_New();
+        PyObject* x86RegDictClass = xPyClass_New(nullptr, x86RegistersDict, xPyString_FromString("X86"));
+        PyDict_SetItemString(registersDict, "X86", x86RegDictClass);
+
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
+          if(X86_AVAIL)                                                                                                           \
+            PyDict_SetItemString(x86RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/x86.spec"
+
+        PyObject* x8664RegistersDict = xPyDict_New();
+        PyObject* x8664RegDictClass = xPyClass_New(nullptr, x8664RegistersDict, xPyString_FromString("X86_64"));
+        PyDict_SetItemString(registersDict, "X86_64", x8664RegDictClass);
+
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)\
+          PyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
       }
