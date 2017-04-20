@@ -165,6 +165,8 @@ class TestRegisterValues(unittest.TestCase):
         self.assertTrue(self.Triton.Register(REG.AX).isOverlapWith(self.Triton.Register(REG.RAX)), "overlap with parent")
         self.assertTrue(self.Triton.Register(REG.RAX).isOverlapWith(self.Triton.Register(REG.AX)), "overlap with lower")
         self.assertFalse(self.Triton.Register(REG.AH).isOverlapWith(self.Triton.Register(REG.AL)))
+        self.assertTrue(self.Triton.Register(REG.AH).isOverlapWith(self.Triton.Register(REG.EAX)))
+        self.assertTrue(self.Triton.Register(REG.EAX).isOverlapWith(self.Triton.Register(REG.AH)))
         self.assertTrue(self.Triton.Register(REG.AX).isOverlapWith(self.Triton.Register(REG.AL)))
         self.assertTrue(self.Triton.Register(REG.AL).isOverlapWith(self.Triton.Register(REG.AX)))
         self.assertFalse(self.Triton.Register(REG.EAX).isOverlapWith(self.Triton.Register(REG.EDX)))
