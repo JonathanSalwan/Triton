@@ -130,3 +130,4 @@ include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 
 set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
+add_subdirectory(doc)

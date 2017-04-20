@@ -13,6 +13,5 @@ pin.log
 pintool.log
 private/*
 www/*
-doc/*
 __pycache__
 .cache
