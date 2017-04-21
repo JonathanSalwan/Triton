@@ -6,14 +6,19 @@ import doctest
 import os
 import glob
 
-SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "..", "doc", "snippets")
+SNIPPET_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "libtriton", "bindings", "python", "objects")
 
 class TestDoc(unittest.TestCase):
 
     """Holder to run examples as tests."""
 
 
-for i, example in enumerate(glob.iglob(os.path.join(SNIPPET_DIR, "*.py"))):
+for i, example in enumerate(glob.iglob(os.path.join(SNIPPET_DIR, "*.cpp"))):
+
+    # Bot modules will die soon
+    if "pyElf" in example or "pyPe" in example:
+        continue
+
     def _test_snippet(self, example_name=example):
         """Run example and show stdout in case of fail."""
         res = doctest.testfile(example_name, module_relative=False)

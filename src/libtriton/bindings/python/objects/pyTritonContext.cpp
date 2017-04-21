@@ -28,6 +28,7 @@ By default, the libTriton contains Python bindings and can be loaded with a clas
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import TritonContext
+
 ~~~~~~~~~~~~~
 
 If you want to use the libTriton without Python bindings, recompile the project with the `cmake` flag `-DTRITON_PYTHON_BINDINGS=no`.

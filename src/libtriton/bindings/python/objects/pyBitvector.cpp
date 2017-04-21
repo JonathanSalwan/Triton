@@ -11,6 +11,12 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 
+/* setup doctest context
+>>> from triton import ARCH, TritonContext, REG
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+*/
 
 
 /*! \page py_Bitvector_page Bitvector
@@ -23,7 +29,18 @@
 
 This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
 
-\snippet pyBitVector.py Description
+
+~~~~~~~~~~~~~{.py}
+>>> ah = ctxt.Register(REG.X86_64.AH)
+>>> bitvector = ah.getBitvector()
+>>> bitvector.getHigh()
+15L
+>>> bitvector.getLow()
+8L
+>>> bitvector.getVectorSize()
+8L
+
+~~~~~~~~~~~~~
 
 \section Bitvector_py_api Python API - Methods of the Bitvector class
 <hr>

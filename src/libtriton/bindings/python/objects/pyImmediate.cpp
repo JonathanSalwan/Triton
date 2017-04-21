@@ -11,7 +11,16 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 
+/* setup doctest
+>>> from triton import TritonContext, ARCH, Instruction, Immediate, CPUSIZE
 
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+>>> inst = Instruction()
+>>> inst.setOpcodes("\xB8\x14\x00\x00\x00")
+
+*/
 
 /*! \page py_Immediate_page Immediate
     \brief [**python api**] All information about the Immediate python object.
@@ -25,11 +34,38 @@ This object is used to represent an immediate.
 
 \subsection py_Immediate_example Example
 
-\snippet pyImmediate.py Process instruction
+~~~~~~~~~~~~~{.py}
+>>> ctxt.processing(inst)
+True
+>>> print inst
+0x0: mov eax, 0x14
+
+>>> op1 = inst.getOperands()[1]
+>>> print op1
+0x14:32 bv[31..0]
+
+>>> print hex(op1.getValue())
+0x14L
+
+>>> print op1.getBitSize()
+32
+
+~~~~~~~~~~~~~
 
 \subsection py_Immediate_constructor Constructor
 
-\snippet pyImmediate.py Constructor
+~~~~~~~~~~~~~{.py}
+>>> imm = Immediate(0x1234, CPUSIZE.WORD)
+>>> print imm
+0x1234:16 bv[15..0]
+>>> imm.getValue()
+4660L
+>>> imm.getSize()
+2L
+>>> imm.getBitSize()
+16L
+
+~~~~~~~~~~~~~
 
 \section Immediate_py_api Python API - Methods of the Immediate class
 <hr>

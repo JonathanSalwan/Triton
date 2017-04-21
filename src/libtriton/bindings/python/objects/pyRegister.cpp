@@ -11,7 +11,15 @@
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
 
+/* setup doctest
+>>> from triton import ARCH, TritonContext, Instruction, REG
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
 
+>>> inst = Instruction("\x8A\xA4\x4A\x00\x01\x00\x00")
+>>> inst.setAddress(0x40000)
+
+*/
 
 /*! \page py_Register_page Register
     \brief [**python api**] All information about the Register python object.
@@ -23,13 +31,50 @@
 
 This object is used to represent a register operand according to the CPU architecture.
 
+
 \subsection py_Register_example Example
 
-\snippet pyRegister.py Example
+~~~~~~~~~~~~~{.py}
+>>> ctxt.processing(inst)
+True
+>>> print inst
+0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
+
+>>> op0 = inst.getOperands()[0]
+>>> print op0
+ah:8 bv[15..8]
+
+>>> op0.getName()
+'ah'
+
+>>> op0.getSize()
+1L
+
+>>> op0.getBitSize()
+8L
+
+>>> ctxt.getParentRegister(op0).getName()
+'rax'
+
+~~~~~~~~~~~~~
 
 \subsection py_Register_constructor Constructor
 
-\snippet pyRegister.py Constructor
+~~~~~~~~~~~~~{.py}
+>>> ah = ctxt.Register(REG.X86_64.AH, 0x18)
+>>> print ah
+ah:8 bv[15..8]
+
+>>> print ah.getBitSize()
+8
+
+>>> print hex(ah.getConcreteValue())
+0x18L
+
+>>> print ctxt.Register(REG.X86_64.RAX)
+rax:64 bv[63..0]
+
+~~~~~~~~~~~~~
 
 \section Register_py_api Python API - Methods of the Register class
 <hr>

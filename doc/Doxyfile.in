@@ -841,8 +841,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/snippets
-EXAMPLE_PATH          += @CMAKE_CURRENT_SOURCE_DIR@/../src/examples
+EXAMPLE_PATH           = @CMAKE_CURRENT_SOURCE_DIR@/../src/examples
 EXAMPLE_PATH          += @CMAKE_CURRENT_BINARY_DIR@/
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
