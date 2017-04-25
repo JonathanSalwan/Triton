@@ -799,7 +799,7 @@ namespace tracer {
       /* Lock / Unlock the Analysis from a Entry point */
       if (tracer::pintool::options::startAnalysisFromEntry) {
         tracer::pintool::options::startAnalysisFromEntry = false;
-        tracer::pintool::options::startAnalysisFromAddress.insert(IMG_Entry(img));
+        tracer::pintool::options::startAnalysisFromAddress.insert(IMG_LoadOffset(img) + IMG_Entry(img));
       }
 
       /* Lock / Unlock the Analysis from a symbol */
