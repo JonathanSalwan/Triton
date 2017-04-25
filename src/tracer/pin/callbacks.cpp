@@ -5,18 +5,19 @@
 **  This program is under the terms of the BSD License.
 */
 
+/* libTriton */
+#include <triton/pythonBindings.hpp>
+#include <triton/pythonObjects.hpp>
+#include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
+#include <triton/api.hpp>
+
 #include <iostream>
 #include <stdexcept>
 #include <string>
 
 #include <pin.H>
 
-/* libTriton */
-#include <triton/api.hpp>
-#include <triton/pythonBindings.hpp>
-#include <triton/pythonObjects.hpp>
-#include <triton/pythonUtils.hpp>
-#include <triton/pythonXFunctions.hpp>
 
 /* pintool */
 #include "bindings.hpp"

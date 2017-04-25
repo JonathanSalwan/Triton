@@ -5,6 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
+/* pintool */
+#include "bindings.hpp"
+#include "context.hpp"
+
 #include <cstring>
 #include <stdexcept>
 
@@ -12,10 +16,6 @@
 #include <triton/cpuSize.hpp>
 #include <triton/coreUtils.hpp>
 #include <triton/x86Specifications.hpp>
-
-/* pintool */
-#include "bindings.hpp"
-#include "context.hpp"
 
 
 
