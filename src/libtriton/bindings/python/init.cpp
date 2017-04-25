@@ -5,11 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <iostream>
-
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonXFunctions.hpp>
-#include <triton/pythonBindings.hpp>
+
+#include <iostream>
 
 
 

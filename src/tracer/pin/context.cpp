@@ -5,6 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
+/* pintool */
+#include "bindings.hpp"
+#include "api.hpp"
+#include "context.hpp"
+
 #include <cstring>
 #include <stdexcept>
 
@@ -14,10 +19,6 @@
 #include <triton/coreUtils.hpp>
 #include <triton/x86Specifications.hpp>
 
-/* pintool */
-#include "api.hpp"
-#include "bindings.hpp"
-#include "context.hpp"
 
 
 
