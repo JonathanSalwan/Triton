@@ -800,6 +800,7 @@ namespace tracer {
       /* Lock / Unlock the Analysis from a Entry point */
       if (tracer::pintool::options::startAnalysisFromEntry) {
         tracer::pintool::options::startAnalysisFromEntry = false;
+        /* IMG_LoadOffset(img) + IMG_Entry(img) for PIE binaries (see #524) */
         tracer::pintool::options::startAnalysisFromAddress.insert(IMG_LoadOffset(img) + IMG_Entry(img));
       }
 
