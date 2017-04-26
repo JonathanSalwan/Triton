@@ -19,6 +19,7 @@ environment:
 
   matrix:
     - platform: Win32
+      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
@@ -37,6 +38,7 @@ environment:
     #  PYTHON: "C:\\Python27"
 
     - platform: x64
+      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
@@ -77,6 +79,11 @@ install:
   - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=v140 /t:capstone_static /m
   - cmd: echo Running cmake...
   - cmd: cmake .. -G "%CMAKE_TEMPLATE%"
+    # Install LIEF
+  - cmd: echo Downloading LIEF...
+  - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/0.7.0/%LIEF_ZIP%
+  - cmd: echo Install LIEF...
+  - cmd: python -m pip install %LIEF_ZIP%
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python

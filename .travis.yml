@@ -142,6 +142,11 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-clang.4.2-mac.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tar -xf pin-2.14-71313-clang.4.2-mac.tar.gz; fi
+  # Install LIEF
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/lief-project/LIEF/releases/download/0.7.0/linux_lief-0.7.0_py2.7.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then pip install linux_lief-0.7.0_py2.7.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget https://github.com/lief-project/LIEF/releases/download/0.7.0/osx_lief-0.7.0_py2.7.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then pip install osx_lief-0.7.0_py2.7.tar.gz; fi
   # Move Triton into pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mv ./Triton ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton; fi

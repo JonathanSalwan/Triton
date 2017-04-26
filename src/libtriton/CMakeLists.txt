@@ -84,24 +84,6 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
-    format/abstractBinary.cpp
-    format/elf/elf.cpp
-    format/elf/elfDynamicTable.cpp
-    format/elf/elfHeader.cpp
-    format/elf/elfProgramHeader.cpp
-    format/elf/elfRelocationTable.cpp
-    format/elf/elfSectionHeader.cpp
-    format/elf/elfSymbolTable.cpp
-    format/memoryMapping.cpp
-    format/pe/peBuilder.cpp
-    format/pe/pe.cpp
-    format/pe/peDataDirectory.cpp
-    format/pe/peExportDirectory.cpp
-    format/pe/peFileHeader.cpp
-    format/pe/peHeader.cpp
-    format/pe/peImportDirectory.cpp
-    format/pe/peOptionalHeader.cpp
-    format/pe/peSectionHeader.cpp
     modes/modes.cpp
     os/unix/syscallNumberToString.cpp
     utils/coreUtils.cpp
@@ -116,10 +98,8 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initAstRepresentationNamespace.cpp
         bindings/python/namespaces/initCallbackNamespace.cpp
         bindings/python/namespaces/initCpuSizeNamespace.cpp
-        bindings/python/namespaces/initElfNamespace.cpp
         bindings/python/namespaces/initModeNamespace.cpp
         bindings/python/namespaces/initOperandNamespace.cpp
-        bindings/python/namespaces/initPeNamespace.cpp
         bindings/python/namespaces/initRegNamespace.cpp
         bindings/python/namespaces/initSymExprNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
@@ -129,24 +109,10 @@ if(PYTHON_BINDINGS)
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
         bindings/python/objects/pyBitsVector.cpp
-        bindings/python/objects/pyElf.cpp
-        bindings/python/objects/pyElfDynamicTable.cpp
-        bindings/python/objects/pyElfHeader.cpp
-        bindings/python/objects/pyElfProgramHeader.cpp
-        bindings/python/objects/pyElfRelocationTable.cpp
-        bindings/python/objects/pyElfSectionHeader.cpp
-        bindings/python/objects/pyElfSymbolTable.cpp
         bindings/python/objects/pyImmediate.cpp
         bindings/python/objects/pyInstruction.cpp
         bindings/python/objects/pyMemoryAccess.cpp
         bindings/python/objects/pyPathConstraint.cpp
-        bindings/python/objects/pyPe.cpp
-        bindings/python/objects/pyPeExportEntry.cpp
-        bindings/python/objects/pyPeExportTable.cpp
-        bindings/python/objects/pyPeHeader.cpp
-        bindings/python/objects/pyPeImportLookup.cpp
-        bindings/python/objects/pyPeImportTable.cpp
-        bindings/python/objects/pyPeSectionHeader.cpp
         bindings/python/objects/pyRegister.cpp
         bindings/python/objects/pySolverModel.cpp
         bindings/python/objects/pySymbolicExpression.cpp

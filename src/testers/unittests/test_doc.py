@@ -15,10 +15,6 @@ class TestDoc(unittest.TestCase):
 
 for i, example in enumerate(glob.iglob(os.path.join(SNIPPET_DIR, "*.cpp"))):
 
-    # Bot modules will die soon
-    if "pyElf" in example or "pyPe" in example:
-        continue
-
     def _test_snippet(self, example_name=example):
         """Run example and show stdout in case of fail."""
         res = doctest.testfile(example_name, module_relative=False)

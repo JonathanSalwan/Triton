@@ -5,8 +5,8 @@
 import unittest
 import os
 
-from triton import (Instruction, ARCH, CPUSIZE, MemoryAccess, Elf, MODE, REG,
-                    TritonContext)
+from triton import (Instruction, ARCH, CPUSIZE, MemoryAccess, MODE,
+                    TritonContext, REG)
 
 
 def checkAstIntegrity(instruction):
@@ -87,14 +87,14 @@ class DefCamp2015(object):
 
     def load_binary(self, filename):
         """Load in memory every opcode from an elf program."""
-        binary = Elf(filename)
-        raw = binary.getRaw()
-        phdrs = binary.getProgramHeaders()
+        import lief
+        binary = lief.parse(filename)
+        phdrs  = binary.segments
         for phdr in phdrs:
-            offset = phdr.getOffset()
-            size = phdr.getFilesz()
-            vaddr = phdr.getVaddr()
-            self.Triton.setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
+            size   = phdr.physical_size
+            vaddr  = phdr.virtual_address
+            print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
+            self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
 
     def test_defcamp_2015(self):
         """Load binary, self.Triton.setup environment and solve challenge with sym eval."""

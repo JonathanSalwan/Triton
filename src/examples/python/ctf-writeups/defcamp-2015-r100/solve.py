@@ -38,7 +38,7 @@
 ##  [+] Emulation done.
 ##
 
-from triton import ARCH, TritonContext, Instruction, Elf, MODE, MemoryAccess, CPUSIZE
+from triton import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPUSIZE
 
 import os
 import sys
@@ -94,15 +94,14 @@ def emulate(pc):
 
 # Load segments into triton.
 def loadBinary(path):
-    binary = Elf(path)
-    raw    = binary.getRaw()
-    phdrs  = binary.getProgramHeaders()
+    import lief
+    binary = lief.parse(path)
+    phdrs  = binary.segments
     for phdr in phdrs:
-        offset = phdr.getOffset()
-        size   = phdr.getFilesz()
-        vaddr  = phdr.getVaddr()
+        size   = phdr.physical_size
+        vaddr  = phdr.virtual_address
         print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
-        Triton.setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
+        Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
     return
 
 
