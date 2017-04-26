@@ -34,6 +34,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
          COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
          COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
          COMMAND ${PYTHONPATH_CMD} ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh
+         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
          COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
          COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
          COMMAND genhtml coverage.info -o coverage
