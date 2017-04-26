@@ -5,10 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/immediate.hpp>
-
+#include <iosfwd>                       // for ostream
+#include <triton/cpuSize.hpp>           // for BYTE_SIZE, BYTE_SIZE_BIT, DWO...
+#include <triton/exceptions.hpp>        // for Immediate
+#include <triton/immediate.hpp>         // for Immediate
+#include "triton/bitsVector.hpp"        // for BitsVector
+#include "triton/operandInterface.hpp"  // for operandType_e::OP_IMM
+#include "triton/tritonTypes.hpp"       // for uint32, uint64, uint16, uint8
 
 
 namespace triton {

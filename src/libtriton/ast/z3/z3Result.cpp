@@ -5,9 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/z3Result.hpp>
-
+#include <z3++.h>                  // for expr, context, sort
+#include <z3_api.h>                // for Z3_get_numeral_uint64
+#include <string>                  // for string
+#include <triton/exceptions.hpp>   // for Exception
+#include <triton/z3Result.hpp>     // for Z3Result
+#include "triton/tritonTypes.hpp"  // for __uint, uint32
 
 
 namespace triton {

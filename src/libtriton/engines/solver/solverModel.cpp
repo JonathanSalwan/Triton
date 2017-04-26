@@ -5,11 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstdlib>
-
-#include <triton/solverModel.hpp>
-#include <triton/symbolicEnums.hpp>
-
+#include <iosfwd>                    // for ostream
+#include <string>                    // for string
+#include <triton/solverModel.hpp>    // for SolverModel
+#include <triton/symbolicEnums.hpp>  // for TRITON_SYMVAR_NAME_SIZE
+#include "triton/tritonTypes.hpp"    // for uint32, uint512
 
 
 namespace triton {

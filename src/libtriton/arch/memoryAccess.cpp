@@ -5,14 +5,19 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/memoryAccess.hpp>
-
+#include <iosfwd>                       // for ostream
+#include <triton/cpuSize.hpp>           // for BYTE_SIZE_BIT, BYTE_SIZE, DQQ...
+#include <triton/exceptions.hpp>        // for MemoryAccess
+#include <triton/memoryAccess.hpp>      // for MemoryAccess
+#include "triton/immediate.hpp"         // for Immediate, operator!=
+#include "triton/operandInterface.hpp"  // for operandType_e::OP_MEM
+#include "triton/register.hpp"          // for Register
+#include "triton/tritonTypes.hpp"       // for uint32, uint64, uint512
 
 
 namespace triton {
   namespace arch {
+    class AbstractNode;
 
     MemoryAccess::MemoryAccess() {
       this->address              = 0;

@@ -5,12 +5,23 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/x86Semantics.hpp>
-#include <triton/x86Specifications.hpp>
-#include <triton/astContext.hpp>
-
+#include <string>                        // for string
+#include <triton/astContext.hpp>         // for AstContext
+#include <triton/cpuSize.hpp>            // for QWORD_SIZE_BIT, DWORD_SIZE_BIT
+#include <triton/exceptions.hpp>         // for Semantics
+#include <triton/x86Semantics.hpp>       // for x86Semantics
+#include <triton/x86Specifications.hpp>  // for prefix_e::ID_PREFIX_REP, pre...
+#include "triton/architecture.hpp"       // for Architecture
+#include "triton/ast.hpp"                // for AbstractNode
+#include "triton/immediate.hpp"          // for Immediate
+#include "triton/instruction.hpp"        // for Instruction
+#include "triton/memoryAccess.hpp"       // for MemoryAccess
+#include "triton/operandWrapper.hpp"     // for OperandWrapper
+#include "triton/register.hpp"           // for RegisterSpec
+#include "triton/registers_e.hpp"        // for registers_e::ID_REG_CF, regi...
+#include "triton/symbolicEngine.hpp"     // for SymbolicEngine
+#include "triton/taintEngine.hpp"        // for TaintEngine
+#include "triton/tritonTypes.hpp"        // for uint32, uint64
 
 
 /*! \page SMT_Semantics_Supported_page SMT Semantics Supported
@@ -320,6 +331,11 @@ XORPS                        | sse1       | Bitwise Logical XOR for Single-Preci
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+    }
+  }
   namespace arch {
     namespace x86 {
 

@@ -5,16 +5,24 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstring>
-
-#include <triton/architecture.hpp>
-#include <triton/coreUtils.hpp>
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/externalLibs.hpp>
-#include <triton/immediate.hpp>
-#include <triton/x86Cpu.hpp>
-
+#include <stdint.h>                      // for uint8_t
+#include <cstring>                       // for memcpy
+#include <iosfwd>                        // for stringstream
+#include <stdexcept>                     // for out_of_range
+#include <triton/architecture.hpp>       // for architectures_e::ARCH_X86
+#include <triton/cpuSize.hpp>            // for BYTE_SIZE_BIT, DQQWORD_SIZE
+#include <triton/coreUtils.hpp>          // for fromUintToBuffer
+#include <triton/exceptions.hpp>         // for Cpu, Disassembly
+#include <triton/externalLibs.hpp>       // for extlibs::
+#include <triton/immediate.hpp>          // for Immediate
+#include <triton/x86Cpu.hpp>             // for x86Cpu, x86Cpu::pcId
+#include "triton/callbacks.hpp"          // for Callbacks, callback_e::GET_C...
+#include "triton/instruction.hpp"        // for Instruction
+#include "triton/memoryAccess.hpp"       // for MemoryAccess
+#include "triton/register.hpp"           // for Register, RegisterSpec
+#include "triton/registers_e.hpp"        // for registers_e, registers_e::ID...
+#include "triton/tritonTypes.hpp"        // for uint32, uint8, uint64, uint16
+#include "triton/x86Specifications.hpp"  // for x86Specifications
 
 
 namespace triton {

@@ -5,13 +5,21 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/astRepresentation.hpp>
-#include <triton/symbolicExpression.hpp>
-
+#include <iosfwd>                         // for ostream
+#include <string>                         // for string
+#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
+#include <triton/exceptions.hpp>          // for SymbolicExpression
+#include <triton/symbolicExpression.hpp>  // for SymbolicExpression
+#include "triton/ast.hpp"                 // for AbstractNode, newInstance
+#include "triton/symbolicEnums.hpp"       // for symkind_e, symkind_e::MEM
+#include "triton/tritonTypes.hpp"         // for usize
 
 
 namespace triton {
+  namespace arch {
+    class MemoryAccess;
+    class Register;
+  }
   namespace engines {
     namespace symbolic {
 

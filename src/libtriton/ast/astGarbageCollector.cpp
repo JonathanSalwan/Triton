@@ -6,13 +6,14 @@
 */
 
 #include <triton/astGarbageCollector.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/symbolicVariable.hpp>
-
+#include "triton/ast.hpp"              // for AbstractNode
+#include "triton/astDictionaries.hpp"  // for AstDictionaries
+#include "triton/modes.hpp"            // for Modes, mode_e::AST_DICTIONARIES
 
 
 namespace triton {
   namespace ast {
+    class AbstractNode;
 
     AstGarbageCollector::AstGarbageCollector(const triton::modes::Modes& modes, bool isBackup)
       : triton::ast::AstDictionaries(isBackup),

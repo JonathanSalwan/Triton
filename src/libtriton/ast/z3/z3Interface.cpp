@@ -5,15 +5,22 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/tritonToZ3Ast.hpp>
-#include <triton/z3Interface.hpp>
-#include <triton/z3Result.hpp>
-#include <triton/z3ToTritonAst.hpp>
-
+#include <z3++.h>                    // for expr
+#include <triton/exceptions.hpp>     // for AstTranslations
+#include <triton/tritonToZ3Ast.hpp>  // for TritonToZ3Ast
+#include <triton/z3Interface.hpp>    // for Z3Interface
+#include <triton/z3Result.hpp>       // for Z3Result
+#include <triton/z3ToTritonAst.hpp>  // for Z3ToTritonAst
+#include "triton/ast.hpp"            // for AbstractNode
+#include "triton/tritonTypes.hpp"    // for uint512
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicEngine;
+    }
+  }
   namespace ast {
 
     Z3Interface::Z3Interface(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {

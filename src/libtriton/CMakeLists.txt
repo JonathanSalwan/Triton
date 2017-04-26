@@ -235,6 +235,15 @@ target_link_libraries(
     ${LIBTRITON_OTHER_LIBS}
 )
 
+if(WITH_IWYU AND NOT ${CMAKE_VERSION} VERSION_LESS 3.3)
+  find_program(iwyu_path NAMES include-what-you-use iwyu)
+  if(NOT iwyu_path)
+      message(FATAL_ERROR "Could not find the program include-what-you-use")
+  endif()
+
+  set_property(TARGET triton PROPERTY CXX_INCLUDE_WHAT_YOU_USE ${iwyu_path})
+endif()
+
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
 install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)

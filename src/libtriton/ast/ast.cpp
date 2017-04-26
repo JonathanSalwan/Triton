@@ -5,16 +5,19 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cmath>
-#include <new>
-
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/astRepresentation.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/tritonToZ3Ast.hpp>
-#include <triton/z3Result.hpp>
-
+#include <iosfwd>                          // for ostream
+#include <string>                          // for string
+#include <triton/ast.hpp>                  // for AbstractNode, ReferenceNode
+#include <triton/astContext.hpp>           // for AstContext
+#include <triton/astRepresentation.hpp>    // for AstRepresentation, astRepr...
+#include <triton/exceptions.hpp>           // for Ast
+#include "triton/astEnums.hpp"             // for kind_e::CONCAT_NODE, kind_e
+#include "triton/astGarbageCollector.hpp"  // for AstGarbageCollector
+#include "triton/astVisitor.hpp"           // for AstVisitor
+#include "triton/cpuSize.hpp"              // for MAX_BITS_SUPPORTED
+#include "triton/symbolicExpression.hpp"   // for SymbolicExpression
+#include "triton/symbolicVariable.hpp"     // for SymbolicVariable
+#include "triton/tritonTypes.hpp"          // for uint512, uint32, sint512
 
 
 namespace triton {

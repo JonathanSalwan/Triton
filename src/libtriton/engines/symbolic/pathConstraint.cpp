@@ -5,13 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/pathConstraint.hpp>
-
+#include <triton/exceptions.hpp>      // for PathConstraint
+#include <triton/pathConstraint.hpp>  // for PathConstraint
+#include "triton/tritonTypes.hpp"     // for uint64
 
 
 namespace triton {
   namespace engines {
+    namespace ast {
+      class AbstractNode;
+    }
     namespace symbolic {
 
       PathConstraint::PathConstraint() {

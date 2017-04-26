@@ -5,16 +5,24 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <list>
-
-#include <triton/exceptions.hpp>
-#include <triton/z3ToTritonAst.hpp>
-#include <triton/astContext.hpp>
-
+#include <z3++.h>                    // for expr, func_decl, sort
+#include <z3_api.h>                  // for ::Z3_OP_AND, ::Z3_OP_BADD, ::Z3_...
+#include <string>                    // for string
+#include <triton/astContext.hpp>     // for AstContext
+#include <triton/exceptions.hpp>     // for AstTranslations
+#include <triton/z3ToTritonAst.hpp>  // for Z3ToTritonAst
+#include "triton/tritonTypes.hpp"    // for uint32, uint512
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicEngine;
+      class SymbolicVariable;
+    }
+  }
   namespace ast {
+    class AbstractNode;
 
     Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, AstContext& astCtxt)
       : symbolicEngine(symbolicEngine), astCtxt(astCtxt), context(), expr(this->context) {

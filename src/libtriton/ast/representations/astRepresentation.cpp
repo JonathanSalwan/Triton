@@ -5,15 +5,19 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <new>
-
-#include <triton/astRepresentation.hpp>
-#include <triton/exceptions.hpp>
-
+#include <iosfwd>                                 // for ostream
+#include <new>                                    // for nothrow, operator new
+#include <triton/astRepresentation.hpp>           // for AstRepresentation
+#include <triton/exceptions.hpp>                  // for AstRepresentation
+#include "triton/astPythonRepresentation.hpp"     // for AstPythonRepresenta...
+#include "triton/astRepresentationInterface.hpp"  // for AstRepresentationIn...
+#include "triton/astSmtRepresentation.hpp"        // for AstSmtRepresentation
+#include "triton/tritonTypes.hpp"                 // for uint32
 
 
 namespace triton {
   namespace ast {
+    class AbstractNode;
     namespace representations {
 
       /* External access to the AST representation API */

@@ -6,9 +6,10 @@
 */
 
 #include <triton/astDictionaries.hpp>
-#include <triton/symbolicExpression.hpp>
-#include <triton/symbolicVariable.hpp>
-
+#include <triton/symbolicExpression.hpp>  // for SymbolicExpression
+#include "triton/ast.hpp"                 // for AbstractNode, DecimalNode
+#include "triton/astEnums.hpp"            // for kind_e::DECIMAL_NODE, kind_...
+#include "triton/tritonTypes.hpp"         // for uint32
 
 
 namespace triton {

@@ -5,16 +5,22 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstring>
-
-#include <triton/architecture.hpp>
-#include <triton/coreUtils.hpp>
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/externalLibs.hpp>
-#include <triton/immediate.hpp>
-#include <triton/x8664Cpu.hpp>
-
+#include <iosfwd>                        // for stringstream
+#include <stdexcept>                     // for out_of_range
+#include <triton/architecture.hpp>       // for architectures_e::ARCH_X86_64
+#include <triton/coreUtils.hpp>          // for fromUintToBuffer
+#include <triton/cpuSize.hpp>            // for BYTE_SIZE_BIT, DQQWORD_SIZE
+#include "triton/immediate.hpp"          // for Immediate
+#include <triton/exceptions.hpp>         // for Cpu, Disassembly
+#include <triton/externalLibs.hpp>       // for extlibs::capstone
+#include <triton/x8664Cpu.hpp>           // for x8664Cpu
+#include "triton/callbacks.hpp"          // for Callbacks, callback_e::GET_C...
+#include "triton/instruction.hpp"        // for Instruction
+#include "triton/memoryAccess.hpp"       // for MemoryAccess
+#include "triton/register.hpp"           // for RegisterSpec, Register
+#include "triton/registers_e.hpp"        // for registers_e, registers_e::ID...
+#include "triton/tritonTypes.hpp"        // for uint64, uint8, uint32, uint16
+#include "triton/x86Specifications.hpp"  // for x86Specifications
 
 
 namespace triton {

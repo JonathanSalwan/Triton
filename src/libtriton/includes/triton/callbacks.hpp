@@ -8,13 +8,10 @@
 #ifndef TRITON_CALLBACKS_H
 #define TRITON_CALLBACKS_H
 
-#include <list>
+#include <list>                          // for list
+#include <triton/comparableFunctor.hpp>  // for ComparableFunctor
+#include <triton/tritonTypes.hpp>        // for usize
 
-#include <triton/ast.hpp>
-#include <triton/memoryAccess.hpp>
-#include <triton/register.hpp>
-#include <triton/tritonTypes.hpp>
-#include <triton/comparableFunctor.hpp>
 
 
 
@@ -26,6 +23,15 @@ namespace triton {
  */
 
   class API;
+
+  namespace arch {
+    class MemoryAccess;
+    class RegisterSpec;
+  }
+
+  namespace ast {
+    class AbstractNode;
+  }
 
   //! The Callbacks namespace
   namespace callbacks {

@@ -5,11 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/pathManager.hpp>
-#include <triton/symbolicEnums.hpp>
-#include <triton/astContext.hpp>
-
+#include <triton/astContext.hpp>          // for AstContext
+#include <triton/exceptions.hpp>          // for PathManager
+#include <triton/pathManager.hpp>         // for PathManager
+#include "triton/ast.hpp"                 // for AbstractNode
+#include "triton/astEnums.hpp"            // for kind_e::ITE_NODE
+#include "triton/instruction.hpp"         // for Instruction
+#include "triton/modes.hpp"               // for Modes, mode_e::ONLY_ON_TAINTED
+#include "triton/pathConstraint.hpp"      // for PathConstraint
+#include "triton/symbolicExpression.hpp"  // for SymbolicExpression
+#include "triton/tritonTypes.hpp"         // for uint64, uint32, usize
 
 
 namespace triton {

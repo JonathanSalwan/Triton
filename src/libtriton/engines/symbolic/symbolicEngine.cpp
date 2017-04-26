@@ -5,14 +5,30 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstring>
-#include <new>
-
-#include <triton/exceptions.hpp>
-#include <triton/coreUtils.hpp>
-#include <triton/symbolicEngine.hpp>
-#include <triton/astContext.hpp>
-
+#include <iosfwd>                             // for stringstream
+#include <new>                                // for nothrow, operator new
+#include <string>                             // for string
+#include <triton/astContext.hpp>              // for AstContext
+#include <triton/coreUtils.hpp>               // for fromUintToBuffer
+#include <triton/exceptions.hpp>              // for SymbolicEngine
+#include <triton/symbolicEngine.hpp>          // for SymbolicEngine
+#include "triton/architecture.hpp"            // for Architecture, architect...
+#include "triton/ast.hpp"                     // for AbstractNode
+#include "triton/cpuSize.hpp"                 // for BYTE_SIZE_BIT, BYTE_SIZE
+#include "triton/immediate.hpp"               // for Immediate
+#include "triton/instruction.hpp"             // for Instruction
+#include "triton/memoryAccess.hpp"            // for MemoryAccess
+#include "triton/modes.hpp"                   // for Modes, mode_e::ALIGNED_...
+#include "triton/operandInterface.hpp"        // for operandType_e::OP_MEM
+#include "triton/operandWrapper.hpp"          // for OperandWrapper
+#include "triton/pathManager.hpp"             // for PathManager
+#include "triton/register.hpp"                // for Register, RegisterSpec
+#include "triton/registers_e.hpp"             // for registers_e
+#include "triton/symbolicEnums.hpp"           // for UNSET, symkind_e::REG
+#include "triton/symbolicExpression.hpp"      // for SymbolicExpression
+#include "triton/symbolicSimplification.hpp"  // for SymbolicSimplification
+#include "triton/symbolicVariable.hpp"        // for SymbolicVariable
+#include "triton/tritonTypes.hpp"             // for usize, uint32, uint64
 
 
 /*! \page engine_DSE_page Dynamic Symbolic Execution
@@ -68,6 +84,9 @@ expression to a new symbolic reference. This allows us to start the analysis eve
 
 
 namespace triton {
+  namespace callbacks {
+    class Callbacks;
+  }
   namespace engines {
     namespace symbolic {
 

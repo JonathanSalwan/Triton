@@ -8,17 +8,12 @@
 #ifndef TRITON_ARCHITECTURE_H
 #define TRITON_ARCHITECTURE_H
 
-#include <set>
-#include <vector>
-#include <memory>
-
-#include <triton/callbacks.hpp>
-#include <triton/cpuInterface.hpp>
-#include <triton/instruction.hpp>
-#include <triton/memoryAccess.hpp>
-#include <triton/register.hpp>
-#include <triton/tritonTypes.hpp>
-
+#include <triton/tritonTypes.hpp>  // for uint32, uint64, uint8, usize, uint512
+#include "triton/registers_e.hpp"  // for registers_e
+#include "triton/cpuInterface.hpp" // for unique_ptr<CpuInterface>
+#include <unordered_map>           // for std::unordered_map
+#include <set>                     // for std::set
+#include <vector>                  // for std::vector
 
 
 //! The Triton namespace
@@ -28,6 +23,10 @@ namespace triton {
  *  @{
  */
 
+  namespace callbacks {
+    class Callbacks;
+  }
+
   //! The Architecture namespace
   namespace arch {
   /*!
@@ -35,6 +34,12 @@ namespace triton {
    *  \addtogroup arch
    *  @{
    */
+
+    class CpuInterface;
+    class Instruction;
+    class MemoryAccess;
+    class RegisterSpec;
+    class Register;
 
     /*! The architectures */
     enum architectures_e {

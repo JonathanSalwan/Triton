@@ -5,14 +5,27 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/exceptions.hpp>
-
+#include <assert.h>                // for assert
+#include <stdexcept>               // for out_of_range
+#include <string>                  // for string
+#include <triton/astContext.hpp>   // for AstContext
+#include <triton/exceptions.hpp>   // for Ast
+#include "triton/tritonTypes.hpp"  // for uint32, uint512
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+      class SymbolicVariable;
+    }
+  }
+  namespace modes {
+    class Modes;
+  }
   namespace ast {
+    class AbstractNode;
+    class AstGarbageCollector;
 
     AstContext::AstContext(const triton::modes::Modes& modes) : astGarbageCollector(modes) {
     }

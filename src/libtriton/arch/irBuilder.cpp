@@ -5,19 +5,24 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <new>
-
-#include <triton/exceptions.hpp>
-#include <triton/irBuilder.hpp>
-#include <triton/memoryAccess.hpp>
-#include <triton/operandWrapper.hpp>
-#include <triton/register.hpp>
-#include <triton/x86Semantics.hpp>
-#include <triton/astContext.hpp>
-
+#include <new>                            // for nothrow, operator new
+#include <triton/astContext.hpp>          // for AstContext
+#include <triton/exceptions.hpp>          // for IrBuilder
+#include <triton/irBuilder.hpp>           // for IrBuilder
+#include <triton/x86Semantics.hpp>        // for x86Semantics
+#include "triton/architecture.hpp"        // for Architecture, architectures...
+#include "triton/instruction.hpp"         // for Instruction
+#include "triton/modes.hpp"               // for Modes, mode_e::ONLY_ON_SYMB...
+#include "triton/semanticsInterface.hpp"  // for SemanticsInterface
+#include "triton/symbolicEngine.hpp"      // for SymbolicEngine
 
 
 namespace triton {
+  namespace engines {
+    namespace taint {
+      class TaintEngine;
+    }
+  }
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,

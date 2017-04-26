@@ -5,17 +5,23 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <new>
-
-#include <triton/architecture.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/x8664Cpu.hpp>
-#include <triton/x86Cpu.hpp>
-
+#include <triton/architecture.hpp>  // for Architecture, architectures_e::AR...
+#include <triton/exceptions.hpp>    // for Architecture
+#include "triton/register.hpp"      // for RegisterSpec, Register (ptr only)
+#include "triton/registers_e.hpp"   // for registers_e
+#include "triton/tritonTypes.hpp"   // for uint64, uint32, uint8, usize, uin...
+#include "triton/x86Cpu.hpp"        // for x86Cpu
+#include "triton/x8664Cpu.hpp"      // for x8664Cpu
 
 
 namespace triton {
+  namespace callbacks {
+    class Callbacks;
+  }
   namespace arch {
+    class CpuInterface;
+    class Instruction;
+    class MemoryAccess;
 
     Architecture::Architecture(triton::callbacks::Callbacks* callbacks) {
       this->arch      = triton::arch::ARCH_INVALID;

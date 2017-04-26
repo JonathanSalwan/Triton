@@ -5,13 +5,20 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/api.hpp>
-#include <triton/callbacks.hpp>
-#include <triton/exceptions.hpp>
-
+#include <triton/callbacks.hpp>    // for Callbacks, callback_e, getConcrete...
+#include <triton/exceptions.hpp>   // for Callbacks
+#include "triton/tritonTypes.hpp"  // for usize
 
 
 namespace triton {
+  class API;
+  namespace arch {
+    class MemoryAccess;
+    class RegisterSpec;
+  }
+  namespace ast {
+    class AbstractNode;
+  }
   namespace callbacks {
 
     Callbacks::Callbacks(triton::API& api) : api(api) {

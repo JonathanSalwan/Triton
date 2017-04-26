@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/symbolicSimplification.hpp>
-
+#include <triton/exceptions.hpp>              // for SymbolicSimplification
+#include <triton/symbolicSimplification.hpp>  // for SymbolicSimplification
+#include "triton/callbacks.hpp"               // for Callbacks, callback_e::...
 
 
 /*! \page SMT_simplification_page SMT simplification passes
@@ -156,6 +156,9 @@ Z3's simplification passes and your own rules.
 
 
 namespace triton {
+  namespace ast {
+    class AbstractNode;
+  }
   namespace engines {
     namespace symbolic {
 

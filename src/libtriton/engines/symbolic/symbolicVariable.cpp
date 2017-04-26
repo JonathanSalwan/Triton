@@ -5,10 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/cpuSize.hpp>
-#include <triton/symbolicVariable.hpp>
-
+#include <iosfwd>                       // for ostream
+#include <string>                       // for string
+#include <triton/cpuSize.hpp>           // for MAX_BITS_SUPPORTED
+#include <triton/exceptions.hpp>        // for SymbolicVariable
+#include <triton/symbolicVariable.hpp>  // for SymbolicVariable
+#include "triton/symbolicEnums.hpp"     // for symkind_e, TRITON_SYMVAR_NAME
+#include "triton/tritonTypes.hpp"       // for uint32, uint64, usize
 
 
 namespace triton {

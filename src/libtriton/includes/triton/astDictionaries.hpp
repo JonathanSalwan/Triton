@@ -8,12 +8,11 @@
 #ifndef TRITON_ASTDICTIONARIES_H
 #define TRITON_ASTDICTIONARIES_H
 
+#include <triton/tritonTypes.hpp>  // for usize
+
 #include <set>
 #include <vector>
-
-#include <triton/ast.hpp>
-#include <triton/tritonTypes.hpp>
-
+#include <map>
 
 
 //! The Triton namespace
@@ -30,6 +29,8 @@ namespace triton {
    *  \addtogroup ast
    *  @{
    */
+
+    class AbstractNode;
 
     //! \class AstDictionaries
     /*! \brief The AST dictionaries class */

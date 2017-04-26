@@ -8,14 +8,9 @@
 #ifndef TRITON_ASTGARBAGECOLLECTOR_H
 #define TRITON_ASTGARBAGECOLLECTOR_H
 
-#include <set>
-#include <string>
-
-#include <triton/ast.hpp>
-#include <triton/astDictionaries.hpp>
-#include <triton/modes.hpp>
-#include <triton/tritonTypes.hpp>
-
+#include <set>                         // for set
+#include <string>                      // for string
+#include <triton/astDictionaries.hpp>  // for AstDictionaries
 
 
 //! The Triton namespace
@@ -25,6 +20,10 @@ namespace triton {
  *  @{
  */
 
+  namespace modes {
+    class Modes;
+  }
+
   //! The AST namespace
   namespace ast {
   /*!
@@ -32,6 +31,8 @@ namespace triton {
    *  \addtogroup ast
    *  @{
    */
+
+    class AbstractNode;
 
     //! \class AstGarbageCollector
     /*! \brief The AST garbage collector class */

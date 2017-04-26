@@ -5,9 +5,15 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/taintEngine.hpp>
-
+#include <triton/exceptions.hpp>          // for TaintEngine
+#include <triton/taintEngine.hpp>         // for TaintEngine, TAINTED, UNTAI...
+#include "triton/memoryAccess.hpp"        // for MemoryAccess
+#include "triton/operandInterface.hpp"    // for operandType_e::OP_MEM, oper...
+#include "triton/operandWrapper.hpp"      // for OperandWrapper
+#include "triton/symbolicEngine.hpp"      // for SymbolicEngine
+#include "triton/symbolicEnums.hpp"       // for UNSET
+#include "triton/symbolicExpression.hpp"  // for SymbolicExpression
+#include "triton/tritonTypes.hpp"         // for uint32, uint64, usize
 
 
 /*! \page engine_Taint_page Taint Engine
@@ -86,6 +92,10 @@ the symbolic variables are controllable by the user input.
 
 
 namespace triton {
+  namespace arch {
+    class CpuInterface;
+    class RegisterSpec;
+  }
   namespace engines {
     namespace taint {
 

@@ -8,25 +8,14 @@
 #ifndef TRITON_API_H
 #define TRITON_API_H
 
-#include <triton/architecture.hpp>
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/astRepresentation.hpp>
-#include <triton/callbacks.hpp>
-#include <triton/immediate.hpp>
-#include <triton/instruction.hpp>
-#include <triton/irBuilder.hpp>
-#include <triton/memoryAccess.hpp>
-#include <triton/modes.hpp>
-#include <triton/operandWrapper.hpp>
-#include <triton/register.hpp>
-#include <triton/registers_e.hpp>
-#include <triton/solverEngine.hpp>
-#include <triton/symbolicEngine.hpp>
-#include <triton/taintEngine.hpp>
-#include <triton/tritonTypes.hpp>
-#include <triton/z3Interface.hpp>
-
+#include <string>                     // for string
+#include <triton/architecture.hpp>    // for Architecture
+#include <triton/astContext.hpp>      // for AstContext
+#include <triton/callbacks.hpp>       // for callback_e, getConcreteMemoryVa...
+#include <triton/modes.hpp>           // for mode_e, Modes
+#include <triton/operandWrapper.hpp>  // for OperandWrapper
+#include <triton/registers_e.hpp>     // for registers_e
+#include <triton/tritonTypes.hpp>     // for uint64, usize, uint32, uint512
 
 
 //! The Triton namespace
@@ -35,6 +24,37 @@ namespace triton {
  *  \addtogroup triton
  *  @{
  */
+    namespace arch {
+        class CpuInterface;
+        class Immediate;
+        class Instruction;
+        class IrBuilder;
+        class MemoryAccess;
+        class Register;
+        class RegisterSpec;
+    }
+
+    namespace ast {
+        class AbstractNode;
+        class Z3Interface;
+    }
+
+    namespace engines {
+        namespace solver {
+            class SolverEngine;
+            class SolverModel;
+        }
+        namespace symbolic {
+            class SymbolicEngine;
+            class SymbolicExpression;
+            class SymbolicVariable;
+            class PathConstraint;
+        }
+        namespace taint {
+            class TaintEngine;
+        }
+    }
+
 
     /*! \class API
      *  \brief This is used as C++ API. */

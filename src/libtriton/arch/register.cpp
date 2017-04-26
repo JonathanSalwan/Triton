@@ -5,10 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/register.hpp>
-#include <triton/cpuInterface.hpp>
-
+#include <iosfwd>                       // for ostream
+#include <string>                       // for string
+#include <triton/cpuInterface.hpp>      // for CpuInterface
+#include <triton/exceptions.hpp>        // for Register
+#include <triton/register.hpp>          // for RegisterSpec, Register
+#include "triton/bitsVector.hpp"        // for BitsVector
+#include "triton/cpuSize.hpp"           // for BYTE_SIZE_BIT
+#include "triton/operandInterface.hpp"  // for operandType_e::OP_REG
+#include "triton/registers_e.hpp"       // for registers_e
+#include "triton/tritonTypes.hpp"       // for uint32, uint512
 
 
 namespace triton {

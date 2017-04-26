@@ -5,13 +5,26 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/tritonToZ3Ast.hpp>
-
+#include <z3++.h>                         // for expr, context, to_expr
+#include <z3_api.h>                       // for Z3_ast, _Z3_ast, Z3_mk_and
+#include <string>                         // for string
+#include <triton/cpuSize.hpp>             // for QWORD_SIZE_BIT
+#include <triton/exceptions.hpp>          // for AstTranslations
+#include <triton/tritonToZ3Ast.hpp>       // for TritonToZ3Ast
+#include "triton/ast.hpp"                 // for AbstractNode (ptr only)
+#include "triton/symbolicEnums.hpp"       // for symkind_e::MEM, symkind_e::REG
+#include "triton/symbolicExpression.hpp"  // for SymbolicExpression
+#include "triton/symbolicVariable.hpp"    // for SymbolicVariable
+#include "triton/tritonTypes.hpp"         // for uint32, uint512
+#include "triton/z3Result.hpp"            // for Z3Result
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicEngine;
+    }
+  }
   namespace ast {
 
     TritonToZ3Ast::TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval) {

@@ -8,10 +8,8 @@
 #ifndef TRITON_ASTPYTHONREPRESENTATION_HPP
 #define TRITON_ASTPYTHONREPRESENTATION_HPP
 
-#include <iostream>
-#include <triton/astRepresentationInterface.hpp>
-#include <triton/ast.hpp>
-
+#include <iostream>                               // for ostream
+#include <triton/astRepresentationInterface.hpp>  // for AstRepresentationIn...
 
 
 //! The Triton namespace
@@ -28,6 +26,57 @@ namespace triton {
    *  \addtogroup ast
    *  @{
    */
+
+    class AbstractNode;
+    class AssertNode;
+    class BvNode;
+    class BvaddNode;
+    class BvandNode;
+    class BvashrNode;
+    class BvdeclNode;
+    class BvlshrNode;
+    class BvmulNode;
+    class BvnandNode;
+    class BvnegNode;
+    class BvnorNode;
+    class BvnotNode;
+    class BvorNode;
+    class BvrolNode;
+    class BvrorNode;
+    class BvsdivNode;
+    class BvsgeNode;
+    class BvsgtNode;
+    class BvshlNode;
+    class BvsleNode;
+    class BvsltNode;
+    class BvsmodNode;
+    class BvsremNode;
+    class BvsubNode;
+    class BvudivNode;
+    class BvugeNode;
+    class BvugtNode;
+    class BvuleNode;
+    class BvultNode;
+    class BvuremNode;
+    class BvxnorNode;
+    class BvxorNode;
+    class CompoundNode;
+    class ConcatNode;
+    class DecimalNode;
+    class DeclareFunctionNode;
+    class DistinctNode;
+    class EqualNode;
+    class ExtractNode;
+    class IteNode;
+    class LandNode;
+    class LetNode;
+    class LnotNode;
+    class LorNode;
+    class ReferenceNode;
+    class StringNode;
+    class SxNode;
+    class VariableNode;
+    class ZxNode;
 
     //! The Representations namespace
     namespace representations {

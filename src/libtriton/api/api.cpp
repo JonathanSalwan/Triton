@@ -6,11 +6,31 @@
 */
 
 #include <triton/api.hpp>
-#include <triton/exceptions.hpp>
+#include <new>                            // for nothrow, operator new
+#include <triton/exceptions.hpp>          // for API
+#include "triton/astRepresentation.hpp"   // for AstRepresentation, astRepre...
+#include "triton/callbacks.hpp"           // for callback_e, getConcreteMemo...
+#include "triton/irBuilder.hpp"           // for IrBuilder
+#include "triton/modes.hpp"               // for mode_e
+#include "triton/operandWrapper.hpp"      // for OperandWrapper
+#include "triton/registers_e.hpp"         // for registers_e
+#include "triton/solverEngine.hpp"        // for SolverEngine
+#include "triton/symbolicEngine.hpp"      // for SymbolicEngine
+#include "triton/symbolicEnums.hpp"       // for symkind_e::UNDEF
+#include "triton/symbolicExpression.hpp"  // for SymbolicExpression
+#include "triton/taintEngine.hpp"         // for TaintEngine
+#include "triton/tritonTypes.hpp"         // for uint64, usize, uint32, uint512
+#include "triton/z3Interface.hpp"         // for Z3Interface
+namespace triton { namespace arch { class CpuInterface; } }
+namespace triton { namespace arch { class Immediate; } }
+namespace triton { namespace arch { class Instruction; } }
+namespace triton { namespace arch { class MemoryAccess; } }
+namespace triton { namespace arch { class Register; } }
+namespace triton { namespace arch { class RegisterSpec; } }
+namespace triton { namespace ast { class AbstractNode; } }
+namespace triton { namespace ast { class AstContext; } }
+namespace triton { namespace engines { namespace symbolic { class SymbolicVariable; } } }
 
-#include <list>
-#include <map>
-#include <new>
 
 
 /*!

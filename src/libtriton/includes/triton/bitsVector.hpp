@@ -8,8 +8,9 @@
 #ifndef TRITON_BITSVECTOR_H
 #define TRITON_BITSVECTOR_H
 
-#include <utility>
-#include <triton/tritonTypes.hpp>
+#include <iosfwd>                  // for ostream
+#include <triton/tritonTypes.hpp>  // for uint32, uint512
+#include <utility>                 // for pair
 
 
 

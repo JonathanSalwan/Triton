@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <triton/api.hpp>
+#include <triton/solverModel.hpp>
 #include <triton/x86Specifications.hpp>
 
 using namespace triton;

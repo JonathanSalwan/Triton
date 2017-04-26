@@ -6,10 +6,11 @@
 */
 
 #include <triton/astPythonRepresentation.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/symbolicExpression.hpp>
-#include <triton/symbolicVariable.hpp>
-
+#include <triton/exceptions.hpp>   // for AstRepresentation
+#include "triton/ast.hpp"          // for AssertNode (ptr only), BvNode (ptr...
+#include "triton/astEnums.hpp"     // for kind_e::ASSERT_NODE, kind_e::BVADD...
+#include "triton/tritonTypes.hpp"  // for uint32, uint512, usize
+#include "triton/symbolicExpression.hpp" // for SymbolicExpression
 
 
 namespace triton {

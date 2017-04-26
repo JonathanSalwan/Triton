@@ -5,9 +5,14 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/operandWrapper.hpp>
-
+#include <iosfwd>                       // for ostream
+#include <triton/exceptions.hpp>        // for OperandWrapper
+#include <triton/operandWrapper.hpp>    // for OperandWrapper
+#include "triton/immediate.hpp"         // for Immediate, operator<, operator<<
+#include "triton/memoryAccess.hpp"      // for MemoryAccess, operator<<
+#include "triton/operandInterface.hpp"  // for operandType_e::OP_IMM, operan...
+#include "triton/register.hpp"          // for Register, RegisterSpec (ptr o...
+#include "triton/tritonTypes.hpp"       // for uint32, uint512
 
 
 namespace triton {

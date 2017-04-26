@@ -6,9 +6,9 @@
 */
 
 #include <triton/bitsVector.hpp>
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-
+#include <triton/cpuSize.hpp>      // for BYTE_SIZE_BIT, FLAG_SIZE_BIT, MAX_...
+#include <triton/exceptions.hpp>   // for BitsVector
+#include "triton/tritonTypes.hpp"  // for uint32, uint512
 
 
 namespace triton {

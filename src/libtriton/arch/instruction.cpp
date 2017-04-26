@@ -5,16 +5,31 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <cstring>
-
-#include <triton/exceptions.hpp>
-#include <triton/immediate.hpp>
-#include <triton/instruction.hpp>
-
+#include <cstring>                      // for memcpy
+#include <iosfwd>                       // for ostream
+#include <string>                       // for string
+#include <triton/exceptions.hpp>        // for Instruction
+#include <triton/instruction.hpp>       // for Instruction
+#include "triton/operandInterface.hpp"  // for operandType_e::OP_IMM, operan...
+#include "triton/operandWrapper.hpp"    // for OperandWrapper
+#include "triton/register.hpp"          // for Register
+#include "triton/registers_e.hpp"       // for registers_e
+#include "triton/tritonTypes.hpp"       // for uint32, uint64, uint8
 
 
 namespace triton {
+  namespace engines {
+    namespace symbolic {
+      class SymbolicExpression;
+    }
+  }
+  namespace ast {
+    class AbstractNode;
+  }
   namespace arch {
+    class CpuInterface;
+    class Immediate;
+    class MemoryAccess;
 
     Instruction::Instruction() {
       this->address         = 0;

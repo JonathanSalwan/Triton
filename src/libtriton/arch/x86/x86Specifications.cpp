@@ -5,12 +5,14 @@
  *  This program is under the terms of the BSD License.
  */
 
-#include <triton/architecture.hpp>
-#include <triton/cpuSize.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/externalLibs.hpp>
-#include <triton/x86Specifications.hpp>
-
+#include <assert.h>                      // for assert
+#include <triton/architecture.hpp>       // for architectures_e::ARCH_X86_64
+#include <triton/cpuSize.hpp>            // 
+#include <triton/exceptions.hpp>         // for Architecture
+#include <triton/externalLibs.hpp>       // for x86_insn::X86_INS_AAA, x86_i...
+#include <triton/x86Specifications.hpp>  // for x86Specifications, instructi...
+#include "triton/registers_e.hpp"        // for registers_e, registers_e::ID...
+#include "triton/tritonTypes.hpp"        // for uint32
 
 
 namespace triton {
