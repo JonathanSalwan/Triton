@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <pin.H>
-
 /* libTriton */
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/tritonTypes.hpp>
+
+#include <pin.H>
 
 /* pintool */
 #include "api.hpp"

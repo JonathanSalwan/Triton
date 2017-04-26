@@ -5,6 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
+/* libTriton */
+#include <triton/pythonBindings.hpp>
+#include <triton/api.hpp>
+
 #include <csignal>
 #include <cstring>
 #include <iostream>
@@ -12,10 +16,6 @@
 #include <string>
 
 #include <pin.H>
-
-/* libTriton */
-#include <triton/api.hpp>
-#include <triton/pythonBindings.hpp>
 
 /* Pintool */
 #include "api.hpp"

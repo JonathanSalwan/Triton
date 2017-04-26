@@ -5,9 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/ast.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/ast.hpp>
 
 
 
