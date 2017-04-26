@@ -131,7 +131,7 @@ Returns the list of all registers. Each item of this list is a \ref py_Register_
 - <b>\ref py_ARCH_page getArchitecture(void)</b><br>
 Returns the current architecture used.
 
-- <b>TODO getAstContext(void)</b><br>
+- <b>\ref py_AstContext_page getAstContext(void)</b><br>
 Returns the AST context to create and modify nodes.
 
 - <b>dict getAstDictionariesStats(void)</b><br>
