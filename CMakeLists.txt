@@ -164,6 +164,8 @@ set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
 add_subdirectory(doc)
 
+set(PROJECT_TRDPARTY_DIR "to_ignored_dir")
+
 # additional target to perform clang-format run, requires clang-format
 find_program(CLANG_FORMAT NAMES clang-format clang-format-3.8)
 if(NOT CLANG_FORMAT)
@@ -173,7 +175,6 @@ else()
 
   # get all project files
   file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
-  set(PROJECT_TRDPARTY_DIR "to_ignored_dir")
   foreach (SOURCE_FILE ${ALL_SOURCE_FILES})
     string(FIND ${SOURCE_FILE} ${PROJECT_TRDPARTY_DIR} PROJECT_TRDPARTY_DIR_FOUND)
     if (NOT ${PROJECT_TRDPARTY_DIR_FOUND} EQUAL -1)
@@ -186,5 +187,36 @@ else()
     COMMAND ${CLANG_FORMAT}
     -i
     ${ALL_SOURCE_FILES}
+    )
+endif()
+
+# additional target to perform cppcheck run, requires cppcheck
+find_program(CPPCHECK NAMES cppcheck)
+if(NOT CPPCHECK)
+  MESSAGE(STATUS "cppcheck not found")
+else()
+  MESSAGE(STATUS "cppcheck path : ${CPPCHECK}")
+
+  # get all project files
+  file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
+  foreach (SOURCE_FILE ${ALL_SOURCE_FILES})
+    string(FIND ${SOURCE_FILE} ${PROJECT_TRDPARTY_DIR} PROJECT_TRDPARTY_DIR_FOUND)
+    if (NOT ${PROJECT_TRDPARTY_DIR_FOUND} EQUAL -1)
+      list(REMOVE_ITEM ALL_SOURCE_FILES ${SOURCE_FILE})
+    endif ()
+  endforeach ()
+
+  add_custom_target(
+    cppcheck
+    COMMAND ${CPPCHECK}
+    --enable=warning,performance,portability,information,missingInclude
+    --std=c++11
+    -I${CMAKE_SOURCE_DIR}/src/libtriton/includes
+    -I${CMAKE_SOURCE_DIR}/src/tracer/pin
+    #--library=qt.cfg
+    --template="[{severity}][{id}] {message} {callstack} \(On {file}:{line}\)"
+    --verbose
+    --quiet
+    ${ALL_SOURCE_FILES} 2>&1 | grep -v purge
     )
 endif()
