@@ -243,8 +243,8 @@ namespace triton {
       }
 
 
-      std::set<triton::arch::registers_e> x86Cpu::getParentRegisters(void) const {
-        std::set<triton::arch::registers_e> ret;
+      std::set<triton::arch::RegisterSpec const*> x86Cpu::getParentRegisters(void) const {
+        std::set<triton::arch::RegisterSpec const*> ret;
 
         for (const auto& kv: this->registers_) {
           auto regId = kv.first;
@@ -252,27 +252,27 @@ namespace triton {
 
           /* Add GPR */
           if (reg.getSize() == this->registerSize())
-            ret.insert(regId);
+            ret.insert(&reg);
 
           /* Add Flags */
           else if (this->isFlag(regId))
-            ret.insert(regId);
+            ret.insert(&reg);
 
           /* Add MMX */
           else if (this->isMMX(regId))
-            ret.insert(regId);
+            ret.insert(&reg);
 
           /* Add SSE */
           else if (this->isSSE(regId))
-            ret.insert(regId);
+            ret.insert(&reg);
 
           /* Add AVX-256 */
           else if (this->isAVX256(regId))
-            ret.insert(regId);
+            ret.insert(&reg);
 
           /* Add Control */
           else if (this->isControl(regId))
-            ret.insert(regId);
+            ret.insert(&reg);
         }
 
         return ret;

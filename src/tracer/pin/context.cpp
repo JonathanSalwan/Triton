@@ -478,21 +478,19 @@ namespace tracer {
         if (api.isSymbolicEngineEnabled() == false)
           return;
 
-        for (triton::arch::registers_e regId : api.getParentRegisters()) {
-          if (regId > triton::arch::ID_REG_EFLAGS)
+        for (triton::arch::RegisterSpec const* reg : api.getParentRegisters()) {
+          if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 
-          triton::arch::RegisterSpec const& reg = api.getRegister(regId);
-
-          if (api.getSymbolicRegisterId(reg) == triton::engines::symbolic::UNSET)
+          if (api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
             continue;
 
-          triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
-          triton::uint512 sv = api.getSymbolicRegisterValue(triton::arch::Register(reg));
+          triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(*reg));
+          triton::uint512 sv = api.getSymbolicRegisterValue(triton::arch::Register(*reg));
 
           if (sv != cv) {
-            api.concretizeRegister(reg);
-            api.setConcreteRegisterValue(triton::arch::Register(reg, cv));
+            api.concretizeRegister(*reg);
+            api.setConcreteRegisterValue(triton::arch::Register(*reg, cv));
           }
         }
       }

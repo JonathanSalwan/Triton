@@ -1410,11 +1410,11 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          auto reg = PyTritonContext_AsTritonContext(self)->getParentRegisters();
-          ret = xPyList_New(reg.size());
+          auto regs = PyTritonContext_AsTritonContext(self)->getParentRegisters();
+          ret = xPyList_New(regs.size());
 
-          for (auto regId: reg) {
-            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(PyTritonContext_AsTritonContext(self)->getRegister(regId))));
+          for (auto const* reg: regs) {
+            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(*reg)));
           }
         }
         catch (const triton::exceptions::Exception& e) {

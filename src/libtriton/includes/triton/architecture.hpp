@@ -108,7 +108,7 @@ namespace triton {
         const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const;
 
         //! Returns all parent registers.
-        std::set<triton::arch::registers_e> getParentRegisters(void) const;
+        std::set<triton::arch::RegisterSpec const*> getParentRegisters(void) const;
 
         //! Get register from id.
         const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const;
