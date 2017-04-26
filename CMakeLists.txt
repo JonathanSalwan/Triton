@@ -163,3 +163,28 @@ include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
 add_subdirectory(doc)
+
+# additional target to perform clang-format run, requires clang-format
+find_program(CLANG_FORMAT NAMES clang-format clang-format-3.8)
+if(NOT CLANG_FORMAT)
+  MESSAGE(STATUS "Clang format not found")
+else()
+  MESSAGE(STATUS "Clang format path : ${CLANG_FORMAT}")
+
+  # get all project files
+  file(GLOB_RECURSE ALL_SOURCE_FILES *.cpp *.hpp)
+  set(PROJECT_TRDPARTY_DIR "to_ignored_dir")
+  foreach (SOURCE_FILE ${ALL_SOURCE_FILES})
+    string(FIND ${SOURCE_FILE} ${PROJECT_TRDPARTY_DIR} PROJECT_TRDPARTY_DIR_FOUND)
+    if (NOT ${PROJECT_TRDPARTY_DIR_FOUND} EQUAL -1)
+      list(REMOVE_ITEM ALL_SOURCE_FILES ${SOURCE_FILE})
+    endif ()
+  endforeach ()
+
+  add_custom_target(
+    clangformat
+    COMMAND ${CLANG_FORMAT}
+    -i
+    ${ALL_SOURCE_FILES}
+    )
+endif()
