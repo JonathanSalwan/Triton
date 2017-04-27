@@ -220,3 +220,26 @@ else()
     ${ALL_SOURCE_FILES} 2>&1 | grep -v purge
     )
 endif()
+
+# additional target to perform clang-tidy run
+# Prefer manual integration to run it only when required.
+# Automatic integration can be done using
+# -DCMAKE_CXX_CLANG_TIDY=clang-tidy-3.8
+#
+# Whatever, we need the compilation database that is enable with
+# -DCMAKE_EXPORT_COMPILE_COMMANDS:BOOL=ON
+if(CMAKE_EXPORT_COMPILE_COMMANDS)
+  find_program(CLANG_TIDY NAMES run-clang-tidy.py run-clang-tidy-3.8.py)
+  if(NOT CLANG_TIDY)
+    MESSAGE(STATUS "clang-tidy not found")
+  else()
+    MESSAGE(STATUS "clang-tidy path : ${CLANG_TIDY}")
+
+    add_custom_target(
+      clangTidy
+      COMMAND ${CLANG_TIDY}
+      )
+  endif()
+else()
+  message(STATUS "Cland tidy disabled: it needs the compilation database")
+endif()
