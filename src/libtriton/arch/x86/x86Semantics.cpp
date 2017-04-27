@@ -88,7 +88,7 @@ CMPXCHG                      |            | Compare and Exchange
 CMPXCHG16B                   |            | Compare and Exchange 16 Bytes
 CMPXCHG8B                    |            | Compare and Exchange 8 Bytes
 CPUID                        |            | CPU Identification
-CQO                          |            | convert qword (rax) to oword (rdx:rax)
+CQO                          |            | Convert qword (rax) to oword (rdx:rax)
 CWD                          |            | Convert word (ax) to dword (dx:ax)
 CWDE                         |            | Convert word (ax) to dword (eax)
 DEC                          |            | Decrement by 1
@@ -3172,25 +3172,16 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EDX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EAX));
-
-        /* Create the semantics - EAX = TMP[31...0] */
-        auto node2 = this->astCtxt.extract(DWORD_SIZE_BIT-1, 0, this->astCtxt.reference(*expr1));
-
-        /* Create symbolic expression */
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CDQ EAX operation");
-
-        /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_EAX), expr1->isTainted);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EAX));
 
         /* Create the semantics - EDX = TMP[63...32] */
-        auto node3 = this->astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CDQ EDX operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CDQ operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_EDX), expr1->isTainted);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4361,25 +4352,16 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RDX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RAX));
-
-        /* Create the semantics - RAX = TMP[63...0] */
-        auto node2 = this->astCtxt.extract(QWORD_SIZE_BIT-1, 0, this->astCtxt.reference(*expr1));
-
-        /* Create symbolic expression */
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CQO RAX operation");
-
-        /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_RAX), expr1->isTainted);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RAX));
 
         /* Create the semantics - RDX = TMP[127...64] */
-        auto node3 = this->astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CQO RDX operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CQO operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_RDX), expr1->isTainted);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4400,25 +4382,16 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_DX)) | this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_AX));
-
-        /* Create the semantics - AX = TMP[15...0] */
-        auto node2 = this->astCtxt.extract(WORD_SIZE_BIT-1, 0, this->astCtxt.reference(*expr1));
-
-        /* Create symbolic expression */
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CWD AX operation");
-
-        /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_AX), expr1->isTainted);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_AX));
 
         /* Create the semantics - DX = TMP[31...16] */
-        auto node3 = this->astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, this->astCtxt.reference(*expr1));
 
         /* Create symbolic expression */
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CWD DX operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CWD operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(architecture->getRegister(ID_REG_DX), expr1->isTainted);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
