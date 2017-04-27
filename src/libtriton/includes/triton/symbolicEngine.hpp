@@ -99,7 +99,7 @@ namespace triton {
            *
            * \description
            * **item1**: <addr:size><br>
-           * **item2**: symbolic reference id
+           * **item2**: AST node
            */
           std::map<std::pair<triton::uint64, triton::uint32>, triton::ast::AbstractNode*> alignedMemoryReference;
 
