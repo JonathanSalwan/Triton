@@ -5,10 +5,15 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/exceptions.hpp>
-#include <triton/astRepresentation.hpp>
-#include <triton/symbolicExpression.hpp>
-
+#include <iosfwd>                         // for ostream
+#include <string>                         // for string
+#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
+#include <triton/astContext.hpp>          // for AstContext
+#include <triton/exceptions.hpp>          // for SymbolicExpression
+#include <triton/symbolicExpression.hpp>  // for SymbolicExpression
+#include "triton/ast.hpp"                 // for AbstractNode, newInstance
+#include "triton/symbolicEnums.hpp"       // for symkind_e, symkind_e::MEM
+#include "triton/tritonTypes.hpp"         // for usize
 
 
 namespace triton {
@@ -50,10 +55,12 @@ namespace triton {
 
 
       std::string SymbolicExpression::getFormattedId(void) const {
-        if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::SMT_REPRESENTATION)
+        if (this->ast == nullptr)
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
+        if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
-        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "ref_" + std::to_string(this->id);
 
         else
@@ -62,13 +69,15 @@ namespace triton {
 
 
       std::string SymbolicExpression::getFormattedComment(void) const {
+        if (this->ast == nullptr)
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
         if (this->getComment().empty())
           return "";
 
-        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::SMT_REPRESENTATION)
+        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "; " + this->getComment();
 
-        else if (triton::ast::representations::astRepresentation.getMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "# " + this->getComment();
 
         else

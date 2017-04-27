@@ -159,9 +159,6 @@ ref_5 = ((ref_0 >> 63) & 0x1) # Sign flag
 ref_6 = (0x1 if (ref_0 == 0x0) else 0x0) # Zero flag
 ref_7 = 0x400003 # Program Counter
 
-# TODO : astRepresentation should not be a global value.
->>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.SMT)
-
 ~~~~~~~~~~~~~
 
 \section ast_py_examples_page Examples
@@ -192,6 +189,7 @@ ref_7 = 0x400003 # Program Counter
 ~~~~~~~~~~~~~{.py}
 # Node information
 
+>>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.SMT)
 >>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
 >>> print type(node)
 <type 'AstNode'>

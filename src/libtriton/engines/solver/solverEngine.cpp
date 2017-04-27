@@ -5,12 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/ast.hpp>
-#include <triton/astRepresentation.hpp>
-#include <triton/exceptions.hpp>
-#include <triton/solverEngine.hpp>
-#include <triton/tritonToZ3Ast.hpp>
-
+#include <z3++.h>                        // for expr, model, solver, expr_ve...
+#include <z3_api.h>                      // for Z3_ast, _Z3_ast
+#include <iosfwd>                        // for ostringstream
+#include <string>                        // for string
+#include <triton/astContext.hpp>         // for AstContext
+#include <triton/exceptions.hpp>         // for SolverEngine
+#include <triton/solverEngine.hpp>       // for SolverEngine
+#include <triton/solverModel.hpp>        // for SolverModel
+#include <triton/tritonToZ3Ast.hpp>      // for TritonToZ3Ast
+#include <triton/tritonTypes.hpp>        // for uint32, uint512
 
 
 /*! \page solver_interface_page SMT Solver Interface

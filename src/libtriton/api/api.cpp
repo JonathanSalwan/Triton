@@ -526,12 +526,12 @@ namespace triton {
   /* AST representation API ========================================================================= */
 
   triton::uint32 API::getAstRepresentationMode(void) const {
-    return triton::ast::representations::astRepresentation.getMode();
+    return this->astCtxt.getRepresentationMode();
   }
 
 
   void API::setAstRepresentationMode(triton::uint32 mode) {
-    triton::ast::representations::astRepresentation.setMode(mode);
+    this->astCtxt.setRepresentationMode(mode);
   }
 
 

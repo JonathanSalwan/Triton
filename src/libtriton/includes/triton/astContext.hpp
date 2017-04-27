@@ -10,6 +10,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/astGarbageCollector.hpp>
+#include "triton/astRepresentation.hpp"   // for AstRepresentation, astRepre...
 
 #include <vector>
 
@@ -217,12 +218,24 @@ namespace triton {
         //! Access a variable value in this context
         const triton::uint512& getValueForVariable(const std::string& varName) const;
 
+        //! Set the representation mode for this astContext
+        void setRepresentationMode(triton::uint32 mode);
+
+        //! Get the representations mode of this astContext
+        triton::uint32 getRepresentationMode(void) const;
+
+        //! Print the given node with this context representation
+        std::ostream& print(std::ostream& stream, AbstractNode* node);
+
       private:
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector astGarbageCollector;
 
         //! Map a concrete value for a variable name.
         std::map<std::string, triton::uint512> valueMapping;
+
+        //! String formater for ast
+        triton::ast::representations::AstRepresentation astRepresentation;
     };
 
   /*! @} End of ast namespace */
