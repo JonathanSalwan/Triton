@@ -121,9 +121,6 @@ namespace tracer {
     }
 
 
-
-
-
     static PyObject* pintool_getSyscallArgument(PyObject* self, PyObject* args) {
       PyObject* num = nullptr;
       PyObject* std = nullptr;
@@ -168,6 +165,16 @@ namespace tracer {
       ret = PIN_GetSyscallReturn(tracer::pintool::context::lastContext, standard);
 
       return triton::bindings::python::PyLong_FromUint(ret);
+    }
+
+
+    static PyObject* pintool_getTritonContext(PyObject* self, PyObject* noarg) {
+      try {
+        return triton::bindings::python::PyTritonContextRef(tracer::pintool::api);
+      }
+      catch (const std::exception& e) {
+        return PyErr_Format(PyExc_TypeError, "%s", e.what());
+      }
     }
 
 
@@ -246,12 +253,12 @@ namespace tracer {
 
     static PyObject* pintool_runProgram(PyObject* self, PyObject* noarg) {
       /* Check if the architecture is definied */
-      if (api.getArchitecture() == triton::arch::ARCH_INVALID)
+      if (tracer::pintool::api.getArchitecture() == triton::arch::ARCH_INVALID)
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::runProgram(): Architecture is not defined.");
       /* Never returns - Rock 'n roll baby \o/ */
       try {
         /* Provide concrete values only if Triton needs them - cf #376 */
-        api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
+        tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
         PIN_StartProgram();
       }
       catch (const std::exception& e) {
@@ -428,15 +435,6 @@ namespace tracer {
       tracer::pintool::snapshot.takeSnapshot(tracer::pintool::context::lastContext);
       Py_INCREF(Py_None);
       return Py_None;
-    }
-
-    static PyObject* pintool_getTritonContext(PyObject* self, PyObject* noarg) {
-        try {
-          return triton::bindings::python::PyTritonContextRef(api);
-        }
-        catch (const std::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
     }
 
 

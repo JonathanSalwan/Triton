@@ -12,8 +12,7 @@
 namespace tracer {
   namespace pintool {
 
-    Trigger::Trigger()
-      : state(false) {
+    Trigger::Trigger() : state(false) {
     }
 
 
