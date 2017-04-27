@@ -281,8 +281,6 @@ install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION
 
 # Install Python bindings
 if(PYTHON_BINDINGS)
-    find_package(PythonInterp 2.7 REQUIRED)
-
     add_custom_target(python-triton ALL
       COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
       DEPENDS triton

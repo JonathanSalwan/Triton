@@ -103,6 +103,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
 # Find Python 2.7
 if(PYTHON_BINDINGS)
+  find_package(PythonInterp 2.7 REQUIRED)
   if(NOT PYTHON_INCLUDE_DIRS)
     set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
   endif()
