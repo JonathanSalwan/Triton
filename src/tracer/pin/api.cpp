@@ -6,5 +6,5 @@ namespace tracer {
     //! Global triton API for pintools.
     triton::API api;
 
-  }
-}
+  };
+};

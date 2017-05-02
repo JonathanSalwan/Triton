@@ -5,12 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/exceptions.hpp>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
+#include <triton/ast.hpp>
+#include <triton/astContext.hpp>
+#include <triton/exceptions.hpp>
 
 /*
  * Init doctest

@@ -7,9 +7,9 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
-#include <triton/architecture.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/architecture.hpp>
 #include <triton/unix.hpp>
 
 

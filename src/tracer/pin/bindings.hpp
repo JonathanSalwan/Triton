@@ -8,16 +8,16 @@
 #ifndef TRITON_PIN_PYTHONBINDINGS_H
 #define TRITON_PIN_PYTHONBINDINGS_H
 
+/* libTriton */
+#include <triton/pythonBindings.hpp>
+#include <triton/api.hpp>
+#include <triton/tritonTypes.hpp>
+
 #include <map>
 #include <set>
 #include <list>
 
-#include <python2.7/Python.h>
 #include <pin.H>
-
-/* libTriton */
-#include <triton/api.hpp>
-#include <triton/tritonTypes.hpp>
 
 /* pintool */
 #include "snapshot.hpp"

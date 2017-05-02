@@ -3,6 +3,8 @@
 
 #include <triton/api.hpp>
 
+
+
 //! The Tracer namespace
 namespace tracer {
 /*!
@@ -18,9 +20,12 @@ namespace tracer {
    *  @{
    */
 
-    extern triton::API api; 
+    //! The triton api for the pintool.
+    extern triton::API api;
 
-  }
-}
+  /*! @} End of pintool namespace */
+  };
+/*! @} End of tracer namespace */
+};
 
 #endif

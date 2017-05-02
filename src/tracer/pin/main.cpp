@@ -5,6 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
+/* libTriton */
+#include <triton/pythonBindings.hpp>
+#include <triton/api.hpp>
+
 #include <csignal>
 #include <cstring>
 #include <iostream>
@@ -12,10 +16,6 @@
 #include <string>
 
 #include <pin.H>
-
-/* libTriton */
-#include <triton/api.hpp>
-#include <triton/pythonBindings.hpp>
 
 /* Pintool */
 #include "api.hpp"
@@ -239,7 +239,7 @@ namespace tracer {
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
 
       /* Disassemble the instruction */
-      api.disassembly(*tritonInst);
+      tracer::pintool::api.disassembly(*tritonInst);
 
       /* Execute the Python callback before the IR processing */
       if (tracer::pintool::context::mustBeExecuted == false)
@@ -257,7 +257,7 @@ namespace tracer {
       tracer::pintool::context::synchronizeContext();
 
       /* Process the IR and taint */
-      api.buildSemantics(*tritonInst);
+      tracer::pintool::api.buildSemantics(*tritonInst);
 
       /* Execute the Python callback */
       if (tracer::pintool::context::mustBeExecuted == false)
@@ -316,7 +316,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
+      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
       /* Mutex */
       PIN_UnlockClient();
     }
@@ -480,7 +480,8 @@ namespace tracer {
       /* Lock / Unlock the Analysis from a Entry point */
       if (tracer::pintool::options::startAnalysisFromEntry) {
         tracer::pintool::options::startAnalysisFromEntry = false;
-        tracer::pintool::options::startAnalysisFromAddress.insert(IMG_Entry(img));
+        /* IMG_LoadOffset(img) + IMG_Entry(img) for PIE binaries (see #524) */
+        tracer::pintool::options::startAnalysisFromAddress.insert(IMG_LoadOffset(img) + IMG_Entry(img));
       }
 
       /* Lock / Unlock the Analysis from a symbol */

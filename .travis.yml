@@ -112,6 +112,7 @@ before_install:
   - cd ..
 
 install:
+  # Install gcov
   - if [ "$GCOV" == "ON" ]; then sudo ln -sf /usr/bin/gcov-5 /usr/bin/gcov; fi
   - if [ "$GCOV" == "ON" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
