@@ -34,6 +34,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
          COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
          COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
          COMMAND ${PYTHONPATH_CMD} ${CMAKE_SOURCE_DIR}/src/scripts/run_linux_test.sh
+         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
          COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
          COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
          COMMAND genhtml coverage.info -o coverage
@@ -107,7 +108,6 @@ if(PYTHON_BINDINGS)
   if(NOT PYTHON_INCLUDE_DIRS)
     set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
   endif()
-  if(NOT STATICLIB) # Only if building dynamic library
     if(NOT PYTHON_LIBRARIES)
       set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
     endif()
@@ -116,10 +116,46 @@ if(PYTHON_BINDINGS)
     elseif(NOT (PYTHON_INCLUDE_DIRS AND PYTHON_LIBRARIES))
         message(FATAL_ERROR "Inconsistent PYTHON_INCLUDE_DIRS and PYTHON_LIBRARIES")
     endif()
-  endif()
   include_directories(${PYTHON_INCLUDE_DIRS})
   add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
 endif()
+
+# Look for dependencies as they may be required by examples
+# FIXME: We should move the tracer away to not link with these libraries
+
+# Find Z3
+if(NOT Z3_INCLUDE_DIRS)
+  set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
+endif()
+  if(NOT Z3_LIBRARIES)
+    set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
+  endif()
+  if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
+      find_package(Z3 REQUIRED)
+      if(NOT Z3_FOUND)
+          message(FATAL_ERROR "Z3 not found")
+      endif()
+endif()
+include_directories(${Z3_INCLUDE_DIRS})
+
+# Find Capstone
+if(NOT CAPSTONE_INCLUDE_DIRS)
+  set(CAPSTONE_INCLUDE_DIRS "$ENV{CAPSTONE_INCLUDE_DIRS}")
+endif()
+  if(NOT CAPSTONE_LIBRARIES)
+    set(CAPSTONE_LIBRARIES "$ENV{CAPSTONE_LIBRARIES}")
+  endif()
+  if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
+      find_package(CAPSTONE REQUIRED)
+      if(NOT CAPSTONE_FOUND)
+          message(FATAL_ERROR "Capstone not found")
+      endif()
+endif()
+include_directories(${CAPSTONE_INCLUDE_DIRS})
+
+# Find boost
+find_package(Boost 1.55.0 REQUIRED)
+include_directories("${Boost_INCLUDE_DIRS}")
 
 # Use the same ABI as pin
 if(PINTOOL)
@@ -131,3 +167,4 @@ include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
 
 set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
+add_subdirectory(doc)

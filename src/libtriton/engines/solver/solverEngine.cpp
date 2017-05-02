@@ -23,7 +23,7 @@
 <hr>
 
 The solver engine is the interface between an SMT solver and **Triton** itself. All requests are sent to the SMT solver
-as Triton AST (See: \ref py_ast_page). The AST representation as string looks like a manually crafted SMT2-LIB script.
+as Triton AST (See: \ref py_AstContext_page). The AST representation as string looks like a manually crafted SMT2-LIB script.
 
 <b>Example:</b>
 
@@ -95,6 +95,8 @@ namespace triton {
   namespace engines {
     namespace solver {
 
+      //! Wrapper to handle variadict number of arguments or'd togethers
+      // FIXME : It is already implemented in the new Z3 interface.
       z3::expr mk_or(z3::expr_vector args) {
         std::vector<Z3_ast> array;
 

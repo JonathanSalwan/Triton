@@ -55,8 +55,8 @@ Triton = getTritonContext()
 
 
 def tainting(threadId):
-    rdi = getCurrentRegisterValue(Triton.Register(REG.RDI)) # argc
-    rsi = getCurrentRegisterValue(Triton.Register(REG.RSI)) # argv
+    rdi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RDI)) # argc
+    rsi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RSI)) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)

@@ -67,8 +67,8 @@ if __name__ == '__main__':
         inst.setAddress(addr)
 
         # optional - Update register state
-        inst.updateContext(Triton.Register(REG.RAX,  12345));
-        inst.updateContext(Triton.Register(REG.RBX,  67890));
+        inst.updateContext(Triton.Register(REG.X86_64.RAX,  12345));
+        inst.updateContext(Triton.Register(REG.X86_64.RBX,  67890));
 
         # optional - Add memory access <addr, size, content>
         inst.updateContext(MemoryAccess(0x66666666, 8, 0x31003200330034));

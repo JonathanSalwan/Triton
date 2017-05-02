@@ -10,7 +10,7 @@ from triton  import REG, ARCH, MODE
 
 def cb_ir(inst):
     if inst.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(getTritonContext().Register(REG.RAX))
+        rax = getCurrentRegisterValue(getTritonContext().Register(REG.X86_64.RAX))
         getTritonContext().taintMemory(rax)
     return
 

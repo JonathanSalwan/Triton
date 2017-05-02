@@ -59,7 +59,7 @@ namespace triton {
         protected:
           /*! \brief map of address -> concrete value
            *
-           * \description
+           * \details
            * **item1**: memory address<br>
            * **item2**: concrete value
            */
@@ -184,6 +184,7 @@ namespace triton {
           //! Constructor.
           x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
+          //! Copy constructor
           x86Cpu(const x86Cpu& other);
 
           //! Destructor.
@@ -221,7 +222,7 @@ namespace triton {
           const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const;
           const triton::arch::RegisterSpec& getParent(const triton::arch::RegisterSpec&) const;
           const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const;
-          std::set<triton::arch::registers_e> getParentRegisters(void) const;
+          std::set<triton::arch::RegisterSpec const*> getParentRegisters(void) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;

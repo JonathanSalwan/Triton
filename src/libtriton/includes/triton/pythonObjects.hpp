@@ -371,7 +371,7 @@ namespace triton {
       //! pyPathConstraint object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::symbolic::PathConstraint* pc;
+        triton::engines::symbolic::PathConstraint* pc; //! Pointer to the cpp path constraints
       } PathConstraint_Object;
 
       //! pyPathConstraint type.
@@ -382,7 +382,7 @@ namespace triton {
       //! pyRegister object.
       typedef struct {
         PyObject_HEAD
-        triton::arch::Register* reg;
+        triton::arch::Register* reg; //! Pointer to the cpp register
       } Register_Object;
 
       //! pyRegister type.
@@ -393,7 +393,7 @@ namespace triton {
       //! pyTritonContext object.
       typedef struct {
         PyObject_HEAD
-        triton::API* api;
+        triton::API* api; //! Pointer to the cpp triton context
       } TritonContext_Object;
 
       //! pyRegister type.
@@ -404,7 +404,7 @@ namespace triton {
       //! pyAstContext object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::AstContext* ctxt;
+        triton::ast::AstContext* ctxt; //!< Pointer to the cpp ast context
       } AstContext_Object;
 
       //! pyRegister type.
@@ -415,7 +415,7 @@ namespace triton {
       //! pySolverModel object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::solver::SolverModel* model;
+        triton::engines::solver::SolverModel* model; //! Pointer to the cpp solver model
       } SolverModel_Object;
 
       //! pySolverModel type.

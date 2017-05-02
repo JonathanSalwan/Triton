@@ -43,7 +43,7 @@ To use the `libTriton`, your tracer must provide two kinds of information at eac
 - The current opcode executed.
 - A state context (register and memory).
 
-Based on these two information, Triton will translate the control flow into \ref py_ast_page. As an example, let assume that you have dumped
+Based on these two information, Triton will translate the control flow into \ref py_AstNode_page. As an example, let assume that you have dumped
 a trace into a database with all registers state and memory access - these information may come from Valgrind, Pin, Qemu or whatever. The following Python code
 uses the Triton's API to build the semantics of each instruction stored in the database.
 
@@ -54,15 +54,16 @@ uses the Triton's API to build the semantics of each instruction stored in the d
 import  sys
 import  struct
 
-from triton  import *
-from datbase import import Manager
+from triton  import ARCH, Instruction, MemoryAccess, REG
+from database import Manager
 
 unpack_size = {1: 'B', 2: 'H', 4: 'I', 8: 'Q', 16: 'QQ'}
 
 if __name__ == '__main__':
 
+    ctxt = getTritonContext()
     # Set the arch
-    setArchitecture(ARCH.X86_64)
+    ctxt.setArchitecture(ARCH.X86_64)
 
     # Connect to the database
     db = Manager().connect()
@@ -90,26 +91,26 @@ if __name__ == '__main__':
         inst.setAddress(regs['rip'])
 
         # Update concrete register state
-        setConcreteRegisterValue(Register(REG.RAX,    regs['rax']))
-        setConcreteRegisterValue(Register(REG.RBX,    regs['rbx']))
-        setConcreteRegisterValue(Register(REG.RCX,    regs['rcx']))
-        setConcreteRegisterValue(Register(REG.RDX,    regs['rdx']))
-        setConcreteRegisterValue(Register(REG.RDI,    regs['rdi']))
-        setConcreteRegisterValue(Register(REG.RSI,    regs['rsi']))
-        setConcreteRegisterValue(Register(REG.RBP,    regs['rbp']))
-        setConcreteRegisterValue(Register(REG.RSP,    regs['rsp']))
-        setConcreteRegisterValue(Register(REG.RIP,    regs['rip']))
-        setConcreteRegisterValue(Register(REG.R8,     regs['r8']))
-        setConcreteRegisterValue(Register(REG.R9,     regs['r9']))
-        setConcreteRegisterValue(Register(REG.R10,    regs['r10']))
-        setConcreteRegisterValue(Register(REG.R11,    regs['r11']))
-        setConcreteRegisterValue(Register(REG.R12,    regs['r12']))
-        setConcreteRegisterValue(Register(REG.R13,    regs['r13']))
-        setConcreteRegisterValue(Register(REG.R14,    regs['r14']))
-        setConcreteRegisterValue(Register(REG.R15,    regs['r15']))
-        setConcreteRegisterValue(Register(REG.EFLAGS, regs['eflags']))
-        setConcreteRegisterValue(Register(REG.FS,     regs['fs'])) # The mapped base address
-        setConcreteRegisterValue(Register(REG.GS,     regs['gs'])) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RAX,    regs['rax']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RBX,    regs['rbx']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RCX,    regs['rcx']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RDX,    regs['rdx']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RDI,    regs['rdi']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RSI,    regs['rsi']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RBP,    regs['rbp']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RSP,    regs['rsp']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.RIP,    regs['rip']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R8,     regs['r8']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R9,     regs['r9']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R10,    regs['r10']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R11,    regs['r11']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R12,    regs['r12']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R13,    regs['r13']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R14,    regs['r14']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.R15,    regs['r15']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.EFLAGS, regs['eflags']))
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.FS,     regs['fs'])) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.Register(REG.GS,     regs['gs'])) # The mapped base address
 
         # Update concrete memory access
         accesses = db.get_memory_access_from_inst_id(inst_id)
@@ -120,10 +121,10 @@ if __name__ == '__main__':
                 address = access['addr']
                 data    = access['data']
                 value   = struct.unpack(unpack_size[len(data)], data)[0]
-                setConcreteMemoryValue(MemoryAccess(address, len(data), value))
+                ctxt.setConcreteMemoryValue(MemoryAccess(address, len(data), value))
 
         # Process everything (build IR, spread taint, perform simplification, ...)
-        processing(inst)
+        ctxt.processing(inst)
 
         # At this point, all engines inside the Triton library were been synchronized with the concrete state.
         # Display instruction
@@ -135,7 +136,6 @@ if __name__ == '__main__':
 
         # Next instruction (from the database)
         inst_id += 1
-
     sys.exit(0)
 ~~~~~~~~~~~~~
 
@@ -153,362 +153,42 @@ is describe at this following page \ref pintool_py_api. Below, some examples.
 <hr>
 \subsection Tracer_pintool_example_1 Example - Display IR
 
-~~~~~~~~~~~~~{.py}
-#!/usr/bin/env python2
-## -*- coding: utf-8 -*-
-
-import sys
-
-from pintool import *
-from triton  import *
-
-
-def mycb(inst):
-    print inst
-    for expr in inst.getSymbolicExpressions():
-        print expr
-    print
-    return
-
-
-if __name__ == '__main__':
-    # Set arch
-    setArchitecture(ARCH.X86_64)
-
-    # Start JIT at the entry point
-    startAnalysisFromEntry()
-
-    # Add callback
-    insertCall(mycb, INSERT_POINT.BEFORE)
-
-    # Run Program
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/ir.py
 
 <hr>
 \subsection Tracer_pintool_example_2 Example - Runtime Memory Tainting
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-GREEN = "\033[92m"
-ENDC  = "\033[0m"
-
-
-# 0x40058b: movzx eax, byte ptr [rax]
-#
-# When the instruction located in 0x40058b is executed,
-# we taint the memory that RAX holds.
-def cbeforeSymProc(instruction):
-    if instruction.getAddress() == 0x40058b:
-        rax = getCurrentRegisterValue(REG.RAX)
-        taintMemory(rax)
-
-
-def cafter(instruction):
-    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
-    for se in instruction.getSymbolicExpressions():
-        if se.isTainted() == True:
-            print '\t -> %s%s%s' %(GREEN, se.getAst(), ENDC)
-        else:
-            print '\t -> %s' %(se.getAst())
-    print
-
-
-if __name__ == '__main__':
-
-    # Set architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Start the symbolic analysis from the 'check' function
-    startAnalysisFromSymbol('check')
-
-    insertCall(cbeforeSymProc, INSERT_POINT.BEFORE_SYMPROC)
-    insertCall(cafter, INSERT_POINT.AFTER)
-
-    # Run the instrumentation - Never returns
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/runtime_memory_tainting.py
 
 <hr>
 \subsection Tracer_pintool_example_3 Example - Runtime Register Modification
 
-~~~~~~~~~~~~~{.py}
-#!/usr/bin/env python2
-## -*- coding: utf-8 -*-
-##
-## Output:
-##
-##  $ ./build/triton ./src/examples/pin/runtime_register_modification.py ./src/samples/crackmes/crackme_xor a
-##  4005f9: mov dword ptr [rbp - 4], eax
-##          ref!180 = ((_ extract 31 24) (_ bv0 32)) ; byte reference - MOV operation
-##          ref!181 = ((_ extract 23 16) (_ bv0 32)) ; byte reference - MOV operation
-##          ref!182 = ((_ extract 15 8) (_ bv0 32)) ; byte reference - MOV operation
-##          ref!183 = ((_ extract 7 0) (_ bv0 32)) ; byte reference - MOV operation
-##          ref!184 = (concat ((_ extract 31 24) (_ bv0 32)) ((_ extract 23 16) (_ bv0 32)) ((_ extract 15 8) (_ bv0 32)) ((_ extract 7 0) (_ bv0 32))) ; concat reference - MOV operation
-##          ref!185 = (_ bv4195836 64) ; Program Counter
-##  Win
-##
-
-import sys
-from   pintool import *
-from   triton  import *
-
-
-def cb1(inst):
-    if inst.getAddress() == 0x4005f9:
-        setCurrentRegisterValue(REG.RAX, 0)
-
-def cb2(inst):
-    if inst.getAddress() == 0x4005f9:
-        print inst
-        for expr in inst.getSymbolicExpressions():
-            print '\t', expr
-
-
-if __name__ == '__main__':
-    setArchitecture(ARCH.X86_64)
-    setupImageWhitelist(['crackme'])
-    startAnalysisFromSymbol('main')
-    insertCall(cb1, INSERT_POINT.BEFORE_SYMPROC)
-    insertCall(cb2, INSERT_POINT.BEFORE)
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/runtime_register_modification.py
 
 <hr>
 \subsection Tracer_pintool_example_4 Example - Blacklist images
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-
-def mycb(instruction):
-    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
-    return
-
-
-if __name__ == '__main__':
-
-    setArchitecture(ARCH.X86_64)
-
-    # libc and ld-linux will be unjited
-    setupImageBlacklist(["libc", "ld-linux"])
-
-    startAnalysisFromSymbol('main')
-    insertCall(mycb, INSERT_POINT.BEFORE)
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/blacklist.py
 
 <hr>
 \subsection Tracer_pintool_example_5 Example - Callback on image
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-# Output
-#
-# $ ./build/triton ./src/examples/pin/callback_image.py ./src/samples/ir_test_suite/ir
-# ----------
-# Image path:  /dir/Triton/samples/ir_test_suite/ir
-# Image base:  0x400000L
-# Image size:  2101312
-# ----------
-# Image path:  /lib64/ld-linux-x86-64.so.2
-# Image base:  0x7fb9a14d9000L
-# Image size:  2236744
-# ----------
-# Image path:  /lib64/libc.so.6
-# Image base:  0x7fb98b739000L
-# Image size:  3766680
-
-
-def image(imagePath, imageBase, imageSize):
-    print '----------'
-    print 'Image path: ', imagePath
-    print 'Image base: ', hex(imageBase)
-    print 'Image size: ', imageSize
-    return
-
-
-if __name__ == '__main__':
-    # Set the architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Start the symbolic analysis from the Entry point
-    startAnalysisFromEntry()
-
-    # Add a callback.
-    insertCall(image, INSERT_POINT.IMAGE_LOAD)
-
-    # Run the instrumentation - Never returns
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/callback_image.py
 
 <hr>
 \subsection Tracer_pintool_example_6 Example - Callback on routine
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-# Output
-#
-# $ ./build/triton ./src/examples/pin/callback_routine.py  ./src/samples/vulns/testSuite
-# -> malloc(0x20)
-# <- 0x8fc010
-# -> malloc(0x20)
-# <- 0x8fc040
-# -> malloc(0x20)
-# <- 0x8fc010
-
-
-def mallocEntry(threadId):
-    sizeAllocated = getCurrentRegisterValue(REG.RDI)
-    print '-> malloc(%#x)' %(sizeAllocated)
-
-
-def mallocExit(threadId):
-    ptrAllocated = getCurrentRegisterValue(REG.RAX)
-    print '<- %#x' %(ptrAllocated)
-
-
-if __name__ == '__main__':
-
-    # Set the architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Start the symbolic analysis from the Entry point
-    startAnalysisFromEntry()
-
-    # Add a callback.
-    insertCall(mallocEntry, INSERT_POINT.ROUTINE_ENTRY, "malloc")
-    insertCall(mallocExit, INSERT_POINT.ROUTINE_EXIT, "malloc")
-
-    # Run the instrumentation - Never returns
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/callback_routine.py
 
 <hr>
 \subsection Tracer_pintool_example_7 Example - Callback on signals
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-# Output
-#
-#  $ ./build/triton ./src/examples/pin/callback_signals.py ./src/samples/others/signals
-#  Signal 11 received on thread 0.
-#  ========================== DUMP ==========================
-#  rax:    0x00000000000000                        ((_ zero_extend 32) (_ bv234 32))
-#  rbx:    0x00000000000000                        UNSET
-#  rcx:    0x00000000001ba4                        ((_ zero_extend 32) ((_ extract 31 0) ref!81))
-#  rdx:    0x0000000000000b                        ((_ sign_extend 32) ((_ extract 31 0) ref!34))
-#  rdi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) ref!83))
-#  rsi:    0x00000000001ba4                        ((_ sign_extend 32) ((_ extract 31 0) ref!90))
-#  rbp:    0x007fff097e3540                        ((_ extract 63 0) ref!0)
-#  rsp:    0x007fff097e3528                        (bvsub ((_ extract 63 0) ref!47) (_ bv8 64))
-#  rip:    0x007f3fa0735ea7                        (_ bv139911251582629 64)
-#  r8:     0x007f3fa0a94c80                        UNSET
-#  r9:     0x007f3fb671b120                        UNSET
-#  r10:    0x00000000000000                        UNSET
-#  r11:    0x007f3fa0735e70                        UNSET
-#  r12:    0x00000000400460                        UNSET
-#  r13:    0x007fff097e3620                        UNSET
-#  r14:    0x00000000000000                        UNSET
-#  r15:    0x00000000000000                        UNSET
-#  xmm0:   0x000000ff000000                        UNSET
-#  xmm1:   0x2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f2f      UNSET
-#  xmm2:   0x00000000000000                        UNSET
-#  xmm3:   0x00ff000000ff00                        UNSET
-#  xmm4:   0x000000000000ff                        UNSET
-#  xmm5:   0x00000000000000                        UNSET
-#  xmm6:   0x00000000000000                        UNSET
-#  xmm7:   0x00000000000000                        UNSET
-#  xmm8:   0x00000000000000                        UNSET
-#  xmm9:   0x00000000000000                        UNSET
-#  xmm10:  0x00000000000000                        UNSET
-#  xmm11:  0x00000000000000                        UNSET
-#  xmm12:  0x00000000000000                        UNSET
-#  xmm13:  0x00000000000000                        UNSET
-#  xmm14:  0x00000000000000                        UNSET
-#  xmm15:  0x00000000000000                        UNSET
-#  af:     0x00000000000000                        (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor ref!12 (bvxor ((_ extract 63 0) ref!0) (_ bv16 64))))) (_ bv1 1) (_ bv0 1))
-#  cf:     0x00000000000000                        (_ bv0 1)
-#  df:     0x00000000000000                        UNSET
-#  if:     0x00000000000001                        UNSET
-#  of:     0x00000000000000                        (_ bv0 1)
-#  pd:     0x00000000000001                        (ite (= (parity_flag ((_ extract 7 0) ref!73)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
-#  sf:     0x00000000000000                        (ite (= ((_ extract 31 31) ref!73) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
-#  tf:     0x00000000000000                        UNSET
-#  zf:     0x00000000000001                        (ite (= ref!73 (_ bv0 32)) (_ bv1 1) (_ bv0 1))
-
-
-
-def signals(threadId, sig):
-    print 'Signal %d received on thread %d.' %(sig, threadId)
-    print '========================== DUMP =========================='
-    regs = getParentRegisters()
-    for reg in regs:
-        value  = getCurrentRegisterValue(reg)
-        exprId = getSymbolicRegisterId(reg)
-        print '%s:\t%#016x\t%s' %(reg.getName(), value, (getSymbolicExpressionFromId(exprId).getAst() if exprId != SYMEXPR.UNSET else 'UNSET'))
-    return
-
-
-if __name__ == '__main__':
-
-    # Set architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Start the symbolic analysis from the Entry point
-    startAnalysisFromEntry()
-
-    # Add a callback.
-    insertCall(signals, INSERT_POINT.SIGNALS)
-
-    # Run the instrumentation - Never returns
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/callback_signals.py
 
 <hr>
 \subsection Tracer_pintool_example_8 Example - Callback on syscalls
 
-~~~~~~~~~~~~~{.py}
-from triton  import *
-from pintool import *
-
-# Output
-#
-# $ ./build/triton examples/callback_syscall.py  ./samples/crackmes/crackme_xor a
-# sys_write(1, 7fb7f06e1000, 6)
-# loose
-#
-
-def my_callback_syscall_entry(threadId, std):
-    if getSyscallNumber(std) == SYSCALL.WRITE:
-        arg0 = getSyscallArgument(std, 0)
-        arg1 = getSyscallArgument(std, 1)
-        arg2 = getSyscallArgument(std, 2)
-        print 'sys_write(%x, %x, %x)' %(arg0, arg1, arg2)
-
-
-if __name__ == '__main__':
-
-    # Set the architecture
-    setArchitecture(ARCH.X86_64)
-
-    # Start the symbolic analysis from the Entry point
-    startAnalysisFromEntry()
-
-    insertCall(my_callback_syscall_entry, INSERT_POINT.SYSCALL_ENTRY)
-
-    # Run the instrumentation - Never returns
-    runProgram()
-~~~~~~~~~~~~~
+\include pin/callback_syscall.py
 
 */
 
@@ -993,7 +673,7 @@ namespace tracer {
     }
 
 
-    /* The pintool's entry point */
+    //! The pintool's entry point
     int main(int argc, char *argv[]) {
       PIN_InitSymbols();
       PIN_SetSyntaxIntel();
@@ -1042,7 +722,7 @@ namespace tracer {
 };
 
 
-/* namespace trampoline */
+//! namespace trampoline
 int main(int argc, char *argv[]) {
   return tracer::pintool::main(argc, argv);
 }

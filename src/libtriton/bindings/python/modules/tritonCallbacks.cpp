@@ -15,31 +15,28 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 
+// FIXME : Move the tracer documentation part in the tracer documentation...
+
 
 
 /*! \page py_triton_page Python bindings
     \brief [**python api**] All information about the libTriton's Python API.
     \anchor triton
 
-\tableofcontents
+\section triton_py_api Python API - Methods and namespaces of the triton module
+<hr>
+
+This project work using a TritonContext which contains all the required internal state
+to simulate your instructions.
+
+You may also find Helpers to wrap more generic concepts.
 
 - \ref py_Elf_page
-- \ref py_ElfDynamicTable_page
-- \ref py_ElfHeader_page
-- \ref py_ElfProgramHeader_page
-- \ref py_ElfRelocationTable_page
-- \ref py_ElfSectionHeader_page
-- \ref py_ElfSymbolTable_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_MemoryAccess_page
 - \ref py_Pe_page
-- \ref py_PeExportEntry_page
-- \ref py_PeExportTable_page
-- \ref py_PeHeader_page
-- \ref py_PeImportLookup_page
-- \ref py_PeImportTable_page
-- \ref py_PeSectionHeader_page
+- \ref py_TritonContext_page
 
 
 \subsection triton_py_api_namespaces Namespaces
@@ -124,6 +121,10 @@ current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY
 - <b>intger getSyscallReturn(\ref py_STANDARD_page std)</b><br>
 Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
 the state of a system call after its execution. This function must be used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
+
+- <b>TritonContext getTritonContext()</b><br>
+Pintools use a global triton context to do its simulation. You can acces it
+using this function.
 
 - <b>void insertCall(function, \ref py_INSERT_POINT_page type)</b><br>
 Inserts a call before and after several cases. All code executed into a callback function are executed during the

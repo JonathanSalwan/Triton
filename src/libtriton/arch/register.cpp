@@ -67,7 +67,6 @@ namespace triton {
 
     bool RegisterSpec::isOverlapWith(const RegisterSpec& other) const {
       if (this->parent == other.parent) {
-        // FIXME: doesn't handle "contains" (AH and EAX)
         if (this->getLow() <= other.getLow() && other.getLow() <= this->getHigh()) return true;
         if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
       }

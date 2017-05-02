@@ -59,7 +59,7 @@ def run(ip):
         print 'Curr ip:', inst
 
         # Next instruction
-        ip = Triton.buildSymbolicRegister(Triton.Register(REG.RIP)).evaluate()
+        ip = Triton.buildSymbolicRegister(Triton.Register(REG.X86_64.RIP)).evaluate()
         print 'Next ip:', hex(ip)
         print
     return
@@ -68,8 +68,8 @@ def run(ip):
 
 # This function initializes the context memory.
 def initContext():
-    Triton.setConcreteRegisterValue(Triton.Register(REG.RSP, 0x7fffffff))
-    Triton.setConcreteRegisterValue(Triton.Register(REG.RBP, 0x99999999))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP, 0x7fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP, 0x99999999))
     return
 
 

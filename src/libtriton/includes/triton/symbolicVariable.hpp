@@ -57,7 +57,7 @@ namespace triton {
 
           /*! \brief The kind value of the symbolic variable.
            *
-           * \description If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
+           * \details If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
            * Otherwise, if the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the address of the
            * memory access.
            */

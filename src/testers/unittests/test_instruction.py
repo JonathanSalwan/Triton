@@ -18,8 +18,8 @@ class TestInstruction(unittest.TestCase):
         self.inst = Instruction()
         self.inst.setOpcodes("\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
-        self.inst.updateContext(self.Triton.Register(REG.RAX, 0x1122334455667788))
-        self.inst.updateContext(self.Triton.Register(REG.RBX, 0x8877665544332211))
+        self.inst.updateContext(self.Triton.Register(REG.X86_64.RAX, 0x1122334455667788))
+        self.inst.updateContext(self.Triton.Register(REG.X86_64.RBX, 0x8877665544332211))
         self.Triton.processing(self.inst)
 
     def test_address(self):
@@ -101,7 +101,7 @@ class TestLoadAccess(unittest.TestCase):
         inst.setOpcodes("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.FS, 0x7fffda8ab700))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
         self.Triton.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())
@@ -120,8 +120,8 @@ class TestLoadAccess(unittest.TestCase):
         inst.setOpcodes("\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.FS, 0x7fffda8ab700))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.RAX, 0xffffffffffffdf90))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX, 0xffffffffffffdf90))
         self.Triton.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())

@@ -70,60 +70,60 @@ namespace triton {
 
         protected:
         /*!
-         * \description This member specifies the name of the section. Its value is an index into the
+         * \details This member specifies the name of the section. Its value is an index into the
          * section header string table section, giving the location of a null-terminated string.
          */
         triton::uint32 idxname;
 
         /*!
-         * \description This member specifies the name of the section as string based on the ElfSectionHeader::idxname.
+         * \details This member specifies the name of the section as string based on the ElfSectionHeader::idxname.
          */
         std::string name;
 
         /*!
-         * \description This member categorizes the section's contents and semantics.
+         * \details This member categorizes the section's contents and semantics.
          */
         triton::uint32 type;
 
         /*!
-         * \description Sections support one-bit flags that describe miscellaneous attributes.
+         * \details Sections support one-bit flags that describe miscellaneous attributes.
          * If a flag bit is set in ElfSectionHeader::flags, the attribute is "on" for the section.
          * Otherwise, the attribute is "off" or does not apply. Undefined attributes are set to zero.
          */
         triton::uint64 flags;
 
         /*!
-         * \description If this section appears in the memory image of a process, this member holds
+         * \details If this section appears in the memory image of a process, this member holds
          * the address at which the section's first byte should reside. Otherwise, the member contains zero.
          */
         triton::uint64 addr;
 
         /*!
-         * \description This member's value holds the byte offset from the beginning of the file to the first
+         * \details This member's value holds the byte offset from the beginning of the file to the first
          * byte in the section. One section type, SHT_NOBITS, occupies no space in the  file, and its sh_offset member
          * locates the conceptual placement in the file.
          */
         triton::uint64 offset;
 
         /*!
-         * \description This  member  holds the section's size in bytes. Unless the section type is SHT_NOBITS, the section
+         * \details This  member  holds the section's size in bytes. Unless the section type is SHT_NOBITS, the section
          * occupies sh_size bytes in the file. A section of type SHT_NOBITS may have a nonzero size, but it occupies no space
          * in the file.
          */
         triton::uint64 size;
 
         /*!
-         * \description This member holds a section header table index link, whose interpretation depends on the section type.
+         * \details This member holds a section header table index link, whose interpretation depends on the section type.
          */
         triton::uint32 link;
 
         /*!
-         * \description This member holds extra information, whose interpretation depends on the section type.
+         * \details This member holds extra information, whose interpretation depends on the section type.
          */
         triton::uint32 info;
 
         /*!
-         * \description Some sections have address alignment constraints. If a section holds a doubleword, the system must
+         * \details Some sections have address alignment constraints. If a section holds a doubleword, the system must
          * ensure doubleword alignment for the entire section. That is, the value of sh_addr must be congruent to zero,
          * modulo the value of ElfSectionHeader::addralign. Only zero and positive integral powers of two are allowed. Values
          * of zero or one mean the section has no alignment constraints.
@@ -131,7 +131,7 @@ namespace triton {
         triton::uint64 addralign;
 
         /*!
-         * \description Some sections hold a table of fixed-sized entries, such as a symbol table. For such a section,
+         * \details Some sections hold a table of fixed-sized entries, such as a symbol table. For such a section,
          * this member gives the size in bytes for each entry. This member contains zero if the section does not hold
          * a table of fixed-size entries.
          */

@@ -82,7 +82,7 @@ namespace triton {
           std::vector<std::string> sharedLibraries;
 
           /*!
-           * \description The list of memory areas which may be mapped into the Triton memory.
+           * \details The list of memory areas which may be mapped into the Triton memory.
            * In the ELF context, this is basically all segments.
            */
           std::list<triton::format::MemoryMapping> memoryMapping;

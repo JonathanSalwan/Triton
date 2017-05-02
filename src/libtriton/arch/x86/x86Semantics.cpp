@@ -21,7 +21,7 @@
 \section SMT_Semantics_Supported_description Description
 <hr>
 
-Here is the instructions' list of what **Triton** can convert into \ref py_ast_page. Please note that our main
+Here is the instructions' list of what **Triton** can convert into \ref py_AstNode_page. Please note that our main
 objective is not to support all semantics right now, we are currently focusing on the design of **Triton**'s
 engines. When engines will be reliable, we will write the last semantics :-). However, feel free to add your
 own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks to `wisk` and his
@@ -5464,7 +5464,6 @@ namespace triton {
           op3 = this->astCtxt.bv(0, leaSize);
 
         /* Base with PC */
-        // FIXME : Should we use overlapWith?
         if (this->architecture->isRegisterValid(srcBase) && (architecture->getParentRegister(srcBase) == architecture->getParentRegister(ID_REG_IP)))
           op3 = this->astCtxt.bvadd(op3, this->astCtxt.bv(inst.getSize(), leaSize));
 

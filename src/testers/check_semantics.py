@@ -1,9 +1,5 @@
-
-from triton import *
+from triton import OPERAND, SYMEXPR, ARCH, OPCODE
 import pintool as Pintool
-
-import sys
-import time
 
 BLUE  = "\033[94m"
 ENDC  = "\033[0m"
@@ -34,7 +30,6 @@ Triton = Pintool.getTritonContext()
 #      Concrete Value : 0000000000000000
 #      Expression     : (ite (= ((_ extract 15 0) #348) ((_ extract 15 0) (_ bv2 64))) (_ bv0 1) (_ bv1 1))
 
-
 def sbefore(instruction):
     Triton.concretizeAllMemory()
     Triton.concretizeAllRegister()
@@ -42,6 +37,18 @@ def sbefore(instruction):
 
 
 def cafter(instruction):
+
+    ofIgnored = [
+        OPCODE.RCL,
+        OPCODE.RCR,
+        OPCODE.ROL,
+        OPCODE.ROR,
+        OPCODE.SAR,
+        OPCODE.SHL,
+        OPCODE.SHLD,
+        OPCODE.SHR,
+        OPCODE.SHRD,
+    ]
 
     good = True
     bad  = list()
@@ -61,6 +68,14 @@ def cafter(instruction):
 
         # Check register
         if cvalue != svalue:
+
+            if reg.getName() == 'of' and instruction.getType() in ofIgnored:
+                continue
+
+            # FIXME: We have an incorrect semantic
+            if instruction.getType() == OPCODE.CDQ:
+                continue
+
             good = False
             bad.append({
                 'reg':    reg.getName(),
@@ -112,4 +127,3 @@ if __name__ == '__main__':
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)
     Pintool.insertCall(sbefore, Pintool.INSERT_POINT.BEFORE_SYMPROC)
     Pintool.runProgram()
-

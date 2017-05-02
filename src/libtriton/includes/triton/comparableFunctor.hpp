@@ -22,7 +22,7 @@ namespace triton {
 
   /*!
    * \class ComparableFunctor
-   * \description This Helper class is a wrapper around a std::function adding a comparison operator
+   * \details This Helper class is a wrapper around a std::function adding a comparison operator
    * to make it searchable in a list even with lambda function.
    */
   template <class Signature>

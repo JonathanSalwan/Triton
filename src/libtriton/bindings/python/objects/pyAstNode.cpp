@@ -12,7 +12,13 @@
 #include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 
+/*
+ * Init doctest
+>>> from triton import TritonContext, ARCH
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
 
+ */
 
 /*! \page py_AstNode_page AstNode
     \brief [**python api**] All information about the AstNode python object.
@@ -25,7 +31,8 @@
 This object is used to represent each AST node of an expression.
 
 ~~~~~~~~~~~~~{.py}
->>> node = bvadd(bv(1, 8), bvxor(bv(10, 8), bv(20, 8)))
+>>> astCtxt = ctxt.getAstContext()
+>>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
 >>> print type(node)
 <type 'AstNode'>
 
@@ -34,11 +41,12 @@ This object is used to represent each AST node of an expression.
 
 # Python's opertors overloaded
 
->>> a = bv(1, 8)
->>> b = bv(2, 8)
+>>> a = astCtxt.bv(1, 8)
+>>> b = astCtxt.bv(2, 8)
 >>> c = (a & ~b) | (~a & b)
 >>> print c
 (bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
+
 ~~~~~~~~~~~~~
 
 \section AstNode_py_api Python API - Methods of the AstNode class

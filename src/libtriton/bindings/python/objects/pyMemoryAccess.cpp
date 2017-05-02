@@ -11,6 +11,15 @@
 #include <triton/exceptions.hpp>
 #include <triton/memoryAccess.hpp>
 
+/* setup doctest env
+>>> from triton import TritonContext, ARCH, Instruction, MemoryAccess
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+>>> inst = Instruction("\x8A\xA4\x4A\x00\x01\x00\x00")
+>>> inst.setAddress(0x40000)
+
+*/
 
 
 /*! \page py_MemoryAccess_page MemoryAccess
@@ -26,13 +35,14 @@ This object is used to represent a memory access.
 \subsection py_MemoryAccess_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> processing(inst)
+>>> ctxt.processing(inst)
+True
 >>> print inst
-40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
+0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
 
 >>> op1 = inst.getOperands()[1]
 >>> print op1
-[@0x6135a]:8 bv[7..0]
+[@0x100]:8 bv[7..0]
 
 >>> print op1.getBaseRegister()
 rdx:64 bv[63..0]
@@ -41,22 +51,23 @@ rdx:64 bv[63..0]
 rcx:64 bv[63..0]
 
 >>> print op1.getScale()
-0x2:8 bv[7..0]
+0x2:64 bv[63..0]
 
 >>> print op1.getDisplacement()
-0x100:8 bv[7..0]
+0x100:64 bv[63..0]
 
 >>> print op1.getLeaAst()
-(bvadd (_ bv397882 64) (bvadd (bvmul (_ bv16 64) (_ bv2 64)) (_ bv256 64)))
+(bvadd (_ bv0 64) (bvadd (bvmul (_ bv0 64) (_ bv2 64)) (_ bv256 64)))
 
 >>> print hex(op1.getLeaAst().evaluate())
-0x6135aL
+0x100L
 
 >>> print hex(op1.getAddress())
-0x6135aL
+0x100L
 
 >>> print op1.getSize()
 1
+
 ~~~~~~~~~~~~~
 
 \subsection py_MemoryAccess_constructor Constructor
@@ -67,13 +78,14 @@ rcx:64 bv[63..0]
 [@0x400f4d3]:64 bv[63..0]
 
 >>> hex(mem.getAddress())
-'0x400f4d3'
+'0x400f4d3L'
 
 >>> mem.getSize()
-8
+8L
 
 >>> hex(mem.getConcreteValue())
 '0x6162636465666768L'
+
 ~~~~~~~~~~~~~
 
 \section MemoryAccess_py_api Python API - Methods of the MemoryAccess class

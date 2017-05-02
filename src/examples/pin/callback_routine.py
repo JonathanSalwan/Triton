@@ -15,12 +15,12 @@ from pintool import *
 Triton = getTritonContext()
 
 def mallocEntry(threadId):
-    sizeAllocated = getCurrentRegisterValue(Triton.Register(REG.RDI))
+    sizeAllocated = getCurrentRegisterValue(Triton.Register(REG.X86_64.RDI))
     print '-> malloc(%#x)' %(sizeAllocated)
 
 
 def mallocExit(threadId):
-    ptrAllocated = getCurrentRegisterValue(Triton.Register(REG.RAX))
+    ptrAllocated = getCurrentRegisterValue(Triton.Register(REG.X86_64.RAX))
     print '<- %#x' %(ptrAllocated)
 
 

@@ -11,6 +11,12 @@
 #include <triton/exceptions.hpp>
 #include <triton/symbolicVariable.hpp>
 
+/* setup doctest env
+>>> from triton import TritonContext, REG, ARCH
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+*/
 
 
 /*! \page py_SymbolicVariable_page SymbolicVariable
@@ -24,9 +30,10 @@
 This object is used to represent a symbolic variable.
 
 ~~~~~~~~~~~~~{.py}
->>> symvar = convertRegisterToSymbolicVariable(REG.RAX)
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
 >>> print symvar
 SymVar_0:64
+
 ~~~~~~~~~~~~~
 
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class

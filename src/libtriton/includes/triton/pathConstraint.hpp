@@ -45,7 +45,7 @@ namespace triton {
         protected:
           /*!
            * \brief The branches constraints
-           * \description Vector of `<flag, source addr, dst addr, pc>`, `flag` is set to true if the branch is taken according the pc.
+           * \details Vector of `<flag, source addr, dst addr, pc>`, `flag` is set to true if the branch is taken according the pc.
            * The source address is the location of the branch instruction and the destination address is the destination of the jump.
            * E.g: `"0x11223344: jne 0x55667788"`, 0x11223344 is the source address and 0x55667788 is the destination if and only if the
            * branch is taken, otherwise the destination is the next instruction address.

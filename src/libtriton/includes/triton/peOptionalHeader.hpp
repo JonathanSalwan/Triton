@@ -39,7 +39,7 @@ namespace triton {
      */
 
       /*!
-       * \description This struct contains the "PE32" (32-bit) version of the optional header.
+       * \details This struct contains the "PE32" (32-bit) version of the optional header.
        * The fields map to the equivalent field in PeOptionalHeader.
        */
       struct PE32_OptionalHeader {
@@ -76,7 +76,7 @@ namespace triton {
       };
 
       /*!
-       * \description This struct contains the "PE32+" (64-bit) version of the optional header.
+       * \details This struct contains the "PE32+" (64-bit) version of the optional header.
        * The fields map to the equivalent field in PeOptionalHeader.
        */
       struct PE32Plus_OptionalHeader {
@@ -116,152 +116,152 @@ namespace triton {
       class PeOptionalHeader {
         protected:
           /*!
-           * \description The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable.
+           * \details The unsigned integer that identifies the state of the image file. The most common number is 0x10B, which identifies it as a normal executable file. 0x107 identifies it as a ROM image, and 0x20B identifies it as a PE32+ executable.
            */
           triton::uint16 magic;
 
           /*!
-           * \description The linker major version number.
+           * \details The linker major version number.
            */
           triton::uint8 majorLinkerVersion;
 
           /*!
-           * \description The linker minor version number.
+           * \details The linker minor version number.
            */
           triton::uint8 minorLinkerVersion;
 
           /*!
-           * \description The size of the code (text) section, or the sum of all code sections if there are multiple sections.
+           * \details The size of the code (text) section, or the sum of all code sections if there are multiple sections.
            */
           triton::uint32 sizeOfCode;
 
           /*!
-           * \description The size of the initialized data section, or the sum of all such sections if there are multiple data sections.
+           * \details The size of the initialized data section, or the sum of all such sections if there are multiple data sections.
            */
           triton::uint32 sizeOfInitializedData;
 
           /*!
-           * \description The size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections.
+           * \details The size of the uninitialized data section (BSS), or the sum of all such sections if there are multiple BSS sections.
            */
           triton::uint32 sizeOfUninitializedData;
 
           /*!
-           * \description The address of the entry point relative to the image base when the executable file is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of the initialization function. An entry point is optional for DLLs. When no entry point is present, this field must be zero.
+           * \details The address of the entry point relative to the image base when the executable file is loaded into memory. For program images, this is the starting address. For device drivers, this is the address of the initialization function. An entry point is optional for DLLs. When no entry point is present, this field must be zero.
            */
           triton::uint32 addressOfEntryPoint;
 
           /*!
-           * \description The address that is relative to the image base of the beginning-of-code section when it is loaded into memory.
+           * \details The address that is relative to the image base of the beginning-of-code section when it is loaded into memory.
            */
           triton::uint32 baseOfCode;
 
           /*!
-           * \description The address that is relative to the image base of the beginning-of-data section when it is loaded into memory.
+           * \details The address that is relative to the image base of the beginning-of-data section when it is loaded into memory.
            */
           triton::uint32 baseOfData;
 
           /*!
-           * \description The preferred address of the first byte of image when loaded into memory; must be a multiple of 64 K. The default for DLLs is 0x10000000. The default for Windows CE EXEs is 0x00010000. The default for Windows NT, Windows 2000, Windows XP, Windows 95, Windows 98, and Windows Me is 0x00400000.
+           * \details The preferred address of the first byte of image when loaded into memory; must be a multiple of 64 K. The default for DLLs is 0x10000000. The default for Windows CE EXEs is 0x00010000. The default for Windows NT, Windows 2000, Windows XP, Windows 95, Windows 98, and Windows Me is 0x00400000.
            */
           triton::uint64 imageBase;
 
           /*!
-           * \description The alignment (in bytes) of sections when they are loaded into memory. It must be greater than or equal to FileAlignment. The default is the page size for the architecture.
+           * \details The alignment (in bytes) of sections when they are loaded into memory. It must be greater than or equal to FileAlignment. The default is the page size for the architecture.
            */
           triton::uint32 sectionAlignment;
 
           /*!
-           * \description The alignment factor (in bytes) that is used to align the raw data of sections in the image file. The value should be a power of 2 between 512 and 64 K, inclusive. The default is 512. If the SectionAlignment is less than the architecture’s page size, then FileAlignment must match SectionAlignment.
+           * \details The alignment factor (in bytes) that is used to align the raw data of sections in the image file. The value should be a power of 2 between 512 and 64 K, inclusive. The default is 512. If the SectionAlignment is less than the architecture’s page size, then FileAlignment must match SectionAlignment.
            */
           triton::uint32 fileAlignment;
 
           /*!
-           * \description The major version number of the required operating system.
+           * \details The major version number of the required operating system.
            */
           triton::uint16 majorOperatingSystemVersion;
 
           /*!
-           * \description The minor version number of the required operating system.
+           * \details The minor version number of the required operating system.
            */
           triton::uint16 minorOperatingSystemVersion;
 
           /*!
-           * \description The major version number of the image.
+           * \details The major version number of the image.
            */
           triton::uint16 majorImageVersion;
 
           /*!
-           * \description The minor version number of the image.
+           * \details The minor version number of the image.
            */
           triton::uint16 minorImageVersion;
 
           /*!
-           * \description The major version number of the subsystem.
+           * \details The major version number of the subsystem.
            */
           triton::uint16 majorSubsystemVersion;
 
           /*!
-           * \description The minor version number of the subsystem.
+           * \details The minor version number of the subsystem.
            */
           triton::uint16 minorSubsystemVersion;
 
           /*!
-           * \description Reserved, must be zero.
+           * \details Reserved, must be zero.
            */
           triton::uint32 win32VersionValue;
 
           /*!
-           * \description The size (in bytes) of the image, including all headers, as the image is loaded in memory. It must be a multiple of SectionAlignment.
+           * \details The size (in bytes) of the image, including all headers, as the image is loaded in memory. It must be a multiple of SectionAlignment.
            */
           triton::uint32 sizeOfImage;
 
           /*!
-           * \description The combined size of an MS‑DOS stub, PE header, and section headers rounded up to a multiple of FileAlignment.
+           * \details The combined size of an MS‑DOS stub, PE header, and section headers rounded up to a multiple of FileAlignment.
            */
           triton::uint32 sizeOfHeaders;
 
           /*!
-           * \description The image file checksum.
+           * \details The image file checksum.
            */
           triton::uint32 checkSum;
 
           /*!
-           * \description The subsystem that is required to run this image.
+           * \details The subsystem that is required to run this image.
            */
           triton::uint16 subsystem;
 
           /*!
-           * \description DLL Characteristics.
+           * \details DLL Characteristics.
            */
           triton::uint16 dllCharacteristics;
 
           /*!
-           * \description The size of the stack to reserve. Only SizeOfStackCommit is committed; the rest is made available one page at a time until the reserve size is reached.
+           * \details The size of the stack to reserve. Only SizeOfStackCommit is committed; the rest is made available one page at a time until the reserve size is reached.
            */
           triton::uint64 sizeOfStackReserve;
 
           /*!
-           * \description The size of the stack to commit.
+           * \details The size of the stack to commit.
            */
           triton::uint64 sizeOfStackCommit;
 
           /*!
-           * \description The size of the local heap space to reserve. Only SizeOfHeapCommit is committed; the rest is made available one page at a time until the reserve size is reached.
+           * \details The size of the local heap space to reserve. Only SizeOfHeapCommit is committed; the rest is made available one page at a time until the reserve size is reached.
            */
           triton::uint64 sizeOfHeapReserve;
 
           /*!
-           * \description The size of the local heap space to commit.
+           * \details The size of the local heap space to commit.
            */
           triton::uint64 sizeOfHeapCommit;
 
           /*!
-           * \description Reserved, must be zero.
+           * \details Reserved, must be zero.
            */
           triton::uint32 loaderFlags;
 
           /*!
-           * \description The number of data-directory entries in the remainder of the optional header. Each describes a location and size.
+           * \details The number of data-directory entries in the remainder of the optional header. Each describes a location and size.
            */
           triton::uint32 numberOfRvaAndSizes;
 

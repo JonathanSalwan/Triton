@@ -42,21 +42,21 @@ namespace triton {
 
     /*! \brief The prototype of a GET_CONCRETE_MEMORY_VALUE callback.
      *
-     * \description The callback takes as unique argument a memory access. Callbacks will
+     * \details The callback takes as unique argument a memory access. Callbacks will
      * be called each time that the Triton library will need a concrete memory value.
      */
     using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, triton::arch::MemoryAccess&)>;
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
-     * \description The callback takes as unique argument a register. Callbacks will be
+     * \details The callback takes as unique argument a register. Callbacks will be
      * called each time that the Triton library will need a concrete register value.
      */
     using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, triton::arch::RegisterSpec&)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
-     * \description The callback takes as uniq argument a triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
+     * \details The callback takes as uniq argument a triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
      * The returned node is used as assignment. See also the page about \ref SMT_simplification_page for more information.
      */
     using symbolicSimplificationCallback = ComparableFunctor<triton::ast::AbstractNode*(triton::API&, triton::ast::AbstractNode*)>;

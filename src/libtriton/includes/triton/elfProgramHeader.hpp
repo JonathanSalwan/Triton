@@ -66,46 +66,46 @@ namespace triton {
 
         protected:
           /*!
-           * \description This member indicates what kind of segment this array element describes
+           * \details This member indicates what kind of segment this array element describes
            * or how to interpret the array element's information.
            */
           triton::uint32 type;
 
           /*!
-           * \description This member holds a bit mask of flags relevant to the segment (PF_X, PF_W or PF_R).
+           * \details This member holds a bit mask of flags relevant to the segment (PF_X, PF_W or PF_R).
            */
           triton::uint32 flags;
 
           /*!
-           * \description This member holds the offset from the beginning of the file at which
+           * \details This member holds the offset from the beginning of the file at which
            * the first byte of the segment resides.
            */
           triton::uint64 offset;
 
           /*!
-           * \description This member holds the virtual address at which the first byte of the
+           * \details This member holds the virtual address at which the first byte of the
            * segment resides in memory.
            */
           triton::uint64 vaddr;
 
           /*!
-           * \description On systems for which physical addressing is relevant, this member is reserved
+           * \details On systems for which physical addressing is relevant, this member is reserved
            * for the segment's physical address. Under BSD this member is not used and must be zero.
            */
           triton::uint64 paddr;
 
           /*!
-           * \description This member holds the number of bytes in the file image of the segment. It may be zero.
+           * \details This member holds the number of bytes in the file image of the segment. It may be zero.
            */
           triton::uint64 filesz;
 
           /*!
-           * \description This member holds the number of bytes in the memory image of the segment. It may be zero.
+           * \details This member holds the number of bytes in the memory image of the segment. It may be zero.
            */
           triton::uint64 memsz;
 
           /*!
-           * \description This member holds the value to which the segments are aligned in memory and in the file.
+           * \details This member holds the value to which the segments are aligned in memory and in the file.
            */
           triton::uint64 align;
 

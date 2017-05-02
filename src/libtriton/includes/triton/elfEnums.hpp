@@ -35,7 +35,7 @@ namespace triton {
 
       /*!
        *  \brief Some useful ELF enums.
-       *  \description This list is not exhaustive, it contains only used enums by the libTriton.
+       *  \details This list is not exhaustive, it contains only used enums by the libTriton.
        */
       enum elf_e {
         EI_NIDENT         = 16,             //!< Size of the ident array.

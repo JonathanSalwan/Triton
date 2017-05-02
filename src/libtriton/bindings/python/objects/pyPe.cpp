@@ -18,6 +18,13 @@
 
 \tableofcontents
 
+- \ref py_PeExportEntry_page
+- \ref py_PeExportTable_page
+- \ref py_PeHeader_page
+- \ref py_PeImportLookup_page
+- \ref py_PeImportTable_page
+- \ref py_PeSectionHeader_page
+
 \section py_Pe_description Description
 <hr>
 

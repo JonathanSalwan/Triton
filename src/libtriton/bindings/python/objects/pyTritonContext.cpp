@@ -12,24 +12,23 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
-
-
-/*! \page py_triton_context_page Python bindings
+/*! \page py_TritonContext_page TritonContext
     \brief [**python api**] All information about the Triton Context
-    \anchor triton
+    \anchor tritonContext
 
 \section triton_py_description Description
 <hr>
 
 The Triton Triton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
 
-\section triton_py_api Python API - Classes, methods, modules and namespaces of libTriton
+\section tritonContext_py_api Python API - Classes, methods, modules and namespaces of libTriton
 <hr>
 
 By default, the libTriton contains Python bindings and can be loaded with a classical Python `import`.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import TritonContext
+
 ~~~~~~~~~~~~~
 
 If you want to use the libTriton without Python bindings, recompile the project with the `cmake` flag `-DTRITON_PYTHON_BINDINGS=no`.
@@ -37,18 +36,13 @@ If you want to use the libTriton without Python bindings, recompile the project 
 \subsection triton_py_api_classes Classes
 
 - \ref py_AstNode_page
+- \ref py_AstContext_page
 - \ref py_Bitvector_page
 - \ref py_PathConstraint_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
 - \ref py_SymbolicExpression_page
 - \ref py_SymbolicVariable_page
-
-
-\subsection triton_py_api_modules Modules
-
-- \ref ast
-
 
 \subsection triton_py_api_methods Methods
 
@@ -137,7 +131,7 @@ Returns the list of all registers. Each item of this list is a \ref py_Register_
 - <b>\ref py_ARCH_page getArchitecture(void)</b><br>
 Returns the current architecture used.
 
-- <b>TODO getAstContext(void)</b><br>
+- <b>\ref py_AstContext_page getAstContext(void)</b><br>
 Returns the AST context to create and modify nodes.
 
 - <b>dict getAstDictionariesStats(void)</b><br>
@@ -410,7 +404,7 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      void TritonContext_dealloc(PyObject* self) {
+      static void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
         Py_DECREF(self);
       }
@@ -1416,11 +1410,11 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          auto reg = PyTritonContext_AsTritonContext(self)->getParentRegisters();
-          ret = xPyList_New(reg.size());
+          auto regs = PyTritonContext_AsTritonContext(self)->getParentRegisters();
+          ret = xPyList_New(regs.size());
 
-          for (auto regId: reg) {
-            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(PyTritonContext_AsTritonContext(self)->getRegister(regId))));
+          for (auto const* reg: regs) {
+            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(*reg)));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -2985,13 +2979,14 @@ namespace triton {
       };
 
 
+      //! Description of the python representation of a TritonContext
       PyTypeObject TritonContext_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
         "TritonContext",                            /* tp_name */
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        0,                                          /* tp_dealloc */
+        TritonContext_dealloc,                      /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */

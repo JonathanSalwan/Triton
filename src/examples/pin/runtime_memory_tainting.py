@@ -16,7 +16,7 @@ Triton = getTritonContext()
 # we taint the memory that RAX holds.
 def cbeforeSymProc(instruction):
     if instruction.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(Triton.Register(REG.RAX))
+        rax = getCurrentRegisterValue(Triton.Register(REG.X86_64.RAX))
         Triton.taintMemory(rax)
 
 

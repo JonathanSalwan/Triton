@@ -57,6 +57,7 @@ namespace triton {
           public triton::engines::symbolic::PathManager {
 
         protected:
+          //! Reference to the context managing ast nodes.
           triton::ast::AstContext& astCtxt;
 
           //! Defines if the engine is enable or disable.
@@ -73,7 +74,7 @@ namespace triton {
 
           /*! \brief The map of symbolic variables
            *
-           * \description
+           * \details
            * **item1**: variable id<br>
            * **item2**: symbolic variable
            */
@@ -81,7 +82,7 @@ namespace triton {
 
           /*! \brief The map of symbolic expressions
            *
-           * \description
+           * \details
            * **item1**: symbolic reference id<br>
            * **item2**: symbolic expression
            */
@@ -89,7 +90,7 @@ namespace triton {
 
           /*! \brief map of address -> symbolic expression
            *
-           * \description
+           * \details
            * **item1**: memory address<br>
            * **item2**: symbolic reference id
            */
@@ -97,7 +98,7 @@ namespace triton {
 
           /*! \brief map of <address:size> -> symbolic expression.
            *
-           * \description
+           * \details
            * **item1**: <addr:size><br>
            * **item2**: AST node
            */

@@ -61,12 +61,13 @@ namespace triton {
           triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) const;
 
         protected:
+          //! List of registers specification available for this architecture.
           std::unordered_map<registers_e, triton::arch::RegisterSpec const> registers_;
       };
 
       /*! \brief The list of prefixes.
        *
-       *  \description
+       *  \details
        *  Note that `REP` and `REPE` have the some opcode. The `REP`
        *  prefix becomes a `REPE` if the instruction modifies `ZF`.
        */

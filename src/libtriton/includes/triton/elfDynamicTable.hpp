@@ -54,12 +54,12 @@ namespace triton {
 
         protected:
         /*!
-         * \description This member describes the kind of the entry. E.g: DT_STRTAB, DT_SYMTAB, DT_NEEDED...
+         * \details This member describes the kind of the entry. E.g: DT_STRTAB, DT_SYMTAB, DT_NEEDED...
          */
         triton::sint64 tag;
 
         /*!
-         * \description This member represents integer values with various interpretations.
+         * \details This member represents integer values with various interpretations.
          */
         triton::uint64 value;
 

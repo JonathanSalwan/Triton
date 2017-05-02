@@ -479,22 +479,20 @@ namespace tracer {
         if (tracer::pintool::api.isSymbolicEngineEnabled() == false)
           return;
 
-        for (triton::arch::registers_e regId : tracer::pintool::api.getParentRegisters()) {
-          if (regId > triton::arch::ID_REG_EFLAGS)
+        for (const triton::arch::RegisterSpec* reg : tracer::pintool::api.getParentRegisters()) {
+          if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 
-          triton::arch::RegisterSpec const& reg = tracer::pintool::api.getRegister(regId);
-
-          if (tracer::pintool::api.getSymbolicRegisterId(reg) == triton::engines::symbolic::UNSET)
+          if (tracer::pintool::api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
             continue;
 
-          triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
-          triton::uint512 sv = tracer::pintool::api.getSymbolicRegisterValue(triton::arch::Register(reg));
+          triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(*reg));
+          triton::uint512 sv = tracer::pintool::api.getSymbolicRegisterValue(triton::arch::Register(*reg));
 
           if (sv != cv) {
-            tracer::pintool::api.concretizeRegister(reg);
-            tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(reg, cv));
-          }
+            tracer::pintool::api.concretizeRegister(*reg);
+            tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*reg, cv));
+          } 
         }
       }
 
