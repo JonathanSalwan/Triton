@@ -9,7 +9,6 @@ from pintool    import getTritonContext, startAnalysisFromEntry, runProgram, ins
 unsuportedSemantics = dict()
 Triton              = getTritonContext()
 
-Triton = getTritonContext()
 
 
 def cbefore(instruction):
