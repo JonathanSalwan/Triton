@@ -64,7 +64,7 @@ namespace triton {
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all parent registers.
-        virtual std::set<triton::arch::RegisterSpec const*> getParentRegisters(void) const = 0;
+        virtual std::set<const triton::arch::RegisterSpec*> getParentRegisters(void) const = 0;
 
         //! Returns all registers.
         virtual const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const = 0;

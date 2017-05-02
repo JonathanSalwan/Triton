@@ -72,10 +72,6 @@ def cafter(instruction):
             if reg.getName() == 'of' and instruction.getType() in ofIgnored:
                 continue
 
-            # FIXME: We have an incorrect semantic
-            if instruction.getType() == OPCODE.CDQ:
-                continue
-
             good = False
             bad.append({
                 'reg':    reg.getName(),

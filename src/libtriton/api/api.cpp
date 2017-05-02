@@ -294,7 +294,7 @@ namespace triton {
   }
 
 
-  std::set<triton::arch::RegisterSpec const*> API::getParentRegisters(void) const {
+  std::set<const triton::arch::RegisterSpec*> API::getParentRegisters(void) const {
     this->checkArchitecture();
     return this->arch.getParentRegisters();
   }

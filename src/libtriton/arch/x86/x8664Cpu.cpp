@@ -361,8 +361,8 @@ namespace triton {
       }
 
 
-      std::set<triton::arch::RegisterSpec const*> x8664Cpu::getParentRegisters(void) const {
-        std::set<triton::arch::RegisterSpec const*> ret;
+      std::set<const triton::arch::RegisterSpec*> x8664Cpu::getParentRegisters(void) const {
+        std::set<const triton::arch::RegisterSpec*> ret;
 
         for (const auto& kv: this->registers_) {
           auto regId = kv.first;

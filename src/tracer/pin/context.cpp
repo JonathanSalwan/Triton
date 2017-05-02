@@ -160,7 +160,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        triton::arch::RegisterSpec const* syncReg = nullptr;
+        const triton::arch::RegisterSpec* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -239,7 +239,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        triton::arch::RegisterSpec const* syncReg = nullptr;
+        const triton::arch::RegisterSpec* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -492,7 +492,7 @@ namespace tracer {
           if (sv != cv) {
             tracer::pintool::api.concretizeRegister(*reg);
             tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*reg, cv));
-          } 
+          }
         }
       }
 

@@ -87,17 +87,11 @@ if(INCBUILD)
     file(WRITE ${CMAKE_SOURCE_DIR}/.build_number ${NEW_BUILD_NUMBER})
 endif()
 
+# Read the build version
 file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 4)
 set(VERSION_BUILD ${BUILD_NUMBER})
-
-if(INCBUILD)
-    # Update the PROJECT_NUMBER variable inside the Doxyfile
-    file(READ ${CMAKE_SOURCE_DIR}/Doxyfile DOXYFILE)
-    STRING(REGEX REPLACE "PROJECT_NUMBER[ ]*=[ ]*\"[a-zA-Z0-9. ]*\"" "PROJECT_NUMBER = \"version ${VERSION_MAJOR}.${VERSION_MINOR} build ${VERSION_BUILD}\"" PROJECT_NUMBER ${DOXYFILE})
-    file(WRITE ${CMAKE_SOURCE_DIR}/Doxyfile ${PROJECT_NUMBER})
-endif()
 
 # Custom cmake search
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")

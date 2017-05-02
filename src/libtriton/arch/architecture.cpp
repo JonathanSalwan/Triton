@@ -140,7 +140,7 @@ namespace triton {
     }
 
 
-    std::set<triton::arch::RegisterSpec const*> Architecture::getParentRegisters(void) const {
+    std::set<const triton::arch::RegisterSpec*> Architecture::getParentRegisters(void) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegisters(): You must define an architecture.");
       return this->cpu->getParentRegisters();

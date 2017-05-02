@@ -135,7 +135,7 @@ namespace triton {
         const std::unordered_map<triton::arch::registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const;
 
         //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::registers_e.
-        std::set<triton::arch::RegisterSpec const*> getParentRegisters(void) const;
+        std::set<const triton::arch::RegisterSpec*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the concrete value of a memory cell.
         triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;

@@ -15,7 +15,7 @@ add_custom_target(gen_doc_from_spec
 add_custom_target(doc
   COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
   DEPENDS gen_doc_from_spec
-  )
+)
 
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
