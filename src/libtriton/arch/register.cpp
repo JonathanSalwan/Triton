@@ -25,6 +25,7 @@ namespace triton {
         parent(parent) {
     }
 
+
     triton::arch::registers_e RegisterSpec::getId(void) const {
       return this->id;
     }

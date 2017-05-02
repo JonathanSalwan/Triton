@@ -46,7 +46,6 @@ set(LIBTRITON_SOURCE_FILES
   arch/immediate.cpp
   arch/irBuilder.cpp
   arch/operandWrapper.cpp
-  arch/registerSpecification.cpp
   arch/bitsVector.cpp
   arch/instruction.cpp
   arch/memoryAccess.cpp

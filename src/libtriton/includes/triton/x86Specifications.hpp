@@ -11,7 +11,6 @@
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
 #include <triton/architecture.hpp>
-#include <triton/registerSpecification.hpp>
 
 #include <unordered_map>
 
