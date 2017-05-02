@@ -1,8 +1,8 @@
 import os
 import sys
 
-x86_regs = []
-BUILD_DIR = sys.argv[2]
+BUILD_DIR = sys.argv[2] # defined from the doc/CMakeLists.txt
+x86_regs  = list()
 
 with open(sys.argv[1], "r") as f:
     for line in f.readlines():
