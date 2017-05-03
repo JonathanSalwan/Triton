@@ -159,7 +159,7 @@ namespace triton {
       static PyObject* Immediate_setValue(PyObject* self, PyObject* value) {
         try {
           if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "setValue(): expected an integer as argument");
+            return PyErr_Format(PyExc_TypeError, "Immediate::setValue(): expected an integer as argument");
           PyImmediate_AsImmediate(self)->setValue(PyLong_AsUint64(value));
           Py_INCREF(Py_None);
           return Py_None;

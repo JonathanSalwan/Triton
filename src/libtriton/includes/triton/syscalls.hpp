@@ -10,16 +10,16 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
-  #ifdef __APPLE__
-    #include <sys/syscall.h>
-  #else
-    #if defined(__x86_64__) || defined(_M_X64)
-      #include <asm/unistd_64.h>
-    #endif
-    #if defined(__i386) || defined(_M_IX86)
-      #include <asm/unistd_32.h>
-    #endif
+#ifdef __APPLE__
+  #include <sys/syscall.h>
+#else
+  #if defined(__x86_64__) || defined(_M_X64)
+    #include <asm/unistd_64.h>
   #endif
+  #if defined(__i386) || defined(_M_IX86)
+    #include <asm/unistd_32.h>
+  #endif
+#endif
 
 
 

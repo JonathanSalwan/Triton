@@ -17,8 +17,7 @@
 >>> from triton import TritonContext, ARCH
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
-
- */
+*/
 
 /*! \page py_AstNode_page AstNode
     \brief [**python api**] All information about the AstNode python object.

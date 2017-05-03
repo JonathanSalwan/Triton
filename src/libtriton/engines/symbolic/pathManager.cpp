@@ -21,6 +21,7 @@ namespace triton {
           astCtxt(astCtxt) {
       }
 
+
       PathManager::PathManager(const PathManager& copy)
         : modes(copy.modes),
           astCtxt(copy.astCtxt) {
@@ -45,7 +46,6 @@ namespace triton {
 
       /* Returns the logical conjunction AST of path constraint */
       triton::ast::AbstractNode* PathManager::getPathConstraintsAst(void) const {
-
         // Every constraint should have the same context otherwise, we can't know
         // which one to use for the current node computation.
         std::vector<triton::engines::symbolic::PathConstraint>::const_iterator it;

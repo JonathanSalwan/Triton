@@ -17,6 +17,7 @@
 #include <triton/tritonTypes.hpp>
 
 
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -179,7 +180,7 @@ namespace triton {
 
         //! Copies a MemoryAccess.
         void operator=(const MemoryAccess& other);
-   };
+    };
 
     //! Displays an MemoryAccess.
     std::ostream& operator<<(std::ostream& stream, const MemoryAccess& mem);

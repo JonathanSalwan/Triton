@@ -325,14 +325,13 @@ namespace triton {
 
 
       PyMethodDef tritonCallbacks[] = {
-        {"Elf",                                 (PyCFunction)triton_Elf,                                    METH_O,             ""},
-        {"Immediate",                           (PyCFunction)triton_Immediate,                              METH_VARARGS,       ""},
-        {"Instruction",                         (PyCFunction)triton_Instruction,                            METH_VARARGS,       ""},
-        {"MemoryAccess",                        (PyCFunction)triton_MemoryAccess,                           METH_VARARGS,       ""},
-        {"Pe",                                  (PyCFunction)triton_Pe,                                     METH_O,             ""},
-        {"TritonContext",                       (PyCFunction)triton_TritonContext,                          METH_VARARGS,       ""},
-        {nullptr,                               nullptr,                                                    0,                  nullptr}
-
+        {"Elf",             (PyCFunction)triton_Elf,              METH_O,         ""},
+        {"Immediate",       (PyCFunction)triton_Immediate,        METH_VARARGS,   ""},
+        {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
+        {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},
+        {"Pe",              (PyCFunction)triton_Pe,               METH_O,         ""},
+        {"TritonContext",   (PyCFunction)triton_TritonContext,    METH_VARARGS,   ""},
+        {nullptr,           nullptr,                              0,              nullptr}
       };
 
     }; /* python namespace */

@@ -661,10 +661,8 @@ namespace triton {
     //! Displays the node in ast representation.
     std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
 
-
     //! Compares two trees.
     bool operator==(AbstractNode& node1, AbstractNode& node2);
-
 
     //! AST C++ API - Duplicates the AST
     AbstractNode* newInstance(AbstractNode* node);

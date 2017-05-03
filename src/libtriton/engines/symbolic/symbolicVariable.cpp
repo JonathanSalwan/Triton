@@ -80,6 +80,7 @@ namespace triton {
         this->comment = comment;
       }
 
+
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
         stream << symVar.getName() << ":" << symVar.getSize();
         return stream;
