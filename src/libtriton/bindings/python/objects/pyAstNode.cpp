@@ -473,6 +473,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
+//std::cout << "Do and" << PyAstNode_AsAstNode(self)->evaluate() << "/" << PyAstNode_AsAstNode(other)->evaluate() << '/' << std::endl;
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {

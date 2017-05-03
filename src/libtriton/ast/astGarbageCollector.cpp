@@ -112,7 +112,7 @@ namespace triton {
 
 
     void AstGarbageCollector::recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node) {
-      this->variableNodes[name] = node;
+      this->variableNodes[name].push_back(node);
     }
 
 
@@ -121,16 +121,16 @@ namespace triton {
     }
 
 
-    const std::map<std::string, triton::ast::AbstractNode*>& AstGarbageCollector::getAstVariableNodes(void) const {
+    const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& AstGarbageCollector::getAstVariableNodes(void) const {
       return this->variableNodes;
     }
 
 
-    triton::ast::AbstractNode* AstGarbageCollector::getAstVariableNode(const std::string& name) const {
+    std::vector<triton::ast::AbstractNode*> AstGarbageCollector::getAstVariableNode(const std::string& name) const {
       auto it = this->variableNodes.find(name);
       if (it != this->variableNodes.end())
         return it->second;
-      return nullptr;
+      return {};
     }
 
 
@@ -144,7 +144,7 @@ namespace triton {
     }
 
 
-    void AstGarbageCollector::setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes) {
+    void AstGarbageCollector::setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes) {
       this->variableNodes = nodes;
     }
 

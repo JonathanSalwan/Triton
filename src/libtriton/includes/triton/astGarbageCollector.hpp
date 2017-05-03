@@ -48,7 +48,7 @@ namespace triton {
         std::set<triton::ast::AbstractNode*> allocatedNodes;
 
         //! This map maintains a link between symbolic variables and their nodes.
-        std::map<std::string, triton::ast::AbstractNode*> variableNodes;
+        std::map<std::string, std::vector<triton::ast::AbstractNode*>> variableNodes;
 
       public:
         //! Constructor.
@@ -85,16 +85,16 @@ namespace triton {
         const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
 
         //! Returns all variable nodes recorded.
-        const std::map<std::string, triton::ast::AbstractNode*>& getAstVariableNodes(void) const;
+        const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
 
         //! Returns the node of a recorded variable.
-        triton::ast::AbstractNode* getAstVariableNode(const std::string& name) const;
+        std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
 
         //! Sets all allocated nodes.
         void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
 
         //! Sets all variable nodes recorded.
-        void setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes);
+        void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
     };
 
   /*! @} End of ast namespace */

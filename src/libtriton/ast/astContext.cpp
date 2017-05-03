@@ -478,16 +478,19 @@ namespace triton {
 
 
     void AstContext::initVariable(const std::string& name, const triton::uint512& value) {
-      this->valueMapping.insert(std::make_pair(name, value));
+      auto it = this->valueMapping.find(name);
+      if(it == this->valueMapping.end())
+        this->valueMapping.insert(std::make_pair(name, value));
     }
 
 
     void AstContext::updateVariable(const std::string& name, const triton::uint512& value) {
       for (auto& kv: this->astGarbageCollector.getAstVariableNodes()) {
         if (kv.first == name) {
-          assert(kv.second->getType() == triton::ast::VARIABLE_NODE);
-          this->valueMapping[dynamic_cast<VariableNode*>(kv.second)->getVar().getName()] = value;
-          kv.second->init();
+          assert(kv.second[0]->getType() == triton::ast::VARIABLE_NODE);
+          this->valueMapping[dynamic_cast<VariableNode*>(kv.second[0])->getVar().getName()] = value;
+          for(auto* N: kv.second)
+            N->init();
           return;
         }
       }
