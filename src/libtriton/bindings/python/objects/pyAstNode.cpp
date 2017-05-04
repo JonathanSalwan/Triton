@@ -12,11 +12,12 @@
 #include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 
-/*
- * Init doctest
+/* setup doctest context
+
 >>> from triton import TritonContext, ARCH
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
+
 */
 
 /*! \page py_AstNode_page AstNode

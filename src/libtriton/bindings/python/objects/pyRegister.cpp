@@ -11,7 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
-/* setup doctest
+/* setup doctest context
+
 >>> from triton import ARCH, TritonContext, Instruction, REG
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)

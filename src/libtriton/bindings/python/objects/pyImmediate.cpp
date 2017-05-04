@@ -11,7 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
 
-/* setup doctest
+/* setup doctest context
+
 >>> from triton import TritonContext, ARCH, Instruction, Immediate, CPUSIZE
 
 >>> ctxt = TritonContext()

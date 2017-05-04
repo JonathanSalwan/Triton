@@ -11,7 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/memoryAccess.hpp>
 
-/* setup doctest env
+/* setup doctest context
+
 >>> from triton import TritonContext, ARCH, Instruction, MemoryAccess
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)

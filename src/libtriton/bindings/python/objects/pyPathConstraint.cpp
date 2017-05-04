@@ -11,7 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/pathConstraint.hpp>
 
-/* Setup doctest context
+/* setup doctest context
+
 >>> from triton import TritonContext, ARCH
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
