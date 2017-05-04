@@ -11,6 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/symbolicVariable.hpp>
 
+
+
 /* setup doctest context
 
 >>> from triton import TritonContext, REG, ARCH
@@ -18,7 +20,6 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 */
-
 
 /*! \page py_SymbolicVariable_page SymbolicVariable
     \brief [**python api**] All information about the SymbolicVariable python object.

@@ -12,6 +12,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
+
+
 /* setup doctest context
 
 >>> from triton import REG, TritonContext, ARCH, Instruction, AST_REPRESENTATION
@@ -32,7 +34,6 @@ True
 0x400000: xor rax, rdx
 
 */
-
 
 /*! \page py_AstContext_page AST Context
     \brief [**python api**] All information about the ast python module.
@@ -184,7 +185,7 @@ ref_7 = 0x400003 # Program Counter
 ...          )
 
 >>> # Get a model
->>> models  = ctxt.getModel(newExpr)
+>>> models = ctxt.getModel(newExpr)
 
 ~~~~~~~~~~~~~
 

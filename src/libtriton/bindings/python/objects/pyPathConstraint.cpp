@@ -11,6 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/pathConstraint.hpp>
 
+
+
 /* setup doctest context
 
 >>> from triton import TritonContext, ARCH
@@ -20,7 +22,6 @@
 
 # TODO : Set up a real programm to test the behavior
 */
-
 
 /*! \page py_PathConstraint_page PathConstraint
     \brief [**python api**] All information about the PathConstraint python object.

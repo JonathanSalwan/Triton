@@ -11,6 +11,8 @@
 #include <triton/bitsVector.hpp>
 #include <triton/exceptions.hpp>
 
+
+
 /* setup doctest context
 
 >>> from triton import ARCH, TritonContext, REG
@@ -18,7 +20,6 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 */
-
 
 /*! \page py_Bitvector_page Bitvector
     \brief [**python api**] All information about the Bitvector python object.
@@ -29,7 +30,6 @@
 <hr>
 
 This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
-
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.Register(REG.X86_64.AH)

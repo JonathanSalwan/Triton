@@ -11,6 +11,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/memoryAccess.hpp>
 
+
+
 /* setup doctest context
 
 >>> from triton import TritonContext, ARCH, Instruction, MemoryAccess
@@ -21,7 +23,6 @@
 >>> inst.setAddress(0x40000)
 
 */
-
 
 /*! \page py_MemoryAccess_page MemoryAccess
     \brief [**python api**] All information about the memory access python object.
