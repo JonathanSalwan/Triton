@@ -720,14 +720,18 @@ namespace triton {
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, counter);
 
             /* Create the semantics for Counter */
-            auto node1 = this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()));
+            auto node1 = this->astCtxt.ite(
+                           this->astCtxt.equal(op1, this->astCtxt.bv(0, counter.getBitSize())),
+                           op1,
+                           this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()))
+                         );
 
             /* Create the semantics for PC */
             auto node2 = this->astCtxt.ite(
-                     this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
-                     this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
-                     this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
-                   );
+                           this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
+                           this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
+                           this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
+                         );
 
             /* Create symbolic expression */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, counter, "Counter operation");
@@ -745,17 +749,21 @@ namespace triton {
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
 
             /* Create the semantics for Counter */
-            auto node1 = this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()));
+            auto node1 = this->astCtxt.ite(
+                           this->astCtxt.equal(op1, this->astCtxt.bv(0, counter.getBitSize())),
+                           op1,
+                           this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()))
+                         );
 
             /* Create the semantics for PC */
             auto node2 = this->astCtxt.ite(
-                     this->astCtxt.lor(
-                       this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
-                       this->astCtxt.equal(op2, this->astCtxt.bvfalse())
-                     ),
-                     this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
-                     this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
-                   );
+                           this->astCtxt.lor(
+                             this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
+                             this->astCtxt.equal(op2, this->astCtxt.bvfalse())
+                           ),
+                           this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
+                           this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
+                         );
 
             /* Create symbolic expression */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, counter, "Counter operation");
@@ -773,17 +781,21 @@ namespace triton {
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
 
             /* Create the semantics for Counter */
-            auto node1 = this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()));
+            auto node1 = this->astCtxt.ite(
+                           this->astCtxt.equal(op1, this->astCtxt.bv(0, counter.getBitSize())),
+                           op1,
+                           this->astCtxt.bvsub(op1, this->astCtxt.bv(1, counter.getBitSize()))
+                         );
 
             /* Create the semantics for PC */
             auto node2 = this->astCtxt.ite(
-                     this->astCtxt.lor(
-                       this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
-                       this->astCtxt.equal(op2, this->astCtxt.bvtrue())
-                     ),
-                     this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
-                     this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
-                   );
+                           this->astCtxt.lor(
+                             this->astCtxt.equal(node1, this->astCtxt.bv(0, counter.getBitSize())),
+                             this->astCtxt.equal(op2, this->astCtxt.bvtrue())
+                           ),
+                           this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize()),
+                           this->astCtxt.bv(inst.getAddress(), pc.getBitSize())
+                         );
 
             /* Create symbolic expression */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, counter, "Counter operation");
@@ -3801,11 +3813,19 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3855,11 +3875,19 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3909,11 +3937,19 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3963,11 +3999,19 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -5550,7 +5594,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5582,7 +5634,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5614,7 +5674,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5646,7 +5714,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6354,7 +6430,15 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6395,7 +6479,15 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6472,7 +6564,15 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6513,7 +6613,15 @@ namespace triton {
         auto& src    = inst.operands[1];
         auto  index1 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
         auto  index2 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -10203,11 +10311,19 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -10248,11 +10364,19 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -10293,11 +10417,19 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -10338,11 +10470,19 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -11213,7 +11353,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11245,7 +11393,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11277,7 +11433,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11309,7 +11473,15 @@ namespace triton {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
         auto  index  = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DI));
+        auto  cx     = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
+
+        /* Check if there is a REP prefix and a counter to zero */
+        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+          this->controlFlow_s(inst);
+          return;
+        }
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
