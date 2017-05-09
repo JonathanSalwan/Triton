@@ -190,7 +190,7 @@ Returns the full AST without SSA form from a symbolic expression id.
 - <b>dict getModel(\ref py_AstNode_page node)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 
-- <b>[dict, ...] getModels(\ref py_AstNode_page node)</b><br>
+- <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
 - <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
