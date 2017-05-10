@@ -106,7 +106,7 @@ a / b             | (bvudiv a b)
 a \| b            | (bvor a b)
 a & b             | (bvand a b)
 a ^ b             | (bvxor a b)
-a % b             | (bvsmod a b)
+a % b             | (bvurem a b)
 a << b            | (bvshl a b)
 a \>> b           | (bvlshr a b)
 ~a                | (bvnot a)
@@ -385,7 +385,7 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorRem(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsrem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
