@@ -39,7 +39,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 triton::ast::AbstractNode* xor_simplification(triton::ast::AbstractNode* node) {
 
   if (node->getKind() == triton::ast::BVXOR_NODE) {
-    if (*(node->getChilds()[0]) == *(node->getChilds()[1]))
+    if (node->getChilds()[0]->equalTo(node->getChilds()[1]))
       return triton::ast::bv(0, node->getBitvectorSize());
   }
 
@@ -86,7 +86,7 @@ def xor_bitwise(node):
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)
             c2_nonNot = getNonNot(c2)
-            if c1_not == ~c2_nonNot and c2_not == ~c1_nonNot:
+            if c1_not.equalTo(~c2_nonNot) and c2_not.equalTo(~c1_nonNot):
                 return c1_nonNot ^ c2_nonNot
     return node
 

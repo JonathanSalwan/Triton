@@ -27,6 +27,10 @@ class TestAstSimplification(unittest.TestCase):
         c = simplify(c)
         self.assertEqual(str(c), "(_ bv0 8)")
 
+        c = a ^ b
+        c = simplify(c)
+        self.assertEqual(str(c), "(bvxor (_ bv1 8) (_ bv2 8))")
+
         c = (a & ~b) | (~a & b)
         c = simplify(c)
         self.assertEqual(str(c), "(bvxor (_ bv1 8) (_ bv2 8))")
@@ -51,7 +55,7 @@ class TestAstSimplification(unittest.TestCase):
     @staticmethod
     def xor_1(node):
         if node.getKind() == AST_NODE.BVXOR:
-            if node.getChilds()[0] == node.getChilds()[1]:
+            if node.getChilds()[0].equalTo(node.getChilds()[1]):
                 return bv(0, node.getBitvectorSize())
         return node
 
@@ -86,7 +90,7 @@ class TestAstSimplification(unittest.TestCase):
                 c2_not    = getNot(c2)
                 c1_nonNot = getNonNot(c1)
                 c2_nonNot = getNonNot(c2)
-                if c1_not == ~c2_nonNot and c2_not == ~c1_nonNot:
+                if c1_not.equalTo(~c2_nonNot) and c2_not.equalTo(~c1_nonNot):
                     return c1_nonNot ^ c2_nonNot
 
         return node

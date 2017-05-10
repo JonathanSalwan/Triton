@@ -84,6 +84,18 @@ namespace triton {
     }
 
 
+    bool AbstractNode::equalTo(const AbstractNode& other) const {
+      return (this->evaluate() == other.evaluate()) &&
+             (this->getBitvectorSize() == other.getBitvectorSize()) &&
+             (this->hash(1) == other.hash(1));
+    }
+
+
+    bool AbstractNode::equalTo(AbstractNode* other) const {
+      return this->equalTo(*other);
+    }
+
+
     triton::uint512 AbstractNode::evaluate(void) const {
       return this->eval;
     }
@@ -186,7 +198,7 @@ namespace triton {
     }
 
 
-    triton::uint512 AssertNode::hash(triton::uint32 deep) {
+    triton::uint512 AssertNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -242,7 +254,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvaddNode::hash(triton::uint32 deep) {
+    triton::uint512 BvaddNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -298,7 +310,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvandNode::hash(triton::uint32 deep) {
+    triton::uint512 BvandNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -387,7 +399,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvashrNode::hash(triton::uint32 deep) {
+    triton::uint512 BvashrNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -451,7 +463,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvdeclNode::hash(triton::uint32 deep) {
+    triton::uint512 BvdeclNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -507,7 +519,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvlshrNode::hash(triton::uint32 deep) {
+    triton::uint512 BvlshrNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -563,7 +575,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvmulNode::hash(triton::uint32 deep) {
+    triton::uint512 BvmulNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -619,7 +631,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvnandNode::hash(triton::uint32 deep) {
+    triton::uint512 BvnandNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -671,7 +683,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvnegNode::hash(triton::uint32 deep) {
+    triton::uint512 BvnegNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -727,7 +739,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvnorNode::hash(triton::uint32 deep) {
+    triton::uint512 BvnorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -779,7 +791,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvnotNode::hash(triton::uint32 deep) {
+    triton::uint512 BvnotNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -835,7 +847,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvorNode::hash(triton::uint32 deep) {
+    triton::uint512 BvorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -907,7 +919,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvrolNode::hash(triton::uint32 deep) {
+    triton::uint512 BvrolNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -978,7 +990,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvrorNode::hash(triton::uint32 deep) {
+    triton::uint512 BvrorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1047,7 +1059,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsdivNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsdivNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1110,7 +1122,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsgeNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsgeNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1173,7 +1185,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsgtNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsgtNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1229,7 +1241,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvshlNode::hash(triton::uint32 deep) {
+    triton::uint512 BvshlNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1292,7 +1304,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsleNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsleNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1355,7 +1367,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsltNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsltNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1422,7 +1434,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsmodNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsmodNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1489,7 +1501,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsremNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsremNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1545,7 +1557,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvsubNode::hash(triton::uint32 deep) {
+    triton::uint512 BvsubNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1605,7 +1617,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvudivNode::hash(triton::uint32 deep) {
+    triton::uint512 BvudivNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1661,7 +1673,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvugeNode::hash(triton::uint32 deep) {
+    triton::uint512 BvugeNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1717,7 +1729,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvugtNode::hash(triton::uint32 deep) {
+    triton::uint512 BvugtNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1773,7 +1785,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvuleNode::hash(triton::uint32 deep) {
+    triton::uint512 BvuleNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1829,7 +1841,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvultNode::hash(triton::uint32 deep) {
+    triton::uint512 BvultNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1889,7 +1901,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvuremNode::hash(triton::uint32 deep) {
+    triton::uint512 BvuremNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -1945,7 +1957,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvxnorNode::hash(triton::uint32 deep) {
+    triton::uint512 BvxnorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2001,7 +2013,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvxorNode::hash(triton::uint32 deep) {
+    triton::uint512 BvxorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2069,7 +2081,7 @@ namespace triton {
     }
 
 
-    triton::uint512 BvNode::hash(triton::uint32 deep) {
+    triton::uint512 BvNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2122,7 +2134,7 @@ namespace triton {
     }
 
 
-    triton::uint512 CompoundNode::hash(triton::uint32 deep) {
+    triton::uint512 CompoundNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2200,7 +2212,7 @@ namespace triton {
     }
 
 
-    triton::uint512 ConcatNode::hash(triton::uint32 deep) {
+    triton::uint512 ConcatNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2250,7 +2262,7 @@ namespace triton {
     }
 
 
-    triton::uint512 DecimalNode::hash(triton::uint32 deep) {
+    triton::uint512 DecimalNode::hash(triton::uint32 deep) const {
       triton::uint512 hash = this->kind ^ this->value;
       return hash;
     }
@@ -2306,7 +2318,7 @@ namespace triton {
     }
 
 
-    triton::uint512 DeclareFunctionNode::hash(triton::uint32 deep) {
+    triton::uint512 DeclareFunctionNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2359,7 +2371,7 @@ namespace triton {
     }
 
 
-    triton::uint512 DistinctNode::hash(triton::uint32 deep) {
+    triton::uint512 DistinctNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2412,7 +2424,7 @@ namespace triton {
     }
 
 
-    triton::uint512 EqualNode::hash(triton::uint32 deep) {
+    triton::uint512 EqualNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2481,7 +2493,7 @@ namespace triton {
     }
 
 
-    triton::uint512 ExtractNode::hash(triton::uint32 deep) {
+    triton::uint512 ExtractNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2538,7 +2550,7 @@ namespace triton {
     }
 
 
-    triton::uint512 IteNode::hash(triton::uint32 deep) {
+    triton::uint512 IteNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2591,7 +2603,7 @@ namespace triton {
     }
 
 
-    triton::uint512 LandNode::hash(triton::uint32 deep) {
+    triton::uint512 LandNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2648,7 +2660,7 @@ namespace triton {
     }
 
 
-    triton::uint512 LetNode::hash(triton::uint32 deep) {
+    triton::uint512 LetNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2700,7 +2712,7 @@ namespace triton {
     }
 
 
-    triton::uint512 LnotNode::hash(triton::uint32 deep) {
+    triton::uint512 LnotNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2753,7 +2765,7 @@ namespace triton {
     }
 
 
-    triton::uint512 LorNode::hash(triton::uint32 deep) {
+    triton::uint512 LorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2812,7 +2824,7 @@ namespace triton {
     }
 
 
-    triton::uint512 ReferenceNode::hash(triton::uint32 deep) {
+    triton::uint512 ReferenceNode::hash(triton::uint32 deep) const {
       triton::uint512 hash = this->kind ^ this->value;
       return hash;
     }
@@ -2859,10 +2871,10 @@ namespace triton {
     }
 
 
-    triton::uint512 StringNode::hash(triton::uint32 deep) {
+    triton::uint512 StringNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
-      for (std::string::iterator it=this->value.begin(); it != this->value.end(); it++)
+      for (std::string::const_iterator it = this->value.cbegin(); it != this->value.cend(); it++)
         h = h ^ triton::ast::pow(*it, index++);
       return triton::ast::rotl(h, deep);
     }
@@ -2922,7 +2934,7 @@ namespace triton {
     }
 
 
-    triton::uint512 SxNode::hash(triton::uint32 deep) {
+    triton::uint512 SxNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -2978,10 +2990,10 @@ namespace triton {
     }
 
 
-    triton::uint512 VariableNode::hash(triton::uint32 deep) {
+    triton::uint512 VariableNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
-      for (std::string::iterator it = this->value.begin(); it != this->value.end(); it++)
+      for (std::string::const_iterator it = this->value.cbegin(); it != this->value.cend(); it++)
         h = h ^ triton::ast::pow(*it, index++);
       return triton::ast::rotl(h, deep);
     }
@@ -3041,7 +3053,7 @@ namespace triton {
     }
 
 
-    triton::uint512 ZxNode::hash(triton::uint32 deep) {
+    triton::uint512 ZxNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->childs.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->childs.size(); index++)
@@ -3063,15 +3075,6 @@ namespace triton {
     std::ostream& operator<<(std::ostream& stream, AbstractNode* node) {
       return triton::ast::representations::astRepresentation.print(stream, node);
     }
-
-
-    /* Compares two trees */
-    bool operator==(AbstractNode& node1, AbstractNode& node2) {
-      return (node1.evaluate() == node2.evaluate()) &&
-             (node1.getBitvectorSize() == node2.getBitvectorSize()) &&
-             (node1.hash(1) == node2.hash(1));
-    }
-
 
   }; /* ast namespace */
 }; /* triton namespace */

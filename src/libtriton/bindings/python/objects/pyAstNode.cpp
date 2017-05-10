@@ -43,6 +43,9 @@ This object is used to represent each AST node of an expression.
 \section AstNode_py_api Python API - Methods of the AstNode class
 <hr>
 
+- <b>bool equalTo(\ref py_AstNode_page)</b><br>
+Compares the current tree to another one.
+
 - <b>integer evaluate(void)</b><br>
 Evaluates the tree and returns its value.
 
@@ -116,6 +119,22 @@ namespace triton {
       void AstNode_dealloc(PyObject* self) {
         std::cout << std::flush;
         Py_DECREF(self);
+      }
+
+
+      static PyObject* AstNode_equalTo(PyObject* self, PyObject* other) {
+        try {
+          if (other == nullptr || !PyAstNode_Check(other))
+            return PyErr_Format(PyExc_TypeError, "AstNode::equalTo(): Expected a AstNode as argument.");
+
+          if (PyAstNode_AsAstNode(self)->equalTo(PyAstNode_AsAstNode(other)))
+            Py_RETURN_TRUE;
+
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -525,6 +544,7 @@ namespace triton {
 
       //! AstNode methods.
       PyMethodDef AstNode_callbacks[] = {
+        {"equalTo",           AstNode_equalTo,           METH_O,          ""},
         {"evaluate",          AstNode_evaluate,          METH_NOARGS,     ""},
         {"getBitvectorMask",  AstNode_getBitvectorMask,  METH_NOARGS,     ""},
         {"getBitvectorSize",  AstNode_getBitvectorSize,  METH_NOARGS,     ""},
