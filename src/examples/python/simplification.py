@@ -29,7 +29,7 @@ from triton.ast import *
 # a ^ a -> a = 0
 def xor_1(node):
     if node.getKind() == AST_NODE.BVXOR:
-        if node.getChilds()[0] == node.getChilds()[1]:
+        if node.getChilds()[0].equalTo(node.getChilds()[1]):
             return bv(0, node.getBitvectorSize())
     return node
 
@@ -63,7 +63,7 @@ def xor_2(node):
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)
             c2_nonNot = getNonNot(c2)
-            if c1_not == ~c2_nonNot and c2_not == ~c1_nonNot:
+            if c1_not.equalTo(~c2_nonNot) and c2_not.equalTo(~c1_nonNot):
                 return c1_nonNot ^ c2_nonNot
 
     return node
