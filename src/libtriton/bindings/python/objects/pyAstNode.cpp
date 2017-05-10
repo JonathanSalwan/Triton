@@ -400,20 +400,8 @@ namespace triton {
       static PyObject* AstNode_operatorRem(PyObject* self, PyObject* other) {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorRem(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* AstNode_operatorMod(PyObject* self, PyObject* other) {
-        try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsmod(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -473,7 +461,6 @@ namespace triton {
         try {
           if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
-//std::cout << "Do and" << PyAstNode_AsAstNode(self)->evaluate() << "/" << PyAstNode_AsAstNode(other)->evaluate() << '/' << std::endl;
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -594,7 +581,7 @@ namespace triton {
         AstNode_operatorMul,                        /* nb_multiply */
         AstNode_operatorDiv,                        /* nb_divide */
         AstNode_operatorRem,                        /* nb_remainder */
-        AstNode_operatorMod,                        /* nb_divmod */
+        0,                                          /* nb_divmod */
         0,                                          /* nb_power */
         AstNode_operatorNeg,                        /* nb_negative */
         0,                                          /* nb_positive */
