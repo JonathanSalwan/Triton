@@ -202,10 +202,16 @@ namespace triton {
           const std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
           z3::expr currentValue = this->convert(node->getChildren()[0]);
+          if(!currentValue.get_sort().is_bool()) {
+            throw triton::exceptions::AstTranslations("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
+          }
           z3::expr nextValue(this->context);
 
           for (triton::uint32 idx = 1; idx < children.size(); idx++) {
             nextValue    = this->convert(children[idx]);
+            if(!nextValue.get_sort().is_bool()) {
+              throw triton::exceptions::AstTranslations("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
+            }
             Z3_ast ops[] = {currentValue, nextValue};
             currentValue = to_expr(this->context, Z3_mk_and(this->context, 2, ops));
           }
@@ -221,17 +227,28 @@ namespace triton {
           return this->convert(node->getChildren()[2]);
         }
 
-        case LNOT_NODE:
-          return to_expr(this->context, Z3_mk_not(this->context, this->convert(node->getChildren()[0])));
+        case LNOT_NODE: {
+          z3::expr value = this->convert(node->getChildren()[0]);
+          if(!value.get_sort().is_bool()) {
+            throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+          }
+          return to_expr(this->context, Z3_mk_not(this->context, value));
+        }
 
         case LOR_NODE: {
           const std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
           z3::expr currentValue = this->convert(node->getChildren()[0]);
+          if(!currentValue.get_sort().is_bool()) {
+            throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+          }
           z3::expr nextValue(this->context);
 
           for (triton::uint32 idx = 1; idx < children.size(); idx++) {
             nextValue    = this->convert(children[idx]);
+            if(!nextValue.get_sort().is_bool()) {
+              throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+            }
             Z3_ast ops[] = {currentValue, nextValue};
             currentValue = to_expr(this->context, Z3_mk_or(this->context, 2, ops));
           }

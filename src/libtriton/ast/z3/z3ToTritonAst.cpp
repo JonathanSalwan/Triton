@@ -138,7 +138,7 @@ namespace triton {
           break;
         }
 
-        //case Z3_OP_BSDIV_I:
+        case Z3_OP_BSDIV_I:
         case Z3_OP_BSDIV: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSDIV must contain at least two arguments.");
@@ -158,7 +158,7 @@ namespace triton {
           break;
         }
 
-        //case Z3_OP_BSREM_I:
+        case Z3_OP_BSREM_I:
         case Z3_OP_BSREM: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSREM must contain at least two arguments.");
@@ -178,7 +178,7 @@ namespace triton {
           break;
         }
 
-        //case Z3_OP_BSMOD_I:
+        case Z3_OP_BSMOD_I:
         case Z3_OP_BSMOD: {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_BSMOD must contain at least two arguments.");

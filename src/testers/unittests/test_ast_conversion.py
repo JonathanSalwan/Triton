@@ -126,28 +126,28 @@ class TestAstConversion(unittest.TestCase):
             #self.astCtxt.bvrol,
             #self.astCtxt.bvror,
             self.astCtxt.bvor,
-            #self.astCtxt.bvsdiv,
+            self.astCtxt.bvsdiv,
             self.astCtxt.bvsge,
             self.astCtxt.bvsgt,
             self.astCtxt.bvshl,
             self.astCtxt.bvsle,
             self.astCtxt.bvslt,
-            #self.astCtxt.bvsmod,
-            #self.astCtxt.bvsrem,
+            self.astCtxt.bvsmod,
+            self.astCtxt.bvsrem,
             self.astCtxt.bvsub,
-            #self.astCtxt.bvudiv,
+            self.astCtxt.bvudiv,
             self.astCtxt.bvuge,
             self.astCtxt.bvugt,
             self.astCtxt.bvule,
             self.astCtxt.bvult,
-            #self.astCtxt.bvurem,
+            self.astCtxt.bvurem,
             self.astCtxt.bvxnor,
             self.astCtxt.bvxor,
-            #self.astCtxt.concat,
+            self.astCtxt.concat,
             self.astCtxt.distinct,
             self.astCtxt.equal,
-            #self.astCtxt.land,
-            #self.astCtxt.lor,
+            self.astCtxt.land,
+            self.astCtxt.lor,
         ]
 
         for run in xrange(100):
@@ -156,7 +156,12 @@ class TestAstConversion(unittest.TestCase):
             self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
             self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
             for op in smtbinop:
-                n = op(self.v1, self.v2)
+                if op == self.astCtxt.concat:
+                    n = op([self.v1, self.v2])
+                elif op in (self.astCtxt.land, self.astCtxt.lor):
+                    n = op([self.v1 != 0, self.v2 != 0])
+                else:
+                    n = op(self.v1, self.v2)
                 self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate(),
                                  "triton = {} and z3 = {} with operator {}"
                                  " operands were {} and {}".format(n.evaluate(),
@@ -176,7 +181,7 @@ class TestAstConversion(unittest.TestCase):
         smtunop = [
             self.astCtxt.bvneg,
             self.astCtxt.bvnot,
-            #self.astCtxt.lnot,
+            self.astCtxt.lnot,
             lambda x: self.astCtxt.bvrol(3, x),
             lambda x: self.astCtxt.bvror(2, x),
             lambda x: self.astCtxt.sx(8, x),
@@ -186,7 +191,10 @@ class TestAstConversion(unittest.TestCase):
         for cv1 in xrange(0, 256):
             self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
             for op in smtunop:
-                n = op(self.v1)
+                if op == self.astCtxt.lnot:
+                    n = op(self.v1 != 0)
+                else:
+                    n = op(self.v1)
                 self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     @utils.xfail
