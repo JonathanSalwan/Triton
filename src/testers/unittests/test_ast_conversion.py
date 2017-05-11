@@ -22,11 +22,11 @@ class TestAstConversion(unittest.TestCase):
 
         self.astCtxt = self.Triton.getAstContext()
 
-        self.sv1   = self.Triton.newSymbolicVariable(8)
-        self.sv2   = self.Triton.newSymbolicVariable(8)
+        self.sv1 = self.Triton.newSymbolicVariable(8)
+        self.sv2 = self.Triton.newSymbolicVariable(8)
 
-        self.v1   = self.astCtxt.variable(self.sv1)
-        self.v2   = self.astCtxt.variable(self.sv2)
+        self.v1 = self.astCtxt.variable(self.sv1)
+        self.v2 = self.astCtxt.variable(self.sv2)
 
     def test_binop(self):
         """
@@ -36,7 +36,7 @@ class TestAstConversion(unittest.TestCase):
         """
         # No simplification available
         # This only going to test Triton <-> z3 AST conversions.
-        binop= [
+        binop = [
             # Overloaded operators
             operator.and_,
             operator.add,
@@ -56,8 +56,7 @@ class TestAstConversion(unittest.TestCase):
             operator.mod,
         ]
 
-
-        for run in xrange(100):
+        for _ in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
@@ -70,7 +69,7 @@ class TestAstConversion(unittest.TestCase):
                     ref = cv1
                 else:
                     ref = op(cv1, cv2) % (2 ** 8)
-                self.assertEqual(ref, self.Triton.simplify(n, True).evaluate(),#n.evaluate(),
+                self.assertEqual(ref, self.Triton.simplify(n, True).evaluate(),
                                  "ref = {} and triton value = {} with operator {}"
                                  " operands were {} and {}".format(ref,
                                                                    n.evaluate(),
@@ -98,12 +97,11 @@ class TestAstConversion(unittest.TestCase):
                 n = op(self.v1)
                 ref = op(cv1) % (2 ** 8)
                 self.assertEqual(ref, n.evaluate(),
-                                 "ref = {} and triton value = {} with operator {}"
-                                 " operands was {}".format(ref,
-                                                           n.evaluate(),
-                                                           op,
-                                                           cv1))
-                #self.assertEqual(str(n), str(self.Triton.simplify(n, True)))
+                                 "ref = {} and triton value = {} with operator "
+                                 "{} operands was {}".format(ref,
+                                                             n.evaluate(),
+                                                             op,
+                                                             cv1))
                 self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
 
     def test_smtbinop(self):
@@ -123,8 +121,6 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.bvmul,
             self.astCtxt.bvnand,
             self.astCtxt.bvnor,
-            #self.astCtxt.bvrol,
-            #self.astCtxt.bvror,
             self.astCtxt.bvor,
             self.astCtxt.bvsdiv,
             self.astCtxt.bvsge,
@@ -150,7 +146,7 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.lor,
         ]
 
-        for run in xrange(100):
+        for _ in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
@@ -162,7 +158,8 @@ class TestAstConversion(unittest.TestCase):
                     n = op([self.v1 != 0, self.v2 != 0])
                 else:
                     n = op(self.v1, self.v2)
-                self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate(),
+                self.assertEqual(n.evaluate(),
+                                 self.Triton.simplify(n, True).evaluate(),
                                  "triton = {} and z3 = {} with operator {}"
                                  " operands were {} and {}".format(n.evaluate(),
                                                                    self.Triton.simplify(n, True).evaluate(),
@@ -184,8 +181,8 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.lnot,
             lambda x: self.astCtxt.bvrol(3, x),
             lambda x: self.astCtxt.bvror(2, x),
-            lambda x: self.astCtxt.sx(8, x),
-            lambda x: self.astCtxt.zx(8, x),
+            lambda x: self.astCtxt.sx(16, x),
+            lambda x: self.astCtxt.zx(16, x),
         ]
 
         for cv1 in xrange(0, 256):
@@ -195,9 +192,57 @@ class TestAstConversion(unittest.TestCase):
                     n = op(self.v1 != 0)
                 else:
                     n = op(self.v1)
-                self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+                self.assertEqual(n.evaluate(),
+                                 self.Triton.simplify(n, True).evaluate())
+
+    def test_bvnode(self):
+        """Check python bit vector declaration."""
+        for _ in xrange(100):
+            cv1 = random.randint(-127, 255)
+            n = self.astCtxt.bv(cv1, 8)
+            self.assertEqual(n.evaluate(),
+                             self.Triton.simplify(n, True).evaluate())
+
+    def test_extract(self):
+        """Check bit extraction from bitvector."""
+        for _ in xrange(100):
+            cv1 = random.randint(0, 255)
+            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            for lo in xrange(0, 8):
+                for hi in xrange(lo, 8):
+                    n = self.astCtxt.extract(hi, lo, self.v1)
+                    ref = ((cv1 << (7 - hi)) % 256) >> (7 - hi + lo)
+                    self.assertEqual(ref, n.evaluate(),
+                                     "ref = {} and triton value = {} with operator"
+                                     "'extract' operands was {} low was : {} and "
+                                     "hi was : {}".format(ref, n.evaluate(),
+                                                          cv1, lo, hi))
+                    self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
+
+    def test_ite(self):
+        """Check ite node."""
+        for _ in xrange(100):
+            cv1 = random.randint(0, 255)
+            cv2 = random.randint(0, 255)
+            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
+            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     @utils.xfail
-    def test_z3_assert(self):
-        n = self.astCtxt.assert_(self.v1 == self.v1)
-        self.Triton.simplify(n, True)
+    def test_decimal(self):
+        # Decimal node is not exported in the python interface
+        for cv1 in xrange(0, 256):
+            n = self.astCtxt.decimale(cv1)
+            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+
+    @utils.xfail
+    def test_let(self):
+        # Let node didn't take the variable in its computation
+        for run in xrange(100):
+            cv1 = random.randint(0, 255)
+            cv2 = random.randint(0, 255)
+            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
+            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
