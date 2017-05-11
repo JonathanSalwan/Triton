@@ -29,7 +29,7 @@ class TestAstRepresentation(unittest.TestCase):
             ((self.v1 | self.v2),               "(bvor SymVar_0 SymVar_1)",             "(SymVar_0 | SymVar_1)"),
             ((self.v1 * self.v2),               "(bvmul SymVar_0 SymVar_1)",            "((SymVar_0 * SymVar_1) & 0xFF)"),
             ((self.v1 / self.v2),               "(bvudiv SymVar_0 SymVar_1)",           "(SymVar_0 / SymVar_1)"),
-            ((self.v1 % self.v2),               "(bvsrem SymVar_0 SymVar_1)",           "(SymVar_0 % SymVar_1)"),
+            ((self.v1 % self.v2),               "(bvurem SymVar_0 SymVar_1)",           "(SymVar_0 % SymVar_1)"),
             ((self.v1 << self.v2),              "(bvshl SymVar_0 SymVar_1)",            "((SymVar_0 << SymVar_1) & 0xFF)"),
             ((self.v1 >> self.v2),              "(bvlshr SymVar_0 SymVar_1)",           "(SymVar_0 >> SymVar_1)"),
             ((~self.v1),                        "(bvnot SymVar_0)",                     "(~(SymVar_0) & 0xFF)"),
