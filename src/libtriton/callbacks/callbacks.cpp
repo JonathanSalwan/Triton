@@ -66,10 +66,10 @@ namespace triton {
 
 
     triton::ast::AbstractNode* Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const {
-      // FIXME : Most of callback node are ignored. May be we should return a list of nodes?
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION: {
           for (auto& function: this->symbolicSimplificationCallbacks) {
+            // Reinject node in next callback
             node = function(api, node);
             if (node == nullptr)
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You cannot return a nullptr node.");
