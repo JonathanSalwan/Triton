@@ -69,7 +69,7 @@ class TestAstConversion(unittest.TestCase):
                     ref = cv1
                 else:
                     ref = op(cv1, cv2) % (2 ** 8)
-                self.assertEqual(ref, self.Triton.simplify(n, True).evaluate(),
+                self.assertEqual(ref, n.evaluate(),
                                  "ref = {} and triton value = {} with operator {}"
                                  " operands were {} and {}".format(ref,
                                                                    n.evaluate(),
@@ -246,3 +246,91 @@ class TestAstConversion(unittest.TestCase):
             self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+
+    def test_fuzz(self):
+        """
+        Fuzz test an ast evaluation.
+
+        It creates an ast node of depth 10 and evaluate it with triton and z3
+        and compare result.
+        """
+        self.in_bool = [
+            (self.astCtxt.lnot, 1),
+            (self.astCtxt.land, 2),
+            (self.astCtxt.lor, 2),
+        ]
+        self.to_bool = [
+            (self.astCtxt.bvsge, 2),
+            (self.astCtxt.bvsgt, 2),
+            (self.astCtxt.bvsle, 2),
+            (self.astCtxt.bvslt, 2),
+            (self.astCtxt.bvuge, 2),
+            (self.astCtxt.bvugt, 2),
+            (self.astCtxt.bvule, 2),
+            (self.astCtxt.bvult, 2),
+            (self.astCtxt.equal, 2),
+        ] + self.in_bool
+        self.bvop = [
+            (self.astCtxt.bvneg, 1),
+            (self.astCtxt.bvnot, 1),
+            (lambda x: self.astCtxt.bvrol(3, x), 1),
+            (lambda x: self.astCtxt.bvror(2, x), 1),
+            (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.sx(16, x)), 1),
+            (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.zx(16, x)), 1),
+
+            # BinOp
+            (self.astCtxt.bvadd, 2),
+            (self.astCtxt.bvand, 2),
+            (self.astCtxt.bvlshr, 2),
+            (self.astCtxt.bvashr, 2),
+            (self.astCtxt.bvmul, 2),
+            (self.astCtxt.bvnand, 2),
+            (self.astCtxt.bvnor, 2),
+            (self.astCtxt.bvor, 2),
+            (self.astCtxt.bvsdiv, 2),
+            (self.astCtxt.bvshl, 2),
+            (self.astCtxt.bvsmod, 2),
+            (self.astCtxt.bvsrem, 2),
+            (self.astCtxt.bvsub, 2),
+            (self.astCtxt.bvudiv, 2),
+            (self.astCtxt.bvurem, 2),
+            (self.astCtxt.bvxnor, 2),
+            (self.astCtxt.bvxor, 2),
+            (lambda x, y: self.astCtxt.concat([self.astCtxt.extract(3, 0, x), self.astCtxt.extract(7, 4, y)]), 2),
+
+            (self.astCtxt.ite, -1),
+
+            # value
+            (self.v1, 0),
+            (self.v2, 0),
+        ]
+        for _ in xrange(10):
+            n = self.new_node(0, self.bvop)
+            for _ in xrange(10):
+                cv1 = random.randint(0, 255)
+                cv2 = random.randint(0, 255)
+                self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+                self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+                self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+
+    def new_node(self, depth, possible):
+        """Recursive function to create a random ast."""
+        if depth >= 10:
+            # shortcut if the tree is deep enough
+            possible = possible[-2:]
+
+        op, nargs = random.choice(possible)
+        if op == self.astCtxt.ite:
+            return op(self.new_node(depth, self.to_bool),
+                      self.new_node(depth + 1, self.bvop),
+                      self.new_node(depth + 1, self.bvop))
+        elif any(op == ibo for ibo, _ in self.in_bool):
+            args = [self.new_node(depth, self.to_bool) for _ in xrange(nargs)]
+            if op in (self.astCtxt.land, self.astCtxt.lor):
+                return op(args)
+            else:
+                return op(*args)
+        elif nargs == 0:
+            return op
+        else:
+            return op(*[self.new_node(depth + 1, self.bvop) for _ in xrange(nargs)])
