@@ -248,7 +248,7 @@ namespace triton {
           return PyInstruction();
 
         if (!PyBytes_Check(opcodes))
-          return PyErr_Format(PyExc_TypeError, "Instruction(): Expected a bytes array as argument.");
+          return PyErr_Format(PyExc_TypeError, "Instruction(): Expected bytes as argument.");
 
         try {
           triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opcodes));

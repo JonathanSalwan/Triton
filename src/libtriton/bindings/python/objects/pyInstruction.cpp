@@ -715,7 +715,7 @@ namespace triton {
       static PyObject* Instruction_setOpcodes(PyObject* self, PyObject* opc) {
         try {
           if (!PyBytes_Check(opc))
-            return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Expected a bytes array as argument.");
+            return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Expected bytes as argument.");
 
           triton::uint8* opcodes = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc));
           triton::uint32 size    = static_cast<triton::uint32>(PyBytes_Size(opc));
