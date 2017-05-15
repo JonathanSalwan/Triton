@@ -2,6 +2,8 @@
 #error REG_SPEC have to be specified before including specs
 #endif
 
+#pragma warning(disable:4067)
+
 // REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X84_84_LOWER, x86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)
 
 /* GPR 64-bits. */
@@ -236,3 +238,5 @@ REG_SPEC(SS, ss, QWORD_SIZE_BIT-1, 0, SS, DWORD_SIZE_BIT-1, 0, SS, true) //!< St
 
 #undef REG_SPEC
 #undef REG_SPEC_NO_CAPSTONE
+
+#pragma warning(default:4067)
