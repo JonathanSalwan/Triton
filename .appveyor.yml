@@ -15,42 +15,42 @@ clone_folder: c:\projects\triton
 environment:
   # python is automatically found by the find_package's
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
-  BOOST_ROOT: c:\Libraries\boost_1_59_0
+  BOOST_ROOT: c:\Libraries\boost_1_62_0
 
   matrix:
     - platform: Win32
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.4.1-x86-win
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CMAKE_TEMPLATE: Visual Studio 14 2015
       PYTHON: "C:\\Python27"
 
     - platform: Win32
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.4.1-x86-win
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CMAKE_TEMPLATE: Visual Studio 15 2017
       PYTHON: "C:\\Python27"
 
     - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.4.1-x64-win
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       PYTHON: "C:\\Python27-x64"
 
     - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.4.1-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.4.1-x64-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.4.1-x64-win
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
       PYTHON: "C:\\Python27-x64"
 
