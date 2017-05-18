@@ -26,8 +26,16 @@ include(CTest)
 
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
-add_custom_target(test-python
-  COMMAND ${PYTHONPATH_CMD} python -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests)
+if(PYTHON_BINDINGS)
+    find_package(PythonInterp 2.7 REQUIRED)
+    add_custom_target(test-python
+      COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests
+      DEPENDS python-triton
+      )
+else()
+  add_custom_target(test-python
+    COMMAND echo "No python test as python support is disabled")
+endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   if(GCOV)
      add_custom_target(check

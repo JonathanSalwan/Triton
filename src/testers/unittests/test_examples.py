@@ -4,6 +4,7 @@
 import unittest
 import subprocess
 import os
+import sys
 import glob
 
 EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "python")
@@ -20,7 +21,7 @@ for example in glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")):
 
     def test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        p = subprocess.Popen(["python", example_name],
+        p = subprocess.Popen([sys.executable, example_name],
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         out, err = p.communicate()
