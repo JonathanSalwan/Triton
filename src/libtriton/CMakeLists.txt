@@ -271,6 +271,7 @@ target_link_libraries(
     ${CAPSTONE_LIBRARIES}
     ${LIBTRITON_OTHER_LIBS}
 )
+add_dependencies(check triton)
 
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
@@ -279,13 +280,10 @@ install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION
 
 # Install Python bindings
 if(PYTHON_BINDINGS)
-    find_package(PythonInterp 2.7 REQUIRED)
-
     add_custom_target(python-triton ALL
       COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
       DEPENDS triton
     )
-    add_dependencies(test-python python-triton)
 
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
