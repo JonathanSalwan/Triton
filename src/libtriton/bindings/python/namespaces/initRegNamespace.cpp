@@ -27,11 +27,11 @@ According to the CPU architecture, the REG namespace contains all kinds of regis
 
 \subsection REG_X86_py_api x86 registers
 
-\include x86_reg
+\htmlinclude x86_reg
 
 \subsection REG_X8664_py_api x86-64 registers
 
-\include x8664_reg
+\htmlinclude x8664_reg
 
 */
 
