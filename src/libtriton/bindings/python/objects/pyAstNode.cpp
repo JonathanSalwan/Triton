@@ -501,10 +501,8 @@ namespace triton {
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
-          if (size) {
-            Py_DECREF(other);
+          if (size)
             other = PyAstNode(triton::ast::bv(value, size));
-          }
         }
 
         if (!PyAstNode_Check(other)) {
