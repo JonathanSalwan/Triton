@@ -514,8 +514,6 @@ namespace triton {
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
           if (size)
             other = PyAstNode(PyAstNode_AsAstNode(self)->getContext().bv(value, size));
-          else
-            return PyErr_Format(PyExc_TypeError, "AstNode::richcompare(): Invalid size node.");
         }
 
         if (!PyAstNode_Check(other)) {
