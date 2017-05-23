@@ -512,10 +512,10 @@ namespace triton {
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
-          if (size) {
-            Py_DECREF(other);
+          if (size)
             other = PyAstNode(PyAstNode_AsAstNode(self)->getContext().bv(value, size));
-          }
+          else
+            return PyErr_Format(PyExc_TypeError, "AstNode::richcompare(): Invalid size node.");
         }
 
         if (!PyAstNode_Check(other)) {
