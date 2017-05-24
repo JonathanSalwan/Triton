@@ -65,6 +65,12 @@ namespace triton {
         //! Returns the number of registers according to the CPU architecture.
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
+        //! Returns the parent register.
+        virtual triton::arch::Register& getParentRegister(triton::uint32 regId) = 0;
+
+        //! Returns a register.
+        virtual triton::arch::Register& getRegister(triton::uint32 regId) = 0;
+
         //! Returns all information about a register id.
         virtual triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const = 0;
 
@@ -75,7 +81,7 @@ namespace triton {
         virtual std::set<triton::arch::Register*> getParentRegisters(void) const = 0;
 
         //! Disassembles the instruction according to the architecture.
-        virtual void disassembly(triton::arch::Instruction& inst) const = 0;
+        virtual void disassembly(triton::arch::Instruction& inst) = 0;
 
         //! Returns the concrete value of a memory cell.
         virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const = 0;

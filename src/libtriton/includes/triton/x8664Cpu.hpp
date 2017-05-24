@@ -334,6 +334,8 @@ namespace triton {
           std::set<triton::arch::Register*> getAllRegisters(void) const;
           std::set<triton::arch::Register*> getParentRegisters(void) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
+          triton::arch::Register& getParentRegister(triton::uint32 regId);
+          triton::arch::Register& getRegister(triton::uint32 regId);
           triton::arch::RegisterSpecification getRegisterSpecification(triton::uint32 regId) const;
           triton::uint32 numberOfRegisters(void) const;
           triton::uint32 registerBitSize(void) const;
@@ -342,7 +344,7 @@ namespace triton {
           triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
           triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
           void clear(void);
-          void disassembly(triton::arch::Instruction& inst) const;
+          void disassembly(triton::arch::Instruction& inst);
           void init(void);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);

@@ -316,6 +316,9 @@ XORPS                        | sse1       | Bitwise Logical XOR for Single-Preci
 
 */
 
+#define GET_REG(x)        this->architecture->getRegister(triton::arch::x86::ID_REG_##x)
+#define GET_PARENT_REG(x) this->architecture->getParentRegister(triton::arch::x86::ID_REG_##x)
+
 
 
 namespace triton {
@@ -637,7 +640,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
+        auto dst = triton::arch::OperandWrapper(GET_PARENT_REG(SP));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -658,7 +661,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_SP.getParent());
+        auto dst = triton::arch::OperandWrapper(GET_PARENT_REG(SP));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -703,9 +706,9 @@ namespace triton {
 
 
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
-        auto pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC.getParent());
-        auto counter = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
-        auto zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto counter = triton::arch::OperandWrapper(GET_PARENT_REG(CX));
+        auto zf      = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Update instruction address if undefined */
         if (!inst.getAddress())
@@ -798,10 +801,10 @@ namespace triton {
             auto node = triton::ast::bv(inst.getNextAddress(), pc.getBitSize());
 
             /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, TRITON_X86_REG_PC, "Program Counter");
+            auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, GET_PARENT_REG(IP), "Program Counter");
 
             /* Spread taint */
-            expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_PC, triton::engines::taint::UNTAINTED);
+            expr->isTainted = this->taintEngine->setTaintRegister(GET_PARENT_REG(IP), triton::engines::taint::UNTAINTED);
             break;
           }
         }
@@ -839,10 +842,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_AF, "Adjust flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(AF), parent->isTainted);
       }
 
 
@@ -876,10 +879,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_AF, "Adjust flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(AF), parent->isTainted);
       }
 
 
@@ -911,10 +914,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -938,10 +941,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -965,10 +968,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -992,10 +995,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1020,10 +1023,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1047,10 +1050,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1074,10 +1077,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1104,10 +1107,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1119,7 +1122,7 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1128,10 +1131,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1144,7 +1147,7 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = result->getBitvectorSize() - 1;
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1153,10 +1156,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1168,7 +1171,7 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1177,10 +1180,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1192,7 +1195,7 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(0, bvSize)),
@@ -1201,10 +1204,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1216,7 +1219,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         /*
          * Create the semantic.
@@ -1237,10 +1240,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1252,7 +1255,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         /*
          * Create the semantic.
@@ -1273,10 +1276,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1289,7 +1292,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         /*
          * Create the semantic.
@@ -1308,10 +1311,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1323,7 +1326,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         /*
          * Create the semantic.
@@ -1343,10 +1346,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1359,7 +1362,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
 
         /*
          * Create the semantic.
@@ -1378,10 +1381,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1411,10 +1414,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(CF), parent->isTainted);
       }
 
 
@@ -1441,10 +1444,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1468,10 +1471,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1495,10 +1498,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1524,10 +1527,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1539,8 +1542,8 @@ namespace triton {
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(1, bvSize)),
@@ -1552,10 +1555,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1567,7 +1570,7 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(1, bvSize)),
@@ -1579,10 +1582,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1595,8 +1598,8 @@ namespace triton {
 
         auto bvSize = op2->getBitvectorSize();
         auto high   = dst.getBitSize()-1;
-        auto cf     = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto cf     = triton::arch::OperandWrapper(GET_REG(CF));
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         auto node = triton::ast::ite(
                       triton::ast::equal(op2, triton::ast::bv(1, bvSize)),
@@ -1608,10 +1611,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1622,7 +1625,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         /*
          * Create the semantic.
@@ -1637,10 +1640,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1652,7 +1655,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         /*
          * Create the semantic.
@@ -1672,10 +1675,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1688,7 +1691,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         /*
          * Create the semantic.
@@ -1712,10 +1715,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1727,7 +1730,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         /*
          * Create the semantic.
@@ -1742,10 +1745,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1758,7 +1761,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto of     = triton::arch::OperandWrapper(GET_REG(OF));
 
         /*
          * Create the semantic.
@@ -1782,10 +1785,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1812,10 +1815,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_OF, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_OF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(OF), parent->isTainted);
       }
 
 
@@ -1847,10 +1850,10 @@ namespace triton {
         }
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_PF, "Parity flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_PF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(PF), parent->isTainted);
       }
 
 
@@ -1863,7 +1866,7 @@ namespace triton {
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
-        auto pf     = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto pf     = triton::arch::OperandWrapper(GET_REG(PF));
 
         /*
          * Create the semantics.
@@ -1889,10 +1892,10 @@ namespace triton {
                      );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, TRITON_X86_REG_PF, "Parity flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, GET_REG(PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_PF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(PF), parent->isTainted);
       }
 
 
@@ -1911,10 +1914,10 @@ namespace triton {
         auto node = triton::ast::extract(high, high, triton::ast::reference(parent->getId()));
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(SF), parent->isTainted);
       }
 
 
@@ -1926,7 +1929,7 @@ namespace triton {
 
         auto bvSize = dst.getBitSize();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-        auto sf     = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto sf     = triton::arch::OperandWrapper(GET_REG(SF));
 
         /*
          * Create the semantic.
@@ -1939,10 +1942,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(SF), parent->isTainted);
       }
 
 
@@ -1955,7 +1958,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
-        auto sf     = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto sf     = triton::arch::OperandWrapper(GET_REG(SF));
 
         /*
          * Create the semantic.
@@ -1974,10 +1977,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(SF), parent->isTainted);
       }
 
 
@@ -1990,7 +1993,7 @@ namespace triton {
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
-        auto sf     = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto sf     = triton::arch::OperandWrapper(GET_REG(SF));
 
         /*
          * Create the semantic.
@@ -2009,10 +2012,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_SF, "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_SF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(SF), parent->isTainted);
       }
 
 
@@ -2039,10 +2042,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(ZF), parent->isTainted);
       }
 
 
@@ -2063,10 +2066,10 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(ZF), parent->isTainted);
       }
 
 
@@ -2079,7 +2082,7 @@ namespace triton {
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getAbstractLow();
         auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
-        auto zf     = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto zf     = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /*
          * Create the semantic.
@@ -2099,19 +2102,19 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_ZF, "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_ZF, parent->isTainted);
+        expr->isTainted = this->taintEngine->setTaintRegister(GET_REG(ZF), parent->isTainted);
       }
 
 
       void x86Semantics::aad_s(triton::arch::Instruction& inst) {
         auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, BYTE_SIZE)); /* D5 0A */
-        auto  src2   = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
-        auto  src3   = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
-        auto  dst    = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-        auto  dsttmp = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
+        auto  src2   = triton::arch::OperandWrapper(GET_REG(AL));
+        auto  src3   = triton::arch::OperandWrapper(GET_REG(AH));
+        auto  dst    = triton::arch::OperandWrapper(GET_REG(AX));
+        auto  dsttmp = triton::arch::OperandWrapper(GET_REG(AL));
 
         /* D5 ib */
         if (inst.operands.size() == 1)
@@ -2150,7 +2153,7 @@ namespace triton {
       void x86Semantics::adc_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -2183,7 +2186,7 @@ namespace triton {
       void x86Semantics::adcx_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -2256,8 +2259,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
@@ -2285,8 +2288,8 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
 
@@ -2414,8 +2417,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->zf_s(inst, expr, dst);
 
         /* Upate the symbolic control flow */
@@ -2441,7 +2444,7 @@ namespace triton {
 
         /* Upate symbolic flags */
         this->cfBlsi_s(inst, expr, src, op1);
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
 
@@ -2471,9 +2474,9 @@ namespace triton {
 
         /* Upate symbolic flags */
         this->cfBlsmsk_s(inst, expr, src, op1);
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
-        this->clearFlag_s(inst, TRITON_X86_REG_ZF, "Clears zero flag");
+        this->clearFlag_s(inst, GET_REG(ZF), "Clears zero flag");
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2501,7 +2504,7 @@ namespace triton {
 
         /* Upate symbolic flags */
         this->cfBlsr_s(inst, expr, src, op1);
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
 
@@ -2915,7 +2918,7 @@ namespace triton {
 
 
       void x86Semantics::bt_s(triton::arch::Instruction& inst) {
-        auto  dst  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  dst  = triton::arch::OperandWrapper(GET_REG(CF));
         auto& src1 = inst.operands[0];
         auto& src2 = inst.operands[1];
 
@@ -2935,7 +2938,7 @@ namespace triton {
                     );
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, TRITON_X86_REG_CF, "BT operation");
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, GET_REG(CF), "BT operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
@@ -2947,7 +2950,7 @@ namespace triton {
 
 
       void x86Semantics::btc_s(triton::arch::Instruction& inst) {
-        auto  dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  dst1 = triton::arch::OperandWrapper(GET_REG(CF));
         auto& dst2 = inst.operands[0];
         auto& src1 = inst.operands[1];
 
@@ -2995,7 +2998,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, TRITON_X86_REG_CF, "BTC carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, GET_REG(CF), "BTC carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTC complement operation");
 
         /* Spread taint */
@@ -3009,7 +3012,7 @@ namespace triton {
 
 
       void x86Semantics::btr_s(triton::arch::Instruction& inst) {
-        auto  dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  dst1 = triton::arch::OperandWrapper(GET_REG(CF));
         auto& dst2 = inst.operands[0];
         auto& src1 = inst.operands[1];
 
@@ -3046,7 +3049,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, TRITON_X86_REG_CF, "BTR carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, GET_REG(CF), "BTR carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTR reset operation");
 
         /* Spread taint */
@@ -3060,7 +3063,7 @@ namespace triton {
 
 
       void x86Semantics::bts_s(triton::arch::Instruction& inst) {
-        auto  dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  dst1 = triton::arch::OperandWrapper(GET_REG(CF));
         auto& dst2 = inst.operands[0];
         auto& src1 = inst.operands[1];
 
@@ -3090,7 +3093,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, TRITON_X86_REG_CF, "BTS carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, GET_REG(CF), "BTS carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTS set operation");
 
         /* Spread taint */
@@ -3104,11 +3107,11 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = GET_PARENT_REG(SP);
 
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, stack.getSize());
-        auto  pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
+        auto  pc         = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
         auto  sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
         auto& src        = inst.operands[0];
 
@@ -3137,7 +3140,7 @@ namespace triton {
 
 
       void x86Semantics::cbw_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(AX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3157,8 +3160,8 @@ namespace triton {
 
 
       void x86Semantics::cdq_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-        auto src = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(EDX));
+        auto src = triton::arch::OperandWrapper(GET_REG(EAX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -3170,7 +3173,7 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(TRITON_X86_REG_EDX) | this->taintEngine->isRegisterTainted(TRITON_X86_REG_EAX);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(GET_REG(EDX)) | this->taintEngine->isRegisterTainted(GET_REG(EAX));
 
         /* Create the semantics - EAX = TMP[31...0] */
         auto node2 = triton::ast::extract(DWORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
@@ -3179,7 +3182,7 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CDQ EAX operation");
 
         /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_EAX, expr1->isTainted);
+        expr2->isTainted = this->taintEngine->setTaintRegister(GET_REG(EAX), expr1->isTainted);
 
         /* Create the semantics - EDX = TMP[63...32] */
         auto node3 = triton::ast::extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
@@ -3188,7 +3191,7 @@ namespace triton {
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CDQ EDX operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_EDX, expr1->isTainted);
+        expr3->isTainted = this->taintEngine->setTaintRegister(GET_REG(EDX), expr1->isTainted);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3196,7 +3199,7 @@ namespace triton {
 
 
       void x86Semantics::cdqe_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(RAX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3216,14 +3219,14 @@ namespace triton {
 
 
       void x86Semantics::clc_s(triton::arch::Instruction& inst) {
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
 
       void x86Semantics::cld_s(triton::arch::Instruction& inst) {
-        this->clearFlag_s(inst, TRITON_X86_REG_DF, "Clears direction flag");
+        this->clearFlag_s(inst, GET_REG(DF), "Clears direction flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3236,7 +3239,7 @@ namespace triton {
 
 
       void x86Semantics::clts_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_CR0);
+        auto dst = triton::arch::OperandWrapper(GET_REG(CR0));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3267,14 +3270,14 @@ namespace triton {
 
 
       void x86Semantics::cli_s(triton::arch::Instruction& inst) {
-        this->clearFlag_s(inst, TRITON_X86_REG_IF, "Clears interrupt flag");
+        this->clearFlag_s(inst, GET_REG(IF), "Clears interrupt flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
 
       void x86Semantics::cmc_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto dst = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3296,8 +3299,8 @@ namespace triton {
       void x86Semantics::cmova_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3327,7 +3330,7 @@ namespace triton {
       void x86Semantics::cmovae_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3356,7 +3359,7 @@ namespace triton {
       void x86Semantics::cmovb_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3385,8 +3388,8 @@ namespace triton {
       void x86Semantics::cmovbe_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3416,7 +3419,7 @@ namespace triton {
       void x86Semantics::cmove_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3445,9 +3448,9 @@ namespace triton {
       void x86Semantics::cmovg_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3478,8 +3481,8 @@ namespace triton {
       void x86Semantics::cmovge_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3509,8 +3512,8 @@ namespace triton {
       void x86Semantics::cmovl_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3540,9 +3543,9 @@ namespace triton {
       void x86Semantics::cmovle_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3573,7 +3576,7 @@ namespace triton {
       void x86Semantics::cmovne_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3602,7 +3605,7 @@ namespace triton {
       void x86Semantics::cmovno_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3631,7 +3634,7 @@ namespace triton {
       void x86Semantics::cmovnp_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pf  = triton::arch::OperandWrapper(GET_REG(PF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3660,7 +3663,7 @@ namespace triton {
       void x86Semantics::cmovns_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3689,7 +3692,7 @@ namespace triton {
       void x86Semantics::cmovo_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3718,7 +3721,7 @@ namespace triton {
       void x86Semantics::cmovp_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pf  = triton::arch::OperandWrapper(GET_REG(PF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3747,7 +3750,7 @@ namespace triton {
       void x86Semantics::cmovs_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -3806,9 +3809,9 @@ namespace triton {
       void x86Semantics::cmpsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -3860,9 +3863,9 @@ namespace triton {
       void x86Semantics::cmpsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -3914,9 +3917,9 @@ namespace triton {
       void x86Semantics::cmpsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -3968,9 +3971,9 @@ namespace triton {
       void x86Semantics::cmpsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -4023,21 +4026,21 @@ namespace triton {
         auto& src1  = inst.operands[0];
         auto& src2  = inst.operands[1];
         auto src1p  = inst.operands[0].getRegister().getParent();
-        auto src2p  = inst.operands[1].getRegister().getParent();;
+        auto src2p  = inst.operands[1].getRegister().getParent();
 
         /* Create the tempory accumulator */
-        triton::arch::OperandWrapper accumulator(TRITON_X86_REG_AL);
-        triton::arch::OperandWrapper accumulatorp(TRITON_X86_REG_AL.getParent());
+        triton::arch::OperandWrapper accumulator(GET_REG(AL));
+        triton::arch::OperandWrapper accumulatorp(GET_PARENT_REG(AL));
 
         switch (src1.getSize()) {
           case WORD_SIZE:
-            accumulator.setRegister(TRITON_X86_REG_AX);
+            accumulator.setRegister(GET_REG(AX));
             break;
           case DWORD_SIZE:
-            accumulator.setRegister(TRITON_X86_REG_EAX);
+            accumulator.setRegister(GET_REG(EAX));
             break;
           case QWORD_SIZE:
-            accumulator.setRegister(TRITON_X86_REG_RAX);
+            accumulator.setRegister(GET_REG(RAX));
             break;
         }
 
@@ -4103,10 +4106,10 @@ namespace triton {
 
       void x86Semantics::cmpxchg16b_s(triton::arch::Instruction& inst) {
         auto& src1 = inst.operands[0];
-        auto  src2 = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-        auto  src3 = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
-        auto  src4 = triton::arch::OperandWrapper(TRITON_X86_REG_RCX);
-        auto  src5 = triton::arch::OperandWrapper(TRITON_X86_REG_RBX);
+        auto  src2 = triton::arch::OperandWrapper(GET_REG(RDX));
+        auto  src3 = triton::arch::OperandWrapper(GET_REG(RAX));
+        auto  src4 = triton::arch::OperandWrapper(GET_REG(RCX));
+        auto  src5 = triton::arch::OperandWrapper(GET_REG(RBX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -4145,12 +4148,12 @@ namespace triton {
 
       void x86Semantics::cmpxchg8b_s(triton::arch::Instruction& inst) {
         auto& src1  = inst.operands[0];
-        auto  src2  = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-        auto  src3  = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-        auto  src4  = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
-        auto  src5  = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
-        auto  src2p = triton::arch::OperandWrapper(TRITON_X86_REG_EDX.getParent());
-        auto  src3p = triton::arch::OperandWrapper(TRITON_X86_REG_EAX.getParent());
+        auto  src2  = triton::arch::OperandWrapper(GET_REG(EDX));
+        auto  src3  = triton::arch::OperandWrapper(GET_REG(EAX));
+        auto  src4  = triton::arch::OperandWrapper(GET_REG(ECX));
+        auto  src5  = triton::arch::OperandWrapper(GET_REG(EBX));
+        auto  src2p = triton::arch::OperandWrapper(GET_PARENT_REG(EDX));
+        auto  src3p = triton::arch::OperandWrapper(GET_PARENT_REG(EAX));
 
         /* Create symbolic operands */
         auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -4214,11 +4217,11 @@ namespace triton {
 
 
       void x86Semantics::cpuid_s(triton::arch::Instruction& inst) {
-        auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
-        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX.getParent());
-        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_BX.getParent());
-        auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_CX.getParent());
-        auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_DX.getParent());
+        auto src  = triton::arch::OperandWrapper(GET_PARENT_REG(AX));
+        auto dst1 = triton::arch::OperandWrapper(GET_PARENT_REG(AX));
+        auto dst2 = triton::arch::OperandWrapper(GET_PARENT_REG(BX));
+        auto dst3 = triton::arch::OperandWrapper(GET_PARENT_REG(CX));
+        auto dst4 = triton::arch::OperandWrapper(GET_PARENT_REG(DX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -4336,10 +4339,10 @@ namespace triton {
         auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4, "CPUID DX operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AX.getParent(), false);
-        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_BX.getParent(), false);
-        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_CX.getParent(), false);
-        expr4->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_DX.getParent(), false);
+        expr1->isTainted = this->taintEngine->setTaintRegister(GET_PARENT_REG(AX), false);
+        expr2->isTainted = this->taintEngine->setTaintRegister(GET_PARENT_REG(BX), false);
+        expr3->isTainted = this->taintEngine->setTaintRegister(GET_PARENT_REG(CX), false);
+        expr4->isTainted = this->taintEngine->setTaintRegister(GET_PARENT_REG(DX), false);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4347,8 +4350,8 @@ namespace triton {
 
 
       void x86Semantics::cqo_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-        auto src = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(RDX));
+        auto src = triton::arch::OperandWrapper(GET_REG(RAX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -4360,7 +4363,7 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(TRITON_X86_REG_RDX) | this->taintEngine->isRegisterTainted(TRITON_X86_REG_RAX);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(GET_REG(RDX)) | this->taintEngine->isRegisterTainted(GET_REG(RAX));
 
         /* Create the semantics - RAX = TMP[63...0] */
         auto node2 = triton::ast::extract(QWORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
@@ -4369,7 +4372,7 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CQO RAX operation");
 
         /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_RAX, expr1->isTainted);
+        expr2->isTainted = this->taintEngine->setTaintRegister(GET_REG(RAX), expr1->isTainted);
 
         /* Create the semantics - RDX = TMP[127...64] */
         auto node3 = triton::ast::extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
@@ -4378,7 +4381,7 @@ namespace triton {
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CQO RDX operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_RDX, expr1->isTainted);
+        expr3->isTainted = this->taintEngine->setTaintRegister(GET_REG(RDX), expr1->isTainted);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4386,8 +4389,8 @@ namespace triton {
 
 
       void x86Semantics::cwd_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
-        auto src = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(DX));
+        auto src = triton::arch::OperandWrapper(GET_REG(AX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -4399,7 +4402,7 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->isRegisterTainted(TRITON_X86_REG_DX) | this->taintEngine->isRegisterTainted(TRITON_X86_REG_AX);
+        expr1->isTainted = this->taintEngine->isRegisterTainted(GET_REG(DX)) | this->taintEngine->isRegisterTainted(GET_REG(AX));
 
         /* Create the semantics - AX = TMP[15...0] */
         auto node2 = triton::ast::extract(WORD_SIZE_BIT-1, 0, triton::ast::reference(expr1->getId()));
@@ -4408,7 +4411,7 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "CWD AX operation");
 
         /* Spread taint */
-        expr2->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_AX, expr1->isTainted);
+        expr2->isTainted = this->taintEngine->setTaintRegister(GET_REG(AX), expr1->isTainted);
 
         /* Create the semantics - DX = TMP[31...16] */
         auto node3 = triton::ast::extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, triton::ast::reference(expr1->getId()));
@@ -4417,7 +4420,7 @@ namespace triton {
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "CWD DX operation");
 
         /* Spread taint */
-        expr3->isTainted = this->taintEngine->setTaintRegister(TRITON_X86_REG_DX, expr1->isTainted);
+        expr3->isTainted = this->taintEngine->setTaintRegister(GET_REG(DX), expr1->isTainted);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4425,7 +4428,7 @@ namespace triton {
 
 
       void x86Semantics::cwde_s(triton::arch::Instruction& inst) {
-        auto dst = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+        auto dst = triton::arch::OperandWrapper(GET_REG(EAX));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -4483,7 +4486,7 @@ namespace triton {
 
           case BYTE_SIZE: {
             /* AX */
-            auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+            auto ax = triton::arch::OperandWrapper(GET_REG(AX));
             auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
             /* res = AX / Source */
             auto result = triton::ast::bvudiv(dividend, triton::ast::zx(BYTE_SIZE_BIT, divisor));
@@ -4504,8 +4507,8 @@ namespace triton {
 
           case WORD_SIZE: {
             /* DX:AX */
-            auto dx = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
-            auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+            auto dx = triton::arch::OperandWrapper(GET_REG(DX));
+            auto ax = triton::arch::OperandWrapper(GET_REG(AX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
             /* res = DX:AX / Source */
             auto result = triton::ast::extract((WORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(WORD_SIZE_BIT, divisor)));
@@ -4524,8 +4527,8 @@ namespace triton {
 
           case DWORD_SIZE: {
             /* EDX:EAX */
-            auto edx = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-            auto eax = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+            auto edx = triton::arch::OperandWrapper(GET_REG(EDX));
+            auto eax = triton::arch::OperandWrapper(GET_REG(EAX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
             /* res = EDX:EAX / Source */
             auto result = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(DWORD_SIZE_BIT, divisor)));
@@ -4544,8 +4547,8 @@ namespace triton {
 
           case QWORD_SIZE: {
             /* RDX:RAX */
-            auto rdx = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-            auto rax = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
+            auto rdx = triton::arch::OperandWrapper(GET_REG(RDX));
+            auto rax = triton::arch::OperandWrapper(GET_REG(RAX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
             /* res = RDX:RAX / Source */
             auto result = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, triton::ast::bvudiv(dividend, triton::ast::zx(QWORD_SIZE_BIT, divisor)));
@@ -4621,7 +4624,7 @@ namespace triton {
 
           case BYTE_SIZE: {
             /* AX */
-            auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+            auto ax = triton::arch::OperandWrapper(GET_REG(AX));
             auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
             /* res = AX / Source */
             auto result = triton::ast::bvsdiv(dividend, triton::ast::sx(BYTE_SIZE_BIT, divisor));
@@ -4642,8 +4645,8 @@ namespace triton {
 
           case WORD_SIZE: {
             /* DX:AX */
-            auto dx = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
-            auto ax = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+            auto dx = triton::arch::OperandWrapper(GET_REG(DX));
+            auto ax = triton::arch::OperandWrapper(GET_REG(AX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
             /* res = DX:AX / Source */
             auto result = triton::ast::extract((WORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(WORD_SIZE_BIT, divisor)));
@@ -4662,8 +4665,8 @@ namespace triton {
 
           case DWORD_SIZE: {
             /* EDX:EAX */
-            auto edx = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-            auto eax = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+            auto edx = triton::arch::OperandWrapper(GET_REG(EDX));
+            auto eax = triton::arch::OperandWrapper(GET_REG(EAX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
             /* res = EDX:EAX / Source */
             auto result = triton::ast::extract((DWORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(DWORD_SIZE_BIT, divisor)));
@@ -4682,8 +4685,8 @@ namespace triton {
 
           case QWORD_SIZE: {
             /* RDX:RAX */
-            auto rdx = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-            auto rax = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
+            auto rdx = triton::arch::OperandWrapper(GET_REG(RDX));
+            auto rax = triton::arch::OperandWrapper(GET_REG(RAX));
             auto dividend = triton::ast::concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
             /* res = RDX:RAX / Source */
             auto result = triton::ast::extract((QWORD_SIZE_BIT - 1), 0, triton::ast::bvsdiv(dividend, triton::ast::sx(QWORD_SIZE_BIT, divisor)));
@@ -4719,8 +4722,8 @@ namespace triton {
 
               /* dst = AX */
               case BYTE_SIZE: {
-                auto ax   = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-                auto al   = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
+                auto ax   = triton::arch::OperandWrapper(GET_REG(AX));
+                auto al   = triton::arch::OperandWrapper(GET_REG(AL));
                 auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, al);
                 auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src);
                 auto node = triton::ast::bvmul(triton::ast::sx(BYTE_SIZE_BIT, op1), triton::ast::sx(BYTE_SIZE_BIT, op2));
@@ -4733,8 +4736,8 @@ namespace triton {
 
               /* dst = DX:AX */
               case WORD_SIZE: {
-                auto ax    = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-                auto dx    = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
+                auto ax    = triton::arch::OperandWrapper(GET_REG(AX));
+                auto dx    = triton::arch::OperandWrapper(GET_REG(DX));
                 auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, ax);
                 auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
                 auto node  = triton::ast::bvmul(triton::ast::sx(WORD_SIZE_BIT, op1), triton::ast::sx(WORD_SIZE_BIT, op2));
@@ -4749,8 +4752,8 @@ namespace triton {
 
               /* dst = EDX:EAX */
               case DWORD_SIZE: {
-                auto eax   = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-                auto edx   = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+                auto eax   = triton::arch::OperandWrapper(GET_REG(EAX));
+                auto edx   = triton::arch::OperandWrapper(GET_REG(EDX));
                 auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, eax);
                 auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
                 auto node  = triton::ast::bvmul(triton::ast::sx(DWORD_SIZE_BIT, op1), triton::ast::sx(DWORD_SIZE_BIT, op2));
@@ -4765,8 +4768,8 @@ namespace triton {
 
               /* dst = RDX:RAX */
               case QWORD_SIZE: {
-                auto rax   = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
-                auto rdx   = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
+                auto rax   = triton::arch::OperandWrapper(GET_REG(RAX));
+                auto rdx   = triton::arch::OperandWrapper(GET_REG(RDX));
                 auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, rax);
                 auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
                 auto node  = triton::ast::bvmul(triton::ast::sx(QWORD_SIZE_BIT, op1), triton::ast::sx(QWORD_SIZE_BIT, op2));
@@ -4860,9 +4863,9 @@ namespace triton {
 
 
       void x86Semantics::ja_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  cf      = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  cf      = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -4899,8 +4902,8 @@ namespace triton {
 
 
       void x86Semantics::jae_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  cf      = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  cf      = triton::arch::OperandWrapper(GET_REG(CF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -4928,8 +4931,8 @@ namespace triton {
 
 
       void x86Semantics::jb_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  cf      = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  cf      = triton::arch::OperandWrapper(GET_REG(CF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -4957,9 +4960,9 @@ namespace triton {
 
 
       void x86Semantics::jbe_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  cf      = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  cf      = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -4990,8 +4993,8 @@ namespace triton {
 
 
       void x86Semantics::je_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5019,10 +5022,10 @@ namespace triton {
 
 
       void x86Semantics::jg_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5054,9 +5057,9 @@ namespace triton {
 
 
       void x86Semantics::jge_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5086,9 +5089,9 @@ namespace triton {
 
 
       void x86Semantics::jl_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5118,10 +5121,10 @@ namespace triton {
 
 
       void x86Semantics::jle_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5153,7 +5156,7 @@ namespace triton {
 
 
       void x86Semantics::jmp_s(triton::arch::Instruction& inst) {
-        auto  pc  = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
+        auto  pc  = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
@@ -5177,8 +5180,8 @@ namespace triton {
 
 
       void x86Semantics::jne_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  zf      = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  zf      = triton::arch::OperandWrapper(GET_REG(ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5206,8 +5209,8 @@ namespace triton {
 
 
       void x86Semantics::jno_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5235,8 +5238,8 @@ namespace triton {
 
 
       void x86Semantics::jnp_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  pf      = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  pf      = triton::arch::OperandWrapper(GET_REG(PF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5264,8 +5267,8 @@ namespace triton {
 
 
       void x86Semantics::jns_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5293,8 +5296,8 @@ namespace triton {
 
 
       void x86Semantics::jo_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  of      = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  of      = triton::arch::OperandWrapper(GET_REG(OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5322,8 +5325,8 @@ namespace triton {
 
 
       void x86Semantics::jp_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  pf      = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  pf      = triton::arch::OperandWrapper(GET_REG(PF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5351,8 +5354,8 @@ namespace triton {
 
 
       void x86Semantics::js_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
-        auto  sf      = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  pc      = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
+        auto  sf      = triton::arch::OperandWrapper(GET_REG(SF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
 
@@ -5380,12 +5383,12 @@ namespace triton {
 
 
       void x86Semantics::lahf_s(triton::arch::Instruction& inst) {
-        auto dst  = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
-        auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto src2 = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto src3 = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto src4 = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto src5 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto dst  = triton::arch::OperandWrapper(GET_REG(AH));
+        auto src1 = triton::arch::OperandWrapper(GET_REG(SF));
+        auto src2 = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto src3 = triton::arch::OperandWrapper(GET_REG(AF));
+        auto src4 = triton::arch::OperandWrapper(GET_REG(PF));
+        auto src5 = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -5442,7 +5445,7 @@ namespace triton {
 
 
       void x86Semantics::ldmxcsr_s(triton::arch::Instruction& inst) {
-        auto  dst = triton::arch::OperandWrapper(TRITON_X86_REG_MXCSR);
+        auto  dst = triton::arch::OperandWrapper(GET_REG(MXCSR));
         auto& src = inst.operands[0];
 
         /* Create the semantics */
@@ -5490,7 +5493,7 @@ namespace triton {
           op3 = triton::ast::bv(0, leaSize);
 
         /* Base with PC */
-        if (this->architecture->isRegisterValid(srcBase) && (srcBase.getParent().getId() == TRITON_X86_REG_PC.getId()))
+        if (this->architecture->isRegisterValid(srcBase) && (srcBase.getParent().getId() == GET_PARENT_REG(IP).getId()))
           op3 = triton::ast::bvadd(op3, triton::ast::bv(inst.getSize(), leaSize));
 
         /* Index */
@@ -5527,11 +5530,11 @@ namespace triton {
 
 
       void x86Semantics::leave_s(triton::arch::Instruction& inst) {
-        auto stack     = TRITON_X86_REG_SP.getParent();
-        auto base      = TRITON_X86_REG_BP.getParent();
+        auto stack     = GET_PARENT_REG(SP);
+        auto base      = GET_PARENT_REG(BP);
         auto baseValue = this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>();
         auto bp1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(baseValue, base.getSize()));
-        auto bp2       = triton::arch::OperandWrapper(TRITON_X86_REG_BP.getParent());
+        auto bp2       = triton::arch::OperandWrapper(GET_PARENT_REG(BP));
         auto sp        = triton::arch::OperandWrapper(stack);
 
         /* Create symbolic operands */
@@ -5575,8 +5578,8 @@ namespace triton {
       void x86Semantics::lodsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5607,8 +5610,8 @@ namespace triton {
       void x86Semantics::lodsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5639,8 +5642,8 @@ namespace triton {
       void x86Semantics::lodsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -5671,8 +5674,8 @@ namespace triton {
       void x86Semantics::lodsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6378,9 +6381,9 @@ namespace triton {
       void x86Semantics::movsb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6419,9 +6422,9 @@ namespace triton {
       void x86Semantics::movsd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6496,9 +6499,9 @@ namespace triton {
       void x86Semantics::movsq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6537,9 +6540,9 @@ namespace triton {
       void x86Semantics::movsw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index1 = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  index2 = triton::arch::OperandWrapper(TRITON_X86_REG_SI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index1 = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  index2 = triton::arch::OperandWrapper(GET_PARENT_REG(SI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -6645,8 +6648,8 @@ namespace triton {
 
           /* AX = AL * r/m8 */
           case BYTE_SIZE: {
-            auto dst  = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-            auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_AL);
+            auto dst  = triton::arch::OperandWrapper(GET_REG(AX));
+            auto src1 = triton::arch::OperandWrapper(GET_REG(AL));
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
@@ -6665,9 +6668,9 @@ namespace triton {
 
           /* DX:AX = AX * r/m16 */
           case WORD_SIZE: {
-            auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
-            auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_DX);
-            auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_AX);
+            auto dst1 = triton::arch::OperandWrapper(GET_REG(AX));
+            auto dst2 = triton::arch::OperandWrapper(GET_REG(DX));
+            auto src1 = triton::arch::OperandWrapper(GET_REG(AX));
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
@@ -6692,9 +6695,9 @@ namespace triton {
 
           /* EDX:EAX = EAX * r/m32 */
           case DWORD_SIZE: {
-            auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-            auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-            auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+            auto dst1 = triton::arch::OperandWrapper(GET_REG(EAX));
+            auto dst2 = triton::arch::OperandWrapper(GET_REG(EDX));
+            auto src1 = triton::arch::OperandWrapper(GET_REG(EAX));
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
@@ -6719,9 +6722,9 @@ namespace triton {
 
           /* RDX:RAX = RAX * r/m64 */
           case QWORD_SIZE: {
-            auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
-            auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
-            auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_RAX);
+            auto dst1 = triton::arch::OperandWrapper(GET_REG(RAX));
+            auto dst2 = triton::arch::OperandWrapper(GET_REG(RDX));
+            auto src1 = triton::arch::OperandWrapper(GET_REG(RAX));
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
             auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
@@ -6759,7 +6762,7 @@ namespace triton {
             auto& dst1 = inst.operands[0];
             auto& dst2 = inst.operands[1];
             auto  src1 = inst.operands[2];
-            auto  src2 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
+            auto  src2 = triton::arch::OperandWrapper(GET_REG(EDX));
 
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -6788,7 +6791,7 @@ namespace triton {
             auto& dst1 = inst.operands[0];
             auto& dst2 = inst.operands[1];
             auto  src1 = inst.operands[2];
-            auto  src2 = triton::arch::OperandWrapper(TRITON_X86_REG_RDX);
+            auto  src2 = triton::arch::OperandWrapper(GET_REG(RDX));
 
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -6891,8 +6894,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
@@ -8276,7 +8279,7 @@ namespace triton {
 
       void x86Semantics::pop_s(triton::arch::Instruction& inst) {
         bool  stackRelative = false;
-        auto  stack         = TRITON_X86_REG_SP.getParent();
+        auto  stack         = GET_PARENT_REG(SP);
         auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto& dst           = inst.operands[0];
         auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
@@ -8322,16 +8325,16 @@ namespace triton {
 
 
       void x86Semantics::popal_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = GET_PARENT_REG(SP);
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_EDI);
-        auto dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_ESI);
-        auto dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_EBP);
-        auto dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ESP);
-        auto dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
-        auto dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-        auto dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
-        auto dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+        auto dst1       = triton::arch::OperandWrapper(GET_REG(EDI));
+        auto dst2       = triton::arch::OperandWrapper(GET_REG(ESI));
+        auto dst3       = triton::arch::OperandWrapper(GET_REG(EBP));
+        auto dst4       = triton::arch::OperandWrapper(GET_REG(ESP));
+        auto dst5       = triton::arch::OperandWrapper(GET_REG(EBX));
+        auto dst6       = triton::arch::OperandWrapper(GET_REG(EDX));
+        auto dst7       = triton::arch::OperandWrapper(GET_REG(ECX));
+        auto dst8       = triton::arch::OperandWrapper(GET_REG(EAX));
         auto src1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize()));
         auto src2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize()));
         auto src3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize()));
@@ -8377,17 +8380,17 @@ namespace triton {
 
 
       void x86Semantics::popfd_s(triton::arch::Instruction& inst) {
-        auto  stack      = TRITON_X86_REG_SP.getParent();
+        auto  stack      = GET_PARENT_REG(SP);
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto  dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto  dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto  dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
-        auto  dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
-        auto  dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
-        auto  dst9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  dst1       = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  dst2       = triton::arch::OperandWrapper(GET_REG(PF));
+        auto  dst3       = triton::arch::OperandWrapper(GET_REG(AF));
+        auto  dst4       = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto  dst5       = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  dst6       = triton::arch::OperandWrapper(GET_REG(TF));
+        auto  dst7       = triton::arch::OperandWrapper(GET_REG(IF));
+        auto  dst8       = triton::arch::OperandWrapper(GET_REG(DF));
+        auto  dst9       = triton::arch::OperandWrapper(GET_REG(OF));
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
@@ -8435,17 +8438,17 @@ namespace triton {
 
 
       void x86Semantics::popfq_s(triton::arch::Instruction& inst) {
-        auto  stack      = TRITON_X86_REG_SP.getParent();
+        auto  stack      = GET_PARENT_REG(SP);
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto  dst1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  dst2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto  dst3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto  dst4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto  dst5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  dst6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
-        auto  dst7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
-        auto  dst8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
-        auto  dst9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  dst1       = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  dst2       = triton::arch::OperandWrapper(GET_REG(PF));
+        auto  dst3       = triton::arch::OperandWrapper(GET_REG(AF));
+        auto  dst4       = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto  dst5       = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  dst6       = triton::arch::OperandWrapper(GET_REG(TF));
+        auto  dst7       = triton::arch::OperandWrapper(GET_REG(IF));
+        auto  dst8       = triton::arch::OperandWrapper(GET_REG(DF));
+        auto  dst9       = triton::arch::OperandWrapper(GET_REG(OF));
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
@@ -9074,11 +9077,11 @@ namespace triton {
         expr2->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_AF, "Clears adjust flag");
+        this->clearFlag_s(inst, GET_REG(AF), "Clears adjust flag");
         this->cfPtest_s(inst, expr2, src1, true);
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(PF), "Clears parity flag");
+        this->clearFlag_s(inst, GET_REG(SF), "Clears sign flag");
         this->zf_s(inst, expr1, src1, true);
 
         /* Upate the symbolic control flow */
@@ -9472,7 +9475,7 @@ namespace triton {
 
       void x86Semantics::push_s(triton::arch::Instruction& inst) {
         auto& src           = inst.operands[0];
-        auto stack          = TRITON_X86_REG_SP.getParent();
+        auto stack          = GET_PARENT_REG(SP);
         triton::uint32 size = stack.getSize();
 
         /* If it's an immediate source, the memory access is always based on the arch size */
@@ -9501,7 +9504,7 @@ namespace triton {
 
 
       void x86Semantics::pushal_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = GET_PARENT_REG(SP);
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto dst1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
         auto dst2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
@@ -9511,14 +9514,14 @@ namespace triton {
         auto dst6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 6), stack.getSize()));
         auto dst7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 7), stack.getSize()));
         auto dst8       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 8), stack.getSize()));
-        auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
-        auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_ECX);
-        auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-        auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_EBX);
-        auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_ESP);
-        auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_EBP);
-        auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_ESI);
-        auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_EDI);
+        auto src1       = triton::arch::OperandWrapper(GET_REG(EAX));
+        auto src2       = triton::arch::OperandWrapper(GET_REG(ECX));
+        auto src3       = triton::arch::OperandWrapper(GET_REG(EDX));
+        auto src4       = triton::arch::OperandWrapper(GET_REG(EBX));
+        auto src5       = triton::arch::OperandWrapper(GET_REG(ESP));
+        auto src6       = triton::arch::OperandWrapper(GET_REG(EBP));
+        auto src7       = triton::arch::OperandWrapper(GET_REG(ESI));
+        auto src8       = triton::arch::OperandWrapper(GET_REG(EDI));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -9567,20 +9570,20 @@ namespace triton {
 
 
       void x86Semantics::pushfd_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = GET_PARENT_REG(SP);
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
         auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
-        auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
-        auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
-        auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
-        auto src9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto src1       = triton::arch::OperandWrapper(GET_REG(CF));
+        auto src2       = triton::arch::OperandWrapper(GET_REG(PF));
+        auto src3       = triton::arch::OperandWrapper(GET_REG(AF));
+        auto src4       = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto src5       = triton::arch::OperandWrapper(GET_REG(SF));
+        auto src6       = triton::arch::OperandWrapper(GET_REG(TF));
+        auto src7       = triton::arch::OperandWrapper(GET_REG(IF));
+        auto src8       = triton::arch::OperandWrapper(GET_REG(DF));
+        auto src9       = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -9633,20 +9636,20 @@ namespace triton {
 
 
       void x86Semantics::pushfq_s(triton::arch::Instruction& inst) {
-        auto stack = TRITON_X86_REG_SP.getParent();
+        auto stack = GET_PARENT_REG(SP);
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
         auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
-        auto src1       = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto src2       = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto src3       = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto src4       = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto src5       = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto src6       = triton::arch::OperandWrapper(TRITON_X86_REG_TF);
-        auto src7       = triton::arch::OperandWrapper(TRITON_X86_REG_IF);
-        auto src8       = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
-        auto src9       = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto src1       = triton::arch::OperandWrapper(GET_REG(CF));
+        auto src2       = triton::arch::OperandWrapper(GET_REG(PF));
+        auto src3       = triton::arch::OperandWrapper(GET_REG(AF));
+        auto src4       = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto src5       = triton::arch::OperandWrapper(GET_REG(SF));
+        auto src6       = triton::arch::OperandWrapper(GET_REG(TF));
+        auto src7       = triton::arch::OperandWrapper(GET_REG(IF));
+        auto src8       = triton::arch::OperandWrapper(GET_REG(DF));
+        auto src9       = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -9723,7 +9726,7 @@ namespace triton {
       void x86Semantics::rcl_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0];
         auto& src   = inst.operands[1];
-        auto  srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  srcCf = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -9794,7 +9797,7 @@ namespace triton {
       void x86Semantics::rcr_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0];
         auto& src   = inst.operands[1];
-        auto  srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  srcCf = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -9862,8 +9865,8 @@ namespace triton {
 
 
       void x86Semantics::rdtsc_s(triton::arch::Instruction& inst) {
-        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_EDX);
-        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_EAX);
+        auto dst1 = triton::arch::OperandWrapper(GET_REG(EDX));
+        auto dst2 = triton::arch::OperandWrapper(GET_REG(EAX));
 
         /* Create symbolic operands */
         auto op1 = triton::ast::bv(0, dst1.getBitSize());
@@ -9883,9 +9886,9 @@ namespace triton {
 
 
       void x86Semantics::ret_s(triton::arch::Instruction& inst) {
-        auto stack      = TRITON_X86_REG_SP.getParent();
+        auto stack      = GET_PARENT_REG(SP);
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto pc         = triton::arch::OperandWrapper(TRITON_X86_REG_PC);
+        auto pc         = triton::arch::OperandWrapper(GET_PARENT_REG(IP));
         auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
@@ -10083,12 +10086,12 @@ namespace triton {
 
 
       void x86Semantics::sahf_s(triton::arch::Instruction& inst) {
-        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
-        auto dst3 = triton::arch::OperandWrapper(TRITON_X86_REG_AF);
-        auto dst4 = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
-        auto dst5 = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto src  = triton::arch::OperandWrapper(TRITON_X86_REG_AH);
+        auto dst1 = triton::arch::OperandWrapper(GET_REG(SF));
+        auto dst2 = triton::arch::OperandWrapper(GET_REG(ZF));
+        auto dst3 = triton::arch::OperandWrapper(GET_REG(AF));
+        auto dst4 = triton::arch::OperandWrapper(GET_REG(PF));
+        auto dst5 = triton::arch::OperandWrapper(GET_REG(CF));
+        auto src  = triton::arch::OperandWrapper(GET_REG(AH));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -10195,7 +10198,7 @@ namespace triton {
       void x86Semantics::sbb_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0];
         auto& src   = inst.operands[1];
-        auto  srcCf = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  srcCf = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
@@ -10228,8 +10231,8 @@ namespace triton {
       void x86Semantics::scasb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -10273,8 +10276,8 @@ namespace triton {
       void x86Semantics::scasd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -10318,8 +10321,8 @@ namespace triton {
       void x86Semantics::scasq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -10363,8 +10366,8 @@ namespace triton {
       void x86Semantics::scasw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* If the REP prefix is defined, convert REP into REPE */
         if (inst.getPrefix() == triton::arch::x86::ID_PREFIX_REP)
@@ -10407,8 +10410,8 @@ namespace triton {
 
       void x86Semantics::seta_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
@@ -10446,7 +10449,7 @@ namespace triton {
 
       void x86Semantics::setae_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
@@ -10476,7 +10479,7 @@ namespace triton {
 
       void x86Semantics::setb_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
@@ -10506,8 +10509,8 @@ namespace triton {
 
       void x86Semantics::setbe_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  cf  = triton::arch::OperandWrapper(TRITON_X86_REG_CF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  cf  = triton::arch::OperandWrapper(GET_REG(CF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
@@ -10539,7 +10542,7 @@ namespace triton {
 
       void x86Semantics::sete_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
@@ -10569,9 +10572,9 @@ namespace triton {
 
       void x86Semantics::setg_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -10605,8 +10608,8 @@ namespace triton {
 
       void x86Semantics::setge_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -10638,8 +10641,8 @@ namespace triton {
 
       void x86Semantics::setl_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -10671,9 +10674,9 @@ namespace triton {
 
       void x86Semantics::setle_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -10707,7 +10710,7 @@ namespace triton {
 
       void x86Semantics::setne_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  zf  = triton::arch::OperandWrapper(TRITON_X86_REG_ZF);
+        auto  zf  = triton::arch::OperandWrapper(GET_REG(ZF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
@@ -10737,7 +10740,7 @@ namespace triton {
 
       void x86Semantics::setno_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
@@ -10767,7 +10770,7 @@ namespace triton {
 
       void x86Semantics::setnp_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pf  = triton::arch::OperandWrapper(GET_REG(PF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
@@ -10797,7 +10800,7 @@ namespace triton {
 
       void x86Semantics::setns_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -10827,7 +10830,7 @@ namespace triton {
 
       void x86Semantics::seto_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  of  = triton::arch::OperandWrapper(TRITON_X86_REG_OF);
+        auto  of  = triton::arch::OperandWrapper(GET_REG(OF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
@@ -10857,7 +10860,7 @@ namespace triton {
 
       void x86Semantics::setp_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  pf  = triton::arch::OperandWrapper(TRITON_X86_REG_PF);
+        auto  pf  = triton::arch::OperandWrapper(GET_REG(PF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
@@ -10887,7 +10890,7 @@ namespace triton {
 
       void x86Semantics::sets_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  sf  = triton::arch::OperandWrapper(TRITON_X86_REG_SF);
+        auto  sf  = triton::arch::OperandWrapper(GET_REG(SF));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
@@ -11194,21 +11197,21 @@ namespace triton {
 
 
       void x86Semantics::stc_s(triton::arch::Instruction& inst) {
-        this->setFlag_s(inst, TRITON_X86_REG_CF, "Sets carry flag");
+        this->setFlag_s(inst, GET_REG(CF), "Sets carry flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
 
       void x86Semantics::std_s(triton::arch::Instruction& inst) {
-        this->setFlag_s(inst, TRITON_X86_REG_DF, "Sets direction flag");
+        this->setFlag_s(inst, GET_REG(DF), "Sets direction flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
 
       void x86Semantics::sti_s(triton::arch::Instruction& inst) {
-        this->setFlag_s(inst, TRITON_X86_REG_IF, "Sets interrupt flag");
+        this->setFlag_s(inst, GET_REG(IF), "Sets interrupt flag");
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -11216,7 +11219,7 @@ namespace triton {
 
       void x86Semantics::stmxcsr_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
-        auto  src = triton::arch::OperandWrapper(TRITON_X86_REG_MXCSR);
+        auto  src = triton::arch::OperandWrapper(GET_REG(MXCSR));
 
         /* Create symbolic operands */
         auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11238,8 +11241,8 @@ namespace triton {
       void x86Semantics::stosb_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11270,8 +11273,8 @@ namespace triton {
       void x86Semantics::stosd_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11302,8 +11305,8 @@ namespace triton {
       void x86Semantics::stosq_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11334,8 +11337,8 @@ namespace triton {
       void x86Semantics::stosw_s(triton::arch::Instruction& inst) {
         auto& dst    = inst.operands[0];
         auto& src    = inst.operands[1];
-        auto  index  = triton::arch::OperandWrapper(TRITON_X86_REG_DI.getParent());
-        auto  df     = triton::arch::OperandWrapper(TRITON_X86_REG_DF);
+        auto  index  = triton::arch::OperandWrapper(GET_PARENT_REG(DI));
+        auto  df     = triton::arch::OperandWrapper(GET_REG(DF));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
@@ -11394,10 +11397,10 @@ namespace triton {
 
 
       void x86Semantics::syscall_s(triton::arch::Instruction& inst) {
-        auto dst1 = triton::arch::OperandWrapper(TRITON_X86_REG_RCX);
-        auto dst2 = triton::arch::OperandWrapper(TRITON_X86_REG_R11);
-        auto src1 = triton::arch::OperandWrapper(TRITON_X86_REG_RIP);
-        auto src2 = triton::arch::OperandWrapper(TRITON_X86_REG_EFLAGS);
+        auto dst1 = triton::arch::OperandWrapper(GET_REG(RCX));
+        auto dst2 = triton::arch::OperandWrapper(GET_REG(R11));
+        auto src1 = triton::arch::OperandWrapper(GET_REG(RIP));
+        auto src2 = triton::arch::OperandWrapper(GET_REG(EFLAGS));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
@@ -11438,8 +11441,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->pf_s(inst, expr, src1, true);
         this->sf_s(inst, expr, src1, true);
         this->zf_s(inst, expr, src1, true);
@@ -11992,11 +11995,11 @@ namespace triton {
         expr2->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_AF, "Clears adjust flag");
+        this->clearFlag_s(inst, GET_REG(AF), "Clears adjust flag");
         this->cfPtest_s(inst, expr2, src1, true);
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_PF, "Clears parity flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_SF, "Clears sign flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(PF), "Clears parity flag");
+        this->clearFlag_s(inst, GET_REG(SF), "Clears sign flag");
         this->zf_s(inst, expr1, src1, true);
 
         /* Upate the symbolic control flow */
@@ -12126,8 +12129,8 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
-        this->clearFlag_s(inst, TRITON_X86_REG_CF, "Clears carry flag");
-        this->clearFlag_s(inst, TRITON_X86_REG_OF, "Clears overflow flag");
+        this->clearFlag_s(inst, GET_REG(CF), "Clears carry flag");
+        this->clearFlag_s(inst, GET_REG(OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
@@ -12184,3 +12187,5 @@ namespace triton {
   }; /* arch namespace */
 }; /* triton namespace */
 
+#undef GET_REG
+#undef GET_PARENT_REG

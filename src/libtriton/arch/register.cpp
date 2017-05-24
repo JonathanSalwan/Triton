@@ -146,6 +146,11 @@ namespace triton {
     }
 
 
+    void Register::setName(const std::string& name) {
+      this->name = name;
+    }
+
+
     void Register::setId(triton::uint32 regId) {
       this->id = regId;
     }

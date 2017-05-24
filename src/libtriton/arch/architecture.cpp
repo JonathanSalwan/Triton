@@ -135,6 +135,22 @@ namespace triton {
     }
 
 
+    triton::arch::Register& Architecture::getRegister(triton::uint32 regId) {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");
+
+      return this->cpu->getRegister(regId);
+    }
+
+
+    triton::arch::Register& Architecture::getParentRegister(triton::uint32 regId) {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");
+
+      return this->cpu->getParentRegister(regId);
+    }
+
+
     triton::arch::RegisterSpecification Architecture::getRegisterSpecification(triton::uint32 regId) const {
       triton::arch::RegisterSpecification ret;
 
@@ -159,7 +175,7 @@ namespace triton {
     }
 
 
-    void Architecture::disassembly(triton::arch::Instruction& inst) const {
+    void Architecture::disassembly(triton::arch::Instruction& inst) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
