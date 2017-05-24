@@ -91,25 +91,25 @@ Concretizes a specific symbolic memory reference.
 - <b>void concretizeRegister(\ref py_REG_page reg)</b><br>
 Concretizes a specific symbolic register reference.
 
-- <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment="")</b><br>
+- <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment)</b><br>
 Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment="")</b><br>
+- <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment)</b><br>
 Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment="")</b><br>
+- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment)</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment="")</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment)</b><br>
 Returns the new symbolic register expression and links this expression to the instruction.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment="")</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment)</b><br>
 Returns the new symbolic memory expression and links this expression to the instruction.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment="")</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment)</b><br>
 Returns the new symbolic register expression and links this expression to the instruction.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment="")</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment)</b><br>
 Returns the new symbolic volatile expression and links this expression to the instruction.
 
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
@@ -274,10 +274,10 @@ Returns true if the symbolic expression id exists.
 - <b>bool isTaintEngineEnabled(void)</b><br>
 Returns true if the taint engine is enabled.
 
-- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment="")</b><br>
+- <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
-- <b>\ref py_SymbolicVariable_page newSymbolicVariable(intger varSize, string comment="")</b><br>
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(intger varSize, string comment)</b><br>
 Returns a new symbolic variable.
 
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
