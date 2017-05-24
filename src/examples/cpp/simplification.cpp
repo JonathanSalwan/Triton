@@ -61,7 +61,7 @@ int main(int ac, const char **av) {
     inst.setAddress(trace[i].addr);
 
     /* optional - Update register state */
-    inst.updateContext(Register(x86::ID_REG_RAX, 12345));
+    inst.updateContext(Register(api.getRegister(ID_REG_RAX), 12345));
 
     /* Process everything */
     api.processing(inst);

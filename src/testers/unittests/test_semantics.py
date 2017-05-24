@@ -3,8 +3,6 @@
 """Test Semantics."""
 
 import os
-import string
-import sys
 import unittest
 
 from triton import *

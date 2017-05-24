@@ -118,12 +118,12 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::RegisterSpec& reg) const {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE: {
            for(auto& function: this->getConcreteRegisterValueCallbacks) {
              // FIXME Const_cast is certainly bad
-             function(const_cast<triton::arch::Register&>(reg));
+             function(const_cast<triton::arch::RegisterSpec&>(reg));
            }
           break;
         }

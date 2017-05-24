@@ -55,7 +55,7 @@ namespace triton {
         OperandWrapper(const triton::arch::MemoryAccess& mem);
 
         //! Register constructor.
-        OperandWrapper(const triton::arch::Register& reg);
+        OperandWrapper(const triton::arch::RegisterSpec& reg);
 
         //! Destructor.
         virtual ~OperandWrapper();

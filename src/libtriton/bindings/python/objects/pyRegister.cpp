@@ -10,6 +10,7 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/register.hpp>
+#include <triton/api.hpp>
 
 
 
@@ -156,7 +157,8 @@ namespace triton {
 
       static PyObject* Register_getParent(PyObject* self, PyObject* noarg) {
         try {
-          triton::arch::Register parent = PyRegister_AsRegister(self)->getParent();
+          // FIXME: should we care about concrete value?
+          triton::arch::Register parent = triton::arch::Register(triton::api.getParentRegister(PyRegister_AsRegister(self)->getId()));
           return PyRegister(parent);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -365,15 +367,10 @@ namespace triton {
 
 
       PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue) {
-        return PyRegister(reg, concreteValue, false);
-      }
-
-
-      PyObject* PyRegister(const triton::arch::Register& reg, triton::uint512 concreteValue, bool isImmutable) {
         PyType_Ready(&Register_Type);
         Register_Object* object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
-          object->reg = new triton::arch::Register(reg.getId(), concreteValue, isImmutable);
+          object->reg = new triton::arch::Register(triton::api.getRegister(reg.getId()), concreteValue);
 
         return (PyObject*)object;
       }

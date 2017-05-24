@@ -184,17 +184,17 @@ namespace triton {
     }
 
 
-    void MemoryAccess::setSegmentRegister(triton::arch::Register& segment) {
+    void MemoryAccess::setSegmentRegister(triton::arch::Register const& segment) {
       this->segmentReg = segment;
     }
 
 
-    void MemoryAccess::setBaseRegister(triton::arch::Register& base) {
+    void MemoryAccess::setBaseRegister(triton::arch::Register const& base) {
       this->baseReg = base;
     }
 
 
-    void MemoryAccess::setIndexRegister(triton::arch::Register& index) {
+    void MemoryAccess::setIndexRegister(triton::arch::Register const& index) {
       this->indexReg = index;
     }
 
