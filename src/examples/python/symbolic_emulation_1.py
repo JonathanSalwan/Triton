@@ -120,7 +120,7 @@ if __name__ == '__main__':
     print 'Symbolic registers information'
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     for k, v in Triton.getSymbolicRegisters().items():
-        print k, v
+        print Triton.Register(k), v
 
     print
     print 'Symbolic memory information'

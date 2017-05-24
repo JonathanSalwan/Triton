@@ -1584,8 +1584,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            triton::arch::Register reg(PyTritonContext_AsTritonContext(self)->getRegister(it->first));
-            PyDict_SetItem(ret, PyRegister(reg), PySymbolicExpression(it->second));
+            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -2911,7 +2910,7 @@ namespace triton {
         {"getFullAstFromId",                    (PyCFunction)TritonContext_getFullAstFromId,                       METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
-        {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             "Get a new register with the upper parent spec"},
+        {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
