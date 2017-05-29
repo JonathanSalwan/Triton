@@ -782,6 +782,15 @@ namespace triton {
         triton::ast::AbstractNode* node = this->buildSymbolicMemory(mem);
         mem.setConcreteValue(node->evaluate());
         inst.setLoadAccess(mem, node);
+
+        /* Set implicit read of the base register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getBaseRegister()))
+          this->buildSymbolicRegister(inst, mem.getBaseRegister());
+
+        /* Set implicit read of the index register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getIndexRegister()))
+          this->buildSymbolicRegister(inst, mem.getIndexRegister());
+
         return node;
       }
 
@@ -811,6 +820,7 @@ namespace triton {
         triton::ast::AbstractNode* node = this->buildSymbolicRegister(reg);
         reg.setConcreteValue(node->evaluate());
         inst.setReadRegister(reg, node);
+
         return node;
       }
 
