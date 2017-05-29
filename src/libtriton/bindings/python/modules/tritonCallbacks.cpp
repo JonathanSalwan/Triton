@@ -2857,7 +2857,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintRegister(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintRegister(): Expects a MemoryAccess as argument.");
+          return PyErr_Format(PyExc_TypeError, "taintRegister(): Expects a REG as argument.");
 
         try {
           if (triton::api.taintRegister(*PyRegister_AsRegister(reg)) == true)
@@ -3086,7 +3086,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "untaintRegister(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "untaintRegister(): Expects a MemoryAccess as argument.");
+          return PyErr_Format(PyExc_TypeError, "untaintRegister(): Expects a REG as argument.");
 
         try {
           if (triton::api.untaintRegister(*PyRegister_AsRegister(reg)) == true)
