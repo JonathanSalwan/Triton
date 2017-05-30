@@ -170,11 +170,13 @@ namespace triton {
           }
         }
 
-        /* Implicit and explicit semantics - MEM */
-        auto& loadAccess     = inst.getLoadAccess();
-        auto& readRegisters  = inst.getReadRegisters();
-        auto& readImmediates = inst.getReadImmediates();
+        auto& loadAccess        = inst.getLoadAccess();
+        auto& readRegisters     = inst.getReadRegisters();
+        auto& readImmediates    = inst.getReadImmediates();
+        auto& storeAccess       = inst.getStoreAccess();
+        auto& writtenRegisters  = inst.getWrittenRegisters();
 
+        /* Implicit and explicit semantics - MEM */
         for (auto it = loadAccess.begin(); it != loadAccess.end(); it++)
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
 
@@ -186,10 +188,20 @@ namespace triton {
         for (auto it = readImmediates.begin(); it != readImmediates.end(); it++)
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
 
+        /* Implicit and explicit semantics - MEM */
+        for (auto it = storeAccess.begin(); it != storeAccess.end(); it++)
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+
+        /* Implicit and explicit semantics - REG */
+        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end(); it++)
+          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+
         /* Clear lists */
         loadAccess.clear();
         readRegisters.clear();
         readImmediates.clear();
+        storeAccess.clear();
+        writtenRegisters.clear();
       }
 
       /* Free collected nodes */
