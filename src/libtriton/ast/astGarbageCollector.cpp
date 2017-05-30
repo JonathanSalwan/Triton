@@ -88,9 +88,11 @@ namespace triton {
 
 
     void AstGarbageCollector::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
-      std::vector<triton::ast::AbstractNode*>::const_iterator it;
+      if (root == nullptr)
+        return;
+
       uniqueNodes.insert(root);
-      for (it = root->getChilds().begin(); it != root->getChilds().end(); it++)
+      for (auto it = root->getChilds().begin(); it != root->getChilds().end(); it++)
         this->extractUniqueAstNodes(uniqueNodes, *it);
     }
 
