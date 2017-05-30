@@ -591,10 +591,16 @@ namespace triton {
 
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+
         /* Create the AST node */
         triton::ast::AbstractNode* symVarNode = astCtxt.variable(*symVar);
+
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteSymbolicVariableValue(*symVar, cv);
+
+        /* Record the aligned symbolic variable for a symbolic optimization */
+        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
+          this->addAlignedMemory(memAddr, symVarSize, symVarNode);
 
         /*  Split expression in bytes */
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
@@ -618,8 +624,6 @@ namespace triton {
 
           /* Add the new memory reference */
           this->addMemoryReference(memAddr+index, se->getId());
-          if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
-            removeAlignedMemory(memAddr+index, BYTE_SIZE);
         }
 
         return symVar;
