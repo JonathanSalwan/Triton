@@ -168,7 +168,7 @@ namespace triton {
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
             if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+              this->astGarbageCollector->extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
               it->getMemory().setLeaAst(nullptr);
             }
           }
