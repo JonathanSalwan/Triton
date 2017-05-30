@@ -114,12 +114,20 @@ namespace triton {
       std::set<triton::ast::AbstractNode*> uniqueNodes;
       std::vector<triton::engines::symbolic::SymbolicExpression*> newVector;
 
+      auto& loadAccess        = inst.getLoadAccess();
+      auto& readRegisters     = inst.getReadRegisters();
+      auto& readImmediates    = inst.getReadImmediates();
+      auto& storeAccess       = inst.getStoreAccess();
+      auto& writtenRegisters  = inst.getWrittenRegisters();
+
       /* Clear unused data */
       inst.memoryAccess.clear();
       inst.registerState.clear();
 
       /* Set the taint */
       inst.setTaint();
+
+      // ----------------------------------------------------------------------
 
       /*
        * If the symbolic engine is disable we delete symbolic
@@ -131,6 +139,8 @@ namespace triton {
         *this->symbolicEngine = *this->backupSymbolicEngine;
       }
 
+      // ----------------------------------------------------------------------
+
       /*
        * If the symbolic engine is defined to process symbolic
        * execution only on tainted instructions, we delete all
@@ -140,12 +150,65 @@ namespace triton {
         this->removeSymbolicExpressions(inst, uniqueNodes);
       }
 
+      // ----------------------------------------------------------------------
+
       /*
        * If the symbolic engine is defined to process symbolic
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
       if (this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
+        /* Clean memory operands */
+        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
+          if (it->getType() == triton::arch::OP_MEM) {
+            if (it->getMemory().getLeaAst()->isSymbolized() == false) {
+              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+              it->getMemory().setLeaAst(nullptr);
+            }
+          }
+        }
+
+        /* Clean implicit and explicit semantics - MEM */
+        for (auto it = loadAccess.begin(); it != loadAccess.end();) {
+          if (std::get<1>(*it)->isSymbolized() == false)
+            loadAccess.erase(it++);
+          else
+            ++it;
+        }
+
+        /* Clean implicit and explicit semantics - REG */
+        for (auto it = readRegisters.begin(); it != readRegisters.end();) {
+          if (std::get<1>(*it)->isSymbolized() == false)
+            readRegisters.erase(it++);
+          else
+            ++it;
+        }
+
+        /* Clean implicit and explicit semantics - IMM */
+        for (auto it = readImmediates.begin(); it != readImmediates.end();) {
+          if (std::get<1>(*it)->isSymbolized() == false)
+            readImmediates.erase(it++);
+          else
+            ++it;
+        }
+
+        /* Clean implicit and explicit semantics - MEM */
+        for (auto it = storeAccess.begin(); it != storeAccess.end();) {
+          if (std::get<1>(*it)->isSymbolized() == false)
+            storeAccess.erase(it++);
+          else
+            ++it;
+        }
+
+        /* Clean implicit and explicit semantics - REG */
+        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
+          if (std::get<1>(*it)->isSymbolized() == false)
+            writtenRegisters.erase(it++);
+          else
+            ++it;
+        }
+
+        /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
           if ((*it)->getAst()->isSymbolized() == false) {
             this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
@@ -156,6 +219,8 @@ namespace triton {
         }
         inst.symbolicExpressions = newVector;
       }
+
+      // ----------------------------------------------------------------------
 
       /*
        * If there is no symbolic expression, clean memory operands AST
@@ -169,12 +234,6 @@ namespace triton {
             it->getMemory().setLeaAst(nullptr);
           }
         }
-
-        auto& loadAccess        = inst.getLoadAccess();
-        auto& readRegisters     = inst.getReadRegisters();
-        auto& readImmediates    = inst.getReadImmediates();
-        auto& storeAccess       = inst.getStoreAccess();
-        auto& writtenRegisters  = inst.getWrittenRegisters();
 
         /* Implicit and explicit semantics - MEM */
         for (auto it = loadAccess.begin(); it != loadAccess.end(); it++)
@@ -203,6 +262,8 @@ namespace triton {
         storeAccess.clear();
         writtenRegisters.clear();
       }
+
+      // ----------------------------------------------------------------------
 
       /* Free collected nodes */
       this->astGarbageCollector.freeAstNodes(uniqueNodes);
