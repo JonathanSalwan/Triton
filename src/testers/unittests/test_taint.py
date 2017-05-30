@@ -451,3 +451,21 @@ class TestTaint(unittest.TestCase):
         Triton.setTaintMemory(MemoryAccess(0x1000, 1), False)
         self.assertFalse(Triton.isMemoryTainted(0x1000))
 
+    def test_taint_off_on(self):
+        """Taint off / on"""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+
+        self.assertTrue(Triton.isTaintEngineEnabled())
+
+        self.assertFalse(Triton.isRegisterTainted(Triton.Register(REG.X86_64.RAX)))
+        Triton.setTaintRegister(Triton.Register(REG.X86_64.RAX), True)
+        self.assertTrue(Triton.isRegisterTainted(Triton.Register(REG.X86_64.RAX)))
+
+        Triton.enableTaintEngine(False)
+        self.assertFalse(Triton.isTaintEngineEnabled())
+
+        self.assertTrue(Triton.isRegisterTainted(Triton.Register(REG.X86_64.RAX)))
+        Triton.setTaintRegister(Triton.Register(REG.X86_64.RAX), False)
+        self.assertTrue(Triton.isRegisterTainted(Triton.Register(REG.X86_64.RAX)))
+

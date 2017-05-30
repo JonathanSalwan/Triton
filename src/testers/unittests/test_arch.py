@@ -26,7 +26,9 @@ class TestX86Arch(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
+        self.assertFalse(self.Triton.isArchitectureValid())
         self.Triton.setArchitecture(ARCH.X86)
+        self.assertTrue(self.Triton.isArchitectureValid())
 
     def test_registers(self):
         """Check some register can't be accessed on X86 arch."""
@@ -60,7 +62,9 @@ class TestX8664Arch(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.Triton = TritonContext()
+        self.assertFalse(self.Triton.isArchitectureValid())
         self.Triton.setArchitecture(ARCH.X86_64)
+        self.assertTrue(self.Triton.isArchitectureValid())
 
     def test_registers(self):
         """Check X86_64 specific registers exists."""
