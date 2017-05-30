@@ -162,7 +162,7 @@ namespace triton {
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
             if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+              // FIXME: Should extract nodes
               it->getMemory().setLeaAst(nullptr);
             }
           }
@@ -171,6 +171,7 @@ namespace triton {
         /* Clean implicit and explicit semantics - MEM */
         for (auto it = loadAccess.begin(); it != loadAccess.end();) {
           if (std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
             loadAccess.erase(it++);
           else
             ++it;
@@ -179,6 +180,7 @@ namespace triton {
         /* Clean implicit and explicit semantics - REG */
         for (auto it = readRegisters.begin(); it != readRegisters.end();) {
           if (std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
             readRegisters.erase(it++);
           else
             ++it;
@@ -187,6 +189,7 @@ namespace triton {
         /* Clean implicit and explicit semantics - IMM */
         for (auto it = readImmediates.begin(); it != readImmediates.end();) {
           if (std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
             readImmediates.erase(it++);
           else
             ++it;
@@ -195,6 +198,7 @@ namespace triton {
         /* Clean implicit and explicit semantics - MEM */
         for (auto it = storeAccess.begin(); it != storeAccess.end();) {
           if (std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
             storeAccess.erase(it++);
           else
             ++it;
@@ -203,6 +207,7 @@ namespace triton {
         /* Clean implicit and explicit semantics - REG */
         for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
           if (std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
             writtenRegisters.erase(it++);
           else
             ++it;
