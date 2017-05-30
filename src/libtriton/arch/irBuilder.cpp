@@ -163,7 +163,7 @@ namespace triton {
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
-      if (this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
+      if (this->symbolicEngine->isEnabled() && this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clean memory operands */
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
@@ -232,7 +232,7 @@ namespace triton {
        * If there is no symbolic expression, clean memory operands AST
        * and implicit/explicit semantics AST to avoid memory leak.
        */
-      if (inst.symbolicExpressions.size() == 0) {
+      else if (inst.symbolicExpressions.size() == 0) {
         /* Memory operands */
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
