@@ -166,13 +166,14 @@ namespace triton {
         for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
           if (it->getType() == triton::arch::OP_MEM) {
             this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            it->getMemory().setLeaAst(nullptr);
           }
         }
 
         /* Implicit and explicit semantics - MEM */
-        const auto& loadAccess     = inst.getLoadAccess();
-        const auto& readRegisters  = inst.getReadRegisters();
-        const auto& readImmediates = inst.getReadImmediates();
+        auto& loadAccess     = inst.getLoadAccess();
+        auto& readRegisters  = inst.getReadRegisters();
+        auto& readImmediates = inst.getReadImmediates();
 
         for (auto it = loadAccess.begin(); it != loadAccess.end(); it++)
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
@@ -184,6 +185,11 @@ namespace triton {
         /* Implicit and explicit semantics - IMM */
         for (auto it = readImmediates.begin(); it != readImmediates.end(); it++)
           this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+
+        /* Clear lists */
+        loadAccess.clear();
+        readRegisters.clear();
+        readImmediates.clear();
       }
 
       /* Free collected nodes */
