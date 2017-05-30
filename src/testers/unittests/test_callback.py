@@ -43,6 +43,17 @@ class TestCallback(unittest.TestCase):
         self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
         self.assertFalse(flag)
 
+        # Remove all callbacks
+        flag = False
+        self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.assertTrue(flag)
+
+        flag = False
+        self.Triton.removeAllCallbacks()
+        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.assertFalse(flag)
+
     @staticmethod
     def cb_flag(api, x):
         global flag
