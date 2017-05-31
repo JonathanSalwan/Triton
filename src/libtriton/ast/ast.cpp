@@ -45,10 +45,11 @@ namespace triton {
       /* virtual */
     }
 
-    AstContext& AbstractNode::getContext() const
-    {
+
+    AstContext& AbstractNode::getContext() const {
       return ctxt;
     }
+
 
     enum kind_e AbstractNode::getKind(void) const {
       return this->kind;
