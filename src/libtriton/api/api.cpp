@@ -404,7 +404,7 @@ namespace triton {
       this->z3Interface         = nullptr;
     }
 
-    // Use default mode again.
+    // Use default modes.
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context

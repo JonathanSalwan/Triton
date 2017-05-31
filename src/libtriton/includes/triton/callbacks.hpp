@@ -67,7 +67,6 @@ namespace triton {
     /*! \brief The callbacks class */
     class Callbacks {
       protected:
-
         //! [c++] Callbacks for all concrete memory needs.
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
 
