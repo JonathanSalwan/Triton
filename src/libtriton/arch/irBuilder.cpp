@@ -215,7 +215,7 @@ namespace triton {
 
         /* Clean symbolic expressions */
         for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
-          if ((*it)->getAst()->isSymbolized() == false) {
+          if ((*it)->isSymbolized() == false) {
             this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             this->symbolicEngine->removeSymbolicExpression((*it)->getId());
           }
