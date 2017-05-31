@@ -140,3 +140,34 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         except:
             self.fail("test_6() raised unexpectedly!")
 
+    def test_7(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
+
+        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        ctx.processing(inst)
+
+        self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
+        self.assertIsNone(inst.getOperands()[1].getLeaAst())
+
+    def test_8(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
+        ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
+        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+
+        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        ctx.processing(inst)
+
+        self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
+        self.assertIsNotNone(inst.getOperands()[1].getLeaAst())
+
+        try:
+            str(inst.getOperands()[1].getLeaAst())
+        except:
+            self.fail("test_8() raised unexpectedly!")
+
