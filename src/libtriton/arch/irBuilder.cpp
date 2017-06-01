@@ -197,9 +197,17 @@ namespace triton {
 
         /* Clean implicit and explicit semantics - MEM */
         for (auto it = storeAccess.begin(); it != storeAccess.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
+          if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
+            ++it;
+
+          else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
             // FIXME: Should extract nodes
             storeAccess.erase(it++);
+
+          else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
+            // FIXME: Should extract nodes
+            storeAccess.erase(it++);
+
           else
             ++it;
         }
