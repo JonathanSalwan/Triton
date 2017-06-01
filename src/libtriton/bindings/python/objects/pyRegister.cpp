@@ -92,6 +92,10 @@ Returns the bitvector of the register.
 - <b>integer getConcreteValue(void)</b><br>
 Returns the concrete value assigned to this register operand.
 
+- <b>\ref py_REG_page getId(void)</b><br>
+Returns the enum of the register.<br>
+e.g: `REG.X86_64.RBX`
+
 - <b>string getName(void)</b><br>
 Returns the name of the register.<br>
 e.g: `rbx`
@@ -148,6 +152,16 @@ namespace triton {
       static PyObject* Register_getConcreteValue(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint512(PyRegister_AsRegister(self)->getConcreteValue());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getId(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyRegister_AsRegister(self)->getId());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -290,6 +304,7 @@ namespace triton {
         {"getBitSize",        Register_getBitSize,       METH_NOARGS,    ""},
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
         {"getConcreteValue",  Register_getConcreteValue, METH_NOARGS,    ""},
+        {"getId",             Register_getId,            METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},

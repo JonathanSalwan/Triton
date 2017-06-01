@@ -75,7 +75,7 @@ False
 >>> expr_1.isRegister()
 True
 
->>> print expr_1.getOriginRegister()
+>>> print expr_1.getOrigin()
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~
@@ -100,11 +100,10 @@ e.g: `SYMEXPR.REG`
 - <b>\ref py_AstNode_page getNewAst(void)</b><br>
 Returns a new AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- <b>\ref py_MemoryAccess_page getOriginMemory(void)</b><br>
-Returns the origin memory access if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
-
-- <b>\ref py_Register_page getOriginRegister(void)</b><br>
-Returns the origin register if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
+- <b>\ref py_MemoryAccess_page / \ref py_Register_page getOrigin(void)</b><br>
+Returns the origin of the symbolic expression. For example, if the symbolic expression is assigned to a memory cell, this function returns
+a \ref py_MemoryAccess_page, else if it is assigned to a register, this function returns a \ref py_Register_page otherwise it returns None. Note that
+for a \ref py_MemoryAccess_page all information about LEA are lost at this level.
 
 - <b>bool isMemory(void)</b><br>
 Returns true if the expression is assigned to a memory.
@@ -189,19 +188,16 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_getOriginMemory(PyObject* self, PyObject* noarg) {
+      static PyObject* SymbolicExpression_getOrigin(PyObject* self, PyObject* noarg) {
         try {
-          return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isMemory())
+            return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
 
+          else if (PySymbolicExpression_AsSymbolicExpression(self)->isRegister())
+            return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
 
-      static PyObject* SymbolicExpression_getOriginRegister(PyObject* self, PyObject* noarg) {
-        try {
-          return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
+          Py_INCREF(Py_None);
+          return Py_None;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -310,8 +306,7 @@ namespace triton {
         {"getId",             SymbolicExpression_getId,             METH_NOARGS,    ""},
         {"getKind",           SymbolicExpression_getKind,           METH_NOARGS,    ""},
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
-        {"getOriginMemory",   SymbolicExpression_getOriginMemory,   METH_NOARGS,    ""},
-        {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
+        {"getOrigin",         SymbolicExpression_getOrigin,         METH_NOARGS,    ""},
         {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
         {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},
         {"isSymbolized",      SymbolicExpression_isSymbolized,      METH_NOARGS,    ""},
