@@ -1,6 +1,10 @@
 if(NOT STATICLIB)
     enable_testing()
 
+    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND ASAN)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -shared-libasan")
+    endif()
+
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
 
     add_executable(taint_reg taint_reg.cpp)
