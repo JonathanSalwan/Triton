@@ -371,6 +371,29 @@ class TestSymboliqueEngineAligned(BaseTestSimulation, unittest.TestCase):
         super(TestSymboliqueEngineAligned, self).setUp()
 
 
+class TestSymboliqueEngineOnlySym(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ONLY_ON_SYMBOLIZED."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        setArchitecture(ARCH.X86_64)
+        enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        super(TestSymboliqueEngineOnlySym, self).setUp()
+
+
+class TestSymboliqueEngineAlignedOnlySym(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ALIGNED_MEMORY and ONLY_ON_SYMBOLIZED."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        setArchitecture(ARCH.X86_64)
+        enableMode(MODE.ALIGNED_MEMORY, True)
+        enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        super(TestSymboliqueEngineAlignedOnlySym, self).setUp()
+
+
 class TestSymboliqueEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic engine with ALIGNED_MEMORY and AST Dict."""
