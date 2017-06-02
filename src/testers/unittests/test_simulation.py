@@ -369,6 +369,18 @@ class TestSymboliqueEngineAligned(BaseTestSimulation, unittest.TestCase):
         super(TestSymboliqueEngineAligned, self).setUp()
 
 
+class TestSymboliqueEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ONLY_ON_SYMBOLIZED."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        super(TestSymboliqueEngineOnlySymbolized, self).setUp()
+
+
 class TestSymboliqueEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ALIGNED_MEMORY and ONLY_ON_SYMBOLIZED."""
