@@ -1,6 +1,6 @@
 #!/usr/bin/env python2
 # coding: utf-8
-"""Test Symbolic Variable."""
+"""Test Symbolic Expression."""
 
 import unittest
 from triton import TritonContext, Instruction, ARCH, REG, SYMEXPR

@@ -346,7 +346,7 @@ class BaseTestSimulation(DefCamp2015, SeedCoverage, Emu1):
     """BaseClass to test the simulation."""
 
 
-class TestSymboliqueEngineNoOptim(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineNoOptim(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine without optimization."""
 
@@ -354,10 +354,10 @@ class TestSymboliqueEngineNoOptim(BaseTestSimulation, unittest.TestCase):
         """Define the arch."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        super(TestSymboliqueEngineNoOptim, self).setUp()
+        super(TestSymbolicEngineNoOptim, self).setUp()
 
 
-class TestSymboliqueEngineAligned(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineAligned(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ALIGNED_MEMORY."""
 
@@ -366,10 +366,10 @@ class TestSymboliqueEngineAligned(BaseTestSimulation, unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        super(TestSymboliqueEngineAligned, self).setUp()
+        super(TestSymbolicEngineAligned, self).setUp()
 
 
-class TestSymboliqueEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ONLY_ON_SYMBOLIZED."""
 
@@ -378,10 +378,10 @@ class TestSymboliqueEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        super(TestSymboliqueEngineOnlySymbolized, self).setUp()
+        super(TestSymbolicEngineOnlySymbolized, self).setUp()
 
 
-class TestSymboliqueEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ALIGNED_MEMORY and ONLY_ON_SYMBOLIZED."""
 
@@ -391,10 +391,10 @@ class TestSymboliqueEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.Tes
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
         self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        super(TestSymboliqueEngineAlignedOnlySymbolized, self).setUp()
+        super(TestSymbolicEngineAlignedOnlySymbolized, self).setUp()
 
 
-class TestSymboliqueEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic engine with ALIGNED_MEMORY and AST Dict."""
 
@@ -404,14 +404,14 @@ class TestSymboliqueEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
         self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymboliqueEngineAlignedAst, self).setUp()
+        super(TestSymbolicEngineAlignedAst, self).setUp()
 
     @unittest.skip("segfault")
     def test_defcamp_2015(self):
         pass
 
 
-class TestSymboliqueEngineAst(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineAst(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic engine with AST Dictionnary."""
 
@@ -420,14 +420,14 @@ class TestSymboliqueEngineAst(BaseTestSimulation, unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymboliqueEngineAst, self).setUp()
+        super(TestSymbolicEngineAst, self).setUp()
 
     @unittest.skip("segfault")
     def test_defcamp_2015(self):
         pass
 
 
-class TestSymboliqueEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
+class TestSymbolicEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic engine with AST Dictionnary and concretization."""
 
@@ -436,10 +436,10 @@ class TestSymboliqueEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymboliqueEngineConcreteAst, self).setUp()
+        super(TestSymbolicEngineConcreteAst, self).setUp()
 
     def test_emulate(self):
-        super(TestSymboliqueEngineConcreteAst, self).test_emulate(False)
+        super(TestSymbolicEngineConcreteAst, self).test_emulate(False)
 
     @unittest.skip("No seed coverage with concretization.")
     def test_seed_coverage(self):

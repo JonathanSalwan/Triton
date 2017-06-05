@@ -709,10 +709,6 @@ namespace triton {
         auto counter = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto zf      = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
-        /* Update instruction address if undefined */
-        if (!inst.getAddress())
-          inst.setAddress(this->architecture->getConcreteRegisterValue(pc.getConstRegister()).convert_to<triton::uint64>());
-
         switch (inst.getPrefix()) {
 
           case triton::arch::x86::ID_PREFIX_REP: {

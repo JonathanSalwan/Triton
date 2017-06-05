@@ -102,6 +102,10 @@ namespace triton {
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();
 
+      /* Update instruction address if undefined */
+      if (!inst.getAddress())
+        inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getParentRegister(ID_REG_IP)).convert_to<triton::uint64>());
+
       /* Backup the symbolic engine in the case where only the taint is available. */
       if (!this->symbolicEngine->isEnabled()) {
         *this->backupSymbolicEngine = *this->symbolicEngine;
