@@ -5,11 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/pythonObjects.hpp>
+#include <triton/pythonUtils.hpp>
 #include <triton/api.hpp>
 #include <triton/ast.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/pythonObjects.hpp>
-#include <triton/pythonUtils.hpp>
 
 
 

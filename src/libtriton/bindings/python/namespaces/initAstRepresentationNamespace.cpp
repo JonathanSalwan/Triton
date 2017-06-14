@@ -5,10 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <triton/astRepresentation.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
-
+#include <triton/astRepresentation.hpp>
 
 
 /*! \page py_AST_REPRESENTATION_page AST_REPRESENTATION
