@@ -519,7 +519,7 @@ namespace triton {
         std::stringstream stream;
 
         for (auto sv : this->symbolicVariables)
-          stream << astCtxt.declareFunction(sv.second->getName(), astCtxt.bvdecl(sv.second->getSize()));
+          stream << this->astCtxt.declareFunction(sv.second->getName(), this->astCtxt.bvdecl(sv.second->getSize()));
 
         return stream.str();
       }
@@ -564,7 +564,7 @@ namespace triton {
         SymbolicExpression* expression = this->getSymbolicExpressionFromId(exprId);
 
         symVar = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
-        tmp = astCtxt.variable(*symVar);
+        tmp = this->astCtxt.variable(*symVar);
 
         if (expression->getAst())
             this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
@@ -593,7 +593,7 @@ namespace triton {
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
 
         /* Create the AST node */
-        triton::ast::AbstractNode* symVarNode = astCtxt.variable(*symVar);
+        triton::ast::AbstractNode* symVarNode = this->astCtxt.variable(*symVar);
 
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteSymbolicVariableValue(*symVar, cv);
@@ -606,7 +606,7 @@ namespace triton {
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
 
           /* Isolate the good part of the symbolic variable */
-          tmp = astCtxt.extract(((BYTE_SIZE_BIT * (index+1)) - 1), ((BYTE_SIZE_BIT * (index+1)) - BYTE_SIZE_BIT), symVarNode);
+          tmp = this->astCtxt.extract(((BYTE_SIZE_BIT * (index+1)) - 1), ((BYTE_SIZE_BIT * (index+1)) - BYTE_SIZE_BIT), symVarNode);
 
           /* Check if the memory address is already defined */
           memSymId = this->getSymbolicMemoryId(memAddr+index);
@@ -631,37 +631,37 @@ namespace triton {
 
 
       SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
-        SymbolicVariable* symVar        = nullptr;
-        SymbolicExpression* expression  = nullptr;
-        triton::usize regSymId          = triton::engines::symbolic::UNSET;
-        triton::arch::registers_e parentId         = reg.getParent();
-        triton::uint32 symVarSize       = reg.getBitSize();
-        triton::uint512 cv              = reg.hasConcreteValue() ? reg.getConcreteValue() : this->architecture->getConcreteRegisterValue(reg);
+        SymbolicVariable* symVar            = nullptr;
+        SymbolicExpression* expression      = nullptr;
+        triton::usize regSymId              = triton::engines::symbolic::UNSET;
+        triton::arch::RegisterSpec parent   = this->architecture->getRegister(reg.getParent());
+        triton::uint32 symVarSize           = reg.getBitSize();
+        triton::uint512 cv                  = reg.hasConcreteValue() ? reg.getConcreteValue() : this->architecture->getConcreteRegisterValue(reg);
 
-        if (!this->architecture->isRegisterValid(parentId))
+        if (!this->architecture->isRegisterValid(parent.getId()))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         regSymId = this->getSymbolicRegisterId(reg);
         if (regSymId == triton::engines::symbolic::UNSET) {
           /* Create the symbolic variable */
-          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parent.getId(), symVarSize, symVarComment);
           /* Create the AST node */
-          triton::ast::AbstractNode* tmp = astCtxt.variable(*symVar);
+          triton::ast::AbstractNode* tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
           /* Setup the concrete value to the symbolic variable */
           this->setConcreteSymbolicVariableValue(*symVar, cv);
           /* Create the symbolic expression */
           SymbolicExpression* se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
           se->setOriginRegister(reg);
-          this->symbolicReg[parentId] = se->getId();
+          this->symbolicReg[parent.getId()] = se->getId();
         }
 
         else {
           /* Get the symbolic expression */
           expression = this->getSymbolicExpressionFromId(regSymId);
           /* Create the symbolic variable */
-          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parentId, symVarSize, symVarComment);
+          symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parent.getId(), symVarSize, symVarComment);
           /* Create the AST node */
-          triton::ast::AbstractNode* tmp = astCtxt.variable(*symVar);
+          triton::ast::AbstractNode* tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
           /* Setup the concrete value to the symbolic variable */
           this->setConcreteSymbolicVariableValue(*symVar, cv);
           /* Set the AST node */
@@ -713,7 +713,7 @@ namespace triton {
 
       /* Returns a symbolic immediate */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
-        triton::ast::AbstractNode* node = astCtxt.bv(imm.getValue(), imm.getBitSize());
+        triton::ast::AbstractNode* node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
         return node;
       }
 
@@ -751,13 +751,13 @@ namespace triton {
           symMem = this->getSymbolicMemoryId(address + size - 1);
           /* Check if the memory cell is already symbolic */
           if (symMem != triton::engines::symbolic::UNSET) {
-            tmp = astCtxt.reference(*this->getSymbolicExpressionFromId(symMem));
-            opVec.push_back(astCtxt.extract((BYTE_SIZE_BIT - 1), 0, tmp));
+            tmp = this->astCtxt.reference(*this->getSymbolicExpressionFromId(symMem));
+            opVec.push_back(this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, tmp));
           }
           /* Otherwise, use the concerte value */
           else {
-            tmp = astCtxt.bv(concreteValue[size - 1], BYTE_SIZE_BIT);
-            opVec.push_back(astCtxt.extract((BYTE_SIZE_BIT - 1), 0, tmp));
+            tmp = this->astCtxt.bv(concreteValue[size - 1], BYTE_SIZE_BIT);
+            opVec.push_back(this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, tmp));
           }
           size--;
         }
@@ -770,7 +770,7 @@ namespace triton {
           case QWORD_SIZE:
           case DWORD_SIZE:
           case WORD_SIZE:
-            tmp = astCtxt.concat(opVec);
+            tmp = this->astCtxt.concat(opVec);
             break;
           case BYTE_SIZE:
             tmp = opVec.front();
@@ -809,11 +809,11 @@ namespace triton {
 
         /* Check if the register is already symbolic */
         if (symReg != triton::engines::symbolic::UNSET)
-          op = astCtxt.extract(high, low, astCtxt.reference(*this->getSymbolicExpressionFromId(symReg)));
+          op = this->astCtxt.extract(high, low, this->astCtxt.reference(*this->getSymbolicExpressionFromId(symReg)));
 
         /* Otherwise, use the concerte value */
         else
-          op = astCtxt.bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
+          op = this->astCtxt.bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
 
         return op;
       }
@@ -860,7 +860,7 @@ namespace triton {
          */
         while (writeSize) {
           /* Extract each byte of the memory */
-          tmp = astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference - " + comment);
           se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           ret.push_back(tmp);
@@ -883,7 +883,7 @@ namespace triton {
         }
 
         /* Otherwise, we return the concatenation of all symbolic expressions */
-        tmp = astCtxt.concat(ret);
+        tmp = this->astCtxt.concat(ret);
 
         /* Synchronize the memory operand */
         mem.setConcreteValue(tmp->evaluate());
@@ -917,23 +917,23 @@ namespace triton {
         switch (regSize) {
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
-              finalExpr = astCtxt.concat(astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
-              finalExpr = astCtxt.concat(astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
-                            astCtxt.concat(node, astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
+              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
+                            this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
             break;
 
           case WORD_SIZE:
-            finalExpr = astCtxt.concat(astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
 
           case DWORD_SIZE:
             /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
             if (this->architecture->getArchitecture() == triton::arch::ARCH_X86_64) {
-              finalExpr = astCtxt.zx(DWORD_SIZE_BIT, node);
+              finalExpr = this->astCtxt.zx(DWORD_SIZE_BIT, node);
               break;
             }
 
@@ -941,7 +941,7 @@ namespace triton {
           case DQWORD_SIZE:
           case QQWORD_SIZE:
           case DQQWORD_SIZE:
-            finalExpr = astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+            finalExpr = this->astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
             break;
         }
 
@@ -1030,7 +1030,7 @@ namespace triton {
          */
         while (writeSize) {
           /* Extract each byte of the memory */
-          triton::ast::AbstractNode* tmp = astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          triton::ast::AbstractNode* tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           SymbolicExpression* byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE, tmp->evaluate()));
           /* Assign memory with little endian */
@@ -1117,26 +1117,26 @@ namespace triton {
 
 
           /* Initialize the AST of the memory access (LEA) -> ((pc + base) + (index * scale) + disp) */
-          auto leaAst = astCtxt.bvadd(
-                          (mem.getPcRelative() ? astCtxt.bv(mem.getPcRelative(), bitSize) :
+          auto leaAst = this->astCtxt.bvadd(
+                          (mem.getPcRelative() ? this->astCtxt.bv(mem.getPcRelative(), bitSize) :
                             (this->architecture->isRegisterValid(base) ? this->buildSymbolicRegister(base) :
-                              astCtxt.bv(0, bitSize)
+                              this->astCtxt.bv(0, bitSize)
                             )
                           ),
-                          astCtxt.bvadd(
-                            astCtxt.bvmul(
-                              (this->architecture->isRegisterValid(index) ? this->buildSymbolicRegister(index) : astCtxt.bv(0, bitSize)),
-                              astCtxt.bv(scaleValue, bitSize)
+                          this->astCtxt.bvadd(
+                            this->astCtxt.bvmul(
+                              (this->architecture->isRegisterValid(index) ? this->buildSymbolicRegister(index) : this->astCtxt.bv(0, bitSize)),
+                              this->astCtxt.bv(scaleValue, bitSize)
                             ),
-                            astCtxt.bv(dispValue, bitSize)
+                            this->astCtxt.bv(dispValue, bitSize)
                           )
                         );
 
           /* Use segments as base address instead of selector into the GDT. */
           if (segmentValue) {
-            leaAst = astCtxt.bvadd(
-                       astCtxt.bv(segmentValue, seg.getBitSize()),
-                       astCtxt.sx((seg.getBitSize() - bitSize), leaAst)
+            leaAst = this->astCtxt.bvadd(
+                       this->astCtxt.bv(segmentValue, seg.getBitSize()),
+                       this->astCtxt.sx((seg.getBitSize() - bitSize), leaAst)
                      );
           }
 
