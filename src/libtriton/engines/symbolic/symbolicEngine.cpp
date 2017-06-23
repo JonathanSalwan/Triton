@@ -649,7 +649,7 @@ namespace triton {
           /* Setup the concrete value to the symbolic variable */
           symVar->setConcreteValue(cv);
           /* Create the AST node */
-          triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
+          triton::ast::AbstractNode* tmp = triton::ast::zx(reg.getParent().getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
           /* Create the symbolic expression */
           SymbolicExpression* se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
           se->setOriginRegister(reg);
@@ -664,7 +664,7 @@ namespace triton {
           /* Setup the concrete value to the symbolic variable */
           symVar->setConcreteValue(cv);
           /* Create the AST node */
-          triton::ast::AbstractNode* tmp = triton::ast::variable(*symVar);
+          triton::ast::AbstractNode* tmp = triton::ast::zx(reg.getParent().getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
           /* Set the AST node */
           tmp->setParent(expression->getAst()->getParents());
           expression->setAst(tmp);
