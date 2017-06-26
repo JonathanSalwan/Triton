@@ -78,11 +78,11 @@ namespace triton {
         //! Constructor by copy.
         AbstractNode(const AbstractNode& copy, AstContext& ctxt);
 
-        //! Access to its context
-        AstContext& getContext() const;
-
         //! Destructor.
         virtual ~AbstractNode();
+
+        //! Access to its context
+        AstContext& getContext(void) const;
 
         //! Returns the kind of the node.
         enum kind_e getKind(void) const;

@@ -46,8 +46,8 @@ namespace triton {
     }
 
 
-    AstContext& AbstractNode::getContext() const {
-      return ctxt;
+    AstContext& AbstractNode::getContext(void) const {
+      return this->ctxt;
     }
 
 
