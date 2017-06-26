@@ -18,55 +18,45 @@
 \section engine_Taint_description Description
 <hr>
 
-Taint analysis is used to know at each program point what part of memory
-and register are controllable by the user input. There is three kinds of
-taint granularity but an infinite number of ways to implement this analysis:
+The purpose of dynamic taint analysis is to track the information flow from the
+sources (usually user inputs) to the targets (such as control-flow value). It
+is thus capable of analyzing which region of the memory and registers are
+controllable by user inputs, which enables a further inspection of security
+properties such as whether the control-flow values can be *infected* by user
+inputs to allow control-flow hijacking.
 
-- Over-approximation
-- Perfect-approximation
-- Under-approximation
+A taint policy typically consists of the following three parts:
 
-Triton uses an **over-approximation** and we will describe why.
+1) taint introduction rules
+2) taint propagation rules
+3) taint checking rules
+
+The `libtriton`'s `TaintEngine` implements an architecture-independent **tag
+propagation rules** while providing APIs for the taint introduction and taint
+checking, enabling users to define their own taint policy. We currently
+implement the semantics of x86 ISA only, but the core propagation rules can be
+extended to other ISAs as well.
+
 
 \section engine_Taint_over_approximation An Over-Approximation
 <hr>
 
-With an **over-approximation**, we lose precision and we may provide false
-positives. Example:
+When implementing the taint propagation rules, there are three implementation
+choices, each with accuracy-performance trade-offs.
 
-~~~~~~~~~~~~~{.asm}
-mov ax, 0x1122                ; RAX is untainted
-mov al, byte ptr [user_input] ; RAX is tainted
-cmp ah, 0x99                  ; can we control this comparison?
-~~~~~~~~~~~~~
+- Over-approximation
+- Precise-approximation
+- Under-approximation
 
-If we ask to the taint engine if we can control the comparison, it will say
-`YES` because `RAX` is tagged has tainted even if it's false. Actually,
-`RAX[63..8]` is not tainted but RAX[7..0] is.
+Triton currently implements an **over-approximation**, which has the following
+advantages over precise-approximation:
 
-The only advantages of an **over-approximation** are:
+- Easy to implement.
+- Low runtime overhead.
+- Consumes little memory.
 
-- Easy to implement
-- No cost of time
-- No cost of RAM
-
-This method is destructive on a big program, and so, totally useless for an
-analyst. An analyst wants precisions even if this is not all possibilities.
-Then, why an analyst may want to know if a register is tainted?
-
-In exploit development, what the user wants in reality is knowing if a register
-is controllable by himself and knowing what values can hold this register at
-specific program point. Taint analysis (any over-approximation you choose)
-cannot give you this kind of information. A lots of instructions have an
-influence on the value that can hold a register. (Path conditions, arithmetic
-operations, ...)
-
-\subsection engine_Taint_big_quesiton The big question is: How can we gain time without losing precision?
-
-Applying a symbolic execution and asking a model at each program point to know
-if a register is controllable or not is pretty expensive. Therefore, we use an
-<b>over-approximation</b> to fix the loss of time and if a register is tainted,
-we ask a model for the precision.
+An over-approximation is also more suitable in the bit-level granularity as
+illustrated in the following scenario:
 
 `e.g`: Imagine this 16-bits register `[x-x-x---x-xx-x-x]` where `x` are bits
 that the user can control and `-` bits that the user cannot control. This
@@ -77,9 +67,42 @@ change with another input value. In this case, using a **perfect-approximation**
 or an **under-approximation** is **not useful**. What we want is only knowing
 what values can hold this register according to the input.
 
-That's why Triton uses **symbolic execution for precision** and an over-approximated
-tainting to know if we can ask a model to the SMT solver - Asking a model means that
-the symbolic variables are controllable by the user input.
+
+\subsection engine_Taint_precision_vs_performance Precision with the Cost in Performance
+
+An over-approximation may sacrifice the precision for the sake of
+simplicity and performance. Let's look at the following ASM code.
+
+~~~~~~~~~~~~~{.asm}
+mov ax, 0x1122                ; RAX is untainted
+mov al, byte ptr [user_input] ; RAX is tainted
+cmp ah, 0x99                  ; can we control this comparison?
+~~~~~~~~~~~~~
+
+Under our current over-approximation, the taint engine will raise a false
+positive (that says the `ah` is tainted while it actually is not) for this
+particular example, while only the seven bits of `RAX` (`RAX[7..0]`) is tainted
+while the other bits (`RAX[63..8]`) are not.
+
+This imprecision may raise excessively extraneous false positive on a big
+problem and make the tool totally useless in solving real problems. Let's
+consider a scenario when an attacker is developing an exploit of an executable.
+In this scenario, what the attacker wants to know is if a register at certain
+program location can be controlled by himself, and furthermore, to what values
+the register can be manipulated to hold. An over-approximation method including
+the dynamic taint analysis is not capable of giving him/her such elaborate
+information there are so many instructions which can manipulate a register at
+any given program location.
+
+In such situations, you can harness the power of symbolic execution by querying
+a model at a program point. This is a much pricier operation to perform than
+over-approximating dynamic taint analysis, but one can gain the precision while
+paying the cost of performance.
+
+This is why Triton uses **symbolic execution for precision** and an
+over-approximated tainting to know if we can ask a model to the SMT solver - by
+asking a model, we can query the solver and check if the symbolic variables are
+controllable by the user input.
 
 */
 
