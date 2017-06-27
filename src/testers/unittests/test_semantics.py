@@ -9,6 +9,36 @@ from triton import (TritonContext, ARCH, Instruction, OPCODE, Elf, REG, CPUSIZE,
                     MemoryAccess, MODE)
 
 
+def checkAstIntegrity(instruction):
+    """
+    This function check if all ASTs under an Instruction class are still
+    available.
+    """
+    try:
+        for se in instruction.getSymbolicExpressions():
+            str(se.getAst())
+
+        for x, y in instruction.getLoadAccess():
+            str(y)
+
+        for x, y in instruction.getStoreAccess():
+            str(y)
+
+        for x, y in instruction.getReadRegisters():
+            str(y)
+
+        for x, y in instruction.getWrittenRegisters():
+            str(y)
+
+        for x, y in instruction.getReadImmediates():
+            str(y)
+
+        return True
+
+    except:
+        return False
+
+
 class TestIR(unittest.TestCase):
 
     """Test IR."""
@@ -148,27 +178,7 @@ class TestIRQemu(unittest.TestCase):
                 break
 
             self.assertTrue(ret)
-
-            try:
-                for se in instruction.getSymbolicExpressions():
-                    str(se.getAst())
-
-                for x, y in instruction.getLoadAccess():
-                    str(y)
-
-                for x, y in instruction.getStoreAccess():
-                    str(y)
-
-                for x, y in instruction.getReadRegisters():
-                    str(y)
-
-                for x, y in instruction.getWrittenRegisters():
-                    str(y)
-
-                for x, y in instruction.getReadImmediates():
-                    str(y)
-            except:
-                self.fail("str(ast): raised unexpectedly!")
+            self.assertTrue(checkAstIntegrity(instruction))
 
             # Simulate routines
             self.hooking_handler()
