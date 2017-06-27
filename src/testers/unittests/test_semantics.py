@@ -149,6 +149,27 @@ class TestIRQemu(unittest.TestCase):
 
             self.assertTrue(ret)
 
+            try:
+                for se in instruction.getSymbolicExpressions():
+                    str(se.getAst())
+
+                for x, y in instruction.getLoadAccess():
+                    str(y)
+
+                for x, y in instruction.getStoreAccess():
+                    str(y)
+
+                for x, y in instruction.getReadRegisters():
+                    str(y)
+
+                for x, y in instruction.getWrittenRegisters():
+                    str(y)
+
+                for x, y in instruction.getReadImmediates():
+                    str(y)
+            except:
+                self.fail("str(ast): raised unexpectedly!")
+
             # Simulate routines
             self.hooking_handler()
 

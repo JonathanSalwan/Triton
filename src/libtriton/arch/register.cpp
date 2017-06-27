@@ -26,6 +26,14 @@ namespace triton {
     }
 
 
+    RegisterSpec::RegisterSpec(const RegisterSpec& other)
+      : BitsVector(other) {
+        this->name    = other.name;
+        this->id      = other.id;
+        this->parent  = other.parent;
+    }
+
+
     triton::arch::registers_e RegisterSpec::getId(void) const {
       return this->id;
     }
@@ -75,13 +83,21 @@ namespace triton {
     }
 
 
-    bool RegisterSpec::operator==(const RegisterSpec& reg1) const {
-      return getId() == reg1.getId();
+    bool RegisterSpec::operator==(const RegisterSpec& other) const {
+      return getId() == other.getId();
     }
 
 
-    bool RegisterSpec::operator!=(const RegisterSpec& reg1) const {
-      return !(*this == reg1);
+    bool RegisterSpec::operator!=(const RegisterSpec& other) const {
+      return !(*this == other);
+    }
+
+
+    void RegisterSpec::operator=(const RegisterSpec& other) {
+      BitsVector::operator=(other);
+      this->name    = other.name;
+      this->id      = other.id;
+      this->parent  = other.parent;
     }
 
 
@@ -110,14 +126,15 @@ namespace triton {
 
     Register::Register()
       : RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0),
-      concreteValue(0),
-      concreteValueDefined(false) {
+        concreteValue(0),
+        concreteValueDefined(false) {
     }
 
 
-    Register::Register(const RegisterSpec& spec, triton::uint512 concreteValue)
-      : RegisterSpec(spec) {
-      this->setConcreteValue(concreteValue);
+    Register::Register(const Register& other)
+      : RegisterSpec(other) {
+        this->concreteValue        = other.concreteValue;
+        this->concreteValueDefined = other.concreteValueDefined;
     }
 
 
@@ -125,6 +142,12 @@ namespace triton {
       : RegisterSpec(spec),
         concreteValue(0),
         concreteValueDefined(false) {
+    }
+
+
+    Register::Register(const RegisterSpec& spec, triton::uint512 concreteValue)
+      : RegisterSpec(spec) {
+      this->setConcreteValue(concreteValue);
     }
 
 
@@ -160,13 +183,20 @@ namespace triton {
     }
 
 
-    bool Register::operator==(const Register& reg1) const {
-      return (RegisterSpec::operator==(reg1) && getConcreteValue() == reg1.getConcreteValue());
+    bool Register::operator==(const Register& other) const {
+      return (RegisterSpec::operator==(other) && getConcreteValue() == other.getConcreteValue());
     }
 
 
-    bool Register::operator!=(const Register& reg1) const {
-      return !(*this == reg1);
+    bool Register::operator!=(const Register& other) const {
+      return !(*this == other);
+    }
+
+
+    void Register::operator=(const Register& other) {
+      RegisterSpec::operator=(other);
+      this->concreteValue         = other.concreteValue;
+      this->concreteValueDefined  = other.concreteValueDefined;
     }
 
 

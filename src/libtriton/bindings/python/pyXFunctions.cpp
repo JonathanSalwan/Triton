@@ -54,8 +54,14 @@ namespace triton {
 
       PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n) {
         PyObject* c = PyClass_New(b, d, n);
+
         if (!c)
           notEnoughMemory();
+
+        Py_CLEAR(b);
+        Py_CLEAR(d);
+        Py_CLEAR(n);
+
         return c;
       }
 

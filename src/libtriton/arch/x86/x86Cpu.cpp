@@ -310,6 +310,9 @@ namespace triton {
         triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
         triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
 
+        /* Clear instructicon's operands if alredy defined */
+        inst.operands.clear();
+
         /* Let's disass and build our operands */
         count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getSize(), inst.getAddress(), 0, &insn);
         if (count > 0) {

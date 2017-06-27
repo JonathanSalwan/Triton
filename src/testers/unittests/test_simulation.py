@@ -33,6 +33,27 @@ class DefCamp2015(object):
             # Process
             self.Triton.processing(instruction)
 
+            try:
+                for se in instruction.getSymbolicExpressions():
+                    str(se.getAst())
+
+                for x, y in instruction.getLoadAccess():
+                    str(y)
+
+                for x, y in instruction.getStoreAccess():
+                    str(y)
+
+                for x, y in instruction.getReadRegisters():
+                    str(y)
+
+                for x, y in instruction.getWrittenRegisters():
+                    str(y)
+
+                for x, y in instruction.getReadImmediates():
+                    str(y)
+            except:
+                self.fail("str(ast): raised unexpectedly!")
+
             # 40078B: cmp eax, 1
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
@@ -203,6 +224,27 @@ class SeedCoverage(object):
             # Process everything
             self.Triton.processing(inst)
 
+            try:
+                for se in inst.getSymbolicExpressions():
+                    str(se.getAst())
+
+                for x, y in inst.getLoadAccess():
+                    str(y)
+
+                for x, y in inst.getStoreAccess():
+                    str(y)
+
+                for x, y in inst.getReadRegisters():
+                    str(y)
+
+                for x, y in inst.getWrittenRegisters():
+                    str(y)
+
+                for x, y in inst.getReadImmediates():
+                    str(y)
+            except:
+                self.fail("str(ast): raised unexpectedly!")
+
             # Next instruction
             ip = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.RIP)).evaluate()
 
@@ -321,6 +363,27 @@ class Emu1(object):
 
             # Check if triton doesn't supports this instruction
             self.assertTrue(self.Triton.processing(instruction))
+
+            try:
+                for se in instruction.getSymbolicExpressions():
+                    str(se.getAst())
+
+                for x, y in instruction.getLoadAccess():
+                    str(y)
+
+                for x, y in instruction.getStoreAccess():
+                    str(y)
+
+                for x, y in instruction.getReadRegisters():
+                    str(y)
+
+                for x, y in instruction.getWrittenRegisters():
+                    str(y)
+
+                for x, y in instruction.getReadImmediates():
+                    str(y)
+            except:
+                self.fail("str(ast): raised unexpectedly!")
 
             pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))
 
@@ -446,6 +509,26 @@ class TestSymbolicEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
         pass
 
     @unittest.skip("No defcamp with concretization")
+    def test_defcamp_2015(self):
+        pass
+
+
+class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the emulation with the symbolic engine disabled."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableSymbolicEngine(False)
+        super(TestSymbolicEngineDisable, self).setUp()
+
+    @unittest.skip("Not possible.")
+    def test_seed_coverage(self):
+        pass
+
+    @unittest.skip("Not possiblen")
     def test_defcamp_2015(self):
         pass
 

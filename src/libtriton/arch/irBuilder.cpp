@@ -102,6 +102,13 @@ namespace triton {
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();
 
+      /* Clear implicit and explicit semantics */
+      inst.getLoadAccess().clear();
+      inst.getReadRegisters().clear();
+      inst.getReadImmediates().clear();
+      inst.getStoreAccess().clear();
+      inst.getWrittenRegisters().clear();
+
       /* Update instruction address if undefined */
       if (!inst.getAddress())
         inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getParentRegister(ID_REG_IP)).convert_to<triton::uint64>());
@@ -139,19 +146,21 @@ namespace triton {
        * is enable we must compute semanitcs to spread the taint.
        */
       if (!this->symbolicEngine->isEnabled()) {
+        /* Clear memory operands */
+        this->collectNodes(uniqueNodes, inst.operands, false);
+
+        /* Clear implicit and explicit semantics */
+        loadAccess.clear();
+        readRegisters.clear();
+        readImmediates.clear();
+        storeAccess.clear();
+        writtenRegisters.clear();
+
+        /* Symbolic Expressions */
         this->removeSymbolicExpressions(inst, uniqueNodes);
+
+        /* Restore backup */
         *this->symbolicEngine = *this->backupSymbolicEngine;
-      }
-
-      // ----------------------------------------------------------------------
-
-      /*
-       * If the symbolic engine is defined to process symbolic
-       * execution only on tainted instructions, we delete all
-       * expressions untainted and their AST nodes.
-       */
-      if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
-        this->removeSymbolicExpressions(inst, uniqueNodes);
       }
 
       // ----------------------------------------------------------------------
@@ -162,72 +171,26 @@ namespace triton {
        * concrete expressions and their AST nodes.
        */
       if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
-        /* Clean memory operands */
-        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            if (it->getMemory().getLeaAst()->isSymbolized() == false) {
-              this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst()); // FIXME: without this line -> win32 failed
-              // FIXME: Should extract nodes
-              it->getMemory().setLeaAst(nullptr);
-            }
-          }
-        }
+        /* Clear memory operands */
+        this->collectUnsymbolizedNodes(uniqueNodes, inst.operands);
 
-        /* Clean implicit and explicit semantics - MEM */
-        for (auto it = loadAccess.begin(); it != loadAccess.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            loadAccess.erase(it++);
-          else
-            ++it;
-        }
+        /* Clear implicit and explicit semantics - MEM */
+        this->collectUnsymbolizedNodes(loadAccess);
 
-        /* Clean implicit and explicit semantics - REG */
-        for (auto it = readRegisters.begin(); it != readRegisters.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            readRegisters.erase(it++);
-          else
-            ++it;
-        }
+        /* Clear implicit and explicit semantics - REG */
+        this->collectUnsymbolizedNodes(readRegisters);
 
-        /* Clean implicit and explicit semantics - IMM */
-        for (auto it = readImmediates.begin(); it != readImmediates.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            readImmediates.erase(it++);
-          else
-            ++it;
-        }
+        /* Clear implicit and explicit semantics - IMM */
+        this->collectUnsymbolizedNodes(readImmediates);
 
-        /* Clean implicit and explicit semantics - MEM */
-        for (auto it = storeAccess.begin(); it != storeAccess.end();) {
-          if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized())
-            ++it;
+        /* Clear implicit and explicit semantics - MEM */
+        this->collectUnsymbolizedNodes(storeAccess);
 
-          else if (std::get<0>(*it).getLeaAst() == nullptr && std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            storeAccess.erase(it++);
+        /* Clear implicit and explicit semantics - REG */
+        this->collectUnsymbolizedNodes(writtenRegisters);
 
-          else if (std::get<0>(*it).getLeaAst()->isSymbolized() == false && std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            storeAccess.erase(it++);
-
-          else
-            ++it;
-        }
-
-        /* Clean implicit and explicit semantics - REG */
-        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end();) {
-          if (std::get<1>(*it)->isSymbolized() == false)
-            // FIXME: Should extract nodes
-            writtenRegisters.erase(it++);
-          else
-            ++it;
-        }
-
-        /* Clean symbolic expressions */
-        for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+        /* Clear symbolic expressions */
+        for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
           if ((*it)->isSymbolized() == false) {
             this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
             this->symbolicEngine->removeSymbolicExpression((*it)->getId());
@@ -241,44 +204,31 @@ namespace triton {
       // ----------------------------------------------------------------------
 
       /*
-       * If there is no symbolic expression, clean memory operands AST
-       * and implicit/explicit semantics AST to avoid memory leak.
+       * If the symbolic engine is defined to process symbolic
+       * execution only on tainted instructions, we delete all
+       * expressions untainted and their AST nodes.
        */
-      else if (inst.symbolicExpressions.size() == 0) {
+      else if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         /* Memory operands */
-        for (auto it = inst.operands.begin(); it!= inst.operands.end(); it++) {
-          if (it->getType() == triton::arch::OP_MEM) {
-            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
-            it->getMemory().setLeaAst(nullptr);
-          }
-        }
+        this->collectNodes(uniqueNodes, inst.operands, true);
 
         /* Implicit and explicit semantics - MEM */
-        for (auto it = loadAccess.begin(); it != loadAccess.end(); it++)
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        this->collectNodes(uniqueNodes, loadAccess);
 
         /* Implicit and explicit semantics - REG */
-        for (auto it = readRegisters.begin(); it != readRegisters.end(); it++)
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        this->collectNodes(uniqueNodes, readRegisters);
 
         /* Implicit and explicit semantics - IMM */
-        for (auto it = readImmediates.begin(); it != readImmediates.end(); it++)
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        this->collectNodes(uniqueNodes, readImmediates);
 
         /* Implicit and explicit semantics - MEM */
-        for (auto it = storeAccess.begin(); it != storeAccess.end(); it++)
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        this->collectNodes(uniqueNodes, storeAccess);
 
         /* Implicit and explicit semantics - REG */
-        for (auto it = writtenRegisters.begin(); it != writtenRegisters.end(); it++)
-          this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+        this->collectNodes(uniqueNodes, writtenRegisters);
 
-        /* Clear lists */
-        loadAccess.clear();
-        readRegisters.clear();
-        readImmediates.clear();
-        storeAccess.clear();
-        writtenRegisters.clear();
+        /* Symbolic Expressions */
+        this->removeSymbolicExpressions(inst, uniqueNodes);
       }
 
       // ----------------------------------------------------------------------
@@ -292,11 +242,56 @@ namespace triton {
 
 
     void IrBuilder::removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes) {
-      for (auto it = inst.symbolicExpressions.begin(); it != inst.symbolicExpressions.end(); it++) {
+      for (auto it = inst.symbolicExpressions.cbegin(); it != inst.symbolicExpressions.cend(); it++) {
         this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, (*it)->getAst());
         this->symbolicEngine->removeSymbolicExpression((*it)->getId());
       }
       inst.symbolicExpressions.clear();
+    }
+
+
+    template <typename T>
+    void IrBuilder::collectNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
+      for (auto it = items.cbegin(); it != items.cend(); it++)
+        this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(*it));
+      items.clear();
+    }
+
+
+    void IrBuilder::collectNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands, bool gc) const {
+      for (auto it = operands.begin(); it != operands.end(); it++) {
+        if (it->getType() == triton::arch::OP_MEM) {
+          if (gc)
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+          it->getMemory().setLeaAst(nullptr);
+        }
+      }
+    }
+
+
+    template <typename T>
+    void IrBuilder::collectUnsymbolizedNodes(T& items) const {
+      T newItems;
+
+      for (auto it = items.cbegin(); it != items.cend(); it++) {
+        if (std::get<1>(*it) && std::get<1>(*it)->isSymbolized() == true)
+          newItems.insert(*it);
+      }
+
+      items.clear();
+      items = newItems;
+    }
+
+
+    void IrBuilder::collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const {
+      for (auto it = operands.begin(); it!= operands.end(); it++) {
+        if (it->getType() == triton::arch::OP_MEM) {
+          if (it->getMemory().getLeaAst() && it->getMemory().getLeaAst()->isSymbolized() == false) {
+            this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, it->getMemory().getLeaAst());
+            it->getMemory().setLeaAst(nullptr);
+          }
+        }
+      }
     }
 
   }; /* arch namespace */

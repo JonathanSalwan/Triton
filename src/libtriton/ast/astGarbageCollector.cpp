@@ -91,7 +91,7 @@ namespace triton {
         return;
 
       uniqueNodes.insert(root);
-      for (auto it = root->getChilds().begin(); it != root->getChilds().end(); it++)
+      for (auto it = root->getChilds().cbegin(); it != root->getChilds().cend(); it++)
         this->extractUniqueAstNodes(uniqueNodes, *it);
     }
 
