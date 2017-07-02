@@ -926,12 +926,6 @@ namespace triton {
             break;
 
           case DWORD_SIZE:
-            /* In AMD64, if a reg32 is written, it clears the 32-bit MSB of the corresponding register (Thx Wisk!) */
-            if (this->architecture->getArchitecture() == triton::arch::ARCH_X86_64) {
-              finalExpr = this->astCtxt.zx(DWORD_SIZE_BIT, node);
-              break;
-            }
-
           case QWORD_SIZE:
           case DQWORD_SIZE:
           case QQWORD_SIZE:
