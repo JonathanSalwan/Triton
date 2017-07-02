@@ -372,7 +372,7 @@ namespace triton {
 
     AbstractNode* AstContext::extract(triton::uint32 high, triton::uint32 low, AbstractNode* expr) {
       /* Optimization: If we extract the full size of expr, just return expr */
-      if (((high - low) + 1) == expr->getBitvectorSize())
+      if (low == 0 && (high + 1) == expr->getBitvectorSize())
         return expr;
 
       AbstractNode* node = new(std::nothrow) ExtractNode(high, low, expr);
