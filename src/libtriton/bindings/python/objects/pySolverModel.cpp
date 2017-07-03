@@ -42,12 +42,12 @@ True
 
 >>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.RAX)))
 >>> print raxAst
-((_ zero_extend 0) (bvxor ((_ extract 63 0) ((_ zero_extend 0) SymVar_0)) (_ bv287454020 64)))
+(bvxor SymVar_0 (_ bv287454020 64))
 
 >>> astCtxt = ctxt.getAstContext()
 >>> constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(0, raxAst.getBitvectorSize())))
 >>> print constraint
-(assert (= ((_ zero_extend 0) (bvxor ((_ extract 63 0) ((_ zero_extend 0) SymVar_0)) (_ bv287454020 64))) (_ bv0 64)))
+(assert (= (bvxor SymVar_0 (_ bv287454020 64)) (_ bv0 64)))
 
 >>> model = ctxt.getModel(constraint)
 >>> print model #doctest: +ELLIPSIS
