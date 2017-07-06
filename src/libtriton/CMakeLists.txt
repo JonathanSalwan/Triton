@@ -31,6 +31,10 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     endif()
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++11")
+    # Disable fall-through warnings
+    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wimplicit-fallthrough=0")
+    endif()
 endif()
 
 # 32-bits
