@@ -164,7 +164,7 @@ namespace triton {
     const triton::arch::Register& Architecture::getParentRegister(triton::arch::registers_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegister(): You must define an architecture.");
-      return getParentRegister(this->cpu->getRegister(id));
+      return this->getParentRegister(this->cpu->getRegister(id));
     }
 
 

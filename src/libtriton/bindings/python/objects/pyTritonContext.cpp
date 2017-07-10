@@ -416,6 +416,10 @@ namespace triton {
       static PyObject* TritonContext_Register(PyObject* self, PyObject* regIn) {
         triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
 
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "Register(): Architecture is not defined.");
+
         if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
           return PyErr_Format(PyExc_TypeError, "Register(): Expects an id as argument.");
 
