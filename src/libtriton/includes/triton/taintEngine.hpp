@@ -94,7 +94,7 @@ namespace triton {
           const std::set<triton::uint64>& getTaintedMemory(void) const;
 
           //! Returns the tainted registers.
-          std::set<const triton::arch::RegisterSpec*> getTaintedRegisters(void) const;
+          std::set<const triton::arch::Register*> getTaintedRegisters(void) const;
 
           //! Returns true if the taint engine is enabled.
           bool isEnabled(void) const;
@@ -106,7 +106,7 @@ namespace triton {
           bool isMemoryTainted(const triton::arch::MemoryAccess& mem) const;
 
           //! Returns true if the register is tainted.
-          bool isRegisterTainted(const triton::arch::RegisterSpec& reg) const;
+          bool isRegisterTainted(const triton::arch::Register& reg) const;
 
           //! Abstract taint verification. Returns true if the operand is tainted.
           bool isTainted(const triton::arch::OperandWrapper& op) const;
@@ -118,7 +118,7 @@ namespace triton {
           bool setTaintMemory(const triton::arch::MemoryAccess& mem, bool flag);
 
           //! Sets the flag (taint or untaint) to a register.
-          bool setTaintRegister(const triton::arch::RegisterSpec& reg, bool flag);
+          bool setTaintRegister(const triton::arch::Register& reg, bool flag);
 
           //! Taints an address. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(triton::uint64 addr);
@@ -127,7 +127,7 @@ namespace triton {
           bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a register. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintRegister(const triton::arch::RegisterSpec& reg);
+          bool taintRegister(const triton::arch::Register& reg);
 
           //! Untaints an address. Returns !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
           bool untaintMemory(triton::uint64 addr);
@@ -136,7 +136,7 @@ namespace triton {
           bool untaintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Untaints a register. Returns !TAINTED if the register has been untainted correctly. Otherwise it returns the last defined state.
-          bool untaintRegister(const triton::arch::RegisterSpec& reg);
+          bool untaintRegister(const triton::arch::Register& reg);
 
           //! Abstract union tainting.
           bool taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
@@ -151,16 +151,16 @@ namespace triton {
           bool taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
-          bool taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc);
+          bool taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
-          bool taintUnionRegisterImmediate(const triton::arch::RegisterSpec& regDst);
+          bool taintUnionRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
-          bool taintUnionRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc);
+          bool taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
-          bool taintUnionRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc);
+          bool taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
           //! Taints MemoryImmediate with assignment. Returns always false.
           bool taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
@@ -169,16 +169,16 @@ namespace triton {
           bool taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints MemoryRegister with assignment. Returns true if the memDst is tainted.
-          bool taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc);
+          bool taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Taints RegisterImmediate with assignment. Returns always false.
-          bool taintAssignmentRegisterImmediate(const triton::arch::RegisterSpec& regDst);
+          bool taintAssignmentRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Taints RegisterMemory with assignment. Returns true if the regDst is tainted.
-          bool taintAssignmentRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc);
+          bool taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
-          bool taintAssignmentRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc);
+          bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
         private:
           //! Spreads MemoryImmediate with union.
@@ -188,16 +188,16 @@ namespace triton {
           bool unionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Spreads MemoryRegister with union.
-          bool unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc);
+          bool unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Spreads RegisterImmediate with union.
-          bool unionRegisterImmediate(const triton::arch::RegisterSpec& regDst);
+          bool unionRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Spreads RegisterMemory with union.
-          bool unionRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc);
+          bool unionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Spreads RegisterRegister with union.
-          bool unionRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc);
+          bool unionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
           //! Spreads MemoryImmediate with assignment.
           bool assignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
@@ -206,16 +206,16 @@ namespace triton {
           bool assignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Spreads MemoryRegister with assignment.
-          bool assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc);
+          bool assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
           //! Spreads RegisterImmediate with assignment.
-          bool assignmentRegisterImmediate(const triton::arch::RegisterSpec& regDst);
+          bool assignmentRegisterImmediate(const triton::arch::Register& regDst);
 
           //! Spreads RegisterMemory with assignment.
-          bool assignmentRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc);
+          bool assignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
           //! Spreads RegisterRegister with assignment.
-          bool assignmentRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc);
+          bool assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
       };
 
     /*! @} End of taint namespace */

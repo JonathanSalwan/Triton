@@ -481,7 +481,7 @@ namespace triton {
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, triton::arch::RegisterSpec& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, triton::arch::Register& reg){
                 /********* Lambda *********/
                   /* Create function args */
                   PyObject* args = triton::bindings::python::xPyTuple_New(2);
@@ -1703,7 +1703,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
 
         try {
-          std::set<const triton::arch::RegisterSpec*> registers = PyTritonContext_AsTritonContext(self)->getTaintedRegisters();
+          std::set<const triton::arch::Register*> registers = PyTritonContext_AsTritonContext(self)->getTaintedRegisters();
 
           size = registers.size();
           ret = xPyList_New(size);

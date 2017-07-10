@@ -160,7 +160,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        const triton::arch::RegisterSpec* syncReg = nullptr;
+        const triton::arch::Register* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -239,7 +239,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        const triton::arch::RegisterSpec* syncReg = nullptr;
+        const triton::arch::Register* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -290,7 +290,7 @@ namespace tracer {
       }
 
 
-      void setCurrentRegisterValue(triton::arch::RegisterSpec& reg, triton::uint512 value) {
+      void setCurrentRegisterValue(triton::arch::Register& reg, triton::uint512 value) {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
@@ -457,7 +457,7 @@ namespace tracer {
       }
 
 
-      void needConcreteRegisterValue(triton::API& api, triton::arch::RegisterSpec& reg) {
+      void needConcreteRegisterValue(triton::API& api, triton::arch::Register& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
         api.setConcreteRegisterValue(reg, value);
       }
@@ -467,7 +467,7 @@ namespace tracer {
         if (tracer::pintool::api.isSymbolicEngineEnabled() == false)
           return;
 
-        for (const triton::arch::RegisterSpec* reg : tracer::pintool::api.getParentRegisters()) {
+        for (const triton::arch::Register* reg : tracer::pintool::api.getParentRegisters()) {
           if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 

@@ -185,7 +185,7 @@ namespace triton {
        * will be over the concretization. This method must be called before symbolic
        * processing.
        */
-      void SymbolicEngine::concretizeRegister(const triton::arch::RegisterSpec& reg) {
+      void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::arch::registers_e parentId = reg.getParent();
 
         if (!this->architecture->isRegisterValid(parentId))
@@ -328,7 +328,7 @@ namespace triton {
 
 
       /* Returns the reg reference or UNSET */
-      triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::RegisterSpec& reg) const {
+      triton::usize SymbolicEngine::getSymbolicRegisterId(const triton::arch::Register& reg) const {
         triton::arch::registers_e parentId = reg.getParent();
 
         if (!this->architecture->isRegisterValid(parentId))
@@ -631,7 +631,7 @@ namespace triton {
         SymbolicVariable* symVar            = nullptr;
         SymbolicExpression* expression      = nullptr;
         triton::usize regSymId              = triton::engines::symbolic::UNSET;
-        triton::arch::RegisterSpec parent   = this->architecture->getRegister(reg.getParent());
+        triton::arch::Register parent       = this->architecture->getRegister(reg.getParent());
         triton::uint32 symVarSize           = reg.getBitSize();
         triton::uint512 cv                  = this->architecture->getConcreteRegisterValue(reg);
 
@@ -890,7 +890,7 @@ namespace triton {
 
 
       /* Returns the new symbolic register expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& reg, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& reg, const std::string& comment) {
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
         triton::uint32 regSize                    = reg.getSize();
@@ -937,7 +937,7 @@ namespace triton {
 
 
       /* Returns the new symbolic flag expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::RegisterSpec& flag, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& flag, const std::string& comment) {
         if (!this->architecture->isFlag(flag))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
 
@@ -1058,7 +1058,7 @@ namespace triton {
 
 
       /* Returns true if the register expression contains a symbolic variable. */
-      bool SymbolicEngine::isRegisterSymbolized(const triton::arch::RegisterSpec& reg) const {
+      bool SymbolicEngine::isRegisterSymbolized(const triton::arch::Register& reg) const {
         triton::usize symId = this->getSymbolicRegisterId(reg);
 
         if (symId == triton::engines::symbolic::UNSET)

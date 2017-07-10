@@ -54,7 +54,7 @@ namespace triton {
      * \details The callback takes as unique argument a register. Callbacks will be
      * called each time that the Triton library will need a concrete register value.
      */
-    using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, triton::arch::RegisterSpec&)>;
+    using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, triton::arch::Register&)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
@@ -117,7 +117,7 @@ namespace triton {
         void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::RegisterSpec& reg) const;
+        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
 
       private:
         //! Reference to the API handling these callbacks

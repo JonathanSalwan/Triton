@@ -680,7 +680,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
+      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(0, 1);
 
@@ -692,7 +692,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
+      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(1, 1);
 

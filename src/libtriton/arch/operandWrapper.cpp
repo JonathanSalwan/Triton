@@ -14,18 +14,19 @@ namespace triton {
   namespace arch {
 
     OperandWrapper::OperandWrapper(const triton::arch::Immediate& imm) {
-      this->imm = imm;
+      this->imm  = imm;
       this->type = triton::arch::OP_IMM;
     }
 
 
     OperandWrapper::OperandWrapper(const triton::arch::MemoryAccess& mem) {
-      this->mem = mem;
+      this->mem  = mem;
       this->type = triton::arch::OP_MEM;
     }
 
 
-    OperandWrapper::OperandWrapper(const triton::arch::RegisterSpec& reg) : reg(reg) {
+    OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
+      this->reg  = reg;
       this->type = triton::arch::OP_REG;
     }
 

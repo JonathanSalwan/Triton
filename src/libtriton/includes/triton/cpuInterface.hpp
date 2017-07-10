@@ -64,16 +64,16 @@ namespace triton {
         virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all parent registers.
-        virtual std::set<const triton::arch::RegisterSpec*> getParentRegisters(void) const = 0;
+        virtual std::set<const triton::arch::Register*> getParentRegisters(void) const = 0;
 
         //! Returns all registers.
-        virtual const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& getAllRegisters(void) const = 0;
+        virtual const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
 
         //! Gets parent register from a given one.
-        virtual const triton::arch::RegisterSpec& getParent(const triton::arch::RegisterSpec&) const = 0;
+        virtual const triton::arch::Register& getParent(const triton::arch::Register&) const = 0;
 
         //! Returns register from id
-        virtual const triton::arch::RegisterSpec& getRegister(triton::arch::registers_e id) const = 0;
+        virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
 
         //! Disassembles the instruction according to the architecture.
         virtual void disassembly(triton::arch::Instruction& inst) const = 0;
@@ -88,7 +88,7 @@ namespace triton {
         virtual std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const = 0;
 
         //! Returns the concrete value of a register.
-        virtual triton::uint512 getConcreteRegisterValue(const triton::arch::RegisterSpec& reg, bool execCallbacks=true) const = 0;
+        virtual triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.

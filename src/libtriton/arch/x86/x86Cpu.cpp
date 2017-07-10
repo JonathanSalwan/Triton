@@ -238,13 +238,13 @@ namespace triton {
 
 
 
-      const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& x86Cpu::getAllRegisters(void) const {
+      const std::unordered_map<registers_e, const triton::arch::Register>& x86Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
 
-      std::set<const triton::arch::RegisterSpec*> x86Cpu::getParentRegisters(void) const {
-        std::set<const triton::arch::RegisterSpec*> ret;
+      std::set<const triton::arch::Register*> x86Cpu::getParentRegisters(void) const {
+        std::set<const triton::arch::Register*> ret;
 
         for (const auto& kv: this->registers_) {
           auto regId = kv.first;
@@ -279,7 +279,7 @@ namespace triton {
       }
 
 
-      const triton::arch::RegisterSpec& x86Cpu::getRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& x86Cpu::getRegister(triton::arch::registers_e id) const {
         try {
           return this->registers_.at(id);
         } catch(const std::out_of_range& e) {
@@ -288,7 +288,7 @@ namespace triton {
       }
 
 
-      const triton::arch::RegisterSpec& x86Cpu::getParent(const triton::arch::RegisterSpec& reg) const {
+      const triton::arch::Register& x86Cpu::getParent(const triton::arch::Register& reg) const {
         return this->getRegister(reg.getParent());
       }
 
@@ -453,7 +453,7 @@ namespace triton {
       }
 
 
-      triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::RegisterSpec& reg, bool execCallbacks) const {
+      triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
         triton::uint512 value = 0;
 
         if (execCallbacks && this->callbacks)
