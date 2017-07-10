@@ -103,11 +103,11 @@ class DefCamp2015(object):
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP), 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), 0x6fffffff)
 
         # Define an user input
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI, 0x10000000))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI), 0x10000000)
 
         # Symbolize user inputs (30 bytes)
         for index in range(30):
@@ -142,18 +142,19 @@ class SeedCoverage(object):
         # Point RDI on our buffer. The address of our buffer is arbitrary. We
         # just need to point the RDI register on it as first argument of our
         # tarself.Triton.geted function.
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI, 0x1000))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI), 0x1000)
 
         # Setup stack on an abitrary address.
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP), 0x7fffffff)
 
     def symbolize_inputs(self, seed):
         """Add symboles in memory for seed."""
         self.Triton.concretizeAllRegister()
         self.Triton.concretizeAllMemory()
         for address, value in seed.items():
-            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+            self.Triton.setConcreteMemoryValue(address, value)
+            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
             self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
 
     def seed_emulate(self, ip):
@@ -340,7 +341,7 @@ class Emu1(object):
                          "r14", "eflags", "xmm0", "xmm1", "xmm2", "xmm3",
                          "xmm4", "xmm5", "xmm6", "xmm7", "xmm8", "xmm9",
                          "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"):
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(getattr(REG.X86_64, reg_name.upper()), regs[reg_name]))
+            self.Triton.setConcreteRegisterValue(self.Triton.Register(getattr(REG.X86_64, reg_name.upper())), regs[reg_name])
 
         # run the code
         pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))

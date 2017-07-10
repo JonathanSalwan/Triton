@@ -118,11 +118,11 @@ if __name__ == '__main__':
     loadBinary(os.path.join(os.path.dirname(__file__), 'r100.bin'))
 
     # Define a fake stack
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP), 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP), 0x6fffffff)
 
     # Define an user input
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RDI, 0x10000000))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RDI), 0x10000000)
 
     # Symbolize user inputs (30 bytes)
     for index in range(30):

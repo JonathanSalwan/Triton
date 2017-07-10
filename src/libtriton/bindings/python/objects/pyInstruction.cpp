@@ -216,13 +216,6 @@ Sets the opcode of the instruction.
 - <b>void setThreadId(integer tid)</b><br>
 Sets the thread id of the instruction.
 
-- <b>void updateContext(\ref py_MemoryAccess_page memCtx)</b><br>
-Updates the context of the instruction by adding a concrete value for a **LOAD** memory access. Please note that you don't have to define a **STORE**
-concrete value, this value will be computed symbolically - **Only LOAD** accesses are necessary.
-
-- <b>void updateContext(\ref py_Register_page regCtx)</b><br>
-Updates the context of the instruction by adding a concrete value for a specific register.
-
 */
 
 
@@ -745,36 +738,6 @@ namespace triton {
       }
 
 
-      static PyObject* Instruction_updateContext(PyObject* self, PyObject* ctx) {
-        try {
-          triton::arch::Instruction*      inst;
-          triton::arch::MemoryAccess*     memCtx;
-          triton::arch::Register*         regCtx;
-
-          if (!PyMemoryAccess_Check(ctx) && !PyRegister_Check(ctx))
-            return PyErr_Format(PyExc_TypeError, "Instruction::updateContext(): Expected a Memory or Register as argument.");
-
-          inst = PyInstruction_AsInstruction(self);
-
-          if (PyMemoryAccess_Check(ctx)) {
-            memCtx = PyMemoryAccess_AsMemoryAccess(ctx);
-            inst->updateContext(*memCtx);
-          }
-
-          else if (PyRegister_Check(ctx)) {
-            regCtx = PyRegister_AsRegister(ctx);
-            inst->updateContext(*regCtx);
-          }
-
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static int Instruction_print(PyObject* self) {
         std::cout << PyInstruction_AsInstruction(self);
         return 0;
@@ -824,7 +787,6 @@ namespace triton {
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcode",                 Instruction_setOpcode,                METH_O,          ""},
         {"setThreadId",               Instruction_setThreadId,              METH_O,          ""},
-        {"updateContext",             Instruction_updateContext,            METH_O,          ""},
         {nullptr,                     nullptr,                              0,               nullptr}
       };
 

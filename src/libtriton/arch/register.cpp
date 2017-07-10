@@ -125,29 +125,17 @@ namespace triton {
     ////////////////////////////////////////////
 
     Register::Register()
-      : RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0),
-        concreteValue(0),
-        concreteValueDefined(false) {
+      : RegisterSpec(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) {
     }
 
 
     Register::Register(const Register& other)
       : RegisterSpec(other) {
-        this->concreteValue        = other.concreteValue;
-        this->concreteValueDefined = other.concreteValueDefined;
     }
 
 
     Register::Register(const RegisterSpec& spec)
-      : RegisterSpec(spec),
-        concreteValue(0),
-        concreteValueDefined(false) {
-    }
-
-
-    Register::Register(const RegisterSpec& spec, triton::uint512 concreteValue)
       : RegisterSpec(spec) {
-      this->setConcreteValue(concreteValue);
     }
 
 
@@ -159,32 +147,8 @@ namespace triton {
     }
 
 
-    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId, triton::uint512 concreteValue)
-      : Register(cpu.getRegister(regId), concreteValue) {
-    }
-
-
-    triton::uint512 Register::getConcreteValue(void) const {
-      return this->concreteValue;
-    }
-
-
-    void Register::setConcreteValue(triton::uint512 concreteValue) {
-      if (concreteValue > this->getMaxValue())
-        throw triton::exceptions::Register("Register::setConcreteValue(): You cannot set this concrete value (too big) to this register.");
-
-      this->concreteValue        = concreteValue;
-      this->concreteValueDefined = true;
-    }
-
-
-    bool Register::hasConcreteValue(void) const {
-      return this->concreteValueDefined;
-    }
-
-
     bool Register::operator==(const Register& other) const {
-      return (RegisterSpec::operator==(other) && getConcreteValue() == other.getConcreteValue());
+      return RegisterSpec::operator==(other);
     }
 
 
@@ -195,8 +159,6 @@ namespace triton {
 
     void Register::operator=(const Register& other) {
       RegisterSpec::operator=(other);
-      this->concreteValue         = other.concreteValue;
-      this->concreteValueDefined  = other.concreteValueDefined;
     }
 
 

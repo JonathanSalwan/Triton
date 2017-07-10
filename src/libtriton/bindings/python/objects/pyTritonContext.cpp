@@ -310,11 +310,11 @@ the symbolic state (if it exists). You should probably use the concretize functi
 Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem, integer value)</b><br>
 Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteRegisterValue(\ref py_REG_page reg)</b><br>
+- <b>void setConcreteRegisterValue(\ref py_REG_page reg, integer value)</b><br>
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
@@ -412,21 +412,8 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_Register(PyObject* self, PyObject* args) {
-        PyObject* concreteValue = nullptr;
-        PyObject* regIn         = nullptr;
-        triton::uint512 cv      = 0;
-        triton::arch::registers_e rid      = triton::arch::ID_REG_INVALID;
-
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &regIn, &concreteValue);
-
-        /* Check if the second arg is a integer */
-        if (concreteValue != nullptr && (!PyLong_Check(concreteValue) && !PyInt_Check(concreteValue)))
-          return PyErr_Format(PyExc_TypeError, "Register(): Expects an integer as second argument.");
-
-        if (concreteValue != nullptr)
-          cv = PyLong_AsUint512(concreteValue);
+      static PyObject* TritonContext_Register(PyObject* self, PyObject* regIn) {
+        triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
 
         /* Check if the first arg is a Register */
         if (regIn != nullptr && PyRegister_Check(regIn))
@@ -441,12 +428,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "Register(): Expects a Register or an id register as first argument.");
 
         try {
-          if (concreteValue == nullptr) {
-            triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
-            return PyRegister(regOut);
-          }
-
-          triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid), cv);
+          triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
           return PyRegister(regOut);
         }
         catch (const triton::exceptions::Exception& e) {
@@ -2251,10 +2233,11 @@ namespace triton {
 
         /* setConcreteMemoryValue(MemoryAccess) */
         else if (mem != nullptr && PyMemoryAccess_Check(mem)) {
-          if (value != nullptr)
-            return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Expects no second argument.");
+          if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
+            return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Expects a value as second argument.");
           try {
-            PyTritonContext_AsTritonContext(self)->setConcreteMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem));
+            triton::uint512 cvalue = PyLong_AsUint512(value);
+            PyTritonContext_AsTritonContext(self)->setConcreteMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem), cvalue);
           }
           catch (const triton::exceptions::Exception& e) {
             return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2270,16 +2253,26 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_setConcreteRegisterValue(PyObject* self, PyObject* reg) {
+      static PyObject* TritonContext_setConcreteRegisterValue(PyObject* self, PyObject* args) {
+        PyObject* reg    = nullptr;
+        PyObject* value  = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &reg, &value);
+
         /* Check if the architecture is definied */
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Architecture is not defined.");
 
-        if (!PyRegister_Check(reg))
+        if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a REG as first argument.");
 
+        if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
+          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a value as second argument.");
+
         try {
-          PyTritonContext_AsTritonContext(self)->setConcreteRegisterValue(*PyRegister_AsRegister(reg));
+          triton::uint512 cvalue = PyLong_AsUint512(value);
+          PyTritonContext_AsTritonContext(self)->setConcreteRegisterValue(*PyRegister_AsRegister(reg), cvalue);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2862,7 +2855,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getParentRegister(): Expects a Register as argument.");
 
         try {
-          return PyRegister(PyTritonContext_AsTritonContext(self)->getParentRegister(PyRegister_AsRegister(reg)->getId()), 0);
+          return PyRegister(PyTritonContext_AsTritonContext(self)->getParentRegister(PyRegister_AsRegister(reg)->getId()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2872,7 +2865,7 @@ namespace triton {
 
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
-        {"Register",                            (PyCFunction)TritonContext_Register,                               METH_VARARGS,       ""},
+        {"Register",                            (PyCFunction)TritonContext_Register,                               METH_O,             ""},
         {"addCallback",                         (PyCFunction)TritonContext_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
@@ -2953,7 +2946,7 @@ namespace triton {
         {"setAstRepresentationMode",            (PyCFunction)TritonContext_setAstRepresentationMode,               METH_O,             ""},
         {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"setConcreteMemoryValue",              (PyCFunction)TritonContext_setConcreteMemoryValue,                 METH_VARARGS,       ""},
-        {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,               METH_O,             ""},
+        {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,               METH_VARARGS,       ""},
         {"setConcreteSymbolicVariableValue",    (PyCFunction)TritonContext_setConcreteSymbolicVariableValue,       METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},

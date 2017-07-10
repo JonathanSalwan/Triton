@@ -25,8 +25,8 @@
 
 >>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
->>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
+>>> ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RAX), 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RDX), 67890)
 
 >>> ctxt.processing(inst)
 True
@@ -140,8 +140,8 @@ Triton allows you to display your AST via a Python syntax.
 >>> inst = Instruction()
 >>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 0x1122334455667788))
->>> inst.updateContext(ctxt.Register(REG.X86_64.RBX, 0x8877665544332211))
+>>> ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RAX), 0x1122334455667788)
+>>> ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RBX), 0x8877665544332211)
 >>> ctxt.processing(inst)
 True
 >>> print inst

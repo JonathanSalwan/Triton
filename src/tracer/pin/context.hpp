@@ -56,14 +56,8 @@ namespace tracer {
       //! Returns the current memory value from an address with a specified readable size.
       triton::uint512 getCurrentMemoryValue(triton::__uint addr, triton::uint32 size);
 
-      //! Sets the current register value from a Register. `triton::arch::Register::getConcreteValue()` is used to define the value.
-      void setCurrentRegisterValue(triton::arch::Register& reg);
-
       //! Sets the current register value from a Register.
       void setCurrentRegisterValue(triton::arch::RegisterSpec& reg, triton::uint512 value);
-
-      //! Sets the current memory value from a MemoryAccess. `triton::arch::MemoryAccess::getConcreteValue()` is used to define the value.
-      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem);
 
       //! Sets the current memory value from a MemoryAccess.
       void setCurrentMemoryValue(triton::arch::MemoryAccess& mem, triton::uint512 value);

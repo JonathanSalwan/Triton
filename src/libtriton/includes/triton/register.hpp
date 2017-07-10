@@ -99,14 +99,6 @@ namespace triton {
      *  \brief This class is used to bind a value on a RegisterSpec
      */
     class Register : public RegisterSpec {
-
-      protected:
-        //! The concrete value (content of the register)
-        triton::uint512 concreteValue;
-
-        //! True if this register contains a concrete value.
-        bool concreteValueDefined;
-
       public:
         //! Constructor.
         Register();
@@ -118,22 +110,7 @@ namespace triton {
         Register(const RegisterSpec& spec);
 
         //! Constructor.
-        Register(const RegisterSpec& spec, triton::uint512 concreteValue);
-
-        //! Constructor.
         Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
-
-        //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId, triton::uint512 concreteValue);
-
-        //! Returns true if the register contains a concrete value.
-        bool hasConcreteValue(void) const;
-
-        //! Returns the concrete value.
-        triton::uint512 getConcreteValue(void) const;
-
-        //! Sets the concrete value of the register.
-        void setConcreteValue(triton::uint512 concreteValue);
 
         //! Compare two Register
         bool operator==(const Register& other) const;

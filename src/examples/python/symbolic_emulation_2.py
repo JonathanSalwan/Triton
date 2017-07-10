@@ -68,8 +68,8 @@ def run(ip):
 
 # This function initializes the context memory.
 def initContext():
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP, 0x7fffffff))
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP, 0x99999999))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP), 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP), 0x99999999)
     return
 
 

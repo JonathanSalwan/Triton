@@ -56,11 +56,8 @@ namespace triton {
       this->conditionTaken      = other.conditionTaken;
       this->controlFlow         = other.controlFlow;
       this->loadAccess          = other.loadAccess;
-      this->memoryAccess        = other.memoryAccess;
       this->operands            = other.operands;
       this->prefix              = other.prefix;
-      this->readRegisters       = other.readRegisters;
-      this->registerState       = other.registerState;
       this->size                = other.size;
       this->storeAccess         = other.storeAccess;
       this->symbolicExpressions = other.symbolicExpressions;
@@ -156,20 +153,6 @@ namespace triton {
 
     std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& Instruction::getReadImmediates(void) {
       return this->readImmediates;
-    }
-
-
-    void Instruction::updateContext(const triton::arch::MemoryAccess& mem) {
-      this->memoryAccess.push_back(mem);
-    }
-
-
-    /* If there is a concrete value recorded, build the appropriate Register. Otherwise, perfrom the analysis on zero. */
-    triton::arch::Register Instruction::getRegisterState(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId) {
-      auto it = this->registerState.find(regId);
-      if (it != this->registerState.end())
-        return it->second;
-      return {cpu, regId};
     }
 
 
@@ -292,11 +275,6 @@ namespace triton {
           break;
         }
       }
-    }
-
-
-    void Instruction::updateContext(const triton::arch::Register& reg) {
-      this->registerState[reg.getId()] = reg;
     }
 
 
@@ -447,8 +425,6 @@ namespace triton {
 
     void Instruction::reset(void) {
       this->partialReset();
-      this->memoryAccess.clear();
-      this->registerState.clear();
     }
 
 

@@ -316,7 +316,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
+      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size), value);
       /* Mutex */
       PIN_UnlockClient();
     }

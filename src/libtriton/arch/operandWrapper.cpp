@@ -132,18 +132,6 @@ namespace triton {
     }
 
 
-    triton::uint512 OperandWrapper::getConcreteValue(void) const {
-      switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getConstImmediate().getValue();
-        case triton::arch::OP_MEM: return this->getConstMemory().getConcreteValue();
-        case triton::arch::OP_REG: return this->getConstRegister().getConcreteValue();
-        default:
-          throw triton::exceptions::OperandWrapper("OperandWrapper::getConcreteValue(): Invalid type operand.");
-      }
-      return 0;
-    }
-
-
     void OperandWrapper::operator=(const OperandWrapper& other) {
       this->imm  = other.imm;
       this->mem  = other.mem;

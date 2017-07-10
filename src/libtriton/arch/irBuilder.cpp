@@ -61,17 +61,7 @@ namespace triton {
       if (this->architecture->getArchitecture() == triton::arch::ARCH_INVALID)
         throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): You must define an architecture.");
 
-      /* Stage 1 - Update the context memory */
-      for (auto const& mem : inst.memoryAccess) {
-        this->architecture->setConcreteMemoryValue(mem);
-      }
-
-      /* Stage 2 - Update the context register */
-      for (auto const& reg : inst.registerState) {
-        this->architecture->setConcreteRegisterValue(reg.second);
-      }
-
-      /* Stage 3 - Initialize the target address of memory operands */
+      /* Initialize the target address of memory operands */
       for (auto& operand : inst.operands) {
         if (operand.getType() == triton::arch::OP_MEM) {
           this->symbolicEngine->initLeaAst(operand.getMemory());
@@ -127,10 +117,6 @@ namespace triton {
       auto& readImmediates    = inst.getReadImmediates();
       auto& storeAccess       = inst.getStoreAccess();
       auto& writtenRegisters  = inst.getWrittenRegisters();
-
-      /* Clear unused data */
-      inst.memoryAccess.clear();
-      inst.registerState.clear();
 
       /* Set the taint */
       inst.setTaint();

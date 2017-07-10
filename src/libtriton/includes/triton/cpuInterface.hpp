@@ -104,7 +104,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem) = 0;
+        virtual void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
@@ -128,7 +128,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteRegisterValue(const triton::arch::Register& reg) = 0;
+        virtual void setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) = 0;
 
         //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
         virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;

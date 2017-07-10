@@ -278,18 +278,16 @@ namespace tracer {
 
       if (mem != nullptr && (PyMemoryAccess_Check(mem) || PyInt_Check(mem) || PyLong_Check(mem))) {
 
-        if (value != nullptr && (!PyInt_Check(value) && !PyLong_Check(value)))
-          return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentMemoryValue(): The value must be an integer.");
+        if (value == nullptr || (!PyInt_Check(value) && !PyLong_Check(value)))
+          return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentMemoryValue(): Expected an integer value as second argument.");
 
         try {
-          if (value != nullptr && PyMemoryAccess_Check(mem))
+          if (PyMemoryAccess_Check(mem))
             tracer::pintool::context::setCurrentMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem), triton::bindings::python::PyLong_AsUint512(value));
-          else if (value != nullptr && (PyInt_Check(mem) || PyLong_Check(mem))) {
+          else if ((PyInt_Check(mem) || PyLong_Check(mem))) {
             triton::uint8 v = (triton::bindings::python::PyLong_AsUint512(value) & 0xff).convert_to<triton::uint8>();
             tracer::pintool::context::setCurrentMemoryValue(triton::bindings::python::PyLong_AsUint(mem), v);
           }
-          else
-            tracer::pintool::context::setCurrentMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -312,14 +310,11 @@ namespace tracer {
       PyArg_ParseTuple(args, "|OO", &reg, &value);
 
       if (reg != nullptr && PyRegister_Check(reg)) {
-        if (value != nullptr && (!PyInt_Check(value) && !PyLong_Check(value)))
-          return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentRegisterValue(): The value must be an integer.");
+        if (value == nullptr || (!PyInt_Check(value) && !PyLong_Check(value)))
+          return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentRegisterValue(): Expected an integer value as second argument.");
 
         try {
-          if (value != nullptr)
-            tracer::pintool::context::setCurrentRegisterValue(*PyRegister_AsRegister(reg), triton::bindings::python::PyLong_AsUint512(value));
-          else
-            tracer::pintool::context::setCurrentRegisterValue(*PyRegister_AsRegister(reg));
+          tracer::pintool::context::setCurrentRegisterValue(*PyRegister_AsRegister(reg), triton::bindings::python::PyLong_AsUint512(value));
         }
         catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

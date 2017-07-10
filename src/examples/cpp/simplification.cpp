@@ -51,6 +51,9 @@ int main(int ac, const char **av) {
   /* Record a simplification callback */
   api.addCallback(xor_simplification);
 
+  /* optional - Update register state */
+  api.setConcreteRegisterValue(api.getRegister(ID_REG_RAX), 12345);
+
   for (unsigned int i = 0; trace[i].inst; i++) {
     /* Build an instruction */
     Instruction inst;
@@ -60,9 +63,6 @@ int main(int ac, const char **av) {
 
     /* optional - Setup address */
     inst.setAddress(trace[i].addr);
-
-    /* optional - Update register state */
-    inst.updateContext(Register(api.getRegister(ID_REG_RAX), 12345));
 
     /* Process everything */
     api.processing(inst);

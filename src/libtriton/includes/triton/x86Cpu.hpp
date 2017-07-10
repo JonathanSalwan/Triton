@@ -234,9 +234,9 @@ namespace triton {
           void disassembly(triton::arch::Instruction& inst) const;
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
           void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
-          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
+          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value);
           void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
-          void setConcreteRegisterValue(const triton::arch::Register& reg);
+          void setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value);
           void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
           /* End of virtual pure inheritance ========================================== */
       };

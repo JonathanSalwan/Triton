@@ -137,15 +137,12 @@ namespace triton {
 
       //! Creates a TritonContext python class which is a reference to another Context.
       PyObject* PyTritonContextRef(triton::API& api);
-      
+
       //! Creates an AstContext python class.
       PyObject* PyAstContext(triton::ast::AstContext& ctxt);
 
       //! Creates the Register python class.
       PyObject* PyRegister(const triton::arch::Register& reg);
-
-      //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::RegisterSpec& reg, triton::uint512 concreteValue);
 
       //! Creates the SolverModel python class.
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);

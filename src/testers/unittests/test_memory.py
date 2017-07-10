@@ -15,11 +15,11 @@ class TestMemory(unittest.TestCase):
         """Define the architecture and memory access to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.mem = MemoryAccess(0x400f4d3, 8, 0x6162636465666768)
+        self.mem = MemoryAccess(0x400f4d3, 8)
 
     def test_address(self):
         """Check address data is correct."""
-        mem = MemoryAccess(0x1122334455667788, 8, 0x6162636465666768)
+        mem = MemoryAccess(0x1122334455667788, 8)
         self.assertEqual(mem.getAddress(), 0x1122334455667788)
         self.assertEqual(self.mem.getAddress(), 0x400f4d3)
 
@@ -34,12 +34,6 @@ class TestMemory(unittest.TestCase):
     def test_type(self):
         """Check type of a memory access."""
         self.assertEqual(self.mem.getType(), OPERAND.MEM)
-
-    def test_set_concrete_value(self):
-        """Check memory is correctly set."""
-        self.mem.setConcreteValue(0x1000)
-        self.assertEqual(self.mem.getConcreteValue(), 0x1000)
-        self.assertEqual(self.mem.getSize(), 8)
 
     def test_base_register(self):
         """Check base register modification."""

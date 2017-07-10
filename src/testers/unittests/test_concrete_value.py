@@ -30,13 +30,13 @@ class TestX86ConcreteRegisterValue(unittest.TestCase):
         """Check setting concrete values"""
         for r in self.pr:
             if r.getBitSize() == 32:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xdeadbeaf))
+                self.Triton.setConcreteRegisterValue(r, 0xdeadbeaf)
             elif r.getBitSize() == 64:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef0123456789))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef0123456789)
             elif r.getBitSize() == 128:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef01234567899876543210fedcba))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef01234567899876543210fedcba)
             elif r.getBitSize() == 256:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba)
             else:
                 pass
 
@@ -55,7 +55,7 @@ class TestX86ConcreteRegisterValue(unittest.TestCase):
 
         """Set everything to zero"""
         for r in self.ar:
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0))
+            self.Triton.setConcreteRegisterValue(r, 0)
 
         """Check if everything is equal to zero"""
         for r in self.ar:
@@ -84,15 +84,15 @@ class TestX8664ConcreteRegisterValue(unittest.TestCase):
         """Check setting concrete values"""
         for r in self.pr:
             if r.getBitSize() == 32:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xdeadbeaf))
+                self.Triton.setConcreteRegisterValue(r, 0xdeadbeaf)
             elif r.getBitSize() == 64:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef0123456789))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef0123456789)
             elif r.getBitSize() == 128:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef01234567899876543210fedcba))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef01234567899876543210fedcba)
             elif r.getBitSize() == 256:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba)
             elif r.getBitSize() == 512:
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba))
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcbaabcdef01234567899876543210fedcba)
             else:
                 pass
 
@@ -113,7 +113,7 @@ class TestX8664ConcreteRegisterValue(unittest.TestCase):
 
         """Set everything to zero"""
         for r in self.ar:
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(r, 0))
+            self.Triton.setConcreteRegisterValue(r, 0)
 
         """Check if everything is equal to zero"""
         for r in self.ar:

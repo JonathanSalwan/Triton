@@ -29,14 +29,6 @@ class TestRAXRegister(unittest.TestCase):
         """Check register bit size."""
         self.assertEqual(self.reg.getBitSize(), 64)
 
-    def test_concrete_value(self):
-        """Check concrete value modification."""
-        self.assertEqual(self.reg.getConcreteValue(), 0)
-
-        value = 0x1122334455667788
-        self.reg.setConcreteValue(value)
-        self.assertEqual(self.reg.getConcreteValue(), value)
-
     def test_parent(self):
         """Check parent register."""
         self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
@@ -100,24 +92,18 @@ class TestXmmRegister(unittest.TestCase):
     def test_xmm_on_x86(self):
         """Check xmm on 32 bits arch."""
         self.Triton.setArchitecture(ARCH.X86)
-        xmm = self.Triton.Register(REG.X86.XMM1, 0x112233445566778899aabbccddeeff00)
+        xmm = self.Triton.Register(REG.X86.XMM1)
         self.assertEqual(xmm.getBitSize(), 128)
-        self.assertEqual(xmm.getConcreteValue(),
-                         0x112233445566778899aabbccddeeff00)
 
     def test_ymm(self):
         """Check ymm on 64 bits arch."""
-        ymm = self.Triton.Register(REG.X86_64.YMM1, 0x112233445566778899aabbccddeeff00)
+        ymm = self.Triton.Register(REG.X86_64.YMM1)
         self.assertEqual(ymm.getBitSize(), 256)
-        ymm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-        self.assertEqual(ymm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
     def test_zmm(self):
         """Check zmm on 64 bits arch."""
-        zmm = self.Triton.Register(REG.X86_64.ZMM2, 0)
+        zmm = self.Triton.Register(REG.X86_64.ZMM2)
         self.assertEqual(zmm.getBitSize(), 512)
-        zmm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-        self.assertEqual(zmm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
 
 class TestRegisterValues(unittest.TestCase):
@@ -129,35 +115,21 @@ class TestRegisterValues(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
 
-    def test_register_create(self):
-        """Check register creation with value."""
-        for reg in (REG.X86_64.AH, REG.X86_64.AL):
-            # OK
-            self.Triton.Register(reg, 0xff)
-            # Not OK
-            # TODO : Be more specific on the raise exception type
-            with self.assertRaises(Exception):
-                self.Triton.Register(reg, 0xff + 1)
-
-        self.Triton.Register(REG.X86_64.ZF, 1)
-        with self.assertRaises(Exception):
-            self.Triton.Register(REG.X86_64.ZF, 2)
-
     def test_set_concrete_value(self):
         """Check register value modification."""
         for reg in (REG.X86_64.AH, REG.X86_64.AL):
             # OK
             reg = self.Triton.Register(reg)
-            reg.setConcreteValue(0xff)
+            self.Triton.setConcreteRegisterValue(reg, 0xff)
             # Not OK
             # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
-                reg.setConcreteValue(0xff + 1)
+                self.Triton.setConcreteRegisterValue(reg, 0xff+1)
 
         reg = self.Triton.Register(REG.X86_64.ZF)
-        reg.setConcreteValue(1)
+        self.Triton.setConcreteRegisterValue(reg, 1)
         with self.assertRaises(Exception):
-            reg.setConcreteValue(2)
+            self.Triton.setConcreteRegisterValue(reg, 2)
 
     def test_overlap(self):
         """Check register overlapping."""

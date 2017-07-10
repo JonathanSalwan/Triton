@@ -88,8 +88,8 @@ class TestIR(unittest.TestCase):
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP), 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), 0x6fffffff)
 
         self.emulate(0x40065c)
         return
@@ -113,11 +113,11 @@ class TestIRQemu(unittest.TestCase):
 
         # Push the return value to jump into the main() function
         self.Triton.concretizeRegister(self.Triton.Register(REG.X86_64.RSP))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP))-CPUSIZE.QWORD))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP))-CPUSIZE.QWORD)
 
-        ret2main = MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP)), CPUSIZE.QWORD, main)
+        ret2main = MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP)), CPUSIZE.QWORD)
         self.Triton.concretizeMemory(ret2main)
-        self.Triton.setConcreteMemoryValue(ret2main)
+        self.Triton.setConcreteMemoryValue(ret2main, main)
 
         # Setup argc / argv
         self.Triton.concretizeRegister(self.Triton.Register(REG.X86_64.RDI))
@@ -145,11 +145,11 @@ class TestIRQemu(unittest.TestCase):
         argc = len(argvs)
         argv = base
         for addr in addrs:
-            self.Triton.setConcreteMemoryValue(MemoryAccess(base, CPUSIZE.QWORD, addr))
+            self.Triton.setConcreteMemoryValue(MemoryAccess(base, CPUSIZE.QWORD), addr)
             base += CPUSIZE.QWORD
 
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI, argc))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSI, argv))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI), argc)
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSI), argv)
 
         return 0
 
@@ -195,18 +195,18 @@ class TestIRQemu(unittest.TestCase):
                 # Emulate the routine and the return value
                 ret_value = rel[1]()
                 self.Triton.concretizeRegister(self.Triton.Register(REG.X86_64.RAX))
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX, ret_value))
+                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX), ret_value)
 
                 # Get the return address
                 ret_addr = self.Triton.getConcreteMemoryValue(MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP)), CPUSIZE.QWORD))
 
                 # Hijack RIP to skip the call
                 self.Triton.concretizeRegister(self.Triton.Register(REG.X86_64.RIP))
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP, ret_addr))
+                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP), ret_addr)
 
                 # Restore RSP (simulate the ret)
                 self.Triton.concretizeRegister(self.Triton.Register(REG.X86_64.RSP))
-                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP))+CPUSIZE.QWORD))
+                self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP))+CPUSIZE.QWORD)
         return
 
     def load_binary(self, filename):
@@ -234,7 +234,7 @@ class TestIRQemu(unittest.TestCase):
             symbolRelo = rel.getOffset()
             for crel in self.RELO:
                 if symbolName == crel[0]:
-                    self.Triton.setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD, crel[2]))
+                    self.Triton.setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD), crel[2])
                     break
         return
 
@@ -252,8 +252,8 @@ class TestIRQemu(unittest.TestCase):
         self.make_relocation(binary)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP), 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP), 0x6fffffff)
 
         self.emulate(binary.getHeader().getEntry())
         return

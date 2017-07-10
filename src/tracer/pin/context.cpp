@@ -249,7 +249,7 @@ namespace tracer {
         #endif
 
         value = triton::utils::fromBufferToUint<triton::uint512>(buffer);
-        tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*syncReg, value));
+        tracer::pintool::api.setConcreteRegisterValue(*syncReg, value);
 
         /* Returns the good casted value */
         return tracer::pintool::api.getConcreteRegisterValue(reg, false);
@@ -287,11 +287,6 @@ namespace tracer {
         }
 
         return value;
-      }
-
-
-      void setCurrentRegisterValue(triton::arch::Register& reg) {
-        tracer::pintool::context::setCurrentRegisterValue(reg, reg.getConcreteValue());
       }
 
 
@@ -409,8 +404,7 @@ namespace tracer {
 
         /* Sync with the libTriton */
         triton::arch::Register syncReg(reg);
-        syncReg.setConcreteValue(value);
-        tracer::pintool::api.setConcreteRegisterValue(syncReg);
+        tracer::pintool::api.setConcreteRegisterValue(syncReg, value);
 
         /* We must concretize the register because the last symbolic value is now false */
         tracer::pintool::api.concretizeRegister(reg);
@@ -420,18 +414,12 @@ namespace tracer {
       }
 
 
-      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem) {
-        tracer::pintool::context::setCurrentMemoryValue(mem, mem.getConcreteValue());
-      }
-
-
       void setCurrentMemoryValue(triton::arch::MemoryAccess& mem, triton::uint512 value) {
         triton::__uint addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         /* Sync with the libTriton */
-        mem.setConcreteValue(value);
-        tracer::pintool::api.setConcreteMemoryValue(mem);
+        tracer::pintool::api.setConcreteMemoryValue(mem, value);
 
         /* We must concretize the memory because the last symbolic value is now false */
         tracer::pintool::api.concretizeMemory(mem);
@@ -471,7 +459,7 @@ namespace tracer {
 
       void needConcreteRegisterValue(triton::API& api, triton::arch::RegisterSpec& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
-        api.setConcreteRegisterValue(triton::arch::Register(reg, value));
+        api.setConcreteRegisterValue(reg, value);
       }
 
 
@@ -491,7 +479,7 @@ namespace tracer {
 
           if (sv != cv) {
             tracer::pintool::api.concretizeRegister(*reg);
-            tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*reg, cv));
+            tracer::pintool::api.setConcreteRegisterValue(*reg, cv);
           }
         }
       }

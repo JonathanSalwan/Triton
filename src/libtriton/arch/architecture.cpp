@@ -210,10 +210,10 @@ namespace triton {
     }
 
 
-    void Architecture::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+    void Architecture::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::setConcreteMemoryValue(): You must define an architecture.");
-      this->cpu->setConcreteMemoryValue(mem);
+      this->cpu->setConcreteMemoryValue(mem, value);
     }
 
 
@@ -231,10 +231,10 @@ namespace triton {
     }
 
 
-    void Architecture::setConcreteRegisterValue(const triton::arch::Register& reg) {
+    void Architecture::setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::setConcreteRegisterValue(): You must define an architecture.");
-      this->cpu->setConcreteRegisterValue(reg);
+      this->cpu->setConcreteRegisterValue(reg, value);
     }
 
 

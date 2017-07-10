@@ -123,11 +123,11 @@ def initContext():
 
     # Point RDI on our buffer. The address of our buffer is arbitrary. We just need
     # to point the RDI register on it as first argument of our targeted function.
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RDI, 0x1000))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RDI), 0x1000)
 
     # Setup stack on an abitrary address.
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP, 0x7fffffff))
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP, 0x7fffffff))
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP), 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP), 0x7fffffff)
     return
 
 
@@ -180,7 +180,8 @@ def symbolizeInputs(seed):
     Triton.concretizeAllRegister()
     Triton.concretizeAllMemory()
     for address, value in seed.items():
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+        Triton.setConcreteMemoryValue(address, value)
+        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
         Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
 

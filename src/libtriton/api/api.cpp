@@ -325,8 +325,8 @@ namespace triton {
   }
 
 
-  void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
-    this->arch.setConcreteMemoryValue(mem);
+  void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
+    this->arch.setConcreteMemoryValue(mem, value);
   }
 
 
@@ -340,8 +340,8 @@ namespace triton {
   }
 
 
-  void API::setConcreteRegisterValue(const triton::arch::Register& reg) {
-    this->arch.setConcreteRegisterValue(reg);
+  void API::setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
+    this->arch.setConcreteRegisterValue(reg, value);
   }
 
 

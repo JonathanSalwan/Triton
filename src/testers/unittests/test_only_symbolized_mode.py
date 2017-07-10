@@ -141,7 +141,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
+        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX), 0x1337)
 
         inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -154,7 +154,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
+        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX), 0x1337)
         ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 

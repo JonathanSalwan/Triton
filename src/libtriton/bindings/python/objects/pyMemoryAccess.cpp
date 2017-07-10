@@ -75,7 +75,7 @@ rcx:64 bv[63..0]
 \subsection py_MemoryAccess_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> mem = MemoryAccess(0x400f4d3, 8, 0x6162636465666768)
+>>> mem = MemoryAccess(0x400f4d3, 8)
 >>> print mem
 [@0x400f4d3]:64 bv[63..0]
 
@@ -84,9 +84,6 @@ rcx:64 bv[63..0]
 
 >>> mem.getSize()
 8L
-
->>> hex(mem.getConcreteValue())
-'0x6162636465666768L'
 
 ~~~~~~~~~~~~~
 
@@ -106,11 +103,6 @@ e.g: `64`
 
 - <b>\ref py_Bitvector_page getBitvector(void)</b><br>
 Returns the bitvector of the memory cells.
-
-- <b>integer getConcreteValue(void)</b><br>
-Returns the concrete value. It's basically the content which has been LOADED or STORED. Note that getting the
-concrete value does not relfect the real internal memory state. If you want to know the internal state of a memory cell, use
-the triton::API::getConcreteMemoryValue() function.
 
 - <b>\ref py_Immediate_page getDisplacement(void)</b><br>
 Returns the displacement (if exists) of the memory access.
@@ -140,10 +132,6 @@ Returns true if `other` and `self` overlap.
 
 - <b>void setBaseRegister(\ref py_Register_page reg)</b><br>
 Sets the base register of the memory access.
-
-- <b>void setConcreteValue(integer value)</b><br>
-Sets a concrete value to this memory access. Note that by setting the concrete value does not affect the internal memory value.
-If you want to define a concrete value at a specific memory cells, use the triton::API::setConcreteMemoryValue() function.
 
 - <b>void setDisplacement(\ref py_Immediate_page imm)</b><br>
 Sets the displacement of the memory access.
@@ -218,16 +206,6 @@ namespace triton {
       static PyObject* MemoryAccess_getBitvector(PyObject* self, PyObject* noarg) {
         try {
           return PyBitvector(*PyMemoryAccess_AsMemoryAccess(self));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* MemoryAccess_getConcreteValue(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint512(PyMemoryAccess_AsMemoryAccess(self)->getConcreteValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -335,24 +313,6 @@ namespace triton {
       }
 
 
-      static PyObject* MemoryAccess_setConcreteValue(PyObject* self, PyObject* value) {
-        try {
-          triton::arch::MemoryAccess* mem;
-
-          if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "MemoryAccess::setConcretevalue(): Expected an integer as argument.");
-
-          mem = PyMemoryAccess_AsMemoryAccess(self);
-          mem->setConcreteValue(PyLong_AsUint512(value));
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* MemoryAccess_setDisplacement(PyObject* self, PyObject* imm) {
         try {
           triton::arch::MemoryAccess* mem;
@@ -449,7 +409,6 @@ namespace triton {
         {"getBaseRegister",     MemoryAccess_getBaseRegister,    METH_NOARGS,      ""},
         {"getBitSize",          MemoryAccess_getBitSize,         METH_NOARGS,      ""},
         {"getBitvector",        MemoryAccess_getBitvector,       METH_NOARGS,      ""},
-        {"getConcreteValue",    MemoryAccess_getConcreteValue,   METH_NOARGS,      ""},
         {"getDisplacement",     MemoryAccess_getDisplacement,    METH_NOARGS,      ""},
         {"getIndexRegister",    MemoryAccess_getIndexRegister,   METH_NOARGS,      ""},
         {"getLeaAst",           MemoryAccess_getLeaAst,          METH_NOARGS,      ""},
@@ -459,7 +418,6 @@ namespace triton {
         {"getType",             MemoryAccess_getType,            METH_NOARGS,      ""},
         {"isOverlapWith",       MemoryAccess_isOverlapWith,      METH_O,           ""},
         {"setBaseRegister",     MemoryAccess_setBaseRegister,    METH_O,           ""},
-        {"setConcreteValue",    MemoryAccess_setConcreteValue,   METH_O,           ""},
         {"setDisplacement",     MemoryAccess_setDisplacement,    METH_O,           ""},
         {"setIndexRegister",    MemoryAccess_setIndexRegister,   METH_O,           ""},
         {"setScale",            MemoryAccess_setScale,           METH_O,           ""},

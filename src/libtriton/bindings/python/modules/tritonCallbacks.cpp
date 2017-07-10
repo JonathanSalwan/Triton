@@ -141,18 +141,11 @@ have to execute a new context registers, so `RIP` will be modified and your call
 - <b>void runProgram(void)</b><br>
 Starts the binary instrumentation over Pin.
 
-- <b>void setCurrentMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
-Sets the current memory value from a \ref py_MemoryAccess_page.
-
 - <b>void setCurrentMemoryValue(\ref py_MemoryAccess_page mem, integer value)</b><br>
 Sets the current memory value from a \ref py_MemoryAccess_page.
 
 - <b>void setCurrentMemoryValue(integer addr, integer value)</b><br>
 Sets the current memory value from an address.
-
-- <b>void setCurrentRegisterValue(\ref py_Register_page reg)</b><br>
-Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
-and `AFTER` callback. This method also synchronizes the Triton's register.
 
 - <b>void setCurrentRegisterValue(\ref py_Register_page reg, integer value)</b><br>
 Sets the current register value from a \ref py_Register_page. This method can only be called into a `BEFORE_SYMPROC`
@@ -264,11 +257,9 @@ namespace triton {
       static PyObject* triton_MemoryAccess(PyObject* self, PyObject* args) {
         PyObject* address       = nullptr;
         PyObject* size          = nullptr;
-        PyObject* concreteValue = nullptr;
-        triton::uint512 cv      = 0;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &address, &size, &concreteValue);
+        PyArg_ParseTuple(args, "|OO", &address, &size);
 
         /* Check if the first arg is a integer */
         if (address == nullptr || (!PyLong_Check(address) && !PyInt_Check(address)))
@@ -278,20 +269,8 @@ namespace triton {
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "MemoryAccess(): Expects an integer as second argument.");
 
-        /* Check if the third arg is a integer */
-        if (concreteValue != nullptr && (!PyLong_Check(concreteValue) && !PyInt_Check(concreteValue)))
-          return PyErr_Format(PyExc_TypeError, "MemoryAccess(): Expects an integer as third argument.");
-
-        if (concreteValue != nullptr)
-          cv = PyLong_AsUint512(concreteValue);
-
         try {
-          if (concreteValue == nullptr){
-            triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size));
-            return PyMemoryAccess(mem);
-          }
-
-          triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size), cv);
+          triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size));
           return PyMemoryAccess(mem);
         }
         catch (const triton::exceptions::Exception& e) {
