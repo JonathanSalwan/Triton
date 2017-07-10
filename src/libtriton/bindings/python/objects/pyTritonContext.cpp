@@ -398,7 +398,8 @@ Untaints a memory. Returns true if the memory is still tainted.
 
 - <b>bool untaintRegister(\ref py_REG_page reg)</b><br>
 Untaints a register. Returns true if the register is still tainted.
- */
+
+*/
 
 
 
@@ -415,19 +416,11 @@ namespace triton {
       static PyObject* TritonContext_Register(PyObject* self, PyObject* regIn) {
         triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
 
-        /* Check if the first arg is a Register */
-        if (regIn != nullptr && PyRegister_Check(regIn))
-          rid = PyRegister_AsRegister(regIn)->getId();
-
-        /* Check if the first arg is a Register */
-        else if (regIn != nullptr && (PyLong_Check(regIn) || PyInt_Check(regIn)))
-          rid = (triton::arch::registers_e)PyLong_AsUint32(regIn);
-
-        /* Invalid firt arg */
-        else
-          return PyErr_Format(PyExc_TypeError, "Register(): Expects a Register or an id register as first argument.");
+        if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
+          return PyErr_Format(PyExc_TypeError, "Register(): Expects an id as argument.");
 
         try {
+          rid = static_cast<triton::arch::registers_e>(PyLong_AsUint32(regIn));
           triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
           return PyRegister(regOut);
         }
