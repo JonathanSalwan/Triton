@@ -136,9 +136,6 @@ namespace triton {
         //! Returns true if `other` and `self` overlap.
         bool isOverlapWith(const MemoryAccess& other) const;
 
-        //! Returns true if the memory contains a concrete value.
-        bool hasConcreteValue(void) const;
-
         //! Sets the address of the memory access.
         void setAddress(triton::uint64 addr);
 

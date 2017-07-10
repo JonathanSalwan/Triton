@@ -40,7 +40,6 @@ namespace triton {
      *  \brief This class is used when an instruction has a register operand.
      */
     class RegisterSpec : public BitsVector, public OperandInterface {
-
       protected:
         //! The name of the register.
         std::string name;
