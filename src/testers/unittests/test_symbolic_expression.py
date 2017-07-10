@@ -54,7 +54,7 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_getOrigin(self):
         """Test getOrigin"""
-        self.assertEqual(self.expr1.getOrigin().getId(), REG.X86_64.RAX)
+        self.assertEqual(self.expr1.getOrigin().getId(), REG.X86_64.RAX.getId())
         self.assertEqual(str(self.expr1.getOrigin()), "rax:64 bv[63..0]")
         self.assertEqual(str(self.expr2.getOrigin()), "[@0x55]:64 bv[63..0]")
 

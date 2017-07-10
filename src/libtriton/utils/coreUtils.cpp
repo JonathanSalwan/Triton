@@ -17,6 +17,12 @@
 namespace triton {
   namespace utils {
 
+    void toupper(std::string& s) {
+      for (triton::usize i = 0; i < s.size(); i++)
+        s.at(i) = std::toupper(s.at(i));
+    }
+
+
     void fromUintToBuffer(triton::uint128 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < DQWORD_SIZE; i++) {
         buffer[i] = (value & 0xff).convert_to<triton::uint8>();
