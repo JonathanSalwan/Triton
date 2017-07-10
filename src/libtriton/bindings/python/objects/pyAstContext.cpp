@@ -201,13 +201,13 @@ ref_7 = 0x400003 # Program Counter
 >>> print node
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
 
->>> subchild = node.getChilds()[1].getChilds()[0]
+>>> subchild = node.getChildren()[1].getChildren()[0]
 >>> print subchild
 (_ bv10 8)
 
->>> print subchild.getChilds()[0].getValue()
+>>> print subchild.getChildren()[0].getValue()
 10
->>> print subchild.getChilds()[1].getValue()
+>>> print subchild.getChildren()[1].getValue()
 8
 
 # Node modification

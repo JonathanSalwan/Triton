@@ -100,12 +100,12 @@ namespace triton {
           throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node size cannot be zero.");
 
         if (pc->getKind() == triton::ast::ZX_NODE)
-          pc = pc->getChilds()[1];
+          pc = pc->getChildren()[1];
 
         /* Multiple branches */
         if (pc->getKind() == triton::ast::ITE_NODE) {
-          triton::uint64 bb1 = pc->getChilds()[1]->evaluate().convert_to<triton::uint64>();
-          triton::uint64 bb2 = pc->getChilds()[2]->evaluate().convert_to<triton::uint64>();
+          triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
+          triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
 
           triton::ast::AbstractNode* bb1pc = (bb1 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
                                                                 this->astCtxt.lnot(this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));

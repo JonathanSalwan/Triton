@@ -52,8 +52,8 @@ namespace triton {
         //! The kind of the node.
         enum kind_e kind;
 
-        //! The childs of the node.
-        std::vector<AbstractNode*> childs;
+        //! The children of the node.
+        std::vector<AbstractNode*> children;
 
         //! The parents of the node. Empty if there is still no parent.
         std::set<AbstractNode*> parents;
@@ -108,8 +108,8 @@ namespace triton {
         //! Evaluates the tree.
         triton::uint512 evaluate(void) const;
 
-        //! Returns the childs of the node.
-        std::vector<AbstractNode*>& getChilds(void);
+        //! Returns the children of the node.
+        std::vector<AbstractNode*>& getChildren(void);
 
         /*!
          * \brief Returns the parents of node or an empty set if there is still no parent defined.

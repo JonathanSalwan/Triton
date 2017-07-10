@@ -444,18 +444,18 @@ namespace triton {
 
       /* Returns the full symbolic expression backtracked. */
       triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed) {
-        std::vector<triton::ast::AbstractNode*>& childs = node->getChilds();
+        std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
-        for (triton::uint32 index = 0; index < childs.size(); index++) {
-          if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getExpr();
+        for (triton::uint32 index = 0; index < children.size(); index++) {
+          if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
+            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getExpr();
             triton::ast::AbstractNode* ref = expr.getAst();
-            childs[index] = ref;
+            children[index] = ref;
             if (processed.find(expr.getId()) != processed.end())
               continue;
             processed.insert(expr.getId());
           }
-          this->getFullAst(childs[index], processed);
+          this->getFullAst(children[index], processed);
         }
 
         return node;
@@ -471,11 +471,11 @@ namespace triton {
 
       /* [private method] Slices all expressions from a given node */
       void SymbolicEngine::sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs) {
-        std::vector<triton::ast::AbstractNode*>& childs = node->getChilds();
+        std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
-        for (triton::uint32 index = 0; index < childs.size(); index++) {
-          if (childs[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(childs[index])->getExpr();
+        for (triton::uint32 index = 0; index < children.size(); index++) {
+          if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
+            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getExpr();
             triton::usize id = expr.getId();
             // FIXME: it is an insert with check on return value.
             if (exprs.find(id) == exprs.end()) {
@@ -483,7 +483,7 @@ namespace triton {
               this->sliceExpressions(expr.getAst(), exprs);
             }
           }
-          this->sliceExpressions(childs[index], exprs);
+          this->sliceExpressions(children[index], exprs);
         }
       }
 

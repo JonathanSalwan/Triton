@@ -205,7 +205,7 @@ namespace triton {
         }
 
         default: {
-          auto value       = node->getChilds();
+          auto value       = node->getChildren();
           auto dictionary  = static_cast<std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
           if (dictionary->find(value) != dictionary->end()) {
             delete node;

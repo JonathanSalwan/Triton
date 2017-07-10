@@ -67,7 +67,7 @@ e.g: `0xffffffff`
 - <b>integer getBitvectorSize(void)</b><br>
 Returns the node vector size.
 
-- <b>[\ref py_AstNode_page, ...] getChilds(void)</b><br>
+- <b>[\ref py_AstNode_page, ...] getChildren(void)</b><br>
 Returns the list of child nodes.
 
 - <b>integer getHash(void)</b><br>
@@ -179,17 +179,17 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_getChilds(PyObject* self, PyObject* noarg) {
+      static PyObject* AstNode_getChildren(PyObject* self, PyObject* noarg) {
         try {
-          PyObject* childs;
+          PyObject* children;
           triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self);
 
-          triton::usize size = node->getChilds().size();
-          childs = xPyList_New(size);
+          triton::usize size = node->getChildren().size();
+          children = xPyList_New(size);
           for (triton::usize index = 0; index < size; index++)
-            PyList_SetItem(childs, index, PyAstNode(node->getChilds()[index]));
+            PyList_SetItem(children, index, PyAstNode(node->getChildren()[index]));
 
-          return childs;
+          return children;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -557,7 +557,7 @@ namespace triton {
         {"evaluate",          AstNode_evaluate,          METH_NOARGS,     ""},
         {"getBitvectorMask",  AstNode_getBitvectorMask,  METH_NOARGS,     ""},
         {"getBitvectorSize",  AstNode_getBitvectorSize,  METH_NOARGS,     ""},
-        {"getChilds",         AstNode_getChilds,         METH_NOARGS,     ""},
+        {"getChildren",       AstNode_getChildren,       METH_NOARGS,     ""},
         {"getHash",           AstNode_getHash,           METH_NOARGS,     ""},
         {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
         {"getParents",        AstNode_getParents,        METH_NOARGS,     ""},
