@@ -46,8 +46,8 @@ def run(ip):
         # Build an instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(function[ip])
+        # Setup opcode
+        inst.setOpcode(function[ip])
 
         # Setup Address
         inst.setAddress(ip)

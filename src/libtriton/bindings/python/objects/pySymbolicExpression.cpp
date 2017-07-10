@@ -29,10 +29,10 @@ This object is used to represent a symbolic expression.
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcodes = "\x48\x31\xD0"
+>>> opcode = "\x48\x31\xD0"
 >>> inst = Instruction()
 
->>> inst.setOpcodes(opcodes)
+>>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))

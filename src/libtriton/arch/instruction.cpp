@@ -27,12 +27,12 @@ namespace triton {
       this->tid             = 0;
       this->type            = 0;
 
-      std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
+      std::memset(this->opcode, 0x00, sizeof(this->opcode));
     }
 
 
-    Instruction::Instruction(const triton::uint8* opcodes, triton::uint32 opSize) : Instruction::Instruction() {
-      this->setOpcodes(opcodes, opSize);
+    Instruction::Instruction(const triton::uint8* opcode, triton::uint32 opSize) : Instruction::Instruction() {
+      this->setOpcode(opcode, opSize);
     }
 
 
@@ -69,7 +69,7 @@ namespace triton {
       this->type                = other.type;
       this->writtenRegisters    = other.writtenRegisters;
 
-      std::memcpy(this->opcodes, other.opcodes, sizeof(this->opcodes));
+      std::memcpy(this->opcode, other.opcode, sizeof(this->opcode));
 
       this->disassembly.clear();
       this->disassembly.str(other.disassembly.str());
@@ -106,15 +106,15 @@ namespace triton {
     }
 
 
-    const triton::uint8* Instruction::getOpcodes(void) const {
-      return this->opcodes;
+    const triton::uint8* Instruction::getOpcode(void) const {
+      return this->opcode;
     }
 
 
-    void Instruction::setOpcodes(const triton::uint8* opcodes, triton::uint32 size) {
-      if (size >= sizeof(this->opcodes))
-       throw triton::exceptions::Instruction("Instruction::setOpcodes(): Invalid size (too big).");
-      std::memcpy(this->opcodes, opcodes, size);
+    void Instruction::setOpcode(const triton::uint8* opcode, triton::uint32 size) {
+      if (size >= sizeof(this->opcode))
+       throw triton::exceptions::Instruction("Instruction::setOpcode(): Invalid size (too big).");
+      std::memcpy(this->opcode, opcode, size);
       this->size = size;
     }
 
@@ -471,7 +471,7 @@ namespace triton {
       this->symbolicExpressions.clear();
       this->writtenRegisters.clear();
 
-      std::memset(this->opcodes, 0x00, sizeof(this->opcodes));
+      std::memset(this->opcode, 0x00, sizeof(this->opcode));
     }
 
 

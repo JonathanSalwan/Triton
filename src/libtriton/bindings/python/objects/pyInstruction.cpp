@@ -40,13 +40,13 @@ This object is used to represent an Instruction.
 # Set the arch
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> for (addr, opcodes) in trace:
+>>> for (addr, opcode) in trace:
 ...
 ...     # Build an instruction
 ...     inst = Instruction()
 ...
-...     # Setup opcodes
-...     inst.setOpcodes(opcodes)
+...     # Setup opcode
+...     inst.setOpcode(opcode)
 ...
 ...     # Setup Address
 ...     inst.setAddress(addr)
@@ -118,7 +118,7 @@ True
 ~~~~~~~~~~~~~{.py}
 >>> inst = Instruction()
 >>> inst.setAddress(0x40000)
->>> inst.setOpcodes("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst.setOpcode("\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
 True
 >>> print inst
@@ -144,8 +144,8 @@ Returns the list of all implicit and explicit LOAD access as list of tuple <\ref
 - <b>integer getNextAddress(void)</b><br>
 Returns the next address of the instruction.
 
-- <b>bytes getOpcodes(void)</b><br>
-Returns the opcodes of the instruction.
+- <b>bytes getOpcode(void)</b><br>
+Returns the opcode of the instruction.
 
 - <b>[\ref py_Immediate_page, \ref py_MemoryAccess_page, \ref py_Register_page, ...] getOperands(void)</b><br>
 Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_MemoryAccess_page or \ref py_Register_page.
@@ -210,8 +210,8 @@ Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 - <b>void setAddress(integer addr)</b><br>
 Sets the address of the instruction.
 
-- <b>void setOpcodes(bytes opcodes)</b><br>
-Sets the opcodes of the instruction.
+- <b>void setOpcode(bytes opcode)</b><br>
+Sets the opcode of the instruction.
 
 - <b>void setThreadId(integer tid)</b><br>
 Sets the thread id of the instruction.
@@ -326,11 +326,11 @@ namespace triton {
       }
 
 
-      static PyObject* Instruction_getOpcodes(PyObject* self, PyObject* noarg) {
+      static PyObject* Instruction_getOpcode(PyObject* self, PyObject* noarg) {
         try {
-          const triton::uint8* opcodes = PyInstruction_AsInstruction(self)->getOpcodes();
-          triton::uint32 size          = PyInstruction_AsInstruction(self)->getSize();
-          return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(opcodes), size);
+          const triton::uint8* opcode = PyInstruction_AsInstruction(self)->getOpcode();
+          triton::uint32 size         = PyInstruction_AsInstruction(self)->getSize();
+          return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(opcode), size);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -712,15 +712,15 @@ namespace triton {
       }
 
 
-      static PyObject* Instruction_setOpcodes(PyObject* self, PyObject* opc) {
+      static PyObject* Instruction_setOpcode(PyObject* self, PyObject* opc) {
         try {
           if (!PyBytes_Check(opc))
-            return PyErr_Format(PyExc_TypeError, "Instruction::setOpcodes(): Expected bytes as argument.");
+            return PyErr_Format(PyExc_TypeError, "Instruction::setOpcode(): Expected bytes as argument.");
 
-          triton::uint8* opcodes = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc));
-          triton::uint32 size    = static_cast<triton::uint32>(PyBytes_Size(opc));
+          triton::uint8* opcode = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opc));
+          triton::uint32 size   = static_cast<triton::uint32>(PyBytes_Size(opc));
 
-          PyInstruction_AsInstruction(self)->setOpcodes(opcodes, size);
+          PyInstruction_AsInstruction(self)->setOpcode(opcode, size);
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -800,7 +800,7 @@ namespace triton {
         {"getFirstOperand",           Instruction_getFirstOperand,          METH_NOARGS,     ""},
         {"getLoadAccess",             Instruction_getLoadAccess,            METH_NOARGS,     ""},
         {"getNextAddress",            Instruction_getNextAddress,           METH_NOARGS,     ""},
-        {"getOpcodes",                Instruction_getOpcodes,               METH_NOARGS,     ""},
+        {"getOpcode",                 Instruction_getOpcode,                METH_NOARGS,     ""},
         {"getOperands",               Instruction_getOperands,              METH_NOARGS,     ""},
         {"getPrefix",                 Instruction_getPrefix,                METH_NOARGS,     ""},
         {"getReadImmediates",         Instruction_getReadImmediates,        METH_NOARGS,     ""},
@@ -822,7 +822,7 @@ namespace triton {
         {"isSymbolized",              Instruction_isSymbolized,             METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
-        {"setOpcodes",                Instruction_setOpcodes,               METH_O,          ""},
+        {"setOpcode",                 Instruction_setOpcode,                METH_O,          ""},
         {"setThreadId",               Instruction_setThreadId,              METH_O,          ""},
         {"updateContext",             Instruction_updateContext,            METH_O,          ""},
         {nullptr,                     nullptr,                              0,               nullptr}
@@ -893,13 +893,13 @@ namespace triton {
       }
 
 
-      PyObject* PyInstruction(const triton::uint8* opcodes, triton::uint32 opSize) {
+      PyObject* PyInstruction(const triton::uint8* opcode, triton::uint32 opSize) {
         Instruction_Object* object;
 
         PyType_Ready(&Instruction_Type);
         object = PyObject_NEW(Instruction_Object, &Instruction_Type);
         if (object != NULL)
-          object->inst = new triton::arch::Instruction(opcodes, opSize);
+          object->inst = new triton::arch::Instruction(opcode, opSize);
 
         return (PyObject*)object;
       }

@@ -42,8 +42,8 @@ int main(int ac, const char **av) {
     /* Build an instruction */
     Instruction inst;
 
-    /* Setup opcodes */
-    inst.setOpcodes(trace[i].inst, trace[i].size);
+    /* Setup opcode */
+    inst.setOpcode(trace[i].inst, trace[i].size);
 
     /* optional - Setup address */
     inst.setAddress(trace[i].addr);

@@ -45,17 +45,17 @@ class TestIR(unittest.TestCase):
 
     def emulate(self, pc):
         """
-        Emulate every opcodes from pc.
+        Emulate every opcode from pc.
 
         Process instruction until the end
         """
         while pc:
-            # Fetch opcodes
-            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 16)
+            # Fetch opcode
+            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
-            instruction.setOpcodes(opcodes)
+            instruction.setOpcode(opcode)
             instruction.setAddress(pc)
 
             # Process
@@ -159,16 +159,16 @@ class TestIRQemu(unittest.TestCase):
 
     def emulate(self, pc):
         """
-        Emulate every opcodes from pc.
+        Emulate every opcode from pc.
         Process instruction until the end
         """
         while pc:
-            # Fetch opcodes
-            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 16)
+            # Fetch opcode
+            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
-            instruction.setOpcodes(opcodes)
+            instruction.setOpcode(opcode)
             instruction.setAddress(pc)
 
             # Process

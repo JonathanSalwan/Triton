@@ -16,7 +16,7 @@ class TestInstruction(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.inst = Instruction()
-        self.inst.setOpcodes("\x48\x01\xd8")  # add rax, rbx
+        self.inst.setOpcode("\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
         self.inst.updateContext(self.Triton.Register(REG.X86_64.RAX, 0x1122334455667788))
         self.inst.updateContext(self.Triton.Register(REG.X86_64.RBX, 0x8877665544332211))
@@ -59,7 +59,7 @@ class TestInstruction(unittest.TestCase):
 
     def test_opcode(self):
         """Check opcode informations."""
-        self.assertEqual(self.inst.getOpcodes(), "\x48\x01\xd8")
+        self.assertEqual(self.inst.getOpcode(), "\x48\x01\xd8")
         self.assertEqual(self.inst.getType(), OPCODE.ADD)
 
     def test_thread(self):
@@ -98,7 +98,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov eax, DWORD PTR fs:0xffffffffffffdf98
-        inst.setOpcodes("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
+        inst.setOpcode("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
@@ -117,7 +117,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov rax, QWORD PTR fs:[rax]
-        inst.setOpcodes("\x64\x48\x8B\x00")
+        inst.setOpcode("\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
@@ -137,7 +137,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov ax, ds:word_40213C
-        inst.setOpcodes("\x66\xA1\x3C\x21\x40\x00")
+        inst.setOpcode("\x66\xA1\x3C\x21\x40\x00")
         self.Triton.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x40213C)

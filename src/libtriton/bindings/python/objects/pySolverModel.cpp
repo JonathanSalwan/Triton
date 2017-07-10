@@ -29,7 +29,7 @@ This object is used to represent a model from an SMT solver.
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> inst = Instruction()
->>> inst.setOpcodes("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
+>>> inst.setOpcode("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
 >>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
 >>> print symvar

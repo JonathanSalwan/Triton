@@ -176,12 +176,12 @@ def emulate(Triton, pc):
 
     print '[+] Starting emulation.'
     while pc:
-        # Fetch opcodes
-        opcodes = Triton.getConcreteMemoryAreaValue(pc, 16)
+        # Fetch opcode
+        opcode = Triton.getConcreteMemoryAreaValue(pc, 16)
 
         # Create the Triton instruction
         instruction = Instruction()
-        instruction.setOpcodes(opcodes)
+        instruction.setOpcode(opcode)
         instruction.setAddress(pc)
 
         # Process

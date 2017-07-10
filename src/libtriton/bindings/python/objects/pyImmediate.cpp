@@ -21,7 +21,7 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 >>> inst = Instruction()
->>> inst.setOpcodes("\xB8\x14\x00\x00\x00")
+>>> inst.setOpcode("\xB8\x14\x00\x00\x00")
 
 */
 

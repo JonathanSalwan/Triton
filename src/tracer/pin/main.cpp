@@ -84,8 +84,8 @@ if __name__ == '__main__':
         # Build the Triton instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(opcode)
+        # Setup opcode
+        inst.setOpcode(opcode)
 
         # Setup Address
         inst.setAddress(regs['rip'])
@@ -234,7 +234,7 @@ namespace tracer {
 
       /* Setup Triton information */
       tritonInst->partialReset();
-      tritonInst->setOpcodes(addr, size);
+      tritonInst->setOpcode(addr, size);
       tritonInst->setAddress(reinterpret_cast<triton::__uint>(addr));
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
 

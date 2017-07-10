@@ -93,9 +93,9 @@ def test_trace(trace):
 
     astCtxt = Triton.getAstContext()
 
-    for opcodes in trace:
+    for opcode in trace:
         instruction = Instruction()
-        instruction.setOpcodes(opcodes)
+        instruction.setOpcode(opcode)
         Triton.processing(instruction)
         print instruction.getDisassembly()
 

@@ -141,12 +141,12 @@ if __name__ == '__main__':
     #Set the arch
     Triton.setArchitecture(ARCH.X86_64)
 
-    for (addr, opcodes) in code:
+    for (addr, opcode) in code:
         # Build an instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(opcodes)
+        # Setup opcode
+        inst.setOpcode(opcode)
 
         # Setup Address
         inst.setAddress(addr)

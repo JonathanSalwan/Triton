@@ -41,8 +41,8 @@ int main(int ac, const char **av) {
   /* Build an instruction */
   Instruction inst;
 
-  /* Setup opcodes */
-  inst.setOpcodes(trace[0].inst, trace[0].size);
+  /* Setup opcode */
+  inst.setOpcode(trace[0].inst, trace[0].size);
 
   /* Define RAX as symbolic variable */
   api.convertRegisterToSymbolicVariable(triton::arch::Register(api.getRegister(ID_REG_RAX)));

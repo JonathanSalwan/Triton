@@ -45,19 +45,19 @@ class DefCamp2015(object):
 
     def emulate(self, pc):
         """
-        Emulate every opcodes from pc.
+        Emulate every opcode from pc.
 
         * Process instruction until the end and search for constraint
         resolution on cmp eax, 1 then self.Triton.set the new correct value and keep going.
         """
         astCtxt = self.Triton.getAstContext()
         while pc:
-            # Fetch opcodes
-            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 16)
+            # Fetch opcode
+            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
-            instruction.setOpcodes(opcodes)
+            instruction.setOpcode(opcode)
             instruction.setAddress(pc)
 
             # Process
@@ -225,8 +225,8 @@ class SeedCoverage(object):
             # Build an instruction
             inst = Instruction()
 
-            # Setup opcodes
-            inst.setOpcodes(function[ip])
+            # Setup opcode
+            inst.setOpcode(function[ip])
 
             # Setup Address
             inst.setAddress(ip)
@@ -345,10 +345,10 @@ class Emu1(object):
         # run the code
         pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))
         while pc != 0x409A18:
-            opcodes = self.Triton.getConcreteMemoryAreaValue(pc, 20)
+            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 20)
 
             instruction = Instruction()
-            instruction.setOpcodes(opcodes)
+            instruction.setOpcode(opcode)
             instruction.setAddress(pc)
 
             # Check if triton doesn't supports this instruction

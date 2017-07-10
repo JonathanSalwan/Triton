@@ -420,9 +420,9 @@ namespace triton {
         triton::extlibs::capstone::cs_insn*  insn;
         triton::usize                        count = 0;
 
-        /* Check if the opcodes and opcodes' size are defined */
-        if (inst.getOpcodes() == nullptr || inst.getSize() == 0)
-          throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Opcodes and opcodesSize must be definied.");
+        /* Check if the opcode and opcode' size are defined */
+        if (inst.getOpcode() == nullptr || inst.getSize() == 0)
+          throw triton::exceptions::Disassembly("x8664Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
         /* Open capstone */
         if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_64, &handle) != triton::extlibs::capstone::CS_ERR_OK)
@@ -436,7 +436,7 @@ namespace triton {
         inst.operands.clear();
 
         /* Let's disass and build our operands */
-        count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcodes(), inst.getSize(), inst.getAddress(), 0, &insn);
+        count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
         if (count > 0) {
           triton::extlibs::capstone::cs_detail* detail = insn->detail;
           for (triton::uint32 j = 0; j < 1; j++) {

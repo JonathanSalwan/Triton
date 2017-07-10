@@ -20,10 +20,10 @@
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcodes = "\x48\x31\xD0"
+>>> opcode = "\x48\x31\xD0"
 >>> inst = Instruction()
 
->>> inst.setOpcodes(opcodes)
+>>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
@@ -138,7 +138,7 @@ Triton allows you to display your AST via a Python syntax.
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 >>> inst = Instruction()
->>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
+>>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 0x1122334455667788))
 >>> inst.updateContext(ctxt.Register(REG.X86_64.RBX, 0x8877665544332211))

@@ -84,8 +84,8 @@ if __name__ == '__main__':
         # Build an instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(function[pc])
+        # Setup opcode
+        inst.setOpcode(function[pc])
 
         # Setup Address
         inst.setAddress(pc)

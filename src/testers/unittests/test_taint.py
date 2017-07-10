@@ -19,7 +19,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintRegister(Triton.Register(REG.X86_64.EAX))
         inst = Instruction()
         # lea eax,[esi+eax*1]
-        inst.setOpcodes("\x8D\x04\x06")
+        inst.setOpcode("\x8D\x04\x06")
         Triton.processing(inst)
 
         self.assertTrue(Triton.isRegisterTainted(Triton.Register(REG.X86_64.EAX)))
