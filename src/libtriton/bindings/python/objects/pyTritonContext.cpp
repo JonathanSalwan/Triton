@@ -459,7 +459,7 @@ namespace triton {
             // FIXME : We should incref the function object as it could be a lambda or a temporary function
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::API& api, triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::API& api, const triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
                 /* Create function args */
                 PyObject* args = triton::bindings::python::xPyTuple_New(2);
@@ -481,7 +481,7 @@ namespace triton {
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, triton::arch::Register& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, const triton::arch::Register& reg){
                 /********* Lambda *********/
                   /* Create function args */
                   PyObject* args = triton::bindings::python::xPyTuple_New(2);
@@ -1397,7 +1397,7 @@ namespace triton {
           auto regs = PyTritonContext_AsTritonContext(self)->getParentRegisters();
           ret = xPyList_New(regs.size());
 
-          for (auto const* reg: regs) {
+          for (const auto* reg: regs) {
             PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(*reg)));
           }
         }
@@ -1707,7 +1707,7 @@ namespace triton {
 
           size = registers.size();
           ret = xPyList_New(size);
-          for (auto const* spec: registers) {
+          for (const auto* spec: registers) {
             PyList_SetItem(ret, index, PyRegister(triton::arch::Register(*spec)));
             index++;
           }

@@ -225,7 +225,7 @@ namespace triton {
 
 
     void IrBuilder::removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes) {
-      for (auto const* se : inst.symbolicExpressions) {
+      for (const auto* se : inst.symbolicExpressions) {
         this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, se->getAst());
         this->symbolicEngine->removeSymbolicExpression(se->getId());
       }
@@ -235,7 +235,7 @@ namespace triton {
 
     template <typename T>
     void IrBuilder::collectNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const {
-      for (auto const& item : items)
+      for (const auto& item : items)
         this->astGarbageCollector.extractUniqueAstNodes(uniqueNodes, std::get<1>(item));
       items.clear();
     }
@@ -256,7 +256,7 @@ namespace triton {
     void IrBuilder::collectUnsymbolizedNodes(T& items) const {
       T newItems;
 
-      for (auto const& item : items) {
+      for (const auto& item : items) {
         if (std::get<1>(item) && std::get<1>(item)->isSymbolized() == true)
           newItems.insert(item);
       }

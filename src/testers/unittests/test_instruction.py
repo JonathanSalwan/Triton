@@ -69,10 +69,10 @@ class TestInstruction(unittest.TestCase):
     def test_operand(self):
         """Check operand information."""
         self.assertEqual(len(self.inst.getOperands()), 2)
-        self.assertEqual(self.inst.getFirstOperand().getName(), "rax")
-        self.assertEqual(self.inst.getSecondOperand().getName(), "rbx")
+        self.assertEqual(self.inst.getOperands()[0].getName(), "rax")
+        self.assertEqual(self.inst.getOperands()[1].getName(), "rbx")
         with self.assertRaises(Exception):
-            self.inst.getThirdOperand()
+            self.inst.getOperands()[2]
 
     def test_symbolic(self):
         """Check symbolic information."""

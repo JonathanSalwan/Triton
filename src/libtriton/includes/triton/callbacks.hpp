@@ -47,14 +47,14 @@ namespace triton {
      * \details The callback takes as unique argument a memory access. Callbacks will
      * be called each time that the Triton library will need a concrete memory value.
      */
-    using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, triton::arch::MemoryAccess&)>;
+    using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)>;
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
      * \details The callback takes as unique argument a register. Callbacks will be
      * called each time that the Triton library will need a concrete register value.
      */
-    using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, triton::arch::Register&)>;
+    using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::Register&)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *

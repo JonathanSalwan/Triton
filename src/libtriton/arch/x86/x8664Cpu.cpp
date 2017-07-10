@@ -478,9 +478,9 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                   /* LEA if exists */
-                  triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
-                  triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                  triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+                  const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
+                  const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
+                  const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
                   triton::uint32 immsize = (
                                             this->isRegisterValid(base.getId()) ? base.getSize() :

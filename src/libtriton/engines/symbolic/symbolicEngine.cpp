@@ -628,12 +628,12 @@ namespace triton {
 
 
       SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
-        SymbolicVariable* symVar            = nullptr;
-        SymbolicExpression* expression      = nullptr;
-        triton::usize regSymId              = triton::engines::symbolic::UNSET;
-        triton::arch::Register parent       = this->architecture->getRegister(reg.getParent());
-        triton::uint32 symVarSize           = reg.getBitSize();
-        triton::uint512 cv                  = this->architecture->getConcreteRegisterValue(reg);
+        SymbolicExpression* expression        = nullptr;
+        SymbolicVariable* symVar              = nullptr;
+        const triton::arch::Register& parent  = this->architecture->getRegister(reg.getParent());
+        triton::uint32 symVarSize             = reg.getBitSize();
+        triton::uint512 cv                    = this->architecture->getConcreteRegisterValue(reg);
+        triton::usize regSymId                = triton::engines::symbolic::UNSET;
 
         if (!this->architecture->isRegisterValid(parent.getId()))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
@@ -683,11 +683,11 @@ namespace triton {
 
 
       /* Returns a symbolic operand based on the abstract wrapper. */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
-          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(op.getImmediate());
-          case triton::arch::OP_MEM: return this->buildSymbolicMemory(op.getMemory());
-          case triton::arch::OP_REG: return this->buildSymbolicRegister(op.getRegister());
+          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(op.getConstImmediate());
+          case triton::arch::OP_MEM: return this->buildSymbolicMemory(op.getConstMemory());
+          case triton::arch::OP_REG: return this->buildSymbolicRegister(op.getConstRegister());
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::buildSymbolicOperand(): Invalid operand.");
         }
@@ -695,11 +695,11 @@ namespace triton {
 
 
       /* Returns a symbolic operand based on the abstract wrapper. */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op) {
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
-          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(inst, op.getImmediate());
-          case triton::arch::OP_MEM: return this->buildSymbolicMemory(inst, op.getMemory());
-          case triton::arch::OP_REG: return this->buildSymbolicRegister(inst, op.getRegister());
+          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(inst, op.getConstImmediate());
+          case triton::arch::OP_MEM: return this->buildSymbolicMemory(inst, op.getConstMemory());
+          case triton::arch::OP_REG: return this->buildSymbolicRegister(inst, op.getConstRegister());
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::buildSymbolicOperand(): Invalid operand.");
         }
@@ -714,7 +714,7 @@ namespace triton {
 
 
       /* Returns a symbolic immediate and defines the immediate as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, triton::arch::Immediate& imm) {
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
         triton::ast::AbstractNode* node = this->buildSymbolicImmediate(imm);
         inst.setReadImmediate(imm, node);
         return node;
@@ -777,17 +777,17 @@ namespace triton {
 
 
       /* Returns a symbolic memory and defines the memory as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, triton::arch::MemoryAccess& mem) {
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
         triton::ast::AbstractNode* node = this->buildSymbolicMemory(mem);
         inst.setLoadAccess(mem, node);
 
         /* Set implicit read of the base register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getBaseRegister()))
-          this->buildSymbolicRegister(inst, mem.getBaseRegister());
+        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
+          this->buildSymbolicRegister(inst, mem.getConstBaseRegister());
 
         /* Set implicit read of the index register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getIndexRegister()))
-          this->buildSymbolicRegister(inst, mem.getIndexRegister());
+        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
+          this->buildSymbolicRegister(inst, mem.getConstIndexRegister());
 
         return node;
       }
@@ -814,7 +814,7 @@ namespace triton {
 
 
       /* Returns a symbolic register and defines the register as input of the instruction */
-      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, triton::arch::Register& reg) {
+      triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
         triton::ast::AbstractNode* node = this->buildSymbolicRegister(reg);
         inst.setReadRegister(reg, node);
 
@@ -823,10 +823,10 @@ namespace triton {
 
 
       /* Returns the new symbolic abstract expression and links this expression to the instruction. */
-      SymbolicExpression* SymbolicEngine::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
         switch (dst.getType()) {
-          case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getMemory(), comment);
-          case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getRegister(), comment);
+          case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
+          case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicExpression(): Invalid operand.");
         }
@@ -835,7 +835,7 @@ namespace triton {
 
 
       /* Returns the new symbolic memory expression */
-      SymbolicExpression* SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment) {
+      SymbolicExpression* SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
         triton::ast::AbstractNode* tmp = nullptr;
         std::list<triton::ast::AbstractNode*> ret;
 
@@ -891,10 +891,10 @@ namespace triton {
 
       /* Returns the new symbolic register expression */
       SymbolicExpression* SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& reg, const std::string& comment) {
+        const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
         triton::uint32 regSize                    = reg.getSize();
-        triton::arch::Register parentReg          = triton::arch::Register(this->architecture->getParentRegister(reg)); // FIXME : provide a getParent from Register with concrete value set
 
         if (this->architecture->isFlag(reg))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");

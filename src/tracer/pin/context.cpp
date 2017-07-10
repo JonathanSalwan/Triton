@@ -290,7 +290,7 @@ namespace tracer {
       }
 
 
-      void setCurrentRegisterValue(triton::arch::Register& reg, triton::uint512 value) {
+      void setCurrentRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
@@ -403,7 +403,7 @@ namespace tracer {
         #endif
 
         /* Sync with the libTriton */
-        triton::arch::Register syncReg(reg);
+        const triton::arch::Register syncReg(reg);
         tracer::pintool::api.setConcreteRegisterValue(syncReg, value);
 
         /* We must concretize the register because the last symbolic value is now false */
@@ -414,7 +414,7 @@ namespace tracer {
       }
 
 
-      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem, triton::uint512 value) {
+      void setCurrentMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
         triton::__uint addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -457,7 +457,7 @@ namespace tracer {
       }
 
 
-      void needConcreteRegisterValue(triton::API& api, triton::arch::Register& reg) {
+      void needConcreteRegisterValue(triton::API& api, const triton::arch::Register& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
         api.setConcreteRegisterValue(reg, value);
       }

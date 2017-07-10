@@ -622,13 +622,13 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicOperand(triton::arch::OperandWrapper& op) {
+  triton::ast::AbstractNode* API::buildSymbolicOperand(const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
     return this->symbolic->buildSymbolicOperand(op);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicOperand(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op) {
+  triton::ast::AbstractNode* API::buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
     return this->symbolic->buildSymbolicOperand(inst, op);
   }
@@ -640,7 +640,7 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicImmediate(triton::arch::Instruction& inst, triton::arch::Immediate& imm) {
+  triton::ast::AbstractNode* API::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
     this->checkSymbolic();
     return this->symbolic->buildSymbolicImmediate(inst, imm);
   }
@@ -652,7 +652,7 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicMemory(triton::arch::Instruction& inst, triton::arch::MemoryAccess& mem) {
+  triton::ast::AbstractNode* API::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
     return this->symbolic->buildSymbolicMemory(inst, mem);
   }
@@ -664,7 +664,7 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicRegister(triton::arch::Instruction& inst, triton::arch::Register& reg) {
+  triton::ast::AbstractNode* API::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
     this->checkSymbolic();
     return this->symbolic->buildSymbolicRegister(inst, reg);
   }
@@ -688,13 +688,13 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::OperandWrapper& dst, const std::string& comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicExpression(inst, node, dst, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, triton::arch::MemoryAccess& mem, const std::string& comment) {
+  triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicMemoryExpression(inst, node, mem, comment);
   }

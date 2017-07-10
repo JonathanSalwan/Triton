@@ -36,7 +36,7 @@ int main(int ac, const char **av) {
 
   std::cout << "----------------------------" << std::endl;
 
-  for(auto const& kv: api.getAllRegisters())
+  for(const auto& kv: api.getAllRegisters())
     std::cout << kv.second << std::endl;
 
   return 0;
