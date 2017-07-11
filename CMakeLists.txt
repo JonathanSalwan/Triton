@@ -103,7 +103,7 @@ endif()
 # Read the build version
 file(READ ${CMAKE_SOURCE_DIR}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 4)
+set(VERSION_MINOR 6)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 # Custom cmake search
