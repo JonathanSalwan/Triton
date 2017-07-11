@@ -180,6 +180,9 @@ Returns the logical conjunction vector of path constraints as list of \ref py_Pa
 - <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
 Returns the logical conjunction AST of path constraints.
 
+- <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
+Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
+
 - <b>integer getRegisterBitSize(void)</b><br>
 Returns the max size (in bit) of the CPU register (GPR).
 
@@ -412,27 +415,6 @@ namespace triton {
       static void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
         Py_DECREF(self);
-      }
-
-
-      static PyObject* TritonContext_Register(PyObject* self, PyObject* regIn) {
-        triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "Register(): Architecture is not defined.");
-
-        if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
-          return PyErr_Format(PyExc_TypeError, "Register(): Expects an id as argument.");
-
-        try {
-          rid = static_cast<triton::arch::registers_e>(PyLong_AsUint32(regIn));
-          triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
-          return PyRegister(regOut);
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -1438,6 +1420,27 @@ namespace triton {
 
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathConstraintsAst());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getRegister(PyObject* self, PyObject* regIn) {
+        triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getRegister(): Architecture is not defined.");
+
+        if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
+          return PyErr_Format(PyExc_TypeError, "getRegister(): Expects an id as argument.");
+
+        try {
+          rid = static_cast<triton::arch::registers_e>(PyLong_AsUint32(regIn));
+          triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
+          return PyRegister(regOut);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2864,7 +2867,6 @@ namespace triton {
 
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
-        {"Register",                            (PyCFunction)TritonContext_Register,                               METH_O,             ""},
         {"addCallback",                         (PyCFunction)TritonContext_addCallback,                            METH_VARARGS,       ""},
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
@@ -2906,6 +2908,7 @@ namespace triton {
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
+        {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
         {"getRegisterBitSize",                  (PyCFunction)TritonContext_getRegisterBitSize,                     METH_NOARGS,        ""},
         {"getRegisterSize",                     (PyCFunction)TritonContext_getRegisterSize,                        METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},

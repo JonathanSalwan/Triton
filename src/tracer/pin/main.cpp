@@ -91,26 +91,26 @@ if __name__ == '__main__':
         inst.setAddress(regs['rip'])
 
         # Update concrete register state
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RAX,    regs['rax']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RBX,    regs['rbx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RCX,    regs['rcx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RDX,    regs['rdx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RDI,    regs['rdi']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RSI,    regs['rsi']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RBP,    regs['rbp']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RSP,    regs['rsp']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RIP,    regs['rip']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R8,     regs['r8']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R9,     regs['r9']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R10,    regs['r10']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R11,    regs['r11']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R12,    regs['r12']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R13,    regs['r13']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R14,    regs['r14']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R15,    regs['r15']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.EFLAGS, regs['eflags']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.FS,     regs['fs'])) # The mapped base address
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.GS,     regs['gs'])) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RAX,    regs['rax']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RBX,    regs['rbx']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RCX,    regs['rcx']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RDX,    regs['rdx']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RDI,    regs['rdi']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RSI,    regs['rsi']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RBP,    regs['rbp']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RSP,    regs['rsp']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RIP,    regs['rip']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R8,     regs['r8']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R9,     regs['r9']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R10,    regs['r10']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R11,    regs['r11']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R12,    regs['r12']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R13,    regs['r13']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R14,    regs['r14']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.R15,    regs['r15']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.EFLAGS, regs['eflags']))
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.FS,     regs['fs'])) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.GS,     regs['gs'])) # The mapped base address
 
         # Update concrete memory access
         accesses = db.get_memory_access_from_inst_id(inst_id)

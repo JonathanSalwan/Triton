@@ -28,7 +28,7 @@ class TestSymbolic(unittest.TestCase):
         inst.setOpcode("\x48\xFF\xC0")
         self.Triton.processing(inst)
 
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.Register(REG.X86_64.RAX)), 1)
+        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.getRegister(REG.X86_64.RAX)), 1)
 
         # This call triton::api.backupSymbolicEngine()
         self.Triton.enableSymbolicEngine(False)
@@ -38,9 +38,9 @@ class TestSymbolic(unittest.TestCase):
         inst.setOpcode("\x48\xFF\xC0")
         self.Triton.processing(inst)
 
-        self.assertEqual(self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX)), 2, "concrete value is updated")
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.Register(REG.X86_64.RAX)), 1)
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.Register(REG.X86_64.RAX)), 1, "Symbolic value is not update")
+        self.assertEqual(self.Triton.getConcreteRegisterValue(self.Triton.getRegister(REG.X86_64.RAX)), 2, "concrete value is updated")
+        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.getRegister(REG.X86_64.RAX)), 1)
+        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.getRegister(REG.X86_64.RAX)), 1, "Symbolic value is not update")
 
         # Try to reset engine after a backup to test if the bug #385 is fixed.
         self.Triton.resetEngines()
@@ -80,14 +80,14 @@ class TestSymbolic(unittest.TestCase):
     def test_bind_expr_to_register(self):
         """Check symbolic expression binded to register."""
         expr1 = self.Triton.newSymbolicExpression(self.astCtxt.bv(0x11223344, 64))
-        self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.Register(REG.X86_64.RAX))
+        self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.getRegister(REG.X86_64.RAX))
 
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.Register(REG.X86_64.RAX)), 0x11223344)
+        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.getRegister(REG.X86_64.RAX)), 0x11223344)
 
         expr1 = self.Triton.newSymbolicExpression(self.astCtxt.bv(0x11223344, 32))
         with self.assertRaises(Exception):
             # Incorrect size
-            self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.Register(REG.X86_64.RAX))
+            self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.getRegister(REG.X86_64.RAX))
 
 
 class TestSymbolicBuilding(unittest.TestCase):
@@ -109,24 +109,24 @@ class TestSymbolicBuilding(unittest.TestCase):
     def test_build_register(self):
         """Check symbolic register has correct size and location."""
         expr1 = self.Triton.newSymbolicExpression(self.astCtxt.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
-        self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.Register(REG.X86_64.RAX))
+        self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.getRegister(REG.X86_64.RAX))
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.RAX))
+        node = self.Triton.buildSymbolicRegister(self.Triton.getRegister(REG.X86_64.RAX))
         self.assertEqual(node.evaluate(), 0x1122334455667788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.QWORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.EAX))
+        node = self.Triton.buildSymbolicRegister(self.Triton.getRegister(REG.X86_64.EAX))
         self.assertEqual(node.evaluate(), 0x55667788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.DWORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.AX))
+        node = self.Triton.buildSymbolicRegister(self.Triton.getRegister(REG.X86_64.AX))
         self.assertEqual(node.evaluate(), 0x7788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.WORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.AH))
+        node = self.Triton.buildSymbolicRegister(self.Triton.getRegister(REG.X86_64.AH))
         self.assertEqual(node.evaluate(), 0x77)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.BYTE_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.AL))
+        node = self.Triton.buildSymbolicRegister(self.Triton.getRegister(REG.X86_64.AL))
         self.assertEqual(node.evaluate(), 0x88)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.BYTE_BIT)

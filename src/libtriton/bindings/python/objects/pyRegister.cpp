@@ -64,14 +64,14 @@ ah:8 bv[15..8]
 \subsection py_Register_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> ah = ctxt.Register(REG.X86_64.AH)
+>>> ah = ctxt.getRegister(REG.X86_64.AH)
 >>> print ah
 ah:8 bv[15..8]
 
 >>> print ah.getBitSize()
 8
 
->>> print ctxt.Register(REG.X86_64.RAX)
+>>> print ctxt.getRegister(REG.X86_64.RAX)
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~

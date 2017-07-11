@@ -32,7 +32,7 @@
 This object is used to represent a symbolic variable.
 
 ~~~~~~~~~~~~~{.py}
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.getRegister(REG.X86_64.RAX))
 >>> print symvar
 SymVar_0:64
 

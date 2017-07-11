@@ -69,7 +69,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_TAINTED, True)
-        ctx.taintRegister(ctx.Register(REG.X86_64.RAX))
+        ctx.taintRegister(ctx.getRegister(REG.X86_64.RAX))
 
         inst = Instruction("\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))

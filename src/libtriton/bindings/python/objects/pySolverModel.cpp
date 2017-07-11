@@ -31,7 +31,7 @@ This object is used to represent a model from an SMT solver.
 >>> inst = Instruction()
 >>> inst.setOpcode("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.getRegister(REG.X86_64.RAX))
 >>> print symvar
 SymVar_0:64
 
@@ -40,7 +40,7 @@ True
 >>> print inst
 0x0: xor rax, 0x11223344
 
->>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.RAX)))
+>>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.getRegister(REG.X86_64.RAX)))
 >>> print raxAst
 (bvxor SymVar_0 (_ bv287454020 64))
 

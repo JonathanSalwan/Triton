@@ -51,13 +51,13 @@ def cafter(instruction):
     # movzx  eax,BYTE PTR [rax]
     # RAX points on the user password
     if instruction.getAddress() == 0x40057b:
-        Triton.convertRegisterToSymbolicVariable(Triton.Register(REG.X86_64.RSI))
+        Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.RSI))
 
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
     if instruction.getAddress() == 0x4005ce:
         print '[+] Please wait, computing in progress...'
-        raxId = Triton.getSymbolicRegisterId(Triton.Register(REG.X86_64.RAX))
+        raxId = Triton.getSymbolicRegisterId(Triton.getRegister(REG.X86_64.RAX))
         raxExpr = Triton.getFullAstFromId(raxId)
 
         SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')

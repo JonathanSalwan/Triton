@@ -32,7 +32,7 @@
 This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
 
 ~~~~~~~~~~~~~{.py}
->>> ah = ctxt.Register(REG.X86_64.AH)
+>>> ah = ctxt.getRegister(REG.X86_64.AH)
 >>> bitvector = ah.getBitvector()
 >>> bitvector.getHigh()
 15L

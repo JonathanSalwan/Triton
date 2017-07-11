@@ -29,9 +29,9 @@ class TestFlags(unittest.TestCase):
 
         # Randomnly set flags registers and check result is the one expected
         for reg in rand_registers:
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(reg), 1)
+            self.Triton.setConcreteRegisterValue(self.Triton.getRegister(reg), 1)
             values[registers.index(reg)] = 1
-            self.assertListEqual([self.Triton.getConcreteRegisterValue(self.Triton.Register(r)) for r in registers], values)
+            self.assertListEqual([self.Triton.getConcreteRegisterValue(self.Triton.getRegister(r)) for r in registers], values)
 
     def test_unset_flags(self):
         """Check flags can be unset in any order with a correct result."""
@@ -40,13 +40,13 @@ class TestFlags(unittest.TestCase):
                      REG.X86_64.TF]
         values = [1] * len(registers)
         for reg in registers:
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(reg), 1)
+            self.Triton.setConcreteRegisterValue(self.Triton.getRegister(reg), 1)
 
         rand_registers = list(registers)
         random.shuffle(rand_registers)
 
         # Randomnly unset flags registers and check result is the one expected
         for reg in rand_registers:
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(reg), 0)
+            self.Triton.setConcreteRegisterValue(self.Triton.getRegister(reg), 0)
             values[registers.index(reg)] = 0
-            self.assertListEqual([self.Triton.getConcreteRegisterValue(self.Triton.Register(r)) for r in registers], values)
+            self.assertListEqual([self.Triton.getConcreteRegisterValue(self.Triton.getRegister(r)) for r in registers], values)

@@ -111,16 +111,16 @@ if __name__ == '__main__':
     print 'Instruction :', inst.getDisassembly()
     print 'Write at    :', hex(write)
     print 'Content     :', hex(Triton.getConcreteMemoryValue(MemoryAccess(write+4, CPUSIZE.DWORD)))
-    print 'RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RAX)))
-    print 'RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RSI)))
-    print 'RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RDI)))
+    print 'RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.getRegister(REG.X86_64.RAX)))
+    print 'RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.getRegister(REG.X86_64.RSI)))
+    print 'RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.getRegister(REG.X86_64.RDI)))
 
 
     print
     print 'Symbolic registers information'
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     for k, v in Triton.getSymbolicRegisters().items():
-        print Triton.Register(k), v
+        print Triton.getRegister(k), v
 
     print
     print 'Symbolic memory information'
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     print
     print 'Craft symbolic stuffs'
     print '~~~~~~~~~~~~~~~~~~~~~'
-    ah  = Triton.buildSymbolicRegister(Triton.Register(REG.X86_64.AH))
+    ah  = Triton.buildSymbolicRegister(Triton.getRegister(REG.X86_64.AH))
     mem = Triton.buildSymbolicMemory(MemoryAccess(0x11248, 4))
     print 'Memory at 0x11248 :', mem
     print 'Compute memory    :', hex(mem.evaluate())
