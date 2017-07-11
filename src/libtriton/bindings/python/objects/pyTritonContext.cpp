@@ -169,6 +169,9 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 - <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
+- <b>\ref py_Register_page getParentRegister(\ref py_REG_page reg)</b><br>
+Returns the parent \ref py_Register_page from a \ref py_Register_page.
+
 - <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
 Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
 

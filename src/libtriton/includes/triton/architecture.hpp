@@ -110,13 +110,13 @@ namespace triton {
         //! Returns all parent registers.
         std::set<const triton::arch::Register*> getParentRegisters(void) const;
 
-        //! Get register from id.
+        //! Returns register from id.
         const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
 
-        //! Get parent register from id.
+        //! Returns parent register from id.
         const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
 
-        //! Get parent register from register
+        //! Returns parent register from register
         const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
 
         //! Disassembles the instruction according to the architecture.

@@ -288,8 +288,13 @@ namespace triton {
       }
 
 
-      const triton::arch::Register& x86Cpu::getParent(const triton::arch::Register& reg) const {
+      const triton::arch::Register& x86Cpu::getParentRegister(const triton::arch::Register& reg) const {
         return this->getRegister(reg.getParent());
+      }
+
+
+      const triton::arch::Register& x86Cpu::getParentRegister(triton::arch::registers_e id) const {
+        return this->getParentRegister(this->getRegister(id));
       }
 
 

@@ -333,8 +333,9 @@ namespace triton {
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           bool isRegister(triton::arch::registers_e regId) const;
           bool isRegisterValid(triton::arch::registers_e regId) const;
-          const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters() const;
-          const triton::arch::Register& getParent(const triton::arch::Register&) const;
+          const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
+          const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
+          const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
           const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
           std::set<const triton::arch::Register*> getParentRegisters(void) const;
           std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;

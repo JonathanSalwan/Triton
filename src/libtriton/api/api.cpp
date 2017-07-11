@@ -258,6 +258,11 @@ namespace triton {
   }
 
 
+  const triton::arch::Register& API::getParentRegister(const triton::arch::Register& reg) const {
+    return this->arch.getParentRegister(reg);
+  }
+
+
   const triton::arch::Register& API::getParentRegister(triton::arch::registers_e id) const {
     return this->arch.getParentRegister(id);
   }

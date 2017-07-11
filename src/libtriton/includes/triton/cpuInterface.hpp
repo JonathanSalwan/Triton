@@ -69,8 +69,11 @@ namespace triton {
         //! Returns all registers.
         virtual const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
 
-        //! Gets parent register from a given one.
-        virtual const triton::arch::Register& getParent(const triton::arch::Register&) const = 0;
+        //! Returns parent register from a given one.
+        virtual const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const = 0;
+
+        //! Returns parent register from a given one.
+        virtual const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const = 0;
 
         //! Returns register from id
         virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
