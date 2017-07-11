@@ -2877,82 +2877,24 @@ namespace triton {
       }
 
 
-      /* Snippet from typeobject.c of the Python project */
-      static PyObject* TritonContext_getattro(PyTypeObject* type, PyObject* name) {
-        PyTypeObject* metatype = Py_TYPE(type);
-        PyObject* attribute;
-        PyObject* meta_attribute;
-        descrgetfunc meta_get;
-
-        /* No readable descriptor found yet */
-        meta_get = NULL;
-
-        /* Look for the attribute in the metatype */
-        meta_attribute = _PyType_Lookup(metatype, name);
-
-        if (meta_attribute != NULL) {
-          meta_get = Py_TYPE(meta_attribute)->tp_descr_get;
-
-          if (meta_get != NULL && PyDescr_IsData(meta_attribute)) {
-            /* Data descriptors implement tp_descr_set to intercept
-             * writes. Assume the attribute is not overridden in
-             * type's tp_dict (and bases): call the descriptor now.
-             */
-            return meta_get(meta_attribute, (PyObject*)type, (PyObject*)metatype);
-          }
-          Py_INCREF(meta_attribute);
-        }
-
-        /* No data descriptor found on metatype. Look in tp_dict of this
-         * type and its bases */
-        attribute = _PyType_Lookup(type, name);
-        if (attribute != NULL) {
-          /* Implement descriptor functionality, if any */
-          descrgetfunc local_get = Py_TYPE(attribute)->tp_descr_get;
-
-          Py_XDECREF(meta_attribute);
-
-          if (local_get != NULL) {
-            /* NULL 2nd argument indicates the descriptor was
-             * found on the target object itself (or a base)  */
-            return local_get(attribute, (PyObject*)NULL, (PyObject*)type);
-          }
-
-          Py_INCREF(attribute);
-          return attribute;
-        }
-
-        /* No attribute found in local __dict__ (or bases): use the
-         * descriptor from the metatype, if any */
-        if (meta_get != NULL) {
-          PyObject* res;
-          res = meta_get(meta_attribute, (PyObject*)type, (PyObject*)metatype);
-          Py_DECREF(meta_attribute);
-          return res;
-        }
-
-        /* If an ordinary attribute was found on the metatype, return it now */
-        if (meta_attribute != NULL) {
-          return meta_attribute;
-        }
-
+      static PyObject* TritonContext_getattro(PyObject* self, PyObject* name) {
         try {
           /* Access to the registers attribute */
-          if (std::string(PyString_AsString(name)) == "registers") {
+          if (PyString_Check(name) && std::string(PyString_AsString(name)) == "registers") {
 
             /* Check if the architecture is defined */
-            if (PyTritonContext_AsTritonContext(type)->getArchitecture() == triton::arch::ARCH_INVALID)
+            if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
               return PyErr_Format(PyExc_TypeError, "__getattro__: Architecture is not defined.");
 
-            Py_INCREF(((TritonContext_Object*)(type))->regAttr);
-            return ((TritonContext_Object*)(type))->regAttr;
+            Py_INCREF(((TritonContext_Object*)(self))->regAttr);
+            return ((TritonContext_Object*)(self))->regAttr;
           }
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        return NULL;
+        return PyObject_GenericGetAttr((PyObject *)self, name);
       }
 
 
