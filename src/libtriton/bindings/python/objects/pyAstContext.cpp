@@ -35,7 +35,7 @@ True
 
 */
 
-/*! \page py_AstContext_page AST Context
+/*! \page py_AstContext_page AstContext
     \brief [**python api**] All information about the ast python module.
 
 \tableofcontents
@@ -258,7 +258,7 @@ a < b             | (bvult a b)
 a > b             | (bvugt a b)
 
 \anchor ast
-\section ast_py_api Python API - Methods of the ast module
+\section AstContext_py_api Python API - Methods of the AstContext module
 <hr>
 
 - <b>\ref py_AstNode_page assert_(\ref py_AstNode_page expr1)</b><br>

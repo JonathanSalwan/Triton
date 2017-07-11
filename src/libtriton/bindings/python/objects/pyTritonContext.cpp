@@ -15,27 +15,25 @@
 
 
 /*! \page py_TritonContext_page TritonContext
-    \brief [**python api**] All information about the Triton Context
+    \brief [**python api**] All information about the Triton Context class
     \anchor tritonContext
 
 \section triton_py_description Description
 <hr>
 
-The Triton Triton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
-
-\section tritonContext_py_api Python API - Classes, methods, modules and namespaces of libTriton
-<hr>
-
-By default, the libTriton contains Python bindings and can be loaded with a classical Python `import`.
+The libTriton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
 
 ~~~~~~~~~~~~~{.py}
->>> from triton import TritonContext
-
+>>> from triton import TritonContext, ARCH
+>>>
+>>> ctx = TritonContext()
+>>> ctx.setArchitecture(ARCH.X86_64)
 ~~~~~~~~~~~~~
 
-If you want to use the libTriton without Python bindings, recompile the project with the `cmake` flag `-DTRITON_PYTHON_BINDINGS=no`.
+\section tritonContext_py_api Python API - Classes and methods of the TritonContext class
+<hr>
 
-\subsection triton_py_api_classes Classes
+\subsection TritonContext_py_api_classes Classes
 
 - \ref py_AstNode_page
 - \ref py_AstContext_page
@@ -46,7 +44,7 @@ If you want to use the libTriton without Python bindings, recompile the project 
 - \ref py_SymbolicExpression_page
 - \ref py_SymbolicVariable_page
 
-\subsection triton_py_api_methods Methods
+\subsection TritonContext_py_api_methods Methods
 
 - <b>void addCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Adds a callback at specific internal points. Your callback will be called each time the point is reached.
@@ -55,8 +53,8 @@ Adds a callback at specific internal points. Your callback will be called each t
 Assigns a \ref py_SymbolicExpression_page to a \ref py_MemoryAccess_page area. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the memory access.
 
-- <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_REG_page reg)</b><br>
-Assigns a \ref py_SymbolicExpression_page to a \ref py_REG_page. **Be careful**, use this function only if you know what you are doing.
+- <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_Register_page reg)</b><br>
+Assigns a \ref py_SymbolicExpression_page to a \ref py_Register_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
 to 128-bits. Otherwise, you will probably get a sort mismatch error when you will solve the expression. If you want to assign an
 expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
@@ -70,8 +68,8 @@ Builds a symbolic immediate from a \ref py_Immediate_page.
 - <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
 Builds a symbolic memory cell from a \ref py_MemoryAccess_page with the SSA form.
 
-- <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_REG_page reg)</b><br>
-Builds a symbolic register from a \ref py_REG_page with the SSA form.
+- <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_Register_page reg)</b><br>
+Builds a symbolic register from a \ref py_Register_page with the SSA form.
 
 - <b>void clearPathConstraints(void)</b><br>
 Clears the logical conjunction vector of path constraints.
@@ -88,7 +86,7 @@ Concretizes a specific symbolic memory reference.
 - <b>void concretizeMemory(\ref py_MemoryAccess_page mem)</b><br>
 Concretizes a specific symbolic memory reference.
 
-- <b>void concretizeRegister(\ref py_REG_page reg)</b><br>
+- <b>void concretizeRegister(\ref py_Register_page reg)</b><br>
 Concretizes a specific symbolic register reference.
 
 - <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment)</b><br>
@@ -97,16 +95,16 @@ Converts a symbolic expression to a symbolic variable. `symVarSize` must be in b
 - <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment)</b><br>
 Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_REG_page reg, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_Register_page reg, string comment)</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page flag, string comment)</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_Register_page flag, string comment)</b><br>
 Returns the new symbolic register expression and links this expression to the instruction.
 
 - <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment)</b><br>
 Returns the new symbolic memory expression and links this expression to the instruction.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_REG_page reg, string comment)</b><br>
+- <b>\ref py_SymbolicExpression_page createSymbolicRegisterExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_Register_page reg, string comment)</b><br>
 Returns the new symbolic register expression and links this expression to the instruction.
 
 - <b>\ref py_SymbolicExpression_page createSymbolicVolatileExpression (\ref py_Instruction_page inst, \ref py_AstNode_page node, string comment)</b><br>
@@ -154,7 +152,7 @@ Returns the concrete value of a memory cell.
 - <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
 Returns the concrete value of memory cells.
 
-- <b>integer getConcreteRegisterValue(\ref py_REG_page reg)</b><br>
+- <b>integer getConcreteRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the concrete value of a register.
 
 - <b>\ref py_AstNode_page getFullAst(\ref py_AstNode_page node)</b><br>
@@ -169,7 +167,7 @@ Computes and returns a model as a dictionary of {integer symVarId : \ref py_Solv
 - <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
 
-- <b>\ref py_Register_page getParentRegister(\ref py_REG_page reg)</b><br>
+- <b>\ref py_Register_page getParentRegister(\ref py_Register_page reg)</b><br>
 Returns the parent \ref py_Register_page from a \ref py_Register_page.
 
 - <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
@@ -208,10 +206,10 @@ Returns the symbolic memory value.
 - <b>dict getSymbolicRegisters(void)</b><br>
 Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
-- <b>integer getSymbolicRegisterId(\ref py_REG_page reg)</b><br>
+- <b>integer getSymbolicRegisterId(\ref py_Register_page reg)</b><br>
 Returns the symbolic expression id corresponding to a register.
 
-- <b>integer getSymbolicRegisterValue(\ref py_REG_page reg)</b><br>
+- <b>integer getSymbolicRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the symbolic register value.
 
 - <b>\ref py_SymbolicVariable_page getSymbolicVariableFromId(integer symVarId)</b><br>
@@ -235,8 +233,8 @@ Returns the list of all tainted symbolic expressions.
 - <b>bool isArchitectureValid(void)</b><br>
 Returns true if the architecture is valid.
 
-- <b>bool isFlag(\ref py_REG_page reg)</b><br>
-Returns true if the register id is a flag.
+- <b>bool isFlag(\ref py_Register_page reg)</b><br>
+Returns true if the register is a flag.
 
 - <b>bool isMemoryMapped(integer baseAddr, integer size=1)</b><br>
 Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
@@ -256,17 +254,17 @@ Returns true if the memory is tainted.
 - <b>bool isModeEnabled(\ref py_MODE_page mode)</b><br>
 Returns true if the mode is enabled.
 
-- <b>bool isRegister(\ref py_REG_page reg)</b><br>
-Returns true if the register id is a register (see also isFlag()).
+- <b>bool isRegister(\ref py_Register_page reg)</b><br>
+Returns true if the register is a register (see also isFlag()).
 
-- <b>bool isRegisterSymbolized(\ref py_REG_page reg)</b><br>
+- <b>bool isRegisterSymbolized(\ref py_Register_page reg)</b><br>
 Returns true if the register expression contains a symbolic variable.
 
-- <b>bool isRegisterTainted(\ref py_REG_page reg)</b><br>
+- <b>bool isRegisterTainted(\ref py_Register_page reg)</b><br>
 Returns true if the register is tainted.
 
-- <b>bool isRegisterValid(\ref py_REG_page reg)</b><br>
-Returns true if the register id is valid.
+- <b>bool isRegisterValid(\ref py_Register_page reg)</b><br>
+Returns true if the register is valid.
 
 - <b>bool isSymbolicEngineEnabled(void)</b><br>
 Returns true if the symbolic execution engine is enabled.
@@ -317,7 +315,7 @@ the symbolic state (if it exists). You should probably use the concretize functi
 Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteRegisterValue(\ref py_REG_page reg, integer value)</b><br>
+- <b>void setConcreteRegisterValue(\ref py_Register_page reg, integer value)</b><br>
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
@@ -327,7 +325,7 @@ Sets the concrete value of a symbolic variable.
 - <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
 Sets the targeted memory as tainted or not. Returns true if the memory is still tainted.
 
-- <b>bool setTaintRegister(\ref py_REG_page reg, bool flag)</b><br>
+- <b>bool setTaintRegister(\ref py_Register_page reg, bool flag)</b><br>
 Sets the targeted register as tainted or not. Returns true if the register is still tainted.
 
 - <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
@@ -344,18 +342,18 @@ Taints `memDst` with an assignment - `memDst` is untained. Returns true if the `
 Taints `memDst` from `memSrc` with an assignment - `memDst` is tainted if `memSrc` is tainted, otherwise
 `memDst` is untained. Returns true if `memDst` is tainted.
 
-- <b>bool taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+- <b>bool taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
 Taints `memDst` from `regSrc` with an assignment - `memDst` is tainted if `regSrc` is tainted, otherwise
 `memDst` is untained. Return true if `memDst` is tainted.
 
-- <b>bool taintAssignmentRegisterImmediate(\ref py_REG_page regDst)</b><br>
+- <b>bool taintAssignmentRegisterImmediate(\ref py_Register_page regDst)</b><br>
 Taints `regDst` with an assignment - `regDst` is untained. Returns true if `reDst` is still tainted.
 
-- <b>bool taintAssignmentRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>bool taintAssignmentRegisterMemory(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSrc` is tainted, otherwise
 `regDst` is untained. Return true if `regDst` is tainted.
 
-- <b>bool taintAssignmentRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+- <b>bool taintAssignmentRegisterRegister(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise
 `regDst` is untained. Return true if `regDst` is tainted.
 
@@ -365,7 +363,7 @@ Taints an address. Returns true if the address is tainted.
 - <b>bool taintMemory(\ref py_MemoryAccess_page mem)</b><br>
 Taints a memory. Returns true if the memory is tainted.
 
-- <b>bool taintRegister(\ref py_REG_page reg)</b><br>
+- <b>bool taintRegister(\ref py_Register_page reg)</b><br>
 Taints a register. Returns true if the register is tainted.
 
 - <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
@@ -375,18 +373,18 @@ Taints `memDst` with an union - `memDst` does not changes. Returns true if `memD
 Taints `memDst` from `memSrc` with an union - `memDst` is tainted if `memDst` or `memSrc` are
 tainted. Returns true if `memDst` is tainted.
 
-- <b>bool taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_REG_page regSrc)</b><br>
+- <b>bool taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
 Taints `memDst` from `RegSrc` with an union - `memDst` is tainted if `memDst` or `regSrc` are
 tainted. Returns true if `memDst` is tainted.
 
-- <b>bool taintUnionRegisterImmediate(\ref py_REG_page regDst)</b><br>
+- <b>bool taintUnionRegisterImmediate(\ref py_Register_page regDst)</b><br>
 Taints `regDst` with an union - `regDst` does not changes. Returns true if `regDst` is tainted.
 
-- <b>bool taintUnionRegisterMemory(\ref py_REG_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>bool taintUnionRegisterMemory(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or `memSrc` are
 tainted. Returns true if `regDst` is tainted.
 
-- <b>bool taintUnionRegisterRegister(\ref py_REG_page regDst, \ref py_REG_page regSrc)</b><br>
+- <b>bool taintUnionRegisterRegister(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are
 tainted. Returns true if `regDst` is tainted.
 
@@ -399,7 +397,7 @@ Untaints an address. Returns true if the address is still tainted.
 - <b>bool untaintMemory(\ref py_MemoryAccess_page mem)</b><br>
 Untaints a memory. Returns true if the memory is still tainted.
 
-- <b>bool untaintRegister(\ref py_REG_page reg)</b><br>
+- <b>bool untaintRegister(\ref py_Register_page reg)</b><br>
 Untaints a register. Returns true if the register is still tainted.
 
 */
@@ -590,7 +588,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a SymbolicExpression as first argument.");
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
-          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a REG as second argument.");
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a Register as second argument.");
 
         triton::engines::symbolic::SymbolicExpression* arg1 = PySymbolicExpression_AsSymbolicExpression(se);
         triton::arch::Register arg2 = *PyRegister_AsRegister(reg);
@@ -747,7 +745,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Expects a Register as argument.");
 
         try {
           PyTritonContext_AsTritonContext(self)->concretizeRegister(*PyRegister_AsRegister(reg));
@@ -838,7 +836,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Architecture is not defined.");
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
-          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a Register as first argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a sting as second argument.");
@@ -876,7 +874,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a AstNode as second argument.");
 
         if (flag == nullptr || (!PyRegister_Check(flag)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a REG as third argument.");
+          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a Register as third argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a sting as fourth argument.");
@@ -960,7 +958,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a AstNode as second argument.");
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
-          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a REG as third argument.");
+          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a Register as third argument.");
 
         if (comment != nullptr && !PyString_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a sting as fourth argument.");
@@ -1273,7 +1271,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Expects a Register as argument.");
 
         try {
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getConcreteRegisterValue(*PyRegister_AsRegister(reg)));
@@ -1583,7 +1581,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Expects a Register as argument.");
 
         try {
           return PyLong_FromUsize(PyTritonContext_AsTritonContext(self)->getSymbolicRegisterId(*PyRegister_AsRegister(reg)));
@@ -1600,7 +1598,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Expects a Register as argument.");
 
         try {
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getSymbolicRegisterValue(*PyRegister_AsRegister(reg)));
@@ -1759,7 +1757,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isFlag(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "isFlag(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "isFlag(): Expects a Register as argument.");
 
         if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
@@ -1850,7 +1848,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegister(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "isRegister(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "isRegister(): Expects a Register as argument.");
 
         if (PyTritonContext_AsTritonContext(self)->isRegister(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
@@ -1864,7 +1862,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegisterSymbolized(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "isRegisterSymbolized(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "isRegisterSymbolized(): Expects a Register as argument.");
 
         if (PyTritonContext_AsTritonContext(self)->isRegisterSymbolized(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
@@ -1878,7 +1876,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Expects a Register as argument.");
 
         if (PyTritonContext_AsTritonContext(self)->isRegisterTainted(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
@@ -1892,7 +1890,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Expects a Register as argument.");
 
         if (PyTritonContext_AsTritonContext(self)->isRegisterValid(*PyRegister_AsRegister(reg)) == true)
           Py_RETURN_TRUE;
@@ -2265,7 +2263,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a Register as first argument.");
 
         if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a value as second argument.");
@@ -2352,7 +2350,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a Register as first argument.");
 
         if (flag == nullptr || !PyBool_Check(flag))
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a boolean as second argument.");
@@ -2484,7 +2482,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Expects a MemoryAccess as first argument.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Expects a REG as second argument.");
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Expects a Register as second argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintAssignmentMemoryRegister(*PyMemoryAccess_AsMemoryAccess(mem), *PyRegister_AsRegister(reg)) == true)
@@ -2503,7 +2501,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterImmediate(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterImmediate(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterImmediate(): Expects a Register as argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
@@ -2528,7 +2526,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Expects a Register as first argument.");
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Expects a MemoryAccess as second argument.");
@@ -2556,10 +2554,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Architecture is not defined.");
 
         if (reg1 == nullptr || !PyRegister_Check(reg1))
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a Register as first argument.");
 
         if (reg2 == nullptr || !PyRegister_Check(reg2))
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a REG as second argument.");
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a Register as second argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterRegister(*PyRegister_AsRegister(reg1), *PyRegister_AsRegister(reg2)) == true)
@@ -2679,7 +2677,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Expects a MemoryAccess as first argument.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Expects a REG as second argument.");
+          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Expects a Register as second argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintUnionMemoryRegister(*PyMemoryAccess_AsMemoryAccess(mem), *PyRegister_AsRegister(reg)) == true)
@@ -2698,7 +2696,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterImmediate(): Architecture is not defined.");
 
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterImmediate(): Expects a REG as argument.");
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterImmediate(): Expects a Register as argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
@@ -2723,7 +2721,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Expects a Register as first argument.");
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Expects a MemoryAccess as second argument.");
@@ -2751,10 +2749,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Architecture is not defined.");
 
         if (reg1 == nullptr || !PyRegister_Check(reg1))
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a REG as first argument.");
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a Register as first argument.");
 
         if (reg2 == nullptr || !PyRegister_Check(reg2))
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a REG as second argument.");
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a Register as second argument.");
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterRegister(*PyRegister_AsRegister(reg1), *PyRegister_AsRegister(reg2)) == true)

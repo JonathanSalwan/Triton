@@ -20,7 +20,7 @@
 \section REG_py_description Description
 <hr>
 
-According to the CPU architecture, the REG namespace contains all kinds of register.
+According to the CPU architecture, the REG namespace contains all enums of register.
 
 \section REG_py_api Python API - Items of the REG namespace
 <hr>

@@ -151,7 +151,7 @@ However, if you prefer to directly download precompiled libraries, check out our
 <hr>
 \subsection libpintool_install_sec Pintool for Linux users
 
-This project is also shipped with a Pin \ref Tracer_page and may be compiled with these following commands:
+This project is also shipped with a \ref Tracer_page and may be compiled with these following commands:
 
 ~~~~~~~~~~~~~{.sh}
 $ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/

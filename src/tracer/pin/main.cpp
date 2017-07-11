@@ -27,7 +27,7 @@
 
 
 
-/*! \page Tracer_page Tracer
+/*! \page Tracer_page Pintool tracer
     \brief [**internal**] All information about how to plug a tracer.
 \tableofcontents
 \section Tracer_description Description
