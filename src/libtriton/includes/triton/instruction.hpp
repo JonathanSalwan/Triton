@@ -67,19 +67,19 @@ namespace triton {
         triton::uint32 prefix;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
-        std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
 
         //! Implicit and explicit store access (write). This field is set at the semantics level.
-        std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
 
         //! Implicit and explicit register inputs (read). This field is set at the semantics level.
-        std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
 
         //! Implicit and explicit register outputs (write). This field is set at the semantics level.
-        std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
 
         //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
-        std::set<std::pair<const triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
+        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
 
         //! True if this instruction is a branch. This field is set at the disassembly level.
         bool branch;
@@ -146,22 +146,19 @@ namespace triton {
         triton::uint32 getPrefix(void) const;
 
         //! Returns the list of all implicit and explicit load access
-        std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getLoadAccess(void);
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getLoadAccess(void);
 
         //! Returns the list of all implicit and explicit store access
-        std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getStoreAccess(void);
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getStoreAccess(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) inputs (read)
-        std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>>& getReadRegisters(void);
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getReadRegisters(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) outputs (write)
-        std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>>& getWrittenRegisters(void);
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getWrittenRegisters(void);
 
         //! Returns the list of all implicit and explicit immediate inputs (read)
-        std::set<std::pair<const triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void);
-
-        //! Returns the register state which has been recorded.
-        triton::arch::Register getRegisterState(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void);
 
         //! Sets the opcode of the instruction.
         void setOpcode(const triton::uint8* opcode, triton::uint32 size);

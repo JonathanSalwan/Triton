@@ -131,27 +131,27 @@ namespace triton {
     }
 
 
-    std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getLoadAccess(void) {
+    std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getLoadAccess(void) {
       return this->loadAccess;
     }
 
 
-    std::set<std::pair<const triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getStoreAccess(void) {
+    std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getStoreAccess(void) {
       return this->storeAccess;
     }
 
 
-    std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getReadRegisters(void) {
+    std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getReadRegisters(void) {
       return this->readRegisters;
     }
 
 
-    std::set<std::pair<const triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getWrittenRegisters(void) {
+    std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getWrittenRegisters(void) {
       return this->writtenRegisters;
     }
 
 
-    std::set<std::pair<const triton::arch::Immediate, triton::ast::AbstractNode*>>& Instruction::getReadImmediates(void) {
+    std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& Instruction::getReadImmediates(void) {
       return this->readImmediates;
     }
 
