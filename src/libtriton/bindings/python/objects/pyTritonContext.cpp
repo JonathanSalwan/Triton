@@ -2880,11 +2880,11 @@ namespace triton {
       static PyObject* TritonContext_getattro(PyObject* self, PyObject* name) {
         try {
           /* Access to the registers attribute */
-          if (PyString_Check(name) && std::string(PyString_AsString(name)) == "registers") {
+          if (std::string(PyString_AsString(name)) == "registers") {
 
             /* Check if the architecture is defined */
             if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-              return PyErr_Format(PyExc_TypeError, "__getattro__: Architecture is not defined.");
+              return PyErr_Format(PyExc_TypeError, "__getattr__.registers: Architecture is not defined.");
 
             Py_INCREF(((TritonContext_Object*)(self))->regAttr);
             return ((TritonContext_Object*)(self))->regAttr;
