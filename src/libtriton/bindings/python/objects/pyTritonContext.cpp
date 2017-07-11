@@ -414,6 +414,7 @@ namespace triton {
 
       static void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
+        Py_XDECREF(((TritonContext_Object*)self)->regAttr);
         Py_DECREF(self);
       }
 
@@ -467,7 +468,7 @@ namespace triton {
                   /* Create function args */
                   PyObject* args = triton::bindings::python::xPyTuple_New(2);
                   PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(triton::arch::Register(reg)));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(reg));
 
                   /* Call the callback */
                   PyObject* ret = PyObject_CallObject(function, args);
@@ -1120,11 +1121,11 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          auto& reg = PyTritonContext_AsTritonContext(self)->getAllRegisters();
+          auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
 
-          ret = xPyList_New(reg.size());
-          for (auto& kv: reg)
-            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(kv.second)));
+          ret = xPyList_New(regs.size());
+          for (auto& reg: regs)
+            PyList_SetItem(ret, index++, PyRegister(reg.second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1379,7 +1380,7 @@ namespace triton {
           ret = xPyList_New(regs.size());
 
           for (const auto* reg: regs) {
-            PyList_SetItem(ret, index++, PyRegister(triton::arch::Register(*reg)));
+            PyList_SetItem(ret, index++, PyRegister(*reg));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1709,8 +1710,8 @@ namespace triton {
 
           size = registers.size();
           ret = xPyList_New(size);
-          for (const auto* spec: registers) {
-            PyList_SetItem(ret, index, PyRegister(triton::arch::Register(*spec)));
+          for (const auto* reg: registers) {
+            PyList_SetItem(ret, index, PyRegister(*reg));
             index++;
           }
         }
@@ -2103,7 +2104,18 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setArchitecture(): Expects an ARCH as argument.");
 
         try {
+          /* Set the architecture */
           PyTritonContext_AsTritonContext(self)->setArchitecture(PyLong_AsUint32(arg));
+
+          /* Fill self->regAttr */
+          auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
+
+          PyObject* registersDict = xPyDict_New();
+          for (auto& reg : regs)
+            PyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
+
+          Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
+          ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2865,6 +2877,85 @@ namespace triton {
       }
 
 
+      /* Snippet from typeobject.c of the Python project */
+      static PyObject* TritonContext_getattro(PyTypeObject* type, PyObject* name) {
+        PyTypeObject* metatype = Py_TYPE(type);
+        PyObject* attribute;
+        PyObject* meta_attribute;
+        descrgetfunc meta_get;
+
+        /* No readable descriptor found yet */
+        meta_get = NULL;
+
+        /* Look for the attribute in the metatype */
+        meta_attribute = _PyType_Lookup(metatype, name);
+
+        if (meta_attribute != NULL) {
+          meta_get = Py_TYPE(meta_attribute)->tp_descr_get;
+
+          if (meta_get != NULL && PyDescr_IsData(meta_attribute)) {
+            /* Data descriptors implement tp_descr_set to intercept
+             * writes. Assume the attribute is not overridden in
+             * type's tp_dict (and bases): call the descriptor now.
+             */
+            return meta_get(meta_attribute, (PyObject*)type, (PyObject*)metatype);
+          }
+          Py_INCREF(meta_attribute);
+        }
+
+        /* No data descriptor found on metatype. Look in tp_dict of this
+         * type and its bases */
+        attribute = _PyType_Lookup(type, name);
+        if (attribute != NULL) {
+          /* Implement descriptor functionality, if any */
+          descrgetfunc local_get = Py_TYPE(attribute)->tp_descr_get;
+
+          Py_XDECREF(meta_attribute);
+
+          if (local_get != NULL) {
+            /* NULL 2nd argument indicates the descriptor was
+             * found on the target object itself (or a base)  */
+            return local_get(attribute, (PyObject*)NULL, (PyObject*)type);
+          }
+
+          Py_INCREF(attribute);
+          return attribute;
+        }
+
+        /* No attribute found in local __dict__ (or bases): use the
+         * descriptor from the metatype, if any */
+        if (meta_get != NULL) {
+          PyObject* res;
+          res = meta_get(meta_attribute, (PyObject*)type, (PyObject*)metatype);
+          Py_DECREF(meta_attribute);
+          return res;
+        }
+
+        /* If an ordinary attribute was found on the metatype, return it now */
+        if (meta_attribute != NULL) {
+          return meta_attribute;
+        }
+
+        try {
+          /* Access to the registers attribute */
+          if (std::string(PyString_AsString(name)) == "registers") {
+
+            /* Check if the architecture is defined */
+            if (PyTritonContext_AsTritonContext(type)->getArchitecture() == triton::arch::ARCH_INVALID)
+              return PyErr_Format(PyExc_TypeError, "__getattro__: Architecture is not defined.");
+
+            Py_INCREF(((TritonContext_Object*)(type))->regAttr);
+            return ((TritonContext_Object*)(type))->regAttr;
+          }
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return NULL;
+      }
+
+
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
         {"addCallback",                         (PyCFunction)TritonContext_addCallback,                            METH_VARARGS,       ""},
@@ -2994,7 +3085,7 @@ namespace triton {
         0,                                          /* tp_hash */
         0,                                          /* tp_call */
         0,                                          /* tp_str */
-        0,                                          /* tp_getattro */
+        (getattrofunc)TritonContext_getattro,       /* tp_getattro */
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
@@ -3032,8 +3123,10 @@ namespace triton {
         PyType_Ready(&TritonContext_Type);
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
-        if (object != nullptr)
+        if (object != nullptr) {
           object->api = new triton::API();
+          object->regAttr = nullptr;
+        }
 
         return (PyObject*)object;
       }
@@ -3043,8 +3136,10 @@ namespace triton {
         PyType_Ready(&TritonContext_Type);
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
-        if (object != nullptr)
+        if (object != nullptr) {
           object->api = &api;
+          object->regAttr = nullptr;
+        }
 
         Py_INCREF(object); // We don't have ownership of the API so don't call the dealloc
         // FIXME: we should define a context without dealloc for this

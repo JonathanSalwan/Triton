@@ -390,7 +390,8 @@ namespace triton {
       //! pyTritonContext object.
       typedef struct {
         PyObject_HEAD
-        triton::API* api; //! Pointer to the cpp triton context
+        triton::API* api;   //! Pointer to the cpp triton context
+        PyObject* regAttr;  //! Pointer to the registers attribute
       } TritonContext_Object;
 
       //! pyRegister type.
