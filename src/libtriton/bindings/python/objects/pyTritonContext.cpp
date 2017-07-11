@@ -28,6 +28,7 @@ The libTriton offers Python bindings on its C++ API which allow you to build ana
 >>>
 >>> ctx = TritonContext()
 >>> ctx.setArchitecture(ARCH.X86_64)
+
 ~~~~~~~~~~~~~
 
 \section tritonContext_py_api Python API - Classes and methods of the TritonContext class
