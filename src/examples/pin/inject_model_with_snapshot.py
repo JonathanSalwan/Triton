@@ -25,7 +25,7 @@
 # Win
 # [+] Analysis done!
 
-from triton     import ARCH, REG
+from triton     import ARCH
 from pintool    import *
 
 password  = dict()
@@ -43,7 +43,7 @@ def csym(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x400574:
         global symVarMem
-        rax = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RAX))
+        rax = getCurrentRegisterValue(Triton.registers.rax)
         symVarMem = rax
         if rax in password:
             setCurrentMemoryValue(rax, password[rax])
@@ -52,7 +52,7 @@ def csym(instruction):
 
     # Epilogue of the function
     if instruction.getAddress() == 0x4005b1:
-        rax = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RAX))
+        rax = getCurrentRegisterValue(Triton.registers.rax)
         # The function returns 0 if the password is valid
         # So, we restore the snapshot until this function
         # returns something else than 0.
@@ -69,12 +69,12 @@ def csym(instruction):
 def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x400574:
-        var = Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.RAX))
+        var = Triton.convertRegisterToSymbolicVariable(Triton.registers.rax)
         return
 
     # 0x4005ae: cmp ecx, eax
     if instruction.getAddress() == 0x400597:
-        zfId    = Triton.getSymbolicRegisterId(Triton.getRegister(REG.X86_64.ZF))
+        zfId    = Triton.getSymbolicRegisterId(Triton.registers.zf)
         zfExpr  = Triton.getFullAstFromId(zfId)
         astCtxt = Triton.getAstContext();
         expr    = astCtxt.assert_(astCtxt.equal(zfExpr, astCtxt.bvtrue())) # (assert (= zf True))

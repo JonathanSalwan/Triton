@@ -46,7 +46,7 @@
 ##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
 ##
 
-from triton     import ARCH, REG, CPUSIZE, MemoryAccess, MODE
+from triton     import ARCH, CPUSIZE, MemoryAccess, MODE
 from pintool    import *
 
 TAINTING_SIZE = 10
@@ -55,8 +55,8 @@ Triton = getTritonContext()
 
 
 def tainting(threadId):
-    rdi = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RDI)) # argc
-    rsi = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RSI)) # argv
+    rdi = getCurrentRegisterValue(Triton.registers.rdi) # argc
+    rsi = getCurrentRegisterValue(Triton.registers.rsi) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)

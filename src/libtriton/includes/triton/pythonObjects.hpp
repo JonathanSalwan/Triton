@@ -133,7 +133,7 @@ namespace triton {
       PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the new TritonContext python class.
-      PyObject* PyTritonContext();
+      PyObject* PyTritonContext(void);
 
       //! Creates a TritonContext python class which is a reference to another Context.
       PyObject* PyTritonContextRef(triton::API& api);

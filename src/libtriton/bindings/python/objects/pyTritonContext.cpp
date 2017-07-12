@@ -419,6 +419,19 @@ namespace triton {
       }
 
 
+      static void TritonContext_fillRegistersAttribute(PyObject* self) {
+        /* Fill self->regAttr */
+        auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
+
+        PyObject* registersDict = xPyDict_New();
+        for (auto& reg : regs)
+          PyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
+
+        Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
+        ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
+      }
+
+
       static PyObject* TritonContext_addCallback(PyObject* self, PyObject* args) {
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
@@ -2099,6 +2112,8 @@ namespace triton {
       }
 
 
+
+
       static PyObject* TritonContext_setArchitecture(PyObject* self, PyObject* arg) {
         if (!PyLong_Check(arg) && !PyInt_Check(arg))
           return PyErr_Format(PyExc_TypeError, "setArchitecture(): Expects an ARCH as argument.");
@@ -2106,16 +2121,7 @@ namespace triton {
         try {
           /* Set the architecture */
           PyTritonContext_AsTritonContext(self)->setArchitecture(PyLong_AsUint32(arg));
-
-          /* Fill self->regAttr */
-          auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
-
-          PyObject* registersDict = xPyDict_New();
-          for (auto& reg : regs)
-            PyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
-
-          Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
-          ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
+          TritonContext_fillRegistersAttribute(self);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2886,6 +2892,10 @@ namespace triton {
             if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
               return PyErr_Format(PyExc_TypeError, "__getattr__.registers: Architecture is not defined.");
 
+            /* Maybe null if TritonContext was created over the PyTritonContextRef function */
+            if (((TritonContext_Object*)(self))->regAttr == nullptr)
+              TritonContext_fillRegistersAttribute(self);
+
             Py_INCREF(((TritonContext_Object*)(self))->regAttr);
             return ((TritonContext_Object*)(self))->regAttr;
           }
@@ -3061,7 +3071,7 @@ namespace triton {
       };
 
 
-      PyObject* PyTritonContext() {
+      PyObject* PyTritonContext(void) {
         PyType_Ready(&TritonContext_Type);
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 

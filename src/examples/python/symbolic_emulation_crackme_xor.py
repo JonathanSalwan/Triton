@@ -3,7 +3,7 @@
 
 import  sys
 
-from triton     import TritonContext, ARCH, MODE, REG, Instruction
+from triton     import TritonContext, ARCH, MODE, Instruction
 
 function = {
                                               #   <serial> function
@@ -73,11 +73,11 @@ if __name__ == '__main__':
     Triton.setConcreteMemoryValue(0x900004, 0x31)
 
     # point rdi on our buffer
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RDI), 0x1000)
+    Triton.setConcreteRegisterValue(Triton.registers.rdi, 0x1000)
 
     # Setup stack
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RSP), 0x7fffffff)
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RBP), 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rbp, 0x7fffffff)
 
     while pc in function:
 
@@ -97,7 +97,7 @@ if __name__ == '__main__':
         print inst
 
         # Next instruction
-        pc = Triton.buildSymbolicRegister(Triton.getRegister(REG.X86_64.RIP)).evaluate()
+        pc = Triton.buildSymbolicRegister(Triton.registers.rip).evaluate()
 
     sys.exit(0)
 

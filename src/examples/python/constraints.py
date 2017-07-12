@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 
-from triton import TritonContext, ARCH, REG, Instruction
+from triton import TritonContext, ARCH, Instruction
 
 
 # Constraint using AST form
@@ -79,13 +79,13 @@ def test5():
     astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
-    Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.EAX))
+    Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
 
     # process instruction
     Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
-    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.getRegister(REG.X86_64.EAX)))
+    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.registers.eax))
 
     # constraint
     c = astCtxt.assert_(

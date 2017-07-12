@@ -42,7 +42,7 @@
 ## -- jonathan
 
 import sys
-from   triton import TritonContext, ARCH, REG, Instruction
+from   triton import TritonContext, ARCH, Instruction
 
 trace_1 = [
     "\x31\xC0",                  # xor eax, eax
@@ -81,10 +81,10 @@ Triton = TritonContext()
 
 
 def symbolization_init():
-    Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.EAX))
-    Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.EBX))
-    Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.ECX))
-    Triton.convertRegisterToSymbolicVariable(Triton.getRegister(REG.X86_64.EDX))
+    Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
+    Triton.convertRegisterToSymbolicVariable(Triton.registers.ebx)
+    Triton.convertRegisterToSymbolicVariable(Triton.registers.ecx)
+    Triton.convertRegisterToSymbolicVariable(Triton.registers.edx)
     return
 
 def test_trace(trace):

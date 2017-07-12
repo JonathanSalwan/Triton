@@ -8,7 +8,7 @@
 ##
 
 from pintool import *
-from triton  import ARCH, OPCODE, REG
+from triton  import ARCH, OPCODE
 
 MAIN_ADDR       = None
 STACK_BASE      = None
@@ -20,7 +20,7 @@ def looking_for_main_addr(instruction):
     if MAIN_ADDR is None and instruction.getType() == OPCODE.CALL:
         # This is the first call into the ___libc_start_main function.
         # Get the main() function address located into RDI.
-        MAIN_ADDR = getCurrentRegisterValue(getTritonContext().getRegister(REG.X86_64.RDI))
+        MAIN_ADDR = getCurrentRegisterValue(getTritonContext().registers.rdi)
         print '[+] main() found at %x' %(MAIN_ADDR)
     return
 
@@ -29,7 +29,7 @@ def looking_for_main_addr(instruction):
 def looking_for_stack_base_addr():
     global STACK_BASE
     if STACK_BASE is None:
-        STACK_BASE = getCurrentRegisterValue(getTritonContext().getRegister(REG.X86_64.RSP))
+        STACK_BASE = getCurrentRegisterValue(getTritonContext().registers.rsp)
         STACK_BASE &= 0xfffffffffffff000
         print '[+] stack base found at %x' %(STACK_BASE)
     return

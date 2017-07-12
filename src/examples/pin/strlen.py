@@ -25,7 +25,7 @@
 ##  Possible solution: 80:09:d4:40:03:96:00:00
 ##
 
-from triton     import ARCH, REG, MemoryAccess, CPUSIZE
+from triton     import ARCH, MemoryAccess, CPUSIZE
 from pintool    import *
 
 # What value you want that strlen must return?
@@ -39,7 +39,7 @@ Triton = getTritonContext()
 
 def before(instruction):
     if instruction.getAddress() == 0x4005c5:
-        rax = Triton.getSymbolicRegisterId(Triton.getRegister(REG.X86_64.RAX))
+        rax = Triton.getSymbolicRegisterId(Triton.registers.rax)
         raxAst = Triton.getAstFromId(rax)
         astCtxt = Triton.getAstContext()
         constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
@@ -55,8 +55,8 @@ def before(instruction):
 
 def tainting(threadId):
 
-    rdi = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RDI)) # argc
-    rsi = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RSI)) # argv
+    rdi = getCurrentRegisterValue(Triton.registers.rdi) # argc
+    rsi = getCurrentRegisterValue(Triton.registers.rsi) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)

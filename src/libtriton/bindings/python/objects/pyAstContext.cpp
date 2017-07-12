@@ -25,8 +25,8 @@
 
 >>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RAX), 12345)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RDX), 67890)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
 
 >>> ctxt.processing(inst)
 True
@@ -116,7 +116,7 @@ If you try to go through the full AST you will fail at the first reference node 
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.
 
 ~~~~~~~~~~~~~{.py}
->>> zfId = ctxt.getSymbolicRegisterId(ctxt.getRegister(REG.X86_64.ZF))
+>>> zfId = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
 >>> partialTree = ctxt.getSymbolicExpressionFromId(zfId).getAst()
 >>> print partialTree
 (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
@@ -140,8 +140,8 @@ Triton allows you to display your AST via a Python syntax.
 >>> inst = Instruction()
 >>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RAX), 0x1122334455667788)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RBX), 0x8877665544332211)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 0x1122334455667788)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rbx, 0x8877665544332211)
 >>> ctxt.processing(inst)
 True
 >>> print inst
@@ -171,7 +171,7 @@ ref_7 = 0x400003 # Program Counter
 
 ~~~~~~~~~~~~~{.py}
 >>> # Get the symbolic expression of the ZF flag
->>> zfId    = ctxt.getSymbolicRegisterId(ctxt.getRegister(REG.X86_64.ZF))
+>>> zfId    = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
 >>> zfExpr  = ctxt.getFullAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
 
 >>> astCtxt = ctxt.getAstContext()

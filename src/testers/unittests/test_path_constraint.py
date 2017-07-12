@@ -3,7 +3,7 @@
 """Test Path Constraint."""
 
 import unittest
-from triton import TritonContext, Instruction, ARCH, REG, SYMEXPR
+from triton import TritonContext, Instruction, ARCH, SYMEXPR
 
 
 class TestPathConstraint(unittest.TestCase):
@@ -24,8 +24,8 @@ class TestPathConstraint(unittest.TestCase):
             "\x0F\x84\x55\x00\x00\x00",  # je 0x55
         ]
 
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.getRegister(REG.X86_64.EAX))
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.getRegister(REG.X86_64.EBX))
+        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.eax)
+        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.ebx)
 
         for opcodes in trace:
             self.ctx.processing(Instruction(opcodes))

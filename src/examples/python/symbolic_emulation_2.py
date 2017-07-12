@@ -25,7 +25,7 @@
 
 import  sys
 
-from triton import TritonContext, ARCH, Instruction, REG, MODE
+from triton import TritonContext, ARCH, Instruction, MODE
 
 
 function = {
@@ -59,7 +59,7 @@ def run(ip):
         print 'Curr ip:', inst
 
         # Next instruction
-        ip = Triton.buildSymbolicRegister(Triton.getRegister(REG.X86_64.RIP)).evaluate()
+        ip = Triton.buildSymbolicRegister(Triton.registers.rip).evaluate()
         print 'Next ip:', hex(ip)
         print
     return
@@ -68,8 +68,8 @@ def run(ip):
 
 # This function initializes the context memory.
 def initContext():
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RSP), 0x7fffffff)
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RBP), 0x99999999)
+    Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rbp, 0x99999999)
     return
 
 

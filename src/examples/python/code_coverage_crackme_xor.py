@@ -19,7 +19,7 @@
 
 import  sys
 
-from triton import TritonContext, ARCH, Instruction, REG, MemoryAccess, CPUSIZE, MODE
+from triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE, MODE
 
 
 # Isolated function code which must be cover. The source code
@@ -99,7 +99,7 @@ def run(ip):
         #print inst
 
         # Next instruction
-        ip = Triton.buildSymbolicRegister(Triton.getRegister(REG.X86_64.RIP)).evaluate()
+        ip = Triton.buildSymbolicRegister(Triton.registers.rip).evaluate()
     return
 
 
@@ -123,11 +123,11 @@ def initContext():
 
     # Point RDI on our buffer. The address of our buffer is arbitrary. We just need
     # to point the RDI register on it as first argument of our targeted function.
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RDI), 0x1000)
+    Triton.setConcreteRegisterValue(Triton.registers.rdi, 0x1000)
 
     # Setup stack on an abitrary address.
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RSP), 0x7fffffff)
-    Triton.setConcreteRegisterValue(Triton.getRegister(REG.X86_64.RBP), 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rbp, 0x7fffffff)
     return
 
 

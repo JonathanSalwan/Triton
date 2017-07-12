@@ -71,7 +71,7 @@ ah:8 bv[15..8]
 >>> print ah.getBitSize()
 8
 
->>> print ctxt.getRegister(REG.X86_64.RAX)
+>>> print ctxt.registers.rax
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~

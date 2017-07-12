@@ -34,8 +34,8 @@ This object is used to represent a symbolic expression.
 
 >>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RAX), 12345)
->>> ctxt.setConcreteRegisterValue(ctxt.getRegister(REG.X86_64.RDX), 67890)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
 
 >>> ctxt.processing(inst)
 True

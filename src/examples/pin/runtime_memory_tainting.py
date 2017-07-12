@@ -1,7 +1,7 @@
 
 # Using: $ ./build/triton ./src/examples/pin/runtime_memory_tainting.py ./src/samples/crackmes/crackme_xor a
 
-from triton  import ARCH, REG
+from triton  import ARCH
 from pintool import *
 
 GREEN = "\033[92m"
@@ -16,7 +16,7 @@ Triton = getTritonContext()
 # we taint the memory that RAX holds.
 def cbeforeSymProc(instruction):
     if instruction.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(Triton.getRegister(REG.X86_64.RAX))
+        rax = getCurrentRegisterValue(Triton.registers.rax)
         Triton.taintMemory(rax)
 
 

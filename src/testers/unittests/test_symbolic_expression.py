@@ -3,7 +3,7 @@
 """Test Symbolic Expression."""
 
 import unittest
-from triton import TritonContext, Instruction, ARCH, REG, SYMEXPR
+from triton import TritonContext, Instruction, ARCH, SYMEXPR, REG
 
 
 class TestSymbolicExpression(unittest.TestCase):
@@ -15,9 +15,9 @@ class TestSymbolicExpression(unittest.TestCase):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
 
-        self.inst1 = Instruction("\x48\x31\xd8") # xor rax, rbxa
-        self.ctx.setConcreteRegisterValue(self.ctx.getRegister(REG.X86_64.AL), 0x10)
-        self.ctx.setConcreteRegisterValue(self.ctx.getRegister(REG.X86_64.BL), 0x55)
+        self.inst1 = Instruction("\x48\x31\xd8") # xor rax, rbx
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.al, 0x10)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.bl, 0x55)
 
         self.inst2 = Instruction("\x48\x89\x03") # mov [rbx], rax
 

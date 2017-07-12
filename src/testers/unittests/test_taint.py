@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, REG, Instruction, MemoryAccess, TritonContext
+from triton import ARCH, Instruction, MemoryAccess, TritonContext
 
 
 class TestTaint(unittest.TestCase):
@@ -16,14 +16,14 @@ class TestTaint(unittest.TestCase):
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86)
 
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.EAX))
+        Triton.taintRegister(Triton.registers.eax)
         inst = Instruction()
         # lea eax,[esi+eax*1]
         inst.setOpcode("\x8D\x04\x06")
         Triton.processing(inst)
 
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.EAX)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.EBX)))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.eax))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.ebx))
 
     def test_taint_memory(self):
         """Check tainting memory."""
@@ -69,21 +69,21 @@ class TestTaint(unittest.TestCase):
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.untaintRegister(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.AH))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.EAX)))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.AX)))
+        Triton.taintRegister(Triton.registers.ah)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.eax))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.ax))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.AH))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.EAX)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.AX)))
+        Triton.untaintRegister(Triton.registers.ah)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.eax))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.ax))
 
     def test_taint_assignement_memory_immediate(self):
         """Check tainting assignment memory <- immediate."""
@@ -161,7 +161,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintMemory(MemoryAccess(0x2000, 8))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 8)))
 
-        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x2002, 2), Triton.getRegister(REG.X86_64.AX))
+        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x2002, 2), Triton.registers.ax)
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 1)))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2001, 1)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2002, 1)))
@@ -174,7 +174,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintMemory(MemoryAccess(0x2000, 8))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 8)))
 
-        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x1fff, 8), Triton.getRegister(REG.X86_64.RAX))
+        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x1fff, 8), Triton.registers.rax)
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1fff, 1)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 1)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2001, 1)))
@@ -190,57 +190,57 @@ class TestTaint(unittest.TestCase):
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintAssignmentRegisterImmediate(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterImmediate(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_assignement_register_memory(self):
         """Check tainting assignment register <- memory."""
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintAssignmentRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 8))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 8))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
         Triton.taintMemory(MemoryAccess(0x2000, 8))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 8)))
 
-        Triton.taintAssignmentRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 8))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 8))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintAssignmentRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x3000, 8))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterMemory(Triton.registers.rax, MemoryAccess(0x3000, 8))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_assignement_register_register(self):
         """Check tainting assignment register <- register."""
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintAssignmentRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterRegister(Triton.registers.rax, Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintAssignmentRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.untaintRegister(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintAssignmentRegisterRegister(Triton.registers.rax, Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RBX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rbx))
+        Triton.taintRegister(Triton.registers.rbx)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rbx))
 
-        Triton.taintAssignmentRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RBX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintAssignmentRegisterRegister(Triton.registers.rax, Triton.registers.rbx)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_union_memory_immediate(self):
         """Check tainting union memory U immediate."""
@@ -288,72 +288,72 @@ class TestTaint(unittest.TestCase):
         Triton.taintMemory(MemoryAccess(0x2000, 4))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
-        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.getRegister(REG.X86_64.RAX))
+        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.registers.rax)
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
         Triton.untaintMemory(MemoryAccess(0x2000, 4))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.getRegister(REG.X86_64.RAX))
+        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.registers.rax)
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.getRegister(REG.X86_64.RAX))
+        Triton.taintRegister(Triton.registers.rax)
+        Triton.taintUnionMemoryRegister(MemoryAccess(0x2000, 4), Triton.registers.rax)
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_union_register_immediate(self):
         """Check tainting union register U immediate."""
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnionRegisterImmediate(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintUnionRegisterImmediate(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintUnionRegisterImmediate(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.untaintRegister(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintUnionRegisterImmediate(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_union_register_memory(self):
         """Check tainting union register U memory."""
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnionRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 4))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintUnionRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 4))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.untaintRegister(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnionRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 4))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintUnionRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 4))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
         # !T U T
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
+        Triton.untaintRegister(Triton.registers.rax)
         Triton.taintMemory(MemoryAccess(0x2000, 4))
-        Triton.taintUnionRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 4))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintUnionRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 4))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
         # T U T
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
+        Triton.taintRegister(Triton.registers.rax)
         Triton.taintMemory(MemoryAccess(0x2000, 4))
-        Triton.taintUnionRegisterMemory(Triton.getRegister(REG.X86_64.RAX), MemoryAccess(0x2000, 4))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        Triton.taintUnionRegisterMemory(Triton.registers.rax, MemoryAccess(0x2000, 4))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
 
     def test_taint_union_register_register(self):
@@ -361,30 +361,30 @@ class TestTaint(unittest.TestCase):
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RAX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.taintRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
-        Triton.taintUnionRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RBX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
+        Triton.taintUnionRegisterRegister(Triton.registers.rax, Triton.registers.rbx)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rbx))
 
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RBX))
-        Triton.taintUnionRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RBX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
+        Triton.taintRegister(Triton.registers.rbx)
+        Triton.taintUnionRegisterRegister(Triton.registers.rax, Triton.registers.rbx)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rbx))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RBX))
-        Triton.taintUnionRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RBX))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
+        Triton.untaintRegister(Triton.registers.rax)
+        Triton.taintRegister(Triton.registers.rbx)
+        Triton.taintUnionRegisterRegister(Triton.registers.rax, Triton.registers.rbx)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rbx))
 
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RAX))
-        Triton.untaintRegister(Triton.getRegister(REG.X86_64.RBX))
-        Triton.taintUnionRegisterRegister(Triton.getRegister(REG.X86_64.RAX), Triton.getRegister(REG.X86_64.RBX))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RBX)))
+        Triton.untaintRegister(Triton.registers.rax)
+        Triton.untaintRegister(Triton.registers.rbx)
+        Triton.taintUnionRegisterRegister(Triton.registers.rax, Triton.registers.rbx)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rbx))
 
     def test_taint_get_tainted_registers(self):
         """Get tainted registers"""
@@ -394,17 +394,17 @@ class TestTaint(unittest.TestCase):
         r = Triton.getTaintedRegisters()
         self.assertTrue(len(r) == 0)
 
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.EAX))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.AX))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.RBX))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.CL))
-        Triton.taintRegister(Triton.getRegister(REG.X86_64.DI))
+        Triton.taintRegister(Triton.registers.eax)
+        Triton.taintRegister(Triton.registers.ax)
+        Triton.taintRegister(Triton.registers.rbx)
+        Triton.taintRegister(Triton.registers.cl)
+        Triton.taintRegister(Triton.registers.di)
 
         r = Triton.getTaintedRegisters()
-        self.assertTrue(Triton.getRegister(REG.X86_64.RAX) in r)
-        self.assertTrue(Triton.getRegister(REG.X86_64.RBX) in r)
-        self.assertTrue(Triton.getRegister(REG.X86_64.RCX) in r)
-        self.assertTrue(Triton.getRegister(REG.X86_64.RDI) in r)
+        self.assertTrue(Triton.registers.rax in r)
+        self.assertTrue(Triton.registers.rbx in r)
+        self.assertTrue(Triton.registers.rcx in r)
+        self.assertTrue(Triton.registers.rdi in r)
 
     def test_taint_get_tainted_memory(self):
         """Get tainted memory"""
@@ -434,11 +434,11 @@ class TestTaint(unittest.TestCase):
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.setTaintRegister(Triton.getRegister(REG.X86_64.RAX), True)
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.setTaintRegister(Triton.getRegister(REG.X86_64.RAX), False)
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.setTaintRegister(Triton.registers.rax, True)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.setTaintRegister(Triton.registers.rax, False)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
 
     def test_taint_set_memory(self):
         """Set taint memory"""
@@ -458,14 +458,14 @@ class TestTaint(unittest.TestCase):
 
         self.assertTrue(Triton.isTaintEngineEnabled())
 
-        self.assertFalse(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.setTaintRegister(Triton.getRegister(REG.X86_64.RAX), True)
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.setTaintRegister(Triton.registers.rax, True)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
         Triton.enableTaintEngine(False)
         self.assertFalse(Triton.isTaintEngineEnabled())
 
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
-        Triton.setTaintRegister(Triton.getRegister(REG.X86_64.RAX), False)
-        self.assertTrue(Triton.isRegisterTainted(Triton.getRegister(REG.X86_64.RAX)))
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        Triton.setTaintRegister(Triton.registers.rax, False)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
