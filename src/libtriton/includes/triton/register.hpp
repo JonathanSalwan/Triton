@@ -51,6 +51,9 @@ namespace triton {
         //! The parent id of the register.
         triton::arch::registers_e parent;
 
+        //! Copy a Register.
+        void copy(const Register& other);
+
       public:
         //! Constructor.
         Register();
