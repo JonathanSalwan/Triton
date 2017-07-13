@@ -323,7 +323,7 @@ the symbolic state (if it exists). You should probably use the concretize functi
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
+- <b>void setConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar, integer value)</b><br>
 Sets the concrete value of a symbolic variable.
 
 - <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
@@ -677,6 +677,7 @@ namespace triton {
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "clearPathConstraints(): Architecture is not defined.");
         PyTritonContext_AsTritonContext(self)->clearPathConstraints();
+
         Py_INCREF(Py_None);
         return Py_None;
       }
@@ -1206,6 +1207,7 @@ namespace triton {
         /* Check if the architecture is definied */
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
           return PyErr_Format(PyExc_TypeError, "getAstRepresentationMode(): Architecture is not defined.");
+
         return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getAstRepresentationMode());
       }
 
@@ -2318,10 +2320,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Architecture is not defined.");
 
         if (value == nullptr)
-          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument as integer value.");
 
         try {
-            PyTritonContext_AsTritonContext(self)->setConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
+          PyTritonContext_AsTritonContext(self)->setConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2333,8 +2335,8 @@ namespace triton {
 
 
       static PyObject* TritonContext_setTaintMemory(PyObject* self, PyObject* args) {
-        PyObject* mem    = nullptr;
-        PyObject* flag   = nullptr;
+        PyObject* mem  = nullptr;
+        PyObject* flag = nullptr;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &flag);

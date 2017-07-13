@@ -568,7 +568,7 @@ namespace triton {
         tmp = this->astCtxt.variable(*symVar);
 
         if (expression->getAst())
-            this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
+           this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
 
         expression->setAst(tmp);
 

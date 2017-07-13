@@ -68,9 +68,6 @@ e.g: `SymVar_18`
 - <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
 
-- <b>void setConcreteValue(integer value)</b><br>
-Sets a concrete value. `value` must be less than 512-bits.
-
 */
 
 
