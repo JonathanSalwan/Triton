@@ -5,7 +5,7 @@
 import unittest
 import os
 
-from triton import (Instruction, ARCH, REG, CPUSIZE, MemoryAccess, Elf, MODE,
+from triton import (Instruction, ARCH, CPUSIZE, MemoryAccess, Elf, MODE, REG,
                     TritonContext)
 
 
@@ -68,7 +68,7 @@ class DefCamp2015(object):
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(self.Triton.Register(REG.X86_64.RAX)))
+                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(self.Triton.registers.rax))
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
@@ -82,7 +82,7 @@ class DefCamp2015(object):
                     self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
         return solution
 
     def load_binary(self, filename):
@@ -103,11 +103,11 @@ class DefCamp2015(object):
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
 
         # Define an user input
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI, 0x10000000))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rdi, 0x10000000)
 
         # Symbolize user inputs (30 bytes)
         for index in range(30):
@@ -142,18 +142,19 @@ class SeedCoverage(object):
         # Point RDI on our buffer. The address of our buffer is arbitrary. We
         # just need to point the RDI register on it as first argument of our
         # tarself.Triton.geted function.
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDI, 0x1000))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rdi, 0x1000)
 
         # Setup stack on an abitrary address.
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSP, 0x7fffffff))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBP, 0x7fffffff))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
 
     def symbolize_inputs(self, seed):
         """Add symboles in memory for seed."""
         self.Triton.concretizeAllRegister()
         self.Triton.concretizeAllMemory()
         for address, value in seed.items():
-            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE, value))
+            self.Triton.setConcreteMemoryValue(address, value)
+            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
             self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
 
     def seed_emulate(self, ip):
@@ -236,7 +237,7 @@ class SeedCoverage(object):
             self.assertTrue(checkAstIntegrity(inst))
 
             # Next instruction
-            ip = self.Triton.buildSymbolicRegister(self.Triton.Register(REG.X86_64.RIP)).evaluate()
+            ip = self.Triton.buildSymbolicRegister(self.Triton.registers.rip).evaluate()
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""
@@ -340,10 +341,10 @@ class Emu1(object):
                          "r14", "eflags", "xmm0", "xmm1", "xmm2", "xmm3",
                          "xmm4", "xmm5", "xmm6", "xmm7", "xmm8", "xmm9",
                          "xmm10", "xmm11", "xmm12", "xmm13", "xmm14", "xmm15"):
-            self.Triton.setConcreteRegisterValue(self.Triton.Register(getattr(REG.X86_64, reg_name.upper()), regs[reg_name]))
+            self.Triton.setConcreteRegisterValue(self.Triton.getRegister(getattr(REG.X86_64, reg_name.upper())), regs[reg_name])
 
         # run the code
-        pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))
+        pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
         while pc != 0x409A18:
             opcode = self.Triton.getConcreteMemoryAreaValue(pc, 20)
 
@@ -355,17 +356,17 @@ class Emu1(object):
             self.assertTrue(self.Triton.processing(instruction))
             self.assertTrue(checkAstIntegrity(instruction))
 
-            pc = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RIP))
+            pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
 
             if concretize:
                 self.Triton.concretizeAllMemory()
                 self.Triton.concretizeAllRegister()
 
-        rax = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX))
-        rbx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RBX))
-        rcx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RCX))
-        rdx = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RDX))
-        rsi = self.Triton.getConcreteRegisterValue(self.Triton.Register(REG.X86_64.RSI))
+        rax = self.Triton.getConcreteRegisterValue(self.Triton.registers.rax)
+        rbx = self.Triton.getConcreteRegisterValue(self.Triton.registers.rbx)
+        rcx = self.Triton.getConcreteRegisterValue(self.Triton.registers.rcx)
+        rdx = self.Triton.getConcreteRegisterValue(self.Triton.registers.rdx)
+        rsi = self.Triton.getConcreteRegisterValue(self.Triton.registers.rsi)
 
         self.assertEqual(rax, 0)
         self.assertEqual(rbx, 0)

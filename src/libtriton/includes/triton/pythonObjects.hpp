@@ -133,19 +133,16 @@ namespace triton {
       PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the new TritonContext python class.
-      PyObject* PyTritonContext();
+      PyObject* PyTritonContext(void);
 
       //! Creates a TritonContext python class which is a reference to another Context.
       PyObject* PyTritonContextRef(triton::API& api);
-      
+
       //! Creates an AstContext python class.
       PyObject* PyAstContext(triton::ast::AstContext& ctxt);
 
       //! Creates the Register python class.
       PyObject* PyRegister(const triton::arch::Register& reg);
-
-      //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::RegisterSpec& reg, triton::uint512 concreteValue);
 
       //! Creates the SolverModel python class.
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
@@ -393,7 +390,8 @@ namespace triton {
       //! pyTritonContext object.
       typedef struct {
         PyObject_HEAD
-        triton::API* api; //! Pointer to the cpp triton context
+        triton::API* api;   //! Pointer to the cpp triton context
+        PyObject* regAttr;  //! Pointer to the registers attribute
       } TritonContext_Object;
 
       //! pyRegister type.

@@ -14,18 +14,19 @@ namespace triton {
   namespace arch {
 
     OperandWrapper::OperandWrapper(const triton::arch::Immediate& imm) {
-      this->imm = imm;
+      this->imm  = imm;
       this->type = triton::arch::OP_IMM;
     }
 
 
     OperandWrapper::OperandWrapper(const triton::arch::MemoryAccess& mem) {
-      this->mem = mem;
+      this->mem  = mem;
       this->type = triton::arch::OP_MEM;
     }
 
 
-    OperandWrapper::OperandWrapper(const triton::arch::RegisterSpec& reg) : reg(reg) {
+    OperandWrapper::OperandWrapper(const triton::arch::Register& reg) {
+      this->reg  = reg;
       this->type = triton::arch::OP_REG;
     }
 
@@ -127,18 +128,6 @@ namespace triton {
         case triton::arch::OP_REG: return this->getConstRegister().getAbstractLow();
         default:
           throw triton::exceptions::OperandWrapper("OperandWrapper::getLow(): Invalid type operand.");
-      }
-      return 0;
-    }
-
-
-    triton::uint512 OperandWrapper::getConcreteValue(void) const {
-      switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getConstImmediate().getValue();
-        case triton::arch::OP_MEM: return this->getConstMemory().getConcreteValue();
-        case triton::arch::OP_REG: return this->getConstRegister().getConcreteValue();
-        default:
-          throw triton::exceptions::OperandWrapper("OperandWrapper::getConcreteValue(): Invalid type operand.");
       }
       return 0;
     }

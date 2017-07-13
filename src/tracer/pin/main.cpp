@@ -27,7 +27,7 @@
 
 
 
-/*! \page Tracer_page Tracer
+/*! \page Tracer_page Pintool tracer
     \brief [**internal**] All information about how to plug a tracer.
 \tableofcontents
 \section Tracer_description Description
@@ -54,7 +54,7 @@ uses the Triton's API to build the semantics of each instruction stored in the d
 import  sys
 import  struct
 
-from triton  import ARCH, Instruction, MemoryAccess, REG
+from triton  import ARCH, Instruction, MemoryAccess
 from database import Manager
 
 unpack_size = {1: 'B', 2: 'H', 4: 'I', 8: 'Q', 16: 'QQ'}
@@ -91,26 +91,26 @@ if __name__ == '__main__':
         inst.setAddress(regs['rip'])
 
         # Update concrete register state
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RAX,    regs['rax']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RBX,    regs['rbx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RCX,    regs['rcx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RDX,    regs['rdx']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RDI,    regs['rdi']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RSI,    regs['rsi']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RBP,    regs['rbp']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RSP,    regs['rsp']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.RIP,    regs['rip']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R8,     regs['r8']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R9,     regs['r9']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R10,    regs['r10']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R11,    regs['r11']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R12,    regs['r12']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R13,    regs['r13']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R14,    regs['r14']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.R15,    regs['r15']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.EFLAGS, regs['eflags']))
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.FS,     regs['fs'])) # The mapped base address
-        ctxt.setConcreteRegisterValue(ctxt.Register(REG.X86_64.GS,     regs['gs'])) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.registers.rax,    regs['rax'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rbx,    regs['rbx'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rcx,    regs['rcx'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rdx,    regs['rdx'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rdi,    regs['rdi'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rsi,    regs['rsi'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rbp,    regs['rbp'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rsp,    regs['rsp'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.rip,    regs['rip'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r8,     regs['r8'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r9,     regs['r9'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r10,    regs['r10'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r11,    regs['r11'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r12,    regs['r12'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r13,    regs['r13'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r14,    regs['r14'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.r15,    regs['r15'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.eflags, regs['eflags'])
+        ctxt.setConcreteRegisterValue(ctxt.registers.fs,     regs['fs']) # The mapped base address
+        ctxt.setConcreteRegisterValue(ctxt.registers.gs,     regs['gs']) # The mapped base address
 
         # Update concrete memory access
         accesses = db.get_memory_access_from_inst_id(inst_id)
@@ -316,7 +316,7 @@ namespace tracer {
       /* Mutex */
       PIN_LockClient();
       triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size, value));
+      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size), value);
       /* Mutex */
       PIN_UnlockClient();
     }

@@ -97,15 +97,6 @@ namespace triton {
         void copy(const Instruction& other);
 
       public:
-        //! The memory access list
-        std::list<triton::arch::MemoryAccess> memoryAccess;
-
-        //! A registers state
-        /*!
-          \brief a map of <regId, regClass>
-        */
-        std::map<triton::uint32, triton::arch::Register> registerState;
-
         //! A list of operands
         std::vector<triton::arch::OperandWrapper> operands;
 
@@ -169,9 +160,6 @@ namespace triton {
         //! Returns the list of all implicit and explicit immediate inputs (read)
         std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void);
 
-        //! Returns the register state which has been recorded.
-        triton::arch::Register getRegisterState(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
-
         //! Sets the opcode of the instruction.
         void setOpcode(const triton::uint8* opcode, triton::uint32 size);
 
@@ -225,12 +213,6 @@ namespace triton {
 
         //! Sets the taint of the instruction based on its expressions.
         void setTaint(void);
-
-        //! Records an instruction context for a memory access.
-        void updateContext(const triton::arch::MemoryAccess& mem);
-
-        //! Records an instruction context for a register state.
-        void updateContext(const triton::arch::Register& reg);
 
         //! Adds a symbolic expression
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);

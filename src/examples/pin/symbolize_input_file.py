@@ -76,7 +76,8 @@ def syscallsExit(threadId, std):
         buff = isRead['buff']
         print '[TT] Symbolizing the input file'
         for index in range(size):
-            Triton.convertMemoryToSymbolicVariable(MemoryAccess(buff+index, CPUSIZE.BYTE, getCurrentMemoryValue(buff+index)))
+            Triton.setConcreteMemoryValue(buff+index, getCurrentMemoryValue(buff+index))
+            Triton.convertMemoryToSymbolicVariable(MemoryAccess(buff+index, CPUSIZE.BYTE))
         isRead = None
 
     return

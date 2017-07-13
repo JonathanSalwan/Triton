@@ -21,8 +21,8 @@ using namespace triton::arch::x86;
 
 
 int main(int ac, const char **av) {
-
   triton::API api;
+
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 
@@ -36,7 +36,7 @@ int main(int ac, const char **av) {
 
   std::cout << "----------------------------" << std::endl;
 
-  for(auto const& kv: api.getAllRegisters())
+  for(const auto& kv: api.getAllRegisters())
     std::cout << kv.second << std::endl;
 
   return 0;

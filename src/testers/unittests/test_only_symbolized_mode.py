@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, REG, MODE, CPUSIZE, TritonContext, Instruction, MemoryAccess
+from triton import ARCH, MODE, CPUSIZE, TritonContext, Instruction, MemoryAccess
 
 
 def checkAstIntegrity(instruction):
@@ -67,7 +67,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
 
         inst = Instruction("\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
@@ -95,7 +95,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
 
         inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -125,7 +125,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
@@ -141,7 +141,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
 
         inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -154,8 +154,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.setConcreteRegisterValue(ctx.Register(REG.X86_64.RAX, 0x1337))
-        ctx.convertRegisterToSymbolicVariable(ctx.Register(REG.X86_64.RAX))
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]

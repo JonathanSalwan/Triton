@@ -25,7 +25,7 @@
 ##  Possible solution: 80:09:d4:40:03:96:00:00
 ##
 
-from triton     import ARCH, REG, MemoryAccess, CPUSIZE
+from triton     import ARCH, MemoryAccess, CPUSIZE
 from pintool    import *
 
 # What value you want that strlen must return?
@@ -39,7 +39,7 @@ Triton = getTritonContext()
 
 def before(instruction):
     if instruction.getAddress() == 0x4005c5:
-        rax = Triton.getSymbolicRegisterId(Triton.Register(REG.X86_64.RAX))
+        rax = Triton.getSymbolicRegisterId(Triton.registers.rax)
         raxAst = Triton.getAstFromId(rax)
         astCtxt = Triton.getAstContext()
         constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
@@ -55,14 +55,16 @@ def before(instruction):
 
 def tainting(threadId):
 
-    rdi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RDI)) # argc
-    rsi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RSI)) # argv
+    rdi = getCurrentRegisterValue(Triton.registers.rdi) # argc
+    rsi = getCurrentRegisterValue(Triton.registers.rsi) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)
         offset = 0
         while offset != STRLEN_ASSERT_LEN+5:
             Triton.taintMemory(argv + offset)
+            concreteValue = getCurrentMemoryValue(argv + offset)
+            Triton.setConcreteMemoryValue(argv + offset, concreteValue)
             Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
         print '[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)

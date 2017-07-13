@@ -11,6 +11,13 @@
 #include <triton/pythonXFunctions.hpp>
 
 
+/* setup doctest context
+
+>>> from triton import ARCH, TritonContext, REG
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+*/
 
 /*! \page py_REG_page REG
     \brief [**python api**] All information about the REG python namespace.
@@ -20,7 +27,26 @@
 \section REG_py_description Description
 <hr>
 
-According to the CPU architecture, the REG namespace contains all kinds of register.
+According to the CPU architecture, the REG namespace contains all enums of register.
+It's possible to create a \ref py_Register_page from a register id using `getRegister`
+like this:
+
+~~~~~~~~~~~~~{.py}
+>>> ah = ctxt.getRegister(REG.X86_64.AH)
+>>> print ah
+ah:8 bv[15..8]
+
+~~~~~~~~~~~~~
+
+Note that creating a \ref py_TritonContext_page, you can directly access to constructed
+\ref py_Register_page according to your defined architecture.
+
+~~~~~~~~~~~~~{.py}
+>>> ctxt.setArchitecture(ARCH.X86_64)
+>>> print ctxt.registers.zmm1
+zmm1:512 bv[511..0]
+
+~~~~~~~~~~~~~
 
 \section REG_py_api Python API - Items of the REG namespace
 <hr>

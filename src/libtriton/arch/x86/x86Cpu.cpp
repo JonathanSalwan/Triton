@@ -238,13 +238,13 @@ namespace triton {
 
 
 
-      const std::unordered_map<registers_e, const triton::arch::RegisterSpec>& x86Cpu::getAllRegisters(void) const {
+      const std::unordered_map<registers_e, const triton::arch::Register>& x86Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
 
-      std::set<const triton::arch::RegisterSpec*> x86Cpu::getParentRegisters(void) const {
-        std::set<const triton::arch::RegisterSpec*> ret;
+      std::set<const triton::arch::Register*> x86Cpu::getParentRegisters(void) const {
+        std::set<const triton::arch::Register*> ret;
 
         for (const auto& kv: this->registers_) {
           auto regId = kv.first;
@@ -279,7 +279,7 @@ namespace triton {
       }
 
 
-      const triton::arch::RegisterSpec& x86Cpu::getRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& x86Cpu::getRegister(triton::arch::registers_e id) const {
         try {
           return this->registers_.at(id);
         } catch(const std::out_of_range& e) {
@@ -288,8 +288,13 @@ namespace triton {
       }
 
 
-      const triton::arch::RegisterSpec& x86Cpu::getParent(const triton::arch::RegisterSpec& reg) const {
+      const triton::arch::Register& x86Cpu::getParentRegister(const triton::arch::Register& reg) const {
         return this->getRegister(reg.getParent());
+      }
+
+
+      const triton::arch::Register& x86Cpu::getParentRegister(triton::arch::registers_e id) const {
+        return this->getParentRegister(this->getRegister(id));
       }
 
 
@@ -356,9 +361,9 @@ namespace triton {
                   mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
                   /* LEA if exists */
-                  triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
-                  triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                  triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+                  const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
+                  const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
+                  const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
                   triton::uint32 immsize = (
                                             this->isRegisterValid(base.getId()) ? base.getSize() :
@@ -384,7 +389,7 @@ namespace triton {
                 }
 
                 case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(inst.getRegisterState(*this, this->capstoneRegisterToTritonRegister(op->reg))));
+                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Register(*this, this->capstoneRegisterToTritonRegister(op->reg))));
                   break;
 
                 default:
@@ -453,7 +458,7 @@ namespace triton {
       }
 
 
-      triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::RegisterSpec& reg, bool execCallbacks) const {
+      triton::uint512 x86Cpu::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
         triton::uint512 value = 0;
 
         if (execCallbacks && this->callbacks)
@@ -594,10 +599,13 @@ namespace triton {
       }
 
 
-      void x86Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+      void x86Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
-        triton::uint512 cv  = mem.getConcreteValue();
+        triton::uint512 cv  = value;
+
+        if (cv > mem.getMaxValue())
+          throw triton::exceptions::Register("x86Cpu::setConcreteMemoryValue(): You cannot set this concrete value (too big) to this memory access.");
 
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x86Cpu::setConcreteMemoryValue(): Invalid size memory.");
@@ -623,8 +631,9 @@ namespace triton {
       }
 
 
-      void x86Cpu::setConcreteRegisterValue(const triton::arch::Register& reg) {
-        triton::uint512 value = reg.getConcreteValue();
+      void x86Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
+        if (value > reg.getMaxValue())
+          throw triton::exceptions::Register("x86Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
 
         switch (reg.getId()) {
           case triton::arch::ID_REG_EAX: (*((triton::uint32*)(this->eax)))  = value.convert_to<triton::uint32>(); break;

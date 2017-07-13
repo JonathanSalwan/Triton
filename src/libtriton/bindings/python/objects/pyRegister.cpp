@@ -64,17 +64,14 @@ ah:8 bv[15..8]
 \subsection py_Register_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> ah = ctxt.Register(REG.X86_64.AH, 0x18)
+>>> ah = ctxt.getRegister(REG.X86_64.AH)
 >>> print ah
 ah:8 bv[15..8]
 
 >>> print ah.getBitSize()
 8
 
->>> print hex(ah.getConcreteValue())
-0x18L
-
->>> print ctxt.Register(REG.X86_64.RAX)
+>>> print ctxt.registers.rax
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~
@@ -88,9 +85,6 @@ e.g: `64`
 
 - <b>\ref py_Bitvector_page getBitvector(void)</b><br>
 Returns the bitvector of the register.
-
-- <b>integer getConcreteValue(void)</b><br>
-Returns the concrete value assigned to this register operand.
 
 - <b>\ref py_REG_page getId(void)</b><br>
 Returns the enum of the register.<br>
@@ -109,9 +103,6 @@ Returns type of the register. In this case this function returns `OPERAND.REG`.
 
 - <b>bool isOverlapWith(\ref py_Register_page other)</b><br>
 Returns true if `other` and `self` overlap.
-
-- <b>void setConcreteValue(integer value)</b><br>
-Sets a concrete value to this register.
 
 */
 
@@ -142,16 +133,6 @@ namespace triton {
       static PyObject* Register_getBitvector(PyObject* self, PyObject* noarg) {
         try {
           return PyBitvector(*PyRegister_AsRegister(self));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Register_getConcreteValue(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint512(PyRegister_AsRegister(self)->getConcreteValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -217,24 +198,6 @@ namespace triton {
       }
 
 
-      static PyObject* Register_setConcreteValue(PyObject* self, PyObject* value) {
-        triton::arch::Register* reg;
-
-        if (!PyLong_Check(value) && !PyInt_Check(value))
-          return PyErr_Format(PyExc_TypeError, "Register::setConcretevalue(): Expected an integer as argument.");
-
-        try {
-          reg = PyRegister_AsRegister(self);
-          reg->setConcreteValue(PyLong_AsUint512(value));
-          Py_INCREF(Py_None);
-          return Py_None;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static int Register_print(PyObject* self) {
         std::cout << PyRegister_AsRegister(self);
         return 0;
@@ -258,8 +221,7 @@ namespace triton {
       }
 
 
-      static PyObject* Register_richcompare(PyObject* self, PyObject* other, int op)
-      {
+      static PyObject* Register_richcompare(PyObject* self, PyObject* other, int op) {
         PyObject* result    = nullptr;
         triton::uint32 id1  = 0;
         triton::uint32 id2  = 0;
@@ -303,13 +265,11 @@ namespace triton {
       PyMethodDef Register_callbacks[] = {
         {"getBitSize",        Register_getBitSize,       METH_NOARGS,    ""},
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
-        {"getConcreteValue",  Register_getConcreteValue, METH_NOARGS,    ""},
         {"getId",             Register_getId,            METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
         {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
-        {"setConcreteValue",  Register_setConcreteValue, METH_O,         ""},
         {nullptr,             nullptr,                   0,              nullptr}
       };
 
@@ -373,16 +333,6 @@ namespace triton {
         object = PyObject_NEW(Register_Object, &Register_Type);
         if (object != NULL)
           object->reg = new triton::arch::Register(reg);
-
-        return (PyObject*)object;
-      }
-
-
-      PyObject* PyRegister(const triton::arch::RegisterSpec& reg, triton::uint512 concreteValue) {
-        PyType_Ready(&Register_Type);
-        Register_Object* object = PyObject_NEW(Register_Object, &Register_Type);
-        if (object != NULL)
-          object->reg = new triton::arch::Register(reg, concreteValue);
 
         return (PyObject*)object;
       }

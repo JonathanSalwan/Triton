@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MemoryAccess, OPERAND, REG, TritonContext
+from triton import ARCH, MemoryAccess, OPERAND, TritonContext
 
 
 class TestMemory(unittest.TestCase):
@@ -15,11 +15,11 @@ class TestMemory(unittest.TestCase):
         """Define the architecture and memory access to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.mem = MemoryAccess(0x400f4d3, 8, 0x6162636465666768)
+        self.mem = MemoryAccess(0x400f4d3, 8)
 
     def test_address(self):
         """Check address data is correct."""
-        mem = MemoryAccess(0x1122334455667788, 8, 0x6162636465666768)
+        mem = MemoryAccess(0x1122334455667788, 8)
         self.assertEqual(mem.getAddress(), 0x1122334455667788)
         self.assertEqual(self.mem.getAddress(), 0x400f4d3)
 
@@ -35,28 +35,22 @@ class TestMemory(unittest.TestCase):
         """Check type of a memory access."""
         self.assertEqual(self.mem.getType(), OPERAND.MEM)
 
-    def test_set_concrete_value(self):
-        """Check memory is correctly set."""
-        self.mem.setConcreteValue(0x1000)
-        self.assertEqual(self.mem.getConcreteValue(), 0x1000)
-        self.assertEqual(self.mem.getSize(), 8)
-
     def test_base_register(self):
         """Check base register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getBaseRegister()))
-        self.mem.setBaseRegister(self.Triton.Register(REG.X86_64.RAX))
+        self.mem.setBaseRegister(self.Triton.registers.rax)
         self.assertEqual(self.mem.getBaseRegister().getName(), "rax")
 
     def test_index_register(self):
         """Check index register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getIndexRegister()))
-        self.mem.setIndexRegister(self.Triton.Register(REG.X86_64.RCX))
+        self.mem.setIndexRegister(self.Triton.registers.rcx)
         self.assertEqual(self.mem.getIndexRegister().getName(), "rcx")
 
     def test_segment_register(self):
         """Check segment register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getSegmentRegister()))
-        self.mem.setSegmentRegister(self.Triton.Register(REG.X86_64.FS))
+        self.mem.setSegmentRegister(self.Triton.registers.fs)
         self.assertEqual(self.mem.getSegmentRegister().getName(), "fs")
 
     def test_scale(self):

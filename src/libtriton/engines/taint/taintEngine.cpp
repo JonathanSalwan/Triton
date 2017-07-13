@@ -162,8 +162,8 @@ namespace triton {
 
 
       /* Returns the tainted registers */
-      std::set<const triton::arch::RegisterSpec*> TaintEngine::getTaintedRegisters(void) const {
-        std::set<const triton::arch::RegisterSpec*> res;
+      std::set<const triton::arch::Register*> TaintEngine::getTaintedRegisters(void) const {
+        std::set<const triton::arch::Register*> res;
 
         for (auto id : this->taintedRegisters)
           res.insert(&this->cpu.getRegister(id));
@@ -198,7 +198,7 @@ namespace triton {
 
 
       /* Returns true of false if the register is currently tainted */
-      bool TaintEngine::isRegisterTainted(const triton::arch::RegisterSpec& reg) const {
+      bool TaintEngine::isRegisterTainted(const triton::arch::Register& reg) const {
         if (this->taintedRegisters.find(reg.getParent()) != this->taintedRegisters.end())
           return TAINTED;
 
@@ -219,7 +219,7 @@ namespace triton {
 
 
       /* Taint the register */
-      bool TaintEngine::taintRegister(const triton::arch::RegisterSpec& reg) {
+      bool TaintEngine::taintRegister(const triton::arch::Register& reg) {
         if (!this->isEnabled())
           return this->isRegisterTainted(reg);
         this->taintedRegisters.insert(reg.getParent());
@@ -229,7 +229,7 @@ namespace triton {
 
 
       /* Untaint the register */
-      bool TaintEngine::untaintRegister(const triton::arch::RegisterSpec& reg) {
+      bool TaintEngine::untaintRegister(const triton::arch::Register& reg) {
         if (!this->isEnabled())
           return this->isRegisterTainted(reg);
         this->taintedRegisters.erase(reg.getParent());
@@ -266,7 +266,7 @@ namespace triton {
 
 
       /* Sets the flag (taint or untaint) to a register. */
-      bool TaintEngine::setTaintRegister(const triton::arch::RegisterSpec& reg, bool flag) {
+      bool TaintEngine::setTaintRegister(const triton::arch::Register& reg, bool flag) {
         if (!this->isEnabled())
           return this->isRegisterTainted(reg);
 
@@ -423,7 +423,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -443,17 +443,17 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintUnionRegisterImmediate(const triton::arch::RegisterSpec& regDst) {
+      bool TaintEngine::taintUnionRegisterImmediate(const triton::arch::Register& regDst) {
         return this->unionRegisterImmediate(regDst);
       }
 
 
-      bool TaintEngine::taintUnionRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         return this->unionRegisterMemory(regDst, memSrc);
       }
 
 
-      bool TaintEngine::taintUnionRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         return this->unionRegisterRegister(regDst, regSrc);
       }
 
@@ -499,7 +499,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -519,23 +519,23 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterImmediate(const triton::arch::RegisterSpec& regDst) {
+      bool TaintEngine::taintAssignmentRegisterImmediate(const triton::arch::Register& regDst) {
         return this->assignmentRegisterImmediate(regDst);
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         return this->assignmentRegisterMemory(regDst, memSrc);
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         return this->assignmentRegisterRegister(regDst, regSrc);
       }
 
 
       /* reg <- reg  */
-      bool TaintEngine::assignmentRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
@@ -550,7 +550,7 @@ namespace triton {
 
 
       /* reg <- imm  */
-      bool TaintEngine::assignmentRegisterImmediate(const triton::arch::RegisterSpec& regDst) {
+      bool TaintEngine::assignmentRegisterImmediate(const triton::arch::Register& regDst) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
         this->untaintRegister(regDst);
@@ -559,7 +559,7 @@ namespace triton {
 
 
       /* reg <- mem */
-      bool TaintEngine::assignmentRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::assignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
@@ -606,7 +606,7 @@ namespace triton {
 
 
       /* mem <- reg  */
-      bool TaintEngine::assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 
@@ -623,7 +623,7 @@ namespace triton {
 
 
       /* reg U imm */
-      bool TaintEngine::unionRegisterImmediate(const triton::arch::RegisterSpec& regDst) {
+      bool TaintEngine::unionRegisterImmediate(const triton::arch::Register& regDst) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
         return this->isRegisterTainted(regDst);
@@ -631,7 +631,7 @@ namespace triton {
 
 
       /* reg U reg */
-      bool TaintEngine::unionRegisterRegister(const triton::arch::RegisterSpec& regDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::unionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
@@ -672,7 +672,7 @@ namespace triton {
 
 
       /* reg U mem */
-      bool TaintEngine::unionRegisterMemory(const triton::arch::RegisterSpec& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::unionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         if (!this->isEnabled())
           return this->isRegisterTainted(regDst);
 
@@ -699,7 +699,7 @@ namespace triton {
 
 
       /* mem U reg */
-      bool TaintEngine::unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::RegisterSpec& regSrc) {
+      bool TaintEngine::unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 

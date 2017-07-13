@@ -61,7 +61,7 @@ namespace triton {
 
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<registers_e, const triton::arch::RegisterSpec> registers_;
+          std::unordered_map<registers_e, const triton::arch::Register> registers_;
       };
 
       /*! \brief The list of prefixes.
