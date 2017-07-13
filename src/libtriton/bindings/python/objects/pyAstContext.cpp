@@ -20,13 +20,13 @@
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcodes = "\x48\x31\xD0"
+>>> opcode = "\x48\x31\xD0"
 >>> inst = Instruction()
 
->>> inst.setOpcodes(opcodes)
+>>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
->>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
 
 >>> ctxt.processing(inst)
 True
@@ -35,7 +35,7 @@ True
 
 */
 
-/*! \page py_AstContext_page AST Context
+/*! \page py_AstContext_page AstContext
     \brief [**python api**] All information about the ast python module.
 
 \tableofcontents
@@ -116,14 +116,14 @@ If you try to go through the full AST you will fail at the first reference node 
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.
 
 ~~~~~~~~~~~~~{.py}
->>> zfId = ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.ZF))
+>>> zfId = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
 >>> partialTree = ctxt.getSymbolicExpressionFromId(zfId).getAst()
 >>> print partialTree
-(ite (= ((_ extract 63 0) ref!0) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
+(ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 
 >>> fullTree = ctxt.getFullAst(partialTree)
 >>> print fullTree
-(ite (= ((_ extract 63 0) ((_ zero_extend 0) (bvxor (_ bv12345 64) (_ bv67890 64)))) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
+(ite (= (bvxor (_ bv12345 64) (_ bv67890 64)) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 
 ~~~~~~~~~~~~~
 
@@ -138,10 +138,10 @@ Triton allows you to display your AST via a Python syntax.
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 >>> inst = Instruction()
->>> inst.setOpcodes("\x48\x01\xd8") # add rax, rbx
+>>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 0x1122334455667788))
->>> inst.updateContext(ctxt.Register(REG.X86_64.RBX, 0x8877665544332211))
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 0x1122334455667788)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rbx, 0x8877665544332211)
 >>> ctxt.processing(inst)
 True
 >>> print inst
@@ -151,12 +151,12 @@ True
 ...     print expr
 ...
 ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) # ADD operation
-ref_1 = (0x1 if (0x10 == (0x10 & ((ref_0 & 0xFFFFFFFFFFFFFFFF) ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag
-ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ (ref_0 & 0xFFFFFFFFFFFFFFFF)) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) # Carry flag
-ref_3 = ((((0x1122334455667788 ^ (~(0x8877665544332211) & 0xFFFFFFFFFFFFFFFF)) & (0x1122334455667788 ^ (ref_0 & 0xFFFFFFFFFFFFFFFF))) >> 63) & 0x1) # Overflow flag
+ref_1 = (0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag
+ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ ref_0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) # Carry flag
+ref_3 = ((((0x1122334455667788 ^ (~(0x8877665544332211) & 0xFFFFFFFFFFFFFFFF)) & (0x1122334455667788 ^ ref_0)) >> 63) & 0x1) # Overflow flag
 ref_4 = ((((((((0x1 ^ (((ref_0 & 0xFF) >> 0x0) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x1) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x2) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x3) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x4) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x5) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x6) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x7) & 0x1)) # Parity flag
 ref_5 = ((ref_0 >> 63) & 0x1) # Sign flag
-ref_6 = (0x1 if ((ref_0 & 0xFFFFFFFFFFFFFFFF) == 0x0) else 0x0) # Zero flag
+ref_6 = (0x1 if (ref_0 == 0x0) else 0x0) # Zero flag
 ref_7 = 0x400003 # Program Counter
 
 # TODO : astRepresentation should not be a global value.
@@ -171,7 +171,7 @@ ref_7 = 0x400003 # Program Counter
 
 ~~~~~~~~~~~~~{.py}
 >>> # Get the symbolic expression of the ZF flag
->>> zfId    = ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.ZF))
+>>> zfId    = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
 >>> zfExpr  = ctxt.getFullAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
 
 >>> astCtxt = ctxt.getAstContext()
@@ -201,13 +201,13 @@ ref_7 = 0x400003 # Program Counter
 >>> print node
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
 
->>> subchild = node.getChilds()[1].getChilds()[0]
+>>> subchild = node.getChildren()[1].getChildren()[0]
 >>> print subchild
 (_ bv10 8)
 
->>> print subchild.getChilds()[0].getValue()
+>>> print subchild.getChildren()[0].getValue()
 10
->>> print subchild.getChilds()[1].getValue()
+>>> print subchild.getChildren()[1].getValue()
 8
 
 # Node modification
@@ -258,7 +258,7 @@ a < b             | (bvult a b)
 a > b             | (bvugt a b)
 
 \anchor ast
-\section ast_py_api Python API - Methods of the ast module
+\section AstContext_py_api Python API - Methods of the AstContext module
 <hr>
 
 - <b>\ref py_AstNode_page assert_(\ref py_AstNode_page expr1)</b><br>

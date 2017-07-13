@@ -16,12 +16,12 @@
 
 import sys
 from   pintool import *
-from   triton  import ARCH, REG
+from   triton  import ARCH
 
 
 def cb1(inst):
     if inst.getAddress() == 0x4005e2:
-        setCurrentRegisterValue(getTritonContext().Register(REG.X86_64.RAX), 0)
+        setCurrentRegisterValue(getTritonContext().registers.rax, 0)
 
 def cb2(inst):
     if inst.getAddress() == 0x4005e2:

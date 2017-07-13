@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import (ARCH, REG, Instruction, PREFIX, OPCODE, TritonContext)
+from triton import (ARCH, Instruction, PREFIX, OPCODE, TritonContext)
 
 
 class TestInstruction(unittest.TestCase):
@@ -16,10 +16,10 @@ class TestInstruction(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.inst = Instruction()
-        self.inst.setOpcodes("\x48\x01\xd8")  # add rax, rbx
+        self.inst.setOpcode("\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
-        self.inst.updateContext(self.Triton.Register(REG.X86_64.RAX, 0x1122334455667788))
-        self.inst.updateContext(self.Triton.Register(REG.X86_64.RBX, 0x8877665544332211))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0x1122334455667788)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbx, 0x8877665544332211)
         self.Triton.processing(self.inst)
 
     def test_address(self):
@@ -59,7 +59,7 @@ class TestInstruction(unittest.TestCase):
 
     def test_opcode(self):
         """Check opcode informations."""
-        self.assertEqual(self.inst.getOpcodes(), "\x48\x01\xd8")
+        self.assertEqual(self.inst.getOpcode(), "\x48\x01\xd8")
         self.assertEqual(self.inst.getType(), OPCODE.ADD)
 
     def test_thread(self):
@@ -69,10 +69,10 @@ class TestInstruction(unittest.TestCase):
     def test_operand(self):
         """Check operand information."""
         self.assertEqual(len(self.inst.getOperands()), 2)
-        self.assertEqual(self.inst.getFirstOperand().getName(), "rax")
-        self.assertEqual(self.inst.getSecondOperand().getName(), "rbx")
+        self.assertEqual(self.inst.getOperands()[0].getName(), "rax")
+        self.assertEqual(self.inst.getOperands()[1].getName(), "rbx")
         with self.assertRaises(Exception):
-            self.inst.getThirdOperand()
+            self.inst.getOperands()[2]
 
     def test_symbolic(self):
         """Check symbolic information."""
@@ -98,10 +98,10 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov eax, DWORD PTR fs:0xffffffffffffdf98
-        inst.setOpcodes("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
+        inst.setOpcode("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
         self.Triton.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())
@@ -117,11 +117,11 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov rax, QWORD PTR fs:[rax]
-        inst.setOpcodes("\x64\x48\x8B\x00")
+        inst.setOpcode("\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.FS, 0x7fffda8ab700))
-        self.Triton.setConcreteRegisterValue(self.Triton.Register(REG.X86_64.RAX, 0xffffffffffffdf90))
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0xffffffffffffdf90)
         self.Triton.processing(inst)
 
         self.assertTrue(inst.getLoadAccess())
@@ -137,7 +137,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov ax, ds:word_40213C
-        inst.setOpcodes("\x66\xA1\x3C\x21\x40\x00")
+        inst.setOpcode("\x66\xA1\x3C\x21\x40\x00")
         self.Triton.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x40213C)
@@ -164,7 +164,6 @@ class TestProcessing(unittest.TestCase):
         self.Triton.processing(inst3)
 
         self.assertEqual(inst3.getOperands()[0].getAddress(), 0x19fe04, "esp has been poped")
-        self.assertEqual(inst3.getOperands()[0].getConcreteValue(), 0x11111111, "new value is still 0x11111111")
         self.assertEqual(inst3.getStoreAccess()[0][0].getAddress(), 0x19fe04, "inst3 set the value in 0x19fe04")
         self.assertEqual(inst3.getStoreAccess()[0][1].evaluate(), 0x11111111, "And this value is 0x11111111")
 
@@ -187,7 +186,6 @@ class TestProcessing(unittest.TestCase):
         self.Triton.processing(inst4)
 
         self.assertEqual(inst4.getOperands()[0].getAddress(), 0x19fe00, "poping edi doesn't change it")
-        self.assertEqual(inst4.getOperands()[0].getConcreteValue(), 0x11111111, "pointed value in edi is the previously pointed value by esp")
         self.assertEqual(inst4.getStoreAccess()[0][0].getAddress(), 0x19fe00, "inst4 store the new value in 0x19fe00 (edi value)")
         self.assertEqual(inst4.getStoreAccess()[0][1].evaluate(), 0x11111111, "The stored value is 0x11111111")
 

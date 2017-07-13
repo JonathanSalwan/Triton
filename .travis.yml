@@ -36,7 +36,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test', 'boost-latest', 'george-edison55-precise-backports']
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, GCOV=ON]
+          env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7 ]
 
         # Linux clang 3.5
         - os: linux
@@ -64,6 +64,15 @@ matrix:
               sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7', 'boost-latest', 'george-edison55-precise-backports']
               packages: ['clang-3.7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7 ]
+
+        # Linux clang 3.8
+        - os: linux
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8', 'boost-latest', 'george-edison55-precise-backports']
+              packages: ['clang-3.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          env: [ CXX_COMPILER=clang++-3.8, C_COMPILER=clang-3.8, PYTHON_VERSION=2.7 ]
 
         # OSX xcode 7.3
         - os: osx
@@ -145,7 +154,7 @@ install:
 script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cmake -DPINTOOL=on -DKERNEL4=on -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER .. -DGCOV=${GCOV:OFF}; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
-  - sudo make -j2
+  - make -j2
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
   - make check
   # Check installation succeed

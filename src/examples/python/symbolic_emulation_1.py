@@ -64,7 +64,7 @@
 
 
 import  sys
-from    triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE, REG
+from    triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
 
 
 code = [
@@ -82,12 +82,12 @@ if __name__ == '__main__':
     # Set the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
-    for (addr, opcodes) in code:
+    for (addr, opcode) in code:
         # Build an instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(opcodes)
+        # Setup opcode
+        inst.setOpcode(opcode)
 
         # Setup Address
         inst.setAddress(addr)
@@ -111,16 +111,16 @@ if __name__ == '__main__':
     print 'Instruction :', inst.getDisassembly()
     print 'Write at    :', hex(write)
     print 'Content     :', hex(Triton.getConcreteMemoryValue(MemoryAccess(write+4, CPUSIZE.DWORD)))
-    print 'RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RAX)))
-    print 'RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RSI)))
-    print 'RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RDI)))
+    print 'RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rax))
+    print 'RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rsi))
+    print 'RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rdi))
 
 
     print
     print 'Symbolic registers information'
     print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
     for k, v in Triton.getSymbolicRegisters().items():
-        print k, v
+        print Triton.getRegister(k), v
 
     print
     print 'Symbolic memory information'
@@ -131,7 +131,7 @@ if __name__ == '__main__':
     print
     print 'Craft symbolic stuffs'
     print '~~~~~~~~~~~~~~~~~~~~~'
-    ah  = Triton.buildSymbolicRegister(Triton.Register(REG.X86_64.AH))
+    ah  = Triton.buildSymbolicRegister(Triton.registers.ah)
     mem = Triton.buildSymbolicMemory(MemoryAccess(0x11248, 4))
     print 'Memory at 0x11248 :', mem
     print 'Compute memory    :', hex(mem.evaluate())

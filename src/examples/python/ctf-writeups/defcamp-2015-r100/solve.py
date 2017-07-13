@@ -38,7 +38,7 @@
 ##  [+] Emulation done.
 ##
 
-from triton import ARCH, TritonContext, Instruction, REG, Elf, MODE, MemoryAccess, CPUSIZE
+from triton import ARCH, TritonContext, Instruction, Elf, MODE, MemoryAccess, CPUSIZE
 
 import os
 import sys
@@ -51,12 +51,12 @@ def emulate(pc):
     astCtxt = Triton.getAstContext()
     print '[+] Starting emulation.'
     while pc:
-        # Fetch opcodes
-        opcodes = Triton.getConcreteMemoryAreaValue(pc, 16)
+        # Fetch opcode
+        opcode = Triton.getConcreteMemoryAreaValue(pc, 16)
 
         # Create the Triton instruction
         instruction = Instruction()
-        instruction.setOpcodes(opcodes)
+        instruction.setOpcode(opcode)
         instruction.setAddress(pc)
 
         # Process
@@ -67,7 +67,7 @@ def emulate(pc):
         # eax must be equal to 1 at each round.
         if instruction.getAddress() == 0x40078B:
             # Slice expressions
-            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.Register(REG.X86_64.RAX)))
+            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.registers.rax))
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
@@ -86,7 +86,7 @@ def emulate(pc):
                 print '[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value))
 
         # Next
-        pc = Triton.getConcreteRegisterValue(Triton.Register(REG.X86_64.RIP))
+        pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
 
     print '[+] Emulation done.'
     return
@@ -118,11 +118,11 @@ if __name__ == '__main__':
     loadBinary(os.path.join(os.path.dirname(__file__), 'r100.bin'))
 
     # Define a fake stack
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RBP, 0x7fffffff))
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RSP, 0x6fffffff))
+    Triton.setConcreteRegisterValue(Triton.registers.rbp, 0x7fffffff)
+    Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x6fffffff)
 
     # Define an user input
-    Triton.setConcreteRegisterValue(Triton.Register(REG.X86_64.RDI, 0x10000000))
+    Triton.setConcreteRegisterValue(Triton.registers.rdi, 0x10000000)
 
     # Symbolize user inputs (30 bytes)
     for index in range(30):

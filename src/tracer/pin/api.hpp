@@ -1,3 +1,10 @@
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the BSD License.
+*/
+
 #ifndef TRITON_PIN_API_H
 #define TRITON_PIN_API_H
 

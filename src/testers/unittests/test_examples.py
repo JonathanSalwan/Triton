@@ -1,11 +1,12 @@
 #!/usr/bin/env python2
 # coding: utf-8
 """Tester for examples."""
-import unittest
-import subprocess
-import os
 import glob
 import itertools
+import os
+import subprocess
+import sys
+import unittest
 
 EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "python")
 
@@ -27,7 +28,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
         assert len(args) <= 1
         if len(args) == 1:
             args = args[0]
-        p = subprocess.Popen(["python", example_name] + args,
+        p = subprocess.Popen([sys.executable, example_name] + args,
                              stdout=subprocess.PIPE,
                              stderr=subprocess.PIPE)
         out, err = p.communicate()

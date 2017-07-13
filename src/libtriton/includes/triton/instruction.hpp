@@ -23,6 +23,7 @@
 #include <triton/tritonTypes.hpp>
 
 
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -53,8 +54,8 @@ namespace triton {
         //! The disassembly of the instruction. This field is set at the disassembly level.
         std::stringstream disassembly;
 
-        //! The opcodes of the instruction.
-        triton::uint8 opcodes[32];
+        //! The opcode of the instruction.
+        triton::uint8 opcode[32];
 
         //! The size of the instruction.
         triton::uint32 size;
@@ -96,15 +97,6 @@ namespace triton {
         void copy(const Instruction& other);
 
       public:
-        //! The memory access list
-        std::list<triton::arch::MemoryAccess> memoryAccess;
-
-        //! A registers state
-        /*!
-          \brief a map of <regId, regClass>
-        */
-        std::map<triton::uint32, triton::arch::Register> registerState;
-
         //! A list of operands
         std::vector<triton::arch::OperandWrapper> operands;
 
@@ -114,8 +106,8 @@ namespace triton {
         //! Constructor.
         Instruction();
 
-        //! Constructor with opcodes.
-        Instruction(const triton::uint8* opcodes, triton::uint32 opSize);
+        //! Constructor with opcode.
+        Instruction(const triton::uint8* opcode, triton::uint32 opSize);
 
         //! Constructor by copy.
         Instruction(const Instruction& other);
@@ -144,8 +136,8 @@ namespace triton {
         //! Returns the disassembly of the instruction.
         std::string getDisassembly(void) const;
 
-        //! Returns the opcodes of the instruction.
-        const triton::uint8* getOpcodes(void) const;
+        //! Returns the opcode of the instruction.
+        const triton::uint8* getOpcode(void) const;
 
         //! Returns the type of the instruction.
         triton::uint32 getType(void) const;
@@ -154,25 +146,22 @@ namespace triton {
         triton::uint32 getPrefix(void) const;
 
         //! Returns the list of all implicit and explicit load access
-        const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getLoadAccess(void) const;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getLoadAccess(void);
 
         //! Returns the list of all implicit and explicit store access
-        const std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getStoreAccess(void) const;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getStoreAccess(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) inputs (read)
-        const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getReadRegisters(void) const;
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getReadRegisters(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) outputs (write)
-        const std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getWrittenRegisters(void) const;
+        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getWrittenRegisters(void);
 
         //! Returns the list of all implicit and explicit immediate inputs (read)
-        const std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void) const;
+        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void);
 
-        //! Returns the register state which has been recorded.
-        triton::arch::Register getRegisterState(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
-
-        //! Sets the opcodes of the instruction.
-        void setOpcodes(const triton::uint8* opcodes, triton::uint32 size);
+        //! Sets the opcode of the instruction.
+        void setOpcode(const triton::uint8* opcode, triton::uint32 size);
 
         //! Returns the size of the instruction.
         triton::uint32 getSize(void) const;
@@ -224,12 +213,6 @@ namespace triton {
 
         //! Sets the taint of the instruction based on its expressions.
         void setTaint(void);
-
-        //! Records an instruction context for a memory access.
-        void updateContext(const triton::arch::MemoryAccess& mem);
-
-        //! Records an instruction context for a register state.
-        void updateContext(const triton::arch::Register& reg);
 
         //! Adds a symbolic expression
         void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);

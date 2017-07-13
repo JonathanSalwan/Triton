@@ -1,3 +1,5 @@
+#pragma warning(disable:4067)
+
 #if not (defined REG_SPEC || defined REG_SPEC_NO_CAPSTONE)
 #error REG_SPEC have to be specified before including specs
 #endif
@@ -236,3 +238,5 @@ REG_SPEC(SS, ss, QWORD_SIZE_BIT-1, 0, SS, DWORD_SIZE_BIT-1, 0, SS, true) //!< St
 
 #undef REG_SPEC
 #undef REG_SPEC_NO_CAPSTONE
+
+#pragma warning(default:4067)

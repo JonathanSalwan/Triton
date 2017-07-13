@@ -15,7 +15,7 @@ class TestRAXRegister(unittest.TestCase):
         """Define arch and register to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = self.Triton.Register(REG.X86_64.RAX)
+        self.reg = self.Triton.registers.rax
 
     def test_name(self):
         """Check register name."""
@@ -28,14 +28,6 @@ class TestRAXRegister(unittest.TestCase):
     def test_bit_size(self):
         """Check register bit size."""
         self.assertEqual(self.reg.getBitSize(), 64)
-
-    def test_concrete_value(self):
-        """Check concrete value modification."""
-        self.assertEqual(self.reg.getConcreteValue(), 0)
-
-        value = 0x1122334455667788
-        self.reg.setConcreteValue(value)
-        self.assertEqual(self.reg.getConcreteValue(), value)
 
     def test_parent(self):
         """Check parent register."""
@@ -66,7 +58,7 @@ class TestAHRegister(unittest.TestCase):
         """Define arch and register to check."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = self.Triton.Register(REG.X86_64.AH)
+        self.reg = self.Triton.registers.ah
 
     def test_size(self):
         """Check register size."""
@@ -83,7 +75,7 @@ class TestAHRegister(unittest.TestCase):
         self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
 
         self.Triton.setArchitecture(ARCH.X86)
-        self.reg = self.Triton.Register(REG.X86.AH)
+        self.reg = self.Triton.registers.ah
         self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "eax")
         self.assertEqual(self.Triton.getParentRegister(self.reg).getBitSize(), 32)
 
@@ -100,24 +92,18 @@ class TestXmmRegister(unittest.TestCase):
     def test_xmm_on_x86(self):
         """Check xmm on 32 bits arch."""
         self.Triton.setArchitecture(ARCH.X86)
-        xmm = self.Triton.Register(REG.X86.XMM1, 0x112233445566778899aabbccddeeff00)
+        xmm = self.Triton.registers.xmm1
         self.assertEqual(xmm.getBitSize(), 128)
-        self.assertEqual(xmm.getConcreteValue(),
-                         0x112233445566778899aabbccddeeff00)
 
     def test_ymm(self):
         """Check ymm on 64 bits arch."""
-        ymm = self.Triton.Register(REG.X86_64.YMM1, 0x112233445566778899aabbccddeeff00)
+        ymm = self.Triton.registers.ymm1
         self.assertEqual(ymm.getBitSize(), 256)
-        ymm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-        self.assertEqual(ymm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
     def test_zmm(self):
         """Check zmm on 64 bits arch."""
-        zmm = self.Triton.Register(REG.X86_64.ZMM2, 0)
+        zmm = self.Triton.registers.zmm2
         self.assertEqual(zmm.getBitSize(), 512)
-        zmm.setConcreteValue(0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
-        self.assertEqual(zmm.getConcreteValue(), 0x112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00112233445566778899aabbccddeeff00)
 
 
 class TestRegisterValues(unittest.TestCase):
@@ -129,45 +115,31 @@ class TestRegisterValues(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
 
-    def test_register_create(self):
-        """Check register creation with value."""
-        for reg in (REG.X86_64.AH, REG.X86_64.AL):
-            # OK
-            self.Triton.Register(reg, 0xff)
-            # Not OK
-            # TODO : Be more specific on the raise exception type
-            with self.assertRaises(Exception):
-                self.Triton.Register(reg, 0xff + 1)
-
-        self.Triton.Register(REG.X86_64.ZF, 1)
-        with self.assertRaises(Exception):
-            self.Triton.Register(REG.X86_64.ZF, 2)
-
     def test_set_concrete_value(self):
         """Check register value modification."""
         for reg in (REG.X86_64.AH, REG.X86_64.AL):
             # OK
-            reg = self.Triton.Register(reg)
-            reg.setConcreteValue(0xff)
+            reg = self.Triton.getRegister(reg)
+            self.Triton.setConcreteRegisterValue(reg, 0xff)
             # Not OK
             # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
-                reg.setConcreteValue(0xff + 1)
+                self.Triton.setConcreteRegisterValue(reg, 0xff+1)
 
-        reg = self.Triton.Register(REG.X86_64.ZF)
-        reg.setConcreteValue(1)
+        reg = self.Triton.registers.zf
+        self.Triton.setConcreteRegisterValue(reg, 1)
         with self.assertRaises(Exception):
-            reg.setConcreteValue(2)
+            self.Triton.setConcreteRegisterValue(reg, 2)
 
     def test_overlap(self):
         """Check register overlapping."""
-        self.assertTrue(self.Triton.Register(REG.X86_64.AX).isOverlapWith(self.Triton.Register(REG.X86_64.EAX)), "overlap with upper")
-        self.assertTrue(self.Triton.Register(REG.X86_64.AX).isOverlapWith(self.Triton.Register(REG.X86_64.RAX)), "overlap with parent")
-        self.assertTrue(self.Triton.Register(REG.X86_64.RAX).isOverlapWith(self.Triton.Register(REG.X86_64.AX)), "overlap with lower")
-        self.assertFalse(self.Triton.Register(REG.X86_64.AH).isOverlapWith(self.Triton.Register(REG.X86_64.AL)))
-        self.assertTrue(self.Triton.Register(REG.X86_64.AH).isOverlapWith(self.Triton.Register(REG.X86_64.EAX)))
-        self.assertTrue(self.Triton.Register(REG.X86_64.EAX).isOverlapWith(self.Triton.Register(REG.X86_64.AH)))
-        self.assertTrue(self.Triton.Register(REG.X86_64.AX).isOverlapWith(self.Triton.Register(REG.X86_64.AL)))
-        self.assertTrue(self.Triton.Register(REG.X86_64.AL).isOverlapWith(self.Triton.Register(REG.X86_64.AX)))
-        self.assertFalse(self.Triton.Register(REG.X86_64.EAX).isOverlapWith(self.Triton.Register(REG.X86_64.EDX)))
+        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.eax), "overlap with upper")
+        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.rax), "overlap with parent")
+        self.assertTrue(self.Triton.registers.rax.isOverlapWith(self.Triton.registers.ax), "overlap with lower")
+        self.assertFalse(self.Triton.registers.ah.isOverlapWith(self.Triton.registers.al))
+        self.assertTrue(self.Triton.registers.ah.isOverlapWith(self.Triton.registers.eax))
+        self.assertTrue(self.Triton.registers.eax.isOverlapWith(self.Triton.registers.ah))
+        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.al))
+        self.assertTrue(self.Triton.registers.al.isOverlapWith(self.Triton.registers.ax))
+        self.assertFalse(self.Triton.registers.eax.isOverlapWith(self.Triton.registers.edx))
 

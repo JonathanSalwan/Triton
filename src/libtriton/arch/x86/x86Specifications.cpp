@@ -27,11 +27,11 @@ namespace triton {
           // Fill registers_ with those available in X86_64 from spec
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                                                         \
-                               triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                                                \
-                                                          #LOWER_NAME,                                                                      \
-                                                          triton::arch::ID_REG_##X86_64_PARENT,                                             \
-                                                          X86_64_UPPER,                                                                     \
-                                                          X86_64_LOWER)                                                                     \
+                               triton::arch::Register(triton::arch::ID_REG_##UPPER_NAME,                                                    \
+                                                      #LOWER_NAME,                                                                          \
+                                                      triton::arch::ID_REG_##X86_64_PARENT,                                                 \
+                                                      X86_64_UPPER,                                                                         \
+                                                      X86_64_LOWER)                                                                         \
                               );
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -43,11 +43,11 @@ namespace triton {
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)   \
           if (X86_AVAIL)                                                                                      \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                           \
-                               triton::arch::RegisterSpec(triton::arch::ID_REG_##UPPER_NAME,                  \
-                                                          #LOWER_NAME,                                        \
-                                                          triton::arch::ID_REG_##X86_PARENT,                  \
-                                                          X86_UPPER,                                          \
-                                                          X86_LOWER)                                          \
+                               triton::arch::Register(triton::arch::ID_REG_##UPPER_NAME,                      \
+                                                      #LOWER_NAME,                                            \
+                                                      triton::arch::ID_REG_##X86_PARENT,                      \
+                                                      X86_UPPER,                                              \
+                                                      X86_LOWER)                                              \
                               );
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC

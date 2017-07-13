@@ -29,9 +29,9 @@ This object is used to represent a model from an SMT solver.
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> inst = Instruction()
->>> inst.setOpcodes("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
+>>> inst.setOpcode("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
 >>> print symvar
 SymVar_0:64
 
@@ -40,14 +40,14 @@ True
 >>> print inst
 0x0: xor rax, 0x11223344
 
->>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.Register(REG.X86_64.RAX)))
+>>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.registers.rax))
 >>> print raxAst
-((_ zero_extend 0) (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)))
+(bvxor SymVar_0 (_ bv287454020 64))
 
 >>> astCtxt = ctxt.getAstContext()
 >>> constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(0, raxAst.getBitvectorSize())))
 >>> print constraint
-(assert (= ((_ zero_extend 0) (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))) (_ bv0 64)))
+(assert (= (bvxor SymVar_0 (_ bv287454020 64)) (_ bv0 64)))
 
 >>> model = ctxt.getModel(constraint)
 >>> print model #doctest: +ELLIPSIS

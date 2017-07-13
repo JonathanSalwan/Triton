@@ -32,7 +32,7 @@
 This object is used to represent a symbolic variable.
 
 ~~~~~~~~~~~~~{.py}
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.Register(REG.X86_64.RAX))
+>>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
 >>> print symvar
 SymVar_0:64
 
@@ -67,9 +67,6 @@ e.g: `SymVar_18`
 
 - <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
-
-- <b>void setConcreteValue(integer value)</b><br>
-Sets a concrete value. `value` must be less than 512-bits.
 
 */
 

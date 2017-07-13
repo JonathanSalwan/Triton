@@ -29,13 +29,13 @@ This object is used to represent a symbolic expression.
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcodes = "\x48\x31\xD0"
+>>> opcode = "\x48\x31\xD0"
 >>> inst = Instruction()
 
->>> inst.setOpcodes(opcodes)
+>>> inst.setOpcode(opcode)
 >>> inst.setAddress(0x400000)
->>> inst.updateContext(ctxt.Register(REG.X86_64.RAX, 12345))
->>> inst.updateContext(ctxt.Register(REG.X86_64.RDX, 67890))
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
 
 >>> ctxt.processing(inst)
 True
@@ -45,19 +45,19 @@ True
 >>> for expr in inst.getSymbolicExpressions():
 ...     print expr
 ...
-ref!0 = ((_ zero_extend 0) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
+ref!0 = (bvxor (_ bv12345 64) (_ bv67890 64)) ; XOR operation
 ref!1 = (_ bv0 1) ; Clears carry flag
 ref!2 = (_ bv0 1) ; Clears overflow flag
 ref!3 = (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv7 8)))) ; Parity flag
 ref!4 = ((_ extract 63 63) ref!0) ; Sign flag
-ref!5 = (ite (= ((_ extract 63 0) ref!0) (_ bv0 64)) (_ bv1 1) (_ bv0 1)) ; Zero flag
-ref!6 = ((_ zero_extend 0) (_ bv4194307 64)) ; Program Counter
+ref!5 = (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1)) ; Zero flag
+ref!6 = (_ bv4194307 64) ; Program Counter
 
 >>> expr_1 = inst.getSymbolicExpressions()[0]
 >>> expr_1 # doctest: +ELLIPSIS
 <SymbolicExpression object at 0x...>
 >>> print expr_1
-ref!0 = ((_ zero_extend 0) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
+ref!0 = (bvxor (_ bv12345 64) (_ bv67890 64)) ; XOR operation
 
 >>> print expr_1.getId()
 0
@@ -66,7 +66,7 @@ ref!0 = ((_ zero_extend 0) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operatio
 >>> ast # doctest: +ELLIPSIS
 <AstNode object at 0x...>
 >>> print ast
-((_ zero_extend 0) (bvxor (_ bv12345 64) (_ bv67890 64)))
+(bvxor (_ bv12345 64) (_ bv67890 64))
 
 
 >>> expr_1.isMemory()
@@ -75,7 +75,7 @@ False
 >>> expr_1.isRegister()
 True
 
->>> print expr_1.getOriginRegister()
+>>> print expr_1.getOrigin()
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~
@@ -100,11 +100,10 @@ e.g: `SYMEXPR.REG`
 - <b>\ref py_AstNode_page getNewAst(void)</b><br>
 Returns a new AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
-- <b>\ref py_MemoryAccess_page getOriginMemory(void)</b><br>
-Returns the origin memory access if `isMemory()` is equal to `True`, invalid memory otherwise. This memory access represents the target assignment. Note that at this level all information about LEA are lost.
-
-- <b>\ref py_Register_page getOriginRegister(void)</b><br>
-Returns the origin register if `isRegister()` is equal `True`, `REG.INVALID` otherwise. This register represents the target assignment.
+- <b>\ref py_MemoryAccess_page / \ref py_Register_page getOrigin(void)</b><br>
+Returns the origin of the symbolic expression. For example, if the symbolic expression is assigned to a memory cell, this function returns
+a \ref py_MemoryAccess_page, else if it is assigned to a register, this function returns a \ref py_Register_page otherwise it returns None. Note that
+for a \ref py_MemoryAccess_page all information about LEA are lost at this level.
 
 - <b>bool isMemory(void)</b><br>
 Returns true if the expression is assigned to a memory.
@@ -189,19 +188,16 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_getOriginMemory(PyObject* self, PyObject* noarg) {
+      static PyObject* SymbolicExpression_getOrigin(PyObject* self, PyObject* noarg) {
         try {
-          return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
+          if (PySymbolicExpression_AsSymbolicExpression(self)->isMemory())
+            return PyMemoryAccess(PySymbolicExpression_AsSymbolicExpression(self)->getOriginMemory());
 
+          else if (PySymbolicExpression_AsSymbolicExpression(self)->isRegister())
+            return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
 
-      static PyObject* SymbolicExpression_getOriginRegister(PyObject* self, PyObject* noarg) {
-        try {
-          return PyRegister(PySymbolicExpression_AsSymbolicExpression(self)->getOriginRegister());
+          Py_INCREF(Py_None);
+          return Py_None;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -310,8 +306,7 @@ namespace triton {
         {"getId",             SymbolicExpression_getId,             METH_NOARGS,    ""},
         {"getKind",           SymbolicExpression_getKind,           METH_NOARGS,    ""},
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
-        {"getOriginMemory",   SymbolicExpression_getOriginMemory,   METH_NOARGS,    ""},
-        {"getOriginRegister", SymbolicExpression_getOriginRegister, METH_NOARGS,    ""},
+        {"getOrigin",         SymbolicExpression_getOrigin,         METH_NOARGS,    ""},
         {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
         {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},
         {"isSymbolized",      SymbolicExpression_isSymbolized,      METH_NOARGS,    ""},

@@ -14,8 +14,8 @@
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/operandInterface.hpp>
-#include <triton/tritonTypes.hpp>
 #include <triton/registers_e.hpp>
+#include <triton/tritonTypes.hpp>
 
 
 
@@ -34,13 +34,13 @@ namespace triton {
    *  @{
    */
 
+    //! Used for a Register constructor.
     class CpuInterface;
 
-    /*! \class RegisterSpec
+    /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class RegisterSpec : public BitsVector, public OperandInterface {
-
+    class Register : public BitsVector, public OperandInterface {
       protected:
         //! The name of the register.
         std::string name;
@@ -53,13 +53,22 @@ namespace triton {
 
       public:
         //! Constructor.
-        RegisterSpec(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
+        Register();
+
+        //! Constructor.
+        Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
+
+        //! Constructor.
+        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+
+        //! Constructor.
+        Register(const Register& other);
 
         //! Returns the parent id of the register.
         registers_e getParent(void) const;
 
         //! Returns true if `other` and `self` overlap.
-        bool isOverlapWith(const RegisterSpec& other) const;
+        bool isOverlapWith(const Register& other) const;
 
         //! Returns the name of the register.
         std::string getName(void) const;
@@ -83,64 +92,22 @@ namespace triton {
         triton::uint32 getType(void) const;
 
         //! Compare two registers specifications
-        bool operator==(const RegisterSpec& r) const;
+        bool operator==(const Register& other) const;
 
         //! Compare two registers specifications
-        bool operator!=(const RegisterSpec& r) const;
-    };
+        bool operator!=(const Register& other) const;
 
-    /*! \class Register
-     *  \brief This class is used to bind a value on a RegisterSpec
-     */
-    class Register : public RegisterSpec {
-
-      protected:
-        //! The concrete value (content of the register)
-        triton::uint512 concreteValue;
-
-        //! True if this register contains a concrete value.
-        bool concreteValueDefined;
-
-      public:
-        //! Constructor.
-        Register();
-
-        //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
-
-        //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId, triton::uint512 concreteValue);
-
-        //! Constructor.
-        Register(const RegisterSpec& spec, triton::uint512 concreteValue);
-
-        //! Constructor.
-        explicit Register(const RegisterSpec& spec);
-
-        //! Returns true if the register contains a concrete value.
-        bool hasConcreteValue(void) const;
-
-        //! Returns the concrete value.
-        triton::uint512 getConcreteValue(void) const;
-
-        //! Sets the concrete value of the register.
-        void setConcreteValue(triton::uint512 concreteValue);
-
-        //! Compare two registers
-        bool operator==(const Register& reg) const;
-
-        //! Compare two registers
-        bool operator!=(const Register& reg) const;
+        //! Copies a Register.
+        void operator=(const Register& other);
     };
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const RegisterSpec& reg);
+    std::ostream& operator<<(std::ostream& stream, const Register& reg);
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const RegisterSpec* reg);
+    std::ostream& operator<<(std::ostream& stream, const Register* reg);
 
-    //! Compares two Register (needed for std::map)
-    // FIXME This should be remove
+    //! Compares two Register
     bool operator<(const Register& reg1, const Register& reg2);
 
   /*! @} End of arch namespace */

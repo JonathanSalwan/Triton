@@ -53,25 +53,17 @@ code = [
 if __name__ == '__main__':
 
     Triton = TritonContext()
-    #Set the arch
     Triton.setArchitecture(ARCH.X86_64)
 
-    for (addr, opcodes) in code:
+    for (addr, opcode) in code:
         # Build an instruction
         inst = Instruction()
 
-        # Setup opcodes
-        inst.setOpcodes(opcodes)
+        # Setup opcode
+        inst.setOpcode(opcode)
 
         # Setup Address
         inst.setAddress(addr)
-
-        # optional - Update register state
-        inst.updateContext(Triton.Register(REG.X86_64.RAX,  12345));
-        inst.updateContext(Triton.Register(REG.X86_64.RBX,  67890));
-
-        # optional - Add memory access <addr, size, content>
-        inst.updateContext(MemoryAccess(0x66666666, 8, 0x31003200330034));
 
         # Process everything
         Triton.processing(inst)
@@ -86,4 +78,3 @@ if __name__ == '__main__':
         print
 
     sys.exit(0)
-

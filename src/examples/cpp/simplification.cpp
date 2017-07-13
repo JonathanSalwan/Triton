@@ -30,11 +30,11 @@ struct op trace[] = {
 ast::AbstractNode* xor_simplification(API&, ast::AbstractNode* node) {
 
   if (node->getKind() == ast::ZX_NODE) {
-    node = node->getChilds()[1];
+    node = node->getChildren()[1];
   }
 
   if (node->getKind() == ast::BVXOR_NODE) {
-    if (node->getChilds()[0]->equalTo(node->getChilds()[1]))
+    if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
       return node->getContext().bv(0, node->getBitvectorSize());
   }
 
@@ -51,18 +51,18 @@ int main(int ac, const char **av) {
   /* Record a simplification callback */
   api.addCallback(xor_simplification);
 
+  /* optional - Update register state */
+  api.setConcreteRegisterValue(api.getRegister(ID_REG_RAX), 12345);
+
   for (unsigned int i = 0; trace[i].inst; i++) {
     /* Build an instruction */
     Instruction inst;
 
-    /* Setup opcodes */
-    inst.setOpcodes(trace[i].inst, trace[i].size);
+    /* Setup opcode */
+    inst.setOpcode(trace[i].inst, trace[i].size);
 
     /* optional - Setup address */
     inst.setAddress(trace[i].addr);
-
-    /* optional - Update register state */
-    inst.updateContext(Register(api.getRegister(ID_REG_RAX), 12345));
 
     /* Process everything */
     api.processing(inst);

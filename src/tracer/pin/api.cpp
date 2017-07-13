@@ -1,4 +1,13 @@
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the BSD License.
+*/
+
 #include <triton/api.hpp>
+
+
 
 namespace tracer {
   namespace pintool {

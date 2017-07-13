@@ -1,6 +1,6 @@
 #!/usr/bin/env sh
 val=$(cat /proc/sys/kernel/yama/ptrace_scope)
-if test "$val" = "0" 
+if test "$val" = "0"
 then
     ctest --output-on-failure
 else

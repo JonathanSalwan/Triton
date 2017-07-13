@@ -5,12 +5,12 @@
 ##
 
 from pintool import *
-from triton  import REG, ARCH, MODE
+from triton  import ARCH, MODE
 
 
 def cb_ir(inst):
     if inst.getAddress() == 0x400574:
-        rax = getCurrentRegisterValue(getTritonContext().Register(REG.X86_64.RAX))
+        rax = getCurrentRegisterValue(getTritonContext().registers.rax)
         getTritonContext().taintMemory(rax)
     return
 

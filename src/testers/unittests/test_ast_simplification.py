@@ -55,7 +55,7 @@ class TestAstSimplification(unittest.TestCase):
     @staticmethod
     def xor_1(api, node):
         if node.getKind() == AST_NODE.BVXOR:
-            if node.getChilds()[0].equalTo(node.getChilds()[1]):
+            if node.getChildren()[0].equalTo(node.getChildren()[1]):
                 return api.getAstContext().bv(0, node.getBitvectorSize())
         return node
 
@@ -65,8 +65,8 @@ class TestAstSimplification(unittest.TestCase):
     def xor_2(api, node):
 
         def getNot(node):
-            a = node.getChilds()[0]
-            b = node.getChilds()[1]
+            a = node.getChildren()[0]
+            b = node.getChildren()[1]
             if a.getKind() == AST_NODE.BVNOT and b.getKind() != AST_NODE.BVNOT:
                 return a
             if b.getKind() == AST_NODE.BVNOT and a.getKind() != AST_NODE.BVNOT:
@@ -74,8 +74,8 @@ class TestAstSimplification(unittest.TestCase):
             return None
 
         def getNonNot(node):
-            a = node.getChilds()[0]
-            b = node.getChilds()[1]
+            a = node.getChildren()[0]
+            b = node.getChildren()[1]
             if a.getKind() != AST_NODE.BVNOT and b.getKind() == AST_NODE.BVNOT:
                 return a
             if b.getKind() != AST_NODE.BVNOT and a.getKind() == AST_NODE.BVNOT:
@@ -83,8 +83,8 @@ class TestAstSimplification(unittest.TestCase):
             return None
 
         if node.getKind() == AST_NODE.BVOR:
-            c1 = node.getChilds()[0]
-            c2 = node.getChilds()[1]
+            c1 = node.getChildren()[0]
+            c2 = node.getChildren()[1]
             if c1.getKind() == AST_NODE.BVAND and c2.getKind() == AST_NODE.BVAND:
                 c1_not    = getNot(c1)
                 c2_not    = getNot(c2)

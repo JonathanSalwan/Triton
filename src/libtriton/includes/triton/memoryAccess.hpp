@@ -42,12 +42,6 @@ namespace triton {
         //! The memory' address.
         triton::uint64 address;
 
-        //! The concrete value (content of the access)
-        triton::uint512 concreteValue;
-
-        //! True if this memory contains a concrete value.
-        bool concreteValueDefined;
-
         //! Contains the pc relative if it exists.
         triton::uint64 pcRelative;
 
@@ -79,9 +73,6 @@ namespace triton {
         //! Constructor.
         MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
 
-        //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */, triton::uint512 concreteValue);
-
         //! Constructor by copy.
         MemoryAccess(const MemoryAccess& other);
 
@@ -102,9 +93,6 @@ namespace triton {
 
         //! Returns the size (in bits) of the memory vector.
         triton::uint32 getBitSize(void) const;
-
-        //! Returnts the concrete value (content of the access)
-        triton::uint512 getConcreteValue(void) const;
 
         //! LEA - Gets pc relative.
         triton::uint64 getPcRelative(void) const;
@@ -148,14 +136,8 @@ namespace triton {
         //! Returns true if `other` and `self` overlap.
         bool isOverlapWith(const MemoryAccess& other) const;
 
-        //! Returns true if the memory contains a concrete value.
-        bool hasConcreteValue(void) const;
-
         //! Sets the address of the memory access.
         void setAddress(triton::uint64 addr);
-
-        //! Sets the concrete value of the memory access.
-        void setConcreteValue(triton::uint512 concreteValue);
 
         //! LEA - Sets pc relative.
         void setPcRelative(triton::uint64 addr);

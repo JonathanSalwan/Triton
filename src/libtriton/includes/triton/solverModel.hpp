@@ -36,8 +36,7 @@ namespace triton {
 
       //! \class SolverModel
       /*! \brief This class is used to represent a constraint model solved. */
-      class SolverModel
-      {
+      class SolverModel {
         protected:
           //! The name of the variable. Names are always something like this: SymVar_X.
           std::string name;

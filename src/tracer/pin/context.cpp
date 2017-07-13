@@ -160,7 +160,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        const triton::arch::RegisterSpec* syncReg = nullptr;
+        const triton::arch::Register* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -239,7 +239,7 @@ namespace tracer {
           }
 
         /* Sync with the libTriton */
-        const triton::arch::RegisterSpec* syncReg = nullptr;
+        const triton::arch::Register* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
@@ -249,7 +249,7 @@ namespace tracer {
         #endif
 
         value = triton::utils::fromBufferToUint<triton::uint512>(buffer);
-        tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*syncReg, value));
+        tracer::pintool::api.setConcreteRegisterValue(*syncReg, value);
 
         /* Returns the good casted value */
         return tracer::pintool::api.getConcreteRegisterValue(reg, false);
@@ -290,12 +290,7 @@ namespace tracer {
       }
 
 
-      void setCurrentRegisterValue(triton::arch::Register& reg) {
-        tracer::pintool::context::setCurrentRegisterValue(reg, reg.getConcreteValue());
-      }
-
-
-      void setCurrentRegisterValue(triton::arch::RegisterSpec& reg, triton::uint512 value) {
+      void setCurrentRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
@@ -408,9 +403,8 @@ namespace tracer {
         #endif
 
         /* Sync with the libTriton */
-        triton::arch::Register syncReg(reg);
-        syncReg.setConcreteValue(value);
-        tracer::pintool::api.setConcreteRegisterValue(syncReg);
+        const triton::arch::Register syncReg(reg);
+        tracer::pintool::api.setConcreteRegisterValue(syncReg, value);
 
         /* We must concretize the register because the last symbolic value is now false */
         tracer::pintool::api.concretizeRegister(reg);
@@ -420,18 +414,12 @@ namespace tracer {
       }
 
 
-      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem) {
-        tracer::pintool::context::setCurrentMemoryValue(mem, mem.getConcreteValue());
-      }
-
-
-      void setCurrentMemoryValue(triton::arch::MemoryAccess& mem, triton::uint512 value) {
+      void setCurrentMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
         triton::__uint addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
         /* Sync with the libTriton */
-        mem.setConcreteValue(value);
-        tracer::pintool::api.setConcreteMemoryValue(mem);
+        tracer::pintool::api.setConcreteMemoryValue(mem, value);
 
         /* We must concretize the memory because the last symbolic value is now false */
         tracer::pintool::api.concretizeMemory(mem);
@@ -469,9 +457,9 @@ namespace tracer {
       }
 
 
-      void needConcreteRegisterValue(triton::API& api, triton::arch::RegisterSpec& reg) {
+      void needConcreteRegisterValue(triton::API& api, const triton::arch::Register& reg) {
         triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
-        api.setConcreteRegisterValue(triton::arch::Register(reg, value));
+        api.setConcreteRegisterValue(reg, value);
       }
 
 
@@ -479,7 +467,7 @@ namespace tracer {
         if (tracer::pintool::api.isSymbolicEngineEnabled() == false)
           return;
 
-        for (const triton::arch::RegisterSpec* reg : tracer::pintool::api.getParentRegisters()) {
+        for (const triton::arch::Register* reg : tracer::pintool::api.getParentRegisters()) {
           if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 
@@ -491,7 +479,7 @@ namespace tracer {
 
           if (sv != cv) {
             tracer::pintool::api.concretizeRegister(*reg);
-            tracer::pintool::api.setConcreteRegisterValue(triton::arch::Register(*reg, cv));
+            tracer::pintool::api.setConcreteRegisterValue(*reg, cv);
           }
         }
       }

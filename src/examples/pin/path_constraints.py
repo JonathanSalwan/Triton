@@ -46,7 +46,7 @@
 ##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
 ##
 
-from triton     import ARCH, REG, CPUSIZE, MemoryAccess, MODE
+from triton     import ARCH, CPUSIZE, MemoryAccess, MODE
 from pintool    import *
 
 TAINTING_SIZE = 10
@@ -55,8 +55,8 @@ Triton = getTritonContext()
 
 
 def tainting(threadId):
-    rdi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RDI)) # argc
-    rsi = getCurrentRegisterValue(Triton.Register(REG.X86_64.RSI)) # argv
+    rdi = getCurrentRegisterValue(Triton.registers.rdi) # argc
+    rsi = getCurrentRegisterValue(Triton.registers.rsi) # argv
 
     while rdi > 1:
         argv = getCurrentMemoryValue(rsi + ((rdi-1) * CPUSIZE.QWORD), CPUSIZE.QWORD)
@@ -64,7 +64,8 @@ def tainting(threadId):
         while offset != TAINTING_SIZE:
             Triton.taintMemory(argv + offset)
             concreteValue = getCurrentMemoryValue(argv + offset)
-            Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE, concreteValue))
+            Triton.setConcreteMemoryValue(argv + offset, concreteValue)
+            Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
         print '[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
         rdi -= 1

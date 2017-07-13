@@ -696,7 +696,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
+      void x86Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(0, 1);
 
@@ -708,7 +708,7 @@ namespace triton {
       }
 
 
-      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::RegisterSpec& flag, std::string comment) {
+      void x86Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
         /* Create the semantics */
         auto node = this->astCtxt.bv(1, 1);
 
@@ -724,10 +724,6 @@ namespace triton {
         auto pc      = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_IP));
         auto counter = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_CX));
         auto zf      = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
-
-        /* Update instruction address if undefined */
-        if (!inst.getAddress())
-          inst.setAddress(this->architecture->getConcreteRegisterValue(pc.getConstRegister()).convert_to<triton::uint64>());
 
         switch (inst.getPrefix()) {
 
