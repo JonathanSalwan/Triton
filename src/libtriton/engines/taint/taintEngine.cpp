@@ -135,10 +135,6 @@ namespace triton {
       }
 
 
-      TaintEngine::~TaintEngine() {
-      }
-
-
       void TaintEngine::operator=(const TaintEngine& other) {
         // We assume the cpu didn't change
         this->copy(other);

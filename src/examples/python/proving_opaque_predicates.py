@@ -103,7 +103,7 @@ def test_trace(trace):
             # Opaque Predicate AST
             op_ast = Triton.getPathConstraintsAst()
             # Try another model
-            model = Triton.getModel(astCtxt.assert_(astCtxt.lnot(op_ast)))
+            model = Triton.getModel(astCtxt.lnot(op_ast))
             if model:
                 print "not an opaque predicate"
             else:

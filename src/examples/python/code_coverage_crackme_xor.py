@@ -156,7 +156,7 @@ def getNewInput():
                 # Get the constraint of the branch which has been not taken
                 if branch['isTaken'] == False:
                     # Ask for a model
-                    models = Triton.getModel(astCtxt.assert_(astCtxt.land(previousConstraints, branch['constraint'])))
+                    models = Triton.getModel(astCtxt.land([previousConstraints, branch['constraint']]))
                     seed   = dict()
                     for k, v in models.items():
                         # Get the symbolic variable assigned to the model
@@ -167,7 +167,7 @@ def getNewInput():
                         inputs.append(seed)
 
         # Update the previous constraints with true branch to keep a good path.
-        previousConstraints = astCtxt.land(previousConstraints, pc.getTakenPathConstraintAst())
+        previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPathConstraintAst()])
 
     # Clear the path constraints to be clean at the next execution.
     Triton.clearPathConstraints()

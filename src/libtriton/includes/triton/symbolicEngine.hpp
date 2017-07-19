@@ -132,7 +132,7 @@ namespace triton {
           SymbolicEngine(const SymbolicEngine& copy);
 
           //! Destructor.
-          virtual ~SymbolicEngine();
+          ~SymbolicEngine();
 
           //! Copies and initializes a SymbolicEngine.
           void copy(const SymbolicEngine& other);
@@ -274,9 +274,6 @@ namespace triton {
 
           //! Returns all symbolic variables.
           const std::map<triton::usize, SymbolicVariable*>& getSymbolicVariables(void) const;
-
-          //! Returns all variable declarations representation.
-          std::string getVariablesDeclaration(void) const;
 
           //! Adds a symbolic memory reference.
           void addMemoryReference(triton::uint64 mem, triton::usize id);

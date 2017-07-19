@@ -28,11 +28,9 @@ namespace triton {
     /*! Enumerates all kinds of node. Must be prime numbers. */
     enum kind_e {
       UNDEFINED_NODE = 0,             /*!< Unknown node */
-      ASSERT_NODE = 2,                /*!< (assert x) */
       BVADD_NODE = 3,                 /*!< (bvadd x y) */
       BVAND_NODE = 5,                 /*!< (bvand x y) */
       BVASHR_NODE = 7,                /*!< (bvashr x y) */
-      BVDECL_NODE = 11,               /*!< (_ BitVec x) */
       BVLSHR_NODE = 13,               /*!< (bvlshr x y) */
       BVMUL_NODE = 17,                /*!< (bvmul x y) */
       BVNAND_NODE = 19,               /*!< (bvnand x y) */
@@ -46,7 +44,7 @@ namespace triton {
       BVSGE_NODE = 53,                /*!< (bvsge x y) */
       BVSGT_NODE = 59,                /*!< (bvsgt x y) */
       BVSHL_NODE = 61,                /*!< (bvshl x y) */
-      BVSLE_NODE = 67,                /*!< (bvslr x y) */
+      BVSLE_NODE = 67,                /*!< (bvsle x y) */
       BVSLT_NODE = 71,                /*!< (bvslt x y) */
       BVSMOD_NODE = 73,               /*!< (bvsmod x y) */
       BVSREM_NODE = 79,               /*!< (bvsrem x y) */
@@ -60,20 +58,16 @@ namespace triton {
       BVXNOR_NODE = 113,              /*!< (bvxnor x y) */
       BVXOR_NODE = 127,               /*!< (bvxor x y) */
       BV_NODE = 131,                  /*!< (_ bvx y) */
-      COMPOUND_NODE = 139,            /*!< Coumpound of several nodes */
       CONCAT_NODE = 149,              /*!< (concat x y z ...) */
       DECIMAL_NODE = 151,             /*!< Decimal node */
-      DECLARE_FUNCTION_NODE = 157,    /*!< (declare-fun x () (_ BitVec y)) */
       DISTINCT_NODE = 163,            /*!< (distinct x y) */
       EQUAL_NODE = 167,               /*!< (= x y) */
       EXTRACT_NODE = 173,             /*!< ((_ extract x y) z) */
-      FUNCTION_NODE = 179,            /*!< (define-fun w (x) y z) */
       ITE_NODE = 181,                 /*!< (ite x y z) */
       LAND_NODE = 191,                /*!< (and x y) */
       LET_NODE = 193,                 /*!< (let ((x y)) z) */
       LNOT_NODE = 197,                /*!< (and x y) */
       LOR_NODE = 199,                 /*!< (or x y) */
-      PARAM_NODE = 211,               /*!< (x y) */
       REFERENCE_NODE = 223,           /*!< Reference node */
       STRING_NODE = 227,              /*!< String node */
       SX_NODE = 229,                  /*!< ((_ sign_extend x) y) */

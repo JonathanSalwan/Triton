@@ -45,9 +45,6 @@ namespace triton {
         //! Total of allocated dictionaries.
         std::set<triton::ast::AbstractNode*> allocatedDictionaries;
 
-        //! Assert Dictionary
-        std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> assertDictionary;
-
         //! Bvadd Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> bvaddDictionary;
 
@@ -56,9 +53,6 @@ namespace triton {
 
         //! Bvashr Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> bvashrDictionary;
-
-        //! Bvdecl Dictionary
-        std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> bvdeclDictionary;
 
         //! Bvlshr Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> bvlshrDictionary;
@@ -141,17 +135,11 @@ namespace triton {
         //! Bv Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> bvDictionary;
 
-        //! Compound Dictionary
-        std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> compoundDictionary;
-
         //! Concat Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> concatDictionary;
 
         //! Decimal Dictionary
         std::map<triton::uint512, triton::ast::AbstractNode*> decimalDictionary;
-
-        //! Declare Dictionary
-        std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> declareFunctionDictionary;
 
         //! Distinct Dictionary
         std::map<std::vector<triton::ast::AbstractNode*>, triton::ast::AbstractNode*> distinctDictionary;

@@ -81,9 +81,6 @@ namespace triton {
           //! Constructor by copy.
           TaintEngine(const TaintEngine& copy);
 
-          //! Destructor.
-          virtual ~TaintEngine();
-
           //! Copies a TaintEngine.
           void operator=(const TaintEngine& other);
 

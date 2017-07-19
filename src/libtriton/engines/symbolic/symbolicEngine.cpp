@@ -448,7 +448,7 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < children.size(); index++) {
           if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getExpr();
+            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getSymbolicExpression();
             triton::ast::AbstractNode* ref = expr.getAst();
             children[index] = ref;
             if (processed.find(expr.getId()) != processed.end())
@@ -475,7 +475,7 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < children.size(); index++) {
           if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getExpr();
+            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getSymbolicExpression();
             triton::usize id = expr.getId();
             // FIXME: it is an insert with check on return value.
             if (exprs.find(id) == exprs.end()) {
@@ -512,17 +512,6 @@ namespace triton {
             taintedExprs.push_back(it->second);
         }
         return taintedExprs;
-      }
-
-
-      /* Returns the list of the symbolic variables declared in the trace */
-      std::string SymbolicEngine::getVariablesDeclaration(void) const {
-        std::stringstream stream;
-
-        for (auto sv : this->symbolicVariables)
-          stream << this->astCtxt.declareFunction(sv.second->getName(), this->astCtxt.bvdecl(sv.second->getSize()));
-
-        return stream.str();
       }
 
 

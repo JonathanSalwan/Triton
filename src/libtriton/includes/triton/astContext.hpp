@@ -55,9 +55,6 @@ namespace triton {
         //! AST C++ API - bvashr node builder
         AbstractNode* bvashr(AbstractNode* expr1, AbstractNode* expr2);
 
-        //! AST C++ API - bvdecl node builder
-        AbstractNode* bvdecl(triton::uint32 size);
-
         //! AST C++ API - bvfalse node builder
         AbstractNode* bvfalse(void);
 
@@ -148,23 +145,17 @@ namespace triton {
         //! AST C++ API - bvxor node builder
         AbstractNode* bvxor(AbstractNode* expr1, AbstractNode* expr2);
 
-        //! AST C++ API - compound node builder
-        AbstractNode* compound(std::vector<AbstractNode* > exprs);
-
         //! AST C++ API - concat node builder
         AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2);
 
         //! AST C++ API - concat node builder
-        AbstractNode* concat(std::vector<AbstractNode* > exprs);
+        AbstractNode* concat(std::vector<AbstractNode*> exprs);
 
         //! AST C++ API - concat node builder
-        AbstractNode* concat(std::list<AbstractNode* > exprs);
+        AbstractNode* concat(std::list<AbstractNode*> exprs);
 
         //! AST C++ API - decimal node builder
         AbstractNode* decimal(triton::uint512 value);
-
-        //! AST C++ API - declare node builder
-        AbstractNode* declareFunction(std::string name, AbstractNode* bvDecl);
 
         //! AST C++ API - distinct node builder
         AbstractNode* distinct(AbstractNode* expr1, AbstractNode* expr2);
@@ -181,6 +172,12 @@ namespace triton {
         //! AST C++ API - land node builder
         AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2);
 
+        //! AST C++ API - land node builder
+        AbstractNode* land(std::vector<AbstractNode*> exprs);
+
+        //! AST C++ API - land node builder
+        AbstractNode* land(std::list<AbstractNode*> exprs);
+
         //! AST C++ API - let node builder
         AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
 
@@ -190,11 +187,14 @@ namespace triton {
         //! AST C++ API - lor node builder
         AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
+        //! AST C++ API - lor node builder
+        AbstractNode* lor(std::vector<AbstractNode*> exprs);
+
+        //! AST C++ API - lor node builder
+        AbstractNode* lor(std::list<AbstractNode*> exprs);
+
         //! AST C++ API - reference node builder
         AbstractNode* reference(triton::engines::symbolic::SymbolicExpression& expr);
-
-        //! AST C++ API - assert node builder
-        AbstractNode* assert_(AbstractNode* expr);
 
         //! AST C++ API - string node builder
         AbstractNode* string(std::string value);
@@ -237,4 +237,3 @@ namespace triton {
 };
 
 #endif /* TRITON_AST_CONTEXT_H */
-

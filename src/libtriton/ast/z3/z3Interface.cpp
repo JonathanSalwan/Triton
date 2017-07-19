@@ -8,7 +8,6 @@
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
 #include <triton/z3Interface.hpp>
-#include <triton/z3Result.hpp>
 #include <triton/z3ToTritonAst.hpp>
 
 
@@ -28,14 +27,14 @@ namespace triton {
 
 
     triton::ast::AbstractNode* Z3Interface::simplify(triton::ast::AbstractNode* node) const {
-      triton::ast::TritonToZ3Ast  z3Ast{this->symbolicEngine, false};
-      triton::ast::Z3ToTritonAst  tritonAst{this->symbolicEngine, node->getContext()};
-      triton::ast::Z3Result       result = z3Ast.eval(*node);
+      triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+      triton::ast::Z3ToTritonAst tritonAst{this->symbolicEngine, node->getContext()};
 
-      /* Simplify and convert back to Triton's AST */
-      z3::expr expr = result.getExpr().simplify();
-      tritonAst.setExpr(expr);
-      node = tritonAst.convert();
+      /* From Triton to Z3 */
+      z3::expr expr = z3Ast.convert(node);
+
+      /* Simplify and back to Triton's AST */
+      node = tritonAst.convert(expr.simplify());
 
       return node;
     }
@@ -46,8 +45,12 @@ namespace triton {
         throw triton::exceptions::AstTranslations("Z3Interface::evaluate(): node cannot be null.");
 
       triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
-      triton::ast::Z3Result result = z3ast.eval(*node);
-      triton::uint512 nbResult{result.getStringValue()};
+
+      /* From Triton to Z3 */
+      z3::expr expr = z3ast.convert(node);
+
+      /* Evaluate expr over the simplify function */
+      triton::uint512 nbResult{Z3_get_numeral_string(z3ast.getContext(), expr.simplify())};
 
       return nbResult;
     }

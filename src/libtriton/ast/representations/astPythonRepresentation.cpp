@@ -20,18 +20,12 @@ namespace triton {
       }
 
 
-      AstPythonRepresentation::~AstPythonRepresentation() {
-      }
-
-
       /* Representation dispatcher from an abstract node */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getKind()) {
-          case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
           case BVAND_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvandNode*>(node)); break;
           case BVASHR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvashrNode*>(node)); break;
-          case BVDECL_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvdeclNode*>(node)); break;
           case BVLSHR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvlshrNode*>(node)); break;
           case BVMUL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvmulNode*>(node)); break;
           case BVNAND_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvnandNode*>(node)); break;
@@ -59,10 +53,8 @@ namespace triton {
           case BVXNOR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvxnorNode*>(node)); break;
           case BVXOR_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvxorNode*>(node)); break;
           case BV_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::BvNode*>(node)); break;
-          case COMPOUND_NODE:             return this->print(stream, reinterpret_cast<triton::ast::CompoundNode*>(node)); break;
           case CONCAT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::ConcatNode*>(node)); break;
           case DECIMAL_NODE:              return this->print(stream, reinterpret_cast<triton::ast::DecimalNode*>(node)); break;
-          case DECLARE_FUNCTION_NODE:     return this->print(stream, reinterpret_cast<triton::ast::DeclareFunctionNode*>(node)); break;
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
@@ -79,13 +71,6 @@ namespace triton {
           default:
             throw triton::exceptions::AstRepresentation("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
         }
-        return stream;
-      }
-
-
-      /* assert representation */
-      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
-        stream << "assert(" << node->getChildren()[0] << ")";
         return stream;
       }
 
@@ -107,13 +92,6 @@ namespace triton {
       /* bvashr representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvashrNode* node) {
         stream << "(" << node->getChildren()[0] << " >> " << node->getChildren()[1] << ")";
-        return stream;
-      }
-
-
-      /* bvdecl representation */
-      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvdeclNode* node) {
-        stream << "bvdecl(" << node->getChildren()[0] << ")";
         return stream;
       }
 
@@ -307,14 +285,6 @@ namespace triton {
       }
 
 
-      /* compound representation */
-      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
-        for (triton::usize index = 0; index < node->getChildren().size(); index++)
-          stream << node->getChildren()[index] << std::endl;
-        return stream;
-      }
-
-
       /* concat representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
         triton::usize size = node->getChildren().size();
@@ -333,13 +303,6 @@ namespace triton {
       /* decimal representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DecimalNode* node) {
         stream << std::hex << "0x" << node->getValue() << std::dec;
-        return stream;
-      }
-
-
-      /* declare representation */
-      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareFunctionNode* node) {
-        stream << node->getChildren()[0];
         return stream;
       }
 
@@ -380,7 +343,13 @@ namespace triton {
 
       /* land representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::LandNode* node) {
-        stream << "(" << node->getChildren()[0] << " and " << node->getChildren()[1] << ")";
+        triton::usize size = node->getChildren().size();
+
+        stream << "(" << node->getChildren()[0];
+        for (triton::usize index = 1; index < size; index++)
+          stream << " and " << node->getChildren()[index];
+        stream << ")";
+
         return stream;
       }
 
@@ -401,14 +370,20 @@ namespace triton {
 
       /* lor representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::LorNode* node) {
-        stream << "(" << node->getChildren()[0] << " or " << node->getChildren()[1] << ")";
+        triton::usize size = node->getChildren().size();
+
+        stream << "(" << node->getChildren()[0];
+        for (triton::usize index = 1; index < size; index++)
+          stream << " or " << node->getChildren()[index];
+        stream << ")";
+
         return stream;
       }
 
 
       /* reference representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "ref_" << node->getExpr().getId();
+        stream << "ref_" << node->getSymbolicExpression().getId();
         return stream;
       }
 

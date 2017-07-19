@@ -74,7 +74,7 @@ namespace triton {
         API();
 
         //! Destructor of the API.
-        virtual ~API();
+        ~API();
 
 
 

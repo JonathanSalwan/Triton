@@ -72,7 +72,6 @@ set(LIBTRITON_SOURCE_FILES
     ast/representations/astSmtRepresentation.cpp
     ast/z3/tritonToZ3Ast.cpp
     ast/z3/z3Interface.cpp
-    ast/z3/z3Result.cpp
     ast/z3/z3ToTritonAst.cpp
     callbacks/callbacks.cpp
     engines/solver/solverEngine.cpp
