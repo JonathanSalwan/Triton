@@ -7,3 +7,5 @@ ignore:
   - "**/examples/cpp" # ignore folders and all its contents
   - "/src/tracer"     # ignore folders and all its contents
   - "**/*.spec"       # glob accepted
+
+comment: false
