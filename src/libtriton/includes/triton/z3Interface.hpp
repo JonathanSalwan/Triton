@@ -39,9 +39,6 @@ namespace triton {
         //! Constructor.
         Z3Interface(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
-        //! Destructor.
-        virtual ~Z3Interface();
-
         //! Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         triton::ast::AbstractNode* simplify(triton::ast::AbstractNode* node) const;
 
