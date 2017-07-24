@@ -1116,6 +1116,11 @@ namespace triton {
       }
 
 
+      const triton::uint512& SymbolicEngine::getConcreteSymbolicVariableValue(const SymbolicVariable& symVar) const {
+        return this->astCtxt.getValueForVariable(symVar.getName());
+      }
+
+
       void SymbolicEngine::setConcreteSymbolicVariableValue(const SymbolicVariable& symVar, const triton::uint512& value) {
         this->astCtxt.updateVariable(symVar.getName(), value);
       }
