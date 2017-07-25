@@ -473,16 +473,16 @@ namespace triton {
       void SymbolicEngine::sliceExpressions(triton::ast::AbstractNode* node, std::map<triton::usize, SymbolicExpression*>& exprs) {
         std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
-        for (triton::uint32 index = 0; index < children.size(); index++) {
-          if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getSymbolicExpression();
-            triton::usize id = expr.getId();
-            // FIXME: it is an insert with check on return value.
-            if (exprs.find(id) == exprs.end()) {
-              exprs[id] = &expr;
-              this->sliceExpressions(expr.getAst(), exprs);
-            }
+        if (node->getKind() == triton::ast::REFERENCE_NODE) {
+          SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression();
+          triton::usize id = expr.getId();
+          if (exprs.find(id) == exprs.end()) {
+            exprs[id] = &expr;
+            this->sliceExpressions(expr.getAst(), exprs);
           }
+        }
+
+        for (triton::uint32 index = 0; index < children.size(); index++) {
           this->sliceExpressions(children[index], exprs);
         }
       }
