@@ -1208,6 +1208,9 @@ namespace triton {
           //! The VPXOR semantics.
           void vpxor_s(triton::arch::Instruction& inst);
 
+          //! The WAIT semantics.
+          void wait_s(triton::arch::Instruction& inst);
+
           //! The WBINVD semantics.
           void wbinvd_s(triton::arch::Instruction& inst);
 

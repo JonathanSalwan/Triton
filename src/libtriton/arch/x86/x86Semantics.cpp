@@ -308,6 +308,7 @@ VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
 VPXOR                        | avx/avx2   | VEX Logical XOR
+WAIT                         |            | Wait
 WBINVD                       |            | Write Back and Invalidate Cache
 XADD                         |            | Exchange and Add
 XCHG                         |            | Exchange Register/Memory with Register
@@ -625,6 +626,7 @@ namespace triton {
           case ID_INS_VPTEST:         this->vptest_s(inst);       break;
           case ID_INS_VPSHUFD:        this->vpshufd_s(inst);      break;
           case ID_INS_VPXOR:          this->vpxor_s(inst);        break;
+          case ID_INS_WAIT:           this->wait_s(inst);         break;
           case ID_INS_WBINVD:         this->wbinvd_s(inst);       break;
           case ID_INS_XADD:           this->xadd_s(inst);         break;
           case ID_INS_XCHG:           this->xchg_s(inst);         break;
@@ -12164,6 +12166,12 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::wait_s(triton::arch::Instruction& inst) {
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
