@@ -101,7 +101,7 @@ Returns the base register (if exists) of the memory access<br>
 Returns the size (in bits) of the memory access.<br>
 e.g: `64`
 
-- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+- <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector of the memory cells.
 
 - <b>\ref py_Immediate_page getDisplacement(void)</b><br>

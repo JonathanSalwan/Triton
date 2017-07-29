@@ -29,7 +29,7 @@
 \section py_BitsVector_description Description
 <hr>
 
-This object is used to represent a bits vector. Mainly used by \ref py_Register_page \ref py_MemoryAccess_page and \ref py_Immediate_page.
+This object is used to represent a bits vector. Mainly used by \ref py_Register_page, \ref py_MemoryAccess_page and \ref py_Immediate_page.
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.registers.ah

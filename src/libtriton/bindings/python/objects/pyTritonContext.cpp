@@ -38,7 +38,7 @@ The libTriton offers Python bindings on its C++ API which allow you to build ana
 
 - \ref py_AstNode_page
 - \ref py_AstContext_page
-- \ref py_Bitvector_page
+- \ref py_BitsVector_page
 - \ref py_PathConstraint_page
 - \ref py_Register_page
 - \ref py_SolverModel_page
