@@ -40,6 +40,18 @@ namespace triton {
         triton::uint32 low;
 
       public:
+        //! Constructor.
+        BitsVector();
+
+        //! Constructor.
+        BitsVector(triton::uint32 high, triton::uint32 low);
+
+        //! Constructor by copy.
+        BitsVector(const triton::arch::BitsVector& copy);
+
+        //! Destructor.
+        virtual ~BitsVector();
+
         //! Returns the highest bit
         triton::uint32 getHigh(void) const;
 
@@ -63,18 +75,6 @@ namespace triton {
 
         //! Sets the pair<high, low> position
         void setPair(std::pair<triton::uint32, triton::uint32> p);
-
-        //! Constructor.
-        BitsVector();
-
-        //! Constructor.
-        BitsVector(triton::uint32 high, triton::uint32 low);
-
-        //! Constructor by copy.
-        BitsVector(const triton::arch::BitsVector& copy);
-
-        //! Destructor.
-        virtual ~BitsVector();
     };
 
     //! Displays a BitsVector.

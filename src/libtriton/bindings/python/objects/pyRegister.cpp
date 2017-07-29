@@ -132,7 +132,7 @@ namespace triton {
 
       static PyObject* Register_getBitvector(PyObject* self, PyObject* noarg) {
         try {
-          return PyBitvector(*PyRegister_AsRegister(self));
+          return PyBitsVector(*PyRegister_AsRegister(self));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

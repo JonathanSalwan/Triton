@@ -29,6 +29,10 @@ class TestRAXBitvector(unittest.TestCase):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 64)
 
+    def test_maxValue(self):
+        """Check the max value of the vector."""
+        self.assertEqual(self.bv.getMaxValue(), 0xffffffffffffffff)
+
 
 class TestCHBitvector(unittest.TestCase):
 
@@ -52,6 +56,10 @@ class TestCHBitvector(unittest.TestCase):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 8)
 
+    def test_maxValue(self):
+        """Check the max value of the vector."""
+        self.assertEqual(self.bv.getMaxValue(), 0xff)
+
 
 class TestDLBitvector(unittest.TestCase):
 
@@ -74,3 +82,8 @@ class TestDLBitvector(unittest.TestCase):
     def test_size(self):
         """Check the vector size."""
         self.assertEqual(self.bv.getVectorSize(), 8)
+
+    def test_maxValue(self):
+        """Check the max value of the vector."""
+        self.assertEqual(self.bv.getMaxValue(), 0xff)
+

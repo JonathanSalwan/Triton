@@ -111,7 +111,7 @@ namespace triton {
 
       static PyObject* Immediate_getBitvector(PyObject* self, PyObject* noarg) {
         try {
-          return PyBitvector(*PyImmediate_AsImmediate(self));
+          return PyBitsVector(*PyImmediate_AsImmediate(self));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
