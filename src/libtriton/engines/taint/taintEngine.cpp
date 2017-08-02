@@ -112,6 +112,12 @@ namespace triton {
   namespace engines {
     namespace taint {
 
+      TagType::TagType() {
+      }
+
+      TagType::TagType(TagType& tag) {
+      }
+
       TaintEngine::TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu)
         : symbolicEngine(symbolicEngine),
           cpu(cpu),
@@ -140,7 +146,6 @@ namespace triton {
 
 
       void TaintEngine::operator=(const TaintEngine& other) {
-        // We assume the cpu didn't change
         this->copy(other);
       }
 
@@ -197,7 +202,7 @@ namespace triton {
       }
 
 
-      /* Returns true of false if the register is currently tainted */
+      /* Returns true or false if the register is currently tainted */
       bool TaintEngine::isRegisterTainted(const triton::arch::Register& reg) const {
         if (this->taintedRegisters.find(reg.getParent()) != this->taintedRegisters.end())
           return TAINTED;
@@ -228,11 +233,38 @@ namespace triton {
       }
 
 
+      /* Taint a register with a single tag */
+      bool TaintEngine::taintRegister(const triton::arch::Register& reg, TagType tag) {
+        return this->taintRegister(reg, std::vector<TagType*>{new TagType(tag)});
+      }
+      //TODO: tag pointer? shared pointer? just keep the value not ref?
+
+
+      /* Taint a register with tags */
+      bool TaintEngine::taintRegister(const triton::arch::Register& reg, std::vector<TagType*> tags) {
+        if (!this->isEnabled())
+          return this->isRegisterTainted(reg);
+        this->taintedRegisters.insert(reg.getParent());
+        if (!tags.empty()) {
+          auto tagMap = this->registerTagMap;
+          if (tagMap.count(reg.getId()) > 0) {
+            /* already exists. append. */
+            tagMap[reg.getParent()].insert(tagMap[reg.getParent()].end(), tags.begin(), tags.end());
+          } else {
+            tagMap[reg.getParent()] = tags;
+          }
+        }
+
+        return TAINTED;
+      }
+
+
       /* Untaint the register */
       bool TaintEngine::untaintRegister(const triton::arch::Register& reg) {
         if (!this->isEnabled())
           return this->isRegisterTainted(reg);
         this->taintedRegisters.erase(reg.getParent());
+        this->deleteTags(reg.getParent());
 
         return !TAINTED;
       }
@@ -288,10 +320,45 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(mem);
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::uint32 index = 0; index < size; index++) {
           this->taintedMemory.insert(addr+index);
+        }
 
         return TAINTED;
+      }
+
+
+      /* Taint the memory with tags */
+      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, std::vector<TagType*> tags) {
+        triton::uint64 addr = mem.getAddress();
+        triton::uint32 size = mem.getSize();
+
+        if (!this->isEnabled())
+          return this->isMemoryTainted(mem);
+
+        for (triton::uint32 index = 0; index < size; index++) {
+          this->taintedMemory.insert(addr+index);
+        }
+
+        if (!tags.empty()) {
+          auto tagMap = this->memoryTagMap;
+          for (triton::uint32 index = 0; index < size; index++) {
+            if (tagMap.count(addr+index) > 0) {
+              /* already exists. append. */
+              tagMap[addr+index].insert(tagMap[addr+index].end(), tags.begin(), tags.end());
+            } else {
+              tagMap[addr+index] = tags;
+            }
+          }
+        }
+
+        return TAINTED;
+      }
+
+
+      /* Taint the memory with a single tag */
+      bool TaintEngine::taintMemory(const triton::arch::MemoryAccess& mem, TagType tag) {
+        return this->taintMemory(mem, std::vector<TagType*>{new TagType(tag)});
       }
 
 
@@ -304,6 +371,30 @@ namespace triton {
       }
 
 
+      /* Taint the address with tags */
+      bool TaintEngine::taintMemory(triton::uint64 addr, std::vector<TagType*> tags) {
+        if (!this->isEnabled())
+          return this->isMemoryTainted(addr);
+        this->taintedMemory.insert(addr);
+
+        if (!tags.empty()) {
+          if (this->memoryTagMap.count(addr) > 0) {
+            /* already exists. append. */
+            this->memoryTagMap[addr].insert(this->memoryTagMap[addr].end(), tags.begin(), tags.end());
+          } else {
+            this->memoryTagMap[addr] = tags;
+          }
+        }
+        return TAINTED;
+      }
+
+
+      /* Taint the address with single tag */
+      bool TaintEngine::taintMemory(triton::uint64 addr, TagType tag) {
+        return this->taintMemory(addr, std::vector<TagType*>{new TagType(tag)});
+      }
+
+
       /* Untaint the memory */
       bool TaintEngine::untaintMemory(const triton::arch::MemoryAccess& mem) {
         triton::uint64 addr = mem.getAddress();
@@ -312,8 +403,10 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(mem);
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::uint32 index = 0; index < size; index++) {
           this->taintedMemory.erase(addr+index);
+          this->deleteTags(addr+index);
+        }
 
         return !TAINTED;
       }
@@ -324,6 +417,7 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(addr);
         this->taintedMemory.erase(addr);
+        this->deleteTags(addr);
         return !TAINTED;
       }
 
@@ -540,7 +634,7 @@ namespace triton {
           return this->isRegisterTainted(regDst);
 
         if (this->isRegisterTainted(regSrc)) {
-          this->taintRegister(regDst);
+          this->taintRegister(regDst, this->getTags(regSrc));
           return TAINTED;
         }
 
@@ -564,7 +658,7 @@ namespace triton {
           return this->isRegisterTainted(regDst);
 
         if (this->isMemoryTainted(memSrc)) {
-          this->taintRegister(regDst);
+          this->taintRegister(regDst, this->getTags(memSrc));
           return TAINTED;
         }
 
@@ -585,7 +679,7 @@ namespace triton {
 
         for (triton::uint32 offset = 0; offset < readSize; offset++) {
           if (this->isMemoryTainted(addrSrc+offset)) {
-            this->taintMemory(addrDst+offset);
+            this->taintMemory(addrDst+offset, this->getTags(addrSrc+offset));
             isTainted = TAINTED;
           }
           else
@@ -612,7 +706,7 @@ namespace triton {
 
         /* Check source */
         if (this->isRegisterTainted(regSrc)) {
-          this->taintMemory(memDst);
+          this->taintMemory(memDst, this->getTags(regSrc));
           return TAINTED;
         }
 
@@ -636,7 +730,7 @@ namespace triton {
           return this->isRegisterTainted(regDst);
 
         if (this->isRegisterTainted(regSrc)) {
-          this->taintRegister(regDst);
+          this->taintRegister(regDst, this->getTags(regSrc));
           return TAINTED;
         }
 
@@ -657,7 +751,7 @@ namespace triton {
         /* Check source */
         for (triton::uint32 offset = 0; offset < writeSize; offset++) {
           if (this->isMemoryTainted(addrSrc+offset)) {
-            this->taintMemory(addrDst+offset);
+            this->taintMemory(addrDst+offset, this->getTags(addrSrc+offset));
             tainted = TAINTED;
           }
         }
@@ -677,7 +771,7 @@ namespace triton {
           return this->isRegisterTainted(regDst);
 
         if (this->isMemoryTainted(memSrc)) {
-          this->taintRegister(regDst);
+          this->taintRegister(regDst, this->getTags(memSrc));
           return TAINTED;
         }
 
@@ -704,7 +798,7 @@ namespace triton {
           return this->isMemoryTainted(memDst);
 
         if (this->isRegisterTainted(regSrc)) {
-          this->taintMemory(memDst);
+          this->taintMemory(memDst, this->getTags(regSrc));
           return TAINTED;
         }
 
@@ -714,7 +808,72 @@ namespace triton {
         return !TAINTED;
       }
 
+
+      std::vector<TagType*> TaintEngine::getTags(const triton::arch::Register& reg) {
+        if (this->isTagged(reg))
+          return this->registerTagMap[reg.getId()];
+        return std::vector<TagType*>();
+      }
+
+
+      std::vector<TagType*> TaintEngine::getTags(const triton::arch::MemoryAccess& mem) {
+        if (this->isTagged(mem))
+          return this->memoryTagMap[mem.getAddress()];
+        return std::vector<TagType*>();
+      }
+
+
+      std::vector<TagType*> TaintEngine::getTags(const triton::uint64 addr) {
+        if (this->isTagged(addr))
+          return this->memoryTagMap[addr];
+        return std::vector<TagType*>();
+      }
+
+
+      bool TaintEngine::isTagged(const triton::arch::Register& reg) {
+        return this->registerTagMap.find(reg.getId()) !=
+            this->registerTagMap.end();
+      }
+
+
+      bool TaintEngine::isTagged(const triton::arch::MemoryAccess& mem) {
+        return this->memoryTagMap.find(mem.getAddress()) !=
+            this->memoryTagMap.end();
+      }
+
+
+      bool TaintEngine::isTagged(const triton::uint64 addr) {
+        return this->memoryTagMap.find(addr) != this->memoryTagMap.end();
+      }
+
+
+      void TaintEngine::deleteTags(const triton::arch::Register& reg) {
+        if (!this->isTagged(reg))
+            return;
+        auto tags = this->registerTagMap[reg.getId()];
+        for (unsigned int i=0; i<tags.size(); i++) {
+          delete tags[i];
+        }
+        this->registerTagMap.erase(reg.getId());
+      }
+
+
+      void TaintEngine::deleteTags(const triton::arch::MemoryAccess& mem) {
+        this->deleteTags(mem.getAddress());
+      }
+
+
+      void TaintEngine::deleteTags(const triton::uint64 addr) {
+        if (!this->isTagged(addr))
+            return;
+        auto tags = this->memoryTagMap[addr];
+        for (unsigned int i=0; i<tags.size(); i++) {
+          delete tags[i];
+        }
+        this->memoryTagMap.erase(addr);
+      }
+
+
     }; /* taint namespace */
   }; /* engines namespace */
 }; /* triton namespace */
-
