@@ -820,7 +820,7 @@ namespace triton {
       }
 
 
-      void x8664Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
+      void x8664Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         triton::uint512 cv  = value;
@@ -852,7 +852,7 @@ namespace triton {
       }
 
 
-      void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
+      void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
         if (value > reg.getMaxValue())
           throw triton::exceptions::Register("x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
 
