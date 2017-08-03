@@ -36,9 +36,14 @@ namespace triton {
 
     Register::Register(const Register& other)
       : BitsVector(other) {
-        this->name    = other.name;
-        this->id      = other.id;
-        this->parent  = other.parent;
+      this->copy(other);
+    }
+
+
+    void Register::copy(const Register& other) {
+      this->name   = other.name;
+      this->id     = other.id;
+      this->parent = other.parent;
     }
 
 
@@ -103,9 +108,7 @@ namespace triton {
 
     void Register::operator=(const Register& other) {
       BitsVector::operator=(other);
-      this->name    = other.name;
-      this->id      = other.id;
-      this->parent  = other.parent;
+      this->copy(other);
     }
 
 
