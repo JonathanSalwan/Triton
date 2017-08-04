@@ -60,17 +60,8 @@ namespace triton {
       //! Creates the AstNode python class.
       PyObject* PyAstNode(triton::ast::AbstractNode* node);
 
-      //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::Immediate& imm);
-
-      //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::MemoryAccess& mem);
-
-      //! Creates the Bitvector python class.
-      PyObject* PyBitvector(const triton::arch::Register& reg);
-
-      //! Creates the Bitvector python class.
-      PyObject* PyBitvector(triton::uint32 high, triton::uint32 low);
+      //! Creates the BitsVector python class.
+      template<typename T> PyObject* PyBitsVector(const T& op);
 
       //! Creates the Elf python class.
       PyObject* PyElf(const std::string& elf);
@@ -164,17 +155,16 @@ namespace triton {
       //! pyAstNode type.
       extern PyTypeObject AstNode_Type;
 
-      /* Bitvector ====================================================== */
+      /* BitsVector ====================================================== */
 
-      //! pyBitvector object.
+      //! pyBitsVector object.
       typedef struct {
         PyObject_HEAD
-        triton::uint32 low;
-        triton::uint32 high;
-      } Bitvector_Object;
+        triton::arch::BitsVector* bv;
+      } BitsVector_Object;
 
-      //! pyBitvector type.
-      extern PyTypeObject Bitvector_Type;
+      //! pyBitsVector type.
+      extern PyTypeObject BitsVector_Type;
 
       /* Elf  =========================================================== */
 
@@ -453,13 +443,10 @@ namespace triton {
 #define PyAstNode_AsAstNode(v) (((triton::bindings::python::AstNode_Object*)(v))->node)
 
 /*! Checks if the pyObject is a triton::arch::BitsVector. */
-#define PyBitvector_Check(v)  ((v)->ob_type == &triton::bindings::python::Bitvector_Type)
+#define PyBitsVector_Check(v) ((v)->ob_type == &triton::bindings::python::BitsVector_Type)
 
-/*! Returns the triton::arch::BitsVector::high. */
-#define PyBitvector_AsHigh(v) (((triton::bindings::python::Bitvector_Object*)(v))->high)
-
-/*! Returns the triton::arch::BitsVector::low. */
-#define PyBitvector_AsLow(v)  (((triton::bindings::python::Bitvector_Object*)(v))->low)
+/*! Returns the triton::arch::BitsVector. */
+#define PyBitsVector_AsBitsVector(v) (((triton::bindings::python::BitsVector_Object*)(v))->bv)
 
 /*! Checks if the pyObject is a triton::format::efl::Elf. */
 #define PyElf_Check(v) ((v)->ob_type == &triton::bindings::python::Elf_Type)
