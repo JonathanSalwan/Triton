@@ -198,37 +198,17 @@ namespace triton {
       };
 
 
-      PyObject* PyBitsVector(const triton::arch::Immediate& imm) {
+      template PyObject* PyBitsVector(const triton::arch::Immediate& op);
+      template PyObject* PyBitsVector(const triton::arch::MemoryAccess& op);
+      template PyObject* PyBitsVector(const triton::arch::Register& op);
+      template <typename T>
+      PyObject* PyBitsVector(const T& op) {
         BitsVector_Object* object;
 
         PyType_Ready(&BitsVector_Type);
         object = PyObject_NEW(BitsVector_Object, &BitsVector_Type);
         if (object != NULL)
-          object->bv = new triton::arch::BitsVector(imm);
-
-        return (PyObject*)object;
-      }
-
-
-      PyObject* PyBitsVector(const triton::arch::MemoryAccess& mem) {
-        BitsVector_Object* object;
-
-        PyType_Ready(&BitsVector_Type);
-        object = PyObject_NEW(BitsVector_Object, &BitsVector_Type);
-        if (object != NULL)
-          object->bv= new triton::arch::BitsVector(mem);
-
-        return (PyObject*)object;
-      }
-
-
-      PyObject* PyBitsVector(const triton::arch::Register& reg) {
-        BitsVector_Object* object;
-
-        PyType_Ready(&BitsVector_Type);
-        object = PyObject_NEW(BitsVector_Object, &BitsVector_Type);
-        if (object != NULL)
-          object->bv = new triton::arch::BitsVector(reg);
+          object->bv = new triton::arch::BitsVector(op);
 
         return (PyObject*)object;
       }

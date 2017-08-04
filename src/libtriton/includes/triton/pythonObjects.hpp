@@ -61,13 +61,7 @@ namespace triton {
       PyObject* PyAstNode(triton::ast::AbstractNode* node);
 
       //! Creates the BitsVector python class.
-      PyObject* PyBitsVector(const triton::arch::Immediate& imm);
-
-      //! Creates the BitsVector python class.
-      PyObject* PyBitsVector(const triton::arch::MemoryAccess& mem);
-
-      //! Creates the BitsVector python class.
-      PyObject* PyBitsVector(const triton::arch::Register& reg);
+      template<typename T> PyObject* PyBitsVector(const T& op);
 
       //! Creates the Elf python class.
       PyObject* PyElf(const std::string& elf);
