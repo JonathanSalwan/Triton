@@ -425,8 +425,7 @@ namespace triton {
     class ConcatNode : public AbstractNode {
       public:
         ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
-        ConcatNode(std::vector<AbstractNode*> exprs, AstContext& ctxt);
-        ConcatNode(std::list<AbstractNode*> exprs, AstContext& ctxt);
+        template <typename T> ConcatNode(const T& exprs, AstContext& ctxt);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -441,7 +440,6 @@ namespace triton {
         DecimalNode(triton::uint512 value, AstContext& ctxt);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
-
         triton::uint512 getValue(void);
     };
 
@@ -486,8 +484,7 @@ namespace triton {
     class LandNode : public AbstractNode {
       public:
         LandNode(AbstractNode* expr1, AbstractNode* expr2);
-        LandNode(std::vector<AbstractNode*> exprs, AstContext& ctxt);
-        LandNode(std::list<AbstractNode*> exprs, AstContext& ctxt);
+        template <typename T> LandNode(const T& exprs, AstContext& ctxt);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -515,8 +512,7 @@ namespace triton {
     class LorNode : public AbstractNode {
       public:
         LorNode(AbstractNode* expr1, AbstractNode* expr2);
-        LorNode(std::vector<AbstractNode*> exprs, AstContext& ctxt);
-        LorNode(std::list<AbstractNode*> exprs, AstContext& ctxt);
+        template <typename T> LorNode(const T& exprs, AstContext& ctxt);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
     };

@@ -149,10 +149,8 @@ namespace triton {
         AbstractNode* concat(AbstractNode* expr1, AbstractNode* expr2);
 
         //! AST C++ API - concat node builder
-        AbstractNode* concat(std::vector<AbstractNode*> exprs);
-
-        //! AST C++ API - concat node builder
-        AbstractNode* concat(std::list<AbstractNode*> exprs);
+        template <typename T>
+        AbstractNode* concat(const T& exprs);
 
         //! AST C++ API - decimal node builder
         AbstractNode* decimal(triton::uint512 value);
@@ -173,10 +171,8 @@ namespace triton {
         AbstractNode* land(AbstractNode* expr1, AbstractNode* expr2);
 
         //! AST C++ API - land node builder
-        AbstractNode* land(std::vector<AbstractNode*> exprs);
-
-        //! AST C++ API - land node builder
-        AbstractNode* land(std::list<AbstractNode*> exprs);
+        template <typename T>
+        AbstractNode* land(const T& exprs);
 
         //! AST C++ API - let node builder
         AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
@@ -188,10 +184,8 @@ namespace triton {
         AbstractNode* lor(AbstractNode* expr1, AbstractNode* expr2);
 
         //! AST C++ API - lor node builder
-        AbstractNode* lor(std::vector<AbstractNode*> exprs);
-
-        //! AST C++ API - lor node builder
-        AbstractNode* lor(std::list<AbstractNode*> exprs);
+        template <typename T>
+        AbstractNode* lor(const T& exprs);
 
         //! AST C++ API - reference node builder
         AbstractNode* reference(triton::engines::symbolic::SymbolicExpression& expr);

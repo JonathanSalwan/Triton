@@ -1574,16 +1574,12 @@ namespace triton {
     }
 
 
-    ConcatNode::ConcatNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (triton::uint32 index = 0; index < exprs.size(); index++)
-        this->addChild(exprs[index]);
-      this->init();
-    }
-
-
-    ConcatNode::ConcatNode(std::list<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (std::list<AbstractNode*>::iterator it = exprs.begin() ; it != exprs.end(); it++)
-        this->addChild(*it);
+    template ConcatNode::ConcatNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template ConcatNode::ConcatNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
       this->init();
     }
 
@@ -1847,16 +1843,12 @@ namespace triton {
     }
 
 
-    LandNode::LandNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
-      for (triton::uint32 index = 0; index < exprs.size(); index++)
-        this->addChild(exprs[index]);
-      this->init();
-    }
-
-
-    LandNode::LandNode(std::list<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
-      for (std::list<AbstractNode*>::iterator it = exprs.begin() ; it != exprs.end(); it++)
-        this->addChild(*it);
+    template LandNode::LandNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template LandNode::LandNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
       this->init();
     }
 
@@ -1989,16 +1981,12 @@ namespace triton {
     }
 
 
-    LorNode::LorNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
-      for (triton::uint32 index = 0; index < exprs.size(); index++)
-        this->addChild(exprs[index]);
-      this->init();
-    }
-
-
-    LorNode::LorNode(std::list<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
-      for (std::list<AbstractNode*>::iterator it = exprs.begin() ; it != exprs.end(); it++)
-        this->addChild(*it);
+    template LorNode::LorNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template LorNode::LorNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
       this->init();
     }
 

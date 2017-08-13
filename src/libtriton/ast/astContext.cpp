@@ -298,15 +298,10 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::concat(std::vector<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) ConcatNode(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      return this->astGarbageCollector.recordAstNode(node);
-    }
-
-
-    AbstractNode* AstContext::concat(std::list<AbstractNode*> exprs) {
+    template AbstractNode* AstContext::concat(const std::vector<AbstractNode*>& exprs);
+    template AbstractNode* AstContext::concat(const std::list<AbstractNode*>& exprs);
+    template <typename T>
+    AbstractNode* AstContext::concat(const T& exprs) {
       AbstractNode* node = new(std::nothrow) ConcatNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -368,15 +363,10 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::land(std::vector<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) LandNode(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      return this->astGarbageCollector.recordAstNode(node);
-    }
-
-
-    AbstractNode* AstContext::land(std::list<AbstractNode*> exprs) {
+    template AbstractNode* AstContext::land(const std::vector<AbstractNode*>& exprs);
+    template AbstractNode* AstContext::land(const std::list<AbstractNode*>& exprs);
+    template <typename T>
+    AbstractNode* AstContext::land(const T& exprs) {
       AbstractNode* node = new(std::nothrow) LandNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
@@ -408,15 +398,10 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::lor(std::vector<AbstractNode*> exprs) {
-      AbstractNode* node = new(std::nothrow) LorNode(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      return this->astGarbageCollector.recordAstNode(node);
-    }
-
-
-    AbstractNode* AstContext::lor(std::list<AbstractNode*> exprs) {
+    template AbstractNode* AstContext::lor(const std::vector<AbstractNode*>& exprs);
+    template AbstractNode* AstContext::lor(const std::list<AbstractNode*>& exprs);
+    template <typename T>
+    AbstractNode* AstContext::lor(const T& exprs) {
       AbstractNode* node = new(std::nothrow) LorNode(exprs, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
