@@ -42,7 +42,10 @@ namespace triton {
 
 
     std::string TritonToZ3Ast::getStringValue(const z3::expr& expr) {
-      return Z3_get_numeral_string(this->context, expr);
+      std::string out;
+      if(!expr.is_numeral(out))
+        throw triton::exceptions::Exception("TritonToZ3Ast::getStringValue(): The ast is not a numerical value.");
+      return out;
     }
 
 
