@@ -13,7 +13,6 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
-#include <triton/z3Result.hpp>
 
 
 
@@ -77,6 +76,31 @@ namespace triton {
 
     bool AbstractNode::isSymbolized(void) const {
       return this->symbolized;
+    }
+
+
+    bool AbstractNode::isLogical(void) const {
+      switch (this->kind) {
+        case BVSGE_NODE:
+        case BVSGT_NODE:
+        case BVSLE_NODE:
+        case BVSLT_NODE:
+        case BVUGE_NODE:
+        case BVUGT_NODE:
+        case BVULE_NODE:
+        case BVULT_NODE:
+        case DISTINCT_NODE:
+        case EQUAL_NODE:
+        case LAND_NODE:
+        case LNOT_NODE:
+        case LOR_NODE:
+          return true;
+
+        default:
+          break;
+      }
+
+      return false;
     }
 
 
@@ -151,49 +175,6 @@ namespace triton {
     }
 
 
-    /* ====== assert */
-
-
-    AssertNode::AssertNode(AbstractNode* expr): AbstractNode(ASSERT_NODE, expr->getContext()) {
-      this->addChild(expr);
-      this->init();
-    }
-
-
-    void AssertNode::init(void) {
-      if (this->children.size() < 1)
-        throw triton::exceptions::Ast("AssertNode::init(): Must take at least one child.");
-
-      /* Init attributes */
-      this->size = 1;
-      this->eval = 0;
-
-      /* Init children and spread information */
-      for (triton::uint32 index = 0; index < this->children.size(); index++) {
-        this->children[index]->setParent(this);
-        this->symbolized |= this->children[index]->isSymbolized();
-      }
-
-      /* Init parents */
-      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
-        (*it)->init();
-    }
-
-
-    void AssertNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
-    triton::uint512 AssertNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
-    }
-
-
     /* ====== bvadd */
 
 
@@ -224,11 +205,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvaddNode::accept(AstVisitor& v) {
-       v(*this);
     }
 
 
@@ -271,11 +247,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvandNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -354,67 +325,7 @@ namespace triton {
     }
 
 
-   void BvashrNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvashrNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
-    }
-
-
-    /* ====== bvdecl */
-
-
-    BvdeclNode::BvdeclNode(triton::uint32 size, AstContext& ctxt): AbstractNode(BVDECL_NODE, ctxt) {
-      this->addChild(ctxt.decimal(size));
-      this->init();
-    }
-
-
-    void BvdeclNode::init(void) {
-      triton::uint32 size = 0;
-
-      if (this->children.size() < 1)
-        throw triton::exceptions::Ast("BvdeclNode::init(): Must take at least one child.");
-
-      if (this->children[0]->getKind() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("BvdeclNode::init(): Child must be a DECIMAL_NODE.");
-
-      size = reinterpret_cast<DecimalNode*>(this->children[0])->getValue().convert_to<triton::uint32>();
-      if (!size)
-        throw triton::exceptions::Ast("BvdeclNode::init(): Size connot be equal to zero.");
-
-      if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("BvdeclNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
-
-      /* Init attributes */
-      this->size = size;
-      this->eval = 0;
-
-      /* Init children and spread information */
-      for (triton::uint32 index = 0; index < this->children.size(); index++) {
-        this->children[index]->setParent(this);
-        this->symbolized |= this->children[index]->isSymbolized();
-      }
-
-      /* Init parents */
-      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
-        (*it)->init();
-    }
-
-
-    void BvdeclNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
-    triton::uint512 BvdeclNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
@@ -453,11 +364,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvlshrNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -503,11 +409,6 @@ namespace triton {
     }
 
 
-    void BvmulNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvmulNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -550,11 +451,6 @@ namespace triton {
     }
 
 
-    void BvnandNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvnandNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -590,11 +486,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvnegNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -640,11 +531,6 @@ namespace triton {
     }
 
 
-    void BvnorNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvnorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -680,11 +566,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvnotNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -727,11 +608,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvorNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -788,11 +664,6 @@ namespace triton {
     }
 
 
-    void BvrolNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvrolNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -843,11 +714,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvrorNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -906,11 +772,6 @@ namespace triton {
     }
 
 
-    void BvsdivNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvsdivNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -957,11 +818,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvsgeNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1014,11 +870,6 @@ namespace triton {
     }
 
 
-    void BvsgtNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvsgtNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1058,11 +909,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvshlNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1114,11 +960,6 @@ namespace triton {
     }
 
 
-    void BvsleNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvsleNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1165,11 +1006,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvsltNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1226,11 +1062,6 @@ namespace triton {
     }
 
 
-    void BvsmodNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvsmodNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1284,11 +1115,6 @@ namespace triton {
     }
 
 
-    void BvsremNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvsremNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1328,11 +1154,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvsubNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1382,11 +1203,6 @@ namespace triton {
     }
 
 
-    void BvudivNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvudivNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1426,11 +1242,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvugeNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1476,11 +1287,6 @@ namespace triton {
     }
 
 
-    void BvugtNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvugtNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1523,11 +1329,6 @@ namespace triton {
     }
 
 
-    void BvuleNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvuleNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1567,11 +1368,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvultNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1621,11 +1417,6 @@ namespace triton {
     }
 
 
-    void BvuremNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvuremNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1668,11 +1459,6 @@ namespace triton {
     }
 
 
-    void BvxnorNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvxnorNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -1712,11 +1498,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void BvxorNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1774,60 +1555,11 @@ namespace triton {
     }
 
 
-    void BvNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 BvNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
-    }
-
-
-    /* ====== compound */
-
-
-    CompoundNode::CompoundNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(COMPOUND_NODE, ctxt) {
-      for (triton::uint32 index = 0; index < exprs.size(); index++)
-        this->addChild(exprs[index]);
-      this->init();
-    }
-
-
-    void CompoundNode::init(void) {
-      if (this->children.size() < 1)
-        throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
-
-      /* Init attributes */
-      this->size = 0;
-      this->eval = 0;
-
-      /* Init children and spread information */
-      for (triton::uint32 index = 0; index < this->children.size(); index++) {
-        this->children[index]->setParent(this);
-        this->symbolized |= this->children[index]->isSymbolized();
-      }
-
-      /* Init parents */
-      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
-        (*it)->init();
-    }
-
-
-    void CompoundNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
-    triton::uint512 CompoundNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
       return triton::ast::rotl(h, deep);
     }
 
@@ -1842,16 +1574,12 @@ namespace triton {
     }
 
 
-    ConcatNode::ConcatNode(std::vector<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (triton::uint32 index = 0; index < exprs.size(); index++)
-        this->addChild(exprs[index]);
-      this->init();
-    }
-
-
-    ConcatNode::ConcatNode(std::list<AbstractNode*> exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (std::list<AbstractNode *>::iterator it = exprs.begin() ; it != exprs.end(); it++)
-        this->addChild(*it);
+    template ConcatNode::ConcatNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template ConcatNode::ConcatNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
       this->init();
     }
 
@@ -1882,11 +1610,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void ConcatNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -1925,64 +1648,9 @@ namespace triton {
     }
 
 
-    void DecimalNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 DecimalNode::hash(triton::uint32 deep) const {
       triton::uint512 hash = this->kind ^ this->value;
       return hash;
-    }
-
-
-    /* ====== Declare node */
-
-
-    DeclareFunctionNode::DeclareFunctionNode(std::string name, AbstractNode* bvDecl): AbstractNode(DECLARE_FUNCTION_NODE, bvDecl->getContext()) {
-      this->addChild(this->ctxt.string(name));
-      this->addChild(bvDecl);
-      this->init();
-    }
-
-
-    void DeclareFunctionNode::init(void) {
-      if (this->children.size() < 2)
-        throw triton::exceptions::Ast("DeclareFunctionNode::init(): Must take at least two children.");
-
-      if (this->children[0]->getKind() != STRING_NODE)
-        throw triton::exceptions::Ast("DeclareFunctionNode::init(): The first argument must be a STRING_NODE.");
-
-      if (this->children[1]->getKind() != BVDECL_NODE)
-        throw triton::exceptions::Ast("DeclareFunctionNode::init(): The second argument must be a BVDECL_NODE.");
-
-      /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
-      this->eval = this->children[1]->evaluate();
-
-      /* Init children and spread information */
-      for (triton::uint32 index = 0; index < this->children.size(); index++) {
-        this->children[index]->setParent(this);
-        this->symbolized |= this->children[index]->isSymbolized();
-      }
-
-      /* Init parents */
-      for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
-        (*it)->init();
-    }
-
-
-    void DeclareFunctionNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
-    triton::uint512 DeclareFunctionNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
     }
 
 
@@ -2013,11 +1681,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void DistinctNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2057,11 +1720,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void EqualNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2120,11 +1778,6 @@ namespace triton {
     }
 
 
-    void ExtractNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 ExtractNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -2149,6 +1802,9 @@ namespace triton {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("IteNode::init(): Must take at least three children.");
 
+      if (this->children[0]->isLogical() == false)
+        throw triton::exceptions::Ast("IteNode::init(): Must take a logical node as first argument.");
+
       if (this->children[1]->getBitvectorSize() != this->children[2]->getBitvectorSize())
         throw triton::exceptions::Ast("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
 
@@ -2165,11 +1821,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void IteNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2192,28 +1843,37 @@ namespace triton {
     }
 
 
+    template LandNode::LandNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template LandNode::LandNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
+      this->init();
+    }
+
+
     void LandNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two children.");
 
       /* Init attributes */
       this->size = 1;
-      this->eval = (this->children[0]->evaluate() && this->children[1]->evaluate());
+      this->eval = 1;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->eval = this->eval && this->children[index]->evaluate();
+
+        if (this->children[index]->isLogical() == false)
+          throw triton::exceptions::Ast("LandNode::init(): Must take logical nodes as arguments.");
       }
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void LandNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2260,11 +1920,6 @@ namespace triton {
     }
 
 
-    void LetNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 LetNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -2295,16 +1950,15 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+
+        if (this->children[index]->isLogical() == false)
+          throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
       }
+
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void LnotNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2327,28 +1981,37 @@ namespace triton {
     }
 
 
+    template LorNode::LorNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template LorNode::LorNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template <typename T>
+    LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
+      for (AbstractNode* expr : exprs)
+        this->addChild(expr);
+      this->init();
+    }
+
+
     void LorNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LorNode::init(): Must take at least two children.");
 
       /* Init attributes */
       this->size = 1;
-      this->eval = (this->children[0]->evaluate() || this->children[1]->evaluate());
+      this->eval = 0;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->eval = this->eval || this->children[index]->evaluate();
+
+        if (this->children[index]->isLogical() == false)
+          throw triton::exceptions::Ast("LorNode::init(): Must take logical nodes as arguments.");
       }
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void LorNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2385,18 +2048,13 @@ namespace triton {
     }
 
 
-    void ReferenceNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 ReferenceNode::hash(triton::uint32 deep) const {
       triton::uint512 hash = this->kind ^ this->expr.getId();
       return hash;
     }
 
-    triton::engines::symbolic::SymbolicExpression& ReferenceNode::getExpr() const
-    {
+
+    triton::engines::symbolic::SymbolicExpression& ReferenceNode::getSymbolicExpression(void) const {
       return this->expr;
     }
 
@@ -2424,11 +2082,6 @@ namespace triton {
 
     std::string StringNode::getValue(void) {
       return this->value;
-    }
-
-
-    void StringNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2481,11 +2134,6 @@ namespace triton {
     }
 
 
-    void SxNode::accept(AstVisitor& v) {
-      v(*this);
-    }
-
-
     triton::uint512 SxNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
@@ -2520,11 +2168,6 @@ namespace triton {
 
     triton::engines::symbolic::SymbolicVariable& VariableNode::getVar() {
       return this->symVar;
-    }
-
-
-    void VariableNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2576,11 +2219,6 @@ namespace triton {
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
         (*it)->init();
-    }
-
-
-    void ZxNode::accept(AstVisitor& v) {
-      v(*this);
     }
 
 
@@ -2663,11 +2301,9 @@ namespace triton {
         return nullptr;
 
       switch (node->getKind()) {
-        case ASSERT_NODE:               newNode = new(std::nothrow) AssertNode(*reinterpret_cast<AssertNode*>(node)); break;
         case BVADD_NODE:                newNode = new(std::nothrow) BvaddNode(*reinterpret_cast<BvaddNode*>(node)); break;
         case BVAND_NODE:                newNode = new(std::nothrow) BvandNode(*reinterpret_cast<BvandNode*>(node)); break;
         case BVASHR_NODE:               newNode = new(std::nothrow) BvashrNode(*reinterpret_cast<BvashrNode*>(node)); break;
-        case BVDECL_NODE:               newNode = new(std::nothrow) BvdeclNode(*reinterpret_cast<BvdeclNode*>(node)); break;
         case BVLSHR_NODE:               newNode = new(std::nothrow) BvlshrNode(*reinterpret_cast<BvlshrNode*>(node)); break;
         case BVMUL_NODE:                newNode = new(std::nothrow) BvmulNode(*reinterpret_cast<BvmulNode*>(node)); break;
         case BVNAND_NODE:               newNode = new(std::nothrow) BvnandNode(*reinterpret_cast<BvnandNode*>(node)); break;
@@ -2695,10 +2331,8 @@ namespace triton {
         case BVXNOR_NODE:               newNode = new(std::nothrow) BvxnorNode(*reinterpret_cast<BvxnorNode*>(node)); break;
         case BVXOR_NODE:                newNode = new(std::nothrow) BvxorNode(*reinterpret_cast<BvxorNode*>(node)); break;
         case BV_NODE:                   newNode = new(std::nothrow) BvNode(*reinterpret_cast<BvNode*>(node)); break;
-        case COMPOUND_NODE:             newNode = new(std::nothrow) CompoundNode(*reinterpret_cast<CompoundNode*>(node)); break;
         case CONCAT_NODE:               newNode = new(std::nothrow) ConcatNode(*reinterpret_cast<ConcatNode*>(node)); break;
         case DECIMAL_NODE:              newNode = new(std::nothrow) DecimalNode(*reinterpret_cast<DecimalNode*>(node)); break;
-        case DECLARE_FUNCTION_NODE:     newNode = new(std::nothrow) DeclareFunctionNode(*reinterpret_cast<DeclareFunctionNode*>(node)); break;
         case DISTINCT_NODE:             newNode = new(std::nothrow) DistinctNode(*reinterpret_cast<DistinctNode*>(node)); break;
         case EQUAL_NODE:                newNode = new(std::nothrow) EqualNode(*reinterpret_cast<EqualNode*>(node)); break;
         case EXTRACT_NODE:              newNode = new(std::nothrow) ExtractNode(*reinterpret_cast<ExtractNode*>(node)); break;

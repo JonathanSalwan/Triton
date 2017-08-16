@@ -43,14 +43,8 @@ namespace triton {
           //! Constructor.
           AstPythonRepresentation();
 
-          //! Destructor.
-          ~AstPythonRepresentation();
-
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);
-
-          //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::AssertNode* node);
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::BvNode* node);
@@ -63,9 +57,6 @@ namespace triton {
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::BvashrNode* node);
-
-          //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::BvdeclNode* node);
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::BvlshrNode* node);
@@ -146,16 +137,10 @@ namespace triton {
           std::ostream& print(std::ostream& stream, triton::ast::BvxorNode* node);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::CompoundNode* node);
-
-          //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::ConcatNode* node);
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::DecimalNode* node);
-
-          //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, triton::ast::DeclareFunctionNode* node);
 
           //! Displays the node according to the representation mode.
           std::ostream& print(std::ostream& stream, triton::ast::DistinctNode* node);

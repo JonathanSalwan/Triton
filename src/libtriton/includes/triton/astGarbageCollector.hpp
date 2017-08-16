@@ -58,7 +58,7 @@ namespace triton {
         AstGarbageCollector(const AstGarbageCollector& other);
 
         //! Destructor.
-        virtual ~AstGarbageCollector();
+        ~AstGarbageCollector();
 
         //! Copies an AstGarbageCollectors.
         void operator=(const AstGarbageCollector& other);

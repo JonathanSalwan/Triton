@@ -798,9 +798,15 @@ namespace triton {
   }
 
 
+  const triton::uint512& API::getConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const {
+    this->checkSymbolic();
+    return this->symbolic->getConcreteSymbolicVariableValue(symVar);
+  }
+
+
   void API::setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
     this->checkSymbolic();
-    return this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
+    this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
   }
 
 

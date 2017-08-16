@@ -42,10 +42,6 @@ namespace triton {
       }
 
 
-      SolverModel::~SolverModel() {
-      }
-
-
       const std::string& SolverModel::getName(void) const {
         return this->name;
       }

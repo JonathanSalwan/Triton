@@ -34,8 +34,8 @@ class TestPathConstraint(unittest.TestCase):
         """Test getPathConstraintsAst"""
         astCtx = self.ctx.getAstContext()
         crst = self.ctx.getPathConstraintsAst()
-        self.assertNotEqual(len(self.ctx.getModel(astCtx.assert_(crst))), 0)
-        self.assertNotEqual(len(self.ctx.getModel(astCtx.assert_(astCtx.lnot(crst)))), 0)
+        self.assertNotEqual(len(self.ctx.getModel(crst)), 0)
+        self.assertNotEqual(len(self.ctx.getModel(astCtx.lnot(crst))), 0)
 
     def test_getPathConstraints(self):
         """Test getPathConstraints"""

@@ -11,17 +11,15 @@ def test1():
     astCtxt = Triton.getAstContext()
 
     x = Triton.newSymbolicVariable(32)
-    c = astCtxt.assert_(
-            astCtxt.equal(
-                astCtxt.bvsub(
-                    astCtxt.bvxor(
-                        astCtxt.variable(x),
-                        astCtxt.bv(0x40, 32)
-                    ),
-                    astCtxt.bv(1, 32)
+    c = astCtxt.equal(
+            astCtxt.bvsub(
+                astCtxt.bvxor(
+                    astCtxt.variable(x),
+                    astCtxt.bv(0x40, 32)
                 ),
-                astCtxt.bv(0x10, 32)
-            )
+                astCtxt.bv(1, 32)
+            ),
+            astCtxt.bv(0x10, 32)
         )
     print 'Test 1:', Triton.getModel(c)[0]
 
@@ -34,9 +32,7 @@ def test2():
     astCtxt = Triton.getAstContext()
 
     x = Triton.newSymbolicVariable(32)
-    c = astCtxt.assert_(
-            (astCtxt.variable(x) ^ 0x40) - 1 == 0x10
-        )
+    c = ((astCtxt.variable(x) ^ 0x40) - 1 == 0x10)
     print 'Test 2:', Triton.getModel(c)[0]
 
     return
@@ -48,12 +44,10 @@ def test3():
     astCtxt = Triton.getAstContext()
 
     x = Triton.newSymbolicVariable(8)
-    c = astCtxt.assert_(
-            astCtxt.land(
-                astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
-                astCtxt.variable(x) != 0x11
-            )
-        )
+    c = astCtxt.land([
+            astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
+            astCtxt.variable(x) != 0x11
+        ])
     print 'Test 3:', Triton.getModel(c)[0]
 
     return
@@ -65,9 +59,7 @@ def test4():
     astCtxt = Triton.getAstContext()
 
     x = Triton.newSymbolicVariable(8)
-    c = astCtxt.assert_(
-            astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
-        )
+    c = astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20
     print 'Test 4:', Triton.getModels(c, 10)
 
     return
@@ -88,9 +80,7 @@ def test5():
     eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.registers.eax))
 
     # constraint
-    c = astCtxt.assert_(
-            eaxAst ^ 0x11223344 == 0xdeadbeaf
-        )
+    c = eaxAst ^ 0x11223344 == 0xdeadbeaf
 
     print 'Test 5:', Triton.getModel(c)[0]
 

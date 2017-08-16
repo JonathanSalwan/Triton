@@ -4,75 +4,93 @@ matrix:
     include:
         # Linux gcc 4.8
         - os: linux
+          dist: trusty
           compiler: gcc
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-4.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=g++-4.8, C_COMPILER=gcc-4.8, PYTHON_VERSION=2.7]
 
         # Linux gcc 4.9
         - os: linux
+          dist: trusty
           compiler: gcc
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-4.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=g++-4.9, C_COMPILER=gcc-4.9, PYTHON_VERSION=2.7]
 
         # Linux gcc 5.0
         - os: linux
+          dist: trusty
           compiler: gcc
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7]
 
         # Linux gcc 5.0 with gcov
         - os: linux
+          dist: trusty
           compiler: gcc
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7 ]
 
         # Linux clang 3.5
         - os: linux
+          dist: trusty
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.5', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-3.5, C_COMPILER=clang-3.5, PYTHON_VERSION=2.7 ]
 
         # Linux clang 3.6
         - os: linux
+          dist: trusty
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.6', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.6', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-3.6, C_COMPILER=clang-3.6, PYTHON_VERSION=2.7 ]
 
         # Linux clang 3.7
         - os: linux
+          dist: trusty
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
               packages: ['clang-3.7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7 ]
 
         # Linux clang 3.8
         - os: linux
+          dist: trusty
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.8', 'boost-latest', 'george-edison55-precise-backports']
+              sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-3.8, C_COMPILER=clang-3.8, PYTHON_VERSION=2.7 ]
+
+        # Linux clang 3.9
+        - os: linux
+          dist: trusty
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test']
+              packages: ['clang-3.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7 ]
 
         # OSX xcode 7.3
         - os: osx

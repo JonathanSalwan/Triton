@@ -24,12 +24,10 @@ The AST_NODE namespace contains all kinds of node.
 \section AST_NODE_py_api Python API - Items of the AST_NODE namespace
 <hr>
 
-- **AST_NODE.ASSERT**
 - **AST_NODE.BV**
 - **AST_NODE.BVADD**
 - **AST_NODE.BVAND**
 - **AST_NODE.BVASHR**
-- **AST_NODE.BVDECL**
 - **AST_NODE.BVLSHR**
 - **AST_NODE.BVMUL**
 - **AST_NODE.BVNAND**
@@ -56,20 +54,16 @@ The AST_NODE namespace contains all kinds of node.
 - **AST_NODE.BVUREM**
 - **AST_NODE.BVXNOR**
 - **AST_NODE.BVXOR**
-- **AST_NODE.COMPOUND**
 - **AST_NODE.CONCAT**
 - **AST_NODE.DECIMAL**
-- **AST_NODE.DECLARE_FUNCTION**
 - **AST_NODE.DISTINCT**
 - **AST_NODE.EQUAL**
 - **AST_NODE.EXTRACT**
-- **AST_NODE.FUNCTION**
 - **AST_NODE.ITE**
 - **AST_NODE.LAND**
 - **AST_NODE.LET**
 - **AST_NODE.LNOT**
 - **AST_NODE.LOR**
-- **AST_NODE.PARAM**
 - **AST_NODE.REFERENCE**
 - **AST_NODE.STRING**
 - **AST_NODE.SX**
@@ -86,12 +80,10 @@ namespace triton {
     namespace python {
 
       void initAstNodeNamespace(PyObject* astNodeDict) {
-        PyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint32(triton::ast::ASSERT_NODE));
         PyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint32(triton::ast::BV_NODE));
         PyDict_SetItemString(astNodeDict, "BVADD",             PyLong_FromUint32(triton::ast::BVADD_NODE));
         PyDict_SetItemString(astNodeDict, "BVAND",             PyLong_FromUint32(triton::ast::BVAND_NODE));
         PyDict_SetItemString(astNodeDict, "BVASHR",            PyLong_FromUint32(triton::ast::BVASHR_NODE));
-        PyDict_SetItemString(astNodeDict, "BVDECL",            PyLong_FromUint32(triton::ast::BVDECL_NODE));
         PyDict_SetItemString(astNodeDict, "BVLSHR",            PyLong_FromUint32(triton::ast::BVLSHR_NODE));
         PyDict_SetItemString(astNodeDict, "BVMUL",             PyLong_FromUint32(triton::ast::BVMUL_NODE));
         PyDict_SetItemString(astNodeDict, "BVNAND",            PyLong_FromUint32(triton::ast::BVNAND_NODE));
@@ -118,20 +110,16 @@ namespace triton {
         PyDict_SetItemString(astNodeDict, "BVUREM",            PyLong_FromUint32(triton::ast::BVUREM_NODE));
         PyDict_SetItemString(astNodeDict, "BVXNOR",            PyLong_FromUint32(triton::ast::BVXNOR_NODE));
         PyDict_SetItemString(astNodeDict, "BVXOR",             PyLong_FromUint32(triton::ast::BVXOR_NODE));
-        PyDict_SetItemString(astNodeDict, "COMPOUND",          PyLong_FromUint32(triton::ast::COMPOUND_NODE));
         PyDict_SetItemString(astNodeDict, "CONCAT",            PyLong_FromUint32(triton::ast::CONCAT_NODE));
         PyDict_SetItemString(astNodeDict, "DECIMAL",           PyLong_FromUint32(triton::ast::DECIMAL_NODE));
-        PyDict_SetItemString(astNodeDict, "DECLARE_FUNCTION",  PyLong_FromUint32(triton::ast::DECLARE_FUNCTION_NODE));
         PyDict_SetItemString(astNodeDict, "DISTINCT",          PyLong_FromUint32(triton::ast::DISTINCT_NODE));
         PyDict_SetItemString(astNodeDict, "EQUAL",             PyLong_FromUint32(triton::ast::EQUAL_NODE));
         PyDict_SetItemString(astNodeDict, "EXTRACT",           PyLong_FromUint32(triton::ast::EXTRACT_NODE));
-        PyDict_SetItemString(astNodeDict, "FUNCTION",          PyLong_FromUint32(triton::ast::FUNCTION_NODE));
         PyDict_SetItemString(astNodeDict, "ITE",               PyLong_FromUint32(triton::ast::ITE_NODE));
         PyDict_SetItemString(astNodeDict, "LAND",              PyLong_FromUint32(triton::ast::LAND_NODE));
         PyDict_SetItemString(astNodeDict, "LET",               PyLong_FromUint32(triton::ast::LET_NODE));
         PyDict_SetItemString(astNodeDict, "LNOT",              PyLong_FromUint32(triton::ast::LNOT_NODE));
         PyDict_SetItemString(astNodeDict, "LOR",               PyLong_FromUint32(triton::ast::LOR_NODE));
-        PyDict_SetItemString(astNodeDict, "PARAM",             PyLong_FromUint32(triton::ast::PARAM_NODE));
         PyDict_SetItemString(astNodeDict, "REFERENCE",         PyLong_FromUint32(triton::ast::REFERENCE_NODE));
         PyDict_SetItemString(astNodeDict, "STRING",            PyLong_FromUint32(triton::ast::STRING_NODE));
         PyDict_SetItemString(astNodeDict, "SX",                PyLong_FromUint32(triton::ast::SX_NODE));

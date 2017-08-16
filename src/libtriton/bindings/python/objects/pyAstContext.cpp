@@ -167,7 +167,7 @@ ref_7 = 0x400003 # Program Counter
 \section ast_py_examples_page Examples
 <hr>
 
-\subsection ast_py_examples_page_1 Get a register's expression and create an assert
+\subsection ast_py_examples_page_1 Get a register expression and ask for a model
 
 ~~~~~~~~~~~~~{.py}
 >>> # Get the symbolic expression of the ZF flag
@@ -176,13 +176,11 @@ ref_7 = 0x400003 # Program Counter
 
 >>> astCtxt = ctxt.getAstContext()
 
->>> # (assert (= zf True))
->>> newExpr = astCtxt.assert_(
-...            astCtxt.equal(
-...                zfExpr,
-...                astCtxt.bvtrue()
-...            )
-...          )
+>>> # (= zf True)
+>>> newExpr = astCtxt.equal(
+...             zfExpr,
+...             astCtxt.bvtrue()
+...           )
 
 >>> # Get a model
 >>> models = ctxt.getModel(newExpr)
@@ -261,10 +259,6 @@ a > b             | (bvugt a b)
 \section AstContext_py_api Python API - Methods of the AstContext module
 <hr>
 
-- <b>\ref py_AstNode_page assert_(\ref py_AstNode_page expr1)</b><br>
-Creates an `assert` node.<br>
-e.g: `(assert expr1)`.
-
 - <b>\ref py_AstNode_page bv(integer value, integer size)</b><br>
 Creates a `bv` node (bitvector). The `size` must be in bits.<br>
 e.g: `(_ bv<balue> size)`.
@@ -280,10 +274,6 @@ e.g: `(bvand expr1 epxr2)`.
 - <b>\ref py_AstNode_page bvashr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
 Creates a `bvashr` node.<br>
 e.g: `(bvashr expr1 epxr2)`.
-
-- <b>\ref py_AstNode_page bvdecl(integer size)</b><br>
-Declares a bitvector node.<br>
-e.g: `(_ BitVec size)`.
 
 - <b>\ref py_AstNode_page bvfalse(void)</b><br>
 This is an alias on the `(_ bv0 1)` ast expression.
@@ -395,9 +385,6 @@ e.g: `(bvxnor expr1 expr2)`.
 Creates a `bvxor` node.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
-- <b>\ref py_AstNode_page compound([\ref py_AstNode_page expr ...])</b><br>
-Creates a `compound` node (a statement of several unrelated nodes).
-
 - <b>\ref py_AstNode_page concat([\ref py_AstNode_page expr ...])</b><br>
 Concatenates several nodes.
 
@@ -420,9 +407,9 @@ e.g: `((_ extract high low) expr1)`.
 Creates an `ite` node.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
-- <b>\ref py_AstNode_page land(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `land` node (logical AND).<br>
-e.g: `(and expr1 expr2)`.
+- <b>\ref py_AstNode_page land([\ref py_AstNode_page expr ...])</b><br>
+Creates a logical `AND` on several nodes.
+e.g: `(and expr1 expr2 expr3 expr4)`.
 
 - <b>\ref py_AstNode_page let(string alias, \ref py_AstNode_page expr2, \ref py_AstNode_page expr3)</b><br>
 Creates a `let` node.<br>
@@ -432,9 +419,9 @@ e.g: `(let ((alias expr2)) expr3)`.
 Creates a `lnot` node (logical NOT).<br>
 e.g: `(not expr)`.
 
-- <b>\ref py_AstNode_page lor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `lor` node (logical OR).<br>
-e.g: `(or expr1 expr2)`.
+- <b>\ref py_AstNode_page lor([\ref py_AstNode_page expr ...])</b><br>
+Creates a logical `OR` on several nodes.
+e.g: `(or expr1 expr2 expr3 expr4)`.
 
 - <b>\ref py_AstNode_page reference(integer exprId)</b><br>
 Creates a reference node (SSA-based).<br>
@@ -460,19 +447,6 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 namespace triton {
   namespace bindings {
     namespace python {
-
-      static PyObject* AstContext_assert(PyObject* self, PyObject* expr) {
-        if (!PyAstNode_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected an AstNode as first argument");
-
-        try {
-          // FIXME : should we Check the context is the same?
-          return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(expr)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
 
 
       static PyObject* AstContext_bv(PyObject* self, PyObject* args) {
@@ -559,19 +533,6 @@ namespace triton {
         try {
           // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* AstContext_bvdecl(PyObject* self, PyObject* size) {
-        if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
-          return PyErr_Format(PyExc_TypeError, "bvdecl(): expected an integer as argument");
-
-        try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->bvdecl(PyLong_AsUint32(size)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1188,31 +1149,6 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_compound(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
-
-        if (exprsList == nullptr || !PyList_Check(exprsList))
-          return PyErr_Format(PyExc_TypeError, "compound(): expected a list of AstNodes as first argument");
-
-        /* Check if the mems list contains only integer item and craft a std::list */
-        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
-          PyObject* item = PyList_GetItem(exprsList, i);
-
-          if (!PyAstNode_Check(item))
-            return PyErr_Format(PyExc_TypeError, "compound(): Each element from the list must be a AstNode");
-
-          exprs.push_back(PyAstNode_AsAstNode(item));
-        }
-
-        try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->compound(exprs));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* AstContext_concat(PyObject* self, PyObject* exprsList) {
         std::vector<triton::ast::AbstractNode *> exprs;
 
@@ -1312,21 +1248,24 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_land(PyObject* self, PyObject* args) {
-        PyObject* op1 = nullptr;
-        PyObject* op2 = nullptr;
+      static PyObject* AstContext_land(PyObject* self, PyObject* exprsList) {
+        std::vector<triton::ast::AbstractNode *> exprs;
 
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (exprsList == nullptr || !PyList_Check(exprsList))
+          return PyErr_Format(PyExc_TypeError, "land(): expected a list of AstNodes as first argument");
 
-        if (op1 == nullptr || !PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "land(): expected a AstNode as first argument");
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+          PyObject* item = PyList_GetItem(exprsList, i);
 
-        if (op2 == nullptr || !PyAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "land(): expected a AstNode as second argument");
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "land(): Each element from the list must be a AstNode");
+
+          exprs.push_back(PyAstNode_AsAstNode(item));
+        }
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->land(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->land(exprs));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1373,21 +1312,24 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_lor(PyObject* self, PyObject* args) {
-        PyObject* op1 = nullptr;
-        PyObject* op2 = nullptr;
+      static PyObject* AstContext_lor(PyObject* self, PyObject* exprsList) {
+        std::vector<triton::ast::AbstractNode *> exprs;
 
-        /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (exprsList == nullptr || !PyList_Check(exprsList))
+          return PyErr_Format(PyExc_TypeError, "lor(): expected a list of AstNodes as first argument");
 
-        if (op1 == nullptr || !PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "lor(): expected a AstNode as first argument");
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+          PyObject* item = PyList_GetItem(exprsList, i);
 
-        if (op2 == nullptr || !PyAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "lor(): expected a AstNode as second argument");
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "lor(): Each element from the list must be a AstNode");
+
+          exprs.push_back(PyAstNode_AsAstNode(item));
+        }
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->lor(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->lor(exprs));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1480,12 +1422,10 @@ namespace triton {
 
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
-        {"assert_",       AstContext_assert,          METH_O,           ""},
         {"bv",            AstContext_bv,              METH_VARARGS,     ""},
         {"bvadd",         AstContext_bvadd,           METH_VARARGS,     ""},
         {"bvand",         AstContext_bvand,           METH_VARARGS,     ""},
         {"bvashr",        AstContext_bvashr,          METH_VARARGS,     ""},
-        {"bvdecl",        AstContext_bvdecl,          METH_O,           ""},
         {"bvfalse",       AstContext_bvfalse,         METH_NOARGS,      ""},
         {"bvtrue",        AstContext_bvtrue,          METH_NOARGS,      ""},
         {"bvlshr",        AstContext_bvlshr,          METH_VARARGS,     ""},
@@ -1514,17 +1454,16 @@ namespace triton {
         {"bvurem",        AstContext_bvurem,          METH_VARARGS,     ""},
         {"bvxnor",        AstContext_bvxnor ,         METH_VARARGS,     ""},
         {"bvxor",         AstContext_bvxor,           METH_VARARGS,     ""},
-        {"compound",      AstContext_compound,        METH_O,           ""},
         {"concat",        AstContext_concat,          METH_O,           ""},
         {"distinct",      AstContext_distinct,        METH_VARARGS,     ""},
         {"duplicate",     AstContext_duplicate,       METH_O,           ""},
         {"equal",         AstContext_equal,           METH_VARARGS,     ""},
         {"extract",       AstContext_extract,         METH_VARARGS,     ""},
         {"ite",           AstContext_ite,             METH_VARARGS,     ""},
-        {"land",          AstContext_land,            METH_VARARGS,     ""},
+        {"land",          AstContext_land,            METH_O,           ""},
         {"let",           AstContext_let,             METH_VARARGS,     ""},
         {"lnot",          AstContext_lnot,            METH_O,           ""},
-        {"lor",           AstContext_lor,             METH_VARARGS,     ""},
+        {"lor",           AstContext_lor,             METH_O,           ""},
         {"reference",     AstContext_reference,       METH_O,           ""},
         {"string",        AstContext_string,          METH_O,           ""},
         {"sx",            AstContext_sx,              METH_VARARGS,     ""},
