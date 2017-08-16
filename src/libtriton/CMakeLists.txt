@@ -72,7 +72,6 @@ set(LIBTRITON_SOURCE_FILES
     ast/representations/astSmtRepresentation.cpp
     ast/z3/tritonToZ3Ast.cpp
     ast/z3/z3Interface.cpp
-    ast/z3/z3Result.cpp
     ast/z3/z3ToTritonAst.cpp
     callbacks/callbacks.cpp
     engines/solver/solverEngine.cpp
@@ -128,7 +127,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initX86PrefixesNamespace.cpp
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
-        bindings/python/objects/pyBitvector.cpp
+        bindings/python/objects/pyBitsVector.cpp
         bindings/python/objects/pyElf.cpp
         bindings/python/objects/pyElfDynamicTable.cpp
         bindings/python/objects/pyElfHeader.cpp

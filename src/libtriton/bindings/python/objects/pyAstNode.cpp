@@ -83,6 +83,10 @@ Returns the parents list nodes. The list is empty if there is still no parent de
 - <b>integer/string getValue(void)</b><br>
 Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
 
+- <b>bool isLogical(void)</b><br>
+Returns true if it's a logical node.
+e.g: `AST_NODE.EQUAL`, `AST_NODE.LNOT`, `AST_NODE.LAND`...
+
 - <b>bool isSigned(void)</b><br>
 According to the size of the expression, returns true if the MSB is 1.
 
@@ -241,7 +245,7 @@ namespace triton {
             return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node)->getValue());
 
           else if (node->getKind() == triton::ast::REFERENCE_NODE)
-            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getExpr().getId());
+            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getId());
 
           else if (node->getKind() == triton::ast::STRING_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node)->getValue().c_str());
@@ -250,6 +254,18 @@ namespace triton {
             return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getName().c_str());
 
           return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstNode_isLogical(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyAstNode_AsAstNode(self)->isLogical())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -562,6 +578,7 @@ namespace triton {
         {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
         {"getParents",        AstNode_getParents,        METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
+        {"isLogical",         AstNode_isLogical,         METH_NOARGS,     ""},
         {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
         {"isSymbolized",      AstNode_isSymbolized,      METH_NOARGS,     ""},
         {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},

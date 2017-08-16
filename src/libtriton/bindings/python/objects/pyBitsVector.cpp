@@ -21,29 +21,31 @@
 
 */
 
-/*! \page py_Bitvector_page Bitvector
-    \brief [**python api**] All information about the Bitvector python object.
+/*! \page py_BitsVector_page BitsVector
+    \brief [**python api**] All information about the BitsVector python object.
 
 \tableofcontents
 
-\section py_Bitvector_description Description
+\section py_BitsVector_description Description
 <hr>
 
-This object is used to represent a bitvector. Mainly used by \ref py_Register_page and \ref py_MemoryAccess_page.
+This object is used to represent a bits vector. Mainly used by \ref py_Register_page, \ref py_MemoryAccess_page and \ref py_Immediate_page.
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.registers.ah
->>> bitvector = ah.getBitvector()
->>> bitvector.getHigh()
+>>> bv = ah.getBitvector()
+>>> bv.getHigh()
 15L
->>> bitvector.getLow()
+>>> bv.getLow()
 8L
->>> bitvector.getVectorSize()
+>>> bv.getVectorSize()
 8L
+>>> bv.getMaxValue()
+255L
 
 ~~~~~~~~~~~~~
 
-\section Bitvector_py_api Python API - Methods of the Bitvector class
+\section BitsVector_py_api Python API - Methods of the BitsVector class
 <hr>
 
 - <b>integer getHigh(void)</b><br>
@@ -51,6 +53,9 @@ Returns the highest bit position.
 
 - <b>integer getLow(void)</b><br>
 Returns the lower bit position.
+
+- <b>integer getMaxValue(void)</b><br>
+Returns the max value of the vector.
 
 - <b>integer getVectorSize(void)</b><br>
 Returns the size of the vector.
@@ -63,16 +68,17 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      //! Bitvector destructor.
-      void Bitvector_dealloc(PyObject* self) {
+      //! BitsVector destructor.
+      void BitsVector_dealloc(PyObject* self) {
         std::cout << std::flush;
+        delete PyBitsVector_AsBitsVector(self);
         Py_DECREF(self);
       }
 
 
-      static PyObject* Bitvector_getHigh(PyObject* self, PyObject* noarg) {
+      static PyObject* BitsVector_getHigh(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint32(PyBitvector_AsHigh(self));
+          return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getHigh());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -80,9 +86,9 @@ namespace triton {
       }
 
 
-      static PyObject* Bitvector_getLow(PyObject* self, PyObject* noarg) {
+      static PyObject* BitsVector_getLow(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint32(PyBitvector_AsLow(self));
+          return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getLow());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -90,10 +96,9 @@ namespace triton {
       }
 
 
-      static PyObject* Bitvector_getVectorSize(PyObject* self, PyObject* noarg) {
+      static PyObject* BitsVector_getMaxValue(PyObject* self, PyObject* noarg) {
         try {
-          triton::uint32 vectorSize = ((PyBitvector_AsHigh(self) - PyBitvector_AsLow(self)) + 1);
-          return PyLong_FromUint32(vectorSize);
+          return PyLong_FromUint512(PyBitsVector_AsBitsVector(self)->getMaxValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -101,15 +106,29 @@ namespace triton {
       }
 
 
-      static int Bitvector_print(PyObject* self) {
-        std::cout << "bv[" << std::dec << PyBitvector_AsHigh(self) << ".." << PyBitvector_AsLow(self) << "]";
+      static PyObject* BitsVector_getVectorSize(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getVectorSize());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static int BitsVector_print(PyObject* self) {
+        triton::uint32 high = PyBitsVector_AsBitsVector(self)->getHigh();
+        triton::uint32 low  = PyBitsVector_AsBitsVector(self)->getLow();
+        std::cout << "bv[" << std::dec << high << ".." << low << "]";
         return 0;
       }
 
 
-      static PyObject* Bitvector_str(PyObject* self) {
+      static PyObject* BitsVector_str(PyObject* self) {
         try {
-          return PyString_FromFormat("bv[%d..%d]", PyBitvector_AsHigh(self), PyBitvector_AsLow(self));
+          triton::uint32 high = PyBitsVector_AsBitsVector(self)->getHigh();
+          triton::uint32 low  = PyBitsVector_AsBitsVector(self)->getLow();
+          return PyString_FromFormat("bv[%d..%d]", high, low);
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -117,23 +136,24 @@ namespace triton {
       }
 
 
-      //! Bitvector methods.
-      PyMethodDef Bitvector_callbacks[] = {
-        {"getHigh",       Bitvector_getHigh,        METH_NOARGS,     ""},
-        {"getLow",        Bitvector_getLow,         METH_NOARGS,     ""},
-        {"getVectorSize", Bitvector_getVectorSize,  METH_NOARGS,     ""},
-        {nullptr,         nullptr,                  0,               nullptr}
+      //! BitsVector methods.
+      PyMethodDef BitsVector_callbacks[] = {
+        {"getHigh",         BitsVector_getHigh,         METH_NOARGS,    ""},
+        {"getLow",          BitsVector_getLow,          METH_NOARGS,    ""},
+        {"getMaxValue",     BitsVector_getMaxValue,     METH_NOARGS,    ""},
+        {"getVectorSize",   BitsVector_getVectorSize,   METH_NOARGS,    ""},
+        {nullptr,           nullptr,                    0,              nullptr}
       };
 
 
-      PyTypeObject Bitvector_Type = {
+      PyTypeObject BitsVector_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
-        "Bitvector",                                /* tp_name */
-        sizeof(Bitvector_Object),                   /* tp_basicsize */
+        "BitsVector",                               /* tp_name */
+        sizeof(BitsVector_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        (destructor)Bitvector_dealloc,              /* tp_dealloc */
-        (printfunc)Bitvector_print,                 /* tp_print */
+        (destructor)BitsVector_dealloc,             /* tp_dealloc */
+        (printfunc)BitsVector_print,                /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -143,19 +163,19 @@ namespace triton {
         0,                                          /* tp_as_mapping */
         0,                                          /* tp_hash */
         0,                                          /* tp_call */
-        (reprfunc)Bitvector_str,                    /* tp_str */
+        (reprfunc)BitsVector_str,                   /* tp_str */
         0,                                          /* tp_getattro */
         0,                                          /* tp_setattro */
         0,                                          /* tp_as_buffer */
         Py_TPFLAGS_DEFAULT,                         /* tp_flags */
-        "Bitvector objects",                        /* tp_doc */
+        "BitsVector objects",                       /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
         0,                                          /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
-        Bitvector_callbacks,                        /* tp_methods */
+        BitsVector_callbacks,                       /* tp_methods */
         0,                                          /* tp_members */
         0,                                          /* tp_getset */
         0,                                          /* tp_base */
@@ -178,43 +198,17 @@ namespace triton {
       };
 
 
-      PyObject* PyBitvector(const triton::arch::Immediate& imm) {
-        Bitvector_Object* object;
+      template PyObject* PyBitsVector(const triton::arch::Immediate& op);
+      template PyObject* PyBitsVector(const triton::arch::MemoryAccess& op);
+      template PyObject* PyBitsVector(const triton::arch::Register& op);
+      template <typename T>
+      PyObject* PyBitsVector(const T& op) {
+        BitsVector_Object* object;
 
-        PyType_Ready(&Bitvector_Type);
-        object = PyObject_NEW(Bitvector_Object, &Bitvector_Type);
-        if (object != NULL) {
-          object->high = imm.getHigh();
-          object->low  = imm.getLow();
-        }
-
-        return (PyObject*)object;
-      }
-
-
-      PyObject* PyBitvector(const triton::arch::MemoryAccess& mem) {
-        Bitvector_Object* object;
-
-        PyType_Ready(&Bitvector_Type);
-        object = PyObject_NEW(Bitvector_Object, &Bitvector_Type);
-        if (object != NULL) {
-          object->high = mem.getHigh();
-          object->low  = mem.getLow();
-        }
-
-        return (PyObject*)object;
-      }
-
-
-      PyObject* PyBitvector(const triton::arch::Register& reg) {
-        Bitvector_Object* object;
-
-        PyType_Ready(&Bitvector_Type);
-        object = PyObject_NEW(Bitvector_Object, &Bitvector_Type);
-        if (object != NULL) {
-          object->high = reg.getHigh();
-          object->low  = reg.getLow();
-        }
+        PyType_Ready(&BitsVector_Type);
+        object = PyObject_NEW(BitsVector_Object, &BitsVector_Type);
+        if (object != NULL)
+          object->bv = new triton::arch::BitsVector(op);
 
         return (PyObject*)object;
       }

@@ -58,7 +58,7 @@ def cafter(instruction):
     if instruction.getAddress() == 0x4005ce:
         print '[+] Please wait, computing in progress...'
         raxId = Triton.getSymbolicRegisterId(Triton.registers.rax)
-        raxExpr = Triton.getFullAstFromId(raxId)
+        raxExpr = Triton.getAstFromId(raxId)
 
         SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')
         SymVar_1 = Triton.getSymbolicVariableFromName('SymVar_1')
@@ -69,18 +69,18 @@ def cafter(instruction):
         astCtxt = Triton.getAstContext()
 
         # We want printable characters
-        expr = astCtxt.compound([
-                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_0), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_0), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_1), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_1), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_2), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_2), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_3), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_3), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvugt(astCtxt.variable(SymVar_4), astCtxt.bv(96,  CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.bvult(astCtxt.variable(SymVar_4), astCtxt.bv(123, CPUSIZE.QWORD_BIT))),
-                 astCtxt.assert_(astCtxt.equal(raxExpr, astCtxt.bv(0xad6d, CPUSIZE.QWORD_BIT)))  # collision: (assert (= rax 0xad6d)
+        expr = astCtxt.land([
+                 astCtxt.bvugt(astCtxt.variable(SymVar_0), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvult(astCtxt.variable(SymVar_0), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvugt(astCtxt.variable(SymVar_1), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvult(astCtxt.variable(SymVar_1), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvugt(astCtxt.variable(SymVar_2), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvult(astCtxt.variable(SymVar_2), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvugt(astCtxt.variable(SymVar_3), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvult(astCtxt.variable(SymVar_3), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvugt(astCtxt.variable(SymVar_4), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
+                 astCtxt.bvult(astCtxt.variable(SymVar_4), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
+                 astCtxt.equal(raxExpr, astCtxt.bv(0xad6d, CPUSIZE.QWORD_BIT)) # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models

@@ -77,7 +77,7 @@ True
 Returns the size (in bits) of the immediate.<br>
 e.g: `64`
 
-- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+- <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector.
 
 - <b>integer getSize(void)</b><br>
@@ -111,7 +111,7 @@ namespace triton {
 
       static PyObject* Immediate_getBitvector(PyObject* self, PyObject* noarg) {
         try {
-          return PyBitvector(*PyImmediate_AsImmediate(self));
+          return PyBitsVector(*PyImmediate_AsImmediate(self));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

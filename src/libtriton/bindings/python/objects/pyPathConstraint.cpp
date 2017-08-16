@@ -46,12 +46,12 @@ This object is used to represent a path constraint.
 ...         seed = list()
 ...
 ...         # Branch 1, we assume that the path constraint contains a symbolic variable
-...         models  = ctxt.getModel(astCtxt.assert_(b1))
+...         models  = ctxt.getModel(b)
 ...         for k, v in models.items():
 ...             seed.append(v)
 ...
 ...         # Branch 2, we assume that the path constraint contains a symbolic variable.
-...         models  = ctxt.getModel(astCtxt.assert_(b2))
+...         models  = ctxt.getModel(b2)
 ...         for k, v in models.items():
 ...             seed.append(v)
 ...

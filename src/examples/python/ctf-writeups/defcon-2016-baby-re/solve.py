@@ -205,12 +205,10 @@ def emulate(Triton, pc):
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
-            cstr  = astCtxt.assert_(
-                        astCtxt.land(
-                            Triton.getPathConstraintsAst(),
-                            astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
-                        )
-                    )
+            cstr  = astCtxt.land([
+                        Triton.getPathConstraintsAst(),
+                        astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
+                    ])
 
             print '[+] Asking for a model, please wait...'
             model = Triton.getModel(cstr)

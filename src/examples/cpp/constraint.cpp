@@ -2,7 +2,7 @@
 ** Output:
 **
 **  RAX expr: (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64))
-**  constraint: (assert (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64)))
+**  constraint: (= (bvxor ((_ extract 63 0) SymVar_0) (_ bv287454020 64)) (_ bv0 64))
 **  Model:
 **    - Variable id  : 0
 **    - Variable name: SymVar_0
@@ -63,7 +63,7 @@ int main(int ac, const char **av) {
   auto& C = api.getAstContext();
 
   /* Modify RAX's AST to build the constraint */
-  auto constraint = C.assert_(C.equal(raxFullAst, C.bv(0, raxFullAst->getBitvectorSize())));
+  auto constraint = C.equal(raxFullAst, C.bv(0, raxFullAst->getBitvectorSize()));
 
   /* Display the AST */
   std::cout << "constraint: " << constraint << std::endl;

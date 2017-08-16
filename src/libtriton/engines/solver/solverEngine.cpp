@@ -10,7 +10,6 @@
 #include <triton/exceptions.hpp>
 #include <triton/solverEngine.hpp>
 #include <triton/tritonToZ3Ast.hpp>
-#include <triton/z3Result.hpp>
 
 
 
@@ -67,24 +66,24 @@ returns a list of triton::engines::solver::SolverModel. Each model for a symboli
 For example, if there are two symbolic variables in your constraint, the triton::API::getModel() function will return a list of two items.
 
 ~~~~~~~~~~~~~{cpp}
-  // Get the symbolic id of RAX
-  auto raxSymId = api.getSymbolicRegisterId(TRITON_X86_REG_RAX);
+// Get the symbolic id of RAX
+auto raxSymId = api.getSymbolicRegisterId(TRITON_X86_REG_RAX);
 
-  // Get the full AST of RAX
-  auto raxFullAst = api.getFullAstFromId(raxSymId);
+// Get the full AST of RAX
+auto raxFullAst = api.getFullAstFromId(raxSymId);
 
-  // Modify the AST of RAX to build the constraint
-  auto constraint = triton::ast::assert_(triton::ast::equal(raxFullAst, triton::ast::bv(0, raxFullAst->getBitvectorSize())));
+// Modify the AST of RAX to build the constraint
+auto constraint = triton::ast::equal(raxFullAst, triton::ast::bv(0, raxFullAst->getBitvectorSize()));
 
-  // Ask a model
-  auto model = api.getModel(constraint);
+// Ask a model
+auto model = api.getModel(constraint);
 
-  // Display all symbolic variable value contained in the model
-  std::cout << "Model:" << std::endl;
-  for (auto it = model.begin(); it != model.end(); it++) {
-    std::cout << "  - Variable: " << it->getName() << std::endl;
-    std::cout << "  - Value   : " << std::hex << it->getValue() << std::endl;
-  }
+// Display all symbolic variable value contained in the model
+std::cout << "Model:" << std::endl;
+for (auto it = model.begin(); it != model.end(); it++) {
+  std::cout << "  - Variable: " << it->getName() << std::endl;
+  std::cout << "  - Value   : " << std::hex << it->getValue() << std::endl;
+}
 ~~~~~~~~~~~~~
 
 */
@@ -114,38 +113,19 @@ namespace triton {
       }
 
 
-      SolverEngine::~SolverEngine() {
-      }
-
-
       std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
-        std::ostringstream formula;
-        z3::context ctx;
-        z3::solver solver(ctx);
-        triton::uint32 representationMode = triton::ast::representations::astRepresentation.getMode();
+        triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+
+        z3::expr      expr = z3Ast.convert(node);
+        z3::context&  ctx  = z3Ast.getContext();
+        z3::solver    solver(ctx);
 
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
 
-        /* Switch into the SMT mode */
-        triton::ast::representations::astRepresentation.setMode(triton::ast::representations::SMT_REPRESENTATION);
-
-        /* First, set the QF_AUFBV flag  */
-        formula << "(set-logic QF_BV)";
-
-        /* Then, delcare all symbolic variables */
-        formula << this->symbolicEngine->getVariablesDeclaration();
-
-        /* And concat the user expression */
-        formula << this->symbolicEngine->getFullAst(node);
-
-        /* Create the context and AST */
-        Z3_ast ast = Z3_parse_smtlib2_string(ctx, formula.str().c_str(), 0, 0, 0, 0, 0, 0);
-        z3::expr eq(ctx, ast);
-
         /* Create a solver and add the expression */
-        solver.add(eq);
+        solver.add(expr);
 
         /* Check if it is sat */
         while (solver.check() == z3::sat && limit >= 1) {
@@ -198,9 +178,6 @@ namespace triton {
           /* Decrement the limit */
           limit--;
         }
-
-        /* Restore the representation mode */
-        triton::ast::representations::astRepresentation.setMode(representationMode);
 
         return ret;
       }

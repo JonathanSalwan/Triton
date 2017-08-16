@@ -45,9 +45,9 @@ True
 (bvxor SymVar_0 (_ bv287454020 64))
 
 >>> astCtxt = ctxt.getAstContext()
->>> constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(0, raxAst.getBitvectorSize())))
+>>> constraint = astCtxt.equal(raxAst, astCtxt.bv(0, raxAst.getBitvectorSize()))
 >>> print constraint
-(assert (= (bvxor SymVar_0 (_ bv287454020 64)) (_ bv0 64)))
+(= (bvxor SymVar_0 (_ bv287454020 64)) (_ bv0 64))
 
 >>> model = ctxt.getModel(constraint)
 >>> print model #doctest: +ELLIPSIS

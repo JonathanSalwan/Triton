@@ -77,7 +77,7 @@ def cafter(instruction):
         zfId    = Triton.getSymbolicRegisterId(Triton.registers.zf)
         zfExpr  = Triton.getFullAstFromId(zfId)
         astCtxt = Triton.getAstContext();
-        expr    = astCtxt.assert_(astCtxt.equal(zfExpr, astCtxt.bvtrue())) # (assert (= zf True))
+        expr    = astCtxt.equal(zfExpr, astCtxt.bvtrue()) # (= zf True)
         models  = Triton.getModel(expr)
         global password
         for k, v in models.items():

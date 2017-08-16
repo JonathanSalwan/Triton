@@ -83,7 +83,7 @@ rax:64 bv[63..0]
 Returns the size (in bits) of the register.<br>
 e.g: `64`
 
-- <b>\ref py_Bitvector_page getBitvector(void)</b><br>
+- <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector of the register.
 
 - <b>\ref py_REG_page getId(void)</b><br>
@@ -132,7 +132,7 @@ namespace triton {
 
       static PyObject* Register_getBitvector(PyObject* self, PyObject* noarg) {
         try {
-          return PyBitvector(*PyRegister_AsRegister(self));
+          return PyBitsVector(*PyRegister_AsRegister(self));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

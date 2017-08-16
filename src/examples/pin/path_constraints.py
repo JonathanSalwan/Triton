@@ -83,12 +83,12 @@ def fini():
             seed = list()
 
             # Branch 1
-            models  = Triton.getModel(astCtxt.assert_(b1))
+            models  = Triton.getModel(b1)
             for k, v in models.items():
                 seed.append(v)
 
             # Branch 2
-            models  = Triton.getModel(astCtxt.assert_(b2))
+            models  = Triton.getModel(b2)
             for k, v in models.items():
                 seed.append(v)
 

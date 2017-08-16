@@ -330,7 +330,7 @@ namespace triton {
   }
 
 
-  void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, triton::uint512 value) {
+  void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
     this->arch.setConcreteMemoryValue(mem, value);
   }
 
@@ -345,7 +345,7 @@ namespace triton {
   }
 
 
-  void API::setConcreteRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
+  void API::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
     this->arch.setConcreteRegisterValue(reg, value);
   }
 
@@ -798,9 +798,15 @@ namespace triton {
   }
 
 
+  const triton::uint512& API::getConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const {
+    this->checkSymbolic();
+    return this->symbolic->getConcreteSymbolicVariableValue(symVar);
+  }
+
+
   void API::setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
     this->checkSymbolic();
-    return this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
+    this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
   }
 
 
