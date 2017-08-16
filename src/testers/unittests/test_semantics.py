@@ -74,7 +74,6 @@ class TestIR(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
             self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
 
     def test_ir(self):
@@ -217,7 +216,6 @@ class TestIRQemu(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
             self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
         return binary
 
