@@ -38,10 +38,8 @@ namespace triton {
         //! Symbolic Engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
+        //! The Triton's AST context
         triton::ast::AstContext& astCtxt;
-
-        //! Vists and converts
-        triton::ast::AbstractNode* visit(const z3::expr& expr);
 
       public:
         //! Constructor.
