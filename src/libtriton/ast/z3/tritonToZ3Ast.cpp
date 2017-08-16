@@ -46,11 +46,6 @@ namespace triton {
     }
 
 
-    z3::context& TritonToZ3Ast::getContext(void) {
-      return this->context;
-    }
-
-
     z3::expr TritonToZ3Ast::convert(triton::ast::AbstractNode* node) {
       if (node == nullptr)
         throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): node cannot be null.");

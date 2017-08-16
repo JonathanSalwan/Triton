@@ -46,7 +46,7 @@ namespace triton {
       z3::expr expr = z3ast.convert(node);
 
       /* Evaluate expr over the simplify function */
-      triton::uint512 nbResult{Z3_get_numeral_string(z3ast.getContext(), expr.simplify())};
+      triton::uint512 nbResult{Z3_get_numeral_string(expr.ctx(), expr.simplify())};
 
       return nbResult;
     }

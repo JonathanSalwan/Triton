@@ -58,9 +58,6 @@ namespace triton {
         //! Constructor.
         TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval=true);
 
-        //! Returns context
-        z3::context& getContext(void);
-
         //! Converts to Z3's AST
         z3::expr convert(triton::ast::AbstractNode* node);
     };
