@@ -18,7 +18,7 @@
 import sys
 import string
 
-from triton import ARCH, TritonContext, Elf, CPUSIZE, MemoryAccess, Instruction, OPCODE
+from triton import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
 
 
 # Script options
@@ -265,17 +265,17 @@ def emulate(pc):
     return
 
 
-def loadBinary(binary):
-    # Map the binary into the memory
-    raw = binary.getRaw()
-    phdrs = binary.getProgramHeaders()
+def loadBinary(filename):
+    """Load in memory every opcode from an elf program."""
+    import lief
+    binary = lief.parse(filename)
+    phdrs  = binary.segments
     for phdr in phdrs:
-        offset = phdr.getOffset()
-        size   = phdr.getFilesz()
-        vaddr  = phdr.getVaddr()
+        size   = phdr.physical_size
+        vaddr  = phdr.virtual_address
         debug('Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
-        Triton.setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
-    return
+        Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+    return binary
 
 
 def makeRelocation(binary):
@@ -284,11 +284,9 @@ def makeRelocation(binary):
         customRelocation[pltIndex][2] = BASE_PLT + pltIndex
 
     # Perform our own relocations
-    symbols = binary.getSymbolsTable()
-    relocations = binary.getRelocationTable()
-    for rel in relocations:
-        symbolName = symbols[rel.getSymidx()].getName()
-        symbolRelo = rel.getOffset()
+    for rel in binary.pltgot_relocations:
+        symbolName = rel.symbol.name
+        symbolRelo = rel.address
         for crel in customRelocation:
             if symbolName == crel[0]:
                 debug('Hooking %s' %(symbolName))
@@ -311,11 +309,8 @@ if __name__ == '__main__':
         print 'Syntax: %s ./rvs' %(sys.argv[0])
         sys.exit(1)
 
-    # Parse the binary
-    binary = Elf(sys.argv[1])
-
     # Load the binary
-    loadBinary(binary)
+    binary = loadBinary(sys.argv[1])
 
     # Perform our own relocations
     makeRelocation(binary)
@@ -326,7 +321,7 @@ if __name__ == '__main__':
 
     # Let's emulate the binary from the entry point
     debug('Starting emulation')
-    emulate(binary.getHeader().getEntry())
+    emulate(binary.entrypoint)
     debug('Emulation done')
 
     sys.exit(0)

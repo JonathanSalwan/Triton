@@ -63,7 +63,7 @@ import os
 import sys
 import string
 
-from triton import TritonContext, ARCH, CPUSIZE, MemoryAccess, OPCODE, Elf, Instruction
+from triton import TritonContext, ARCH, CPUSIZE, MemoryAccess, OPCODE, Instruction
 
 Triton = TritonContext()
 
@@ -225,26 +225,23 @@ def emulate(pc):
     return
 
 
-def loadBinary(binary):
-    # Map the binary into the memory
-    raw = binary.getRaw()
-    phdrs = binary.getProgramHeaders()
+def loadBinary(path):
+    import lief
+    binary = lief.parse(path)
+    phdrs  = binary.segments
     for phdr in phdrs:
-        offset = phdr.getOffset()
-        size   = phdr.getFilesz()
-        vaddr  = phdr.getVaddr()
+        size   = phdr.physical_size
+        vaddr  = phdr.virtual_address
         print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
-        Triton.setConcreteMemoryAreaValue(vaddr, raw[offset:offset+size])
-    return
+        Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+    return binary
 
 
 def makeRelocation(binary):
     # Perform our own relocations
-    symbols = binary.getSymbolsTable()
-    relocations = binary.getRelocationTable()
-    for rel in relocations:
-        symbolName = symbols[rel.getSymidx()].getName()
-        symbolRelo = rel.getOffset()
+    for rel in binary.pltgot_relocations:
+        symbolName = rel.symbol.name
+        symbolRelo = rel.address
         for crel in customRelocation:
             if symbolName == crel[0]:
                 print '[+] Hooking %s' %(symbolName)
@@ -256,11 +253,8 @@ if __name__ == '__main__':
     # Set the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
-    # Parse the binary
-    binary = Elf(os.path.join(os.path.dirname(__file__), 'samples', 'sample_1'))
-
     # Load the binary
-    loadBinary(binary)
+    binary = loadBinary(os.path.join(os.path.dirname(__file__), 'samples', 'sample_1'))
 
     # Perform our own relocations
     makeRelocation(binary)
@@ -270,7 +264,7 @@ if __name__ == '__main__':
     Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x6fffffff)
 
     # Let's emulate the binary from the entry point
-    emulate(binary.getHeader().getEntry())
+    emulate(binary.entrypoint)
 
     sys.exit(0)
 
