@@ -13,12 +13,15 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      CovTag::CovTag() {
+      CovTag::CovTag() : TagType() {
         this->addr = 0;
         this->truth = false;
       }
 
-      CovTag::CovTag(CovTag& tag): TagType(tag) {
+      CovTag::~CovTag() {
+      }
+
+      CovTag::CovTag(CovTag const& tag) : TagType() {
         this->addr = tag.addr;
         this->truth = tag.truth;
       }
@@ -28,12 +31,19 @@ namespace triton {
         this->truth = truth;
       }
 
-      triton::uint64 CovTag::getAddress() {
+      triton::uint64 CovTag::getAddress() const {
         return this->addr;
       }
 
-      bool CovTag::getTruthValue() {
+      bool CovTag::getTruthValue() const {
         return this->truth;
+      }
+
+      std::string CovTag::toString() const {
+        std::stringstream ss;
+        ss << "CovTag(addr: " << this->getAddress()
+          << ", truth: " << this->getTruthValue() << ")";
+        return ss.str();
       }
 
     }; /* taint namespace */
