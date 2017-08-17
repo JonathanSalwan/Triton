@@ -84,6 +84,7 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
+    engines/taint/covTag.cpp
     format/abstractBinary.cpp
     format/elf/elf.cpp
     format/elf/elfDynamicTable.cpp
