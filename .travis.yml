@@ -100,7 +100,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7 ]
+          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
 
         # OSX xcode 7.3
         - os: osx
