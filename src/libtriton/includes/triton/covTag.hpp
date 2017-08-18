@@ -69,6 +69,8 @@ namespace triton {
           /*! Returns the truth value which was evaluated at the point where
            * this tag was generated */
           bool getTruthValue() const;
+
+          long getHash() const;
       };
 
 

@@ -29,7 +29,7 @@
 #include <triton/solverModel.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-
+#include <triton/covTag.hpp>
 
 
 //! The Triton namespace
@@ -152,6 +152,10 @@ namespace triton {
 
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
+
+      //! Creates the CovTag python class.
+      PyObject* PyCovTag(const triton::engines::taint::CovTag& tag);
+
 
       /* AstNode ======================================================== */
 
@@ -441,6 +445,17 @@ namespace triton {
       //! pySymbolicVariable type.
       extern PyTypeObject SymbolicVariable_Type;
 
+      /* CovTag ========================================================== */
+      //TODO
+      //! pyCovTag object.
+      typedef struct {
+        PyObject_HEAD
+        triton::engines::taint::CovTag* tag; //! Pointer to the tag type
+      } CovTag_Object;
+
+      //! pyRegister type.
+      extern PyTypeObject CovTag_Type;
+
     /*! @} End of python namespace */
     };
   /*! @} End of bindings namespace */
@@ -607,5 +622,11 @@ namespace triton {
 
 /*! Returns the triton::engines::symbolic::SymbolicVariable. */
 #define PySymbolicVariable_AsSymbolicVariable(v) (((triton::bindings::python::SymbolicVariable_Object*)(v))->symVar)
+
+/*! Checks if the pyObject is a triton::engines::taint::CovTag. */
+#define PyCovTag_Check(v) ((v)->ob_type == &triton::bindings::python::CovTag_Type)
+
+/*! Returns the triton::engines::taint::CovTag . */
+#define PyCovTag_AsCovTag(v) (((triton::bindings::python::CovTag_Object*)(v))->tag)
 
 #endif /* TRITON_PYOBJECT_H */
