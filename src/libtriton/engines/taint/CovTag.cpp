@@ -46,6 +46,12 @@ namespace triton {
         return ss.str();
       }
 
+      long CovTag::getHash() const {
+        triton::uint64 hash = this->getAddress() * 10;
+        int b = this->getTruthValue() ? 1 : 0;
+        return hash + b;
+      }
+
     }; /* taint namespace */
   }; /* engines namespace */
 }; /* triton namespace */

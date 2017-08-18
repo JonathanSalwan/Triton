@@ -829,7 +829,6 @@ namespace triton {
 
 
       std::set<TagType*> TaintEngine::getTags(const triton::uint64 addr, const triton::uint32 size) {
-        // TODO: tags from a range of memory
         std::set<TagType*> tagSet;
         for (triton::uint32 index = 0; index < size; index++) {
           /* collect all the tags in a given memory range */
