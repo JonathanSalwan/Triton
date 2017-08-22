@@ -10,7 +10,7 @@
 #include <iostream>
 #include <triton/api.hpp>
 #include <triton/x86Specifications.hpp>
-#include <triton/covTag.hpp>
+#include <triton/taintTag.hpp>
 
 using namespace triton;
 using namespace triton::arch;
@@ -22,8 +22,9 @@ void printRegInfo(std::string regName, triton::arch::Register reg) {
   std::cout << regName<< " tainted? "<< api.isRegisterTainted(reg) << std::endl;
   std::cout<< regName<< " tags: ";
   auto tags = api.getTags(reg);
-  for (auto tag : tags) {
-    std::cout << *tag << " ";
+  for (auto t : tags) {
+    auto tag = (std::pair<long,bool>*) t->getData();
+    std::cout << "(" << tag->first << "," << tag->second << ") ";
   }
   std::cout<< std::endl<< std::endl;
 }
@@ -34,7 +35,8 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   /* create a tag */
-  auto ctag = new triton::engines::taint::CovTag(99, true);
+  std::pair<long, bool> tag(99, true);
+  auto ctag = new triton::engines::taint::TaintTag(&tag);
 
   /* Taint the RAX */
   api.taintRegister(api.getRegister(ID_REG_RAX), ctag);
