@@ -14,6 +14,7 @@
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
+#include <triton/covTag.hpp>
 
 
 
@@ -141,12 +142,36 @@ namespace triton {
         }
       }
 
+      static PyObject* triton_CovTag(PyObject* self, PyObject* args) {
+        PyObject* address       = nullptr;
+        PyObject* truth         = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &address, &truth);
+
+        /* Check if the first arg is a integer */
+        if (address == nullptr || (!PyLong_Check(address) && !PyInt_Check(address)))
+          return PyErr_Format(PyExc_TypeError, "CovTag(): Expects an integer as the first argument.");
+
+        /* Check if the second arg is a integer */
+        if (truth == nullptr || (!PyBool_Check(truth) && !PyInt_Check(truth)))
+          return PyErr_Format(PyExc_TypeError, "CovTag(): Expects a Boolean as the second argument.");
+
+        try {
+          triton::engines::taint::CovTag tag(PyLong_AsUint64(address), PyObject_IsTrue(truth));
+          return PyCovTag(tag);
+        } catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
 
       PyMethodDef tritonCallbacks[] = {
         {"Immediate",       (PyCFunction)triton_Immediate,        METH_VARARGS,   ""},
         {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
         {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},
         {"TritonContext",   (PyCFunction)triton_TritonContext,    METH_VARARGS,   ""},
+        {"CovTag",          (PyCFunction)triton_CovTag,           METH_VARARGS,   ""},
         {nullptr,           nullptr,                              0,              nullptr}
       };
 
