@@ -1081,7 +1081,7 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(triton::uint64 addr, triton::engines::taint::TagType* tag) {
+  bool API::taintMemory(triton::uint64 addr, triton::engines::taint::TaintTag* tag) {
     this->checkTaint();
     return this->taint->taintMemory(addr, tag);
   }
@@ -1093,7 +1093,7 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::TagType* tag) {
+  bool API::taintMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::TaintTag* tag) {
     this->checkTaint();
     return this->taint->taintMemory(mem, tag);
   }
@@ -1105,7 +1105,7 @@ namespace triton {
   }
 
 
-  bool API::taintRegister(const triton::arch::Register& reg, triton::engines::taint::TagType* tag) {
+  bool API::taintRegister(const triton::arch::Register& reg, triton::engines::taint::TaintTag* tag) {
     this->checkTaint();
     return this->taint->taintRegister(reg, tag);
   }
@@ -1213,19 +1213,19 @@ namespace triton {
   }
 
 
-  std::set<triton::engines::taint::TagType*> API::getTags(const triton::arch::Register& reg) {
+  std::set<triton::engines::taint::TaintTag*> API::getTags(const triton::arch::Register& reg) {
     this->checkTaint();
     return this->taint->getTags(reg);
   }
 
 
-  std::set<triton::engines::taint::TagType*> API::getTags(const triton::arch::MemoryAccess& mem) {
+  std::set<triton::engines::taint::TaintTag*> API::getTags(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->getTags(mem);
   }
 
 
-  std::set<triton::engines::taint::TagType*> API::getTags(const triton::uint64 addr, const triton::uint32 size) {
+  std::set<triton::engines::taint::TaintTag*> API::getTags(const triton::uint64 addr, const triton::uint32 size) {
     this->checkTaint();
     return this->taint->getTags(addr, size);
   }

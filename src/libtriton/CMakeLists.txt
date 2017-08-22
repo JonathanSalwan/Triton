@@ -84,7 +84,7 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
-    engines/taint/covTag.cpp
+    engines/taint/taintTag.cpp
     format/abstractBinary.cpp
     format/elf/elf.cpp
     format/elf/elfDynamicTable.cpp
@@ -153,7 +153,7 @@ if(PYTHON_BINDINGS)
         bindings/python/objects/pySymbolicExpression.cpp
         bindings/python/objects/pySymbolicVariable.cpp
         bindings/python/objects/pyTritonContext.cpp
-        bindings/python/objects/pyCovTag.cpp
+        bindings/python/objects/pyTaintTag.cpp
         bindings/python/pyXFunctions.cpp
         bindings/python/utils.cpp
     )

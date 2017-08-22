@@ -29,7 +29,7 @@
 #include <triton/solverModel.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/covTag.hpp>
+#include <triton/taintTag.hpp>
 
 
 //! The Triton namespace
@@ -153,8 +153,8 @@ namespace triton {
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
 
-      //! Creates the CovTag python class.
-      PyObject* PyCovTag(const triton::engines::taint::CovTag& tag);
+      //! Creates the TaintTag python class.
+      PyObject* PyTaintTag(const triton::engines::taint::TaintTag& tag);
 
 
       /* AstNode ======================================================== */
@@ -445,16 +445,16 @@ namespace triton {
       //! pySymbolicVariable type.
       extern PyTypeObject SymbolicVariable_Type;
 
-      /* CovTag ========================================================== */
+      /* TaintTag ========================================================== */
       //TODO
-      //! pyCovTag object.
+      //! pyTaintTag object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::taint::CovTag* tag; //! Pointer to the tag type
-      } CovTag_Object;
+        triton::engines::taint::TaintTag* tag; //! Pointer to the tag type
+      } TaintTag_Object;
 
       //! pyRegister type.
-      extern PyTypeObject CovTag_Type;
+      extern PyTypeObject TaintTag_Type;
 
     /*! @} End of python namespace */
     };
@@ -623,10 +623,10 @@ namespace triton {
 /*! Returns the triton::engines::symbolic::SymbolicVariable. */
 #define PySymbolicVariable_AsSymbolicVariable(v) (((triton::bindings::python::SymbolicVariable_Object*)(v))->symVar)
 
-/*! Checks if the pyObject is a triton::engines::taint::CovTag. */
-#define PyCovTag_Check(v) ((v)->ob_type == &triton::bindings::python::CovTag_Type)
+/*! Checks if the pyObject is a triton::engines::taint::TaintTag. */
+#define PyTaintTag_Check(v) ((v)->ob_type == &triton::bindings::python::TaintTag_Type)
 
-/*! Returns the triton::engines::taint::CovTag . */
-#define PyCovTag_AsCovTag(v) (((triton::bindings::python::CovTag_Object*)(v))->tag)
+/*! Returns the triton::engines::taint::TaintTag . */
+#define PyTaintTag_AsTaintTag(v) (((triton::bindings::python::TaintTag_Object*)(v))->tag)
 
 #endif /* TRITON_PYOBJECT_H */
