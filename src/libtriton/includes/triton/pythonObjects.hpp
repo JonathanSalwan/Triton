@@ -231,7 +231,6 @@ namespace triton {
       extern PyTypeObject SymbolicVariable_Type;
 
       /* TaintTag ========================================================== */
-      //TODO
       //! pyTaintTag object.
       typedef struct {
         PyObject_HEAD

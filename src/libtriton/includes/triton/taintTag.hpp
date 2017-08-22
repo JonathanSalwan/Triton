@@ -40,6 +40,7 @@ namespace triton {
      *  @{
      */
 
+      //! A wrapper class that encapsulates a generic pointer to enable any data to be "tagged" along with the taints.
       class TaintTag {
         private:
           void* data;
@@ -47,19 +48,16 @@ namespace triton {
         public:
           TaintTag();
 
+          //! Construct a TaintTag object by copying from an existing one.
           TaintTag(TaintTag const& tag);
 
+          //! Initialize a TaintTag with a generic pointer data
           TaintTag(void* data);
 
           ~TaintTag();
 
+          //! Retrieve the data; it is the user's responsibility to cast it back to its original data type
           void* getData();
-
-          //std::string toString() const;
-
-          //long hash() const;
-
-          //friend std::ostream& operator<<(std::ostream& ostrm, TaintTag const& tag);
       };
 
     /*! @} End of taint namespace */
