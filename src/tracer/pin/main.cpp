@@ -256,8 +256,9 @@ namespace tracer {
       /* Synchronize gliches between Pintool and libTriton */
       tracer::pintool::context::synchronizeContext();
 
-      /* Process the IR and taint */
-      tracer::pintool::api.buildSemantics(*tritonInst);
+      /* Process the IR and spread taint only if one of both engines are enabled */
+      if (tracer::pintool::api.isTaintEngineEnabled() || tracer::pintool::api.isSymbolicEngineEnabled())
+        tracer::pintool::api.buildSemantics(*tritonInst);
 
       /* Execute the Python callback */
       if (tracer::pintool::context::mustBeExecuted == false)

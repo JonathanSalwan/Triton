@@ -13,6 +13,8 @@ def mycb(inst):
 if __name__ == '__main__':
     # Set arch
     getTritonContext().setArchitecture(ARCH.X86_64)
+    getTritonContext().enableSymbolicEngine(False)
+    getTritonContext().enableTaintEngine(False)
 
     # Start JIT at the entry point
     startAnalysisFromEntry()
