@@ -142,22 +142,6 @@ namespace triton {
         }
       }
 
-      static PyObject* triton_TaintTag(PyObject* self, PyObject* args) {
-        PyObject* pDict = nullptr;
-
-        /* Extract arguments */
-        if (!PyArg_ParseTuple(args, "O!", &PyDict_Type, &pDict)) {
-          return PyErr_Format(PyExc_TypeError, \
-              "TaintTag(): Expects a dictionary as the first argument.");
-        }
-
-        try {
-          triton::engines::taint::TaintTag tag(pDict);
-          return PyTaintTag(tag);
-        } catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
 
       static PyObject* triton_TaintTag(PyObject* self, PyObject* args) {
         PyObject* pDict = nullptr;
