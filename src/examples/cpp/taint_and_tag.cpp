@@ -21,7 +21,7 @@ triton::API api;
 void printRegInfo(std::string regName, triton::arch::Register reg) {
   std::cout << regName<< " tainted? "<< api.isRegisterTainted(reg) << std::endl;
   std::cout<< regName<< " tags: ";
-  auto tags = api.getTags(reg);
+  auto tags = api.getTagsOnRegister(reg);
   for (auto t : tags) {
     auto tag = (std::pair<long,bool>*) t->getData();
     std::cout << "(" << tag->first << "," << tag->second << ") ";

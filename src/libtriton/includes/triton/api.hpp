@@ -661,13 +661,13 @@ namespace triton {
         /* Tags ============================================================ */
 
         //! [**taint api**] - Retrieve the tags assigned to a register
-        std::set<triton::engines::taint::Tag*> getTags(const triton::arch::Register& reg);
+        std::set<triton::engines::taint::Tag*> getTagsOnRegister(const triton::arch::Register& reg);
 
         //! [**taint api**] - Retrieve the tags assigned to a MemoryAccess
-        std::set<triton::engines::taint::Tag*> getTags(const triton::arch::MemoryAccess& mem);
+        std::set<triton::engines::taint::Tag*> getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem);
 
         //! [**taint api**] - Retrieve the tags assigned to a memory address
-        std::set<triton::engines::taint::Tag*> getTags(const triton::uint64 addr, const triton::uint32 size);
+        std::set<triton::engines::taint::Tag*> getTagsOnMemoryAddress(const triton::uint64 addr, const triton::uint32 size);
     };
 
 /*! @} End of triton namespace */

@@ -1219,19 +1219,19 @@ namespace triton {
   }
 
 
-  std::set<triton::engines::taint::Tag*> API::getTags(const triton::arch::Register& reg) {
+  std::set<triton::engines::taint::Tag*> API::getTagsOnRegister(const triton::arch::Register& reg) {
     this->checkTaint();
     return this->taint->getTags(reg);
   }
 
 
-  std::set<triton::engines::taint::Tag*> API::getTags(const triton::arch::MemoryAccess& mem) {
+  std::set<triton::engines::taint::Tag*> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->getTags(mem);
   }
 
 
-  std::set<triton::engines::taint::Tag*> API::getTags(const triton::uint64 addr, const triton::uint32 size) {
+  std::set<triton::engines::taint::Tag*> API::getTagsOnMemoryAddress(const triton::uint64 addr, const triton::uint32 size) {
     this->checkTaint();
     return this->taint->getTags(addr, size);
   }
