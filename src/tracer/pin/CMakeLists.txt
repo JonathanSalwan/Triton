@@ -2,6 +2,7 @@
 
 set(PROJECT_PINTOOL "pintool")
 add_definitions(-DTRITON_PINTOOL)
+include_directories(${Z3_INCLUDE_DIR})
 
 # Root directory of the Pin toolkit
 set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../.." CACHE PATH "Path to pin root directory")

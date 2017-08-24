@@ -1,3 +1,4 @@
+include_directories(${Z3_INCLUDE_DIR})
 enable_testing()
 
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
