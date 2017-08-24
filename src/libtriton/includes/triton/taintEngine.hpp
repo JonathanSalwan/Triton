@@ -14,7 +14,7 @@
 #include <triton/register.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/taintTag.hpp>
+#include <triton/tag.hpp>
 
 
 
@@ -74,10 +74,10 @@ namespace triton {
           std::set<triton::arch::registers_e> taintedRegisters;
 
           //! The map of memory address to assigned tags.
-          std::map<triton::uint64, std::set<TaintTag*>> memoryTagMap;
+          std::map<triton::uint64, std::set<Tag*>> memoryTagMap;
 
           //! The map of register to tags
-          std::map<triton::uint32, std::set<TaintTag*>> registerTagMap;
+          std::map<triton::uint32, std::set<Tag*>> registerTagMap;
 
           //! Copies a TaintEngine.
           void copy(const TaintEngine& other);
@@ -129,28 +129,28 @@ namespace triton {
           bool taintMemory(triton::uint64 addr);
 
           //! Taints an address and assign tags. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(triton::uint64 addr, std::set<TaintTag*> tags);
+          bool taintMemory(triton::uint64 addr, std::set<Tag*> tags);
 
           //! Taints an address and assign tags. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(triton::uint64 addr, TaintTag* tag);
+          bool taintMemory(triton::uint64 addr, Tag* tag);
 
           //! Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a memory and assign tags. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(const triton::arch::MemoryAccess& mem, std::set<TaintTag*> tags);
+          bool taintMemory(const triton::arch::MemoryAccess& mem, std::set<Tag*> tags);
 
           //! Taints a memory and assign tags. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(const triton::arch::MemoryAccess& mem, TaintTag* tag);
+          bool taintMemory(const triton::arch::MemoryAccess& mem, Tag* tag);
 
           //! Taints a register. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
           bool taintRegister(const triton::arch::Register& reg);
 
           //! Taints a register and assign tags. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintRegister(const triton::arch::Register& reg, std::set<TaintTag*> tags);
+          bool taintRegister(const triton::arch::Register& reg, std::set<Tag*> tags);
 
           //! Taints a register and assign tags. Returns TAINTED if the register has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintRegister(const triton::arch::Register& reg, TaintTag* tag);
+          bool taintRegister(const triton::arch::Register& reg, Tag* tag);
 
           //! Untaints an address. Returns !TAINTED if the address has been untainted correctly. Otherwise it returns the last defined state.
           bool untaintMemory(triton::uint64 addr);
@@ -204,13 +204,13 @@ namespace triton {
           bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
           //! Retrieve the tags assigned to a register
-          std::set<TaintTag*> getTags(const triton::arch::Register& reg);
+          std::set<Tag*> getTags(const triton::arch::Register& reg);
 
           //! Retrieve the tags assigned to a MemoryAccess
-          std::set<TaintTag*> getTags(const triton::arch::MemoryAccess& mem);
+          std::set<Tag*> getTags(const triton::arch::MemoryAccess& mem);
 
           //! Retrieve the tags assigned to a memory address
-          std::set<TaintTag*> getTags(const triton::uint64 addr, const triton::uint32 size);
+          std::set<Tag*> getTags(const triton::uint64 addr, const triton::uint32 size);
 
           //! Check if a register is tagged.
           bool isTagged(const triton::arch::Register& reg);

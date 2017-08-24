@@ -41,20 +41,20 @@ namespace triton {
      */
 
       //! A wrapper class that encapsulates a generic pointer to enable any data to be "tagged" along with the taints.
-      class TaintTag {
+      class Tag {
         private:
           void* data;
 
         public:
-          TaintTag();
+          Tag();
 
-          //! Construct a TaintTag object by copying from an existing one.
-          TaintTag(TaintTag const& tag);
+          //! Construct a Tag object by copying from an existing one.
+          Tag(Tag const& tag);
 
-          //! Initialize a TaintTag with a generic pointer data
-          TaintTag(void* data);
+          //! Initialize a Tag with a generic pointer data
+          Tag(void* data);
 
-          ~TaintTag();
+          ~Tag();
 
           //! Retrieve the data; it is the user's responsibility to cast it back to its original data type
           void* getData();

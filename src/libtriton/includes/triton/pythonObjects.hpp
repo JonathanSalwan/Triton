@@ -20,7 +20,7 @@
 #include <triton/solverModel.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/taintTag.hpp>
+#include <triton/tag.hpp>
 
 
 //! The Triton namespace
@@ -93,8 +93,8 @@ namespace triton {
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
 
-      //! Creates the TaintTag python class.
-      PyObject* PyTaintTag(const triton::engines::taint::TaintTag& tag);
+      //! Creates the Tag python class.
+      PyObject* PyTag(const triton::engines::taint::Tag& tag);
 
 
       /* AstNode ======================================================== */
@@ -230,15 +230,15 @@ namespace triton {
       //! pySymbolicVariable type.
       extern PyTypeObject SymbolicVariable_Type;
 
-      /* TaintTag ========================================================== */
-      //! pyTaintTag object.
+      /* Tag ========================================================== */
+      //! pyTag object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::taint::TaintTag* tag; //! Pointer to the tag type
-      } TaintTag_Object;
+        triton::engines::taint::Tag* tag; //! Pointer to the tag type
+      } Tag_Object;
 
       //! pyRegister type.
-      extern PyTypeObject TaintTag_Type;
+      extern PyTypeObject Tag_Type;
 
     /*! @} End of python namespace */
     };
@@ -404,10 +404,10 @@ namespace triton {
 /*! Returns the triton::engines::symbolic::SymbolicVariable. */
 #define PySymbolicVariable_AsSymbolicVariable(v) (((triton::bindings::python::SymbolicVariable_Object*)(v))->symVar)
 
-/*! Checks if the pyObject is a triton::engines::taint::TaintTag. */
-#define PyTaintTag_Check(v) ((v)->ob_type == &triton::bindings::python::TaintTag_Type)
+/*! Checks if the pyObject is a triton::engines::taint::Tag. */
+#define PyTag_Check(v) ((v)->ob_type == &triton::bindings::python::Tag_Type)
 
-/*! Returns the triton::engines::taint::TaintTag . */
-#define PyTaintTag_AsTaintTag(v) (((triton::bindings::python::TaintTag_Object*)(v))->tag)
+/*! Returns the triton::engines::taint::Tag . */
+#define PyTag_AsTag(v) (((triton::bindings::python::Tag_Object*)(v))->tag)
 
 #endif /* TRITON_PYOBJECT_H */

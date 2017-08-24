@@ -10,7 +10,7 @@
 #include <iostream>
 #include <triton/api.hpp>
 #include <triton/x86Specifications.hpp>
-#include <triton/taintTag.hpp>
+#include <triton/tag.hpp>
 
 using namespace triton;
 using namespace triton::arch;
@@ -36,7 +36,7 @@ int main(int ac, const char **av) {
 
   /* create a tag */
   std::pair<long, bool> tag(99, true);
-  auto ctag = new triton::engines::taint::TaintTag(&tag);
+  auto ctag = new triton::engines::taint::Tag(&tag);
 
   /* Taint the RAX */
   api.taintRegister(api.getRegister(ID_REG_RAX), ctag);

@@ -6,28 +6,28 @@
 */
 
 #include <triton/exceptions.hpp>
-#include <triton/taintTag.hpp>
+#include <triton/tag.hpp>
 
 
 namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintTag::TaintTag() {
+      Tag::Tag() {
       }
 
-      TaintTag::~TaintTag() {
+      Tag::~Tag() {
       }
 
-      TaintTag::TaintTag(TaintTag const& tag) {
+      Tag::Tag(Tag const& tag) {
         this->data = tag.data;
       }
 
-      TaintTag::TaintTag(void * data) {
+      Tag::Tag(void * data) {
         this->data = data;
       }
 
-      void* TaintTag::getData() {
+      void* Tag::getData() {
         return this->data;
       }
 

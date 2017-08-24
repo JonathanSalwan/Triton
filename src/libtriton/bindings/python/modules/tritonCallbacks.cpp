@@ -14,7 +14,7 @@
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
-#include <triton/taintTag.hpp>
+#include <triton/tag.hpp>
 
 
 
@@ -143,18 +143,18 @@ namespace triton {
       }
 
 
-      static PyObject* triton_TaintTag(PyObject* self, PyObject* args) {
+      static PyObject* triton_Tag(PyObject* self, PyObject* args) {
         PyObject* pDict = nullptr;
 
         /* Extract arguments */
         if (!PyArg_ParseTuple(args, "O!", &PyDict_Type, &pDict)) {
           return PyErr_Format(PyExc_TypeError, \
-              "TaintTag(): Expects a dictionary as the first argument.");
+              "Tag(): Expects a dictionary as the first argument.");
         }
 
         try {
-          triton::engines::taint::TaintTag tag(pDict);
-          return PyTaintTag(tag);
+          triton::engines::taint::Tag tag(pDict);
+          return PyTag(tag);
         } catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -166,7 +166,7 @@ namespace triton {
         {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
         {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},
         {"TritonContext",   (PyCFunction)triton_TritonContext,    METH_VARARGS,   ""},
-        {"TaintTag",        (PyCFunction)triton_TaintTag,         METH_VARARGS,   ""},
+        {"Tag",             (PyCFunction)triton_Tag,              METH_VARARGS,   ""},
         {nullptr,           nullptr,                              0,              nullptr}
       };
 
