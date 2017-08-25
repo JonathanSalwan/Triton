@@ -145,7 +145,6 @@ namespace triton {
 
       static PyObject* triton_Tag(PyObject* self, PyObject* args) {
         PyObject* pDict = nullptr;
-        //FIXME: there's a bug when a dictionary object is not stored as a variable in the calling Python program
 
         /* Extract arguments */
         if (!PyArg_ParseTuple(args, "O!", &PyDict_Type, &pDict)) {

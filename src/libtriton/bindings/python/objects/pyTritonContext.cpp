@@ -1772,7 +1772,6 @@ namespace triton {
       }
 
 
-      //TODO: in progress
       static PyObject* TritonContext_getTagsOnRegister(PyObject* self, PyObject* reg) {
         PyObject* ret = nullptr;
 
@@ -1788,7 +1787,7 @@ namespace triton {
           size = tags.size();
           ret = xPyList_New(size);
           for (auto it = tags.begin(); it != tags.end(); it++) {
-            PyList_SetItem(ret, index, PyTag(PyTag_AsTag(*it)));
+            PyList_SetItem(ret, index, PyTag(**it));
             index++;
           }
         }
