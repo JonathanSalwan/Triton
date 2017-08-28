@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, Instruction, MemoryAccess, TritonContext
+from triton import ARCH, Instruction, MemoryAccess, TritonContext, Tag
 
 
 class TestTaint(unittest.TestCase):
