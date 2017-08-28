@@ -64,6 +64,44 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2002, 2)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2003, 2)))
 
+    def test_tag_memory(self):
+        """Check tagging memory."""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+
+        self.assertFalse(Triton.isMemoryTainted(0x1000))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
+
+        tag1 = Tag('mydata1')
+        Triton.taintAndTagMemory(MemoryAccess(0x1000, 4), tag1)
+        tags1 = Triton.getTagsOnMemory(MemoryAccess(0x1000, 4))
+        tags2 = Triton.getTagsOnMemory(MemoryAccess(0x1000, 2))
+        self.assertTrue(Triton.isMemoryTainted(0x1000))
+        self.assertTrue(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(len(tags1) == 1)
+        self.assertTrue(len(tags2) == 1)
+        self.assertTrue(tags1[0].getData() == 'mydata1')
+        self.assertTrue(tags2[0].getData() == 'mydata1')
+
+        tag2 = Tag('mydata2')
+        Triton.taintAndTagMemory(MemoryAccess(0x1003, 1), tag2)
+        tags3 = Triton.getTagsOnMemory(MemoryAccess(0x1003, 1))
+        tags3_data_list = [t.getData() for t in tags3]
+        tags4 = Triton.getTagsOnMemory(MemoryAccess(0x1004, 1))
+        self.assertTrue(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(len(tags3) == 2)
+        self.assertTrue(len(tags4) == 0)
+        self.assertTrue('mydata1' in tags3_data_list)
+        self.assertTrue('mydata2' in tags3_data_list)
+
+        Triton.untaintMemory(MemoryAccess(0x1003, 1))
+        tags5 = Triton.getTagsOnMemory(MemoryAccess(0x1003, 2))
+        self.assertTrue(len(tags5) == 0)
+        self.assertFalse(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(Triton.isMemoryTainted(0x1000))
+        Triton.untaintMemory(MemoryAccess(0x1000, 4))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1003, 4)))
+
     def test_taint_register(self):
         """Check over tainting register."""
         Triton = TritonContext()
