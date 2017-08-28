@@ -1753,14 +1753,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getTagsOnMemory(): Architecture is not defined.");
 
         try {
-          std::set<triton::engines::taint::Tag*> tags;
-          tags = PyTritonContext_AsTritonContext(self)->getTagsOnMemoryAccess(*PyMemoryAccess_AsMemoryAccess(mem));
+          auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnMemoryAccess(*PyMemoryAccess_AsMemoryAccess(mem));
 
           triton::usize size = 0, index = 0;
           size = tags.size();
           ret = xPyList_New(size);
-          for (auto it = tags.begin(); it != tags.end(); it++) {
-            PyList_SetItem(ret, index, PyTag(PyTag_AsTag(*it)));
+          for (auto it = begin(tags); it != end(tags); it++) {
+            PyList_SetItem(ret, index, PyTag(*it));
             index++;
           }
         }
@@ -1780,14 +1779,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getTagsOnRegister(): Architecture is not defined.");
 
         try {
-          std::set<triton::engines::taint::Tag*> tags;
-          tags = PyTritonContext_AsTritonContext(self)->getTagsOnRegister(*PyRegister_AsRegister(reg));
+          auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnRegister(*PyRegister_AsRegister(reg));
 
           triton::usize size = 0, index = 0;
           size = tags.size();
           ret = xPyList_New(size);
           for (auto it = tags.begin(); it != tags.end(); it++) {
-            PyList_SetItem(ret, index, PyTag(**it));
+            PyList_SetItem(ret, index, PyTag(*it));
             index++;
           }
         }
@@ -2724,7 +2722,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAndTagMemory(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem), PyTag_AsTag(tag)))
+          if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem), *PyTag_AsTag(tag)))
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2769,7 +2767,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "taintAndTagRegister(): Expects a Tag as the second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg), PyTag_AsTag(tag)) == true)
+          if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg), *PyTag_AsTag(tag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }

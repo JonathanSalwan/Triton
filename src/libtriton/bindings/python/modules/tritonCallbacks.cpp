@@ -144,16 +144,14 @@ namespace triton {
 
 
       static PyObject* triton_Tag(PyObject* self, PyObject* args) {
-        PyObject* pDict = nullptr;
+        char* tagData = nullptr;
 
         /* Extract arguments */
-        if (!PyArg_ParseTuple(args, "O!", &PyDict_Type, &pDict)) {
-          return PyErr_Format(PyExc_TypeError, \
-              "Tag(): Expects a dictionary as the first argument.");
+        if (!PyArg_ParseTuple(args, "s", &tagData)) {
+          return PyErr_Format(PyExc_TypeError, "Tag(): Expects a char* as the first argument.");
         }
-
         try {
-          triton::engines::taint::Tag tag(pDict);
+          triton::engines::taint::Tag tag(tagData);
           return PyTag(tag);
         } catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
