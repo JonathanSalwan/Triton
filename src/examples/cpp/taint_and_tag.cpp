@@ -23,8 +23,7 @@ void printRegInfo(std::string regName, triton::arch::Register reg) {
   std::cout<< regName<< " tags: ";
   auto tags = api.getTagsOnRegister(reg);
   for (auto t : tags) {
-    auto tag = (std::pair<long,bool>*) t->getData();
-    std::cout << "(" << tag->first << "," << tag->second << ") ";
+    std::cout << "(" << t.getData() << ")";
   }
   std::cout<< std::endl<< std::endl;
 }
@@ -35,8 +34,7 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   /* create a tag */
-  std::pair<long, bool> tag(99, true);
-  auto ctag = new triton::engines::taint::Tag(&tag);
+  auto ctag = triton::engines::taint::Tag("99 True");
 
   /* Taint the RAX */
   api.taintRegister(api.getRegister(ID_REG_RAX), ctag);

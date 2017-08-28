@@ -26,7 +26,7 @@ namespace triton {
 
       static PyObject* Tag_getData(PyObject* self, PyObject* noarg) {
         try {
-          return (PyObject*) PyTag_AsTag(self)->getData();
+          return (PyObject*) PyString_FromString(PyTag_AsTag(self)->getData()->c_str());
         } catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -36,6 +36,7 @@ namespace triton {
       static PyObject* Tag_str(PyObject* self) {
         try {
           std::stringstream str;
+          // prints the pointer address of the stored string
           str << "Tag(" << PyTag_AsTag(self)->getData() << ")";
           return PyString_FromFormat("%s", str.str().c_str());
         } catch (const triton::exceptions::Exception& e) {
