@@ -139,7 +139,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintAndTagRegister(Triton.registers.rax, tag2)
         tags2 = Triton.getTagsOnRegister(Triton.registers.rax)
         tag_data_list = [t.getData() for t in tags2]
-        self.assertTrue(len(tags1) is 2)
+        self.assertTrue(len(tags2) is 2)
         self.assertTrue('mydata1' in tag_data_list)
         self.assertTrue('mydata2' in tag_data_list)
 
