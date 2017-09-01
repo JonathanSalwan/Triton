@@ -124,6 +124,9 @@ namespace triton {
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
 
+        if (node->isLogical() == false)
+          throw triton::exceptions::SolverEngine("SolverEngine::getModels(): Must be a logical node.");
+
         /* Create a solver and add the expression */
         solver.add(expr);
 
