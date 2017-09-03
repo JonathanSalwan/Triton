@@ -438,6 +438,8 @@ namespace triton {
       static PyObject* TritonContext_addCallback(PyObject* self, PyObject* args) {
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
+        PyObject* cb       = nullptr;
+        PyObject* cb_self  = nullptr;
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &function, &mode);
@@ -452,20 +454,39 @@ namespace triton {
         if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
           return PyErr_Format(PyExc_TypeError, "addCallback(): Expects a CALLBACK as second argument.");
 
+        if (PyMethod_Check(function)) {
+          cb_self = PyMethod_GET_SELF(function);
+          cb = PyMethod_GET_FUNCTION(function);
+          Py_INCREF(cb_self);
+          Py_INCREF(cb);
+        }
+        else {
+          cb = function;
+        }
+
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
-            // FIXME : We should incref the function object as it could be a lambda or a temporary function
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([function](triton::API& api, const triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteMemoryValueCallback([cb_self, cb](triton::API& api, const triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
+                PyObject* args = nullptr;
+
                 /* Create function args */
-                PyObject* args = triton::bindings::python::xPyTuple_New(2);
-                PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
-                PyTuple_SetItem(args, 1, triton::bindings::python::PyMemoryAccess(mem));
+                if (cb_self) {
+                  args = triton::bindings::python::xPyTuple_New(3);
+                  PyTuple_SetItem(args, 0, cb_self);
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
+                }
+                else {
+                  args = triton::bindings::python::xPyTuple_New(2);
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyMemoryAccess(mem));
+                }
 
                 /* Call the callback */
-                PyObject* ret = PyObject_CallObject(function, args);
+                PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
                 if (ret == nullptr) {
@@ -475,40 +496,61 @@ namespace triton {
 
                 Py_DECREF(args);
                 /********* End of lambda *********/
-              }, function));
+              }, cb));
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([function](triton::API& api, const triton::arch::Register& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::getConcreteRegisterValueCallback([cb_self, cb](triton::API& api, const triton::arch::Register& reg){
                 /********* Lambda *********/
-                  /* Create function args */
-                  PyObject* args = triton::bindings::python::xPyTuple_New(2);
+                PyObject* args = nullptr;
+
+                /* Create function args */
+                if (cb_self) {
+                  args = triton::bindings::python::xPyTuple_New(3);
+                  PyTuple_SetItem(args, 0, cb_self);
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
+                }
+                else {
+                  args = triton::bindings::python::xPyTuple_New(2);
                   PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(reg));
+                }
 
-                  /* Call the callback */
-                  PyObject* ret = PyObject_CallObject(function, args);
+                /* Call the callback */
+                PyObject* ret = PyObject_CallObject(cb, args);
 
-                  /* Check the call */
-                  if (ret == nullptr) {
-                    PyErr_Print();
-                    throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_REGISTER_VALUE): Fail to call the python callback.");
-                  }
+                /* Check the call */
+                if (ret == nullptr) {
+                  PyErr_Print();
+                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_REGISTER_VALUE): Fail to call the python callback.");
+                }
 
-                  Py_DECREF(args);
+                Py_DECREF(args);
                 /********* End of lambda *********/
-                }, function));
+              }, cb));
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([function](triton::API& api, triton::ast::AbstractNode* node) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([cb_self, cb](triton::API& api, triton::ast::AbstractNode* node) {
                 /********* Lambda *********/
-                PyObject* args = triton::bindings::python::xPyTuple_New(2);
-                PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
-                PyTuple_SetItem(args, 1, triton::bindings::python::PyAstNode(node));
+                PyObject* args = nullptr;
+
+                /* Create function args */
+                if (cb_self) {
+                  args = triton::bindings::python::xPyTuple_New(3);
+                  PyTuple_SetItem(args, 0, cb_self);
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 2, triton::bindings::python::PyAstNode(node));
+                }
+                else {
+                  args = triton::bindings::python::xPyTuple_New(2);
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyAstNode(node));
+                }
 
                 /* Call the callback */
-                PyObject* ret = PyObject_CallObject(function, args);
+                PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
                 if (ret == nullptr) {
@@ -525,7 +567,7 @@ namespace triton {
                 Py_DECREF(args);
                 return node;
                 /********* End of lambda *********/
-              }, function));
+              }, cb));
               break;
 
             default:
@@ -2077,6 +2119,7 @@ namespace triton {
 
 
       static PyObject* TritonContext_removeCallback(PyObject* self, PyObject* args) {
+        PyObject* cb       = nullptr;
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
 
@@ -2093,16 +2136,19 @@ namespace triton {
         if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
           return PyErr_Format(PyExc_TypeError, "removeCallback(): Expects a CALLBACK as second argument.");
 
+        /* Get the callback (class or static) */
+        cb = (PyMethod_Check(function) ? PyMethod_GET_FUNCTION(function) : function);
+
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::getConcreteMemoryValueCallback(nullptr, function));
+              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::getConcreteMemoryValueCallback(nullptr, cb));
               break;
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::getConcreteRegisterValueCallback(nullptr, function));
+              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::getConcreteRegisterValueCallback(nullptr, cb));
               break;
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::symbolicSimplificationCallback(nullptr, function));
+              PyTritonContext_AsTritonContext(self)->removeCallback(callbacks::symbolicSimplificationCallback(nullptr, cb));
               break;
             default:
               return PyErr_Format(PyExc_TypeError, "removeCallback(): Invalid kind of callback.");
@@ -2111,6 +2157,10 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+
+        /* Free cb if exists */
+        if (PyMethod_Check(function))
+          Py_DECREF(cb);
 
         Py_INCREF(Py_None);
         return Py_None;
