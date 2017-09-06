@@ -65,7 +65,7 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2003, 2)))
 
     def test_tag_memory(self):
-        """Check tagging memory."""
+        """Check memory tagging."""
         Triton = TritonContext()
         Triton.setArchitecture(ARCH.X86_64)
 
@@ -247,6 +247,12 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2005, 1)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2006, 1)))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2007, 1)))
+
+        Triton.taintRegister(Triton.registers.rax)
+        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x1001, 2), Triton.registers.rax)
+        self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x1001, 2)))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1000, 1)))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1003, 1)))
 
     def test_taint_assignement_register_immediate(self):
         """Check tainting assignment register <- immediate."""

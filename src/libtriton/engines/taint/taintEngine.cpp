@@ -835,17 +835,6 @@ namespace triton {
       }
 
 
-      bool TaintEngine::isTagged(const triton::arch::MemoryAccess& mem) {
-        triton::uint64 addr = mem.getAddress();
-        triton::uint32 size = mem.getSize();
-        for (triton::uint32 index = 0; index < size; index++) {
-          if (this->memoryTagMap.find(addr+index) != this->memoryTagMap.end())
-            return true;
-        }
-        return false;
-      }
-
-
       bool TaintEngine::isTagged(const triton::uint64 addr, triton::uint32 size) {
         for (triton::uint32 index = 0; index < size; index++) {
           if (this->memoryTagMap.find(addr+index) != this->memoryTagMap.end())

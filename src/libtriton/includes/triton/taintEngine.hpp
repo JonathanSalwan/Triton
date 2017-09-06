@@ -215,10 +215,7 @@ namespace triton {
           //! Check if a register is tagged.
           bool isTagged(const triton::arch::Register& reg);
 
-          //! Check if a memory access is tagged.
-          bool isTagged(const triton::arch::MemoryAccess& mem);
-
-          //! Check if a memory address is tagged.
+        //! Check if a memory address is tagged.
           bool isTagged(const triton::uint64 addr, const triton::uint32 size);
 
         private:
