@@ -443,29 +443,19 @@ namespace triton {
 
 
       /* Returns the full symbolic expression backtracked. */
-      triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed) {
+      triton::ast::AbstractNode* SymbolicEngine::unrollAst(triton::ast::AbstractNode* node) {
         std::vector<triton::ast::AbstractNode*>& children = node->getChildren();
 
-        for (triton::uint32 index = 0; index < children.size(); index++) {
-          if (children[index]->getKind() == triton::ast::REFERENCE_NODE) {
-            auto& expr = reinterpret_cast<triton::ast::ReferenceNode*>(children[index])->getSymbolicExpression();
-            triton::ast::AbstractNode* ref = expr.getAst();
-            children[index] = ref;
-            if (processed.find(expr.getId()) != processed.end())
-              continue;
-            processed.insert(expr.getId());
-          }
-          this->getFullAst(children[index], processed);
+        if (node->getKind() == triton::ast::REFERENCE_NODE) {
+          SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression();
+          triton::ast::AbstractNode* ref = expr.getAst();
+          return ref;
         }
 
+        for (triton::uint32 index = 0; index < children.size(); index++)
+          children[index] = this->unrollAst(children[index]);
+
         return node;
-      }
-
-
-      /* Returns the full symbolic expression backtracked. */
-      triton::ast::AbstractNode* SymbolicEngine::getFullAst(triton::ast::AbstractNode* node) {
-        std::set<triton::usize> processed;
-        return this->getFullAst(node, processed);
       }
 
 
@@ -511,6 +501,7 @@ namespace triton {
           if (it->second->isTainted == true)
             taintedExprs.push_back(it->second);
         }
+
         return taintedExprs;
       }
 

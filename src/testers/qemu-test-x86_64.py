@@ -38,7 +38,7 @@ def cafter(instruction):
         if seid == SYMEXPR.UNSET:
             continue
 
-        expr   = Triton.getFullAstFromId(seid)
+        expr   = Triton.unrollAstFromId(seid)
         svalue = expr.evaluate()
         #svalue = Triton.evaluateAstViaZ3(expr)
 

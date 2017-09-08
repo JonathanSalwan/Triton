@@ -159,12 +159,6 @@ Returns the concrete value of a register.
 - <b>integer getConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
 Returns the concrete value of a symbolic variable.
 
-- <b>\ref py_AstNode_page getFullAst(\ref py_AstNode_page node)</b><br>
-Returns the full AST without SSA form from a given root node.
-
-- <b>\ref py_AstNode_page getFullAstFromId(integer symExprId)</b><br>
-Returns the full AST without SSA form from a symbolic expression id.
-
 - <b>dict getModel(\ref py_AstNode_page node)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 
@@ -397,6 +391,12 @@ tainted. Returns true if `regDst` is tainted.
 
 - <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
 Removes the range `[baseAddr:size]` from the internal memory representation.
+
+- <b>\ref py_AstNode_page unroolAst(\ref py_AstNode_page node)</b><br>
+Unrools the SSA form of a given AST.
+
+- <b>\ref py_AstNode_page unroolAstFromId(integer symExprId)</b><br>
+Unrools the SSA form of a given symbolic expression id.
 
 - <b>bool untaintMemory(intger addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
@@ -1336,40 +1336,6 @@ namespace triton {
 
         try {
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getFullAst(PyObject* self, PyObject* node) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getFullAst(): Architecture is not defined.");
-
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "getFullAst(): Expects a AstNode as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getFullAst(PyAstNode_AsAstNode(node)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getFullAstFromId(PyObject* self, PyObject* symExprId) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getFullAstFromId(): Architecture is not defined.");
-
-        if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
-          return PyErr_Format(PyExc_TypeError, "getFullAstFromId(): Expects an integer as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getFullAstFromId(PyLong_AsUsize(symExprId)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2893,6 +2859,40 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_unrollAst(PyObject* self, PyObject* node) {
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "unrollAst(): Architecture is not defined.");
+
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "unrollAst(): Expects a AstNode as argument.");
+
+        try {
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->unrollAst(PyAstNode_AsAstNode(node)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_unrollAstFromId(PyObject* self, PyObject* symExprId) {
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "unrollAstFromId(): Architecture is not defined.");
+
+        if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
+          return PyErr_Format(PyExc_TypeError, "unrollAstFromId(): Expects an integer as argument.");
+
+        try {
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->unrollAstFromId(PyLong_AsUsize(symExprId)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_untaintMemory(PyObject* self, PyObject* mem) {
         /* Check if the architecture is definied */
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
@@ -3016,8 +3016,6 @@ namespace triton {
         {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                 METH_O,             ""},
         {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,               METH_O,             ""},
         {"getConcreteSymbolicVariableValue",    (PyCFunction)TritonContext_getConcreteSymbolicVariableValue,       METH_O,             ""},
-        {"getFullAst",                          (PyCFunction)TritonContext_getFullAst,                             METH_O,             ""},
-        {"getFullAstFromId",                    (PyCFunction)TritonContext_getFullAstFromId,                       METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
@@ -3085,6 +3083,8 @@ namespace triton {
         {"taintUnionRegisterMemory",            (PyCFunction)TritonContext_taintUnionRegisterMemory,               METH_VARARGS,       ""},
         {"taintUnionRegisterRegister",          (PyCFunction)TritonContext_taintUnionRegisterRegister,             METH_VARARGS,       ""},
         {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
+        {"unrollAst",                           (PyCFunction)TritonContext_unrollAst,                              METH_O,             ""},
+        {"unrollAstFromId",                     (PyCFunction)TritonContext_unrollAstFromId,                        METH_O,             ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
         {nullptr,                               nullptr,                                                           0,                  nullptr}

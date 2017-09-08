@@ -257,11 +257,8 @@ namespace triton {
           //! Assigns a symbolic expression to a memory.
           void assignSymbolicExpressionToMemory(SymbolicExpression *se, const triton::arch::MemoryAccess& mem);
 
-          //! Returns the full AST of a root node.
-          triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node, std::set<triton::usize>& processed);
-
-          //! Returns the full AST of a root node.
-          triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
+          //! Unrolls the SSA form of a given AST.
+          triton::ast::AbstractNode* unrollAst(triton::ast::AbstractNode* node);
 
           //! Slices all expressions from a given one.
           std::map<triton::usize, SymbolicExpression*> sliceExpressions(SymbolicExpression* expr);

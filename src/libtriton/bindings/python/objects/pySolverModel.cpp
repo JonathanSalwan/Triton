@@ -40,7 +40,7 @@ True
 >>> print inst
 0x0: xor rax, 0x11223344
 
->>> raxAst = ctxt.getFullAstFromId(ctxt.getSymbolicRegisterId(ctxt.registers.rax))
+>>> raxAst = ctxt.unrollAstFromId(ctxt.getSymbolicRegisterId(ctxt.registers.rax))
 >>> print raxAst
 (bvxor SymVar_0 (_ bv287454020 64))
 

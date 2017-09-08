@@ -912,9 +912,9 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::getFullAst(triton::ast::AbstractNode* node) {
+  triton::ast::AbstractNode* API::unrollAst(triton::ast::AbstractNode* node) {
     this->checkSymbolic();
-    return this->symbolic->getFullAst(node);
+    return this->symbolic->unrollAst(node);
   }
 
 
@@ -925,10 +925,10 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::getFullAstFromId(triton::usize symExprId) {
+  triton::ast::AbstractNode* API::unrollAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
     triton::ast::AbstractNode* partialAst = this->getAstFromId(symExprId);
-    return this->getFullAst(partialAst);
+    return this->unrollAst(partialAst);
   }
 
 

@@ -113,7 +113,7 @@ tree but contains a reference to another subtree. Below, an example of one "part
 <p align="center"><img width="600" src="https://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
 
 If you try to go through the full AST you will fail at the first reference node because a reference node does not contains child nodes.
-The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::getFullAst() function.
+The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::unrollAst() function.
 
 ~~~~~~~~~~~~~{.py}
 >>> zfId = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
@@ -121,7 +121,7 @@ The only way to jump from a reference node to the targeted node is to use the tr
 >>> print partialTree
 (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 
->>> fullTree = ctxt.getFullAst(partialTree)
+>>> fullTree = ctxt.unrollAst(partialTree)
 >>> print fullTree
 (ite (= (bvxor (_ bv12345 64) (_ bv67890 64)) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 
@@ -172,7 +172,7 @@ ref_7 = 0x400003 # Program Counter
 ~~~~~~~~~~~~~{.py}
 >>> # Get the symbolic expression of the ZF flag
 >>> zfId    = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
->>> zfExpr  = ctxt.getFullAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
+>>> zfExpr  = ctxt.unrollAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
 
 >>> astCtxt = ctxt.getAstContext()
 

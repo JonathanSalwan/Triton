@@ -75,7 +75,7 @@ def cafter(instruction):
     # 0x4005ae: cmp ecx, eax
     if instruction.getAddress() == 0x400597:
         zfId    = Triton.getSymbolicRegisterId(Triton.registers.zf)
-        zfExpr  = Triton.getFullAstFromId(zfId)
+        zfExpr  = Triton.unrollAstFromId(zfId)
         astCtxt = Triton.getAstContext();
         expr    = astCtxt.equal(zfExpr, astCtxt.bvtrue()) # (= zf True)
         models  = Triton.getModel(expr)
