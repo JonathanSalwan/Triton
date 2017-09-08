@@ -487,7 +487,7 @@ namespace triton {
         //! [**symbolic api**] - Unrolls the SSA form of a given AST.
         triton::ast::AbstractNode* unrollAst(triton::ast::AbstractNode* node);
 
-        //! [**symbolic api**] - Unrools the SSA form of a given symbolic expression id.
+        //! [**symbolic api**] - Unrolls the SSA form of a given symbolic expression id.
         triton::ast::AbstractNode* unrollAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Slices all expressions from a given one.

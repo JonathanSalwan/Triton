@@ -392,11 +392,11 @@ tainted. Returns true if `regDst` is tainted.
 - <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
 Removes the range `[baseAddr:size]` from the internal memory representation.
 
-- <b>\ref py_AstNode_page unroolAst(\ref py_AstNode_page node)</b><br>
-Unrools the SSA form of a given AST.
+- <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
+Unrolls the SSA form of a given AST.
 
-- <b>\ref py_AstNode_page unroolAstFromId(integer symExprId)</b><br>
-Unrools the SSA form of a given symbolic expression id.
+- <b>\ref py_AstNode_page unrollAstFromId(integer symExprId)</b><br>
+Unrolls the SSA form of a given symbolic expression id.
 
 - <b>bool untaintMemory(intger addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
