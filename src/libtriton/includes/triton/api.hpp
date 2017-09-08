@@ -487,8 +487,8 @@ namespace triton {
         //! [**symbolic api**] - Returns the full AST of a root node.
         triton::ast::AbstractNode* getFullAst(triton::ast::AbstractNode* node);
 
-        //! [**symbolic api**] - Returns the full AST from a symbolic expression id.
-        triton::ast::AbstractNode* getFullAstFromId(triton::usize symExprId);
+        //! [**symbolic api**] - Unrolls the SSA form of a given symbolic expression id.
+        triton::ast::AbstractNode* unrollAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Slices all expressions from a given one.
         std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> sliceExpressions(triton::engines::symbolic::SymbolicExpression* expr);

@@ -147,7 +147,7 @@ Returns the current AST representation mode.
 - <b>bytes getConcreteMemoryAreaValue(integer baseAddr, integer size)</b><br>
 Returns the concrete value of a memory area.
 
-- <b>integer getConcreteMemoryValue(intger addr)</b><br>
+- <b>integer getConcreteMemoryValue(integer addr)</b><br>
 Returns the concrete value of a memory cell.
 
 - <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
@@ -192,7 +192,7 @@ Returns the max size (in bit) of the CPU register (GPR).
 - <b>integer getRegisterSize(void)</b><br>
 Returns the max size (in byte) of the CPU register (GPR).
 
-- <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(intger symExprId)</b><br>
+- <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(integer symExprId)</b><br>
 Returns the symbolic expression corresponding to an id.
 
 - <b>dict getSymbolicExpressions(void)</b><br>
@@ -201,10 +201,10 @@ Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py
 - <b>dict getSymbolicMemory(void)</b><br>
 Returns the map of symbolic memory as {integer address : \ref py_SymbolicExpression_page expr}.
 
-- <b>integer getSymbolicMemoryId(intger addr)</b><br>
+- <b>integer getSymbolicMemoryId(integer addr)</b><br>
 Returns the symbolic expression id corresponding to a memory address.
 
-- <b>integer getSymbolicMemoryValue(intger addr)</b><br>
+- <b>integer getSymbolicMemoryValue(integer addr)</b><br>
 Returns the symbolic memory value.
 
 - <b>integer getSymbolicMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
@@ -228,7 +228,7 @@ Returns the symbolic variable corresponding to a symbolic variable name.
 - <b>dict getSymbolicVariables(void)</b><br>
 Returns all symbolic variable as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
 
-- <b>[intger, ...] getTaintedMemory(void)</b><br>
+- <b>[integer, ...] getTaintedMemory(void)</b><br>
 Returns the list of all tainted addresses.
 
 - <b>[\ref py_Register_page, ...] getTaintedRegisters(void)</b><br>
@@ -291,7 +291,7 @@ Returns true if the taint engine is enabled.
 - <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
-- <b>\ref py_SymbolicVariable_page newSymbolicVariable(intger varSize, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string comment)</b><br>
 Returns a new symbolic variable.
 
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
@@ -370,10 +370,10 @@ Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSr
 Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise
 `regDst` is untained. Return true if `regDst` is tainted.
 
-- <b>bool taintMemory(intger addr)</b><br>
+- <b>bool taintMemory(integer addr)</b><br>
 Taints an address. Returns true if the address is tainted.
 
-- <b>bool taintMemory(intger addr, \ref py_Tag_page tag)</b><br>
+- <b>bool taintMemory(integer addr, \ref py_Tag_page tag)</b><br>
 Taints an address with a tag. Returns true if the address is tainted successfully.
 
 - <b>bool taintMemory(\ref py_MemoryAccess_page mem)</b><br>
@@ -409,6 +409,12 @@ tainted. Returns true if `regDst` is tainted.
 
 - <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
 Removes the range `[baseAddr:size]` from the internal memory representation.
+
+- <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
+Unrolls the SSA form of a given AST.
+
+- <b>\ref py_AstNode_page unrollAstFromId(integer symExprId)</b><br>
+Unrolls the SSA form of a given symbolic expression id.
 
 - <b>bool untaintMemory(integer addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
