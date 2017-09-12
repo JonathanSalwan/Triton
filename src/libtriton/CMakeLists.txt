@@ -83,6 +83,7 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
+        engines/taint/tag.cpp
     modes/modes.cpp
     os/unix/syscallNumberToString.cpp
     utils/coreUtils.cpp
@@ -117,6 +118,7 @@ if(PYTHON_BINDINGS)
         bindings/python/objects/pySymbolicExpression.cpp
         bindings/python/objects/pySymbolicVariable.cpp
         bindings/python/objects/pyTritonContext.cpp
+            bindings/python/objects/pyTag.cpp
         bindings/python/pyXFunctions.cpp
         bindings/python/utils.cpp
     )
