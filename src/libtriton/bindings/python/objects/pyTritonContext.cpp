@@ -416,7 +416,7 @@ Unrolls the SSA form of a given AST.
 - <b>\ref py_AstNode_page unrollAstFromId(integer symExprId)</b><br>
 Unrolls the SSA form of a given symbolic expression id.
 
-- <b>bool untaintMemory(integer addr)</b><br>
+- <b>bool untaintMemory(intger addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
 
 - <b>bool untaintMemory(\ref py_MemoryAccess_page mem)</b><br>
