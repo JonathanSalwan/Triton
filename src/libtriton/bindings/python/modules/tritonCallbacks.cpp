@@ -14,6 +14,7 @@
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
+#include <triton/tag.hpp>
 
 
 
@@ -142,11 +143,28 @@ namespace triton {
       }
 
 
+      static PyObject* triton_Tag(PyObject* self, PyObject* args) {
+        char* tagData = nullptr;
+
+        /* Extract arguments */
+        if (!PyArg_ParseTuple(args, "s", &tagData)) {
+          return PyErr_Format(PyExc_TypeError, "Tag(): Expects a char* as the first argument.");
+        }
+        try {
+          triton::engines::taint::Tag tag(tagData);
+          return PyTag(tag);
+        } catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       PyMethodDef tritonCallbacks[] = {
         {"Immediate",       (PyCFunction)triton_Immediate,        METH_VARARGS,   ""},
         {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
         {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},
         {"TritonContext",   (PyCFunction)triton_TritonContext,    METH_VARARGS,   ""},
+        {"Tag",             (PyCFunction)triton_Tag,              METH_VARARGS,   ""},
         {nullptr,           nullptr,                              0,              nullptr}
       };
 

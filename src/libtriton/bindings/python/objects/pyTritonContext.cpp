@@ -228,6 +228,12 @@ Returns the list of all tainted addresses.
 - <b>[\ref py_Register_page, ...] getTaintedRegisters(void)</b><br>
 Returns the list of all tainted registers.
 
+- <b>list getTagsOnMemory(\ref py_MemoryAccess_page mem)</b><br>
+Retrieves a list of \ref py_Tag_page from a tainted memory address.
+
+- <b>list getTagsOnRegister(\ref py_Register_page reg)</b><br>
+Retrieves a list of \ref py_Tag_page from a tainted register.
+
 - <b>[\ref py_SymbolicExpression_page, ...] getTaintedSymbolicExpressions(void)</b><br>
 Returns the list of all tainted symbolic expressions.
 
@@ -361,11 +367,17 @@ Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSr
 - <b>bool taintMemory(intger addr)</b><br>
 Taints an address. Returns true if the address is tainted.
 
+- <b>bool taintMemory(intger addr, \ref py_Tag_page tag)</b><br>
+Taints an address with a tag. Returns true if the address is tainted successfully.
+
 - <b>bool taintMemory(\ref py_MemoryAccess_page mem)</b><br>
 Taints a memory. Returns true if the memory is tainted.
 
 - <b>bool taintRegister(\ref py_Register_page reg)</b><br>
 Taints a register. Returns true if the register is tainted.
+
+- <b>bool taintAndTagRegister(\ref py_Register_page reg, \ref py_Tag_page tag)</b><br>
+Taints a register with a tag. Returns true if the register is tainted successfully.
 
 - <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
 Taints `memDst` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
@@ -1740,6 +1752,59 @@ namespace triton {
       }
 
 
+      //TODO: in progress
+      static PyObject* TritonContext_getTagsOnMemory(PyObject* self, PyObject* mem) {
+        PyObject* ret = nullptr;
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getTagsOnMemory(): Architecture is not defined.");
+
+        try {
+          auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnMemoryAccess(*PyMemoryAccess_AsMemoryAccess(mem));
+
+          triton::usize size = 0, index = 0;
+          size = tags.size();
+          ret = xPyList_New(size);
+          for (auto it = begin(tags); it != end(tags); it++) {
+            PyList_SetItem(ret, index, PyTag(*it));
+            index++;
+          }
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
+      static PyObject* TritonContext_getTagsOnRegister(PyObject* self, PyObject* reg) {
+        PyObject* ret = nullptr;
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "getTagsOnRegister(): Architecture is not defined.");
+
+        try {
+          auto tags = PyTritonContext_AsTritonContext(self)->getTagsOnRegister(*PyRegister_AsRegister(reg));
+
+          triton::usize size = 0, index = 0;
+          size = tags.size();
+          ret = xPyList_New(size);
+          for (auto it = tags.begin(); it != tags.end(); it++) {
+            PyList_SetItem(ret, index, PyTag(*it));
+            index++;
+          }
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
+      }
+
+
       static PyObject* TritonContext_getTaintedRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
@@ -2656,6 +2721,33 @@ namespace triton {
       }
 
 
+      // TODO: in progress
+      static PyObject* TritonContext_taintAndTagMemory(PyObject* self, PyObject* args) {
+        PyObject* mem = nullptr;
+        PyObject* tag = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &mem, &tag);
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "taintAndTagMemory(): Architecture is not defined.");
+        if (mem == nullptr || !PyMemoryAccess_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "taintAndTagMemory(): Expects a MemoryAccess as the first argument.");
+        if (tag == nullptr || !PyTag_Check(tag))
+          return PyErr_Format(PyExc_TypeError, "taintAndTagMemory(): Expects a Tag as the second argument.");
+
+        try {
+          if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem), *PyTag_AsTag(tag)))
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_taintRegister(PyObject* self, PyObject* reg) {
         /* Check if the architecture is definied */
         if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2666,6 +2758,32 @@ namespace triton {
 
         try {
           if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+      // TODO: in progress
+      static PyObject* TritonContext_taintAndTagRegister(PyObject* self, PyObject* args) {
+        PyObject* reg = nullptr;
+        PyObject* tag = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &reg, &tag);
+
+        /* Check if the architecture is definied */
+        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
+          return PyErr_Format(PyExc_TypeError, "taintAndTagRegister(): Architecture is not defined.");
+        if (reg == nullptr || !PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "taintAndTagRegister(): Expects a Register as the first argument.");
+        if (tag == nullptr || !PyTag_Check(tag))
+          return PyErr_Format(PyExc_TypeError, "taintAndTagRegister(): Expects a Tag as the second argument.");
+
+        try {
+          if (PyTritonContext_AsTritonContext(self)->taintRegister(*PyRegister_AsRegister(reg), *PyTag_AsTag(tag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -3038,6 +3156,8 @@ namespace triton {
         {"getSymbolicVariables",                (PyCFunction)TritonContext_getSymbolicVariables,                   METH_NOARGS,        ""},
         {"getTaintedMemory",                    (PyCFunction)TritonContext_getTaintedMemory,                       METH_NOARGS,        ""},
         {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                    METH_NOARGS,        ""},
+        {"getTagsOnMemory",                     (PyCFunction)TritonContext_getTagsOnMemory,                        METH_O,             ""},
+        {"getTagsOnRegister",                   (PyCFunction)TritonContext_getTagsOnRegister,                      METH_O,             ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                    METH_NOARGS,        ""},
         {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                 METH_O,             ""},
@@ -3075,7 +3195,9 @@ namespace triton {
         {"taintAssignmentRegisterMemory",       (PyCFunction)TritonContext_taintAssignmentRegisterMemory,          METH_VARARGS,       ""},
         {"taintAssignmentRegisterRegister",     (PyCFunction)TritonContext_taintAssignmentRegisterRegister,        METH_VARARGS,       ""},
         {"taintMemory",                         (PyCFunction)TritonContext_taintMemory,                            METH_O,             ""},
+        {"taintAndTagMemory",                   (PyCFunction)TritonContext_taintAndTagMemory,                      METH_VARARGS,       ""},
         {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                          METH_O,             ""},
+        {"taintAndTagRegister",                 (PyCFunction)TritonContext_taintAndTagRegister,                    METH_VARARGS,       ""},
         {"taintUnionMemoryImmediate",           (PyCFunction)TritonContext_taintUnionMemoryImmediate,              METH_O,             ""},
         {"taintUnionMemoryMemory",              (PyCFunction)TritonContext_taintUnionMemoryMemory,                 METH_VARARGS,       ""},
         {"taintUnionMemoryRegister",            (PyCFunction)TritonContext_taintUnionMemoryRegister,               METH_VARARGS,       ""},
