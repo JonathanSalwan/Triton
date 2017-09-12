@@ -131,10 +131,7 @@ namespace triton {
           //! Taints an address and assign tags. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(triton::uint64 addr, std::set<Tag> tags);
 
-          //! Taints an address and assign tags. Returns TAINTED if the address has been tainted correctly. Otherwise it returns the last defined state.
-          bool taintMemory(triton::uint64 addr, Tag tag);
-
-          //! Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
+        //! Taints a memory. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.
           bool taintMemory(const triton::arch::MemoryAccess& mem);
 
           //! Taints a memory and assign tags. Returns TAINTED if the memory has been tainted correctly. Otherwise it returns the last defined state.

@@ -381,14 +381,6 @@ namespace triton {
       }
 
 
-      /* Taint the address with single tag */
-      bool TaintEngine::taintMemory(triton::uint64 addr, Tag tag) {
-        auto tagSet = std::set<Tag>();
-        tagSet.insert(tag);
-        return this->taintMemory(addr, tagSet);
-      }
-
-
       /* Untaint the memory */
       bool TaintEngine::untaintMemory(const triton::arch::MemoryAccess& mem) {
         triton::uint64 addr = mem.getAddress();

@@ -1087,12 +1087,6 @@ namespace triton {
   }
 
 
-  bool API::taintMemory(triton::uint64 addr, triton::engines::taint::Tag tag) {
-    this->checkTaint();
-    return this->taint->taintMemory(addr, tag);
-  }
-
-
   bool API::taintMemory(const triton::arch::MemoryAccess& mem) {
     this->checkTaint();
     return this->taint->taintMemory(mem);
@@ -1230,10 +1224,5 @@ namespace triton {
     return this->taint->getTags(mem);
   }
 
-
-  std::set<triton::engines::taint::Tag> API::getTagsOnMemoryAddress(const triton::uint64 addr, const triton::uint32 size) {
-    this->checkTaint();
-    return this->taint->getTags(addr, size);
-  }
 
 }; /* triton namespace */

@@ -25,6 +25,18 @@ class TestTaint(unittest.TestCase):
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.eax))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.ebx))
 
+    def test_disabled(self):
+        """check taint disabled"""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+        Triton.enableTaintEngine(False)
+        self.assertFalse(Triton.taintRegister(Triton.registers.rax))
+        self.assertFalse(Triton.taintAndTagRegister(Triton.registers.rax))
+        self.assertFalse(Triton.untaintRegister(Triton.registers.rax))
+        self.assertFalse(Triton.taintMemory(MemoryAccess(0x1000, 1)))
+        self.assertFalse(Triton.taintAndTagMemory(MemoryAccess(0x1000, 1)))
+        self.assertFalse(Triton.untaintMemory(MemoryAccess(0x1000, 1)))
+
     def test_taint_memory(self):
         """Check tainting memory."""
         Triton = TritonContext()
