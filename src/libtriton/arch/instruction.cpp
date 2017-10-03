@@ -36,10 +36,6 @@ namespace triton {
     }
 
 
-    Instruction::~Instruction() {
-    }
-
-
     Instruction::Instruction(const Instruction& other) {
       this->copy(other);
     }

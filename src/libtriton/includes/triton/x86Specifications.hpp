@@ -47,9 +47,6 @@ namespace triton {
           //! Constructor.
           x86Specifications(triton::arch::architectures_e);
 
-          //! Destructor.
-          virtual ~x86Specifications();
-
           //! Converts a capstone's register id to a triton's register id.
           triton::arch::registers_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
 

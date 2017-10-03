@@ -62,9 +62,6 @@ namespace triton {
           //! Constructor by copy.
           PathManager(const PathManager& copy);
 
-          //! Destructore.
-          virtual ~PathManager();
-
           //! Copies a PathManager.
           void copy(const PathManager& other);
 

@@ -86,9 +86,6 @@ namespace triton {
         //! Constructor.
         Callbacks(triton::API& api);
 
-        //! Destructor.
-        virtual ~Callbacks();
-
         //! Adds a GET_CONCRETE_MEMORY_VALUE callback.
         void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 

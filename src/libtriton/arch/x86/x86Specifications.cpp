@@ -54,10 +54,6 @@ namespace triton {
       }
 
 
-      x86Specifications::~x86Specifications() {
-      }
-
-
       triton::arch::registers_e x86Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
         triton::arch::registers_e tritonId = triton::arch::ID_REG_INVALID;
 

@@ -50,9 +50,6 @@ namespace triton {
           //! Constructor.
           SymbolicSimplification(const SymbolicSimplification& copy);
 
-          //! Destructor.
-          virtual ~SymbolicSimplification();
-
           //! Copies a SymbolicSimplification.
           void copy(const SymbolicSimplification& other);
 

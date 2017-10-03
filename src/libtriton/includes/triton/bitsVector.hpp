@@ -49,9 +49,6 @@ namespace triton {
         //! Constructor by copy.
         BitsVector(const triton::arch::BitsVector& copy);
 
-        //! Destructor.
-        virtual ~BitsVector();
-
         //! Returns the highest bit
         triton::uint32 getHigh(void) const;
 

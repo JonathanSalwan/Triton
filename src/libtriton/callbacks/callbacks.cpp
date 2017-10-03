@@ -19,10 +19,6 @@ namespace triton {
     }
 
 
-    Callbacks::~Callbacks() {
-    }
-
-
     void Callbacks::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
       this->getConcreteMemoryValueCallbacks.push_back(cb);
       this->isDefined = true;

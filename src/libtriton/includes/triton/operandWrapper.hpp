@@ -57,9 +57,6 @@ namespace triton {
         //! Register constructor.
         OperandWrapper(const triton::arch::Register& reg);
 
-        //! Destructor.
-        virtual ~OperandWrapper();
-
         //! Returns the abstract type of the operand.
         triton::uint32 getType(void) const;
 

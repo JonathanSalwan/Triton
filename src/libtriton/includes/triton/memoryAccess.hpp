@@ -76,9 +76,6 @@ namespace triton {
         //! Constructor by copy.
         MemoryAccess(const MemoryAccess& other);
 
-        //! Destructor.
-        virtual ~MemoryAccess();
-
         //! Returns the AST of the memory access (LEA).
         triton::ast::AbstractNode* getLeaAst(void) const;
 

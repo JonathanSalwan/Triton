@@ -25,10 +25,6 @@ namespace triton {
       }
 
 
-      SymbolicExpression::~SymbolicExpression() {
-      }
-
-
       triton::ast::AbstractNode* SymbolicExpression::getAst(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
