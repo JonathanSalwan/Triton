@@ -1,0 +1,130 @@
+#!/usr/bin/env python2
+## -*- coding: utf-8 -*-
+##
+## $ python ./backward_slicing.py
+## [slicing] 0x40058b: movzx eax, byte ptr [rax]
+## [slicing] 0x40058e: movsx eax, al
+## [slicing] 0x400591: sub eax, 1
+## [slicing] 0x400594: xor eax, 0x55
+## [slicing] 0x400597: mov ecx, eax
+##
+
+import  sys
+
+from triton import *
+
+
+# A dumb function to emulate.
+function = {
+  0x40056d: "\x55",                           #   push    rbp
+  0x40056e: "\x48\x89\xe5",                   #   mov     rbp,rsp
+  0x400571: "\x48\x89\x7d\xe8",               #   mov     QWORD PTR [rbp-0x18],rdi
+  0x400575: "\xc7\x45\xfc\x00\x00\x00\x00",   #   mov     DWORD PTR [rbp-0x4],0x0
+  0x40057c: "\xeb\x3f",                       #   jmp     4005bd <check+0x50>
+  0x40057e: "\x8b\x45\xfc",                   #   mov     eax,DWORD PTR [rbp-0x4]
+  0x400581: "\x48\x63\xd0",                   #   movsxd  rdx,eax
+  0x400584: "\x48\x8b\x45\xe8",               #   mov     rax,QWORD PTR [rbp-0x18]
+  0x400588: "\x48\x01\xd0",                   #   add     rax,rdx
+  0x40058b: "\x0f\xb6\x00",                   #   movzx   eax,BYTE PTR [rax]
+  0x40058e: "\x0f\xbe\xc0",                   #   movsx   eax,al
+  0x400591: "\x83\xe8\x01",                   #   sub     eax,0x1
+  0x400594: "\x83\xf0\x55",                   #   xor     eax,0x55
+  0x400597: "\x89\xc1",                       #   mov     ecx,eax
+  0x400599: "\x48\x8b\x15\xa0\x0a\x20\x00",   #   mov     rdx,QWORD PTR [rip+0x200aa0]        # 601040 <serial>
+  0x4005a0: "\x8b\x45\xfc",                   #   mov     eax,DWORD PTR [rbp-0x4]
+  0x4005a3: "\x48\x98",                       #   cdqe
+  0x4005a5: "\x48\x01\xd0",                   #   add     rax,rdx
+  0x4005a8: "\x0f\xb6\x00",                   #   movzx   eax,BYTE PTR [rax]
+  0x4005ab: "\x0f\xbe\xc0",                   #   movsx   eax,al
+  0x4005ae: "\x39\xc1",                       #   cmp     ecx,eax
+  0x4005b0: "\x74\x07",                       #   je      4005b9 <check+0x4c>
+  0x4005b2: "\xb8\x01\x00\x00\x00",           #   mov     eax,0x1
+  0x4005b7: "\xeb\x0f",                       #   jmp     4005c8 <check+0x5b>
+  0x4005b9: "\x83\x45\xfc\x01",               #   add     DWORD PTR [rbp-0x4],0x1
+  0x4005bd: "\x83\x7d\xfc\x04",               #   cmp     DWORD PTR [rbp-0x4],0x4
+  0x4005c1: "\x7e\xbb",                       #   jle     40057e <check+0x11>
+  0x4005c3: "\xb8\x00\x00\x00\x00",           #   mov     eax,0x0
+  0x4005c8: "\x5d",                           #   pop     rbp
+  0x4005c9: "\xc3",                           #   ret
+}
+
+
+
+if __name__ == '__main__':
+    # Triton context
+    ctx = TritonContext()
+
+    # Set the architecture
+    ctx.setArchitecture(ARCH.X86_64)
+
+    # Symbolic optimization
+    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+
+    # Define the Python syntax
+    ctx.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
+
+    # Define entry point
+    pc = 0x40056d
+
+    # Define our input context
+    ctx.setConcreteMemoryValue(0x1000, ord('a'))
+    ctx.setConcreteMemoryValue(0x1001, ord('b'))
+    ctx.setConcreteMemoryValue(0x1002, ord('c'))
+    ctx.setConcreteMemoryValue(0x1003, ord('d'))
+    ctx.setConcreteMemoryValue(0x1004, ord('e'))
+
+    # Define the serial pointer
+    ctx.setConcreteMemoryValue(0x601040, 0x00)
+    ctx.setConcreteMemoryValue(0x601041, 0x00)
+    ctx.setConcreteMemoryValue(0x601042, 0x90)
+
+    # Define the serial context
+    ctx.setConcreteMemoryValue(0x900000, 0x31)
+    ctx.setConcreteMemoryValue(0x900001, 0x3e)
+    ctx.setConcreteMemoryValue(0x900002, 0x3d)
+    ctx.setConcreteMemoryValue(0x900003, 0x26)
+    ctx.setConcreteMemoryValue(0x900004, 0x31)
+
+    # Point rdi on our buffer
+    ctx.setConcreteRegisterValue(ctx.registers.rdi, 0x1000)
+
+    # Setup stack
+    ctx.setConcreteRegisterValue(ctx.registers.rsp, 0x7fffffff)
+    ctx.setConcreteRegisterValue(ctx.registers.rbp, 0x7fffffff)
+
+    # Let's emulate the function
+    while pc in function:
+        # Build an instruction
+        inst = Instruction()
+
+        # Setup opcode
+        inst.setOpcode(function[pc])
+
+        # Setup Address
+        inst.setAddress(pc)
+
+        # Process the instruction
+        ctx.processing(inst)
+
+        # Spread the instruction address and its disassembly into its symbolic
+        # expressions. Used to refer an instruction to its expressions. Will
+        # be useful to understand the slicing part.
+        for se in inst.getSymbolicExpressions():
+            se.setComment(str(inst))
+
+        # Next instruction
+        pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
+
+        # Let's slice (backward) the rcx expression at 0x4005ae
+        if pc == 0x4005ae:
+            # Get the symbolic expression of RCX
+            rcxExpr = ctx.getSymbolicRegisters()[REG.X86_64.RCX]
+            # Backward slice the RCX expression.
+            slicing = ctx.sliceExpressions(rcxExpr)
+            # Sort the slicing and display all expressions with their comments
+            for k, v in sorted(slicing.items()):
+                # Here we display the comment to understand the correspondence
+                # between an expression and its referenced instruction.
+                print '[slicing]', v.getComment()
+
+    sys.exit(0)
