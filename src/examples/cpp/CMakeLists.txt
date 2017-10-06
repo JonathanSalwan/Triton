@@ -12,10 +12,6 @@ if(NOT STATICLIB)
     add_test(TaintRegister taint_reg)
     add_dependencies(check taint_reg)
 
-    add_executable(taint_and_tag taint_and_tag.cpp)
-    target_link_libraries(taint_and_tag triton)
-    add_dependencies(check taint_and_tag)
-
     add_executable(info_reg info_reg.cpp)
     target_link_libraries(info_reg triton)
     add_test(InfoRegister info_reg)
