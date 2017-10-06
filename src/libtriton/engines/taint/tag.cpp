@@ -13,11 +13,19 @@ namespace triton {
   namespace engines {
     namespace taint {
 
+      std::map<std::string, Tag> Tag::tagMap = std::map<std::string, Tag>();
+
       Tag::Tag(char* data) {
-        /* I first thought of keeping the char* as it is for a better performance, but gave it up since the Python's
-         * resource management scheme * is totally different from C++ that the stored char* does not always point to
-         * the same string as it was at the time when the pointer was stored. */
         this->data = std::make_shared<std::string>(data);
+      }
+
+      Tag Tag::createTag(char *data) {
+        auto tag = Tag::tagMap.find(std::string(data));
+        if (tag != Tag::tagMap.end()) {
+          return tag->second;
+        } else {
+          return Tag(data);
+        }
       }
 
       Tag::~Tag() {

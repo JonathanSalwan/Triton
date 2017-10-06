@@ -45,9 +45,13 @@ namespace triton {
         private:
           std::shared_ptr<std::string> data;
 
-        public:
           //! Initialize a Tag
           Tag(char* data);
+
+        public:
+          static std::map<std::string, Tag> tagMap;
+
+          static Tag createTag(char *data);
 
           ~Tag();
 
