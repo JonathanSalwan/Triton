@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, Instruction, MemoryAccess, TritonContext
+from triton import ARCH, Instruction, MemoryAccess, TritonContext, Tag
 
 
 class TestTaint(unittest.TestCase):
@@ -24,6 +24,20 @@ class TestTaint(unittest.TestCase):
 
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.eax))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.ebx))
+
+    def test_disabled(self):
+        """check taint disabled"""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+        Triton.enableTaintEngine(False)
+        tag1 = Tag('mydata1')
+
+        self.assertFalse(Triton.taintRegister(Triton.registers.rax))
+        self.assertFalse(Triton.taintAndTagRegister(Triton.registers.rax, tag1))
+        self.assertFalse(Triton.untaintRegister(Triton.registers.rax))
+        self.assertFalse(Triton.taintMemory(MemoryAccess(0x1000, 1)))
+        self.assertFalse(Triton.taintAndTagMemory(MemoryAccess(0x1000, 1), tag1))
+        self.assertFalse(Triton.untaintMemory(MemoryAccess(0x1000, 1)))
 
     def test_taint_memory(self):
         """Check tainting memory."""
@@ -64,6 +78,44 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2002, 2)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2003, 2)))
 
+    def test_tag_memory(self):
+        """Check memory tagging."""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+
+        self.assertFalse(Triton.isMemoryTainted(0x1000))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2000, 4)))
+
+        tag1 = Tag('mydata1')
+        Triton.taintAndTagMemory(MemoryAccess(0x1000, 4), tag1)
+        tags1 = Triton.getTagsOnMemory(MemoryAccess(0x1000, 4))
+        tags2 = Triton.getTagsOnMemory(MemoryAccess(0x1000, 2))
+        self.assertTrue(Triton.isMemoryTainted(0x1000))
+        self.assertTrue(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(len(tags1) == 1)
+        self.assertTrue(len(tags2) == 1)
+        self.assertTrue(tags1[0].getData() == 'mydata1')
+        self.assertTrue(tags2[0].getData() == 'mydata1')
+
+        tag2 = Tag('mydata2')
+        Triton.taintAndTagMemory(MemoryAccess(0x1003, 1), tag2)
+        tags3 = Triton.getTagsOnMemory(MemoryAccess(0x1003, 1))
+        tags3_data_list = [t.getData() for t in tags3]
+        tags4 = Triton.getTagsOnMemory(MemoryAccess(0x1004, 1))
+        self.assertTrue(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(len(tags3) == 2)
+        self.assertTrue(len(tags4) == 0)
+        self.assertTrue('mydata1' in tags3_data_list)
+        self.assertTrue('mydata2' in tags3_data_list)
+
+        Triton.untaintMemory(MemoryAccess(0x1003, 1))
+        tags5 = Triton.getTagsOnMemory(MemoryAccess(0x1003, 2))
+        self.assertTrue(len(tags5) == 0)
+        self.assertFalse(Triton.isMemoryTainted(0x1003))
+        self.assertTrue(Triton.isMemoryTainted(0x1000))
+        Triton.untaintMemory(MemoryAccess(0x1000, 4))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1003, 4)))
+
     def test_taint_register(self):
         """Check over tainting register."""
         Triton = TritonContext()
@@ -84,6 +136,31 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.eax))
         self.assertFalse(Triton.isRegisterTainted(Triton.registers.ax))
+
+    def test_tag_register(self):
+        """Check tagging register."""
+        Triton = TritonContext()
+        Triton.setArchitecture(ARCH.X86_64)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+
+        tag1 = Tag('mydata1')
+        Triton.taintAndTagRegister(Triton.registers.rax, tag1)
+        tags1 = Triton.getTagsOnRegister(Triton.registers.rax)
+        self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(len(tags1) is 1)
+
+        tag2 = Tag('mydata2')
+        Triton.taintAndTagRegister(Triton.registers.rax, tag2)
+        tags2 = Triton.getTagsOnRegister(Triton.registers.rax)
+        tag_data_list = [t.getData() for t in tags2]
+        self.assertTrue(len(tags2) is 2)
+        self.assertTrue('mydata1' in tag_data_list)
+        self.assertTrue('mydata2' in tag_data_list)
+
+        Triton.untaintRegister(Triton.registers.rax)
+        tags3 = Triton.getTagsOnRegister(Triton.registers.rax)
+        self.assertFalse(Triton.isRegisterTainted(Triton.registers.rax))
+        self.assertTrue(len(tags3) is 0)
 
     def test_taint_assignement_memory_immediate(self):
         """Check tainting assignment memory <- immediate."""
@@ -184,6 +261,12 @@ class TestTaint(unittest.TestCase):
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2005, 1)))
         self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x2006, 1)))
         self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x2007, 1)))
+
+        Triton.taintRegister(Triton.registers.rax)
+        Triton.taintAssignmentMemoryRegister(MemoryAccess(0x1001, 2), Triton.registers.rax)
+        self.assertTrue(Triton.isMemoryTainted(MemoryAccess(0x1001, 2)))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1000, 1)))
+        self.assertFalse(Triton.isMemoryTainted(MemoryAccess(0x1003, 1)))
 
     def test_taint_assignement_register_immediate(self):
         """Check tainting assignment register <- immediate."""
@@ -468,4 +551,5 @@ class TestTaint(unittest.TestCase):
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
         Triton.setTaintRegister(Triton.registers.rax, False)
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
+
 

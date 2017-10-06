@@ -1093,9 +1093,21 @@ namespace triton {
   }
 
 
+  bool API::taintMemory(const triton::arch::MemoryAccess& mem, triton::engines::taint::Tag tag) {
+    this->checkTaint();
+    return this->taint->taintMemory(mem, tag);
+  }
+
+
   bool API::taintRegister(const triton::arch::Register& reg) {
     this->checkTaint();
     return this->taint->taintRegister(reg);
+  }
+
+
+  bool API::taintRegister(const triton::arch::Register& reg, triton::engines::taint::Tag tag) {
+    this->checkTaint();
+    return this->taint->taintRegister(reg, tag);
   }
 
 
@@ -1199,5 +1211,18 @@ namespace triton {
     this->checkTaint();
     return this->taint->taintAssignmentRegisterRegister(regDst, regSrc);
   }
+
+
+  std::set<triton::engines::taint::Tag> API::getTagsOnRegister(const triton::arch::Register& reg) {
+    this->checkTaint();
+    return this->taint->getTags(reg);
+  }
+
+
+  std::set<triton::engines::taint::Tag> API::getTagsOnMemoryAccess(const triton::arch::MemoryAccess& mem) {
+    this->checkTaint();
+    return this->taint->getTags(mem);
+  }
+
 
 }; /* triton namespace */
