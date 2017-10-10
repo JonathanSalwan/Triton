@@ -88,8 +88,7 @@ namespace triton {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
            for (auto& function: this->getConcreteMemoryValueCallbacks) {
-             // FIXME Const_cast is certainly bad
-             function(api, const_cast<triton::arch::MemoryAccess&>(mem));
+             function(api, mem);
            }
           break;
         }
@@ -104,8 +103,7 @@ namespace triton {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE: {
            for (auto& function: this->getConcreteRegisterValueCallbacks) {
-             // FIXME Const_cast is certainly bad
-             function(api, const_cast<triton::arch::Register&>(reg));
+             function(api, reg);
            }
           break;
         }
