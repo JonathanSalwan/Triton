@@ -874,38 +874,12 @@ namespace triton {
         const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
-        triton::uint32 regSize                    = reg.getSize();
 
         if (this->architecture->isFlag(reg))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
-        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
-          origReg = this->buildSymbolicRegister(parentReg);
-
-        switch (regSize) {
-          case BYTE_SIZE:
-            if (reg.getLow() == 0) {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
-            }
-            else {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
-                            this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
-                          );
-            }
-            break;
-
-          case WORD_SIZE:
-            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
-            break;
-
-          case DWORD_SIZE:
-          case QWORD_SIZE:
-          case DQWORD_SIZE:
-          case QQWORD_SIZE:
-          case DQQWORD_SIZE:
-            finalExpr = this->astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
-            break;
-        }
+        if (this->architecture->getArchitecture() == triton::arch::ARCH_X86_64 || this->architecture->getArchitecture() == triton::arch::ARCH_X86)
+          finalExpr = this->createSymbolicX86RegisterExpression(node, reg, parentReg, origReg);
 
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
@@ -913,6 +887,42 @@ namespace triton {
         inst.setWrittenRegister(reg, node);
 
         return se;
+      }
+
+      /* Returns the abstract node expression for x86 */
+      triton::ast::AbstractNode* SymbolicEngine::createSymbolicX86RegisterExpression(triton::ast::AbstractNode* node, const triton::arch::Register& reg, const triton::arch::Register& parentReg, triton::ast::AbstractNode* origReg)
+      {
+        triton::ast::AbstractNode* finalExpr     = nullptr;
+        triton::uint32 regSize                   = reg.getSize();
+
+        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
+          origReg = this->buildSymbolicRegister(parentReg);
+
+        switch (regSize) {
+        case BYTE_SIZE:
+          if (reg.getLow() == 0) {
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+          }
+          else {
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
+                                             this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
+              );
+          }
+          break;
+
+        case WORD_SIZE:
+          finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+          break;
+
+        case DWORD_SIZE:
+        case QWORD_SIZE:
+        case DQWORD_SIZE:
+        case QQWORD_SIZE:
+        case DQQWORD_SIZE:
+          finalExpr = this->astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+            break;
+        }
+        return finalExpr;
       }
 
 
@@ -1119,4 +1129,3 @@ namespace triton {
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
-
