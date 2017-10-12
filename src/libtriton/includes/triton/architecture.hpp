@@ -36,6 +36,14 @@ namespace triton {
    *  @{
    */
 
+    /*! The Endianness */
+    enum endianness_e {
+      ENDIAN_INVALID = 0, /*!< invalid Endianness. */
+      ENDIAN_LITTLE,      /*!< little endian. */
+      ENDIAN_BIG,         /*!< big endian. */
+      ENDIAN_LAST_ITEM    /*!< must be the last item */
+    };
+
     /*! The architectures */
     enum architectures_e {
       ARCH_INVALID = 0, /*!< invalid architecture. */
@@ -54,6 +62,9 @@ namespace triton {
       protected:
         //! The kind of architecture.
         triton::uint32 arch;
+
+        //! The endianness
+        triton::uint32 endian;
 
         //! Instance to the real CPU class.
         std::unique_ptr<triton::arch::CpuInterface> cpu;
@@ -190,4 +201,3 @@ namespace triton {
 };
 
 #endif /* TRITON_ARCHITECTURE_H */
-
