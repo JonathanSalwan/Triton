@@ -23,6 +23,7 @@ namespace triton {
 
       x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(ARCH_X86) {
         this->callbacks = callbacks;
+        this->endian = triton::arch::ENDIAN_LITTLE;
         this->clear();
       }
 
@@ -186,11 +187,13 @@ namespace triton {
         );
       }
 
-
       bool x86Cpu::isRegisterValid(triton::arch::registers_e regId) const {
         return (this->isFlag(regId) || this->isRegister(regId));
       }
 
+      triton::uint32 x86Cpu::getEndianness() const {
+        return this->endian;
+      }
 
       bool x86Cpu::isGPR(triton::arch::registers_e regId) const {
         return ((regId >= triton::arch::ID_REG_EAX && regId <= triton::arch::ID_REG_EFLAGS) ? true : false);
@@ -882,4 +885,3 @@ namespace triton {
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */
-

@@ -64,6 +64,9 @@ namespace triton {
            */
           std::map<triton::uint64, triton::uint8> memory;
 
+          //! Endianness
+          triton::uint32                          endian;
+
           //! Concrete value of rax
           triton::uint8 rax[QWORD_SIZE];
           //! Concrete value of rbx
@@ -333,6 +336,7 @@ namespace triton {
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           bool isRegister(triton::arch::registers_e regId) const;
           bool isRegisterValid(triton::arch::registers_e regId) const;
+          triton::uint32 getEndianness() const;
           const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
           const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
           const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;

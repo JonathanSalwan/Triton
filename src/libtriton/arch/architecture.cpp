@@ -19,6 +19,7 @@ namespace triton {
 
     Architecture::Architecture(triton::callbacks::Callbacks* callbacks) {
       this->arch      = triton::arch::ARCH_INVALID;
+      this->endian    = triton::arch::ENDIAN_INVALID;
       this->callbacks = callbacks;
     }
 
@@ -253,4 +254,3 @@ namespace triton {
 
   }; /* arch namespace */
 }; /* triton namespace */
-
