@@ -63,9 +63,6 @@ namespace triton {
         //! The kind of architecture.
         triton::uint32 arch;
 
-        //! The endianness.
-        triton::uint32 endian;
-
         //! Instance to the real CPU class.
         std::unique_ptr<triton::arch::CpuInterface> cpu;
 
