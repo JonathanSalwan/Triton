@@ -23,6 +23,9 @@ namespace triton {
       this->callbacks = callbacks;
     }
 
+    triton::uint32 Architecture::getEndianness(void) const {
+      return this->endian;
+    }
 
     triton::uint32 Architecture::getArchitecture(void) const {
       return this->arch;
@@ -43,7 +46,6 @@ namespace triton {
 
       /* Setup global variables */
       this->arch = arch;
-
       /* Allocate and init the good arch */
       switch (this->arch) {
         case triton::arch::ARCH_X86_64:
@@ -51,6 +53,10 @@ namespace triton {
           this->cpu.reset(new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
+          /* Setup endianness. */
+          if (!(this->cpu->getEndianness() > triton::arch::ENDIAN_INVALID && this->cpu->getEndianness() < triton::arch::ENDIAN_LAST_ITEM))
+            throw triton::exceptions::Architecture("Architecture::setArchitecture: Invalid Endianness.");
+          this->endian = this->cpu->getEndianness();
           break;
 
         case triton::arch::ARCH_X86:
@@ -58,6 +64,10 @@ namespace triton {
           this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
+          /* Setup endianness. */
+          if (!(this->cpu->getEndianness() > triton::arch::ENDIAN_INVALID && this->cpu->getEndianness() < triton::arch::ENDIAN_LAST_ITEM))
+            throw triton::exceptions::Architecture("Architecture::setArchitecture: Invalid Endianness.");
+          this->endian = this->cpu->getEndianness();
           break;
       }
     }

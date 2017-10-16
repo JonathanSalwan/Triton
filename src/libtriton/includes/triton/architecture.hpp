@@ -63,7 +63,7 @@ namespace triton {
         //! The kind of architecture.
         triton::uint32 arch;
 
-        //! The endianness
+        //! The endianness.
         triton::uint32 endian;
 
         //! Instance to the real CPU class.
@@ -93,6 +93,10 @@ namespace triton {
 
         //! Returns true if the architecture is valid.
         bool isValid(void) const;
+
+
+        //! Returns the endianness as triton::arch::endianness_e.
+        triton::uint32 getEndianness(void) const;
 
         //! Returns the architecture as triton::arch::architecture_e.
         triton::uint32 getArchitecture(void) const;
