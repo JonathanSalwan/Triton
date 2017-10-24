@@ -170,10 +170,6 @@ namespace triton {
       }
 
 
-      SymbolicSimplification::~SymbolicSimplification() {
-      }
-
-
       void SymbolicSimplification::copy(const SymbolicSimplification& other) {
         this->callbacks = other.callbacks;
       }

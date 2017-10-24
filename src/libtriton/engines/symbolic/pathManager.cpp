@@ -29,10 +29,6 @@ namespace triton {
       }
 
 
-      PathManager::~PathManager() {
-      }
-
-
       void PathManager::copy(const PathManager& other) {
         this->pathConstraints = other.pathConstraints;
       }

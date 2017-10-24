@@ -61,9 +61,6 @@ namespace triton {
                        triton::engines::taint::TaintEngine* taintEngine,
                        triton::ast::AstContext& astCtxt);
 
-          //! Destructor.
-          virtual ~x86Semantics();
-
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
           bool buildSemantics(triton::arch::Instruction& inst);
 

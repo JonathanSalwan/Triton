@@ -46,10 +46,6 @@ namespace triton {
     }
 
 
-    MemoryAccess::~MemoryAccess() {
-    }
-
-
     triton::uint32 MemoryAccess::getAbstractLow(void) const {
       return this->getLow();
     }

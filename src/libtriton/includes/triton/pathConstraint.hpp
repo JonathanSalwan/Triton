@@ -60,9 +60,6 @@ namespace triton {
           //! Constructor by copy.
           PathConstraint(const PathConstraint &copy);
 
-          //! Destructore.
-          virtual ~PathConstraint();
-
           //! Adds a branch to the path constraint.
           void addBranchConstraint(bool taken, triton::uint64 srdAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc);
 

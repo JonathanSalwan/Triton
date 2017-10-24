@@ -121,9 +121,6 @@ namespace triton {
 
           //! Constructor.
           SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
-
-          //! Destructor.
-          virtual ~SymbolicExpression();
       };
 
       //! Displays a symbolic expression.

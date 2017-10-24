@@ -344,10 +344,6 @@ namespace triton {
       }
 
 
-      x86Semantics::~x86Semantics() {
-      }
-
-
       bool x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
           case ID_INS_AAD:            this->aad_s(inst);          break;

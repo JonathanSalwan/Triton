@@ -22,10 +22,6 @@ namespace triton {
     }
 
 
-    Modes::~Modes() {
-    }
-
-
     void Modes::copy(const Modes& other) {
       this->enabledModes = other.enabledModes;
     }

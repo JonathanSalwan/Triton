@@ -258,6 +258,9 @@ void check(void)
   asm("tzcnt rbx, rax");
   asm("mov rax, 0x8000000000000000");
   asm("tzcnt rbx, rax");
+  asm("mov rax, 0xffffffffffffffff");
+  asm("mov rbx, 0x0");
+  asm("tzcnt rbx, rax");
 
   asm("mov rax, 0x0");
   asm("mov rbx, 0x0");

@@ -42,10 +42,6 @@ namespace triton {
       }
 
 
-      SymbolicVariable::~SymbolicVariable() {
-      }
-
-
       symkind_e SymbolicVariable::getKind(void) const {
         return this->kind;
       }

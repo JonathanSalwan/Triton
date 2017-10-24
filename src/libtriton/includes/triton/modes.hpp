@@ -54,9 +54,6 @@ namespace triton {
         //! Constructor.
         Modes(const Modes& copy);
 
-        //! Destructor.
-        virtual ~Modes();
-
         //! Copies a Modes.
         void copy(const Modes& other);
 

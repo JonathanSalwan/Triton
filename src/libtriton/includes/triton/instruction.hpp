@@ -112,9 +112,6 @@ namespace triton {
         //! Constructor by copy.
         Instruction(const Instruction& other);
 
-        //! Destructor.
-        virtual ~Instruction();
-
         //! Copies an Instruction.
         void operator=(const Instruction& other);
 

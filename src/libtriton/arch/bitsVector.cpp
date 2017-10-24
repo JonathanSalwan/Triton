@@ -31,10 +31,6 @@ namespace triton {
     }
 
 
-    BitsVector::~BitsVector() {
-    }
-
-
     triton::uint32 BitsVector::getHigh(void) const {
       return this->high;
     }

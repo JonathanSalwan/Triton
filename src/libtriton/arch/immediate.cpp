@@ -55,10 +55,6 @@ namespace triton {
     }
 
 
-    Immediate::~Immediate() {
-    }
-
-
     triton::uint64 Immediate::getValue(void) const {
       return this->value;
     }
