@@ -1,11 +1,20 @@
+
 from triton import OPERAND, SYMEXPR, ARCH, OPCODE
 import pintool as Pintool
+import os
 
 BLUE  = "\033[94m"
 ENDC  = "\033[0m"
 GREEN = "\033[92m"
 RED   = "\033[91m"
 
+# Check if we are on a Travis environment
+Travis = False
+try:
+    if os.environ['TRAVIS']:
+        Travis = True
+except:
+    pass
 
 # Get the Triton context over the pintool
 Triton = Pintool.getTritonContext()
@@ -70,6 +79,15 @@ def cafter(instruction):
         if cvalue != svalue:
 
             if reg.getName() == 'of' and instruction.getType() in ofIgnored:
+                continue
+
+            # On processors that do not support TZCNT, the instruction byte
+            # encoding is executed as BSF. The key difference between TZCNT
+            # and BSF instruction is that TZCNT provides operand size as output
+            # when source operand is zero while in the case of BSF instruction,
+            # if source operand is zero, the content of destination operand are
+            # undefined.
+            if instruction.getType() == OPCODE.TZCNT and if Travis == True:
                 continue
 
             good = False
