@@ -87,7 +87,7 @@ def cafter(instruction):
             # when source operand is zero while in the case of BSF instruction,
             # if source operand is zero, the content of destination operand are
             # undefined.
-            if instruction.getType() == OPCODE.TZCNT and if Travis == True:
+            if instruction.getType() == OPCODE.TZCNT and Travis == True:
                 continue
 
             good = False
