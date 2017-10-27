@@ -1,7 +1,9 @@
 enable_testing()
 
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+find_package(Z3)
 
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+include_directories(${Z3_INCLUDE_DIRS})
 add_executable(taint_reg taint_reg.cpp)
 target_link_libraries(taint_reg triton)
 add_test(TaintRegister taint_reg)
