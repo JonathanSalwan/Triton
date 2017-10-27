@@ -235,7 +235,7 @@ if($ENV{Z3_LIBRARIES})
 endif()
 if(NOT STATICLIB) # Only if building dynamic library
   if(NOT Z3_INCLUDE_DIRS OR NOT Z3_LIBRARIES)
-    find_package(Z3 REQUIRED)
+    find_package(Z3)
     # Allow manual override
     if($ENV{Z3_INCLUDE_DIRS})
       set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
