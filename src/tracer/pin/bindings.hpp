@@ -53,7 +53,7 @@ namespace tracer {
     bool execScript(const char* fileName);
 
     //! The initialization of the Pin's Python env.
-    void initBindings(void);
+    void initBindings(int argc, char* argv[]);
 
     //! The Options namespace
     namespace options {

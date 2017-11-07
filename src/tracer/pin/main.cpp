@@ -713,7 +713,7 @@ namespace tracer {
       PIN_InterceptSignal(SIGTERM, callbackSignals, nullptr);
 
       /* Exec the Pin's python bindings */
-      tracer::pintool::initBindings();
+      tracer::pintool::initBindings(argc, argv);
       tracer::pintool::execScript(KnobPythonModule.Value().c_str());
 
       return 0;

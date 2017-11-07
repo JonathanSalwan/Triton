@@ -141,7 +141,10 @@ namespace tracer {
     };
 
 
-    void initBindings(void) {
+    void initBindings(int argc, char* argv[]) {
+      /* Setup argc and argv */
+      PySys_SetArgv(argc, argv);
+
       /* Setup pintool bindings */
       PyObject* pintoolModule = Py_InitModule("pintool", tracer::pintool::pintoolCallbacks);
 
