@@ -21,11 +21,10 @@
 
 \section description_sec Description
 
-Triton is a dynamic binary analysis (DBA) framework. It provides internal components
-like a \ref engine_DSE_page (DSE) engine, a \ref engine_Taint_page, \ref py_AstContext_page of the x86 and the x86-64
-instruction set semantics, \ref SMT_simplification_page, a \ref solver_interface_page and, the last but not least,
-\ref py_triton_page. Based on these components, you are able to build program analysis tools,
-automate reverse engineering and perform software verification.
+<b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
+like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
+of the <b>x86</b> and the <b>x86-64</b> instructions set semantics, <b>SMT simplification</b> passes,
+an <b>SMT Solver</b> Interface and, the last but not least, <b>Python bindings</b>.
 
 
 <br>
@@ -33,6 +32,18 @@ automate reverse engineering and perform software verification.
 \section publications_sec Presentations and Publications
 
 <ul>
+  <li><b>Deobfuscation of VM based software protection </b><br>
+  Talk at SSTIC, Rennes, 2017.
+  [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-paper.pdf">french paper</a>]
+  [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-slide.pdf">english slide</a>]
+  [<a href="https://static.sstic.org/videos2017/SSTIC_2017-06-07_P08.mp4">french video</a>]
+  [<a href="https://triton.quarkslab.com/files/DeobfuscationSSTIC2017.txt">bibtex</a>]<br>
+  Abstract: <i>In this presentation we describe an approach which consists to automatically analyze virtual
+  machine based software protections and which recompiles a new version of the binary without such protections. This
+  automated approach relies on a symbolic execution guide by a taint analysis and some concretization policies, then
+  on a binary rewriting using LLVM transition.
+  </i></li>
+
   <li><b>How Triton can help to reverse virtual machine based software protections</b><br>
   Talk at CSAW SOS, NYC, 2016.
   [<a href="https://triton.quarkslab.com/files/csaw2016-sos-rthomas-jsalwan.pdf">slide</a>]<br>

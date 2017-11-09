@@ -699,7 +699,7 @@ namespace tracer {
       /* Syscall exit callback */
       PIN_AddSyscallExitFunction(callbackSyscallExit, nullptr);
 
-      ///* Signals callback */
+      /* Signals callback */
       PIN_InterceptSignal(SIGHUP,  callbackSignals, nullptr);
       PIN_InterceptSignal(SIGINT,  callbackSignals, nullptr);
       PIN_InterceptSignal(SIGQUIT, callbackSignals, nullptr);
