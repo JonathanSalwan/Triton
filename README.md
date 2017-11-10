@@ -25,7 +25,7 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
-    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/master/graph/badge.svg" alt="Codecov" />
+    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/dev-v0.6/graph/badge.svg" alt="Codecov" />
   </a>
 </p>
 
