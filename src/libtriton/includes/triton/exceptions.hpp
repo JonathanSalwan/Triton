@@ -383,42 +383,6 @@ namespace triton {
     };
 
 
-    /*! \class Format
-     *  \brief The exception class used by all binary formats. */
-    class Format : public triton::exceptions::Exception {
-      public:
-        //! Constructor.
-        Format(const char* message) : triton::exceptions::Exception(message) {};
-
-        //! Constructor.
-        Format(const std::string& message) : triton::exceptions::Exception(message) {};
-    };
-
-
-    /*! \class Elf
-     *  \brief The exception class used by the ELF format. */
-    class Elf : public triton::exceptions::Format {
-      public:
-        //! Constructor.
-        Elf(const char* message) : triton::exceptions::Format(message) {};
-
-        //! Constructor.
-        Elf(const std::string& message) : triton::exceptions::Format(message) {};
-    };
-
-
-    /*! \class Pe
-     *  \brief The exception class used by the PE format. */
-    class Pe : public triton::exceptions::Format {
-      public:
-        //! Constructor.
-        Pe(const char* message) : triton::exceptions::Format(message) {};
-
-        //! Constructor.
-        Pe(const std::string& message) : triton::exceptions::Format(message) {};
-    };
-
-
     /*! \class Callbacks
      *  \brief The exception class used by callbacks. */
     class Callbacks : public triton::exceptions::Exception {

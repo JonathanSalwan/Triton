@@ -61,12 +61,6 @@ namespace triton {
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(PyObject* cpuSizeDict);
 
-      //! Initializes the ELF python namespace.
-      void initElfNamespace(PyObject* elfDict);
-
-      //! Initializes the PE python namespace.
-      void initPENamespace(PyObject* peDict);
-
       //! Initializes the OPCODE python namespace.
       void initX86OpcodesNamespace(PyObject* opcodeDict);
 
