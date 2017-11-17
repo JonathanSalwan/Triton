@@ -2150,8 +2150,6 @@ namespace triton {
       }
 
 
-
-
       static PyObject* TritonContext_setArchitecture(PyObject* self, PyObject* arg) {
         if (!PyLong_Check(arg) && !PyInt_Check(arg))
           return PyErr_Format(PyExc_TypeError, "setArchitecture(): Expects an ARCH as argument.");
