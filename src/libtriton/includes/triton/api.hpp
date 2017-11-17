@@ -259,16 +259,16 @@ namespace triton {
         std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
 
         //! [**AST garbage collector api**] - Returns all variable nodes recorded.
-        const std::map<std::string, triton::ast::AbstractNode*>& getAstVariableNodes(void) const;
+        const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
 
         //! [**AST garbage collector api**] - Returns the node of a recorded variable.
-        triton::ast::AbstractNode* getAstVariableNode(const std::string& name) const;
+        std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
 
         //! [**AST garbage collector api**] - Sets all allocated nodes.
         void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
 
         //! [**AST garbage collector api**] - Sets all variable nodes recorded.
-        void setAstVariableNodes(const std::map<std::string, triton::ast::AbstractNode*>& nodes);
+        void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
 
 
 

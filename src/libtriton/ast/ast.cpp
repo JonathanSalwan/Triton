@@ -2242,7 +2242,7 @@ namespace triton {
 
     /* Representation dispatcher from an abstract node */
     std::ostream& operator<<(std::ostream& stream, AbstractNode* node) {
-      return triton::ast::representations::astRepresentation.print(stream, node);
+      return node->getContext().print(stream, node);
     }
 
   }; /* ast namespace */
