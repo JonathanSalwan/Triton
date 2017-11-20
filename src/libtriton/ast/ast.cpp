@@ -2146,18 +2146,17 @@ namespace triton {
     /* ====== Variable node */
 
 
-    // WARNING: A variable ast node should not live once the SymbolicVariable is dead
-    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
+    VariableNode::VariableNode(std::string const& varName, triton::uint32 size, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
-        symVar(symVar) {
-      ctxt.initVariable(symVar.getName(), 0);
+        varName(varName) {
+      setBitvectorSize(size);
+      ctxt.initVariable(varName, 0);
       this->init();
     }
 
 
     void VariableNode::init(void) {
-      this->size        = this->symVar.getSize();
-      this->eval        = ctxt.getValueForVariable(this->symVar.getName()) & this->getBitvectorMask();
+      this->eval        = ctxt.getValueForVariable(this->varName) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */
@@ -2166,8 +2165,8 @@ namespace triton {
     }
 
 
-    triton::engines::symbolic::SymbolicVariable& VariableNode::getVar() {
-      return this->symVar;
+    std::string const& VariableNode::getVarName() const {
+      return this->varName;
     }
 
 
@@ -2175,7 +2174,7 @@ namespace triton {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
 
-      for (char c : this->symVar.getName())
+      for (char c : this->varName)
         h = h ^ triton::ast::pow(c, index++);
 
       return triton::ast::rotl(h, deep);

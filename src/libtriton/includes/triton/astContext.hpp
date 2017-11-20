@@ -198,7 +198,7 @@ namespace triton {
         AbstractNode* sx(triton::uint32 sizeExt, AbstractNode* expr);
 
         //! AST C++ API - variable node builder
-        AbstractNode* variable(triton::engines::symbolic::SymbolicVariable& symVar);
+        AbstractNode* variable(std::string const& varName, triton::uint32 size);
 
         //! AST C++ API - zx node builder
         AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
