@@ -12,7 +12,7 @@
 #include <triton/coreUtils.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/astContext.hpp>
-
+#include <triton/swab.hpp>
 
 
 /*! \page engine_DSE_page Dynamic Symbolic Execution
@@ -568,6 +568,21 @@ namespace triton {
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
+        /*  Convert big endian addresses */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(symVarSize) {
+          case DQWORD_SIZE:
+            memAddr = swab16(memAddr);
+            break;
+          case QQWORD_SIZE:
+            memAddr = swab32(memAddr);
+            break;
+          case DQQWORD_SIZE:
+            memAddr = swab64(memAddr);
+            break;
+          default:
+            break;
+          }
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
 
@@ -723,6 +738,20 @@ namespace triton {
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
         while (size) {
+          if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+            switch(size) {
+              case DQWORD_SIZE:
+                address = swab16(address);
+                break;
+              case QQWORD_SIZE:
+                address = swab32(address);
+                break;
+              case DQQWORD_SIZE:
+                address = swab64(address);
+                break;
+              default:
+                break;
+            }
           symMem = this->getSymbolicMemoryId(address + size - 1);
           /* Check if the memory cell is already symbolic */
           if (symMem != triton::engines::symbolic::UNSET) {
@@ -823,6 +852,21 @@ namespace triton {
         triton::uint64 address   = mem.getAddress();
         triton::uint32 writeSize = mem.getSize();
 
+        /* Convert big endian addresses. */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(writeSize) {
+          case DQWORD_SIZE:
+            address = swab16(address);
+            break;
+          case QQWORD_SIZE:
+            address = swab32(address);
+            break;
+          case DQQWORD_SIZE:
+            address = swab64(address);
+            break;
+          default:
+            break;
+          }
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
@@ -987,6 +1031,21 @@ namespace triton {
         if (node->getBitvectorSize() != mem.getBitSize())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
+        /* Convert big endian addresses. */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(writeSize) {
+          case DQWORD_SIZE:
+            address = swab16(address);
+            break;
+          case QQWORD_SIZE:
+            address = swab32(address);
+            break;
+          case DQQWORD_SIZE:
+            address = swab64(address);
+            break;
+          default:
+            break;
+          }
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
