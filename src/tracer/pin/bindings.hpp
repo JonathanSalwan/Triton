@@ -11,7 +11,7 @@
 /* libTriton */
 #include <triton/pythonBindings.hpp>
 #include <triton/api.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 #include <map>
 #include <set>

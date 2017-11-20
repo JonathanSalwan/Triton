@@ -8,7 +8,7 @@
 /* libTriton */
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonObjects.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 #include <pin.H>
 

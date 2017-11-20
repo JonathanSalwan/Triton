@@ -29,9 +29,6 @@ namespace triton {
 
     //! Enumerates all kinds of mode.
     enum mode_e {
-      /* AST */
-      AST_DICTIONARIES,      //!< [ast mode] Abstract Syntax Tree dictionaries.
-
       /* Symbolic */
       ALIGNED_MEMORY,        //!< [symbolic mode] Keep a map of aligned memory.
       ONLY_ON_SYMBOLIZED,    //!< [symbolic mode] Perform symbolic execution only on symbolized expressions.

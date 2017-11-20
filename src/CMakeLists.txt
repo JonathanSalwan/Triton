@@ -1,3 +1,4 @@
+add_subdirectory(libtritonast)
 add_subdirectory(libtriton)
 
 if(PINTOOL)

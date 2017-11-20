@@ -160,7 +160,7 @@ def getNewInput():
                     seed   = dict()
                     for k, v in models.items():
                         # Get the symbolic variable assigned to the model
-                        symVar = Triton.getSymbolicVariableFromId(k)
+                        symVar = Triton.getSymbolicVariableFromName(k)
                         # Save the new input as seed.
                         seed.update({symVar.getKindValue(): v.getValue()})
                     if seed:

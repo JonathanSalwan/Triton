@@ -22,18 +22,18 @@ environment:
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x86-win
       CMAKE_TEMPLATE: Visual Studio 14 2015
       PYTHON: "C:\\Python27"
 
     #- platform: Win32
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
-    #  Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
-    #  Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
-    #  Z3_PKG_NAME: z3-4.5.0-x86-win
+    #  Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
+    #  Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
+    #  Z3_PKG_NAME: z3-4.6.0-x86-win
     #  CMAKE_TEMPLATE: Visual Studio 15 2017
     #  PYTHON: "C:\\Python27"
 
@@ -41,18 +41,18 @@ environment:
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x64-win
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       PYTHON: "C:\\Python27-x64"
 
     #- platform: x64
     #  APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
     #  CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
-    #  Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
-    #  Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
-    #  Z3_PKG_NAME: z3-4.5.0-x64-win
+    #  Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
+    #  Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
+    #  Z3_PKG_NAME: z3-4.6.0-x64-win
     #  CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
     #  PYTHON: "C:\\Python27-x64"
 
@@ -62,7 +62,7 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.5.0/%Z3_PKG_NAME%.zip
+  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
     # Install z3 in the path
   - set PATH=%Z3_PKG_NAME%/bin;%PATH%

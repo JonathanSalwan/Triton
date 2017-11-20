@@ -10,7 +10,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-4.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=g++-4.8, C_COMPILER=gcc-4.8, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=g++-4.8, C_COMPILER=gcc-4.8, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux gcc 4.9
         - os: linux
@@ -20,7 +20,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-4.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=g++-4.9, C_COMPILER=gcc-4.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=g++-4.9, C_COMPILER=gcc-4.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux gcc 5.0
         - os: linux
@@ -30,7 +30,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux gcc 5.0 with gcov
         - os: linux
@@ -40,7 +40,29 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
+
+          # We can't use gcc 6/7 as they detect an issue in boost 1.55 fixed in boost 1.66 which is not available on 
+          # trusty. If we really want it, we should install boost from source
+          #        # Linux gcc 6.0
+          #        - os: linux
+          #          dist: trusty
+          #          compiler: gcc
+          #          addons:
+          #            apt:
+          #              sources: ['ubuntu-toolchain-r-test']
+          #              packages: ['g++-6', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          #          env: [ CXX_COMPILER=g++-6, C_COMPILER=gcc-6, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          #
+          #        # Linux gcc 7.0
+          #        - os: linux
+          #          dist: trusty
+          #          compiler: gcc
+          #          addons:
+          #            apt:
+          #              sources: ['ubuntu-toolchain-r-test']
+          #              packages: ['g++-7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          #          env: [ CXX_COMPILER=g++-7, C_COMPILER=gcc-7, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
 
         # Linux clang 3.5
         - os: linux
@@ -50,7 +72,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.5', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.5, C_COMPILER=clang-3.5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=clang++-3.5, C_COMPILER=clang-3.5, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux clang 3.6
         - os: linux
@@ -60,7 +82,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.6', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.6, C_COMPILER=clang-3.6, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=clang++-3.6, C_COMPILER=clang-3.6, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux clang 3.7
         - os: linux
@@ -70,7 +92,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
               packages: ['clang-3.7', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux clang 3.8
         - os: linux
@@ -80,7 +102,7 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.8', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.8, C_COMPILER=clang-3.8, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=clang++-3.8, C_COMPILER=clang-3.8, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # Linux clang 3.9
         - os: linux
@@ -90,41 +112,46 @@ matrix:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['clang-3.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
-        # Linux clang 3.9
+        # Linux clang 4.0
         - os: linux
           dist: trusty
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['clang-3.9', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
-          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, PYTHON_VERSION=2.7, Z3_PKG=z3-4.5.0-x64-ubuntu-14.04 ]
+              sources: ['ubuntu-toolchain-r-test', "llvm-toolchain-trusty-4.0"]
+              packages: ['clang-4.0', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          env: [ CXX_COMPILER=clang++-4.0, C_COMPILER=clang-4.0, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
+
+        # Linux clang 5.0
+        - os: linux
+          dist: trusty
+          compiler: clang
+          addons:
+            apt:
+              sources: ['ubuntu-toolchain-r-test', "llvm-toolchain-trusty-5.0"]
+              packages: ['clang-5.0', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
+          env: [ CXX_COMPILER=clang++-5.0, C_COMPILER=clang-5.0, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
         # OSX xcode 7.3
         - os: osx
           osx_image: xcode7.3
           compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
-        # OSX xcode 8.0
+        # OSX xcode 8.3
         - os: osx
-          osx_image: xcode8
+          language: generic
+          osx_image: xcode8.3
           compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_PYTHON_ENV='' ]
 
-        # OSX xcode 8.1
-        - os: osx
-          osx_image: xcode8.1
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
-
-        # OSX xcode 8.2
-        - os: osx
-          osx_image: xcode8.2
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+          #        # OSX xcode 9 Doesn't work because lief.so installation fail. See https://github.com/lief-project/LIEF/issues/130
+          #        - os: osx
+          #          osx_image: xcode9
+          #          compiler: clang
+          #          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
 notifications:
   email: false
@@ -136,14 +163,15 @@ cache:
   - ccache
 
 before_install:
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/Z3Prover/z3/releases/download/z3-4.5.0/${Z3_PKG}.zip; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/${Z3_PKG}.zip; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then unzip ${Z3_PKG}.zip; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install python-setuptools; fi
   - export CC="$C_COMPILER"
   - export CXX="$CXX_COMPILER"
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PREFIX="/usr/local"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install $TT_DEP_BREW_PKGS; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3 capstone; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export DYLD_LIBRARY_PATH=/usr/local/opt/capstone/lib/:$DYLD_LIBRARY_PATH; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
 
@@ -154,16 +182,11 @@ install:
   - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
   # Install capstone
-  - git clone https://github.com/aquynh/capstone.git
-  - cd capstone
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/aquynh/capstone.git; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd capstone; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash ./make.sh; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then ./make.sh; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo PREFIX=/usr/local make install; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd ./bindings/python; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo python2.7 ./setup.py install; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cd ../../; fi
-  - cd ../
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ../; fi
   # Download pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
@@ -171,9 +194,9 @@ install:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then tar -xf pin-2.14-71313-clang.4.2-mac.tar.gz; fi
   # Install LIEF
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/lief-project/LIEF/releases/download/0.7.0/linux_lief-0.7.0_py2.7.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo pip install linux_lief-0.7.0_py2.7.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo pip2 install linux_lief-0.7.0_py2.7.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then wget https://github.com/lief-project/LIEF/releases/download/0.7.0/osx_lief-0.7.0_py2.7.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo pip install osx_lief-0.7.0_py2.7.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then sudo pip2 install osx_lief-0.7.0_py2.7.tar.gz -v; fi
   # Move Triton into pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then mv ./Triton ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ./pin-2.14-71313-gcc.4.4.7-linux/source/tools/Triton; fi
@@ -188,6 +211,8 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then cmake $TT_PYTHON_ENV ..; fi
   - make -j2
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then mkdir -p /Users/travis/Library/Python/2.7/lib/python/site-packages; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> /Users/travis/Library/Python/2.7/lib/python/site-packages/homebrew.pth; fi
   - make check
   # Check installation succeed
   - sudo make install

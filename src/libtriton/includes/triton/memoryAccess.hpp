@@ -8,14 +8,16 @@
 #ifndef TRITON_MEMORYACCESS
 #define TRITON_MEMORYACCESS
 
-#include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/immediate.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
+#include <tritonast/nodes.hpp>
+
+#include <memory>
 
 
 //! The Triton namespace
@@ -61,7 +63,7 @@ namespace triton {
         triton::arch::Immediate scale;
 
         //! The AST of the memory access (LEA).
-        triton::ast::AbstractNode* leaAst;
+        triton::ast::SharedAbstractNode leaAst;
 
         //! Copy a MemoryAccess.
         void copy(const MemoryAccess& other);
@@ -77,7 +79,7 @@ namespace triton {
         MemoryAccess(const MemoryAccess& other);
 
         //! Returns the AST of the memory access (LEA).
-        triton::ast::AbstractNode* getLeaAst(void) const;
+        triton::ast::SharedAbstractNode const& getLeaAst(void) const;
 
         //! Returns the address of the memory.
         triton::uint64 getAddress(void) const;
@@ -155,7 +157,7 @@ namespace triton {
         void setScale(const triton::arch::Immediate& scale);
 
         //! Sets the AST of the memory access (LEA).
-        void setLeaAst(triton::ast::AbstractNode* ast);
+        void setLeaAst(triton::ast::SharedAbstractNode const& ast);
 
         //! Copies a MemoryAccess.
         void operator=(const MemoryAccess& other);

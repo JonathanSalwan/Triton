@@ -8,9 +8,11 @@
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
+
+#include <triton/astContext.hpp>          // for Context
 #include <triton/exceptions.hpp>
+
+#include <tritonast/nodes.hpp>
 
 
 
@@ -133,7 +135,7 @@ namespace triton {
       //! AstNode destructor.
       void AstNode_dealloc(PyObject* self) {
         std::cout << std::flush;
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -142,12 +144,12 @@ namespace triton {
           if (other == nullptr || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::equalTo(): Expected a AstNode as argument.");
 
-          if (PyAstNode_AsAstNode(self)->equalTo(PyAstNode_AsAstNode(other)))
+          if (PyAstNode_AsAstNode(self)->equalTo(PyAstNode_AsAstNode(other).get()))
             Py_RETURN_TRUE;
 
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -157,7 +159,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyAstNode_AsAstNode(self)->evaluate());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -167,7 +169,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyAstNode_AsAstNode(self)->getBitvectorMask());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -177,7 +179,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getBitvectorSize());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -186,7 +188,7 @@ namespace triton {
       static PyObject* AstNode_getChildren(PyObject* self, PyObject* noarg) {
         try {
           PyObject* children;
-          triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self);
+          auto& node = PyAstNode_AsAstNode(self);
 
           triton::usize size = node->getChildren().size();
           children = xPyList_New(size);
@@ -195,7 +197,7 @@ namespace triton {
 
           return children;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -205,7 +207,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyAstNode_AsAstNode(self)->hash(1));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -215,7 +217,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getKind());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -224,14 +226,14 @@ namespace triton {
       static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
-          std::set<triton::ast::AbstractNode*>& parents = PyAstNode_AsAstNode(self)->getParents();
+          auto parents = PyAstNode_AsAstNode(self)->getParents();
           ret = xPyList_New(parents.size());
           triton::uint32 index = 0;
-          for (std::set<triton::ast::AbstractNode*>::iterator it = parents.begin(); it != parents.end(); it++)
-            PyList_SetItem(ret, index++, PyAstNode(*it));
+          for (auto& sp: parents)
+            PyList_SetItem(ret, index++, PyAstNode(sp));
           return ret;
           }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -239,23 +241,23 @@ namespace triton {
 
       static PyObject* AstNode_getValue(PyObject* self, PyObject* noarg) {
         try {
-          triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self);
+          triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self).get();
 
           if (node->getKind() == triton::ast::DECIMAL_NODE)
             return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node)->getValue());
 
           else if (node->getKind() == triton::ast::REFERENCE_NODE)
-            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getId());
+            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getId());
 
           else if (node->getKind() == triton::ast::STRING_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node)->getValue().c_str());
 
           else if (node->getKind() == triton::ast::VARIABLE_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getName().c_str());
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node)->getVarName().c_str());
 
           return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -267,7 +269,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -279,7 +281,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -291,7 +293,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -302,7 +304,6 @@ namespace triton {
           PyObject* index = nullptr;
           PyObject* node = nullptr;
           triton::uint32 idx;
-          triton::ast::AbstractNode* dst,* src;
 
           PyArg_ParseTuple(args, "|OO", &index, &node);
 
@@ -313,21 +314,21 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected a AstNode as second argument.");
 
           idx = PyLong_AsUint32(index);
-          src = PyAstNode_AsAstNode(node);
-          dst = PyAstNode_AsAstNode(self);
+          auto& src = PyAstNode_AsAstNode(node);
+          auto& dst = PyAstNode_AsAstNode(self);
           dst->setChild(idx, src);
           dst->init();
 
           Py_RETURN_TRUE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
 
 
       static int AstNode_print(PyObject* self) {
-        std::cout << PyAstNode_AsAstNode(self);
+        std::cout << PyAstNode_AsAstNode(self).get();
         return 0;
       }
 
@@ -340,10 +341,10 @@ namespace triton {
       static PyObject* AstNode_str(PyObject* self) {
         try {
           std::stringstream str;
-          str << PyAstNode_AsAstNode(self);
+          str << PyAstNode_AsAstNode(self).get();
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -355,7 +356,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -367,7 +368,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -379,7 +380,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -391,7 +392,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvudiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -403,7 +404,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -415,7 +416,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorNeg(): Expected a AstNode as argument.");
           return PyAstNode(PyAstNode_AsAstNode(node)->getContext().bvneg(PyAstNode_AsAstNode(node)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -427,7 +428,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorNot(): Expected a AstNode as argument.");
           return PyAstNode(PyAstNode_AsAstNode(node)->getContext().bvnot(PyAstNode_AsAstNode(node)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -439,7 +440,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -451,7 +452,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -463,7 +464,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -475,7 +476,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -487,7 +488,7 @@ namespace triton {
             return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
           return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -510,8 +511,6 @@ namespace triton {
       static PyObject* AstNode_richcompare(PyObject* self, PyObject* other, int op)
       {
         PyObject* result                 = nullptr;
-        triton::ast::AbstractNode* node1 = nullptr;
-        triton::ast::AbstractNode* node2 = nullptr;
 
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
@@ -525,8 +524,8 @@ namespace triton {
         }
 
         else {
-          node1 = PyAstNode_AsAstNode(self);
-          node2 = PyAstNode_AsAstNode(other);
+          auto& node1 = PyAstNode_AsAstNode(self);
+          auto& node2 = PyAstNode_AsAstNode(other);
 
           switch (op) {
             case Py_LT:
@@ -617,6 +616,18 @@ namespace triton {
         0,                                          /* nb_index */
       };
 
+      static PyObject *
+        AstNode_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
+        {
+          return type->tp_alloc(type, 0);
+        }
+
+      static int
+        AstNode_init(AstNode_Object *self, PyObject *args, PyObject *kwds)
+        {
+          return 0;
+        }
+
 
       PyTypeObject AstNode_Type = {
         PyObject_HEAD_INIT(&PyType_Type)
@@ -655,9 +666,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,                                          /* tp_init */
+        (initproc)AstNode_init,                     /* tp_init */
         0,                                          /* tp_alloc */
-        0,                                          /* tp_new */
+        AstNode_new,                                /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -670,8 +681,7 @@ namespace triton {
       };
 
 
-      PyObject* PyAstNode(triton::ast::AbstractNode* node) {
-        AstNode_Object* object;
+      PyObject* PyAstNode(triton::ast::SharedAbstractNode node) {
 
         if (node == nullptr) {
           Py_INCREF(Py_None);
@@ -679,9 +689,14 @@ namespace triton {
         }
 
         PyType_Ready(&AstNode_Type);
-        object = PyObject_NEW(AstNode_Object, &AstNode_Type);
-        if (object != NULL)
+        // Build the new object the python way (calling operator() on the type) as
+        // it crash otherwise (certainly due to incorrect shared_ptr initialization).
+        auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject *) &AstNode_Type, nullptr);
+
+        if (object != NULL) {
+          new (&object->node) triton::ast::SharedAbstractNode();
           object->node = node;
+        }
 
         return (PyObject*)object;
       }

@@ -12,7 +12,7 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

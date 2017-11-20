@@ -404,7 +404,7 @@ namespace triton {
       const triton::arch::Register& x8664Cpu::getRegister(triton::arch::registers_e id) const {
         try {
           return this->registers_.at(id);
-        } catch(const std::out_of_range& e) {
+        } catch(const std::out_of_range&) {
           throw triton::exceptions::Cpu("x8664Cpu::getRegister(): Invalid register for this architecture.");
         }
       }

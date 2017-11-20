@@ -9,9 +9,7 @@
 #define TRITON_API_H
 
 #include <triton/architecture.hpp>
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/astRepresentation.hpp>
+#include <triton/astContext.hpp>          // for Context
 #include <triton/callbacks.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
@@ -21,11 +19,13 @@
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
-#include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
-#include <triton/tritonTypes.hpp>
-#include <triton/z3Interface.hpp>
+#include <tritoncore/types.hpp>
+
+#include <tritonast/nodes.hpp>
+#include <tritonast/representations/representation.hpp>
+#include <tritonast/solvers/model.hpp>
 
 
 
@@ -56,18 +56,11 @@ namespace triton {
         //! The symbolic engine.
         triton::engines::symbolic::SymbolicEngine* symbolic = nullptr;
 
-        //! The solver engine.
-        triton::engines::solver::SolverEngine* solver = nullptr;
-
         //! The AST Context interface.
-        triton::ast::AstContext astCtxt;
+        triton::AstContext astCtxt;
 
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
-
-        //! The Z3 interface between Triton and Z3.
-        triton::ast::Z3Interface* z3Interface = nullptr;
-
 
       public:
         //! Constructor of the API.
@@ -228,47 +221,7 @@ namespace triton {
         bool buildSemantics(triton::arch::Instruction& inst);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
-        triton::ast::AstContext& getAstContext(void);
-
-
-
-        /* AST Garbage Collector API ===================================================================== */
-
-        //! [**AST garbage collector api**] - Raises an exception if the AST garbage collector interface is not initialized.
-        void checkAstGarbageCollector(void) const;
-
-        //! [**AST garbage collector api**] - Go through every allocated nodes and free them.
-        void freeAllAstNodes(void);
-
-        //! [**AST garbage collector api**] - Frees a set of nodes and removes them from the global container.
-        void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
-
-        //! [**AST garbage collector api**] - Extracts all unique nodes from a partial AST into the uniqueNodes set.
-        void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const;
-
-        //! [**AST garbage collector api**] - Records the allocated node or returns the same node if it already exists inside the dictionaries.
-        triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
-
-        //! [**AST garbage collector api**] - Records a variable AST node.
-        void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
-
-        //! [**AST garbage collector api**] - Returns all allocated nodes.
-        const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
-
-        //! [**AST garbage collector api**] - Returns all stats about AST Dictionaries.
-        std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
-
-        //! [**AST garbage collector api**] - Returns all variable nodes recorded.
-        const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
-
-        //! [**AST garbage collector api**] - Returns the node of a recorded variable.
-        std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
-
-        //! [**AST garbage collector api**] - Sets all allocated nodes.
-        void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
-
-        //! [**AST garbage collector api**] - Sets all variable nodes recorded.
-        void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
+        triton::AstContext& getAstContext(void);
 
 
 
@@ -306,7 +259,7 @@ namespace triton {
         void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
-        triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
+        triton::ast::SharedAbstractNode processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode const& node) const;
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
         void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
@@ -338,16 +291,16 @@ namespace triton {
         triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
-        std::map<triton::arch::registers_e, triton::engines::symbolic::SymbolicExpression*> getSymbolicRegisters(void) const;
+        std::map<triton::arch::registers_e, triton::SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
         //! [**symbolic api**] - Returns the map (<Addr : SymExpr>) of symbolic memory defined.
-        std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> getSymbolicMemory(void) const;
+        std::map<triton::uint64, triton::SharedSymbolicExpression> getSymbolicMemory(void) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the memory address.
-        triton::usize getSymbolicMemoryId(triton::uint64 addr) const;
+        triton::SharedSymbolicExpression getSymbolicMemory(triton::uint64 addr) const;
 
         //! [**symbolic api**] - Returns the symbolic expression id corresponding to the register.
-        triton::usize getSymbolicRegisterId(const triton::arch::Register& reg) const;
+        triton::SharedSymbolicExpression const& getSymbolicRegister(const triton::arch::Register& reg) const;
 
         //! [**symbolic api**] - Returns the symbolic memory value.
         triton::uint8 getSymbolicMemoryValue(triton::uint64 address);
@@ -371,31 +324,31 @@ namespace triton {
         triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Returns a symbolic operand.
-        triton::ast::AbstractNode* buildSymbolicOperand(const triton::arch::OperandWrapper& op);
+        triton::ast::SharedAbstractNode getAstOperand(const triton::arch::OperandWrapper& op);
 
         //! [**symbolic api**] - Returns a symbolic operand.
-        triton::ast::AbstractNode* buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
+        triton::ast::SharedAbstractNode const& getAstOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
 
         //! [**symbolic api**] - Returns an immediate symbolic.
-        triton::ast::AbstractNode* buildSymbolicImmediate(const triton::arch::Immediate& imm);
+        triton::ast::SharedAbstractNode getAstImmediate(const triton::arch::Immediate& imm);
 
         //! [**symbolic api**] - Returns an immediate symbolic and defines the immediate as input of the instruction..
-        triton::ast::AbstractNode* buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
+        triton::ast::SharedAbstractNode const& getAstImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
 
         //! [**symbolic api**] - Returns a symbolic memory cell.
-        triton::ast::AbstractNode* buildSymbolicMemory(const triton::arch::MemoryAccess& mem);
+        triton::ast::SharedAbstractNode getAstMemory(const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns a symbolic memory cell and defines the memory cell as input of the instruction.
-        triton::ast::AbstractNode* buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
+        triton::ast::SharedAbstractNode const& getAstMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns a symbolic register.
-        triton::ast::AbstractNode* buildSymbolicRegister(const triton::arch::Register& reg);
+        triton::ast::SharedAbstractNode getAstRegister(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns a symbolic register and defines the register as input of the instruction.
-        triton::ast::AbstractNode* buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg);
+        triton::ast::SharedAbstractNode const& getAstRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns a new symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
-        triton::engines::symbolic::SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, const std::string& comment="");
+        triton::SharedSymbolicExpression newSymbolicExpression(triton::ast::SharedAbstractNode const& node, const std::string& comment="");
 
         //! [**symbolic api**] - Returns a new symbolic variable.
         triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
@@ -404,31 +357,31 @@ namespace triton {
         void removeSymbolicExpression(triton::usize symExprId);
 
         //! [**symbolic api**] - Returns the new symbolic abstract expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::OperandWrapper& dst, const std::string& comment="");
+        triton::SharedSymbolicExpression const& createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::OperandWrapper& dst, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic memory expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::MemoryAccess& mem, const std::string& comment="");
+        triton::SharedSymbolicExpression const& createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::MemoryAccess& mem, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic register expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& reg, const std::string& comment="");
+        triton::SharedSymbolicExpression const& createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::Register& reg, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic flag expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& flag, const std::string& comment="");
+        triton::SharedSymbolicExpression const& createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::Register& flag, const std::string& comment="");
 
         //! [**symbolic api**] - Returns the new symbolic volatile expression and links this expression to the instruction.
-        triton::engines::symbolic::SymbolicExpression* createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment="");
+        triton::SharedSymbolicExpression const& createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const std::string& comment="");
 
         //! [**symbolic api**] - Assigns a symbolic expression to a memory.
-        void assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::MemoryAccess& mem);
+        void assignSymbolicExpressionToMemory(triton::SharedSymbolicExpression const& se, const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
-        void assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg);
+        void assignSymbolicExpressionToRegister(triton::SharedSymbolicExpression const& se, const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
-        triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node, bool z3=false) const;
+        triton::ast::SharedAbstractNode processSimplification(triton::ast::SharedAbstractNode const& node, bool z3=false) const;
 
         //! [**symbolic api**] - Returns the symbolic expression corresponding to an id.
-        triton::engines::symbolic::SymbolicExpression* getSymbolicExpressionFromId(triton::usize symExprId) const;
+        triton::SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
         triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
@@ -440,10 +393,10 @@ namespace triton {
         const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
         //! [**symbolic api**] - Returns the logical conjunction AST of path constraints.
-        triton::ast::AbstractNode* getPathConstraintsAst(void);
+        triton::ast::SharedAbstractNode getPathConstraintsAst(void);
 
         //! [**symbolic api**] - Adds a path constraint.
-        void addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr);
+        void addPathConstraint(const triton::arch::Instruction& inst, triton::SharedSymbolicExpression const& expr);
 
         //! [**symbolic api**] - Clears the logical conjunction vector of path constraints.
         void clearPathConstraints(void);
@@ -482,25 +435,25 @@ namespace triton {
         void concretizeRegister(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
-        triton::ast::AbstractNode* getAstFromId(triton::usize symExprId);
+        triton::ast::SharedAbstractNode const& getAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Unrolls the SSA form of a given AST.
-        triton::ast::AbstractNode* unrollAst(triton::ast::AbstractNode* node);
+        triton::ast::SharedAbstractNode unrollAst(triton::ast::SharedAbstractNode const& node);
 
         //! [**symbolic api**] - Unrolls the SSA form of a given symbolic expression id.
-        triton::ast::AbstractNode* unrollAstFromId(triton::usize symExprId);
+        triton::ast::SharedAbstractNode unrollAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Slices all expressions from a given one.
-        std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> sliceExpressions(triton::engines::symbolic::SymbolicExpression* expr);
+        std::map<triton::usize, triton::SharedSymbolicExpression> sliceExpressions(triton::SharedSymbolicExpression const& expr);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
-        std::list<triton::engines::symbolic::SymbolicExpression*> getTaintedSymbolicExpressions(void) const;
+        std::list<triton::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic expressions as a map of <SymExprId : SymExpr>
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& getSymbolicExpressions(void) const;
+        std::unordered_map<triton::usize, triton::SharedSymbolicExpression> getSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
-        const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
+        const std::unordered_map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Gets the concrete value of a symbolic variable.
         const triton::uint512& getConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const;
@@ -512,9 +465,6 @@ namespace triton {
 
         /* Solver engine API ============================================================================= */
 
-        //! [**solver api**] - Raises an exception if the solver engine is not initialized.
-        void checkSolver(void) const;
-
         /*!
          * \brief [**solver api**] - Computes and returns a model from a symbolic constraint.
          *
@@ -522,7 +472,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::map<triton::uint32, triton::engines::solver::SolverModel> getModel(triton::ast::AbstractNode* node) const;
+        std::map<std::string, triton::ast::solvers::Model> getModel(triton::ast::AbstractNode* node) const;
 
         /*!
          * \brief [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
@@ -531,20 +481,17 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
+        std::list<std::map<std::string, triton::ast::solvers::Model>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
 
 
 
         /* Z3 interface API ============================================================================== */
 
-        //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
-        void checkZ3Interface(void) const;
-
         //! [**z3 api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
         triton::uint512 evaluateAstViaZ3(triton::ast::AbstractNode* node) const;
 
         //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
-        triton::ast::AbstractNode* processZ3Simplification(triton::ast::AbstractNode* node) const;
+        triton::ast::SharedAbstractNode processZ3Simplification(triton::ast::AbstractNode* node) const;
 
 
 

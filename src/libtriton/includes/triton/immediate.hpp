@@ -10,7 +10,7 @@
 
 #include <triton/bitsVector.hpp>
 #include <triton/operandInterface.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

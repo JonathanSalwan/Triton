@@ -9,7 +9,7 @@
 #define TRITON PYTHONUTILS_H
 
 #include <triton/pythonBindings.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 
@@ -80,6 +80,12 @@ namespace triton {
 
       //! Returns a pyObject from a triton::uint512.
       PyObject* PyLong_FromUint512(triton::uint512 value);
+
+      //! Same as PyDict_SetItemString but steal reference on object
+      int PyDict_SetItemStringSteal(PyObject *p, const char *key, PyObject *val);
+
+      //! Same as PyDict_SetItem but steal reference on object and key
+      int PyDict_SetItemSteal(PyObject *p, PyObject* key, PyObject *val);
 
     /*! @} End of python namespace */
     };

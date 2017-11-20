@@ -15,7 +15,7 @@
 #include <triton/cpuSize.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/registers_e.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

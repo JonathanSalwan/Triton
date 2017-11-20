@@ -100,7 +100,7 @@ namespace triton {
       void PathConstraint_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyPathConstraint_AsPathConstraint(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -112,16 +112,16 @@ namespace triton {
           ret = xPyList_New(branches.size());
           for (triton::usize index = 0; index != branches.size(); index++) {
             PyObject* dict = xPyDict_New();
-            PyDict_SetItem(dict, PyString_FromString("isTaken"),    PyBool_FromLong(std::get<0>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("srcAddr"),    PyLong_FromUint64(std::get<1>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("dstAddr"),    PyLong_FromUint64(std::get<2>(branches[index])));
-            PyDict_SetItem(dict, PyString_FromString("constraint"), PyAstNode(std::get<3>(branches[index])));
+            PyDict_SetItemStringSteal(dict, "isTaken",    PyBool_FromLong(std::get<0>(branches[index])));
+            PyDict_SetItemStringSteal(dict, "srcAddr",    PyLong_FromUint64(std::get<1>(branches[index])));
+            PyDict_SetItemStringSteal(dict, "dstAddr",    PyLong_FromUint64(std::get<2>(branches[index])));
+            PyDict_SetItemStringSteal(dict, "constraint", PyAstNode(std::get<3>(branches[index])));
             PyList_SetItem(ret, index, dict);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -131,7 +131,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyPathConstraint_AsPathConstraint(self)->getTakenAddress());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -141,7 +141,7 @@ namespace triton {
         try {
           return PyAstNode(PyPathConstraint_AsPathConstraint(self)->getTakenPathConstraintAst());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -153,7 +153,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

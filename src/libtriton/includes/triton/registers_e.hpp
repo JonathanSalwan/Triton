@@ -45,7 +45,7 @@ namespace triton {
 namespace std {
   // Define the hash function for registers_e to be use in stl containers like unordered_map
   template <>
-  class hash<triton::arch::registers_e>: public hash<uint64_t> {
+  class hash<triton::arch::registers_e>: public hash<triton::uint64> {
   };
 };
 

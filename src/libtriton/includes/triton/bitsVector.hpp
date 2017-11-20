@@ -8,9 +8,9 @@
 #ifndef TRITON_BITSVECTOR_H
 #define TRITON_BITSVECTOR_H
 
-#include <utility>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
+#include <utility>
 
 
 //! The Triton namespace

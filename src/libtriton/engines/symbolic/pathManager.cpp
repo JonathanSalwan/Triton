@@ -5,18 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/astContext.hpp>          // for Context
 #include <triton/exceptions.hpp>
 #include <triton/pathManager.hpp>
-#include <triton/symbolicEnums.hpp>
-#include <triton/astContext.hpp>
-
 
 
 namespace triton {
   namespace engines {
     namespace symbolic {
 
-      PathManager::PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt)
+      PathManager::PathManager(const triton::modes::Modes& modes, triton::AstContext& astCtxt)
         : modes(modes),
           astCtxt(astCtxt) {
       }
@@ -41,14 +39,13 @@ namespace triton {
 
 
       /* Returns the logical conjunction AST of path constraint */
-      triton::ast::AbstractNode* PathManager::getPathConstraintsAst(void) const {
+      triton::ast::SharedAbstractNode PathManager::getPathConstraintsAst(void) const {
         // Every constraint should have the same context otherwise, we can't know
         // which one to use for the current node computation.
         std::vector<triton::engines::symbolic::PathConstraint>::const_iterator it;
-        triton::ast::AbstractNode* node = nullptr;
 
         /* by default PC is T (top) */
-        node = this->astCtxt.equal(
+        auto node = this->astCtxt.equal(
                  this->astCtxt.bvtrue(),
                  this->astCtxt.bvtrue()
                );
@@ -68,14 +65,13 @@ namespace triton {
 
 
       /* Add a path constraint */
-      void PathManager::addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr) {
+      void PathManager::addPathConstraint(const triton::arch::Instruction& inst, triton::SharedSymbolicExpression const& expr) {
         triton::engines::symbolic::PathConstraint pco;
-        triton::ast::AbstractNode* pc = nullptr;
         triton::uint64 srcAddr        = 0;
         triton::uint64 dstAddr        = 0;
         triton::uint32 size           = 0;
 
-        pc = expr->getAst();
+        auto pc = expr->getShareAst();
         if (pc == nullptr)
           throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node cannot be null.");
 
@@ -103,10 +99,10 @@ namespace triton {
           triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
           triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
 
-          triton::ast::AbstractNode* bb1pc = (bb1 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
+          triton::ast::SharedAbstractNode bb1pc = (bb1 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
                                                                 this->astCtxt.lnot(this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));
 
-          triton::ast::AbstractNode* bb2pc = (bb2 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
+          triton::ast::SharedAbstractNode bb2pc = (bb2 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
                                                                 this->astCtxt.lnot(this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));
 
           pco.addBranchConstraint(bb1 == dstAddr, srcAddr, bb1, bb1pc);

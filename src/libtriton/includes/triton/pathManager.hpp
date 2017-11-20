@@ -10,11 +10,12 @@
 
 #include <vector>
 
+#include <triton/astContext.hpp>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
 #include <triton/pathConstraint.hpp>
 #include <triton/symbolicExpression.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 
@@ -48,8 +49,8 @@ namespace triton {
           //! Modes API.
           const triton::modes::Modes& modes;
 
-          //! AstContext API
-          triton::ast::AstContext & astCtxt;
+          //! Context API
+          triton::AstContext & astCtxt;
 
         protected:
           //! \brief The logical conjunction vector of path constraints.
@@ -57,7 +58,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
+          PathManager(const triton::modes::Modes& modes, triton::AstContext& astCtxt);
 
           //! Constructor by copy.
           PathManager(const PathManager& copy);
@@ -69,13 +70,13 @@ namespace triton {
           const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
           //! Returns the logical conjunction AST of path constraints.
-          triton::ast::AbstractNode* getPathConstraintsAst(void) const;
+          triton::ast::SharedAbstractNode getPathConstraintsAst(void) const;
 
           //! Returns the number of constraints.
           triton::usize getNumberOfPathConstraints(void) const;
 
           //! Adds a path constraint.
-          void addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr);
+          void addPathConstraint(const triton::arch::Instruction& inst, triton::SharedSymbolicExpression const& expr);
 
           //! Clears the logical conjunction vector of path constraints.
           void clearPathConstraints(void);

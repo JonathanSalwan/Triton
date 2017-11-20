@@ -5,11 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/astContext.hpp>          // for Context
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/x86Semantics.hpp>
 #include <triton/x86Specifications.hpp>
-#include <triton/astContext.hpp>
 
 
 
@@ -327,7 +327,7 @@ namespace triton {
       x86Semantics::x86Semantics(triton::arch::Architecture* architecture,
                                  triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                  triton::engines::taint::TaintEngine* taintEngine,
-                                 triton::ast::AstContext& astCtxt) : astCtxt(astCtxt) {
+                                 triton::AstContext& astCtxt) : astCtxt(astCtxt) {
 
         this->architecture    = architecture;
         this->symbolicEngine  = symbolicEngine;
@@ -640,7 +640,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
         auto op2 = this->astCtxt.bv(delta, dst.getBitSize());
 
         /* Create the semantics */
@@ -661,7 +661,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_SP));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
         auto op2 = this->astCtxt.bv(delta, dst.getBitSize());
 
         /* Create the semantics */
@@ -711,7 +711,7 @@ namespace triton {
 
           case triton::arch::x86::ID_PREFIX_REP: {
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, counter);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, counter);
 
             /* Create the semantics for Counter */
             auto node1 = this->astCtxt.ite(
@@ -739,8 +739,8 @@ namespace triton {
 
           case triton::arch::x86::ID_PREFIX_REPE: {
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, counter);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, counter);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
 
             /* Create the semantics for Counter */
             auto node1 = this->astCtxt.ite(
@@ -771,8 +771,8 @@ namespace triton {
 
           case triton::arch::x86::ID_PREFIX_REPNE: {
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, counter);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, counter);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
 
             /* Create the semantics for Counter */
             auto node1 = this->astCtxt.ite(
@@ -817,10 +817,10 @@ namespace triton {
 
 
       void x86Semantics::af_s(triton::arch::Instruction& inst,
-                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::SharedSymbolicExpression const& parent,
                               triton::arch::OperandWrapper& dst,
-                              triton::ast::AbstractNode* op1,
-                              triton::ast::AbstractNode* op2,
+                              triton::ast::SharedAbstractNode const& op1,
+                              triton::ast::SharedAbstractNode const& op2,
                               bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -837,7 +837,7 @@ namespace triton {
                         this->astCtxt.bvand(
                           this->astCtxt.bv(0x10, bvSize),
                           this->astCtxt.bvxor(
-                            this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                            this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                             this->astCtxt.bvxor(op1, op2)
                           )
                         )
@@ -855,9 +855,9 @@ namespace triton {
 
 
       void x86Semantics::afNeg_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::SharedAbstractNode const& op1,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -875,7 +875,7 @@ namespace triton {
                           this->astCtxt.bv(0x10, bvSize),
                           this->astCtxt.bvxor(
                             op1,
-                            this->astCtxt.extract(high, low, this->astCtxt.reference(*parent))
+                            this->astCtxt.extract(high, low, this->astCtxt.reference(parent))
                           )
                         )
                       ),
@@ -892,10 +892,10 @@ namespace triton {
 
 
       void x86Semantics::cfAdd_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -912,7 +912,7 @@ namespace triton {
                         this->astCtxt.bvand(
                           this->astCtxt.bvxor(
                             this->astCtxt.bvxor(op1, op2),
-                            this->astCtxt.extract(high, low, this->astCtxt.reference(*parent))
+                            this->astCtxt.extract(high, low, this->astCtxt.reference(parent))
                           ),
                         this->astCtxt.bvxor(op1, op2))
                       )
@@ -927,9 +927,9 @@ namespace triton {
 
 
       void x86Semantics::cfBlsi_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::SharedAbstractNode const& op1,
                                   bool vol) {
 
         /*
@@ -954,9 +954,9 @@ namespace triton {
 
 
       void x86Semantics::cfBlsmsk_s(triton::arch::Instruction& inst,
-                                    triton::engines::symbolic::SymbolicExpression* parent,
+                                    triton::SharedSymbolicExpression const& parent,
                                     triton::arch::OperandWrapper& dst,
-                                    triton::ast::AbstractNode* op1,
+                                    triton::ast::SharedAbstractNode const& op1,
                                     bool vol) {
 
         /*
@@ -981,9 +981,9 @@ namespace triton {
 
 
       void x86Semantics::cfBlsr_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
+                                  triton::ast::SharedAbstractNode const& op1,
                                   bool vol) {
 
         /*
@@ -1008,10 +1008,10 @@ namespace triton {
 
 
       void x86Semantics::cfImul_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* res,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& res,
                                   bool vol) {
 
         /*
@@ -1036,9 +1036,9 @@ namespace triton {
 
 
       void x86Semantics::cfMul_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::SharedAbstractNode const& op1,
                                  bool vol) {
 
         /*
@@ -1063,9 +1063,9 @@ namespace triton {
 
 
       void x86Semantics::cfNeg_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::SharedAbstractNode const& op1,
                                  bool vol) {
 
         /*
@@ -1090,7 +1090,7 @@ namespace triton {
 
 
       void x86Semantics::cfPtest_s(triton::arch::Instruction& inst,
-                                   triton::engines::symbolic::SymbolicExpression* parent,
+                                   triton::SharedSymbolicExpression const& parent,
                                    triton::arch::OperandWrapper& dst,
                                    bool vol) {
 
@@ -1104,7 +1104,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(
-                        this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                        this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                         this->astCtxt.bv(0, bvSize)
                       ),
                       this->astCtxt.bv(1, 1),
@@ -1120,9 +1120,9 @@ namespace triton {
 
 
       void x86Semantics::cfRcl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
-                                 triton::ast::AbstractNode* result,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::SharedSymbolicExpression const& parent,
+                                 triton::ast::SharedAbstractNode const& result,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1131,7 +1131,7 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(high, high, result)
                     );
 
@@ -1144,10 +1144,10 @@ namespace triton {
 
 
       void x86Semantics::cfRcr_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* result,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& result,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1156,7 +1156,7 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(high, high, result) /* yes it's should be LSB, but here it's a trick :-) */
                     );
 
@@ -1169,9 +1169,9 @@ namespace triton {
 
 
       void x86Semantics::cfRol_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1180,8 +1180,8 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
-                      this->astCtxt.extract(low, low, this->astCtxt.reference(*parent))
+                      this->symbolicEngine->getAstOperand(inst, cf),
+                      this->astCtxt.extract(low, low, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
@@ -1193,9 +1193,9 @@ namespace triton {
 
 
       void x86Semantics::cfRor_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1204,8 +1204,8 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
-                      this->astCtxt.extract(high, high, this->astCtxt.reference(*parent))
+                      this->symbolicEngine->getAstOperand(inst, cf),
+                      this->astCtxt.extract(high, high, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
@@ -1217,10 +1217,10 @@ namespace triton {
 
 
       void x86Semantics::cfSar_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1236,7 +1236,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.ite(
                         this->astCtxt.bvugt(op2, this->astCtxt.bv(bvSize, bvSize)),
                         this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(1, bvSize)))),
@@ -1253,10 +1253,10 @@ namespace triton {
 
 
       void x86Semantics::cfShl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1268,7 +1268,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(0, 0,
                         this->astCtxt.bvlshr(
                           op1,
@@ -1289,11 +1289,11 @@ namespace triton {
 
 
       void x86Semantics::cfShld_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
@@ -1305,7 +1305,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(
                         dst.getBitSize(), dst.getBitSize(),
                         this->astCtxt.bvrol(
@@ -1324,10 +1324,10 @@ namespace triton {
 
 
       void x86Semantics::cfShr_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1339,7 +1339,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(0, 0,
                         this->astCtxt.bvlshr(
                           op1,
@@ -1359,11 +1359,11 @@ namespace triton {
 
 
       void x86Semantics::cfShrd_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
@@ -1375,7 +1375,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, cf),
+                      this->symbolicEngine->getAstOperand(inst, cf),
                       this->astCtxt.extract(
                         (dst.getBitSize() * 2)-1, (dst.getBitSize()*2)-1,
                         this->astCtxt.bvror(
@@ -1394,10 +1394,10 @@ namespace triton {
 
 
       void x86Semantics::cfSub_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1410,9 +1410,9 @@ namespace triton {
          */
         auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
                       this->astCtxt.bvxor(
-                        this->astCtxt.bvxor(op1, this->astCtxt.bvxor(op2, this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)))),
+                        this->astCtxt.bvxor(op1, this->astCtxt.bvxor(op2, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))),
                         this->astCtxt.bvand(
-                          this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(*parent))),
+                          this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent))),
                           this->astCtxt.bvxor(op1, op2)
                         )
                       )
@@ -1427,10 +1427,10 @@ namespace triton {
 
 
       void x86Semantics::ofAdd_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1444,7 +1444,7 @@ namespace triton {
         auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
                       this->astCtxt.bvand(
                         this->astCtxt.bvxor(op1, this->astCtxt.bvnot(op2)),
-                        this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)))
+                        this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))
                       )
                     );
 
@@ -1457,10 +1457,10 @@ namespace triton {
 
 
       void x86Semantics::ofImul_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* res,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& res,
                                   bool vol) {
         /*
          * Create the semantic.
@@ -1484,9 +1484,9 @@ namespace triton {
 
 
       void x86Semantics::ofMul_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::SharedAbstractNode const& op1,
                                  bool vol) {
 
         /*
@@ -1511,9 +1511,9 @@ namespace triton {
 
 
       void x86Semantics::ofNeg_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::SharedAbstractNode const& op1,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1526,7 +1526,7 @@ namespace triton {
          */
         auto node = this->astCtxt.extract(0, 0,
                       this->astCtxt.bvlshr(
-                        this->astCtxt.bvand(this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)), op1),
+                        this->astCtxt.bvand(this->astCtxt.extract(high, low, this->astCtxt.reference(parent)), op1),
                         this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(1, bvSize))
                       )
                     );
@@ -1540,9 +1540,9 @@ namespace triton {
 
 
       void x86Semantics::ofRol_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1553,10 +1553,10 @@ namespace triton {
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
-                        this->astCtxt.extract(high, high, this->astCtxt.reference(*parent)),
-                        this->symbolicEngine->buildSymbolicOperand(inst, cf)
+                        this->astCtxt.extract(high, high, this->astCtxt.reference(parent)),
+                        this->symbolicEngine->getAstOperand(inst, cf)
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1568,9 +1568,9 @@ namespace triton {
 
 
       void x86Semantics::ofRor_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1580,10 +1580,10 @@ namespace triton {
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
-                        this->astCtxt.extract(high, high, this->astCtxt.reference(*parent)),
-                        this->astCtxt.extract(high-1, high-1, this->astCtxt.reference(*parent))
+                        this->astCtxt.extract(high, high, this->astCtxt.reference(parent)),
+                        this->astCtxt.extract(high-1, high-1, this->astCtxt.reference(parent))
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1595,10 +1595,10 @@ namespace triton {
 
 
       void x86Semantics::ofRcr_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
@@ -1610,9 +1610,9 @@ namespace triton {
                       this->astCtxt.equal(op2, this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(high, high, op1),
-                        this->symbolicEngine->buildSymbolicOperand(inst, cf)
+                        this->symbolicEngine->getAstOperand(inst, cf)
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1624,9 +1624,9 @@ namespace triton {
 
 
       void x86Semantics::ofSar_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1641,7 +1641,7 @@ namespace triton {
                         op2,
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bv(0, 1),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1653,10 +1653,10 @@ namespace triton {
 
 
       void x86Semantics::ofShl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1676,7 +1676,7 @@ namespace triton {
                           this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(2, bvSize)))
                         )
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1688,11 +1688,11 @@ namespace triton {
 
 
       void x86Semantics::ofShld_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1716,7 +1716,7 @@ namespace triton {
                         ),
                         this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1728,10 +1728,10 @@ namespace triton {
 
 
       void x86Semantics::ofShr_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1746,7 +1746,7 @@ namespace triton {
                         op2,
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(1, bvSize)))),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1758,11 +1758,11 @@ namespace triton {
 
 
       void x86Semantics::ofShrd_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1786,7 +1786,7 @@ namespace triton {
                         ),
                         this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
                       ),
-                      this->symbolicEngine->buildSymbolicOperand(inst, of)
+                      this->symbolicEngine->getAstOperand(inst, of)
                     );
 
         /* Create the symbolic expression */
@@ -1798,10 +1798,10 @@ namespace triton {
 
 
       void x86Semantics::ofSub_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op1,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op1,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1815,7 +1815,7 @@ namespace triton {
         auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
                       this->astCtxt.bvand(
                         this->astCtxt.bvxor(op1, op2),
-                        this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)))
+                        this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))
                       )
                     );
 
@@ -1828,7 +1828,7 @@ namespace triton {
 
 
       void x86Semantics::pf_s(triton::arch::Instruction& inst,
-                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::SharedSymbolicExpression const& parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
 
@@ -1847,7 +1847,7 @@ namespace triton {
                    node,
                    this->astCtxt.extract(0, 0,
                      this->astCtxt.bvlshr(
-                       this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                       this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                        this->astCtxt.bv(counter, BYTE_SIZE_BIT)
                      )
                   )
@@ -1863,9 +1863,9 @@ namespace triton {
 
 
       void x86Semantics::pfShl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1883,7 +1883,7 @@ namespace triton {
                    node1,
                    this->astCtxt.extract(0, 0,
                      this->astCtxt.bvlshr(
-                       this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                       this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                        this->astCtxt.bv(counter, BYTE_SIZE_BIT)
                      )
                   )
@@ -1892,7 +1892,7 @@ namespace triton {
 
         auto node2 = this->astCtxt.ite(
                        this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                       this->symbolicEngine->buildSymbolicOperand(inst, pf),
+                       this->symbolicEngine->getAstOperand(inst, pf),
                        node1
                      );
 
@@ -1905,7 +1905,7 @@ namespace triton {
 
 
       void x86Semantics::sf_s(triton::arch::Instruction& inst,
-                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::SharedSymbolicExpression const& parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
 
@@ -1916,7 +1916,7 @@ namespace triton {
          * Create the semantic.
          * sf = high:bool(regDst)
          */
-        auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(*parent));
+        auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, architecture->getRegister(ID_REG_SF), "Sign flag");
@@ -1927,9 +1927,9 @@ namespace triton {
 
 
       void x86Semantics::sfShl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -1942,8 +1942,8 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, sf),
-                      this->astCtxt.extract(high, high, this->astCtxt.reference(*parent))
+                      this->symbolicEngine->getAstOperand(inst, sf),
+                      this->astCtxt.extract(high, high, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
@@ -1955,11 +1955,11 @@ namespace triton {
 
 
       void x86Semantics::sfShld_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
@@ -1971,7 +1971,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, sf),
+                      this->symbolicEngine->getAstOperand(inst, sf),
                       this->astCtxt.extract(
                         dst.getBitSize()-1, dst.getBitSize()-1,
                         this->astCtxt.bvrol(
@@ -1990,11 +1990,11 @@ namespace triton {
 
 
       void x86Semantics::sfShrd_s(triton::arch::Instruction& inst,
-                                  triton::engines::symbolic::SymbolicExpression* parent,
+                                  triton::SharedSymbolicExpression const& parent,
                                   triton::arch::OperandWrapper& dst,
-                                  triton::ast::AbstractNode* op1,
-                                  triton::ast::AbstractNode* op2,
-                                  triton::ast::AbstractNode* op3,
+                                  triton::ast::SharedAbstractNode const& op1,
+                                  triton::ast::SharedAbstractNode const& op2,
+                                  triton::ast::SharedAbstractNode const& op3,
                                   bool vol) {
 
         auto bvSize = op3->getBitvectorSize();
@@ -2006,7 +2006,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, sf),
+                      this->symbolicEngine->getAstOperand(inst, sf),
                       this->astCtxt.extract(
                         dst.getBitSize()-1, dst.getBitSize()-1,
                         this->astCtxt.bvror(
@@ -2025,7 +2025,7 @@ namespace triton {
 
 
       void x86Semantics::zf_s(triton::arch::Instruction& inst,
-                              triton::engines::symbolic::SymbolicExpression* parent,
+                              triton::SharedSymbolicExpression const& parent,
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
 
@@ -2039,7 +2039,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(
-                        this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                        this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                         this->astCtxt.bv(0, bvSize)
                       ),
                       this->astCtxt.bv(1, 1),
@@ -2055,9 +2055,9 @@ namespace triton {
 
 
       void x86Semantics::zfBsf_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& src,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         /*
@@ -2079,9 +2079,9 @@ namespace triton {
 
 
       void x86Semantics::zfShl_s(triton::arch::Instruction& inst,
-                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::SharedSymbolicExpression const& parent,
                                  triton::arch::OperandWrapper& dst,
-                                 triton::ast::AbstractNode* op2,
+                                 triton::ast::SharedAbstractNode const& op2,
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
@@ -2095,10 +2095,10 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->buildSymbolicOperand(inst, zf),
+                      this->symbolicEngine->getAstOperand(inst, zf),
                       this->astCtxt.ite(
                         this->astCtxt.equal(
-                          this->astCtxt.extract(high, low, this->astCtxt.reference(*parent)),
+                          this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
                           this->astCtxt.bv(0, bvSize)
                         ),
                         this->astCtxt.bv(1, 1),
@@ -2126,9 +2126,9 @@ namespace triton {
           src1 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(
@@ -2161,9 +2161,9 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvadd(this->astCtxt.bvadd(op1, op2), this->astCtxt.zx(dst.getBitSize()-1, op3));
@@ -2194,9 +2194,9 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvadd(this->astCtxt.bvadd(op1, op2), this->astCtxt.zx(dst.getBitSize()-1, op3));
@@ -2221,8 +2221,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvadd(op1, op2);
@@ -2251,8 +2251,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op1, op2);
@@ -2281,8 +2281,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op2), op3);
@@ -2308,8 +2308,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op1), op2);
@@ -2330,8 +2330,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op1), op2);
@@ -2352,8 +2352,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op1, op2);
@@ -2374,8 +2374,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op1, op2);
@@ -2397,8 +2397,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(
@@ -2436,7 +2436,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvneg(op1), op1);
@@ -2463,7 +2463,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(
@@ -2493,7 +2493,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(
@@ -2525,11 +2525,11 @@ namespace triton {
         auto  bvSize2 = src.getBitSize();
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
           case BYTE_SIZE:
             node = this->astCtxt.ite(
@@ -2708,11 +2708,11 @@ namespace triton {
         auto  bvSize2 = src.getBitSize();
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
           case BYTE_SIZE:
             node = this->astCtxt.ite(
@@ -2888,10 +2888,10 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> bytes;
+        std::list<triton::ast::SharedAbstractNode> bytes;
         switch (src.getSize()) {
           case QWORD_SIZE:
             bytes.push_front(this->astCtxt.extract(63, 56, op1));
@@ -2928,8 +2928,8 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.extract(0, 0,
@@ -2960,8 +2960,8 @@ namespace triton {
         auto& src1 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst2);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,
@@ -3022,8 +3022,8 @@ namespace triton {
         auto& src1 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst2);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,
@@ -3073,8 +3073,8 @@ namespace triton {
         auto& src1 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst2);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,
@@ -3121,7 +3121,7 @@ namespace triton {
         auto& src        = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics - side effect */
         auto node1 = this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize());
@@ -3148,7 +3148,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
 
         /* Create the semantics */
         auto node = this->astCtxt.sx(BYTE_SIZE_BIT, this->astCtxt.extract(BYTE_SIZE_BIT-1, 0, op1));
@@ -3169,7 +3169,7 @@ namespace triton {
         auto src = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics - TMP = 64 bitvec (EDX:EAX) */
         auto node1 = this->astCtxt.sx(DWORD_SIZE_BIT, op1);
@@ -3181,7 +3181,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_EAX));
 
         /* Create the semantics - EDX = TMP[63...32] */
-        auto node2 = this->astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, this->astCtxt.reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CDQ operation");
@@ -3198,7 +3198,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
 
         /* Create the semantics */
         auto node = this->astCtxt.sx(DWORD_SIZE_BIT, this->astCtxt.extract(DWORD_SIZE_BIT-1, 0, op1));
@@ -3238,10 +3238,10 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CR0));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         switch (dst.getBitSize()) {
           case QWORD_SIZE_BIT:
@@ -3276,7 +3276,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvnot(op1);
@@ -3299,10 +3299,10 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvand(this->astCtxt.bvnot(op3), this->astCtxt.bvnot(op4)), this->astCtxt.bvtrue()), op2, op1);
@@ -3329,9 +3329,9 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvfalse()), op2, op1);
@@ -3358,9 +3358,9 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvtrue()), op2, op1);
@@ -3388,10 +3388,10 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(op3, op4), this->astCtxt.bvtrue()), op2, op1);
@@ -3418,9 +3418,9 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvtrue()), op2, op1);
@@ -3449,11 +3449,11 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(this->astCtxt.bvxor(op3, op4), op5), this->astCtxt.bvfalse()), op2, op1);
@@ -3481,10 +3481,10 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, op4), op2, op1);
@@ -3512,10 +3512,10 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvxor(op3, op4), this->astCtxt.bvtrue()), op2, op1);
@@ -3544,11 +3544,11 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(this->astCtxt.bvxor(op3, op4), op5), this->astCtxt.bvtrue()), op2, op1);
@@ -3575,9 +3575,9 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvfalse()), op2, op1);
@@ -3604,9 +3604,9 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvfalse()), op2, op1);
@@ -3633,9 +3633,9 @@ namespace triton {
         auto  pf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_PF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, pf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvfalse()), op2, op1);
@@ -3662,9 +3662,9 @@ namespace triton {
         auto  sf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvfalse()), op2, op1);
@@ -3691,9 +3691,9 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvtrue()), op2, op1);
@@ -3720,9 +3720,9 @@ namespace triton {
         auto  pf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_PF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, pf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvtrue()), op2, op1);
@@ -3749,9 +3749,9 @@ namespace triton {
         auto  sf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, sf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op3, this->astCtxt.bvtrue()), op2, op1);
@@ -3777,8 +3777,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         /* Create the semantics */
         auto node = this->astCtxt.bvsub(op1, op2);
@@ -3815,18 +3815,18 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -3877,18 +3877,18 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -3939,18 +3939,18 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -4001,18 +4001,18 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -4071,12 +4071,12 @@ namespace triton {
         }
 
         /* Create symbolic operands */
-        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, accumulator);
-        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op1p = this->symbolicEngine->buildSymbolicOperand(accumulatorp);
-        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
-        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
+        auto& op1  = this->symbolicEngine->getAstOperand(inst, accumulator);
+        auto& op2  = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3  = this->symbolicEngine->getAstOperand(inst, src2);
+        auto op1p = this->symbolicEngine->getAstOperand(accumulatorp);
+        auto op2p = this->symbolicEngine->getAstRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
+        auto op3p = this->symbolicEngine->getAstRegister((src1.getType() == triton::arch::OP_REG ? Register(architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
 
         /* Create the semantics */
         auto nodeq  = this->astCtxt.equal(op1, op2);
@@ -4093,8 +4093,8 @@ namespace triton {
         auto expr4 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3, "Temporary operation");
         auto expr5 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
 
-        triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
-        triton::engines::symbolic::SymbolicExpression* expr7 = nullptr;
+        triton::SharedSymbolicExpression expr6 = nullptr;
+        triton::SharedSymbolicExpression expr7 = nullptr;
 
         /* Destination */
         if (nodeq->evaluate() == false && src1.getType() == triton::arch::OP_REG) {
@@ -4139,11 +4139,11 @@ namespace triton {
         auto  src5 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RBX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, src5);
 
         /* Create the semantics */
         /* CMP8B */
@@ -4183,13 +4183,13 @@ namespace triton {
         auto  src3p = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_EAX));
 
         /* Create symbolic operands */
-        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4  = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5  = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op2p = this->symbolicEngine->buildSymbolicOperand(inst, src2p);
-        auto op3p = this->symbolicEngine->buildSymbolicOperand(inst, src3p);
+        auto& op1  = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2  = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3  = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4  = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5  = this->symbolicEngine->getAstOperand(inst, src5);
+        auto& op2p = this->symbolicEngine->getAstOperand(inst, src2p);
+        auto& op3p = this->symbolicEngine->getAstOperand(inst, src3p);
 
         /* Create the semantics */
         /* CMP8B */
@@ -4212,8 +4212,8 @@ namespace triton {
         auto expr3 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3, "Temporary operation");
         auto expr4 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node3p, "Temporary operation");
 
-        triton::engines::symbolic::SymbolicExpression* expr5 = nullptr;
-        triton::engines::symbolic::SymbolicExpression* expr6 = nullptr;
+        triton::SharedSymbolicExpression expr5 = nullptr;
+        triton::SharedSymbolicExpression expr6 = nullptr;
 
         /* EDX */
         if (node1->evaluate() == 0)
@@ -4251,13 +4251,13 @@ namespace triton {
         auto dst4 = triton::arch::OperandWrapper(architecture->getParentRegister(ID_REG_DX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node1 = nullptr;
-        triton::ast::AbstractNode* node2 = nullptr;
-        triton::ast::AbstractNode* node3 = nullptr;
-        triton::ast::AbstractNode* node4 = nullptr;
+        triton::ast::SharedAbstractNode node1 = nullptr;
+        triton::ast::SharedAbstractNode node2 = nullptr;
+        triton::ast::SharedAbstractNode node3 = nullptr;
+        triton::ast::SharedAbstractNode node4 = nullptr;
 
         /* In this case, we concretize the AX option */
         switch (op1->evaluate().convert_to<triton::uint32>()) {
@@ -4381,7 +4381,7 @@ namespace triton {
         auto src = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics - TMP = 128 bitvec (RDX:RAX) */
         auto node1 = this->astCtxt.sx(QWORD_SIZE_BIT, op1);
@@ -4393,7 +4393,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_RAX));
 
         /* Create the semantics - RDX = TMP[127...64] */
-        auto node2 = this->astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, this->astCtxt.reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CQO operation");
@@ -4411,7 +4411,7 @@ namespace triton {
         auto src = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics - TMP = 32 bitvec (DX:AX) */
         auto node1 = this->astCtxt.sx(WORD_SIZE_BIT, op1);
@@ -4423,7 +4423,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(architecture->getRegister(ID_REG_AX));
 
         /* Create the semantics - DX = TMP[31...16] */
-        auto node2 = this->astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, this->astCtxt.reference(*expr1));
+        auto node2 = this->astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, this->astCtxt.reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CWD operation");
@@ -4440,7 +4440,7 @@ namespace triton {
         auto dst = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
 
         /* Create the semantics */
         auto node = this->astCtxt.sx(WORD_SIZE_BIT, this->astCtxt.extract(WORD_SIZE_BIT-1, 0, op1));
@@ -4460,7 +4460,7 @@ namespace triton {
         auto& dst = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
         auto op2 = this->astCtxt.bv(1, dst.getBitSize());
 
         /* Create the semantics */
@@ -4488,7 +4488,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto divisor = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& divisor = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         switch (src.getSize()) {
@@ -4496,7 +4496,7 @@ namespace triton {
           case BYTE_SIZE: {
             /* AX */
             auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
+            auto& dividend = this->symbolicEngine->getAstOperand(inst, ax);
             /* res = AX / Source */
             auto result = this->astCtxt.bvudiv(dividend, this->astCtxt.zx(BYTE_SIZE_BIT, divisor));
             /* mod = AX % Source */
@@ -4518,7 +4518,8 @@ namespace triton {
             /* DX:AX */
             auto dx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DX));
             auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, dx),
+                                                 this->symbolicEngine->getAstOperand(inst, ax));
             /* res = DX:AX / Source */
             auto result = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(WORD_SIZE_BIT, divisor)));
             /* mod = DX:AX % Source */
@@ -4538,7 +4539,8 @@ namespace triton {
             /* EDX:EAX */
             auto edx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
             auto eax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, edx),
+                                                 this->symbolicEngine->getAstOperand(inst, eax));
             /* res = EDX:EAX / Source */
             auto result = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(DWORD_SIZE_BIT, divisor)));
             /* mod = EDX:EAX % Source */
@@ -4558,7 +4560,8 @@ namespace triton {
             /* RDX:RAX */
             auto rdx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
             auto rax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, rdx),
+                                                 this->symbolicEngine->getAstOperand(inst, rax));
             /* res = RDX:RAX / Source */
             auto result = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvudiv(dividend, this->astCtxt.zx(QWORD_SIZE_BIT, divisor)));
             /* mod = RDX:RAX % Source */
@@ -4587,8 +4590,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.extract(DWORD_SIZE_BIT-1, 0,
@@ -4626,7 +4629,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto divisor = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& divisor = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         switch (src.getSize()) {
@@ -4634,7 +4637,7 @@ namespace triton {
           case BYTE_SIZE: {
             /* AX */
             auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->symbolicEngine->buildSymbolicOperand(inst, ax);
+            auto& dividend = this->symbolicEngine->getAstOperand(inst, ax);
             /* res = AX / Source */
             auto result = this->astCtxt.bvsdiv(dividend, this->astCtxt.sx(BYTE_SIZE_BIT, divisor));
             /* mod = AX % Source */
@@ -4656,7 +4659,8 @@ namespace triton {
             /* DX:AX */
             auto dx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DX));
             auto ax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, dx), this->symbolicEngine->buildSymbolicOperand(inst, ax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, dx),
+                                                 this->symbolicEngine->getAstOperand(inst, ax));
             /* res = DX:AX / Source */
             auto result = this->astCtxt.extract((WORD_SIZE_BIT - 1), 0, this->astCtxt.bvsdiv(dividend, this->astCtxt.sx(WORD_SIZE_BIT, divisor)));
             /* mod = DX:AX % Source */
@@ -4676,7 +4680,8 @@ namespace triton {
             /* EDX:EAX */
             auto edx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
             auto eax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, edx), this->symbolicEngine->buildSymbolicOperand(inst, eax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, edx),
+                                                 this->symbolicEngine->getAstOperand(inst, eax));
             /* res = EDX:EAX / Source */
             auto result = this->astCtxt.extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt.bvsdiv(dividend, this->astCtxt.sx(DWORD_SIZE_BIT, divisor)));
             /* mod = EDX:EAX % Source */
@@ -4696,7 +4701,8 @@ namespace triton {
             /* RDX:RAX */
             auto rdx = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
             auto rax = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
-            auto dividend = this->astCtxt.concat(this->symbolicEngine->buildSymbolicOperand(inst, rdx), this->symbolicEngine->buildSymbolicOperand(inst, rax));
+            auto dividend = this->astCtxt.concat(this->symbolicEngine->getAstOperand(inst, rdx),
+                                                 this->symbolicEngine->getAstOperand(inst, rax));
             /* res = RDX:RAX / Source */
             auto result = this->astCtxt.extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt.bvsdiv(dividend, this->astCtxt.sx(QWORD_SIZE_BIT, divisor)));
             /* mod = RDX:RAX % Source */
@@ -4733,8 +4739,8 @@ namespace triton {
               case BYTE_SIZE: {
                 auto ax   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
                 auto al   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AL));
-                auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, al);
-                auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src);
+                auto& op1  = this->symbolicEngine->getAstOperand(inst, al);
+                auto& op2  = this->symbolicEngine->getAstOperand(inst, src);
                 auto node = this->astCtxt.bvmul(this->astCtxt.sx(BYTE_SIZE_BIT, op1), this->astCtxt.sx(BYTE_SIZE_BIT, op2));
                 auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "IMUL operation");
                 expr->isTainted = this->taintEngine->taintUnion(ax, src);
@@ -4747,8 +4753,8 @@ namespace triton {
               case WORD_SIZE: {
                 auto ax    = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
                 auto dx    = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DX));
-                auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, ax);
-                auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
+                auto& op1   = this->symbolicEngine->getAstOperand(inst, ax);
+                auto& op2   = this->symbolicEngine->getAstOperand(inst, src);
                 auto node  = this->astCtxt.bvmul(this->astCtxt.sx(WORD_SIZE_BIT, op1), this->astCtxt.sx(WORD_SIZE_BIT, op2));
                 auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(WORD_SIZE_BIT-1, 0, node), ax, "IMUL operation");
                 auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, node), dx, "IMUL operation");
@@ -4763,8 +4769,8 @@ namespace triton {
               case DWORD_SIZE: {
                 auto eax   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
                 auto edx   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
-                auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, eax);
-                auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
+                auto& op1   = this->symbolicEngine->getAstOperand(inst, eax);
+                auto& op2   = this->symbolicEngine->getAstOperand(inst, src);
                 auto node  = this->astCtxt.bvmul(this->astCtxt.sx(DWORD_SIZE_BIT, op1), this->astCtxt.sx(DWORD_SIZE_BIT, op2));
                 auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(DWORD_SIZE_BIT-1, 0, node), eax, "IMUL operation");
                 auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, node), edx, "IMUL operation");
@@ -4779,8 +4785,8 @@ namespace triton {
               case QWORD_SIZE: {
                 auto rax   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
                 auto rdx   = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
-                auto op1   = this->symbolicEngine->buildSymbolicOperand(inst, rax);
-                auto op2   = this->symbolicEngine->buildSymbolicOperand(inst, src);
+                auto& op1   = this->symbolicEngine->getAstOperand(inst, rax);
+                auto& op2   = this->symbolicEngine->getAstOperand(inst, src);
                 auto node  = this->astCtxt.bvmul(this->astCtxt.sx(QWORD_SIZE_BIT, op1), this->astCtxt.sx(QWORD_SIZE_BIT, op2));
                 auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(QWORD_SIZE_BIT-1, 0, node), rax, "IMUL operation");
                 auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, node), rdx, "IMUL operation");
@@ -4799,8 +4805,8 @@ namespace triton {
           case 2: {
             auto& dst  = inst.operands[0];
             auto& src  = inst.operands[1];
-            auto  op1  = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-            auto  op2  = this->symbolicEngine->buildSymbolicOperand(inst, src);
+            auto& op1  = this->symbolicEngine->getAstOperand(inst, dst);
+            auto& op2  = this->symbolicEngine->getAstOperand(inst, src);
             auto  node = this->astCtxt.bvmul(this->astCtxt.sx(dst.getBitSize(), op1), this->astCtxt.sx(src.getBitSize(), op2));
             auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
             expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -4814,8 +4820,8 @@ namespace triton {
             auto& dst  = inst.operands[0];
             auto& src1 = inst.operands[1];
             auto& src2 = inst.operands[2];
-            auto  op2  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto  op3  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op2  = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op3  = this->symbolicEngine->getAstOperand(inst, src2);
             auto  node = this->astCtxt.bvmul(this->astCtxt.sx(src1.getBitSize(), op2), this->astCtxt.sx(src2.getBitSize(), op3));
             auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt.extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
             expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -4835,7 +4841,7 @@ namespace triton {
         auto& dst = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
         auto op2 = this->astCtxt.bv(1, dst.getBitSize());
 
         /* Create the semantics */
@@ -4879,10 +4885,10 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -4917,9 +4923,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvfalse()), op3, op2);
@@ -4946,9 +4952,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvtrue()), op3, op2);
@@ -4976,10 +4982,10 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(op1, op2), this->astCtxt.bvtrue()), op4, op3);
@@ -5008,9 +5014,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvtrue()), op3, op2);
@@ -5039,11 +5045,11 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(this->astCtxt.bvxor(op1, op2), op3), this->astCtxt.bvfalse()), op5, op4);
@@ -5073,10 +5079,10 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, op2), op4, op3);
@@ -5105,10 +5111,10 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvxor(op1, op2), this->astCtxt.bvtrue()), op4, op3);
@@ -5138,11 +5144,11 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(this->astCtxt.bvor(this->astCtxt.bvxor(op1, op2), op3), this->astCtxt.bvtrue()), op5, op4);
@@ -5169,7 +5175,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = op1;
@@ -5195,9 +5201,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvfalse()), op3, op2);
@@ -5224,9 +5230,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvfalse()), op3, op2);
@@ -5253,9 +5259,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, pf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvfalse()), op3, op2);
@@ -5282,9 +5288,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvfalse()), op3, op2);
@@ -5311,9 +5317,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvtrue()), op3, op2);
@@ -5340,9 +5346,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, pf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvtrue()), op3, op2);
@@ -5369,9 +5375,9 @@ namespace triton {
         auto& srcImm2 = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, srcImm2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, srcImm1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, srcImm2);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(this->astCtxt.equal(op1, this->astCtxt.bvtrue()), op3, op2);
@@ -5400,14 +5406,14 @@ namespace triton {
         auto src5 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, src5);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> flags;
+        std::list<triton::ast::SharedAbstractNode> flags;
 
         flags.push_back(op1);
         flags.push_back(op2);
@@ -5440,7 +5446,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDDQU operation");
@@ -5458,7 +5464,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDMXCSR operation");
@@ -5490,42 +5496,41 @@ namespace triton {
         /* Create symbolic operands */
 
         /* Displacement */
-        auto op2 = this->symbolicEngine->buildSymbolicImmediate(inst, srcDisp);
+        auto op2 = this->symbolicEngine->getAstImmediate(inst, srcDisp);
         if (leaSize > srcDisp.getBitSize())
-          op2 = this->astCtxt.zx(leaSize - srcDisp.getBitSize(), op2);
+          op2 = this->astCtxt.zx(leaSize - srcDisp.getBitSize(), std::move(op2));
 
         /* Base */
-        triton::ast::AbstractNode* op3;
+        triton::ast::SharedAbstractNode op3;
         if (this->architecture->isRegisterValid(srcBase))
-          op3 = this->symbolicEngine->buildSymbolicRegister(inst, srcBase);
+          op3 = this->symbolicEngine->getAstRegister(inst, srcBase);
         else
           op3 = this->astCtxt.bv(0, leaSize);
 
         /* Base with PC */
         if (this->architecture->isRegisterValid(srcBase) && (architecture->getParentRegister(srcBase) == architecture->getParentRegister(ID_REG_IP)))
-          op3 = this->astCtxt.bvadd(op3, this->astCtxt.bv(inst.getSize(), leaSize));
+          op3 = this->astCtxt.bvadd(std::move(op3), this->astCtxt.bv(inst.getSize(), leaSize));
 
         /* Index */
-        triton::ast::AbstractNode* op4;
+        triton::ast::SharedAbstractNode op4;
         if (this->architecture->isRegisterValid(srcIndex))
-          op4 = this->symbolicEngine->buildSymbolicRegister(inst, srcIndex);
+          op4 = this->symbolicEngine->getAstRegister(inst, srcIndex);
         else
           op4 = this->astCtxt.bv(0, leaSize);
 
         /* Scale */
-        auto op5 = this->symbolicEngine->buildSymbolicImmediate(inst, srcScale);
+        auto op5 = this->symbolicEngine->getAstImmediate(inst, srcScale);
         if (leaSize > srcScale.getBitSize())
-          op5 = this->astCtxt.zx(leaSize - srcScale.getBitSize(), op5);
+          op5 = this->astCtxt.zx(leaSize - srcScale.getBitSize(), std::move(op5));
 
         /* Create the semantics */
         /* Effective address = Displacement + BaseReg + IndexReg * Scale */
-        auto node = this->astCtxt.bvadd(op2, this->astCtxt.bvadd(op3, this->astCtxt.bvmul(op4, op5)));
+        auto node = this->astCtxt.bvadd(std::move(op2), this->astCtxt.bvadd(std::move(op3), this->astCtxt.bvmul(std::move(op4), std::move(op5))));
 
         if (dst.getBitSize() > leaSize)
-          node = this->astCtxt.zx(dst.getBitSize() - leaSize, node);
-
-        if (dst.getBitSize() < leaSize)
-          node = this->astCtxt.extract(dst.getAbstractHigh(), dst.getAbstractLow(), node);
+          node = this->astCtxt.zx(dst.getBitSize() - leaSize, std::move(node));
+        else if (dst.getBitSize() < leaSize)
+          node = this->astCtxt.extract(dst.getAbstractHigh(), dst.getAbstractLow(), std::move(node));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, dst, "LEA operation");
@@ -5547,7 +5552,7 @@ namespace triton {
         auto sp        = triton::arch::OperandWrapper(stack);
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, bp2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, bp2);
 
         /* RSP = RBP */
         auto node1 = op1;
@@ -5559,7 +5564,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintAssignment(sp, bp2);
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, bp1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, bp1);
 
         /* RBP = pop() */
         auto node2 = op2;
@@ -5592,16 +5597,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -5632,16 +5637,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -5672,16 +5677,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -5712,16 +5717,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -5755,7 +5760,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto node = this->symbolicEngine->getAstOperand(inst, src);
 
         /*
          * Special cases:
@@ -5799,7 +5804,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVABS operation");
@@ -5817,7 +5822,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVAPD operation");
@@ -5835,7 +5840,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVAPS operation");
@@ -5853,10 +5858,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         switch (dst.getBitSize()) {
           /* GPR 32-bits */
@@ -5891,7 +5896,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.concat(this->astCtxt.extract(QWORD_SIZE_BIT-1, 0, op2), this->astCtxt.extract(QWORD_SIZE_BIT-1, 0, op2));
@@ -5912,7 +5917,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.extract(QWORD_SIZE_BIT-1, 0, op2);
@@ -5933,7 +5938,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVDQA operation");
@@ -5951,7 +5956,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVDQU operation");
@@ -5969,8 +5974,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.concat(
@@ -5994,11 +5999,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
         if (dst.getSize() == DQWORD_SIZE) {
@@ -6029,11 +6034,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
         if (dst.getSize() == DQWORD_SIZE) {
@@ -6064,8 +6069,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.concat(
@@ -6089,11 +6094,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
         if (dst.getSize() == DQWORD_SIZE) {
@@ -6124,11 +6129,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
         if (dst.getSize() == DQWORD_SIZE) {
@@ -6159,7 +6164,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(30,                       /* Destination[2..31] = 0        */
@@ -6185,10 +6190,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> signs;
+        std::list<triton::ast::SharedAbstractNode> signs;
 
         signs.push_back(this->astCtxt.extract(127, 127, op2)); /* Destination[3] = Source[127]; */
         signs.push_back(this->astCtxt.extract(95, 95,   op2)); /* Destination[2] = Source[95];  */
@@ -6213,7 +6218,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVNTDQ operation");
@@ -6231,7 +6236,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVNTI operation");
@@ -6249,7 +6254,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVNTPD operation");
@@ -6267,7 +6272,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVNTPS operation");
@@ -6285,7 +6290,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVNTQ operation");
@@ -6302,10 +6307,10 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> bytes;
+        std::list<triton::ast::SharedAbstractNode> bytes;
 
         bytes.push_back(this->astCtxt.extract(127, 96, op2));
         bytes.push_back(this->astCtxt.extract(127, 96, op2));
@@ -6329,10 +6334,10 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> bytes;
+        std::list<triton::ast::SharedAbstractNode> bytes;
 
         bytes.push_back(this->astCtxt.extract(95, 64, op2));
         bytes.push_back(this->astCtxt.extract(95, 64, op2));
@@ -6356,11 +6361,11 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
 
         /* when operating on MMX technology registers and memory locations */
         if (dst.getBitSize() == QWORD_SIZE_BIT && src.getBitSize() == QWORD_SIZE_BIT)
@@ -6403,7 +6408,7 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(QWORD_SIZE_BIT, op2);
@@ -6428,17 +6433,17 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -6477,17 +6482,17 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -6522,7 +6527,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVUPD operation");
@@ -6540,7 +6545,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVUPS operation");
@@ -6562,17 +6567,17 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -6611,17 +6616,17 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index2);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index2);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -6656,7 +6661,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), op1);
@@ -6677,7 +6682,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.sx(dst.getBitSize() - src.getBitSize(), op1);
@@ -6698,7 +6703,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -6724,8 +6729,8 @@ namespace triton {
             auto dst  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
             auto src1 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AL));
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
             /* Create the semantics */
             auto node = this->astCtxt.bvmul(this->astCtxt.zx(BYTE_SIZE_BIT, op1), this->astCtxt.zx(BYTE_SIZE_BIT, op2));
             /* Create symbolic expression */
@@ -6745,8 +6750,8 @@ namespace triton {
             auto dst2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DX));
             auto src1 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AX));
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
             /* Create the semantics */
             auto node = this->astCtxt.bvmul(this->astCtxt.zx(WORD_SIZE_BIT, op1), this->astCtxt.zx(WORD_SIZE_BIT, op2));
             /* Create symbolic expression for ax */
@@ -6772,8 +6777,8 @@ namespace triton {
             auto dst2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
             auto src1 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EAX));
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
             /* Create the semantics */
             auto node = this->astCtxt.bvmul(this->astCtxt.zx(DWORD_SIZE_BIT, op1), this->astCtxt.zx(DWORD_SIZE_BIT, op2));
             /* Create symbolic expression for eax */
@@ -6799,8 +6804,8 @@ namespace triton {
             auto dst2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
             auto src1 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RAX));
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
             /* Create the semantics */
             auto node = this->astCtxt.bvmul(this->astCtxt.zx(QWORD_SIZE_BIT, op1), this->astCtxt.zx(QWORD_SIZE_BIT, op2));
             /* Create symbolic expression for eax */
@@ -6838,8 +6843,8 @@ namespace triton {
             auto  src2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDX));
 
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
             /* Create the semantics */
             auto node  = this->astCtxt.bvmul(this->astCtxt.zx(DWORD_SIZE_BIT, op1), this->astCtxt.zx(DWORD_SIZE_BIT, op2));
@@ -6867,8 +6872,8 @@ namespace triton {
             auto  src2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_RDX));
 
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-            auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+            auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+            auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
             /* Create the semantics */
             auto node  = this->astCtxt.bvmul(this->astCtxt.zx(QWORD_SIZE_BIT, op1), this->astCtxt.zx(QWORD_SIZE_BIT, op2));
@@ -6899,7 +6904,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvneg(op1);
@@ -6933,7 +6938,7 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvnot(op1);
@@ -6954,8 +6959,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvor(op1, op2);
@@ -6983,8 +6988,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvor(op1, op2);
@@ -7005,8 +7010,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvor(op1, op2);
@@ -7027,11 +7032,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -7081,11 +7086,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -7123,11 +7128,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -7163,11 +7168,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -7209,8 +7214,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op1, op2);
@@ -7231,8 +7236,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op1), op2);
@@ -7259,11 +7264,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
@@ -7302,11 +7307,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
@@ -7345,11 +7350,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7380,11 +7385,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7415,11 +7420,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7450,11 +7455,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7485,11 +7490,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7520,11 +7525,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7555,11 +7560,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7590,11 +7595,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7625,11 +7630,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7660,11 +7665,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7695,11 +7700,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7730,11 +7735,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7765,11 +7770,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7800,11 +7805,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7835,11 +7840,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7870,11 +7875,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
@@ -7905,11 +7910,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
@@ -7940,11 +7945,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
         for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
           uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
@@ -7975,10 +7980,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> mskb;
+        std::list<triton::ast::SharedAbstractNode> mskb;
 
         switch (src.getSize()) {
           case DQWORD_SIZE:
@@ -8023,10 +8028,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(31, 24, op2)));
         pck.push_back(this->astCtxt.sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(23, 16, op2)));
@@ -8051,10 +8056,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(15, 8,  op2)));
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(7,  0,  op2)));
@@ -8077,10 +8082,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(63, 56, op2)));
         pck.push_back(this->astCtxt.sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(55, 48, op2)));
@@ -8109,10 +8114,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt.extract(63, 32, op2)));
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt.extract(31, 0,  op2)));
@@ -8135,10 +8140,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(63, 48, op2)));
         pck.push_back(this->astCtxt.sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(47, 32, op2)));
@@ -8163,10 +8168,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(31, 16, op2)));
         pck.push_back(this->astCtxt.sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(15, 0,  op2)));
@@ -8189,10 +8194,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(31, 24, op2)));
         pck.push_back(this->astCtxt.zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(23, 16, op2)));
@@ -8217,10 +8222,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(15, 8,  op2)));
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(7,  0,  op2)));
@@ -8243,10 +8248,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(63, 56, op2)));
         pck.push_back(this->astCtxt.zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt.extract(55, 48, op2)));
@@ -8275,10 +8280,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt.extract(63, 32, op2)));
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt.extract(31, 0,  op2)));
@@ -8301,10 +8306,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(63, 48, op2)));
         pck.push_back(this->astCtxt.zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(47, 32, op2)));
@@ -8329,10 +8334,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode *> pck;
+        std::list<triton::ast::SharedAbstractNode> pck;
 
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(31, 16, op2)));
         pck.push_back(this->astCtxt.zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt.extract(15, 0,  op2)));
@@ -8358,7 +8363,7 @@ namespace triton {
         auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = op1;
@@ -8418,14 +8423,14 @@ namespace triton {
         auto src8       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize()));
 
         /* Create symbolic operands and semantics */
-        auto node1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto node2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto node3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto node4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto node5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto node6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto node7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto node8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
+        auto& node1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& node2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& node3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& node4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& node5 = this->symbolicEngine->getAstOperand(inst, src5);
+        auto& node6 = this->symbolicEngine->getAstOperand(inst, src6);
+        auto& node7 = this->symbolicEngine->getAstOperand(inst, src7);
+        auto& node8 = this->symbolicEngine->getAstOperand(inst, src8);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "POPAL EDI operation");
@@ -8467,7 +8472,7 @@ namespace triton {
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0,  0,  op1);
@@ -8525,7 +8530,7 @@ namespace triton {
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0,  0,  op1);
@@ -8573,8 +8578,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvor(op1, op2);
@@ -8594,7 +8599,8 @@ namespace triton {
         auto& src = inst.operands[0];
 
         /* Only specify that the instruction performs an implicit memory read */
-        this->symbolicEngine->buildSymbolicOperand(inst, src);
+        // FIXME: It is weird to have a getter modifying values
+        this->symbolicEngine->getAstOperand(inst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -8607,11 +8613,11 @@ namespace triton {
         auto& ord = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, ord);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, ord);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pack;
+        std::list<triton::ast::SharedAbstractNode> pack;
         pack.push_back(
           this->astCtxt.extract(31, 0,
             this->astCtxt.bvlshr(
@@ -8676,11 +8682,11 @@ namespace triton {
         auto& ord = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, ord);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, ord);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pack;
+        std::list<triton::ast::SharedAbstractNode> pack;
         pack.push_back(
           this->astCtxt.extract(79, 64,
             this->astCtxt.bvlshr(
@@ -8748,11 +8754,11 @@ namespace triton {
         auto& ord = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, ord);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, ord);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pack;
+        std::list<triton::ast::SharedAbstractNode> pack;
         pack.push_back(
           this->astCtxt.extract(127, 64, op2)
         );
@@ -8820,11 +8826,11 @@ namespace triton {
         auto& ord = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, ord);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, ord);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pack;
+        std::list<triton::ast::SharedAbstractNode> pack;
         pack.push_back(
           this->astCtxt.extract(15, 0,
             this->astCtxt.bvlshr(
@@ -8888,8 +8894,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         /* Create the semantics */
         auto node = this->astCtxt.bvshl(
@@ -8920,8 +8926,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         /* Create the semantics */
         auto node = this->astCtxt.bvlshr(
@@ -8952,11 +8958,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -9006,11 +9012,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -9048,11 +9054,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -9088,11 +9094,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> packed;
+        std::list<triton::ast::SharedAbstractNode> packed;
 
         switch (dst.getBitSize()) {
 
@@ -9134,8 +9140,8 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvand(op1, op2);
@@ -9167,11 +9173,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9229,11 +9235,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9273,11 +9279,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9309,11 +9315,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9359,11 +9365,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9421,11 +9427,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9465,11 +9471,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9501,11 +9507,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         switch (dst.getBitSize()) {
 
@@ -9560,7 +9566,7 @@ namespace triton {
         auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -9597,14 +9603,14 @@ namespace triton {
         auto src8       = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EDI));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto op7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto op8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, src5);
+        auto& op6 = this->symbolicEngine->getAstOperand(inst, src6);
+        auto& op7 = this->symbolicEngine->getAstOperand(inst, src7);
+        auto& op8 = this->symbolicEngine->getAstOperand(inst, src8);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.zx(dst1.getBitSize() - src1.getBitSize(), op1);
@@ -9659,18 +9665,18 @@ namespace triton {
         auto src9       = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto op7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto op8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
-        auto op9 = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, src5);
+        auto& op6 = this->symbolicEngine->getAstOperand(inst, src6);
+        auto& op7 = this->symbolicEngine->getAstOperand(inst, src7);
+        auto& op8 = this->symbolicEngine->getAstOperand(inst, src8);
+        auto& op9 = this->symbolicEngine->getAstOperand(inst, src9);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> eflags;
+        std::list<triton::ast::SharedAbstractNode> eflags;
         eflags.push_back(op9);
         eflags.push_back(op8);
         eflags.push_back(op7);
@@ -9725,18 +9731,18 @@ namespace triton {
         auto src9       = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto op7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto op8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
-        auto op9 = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src3);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, src4);
+        auto& op5 = this->symbolicEngine->getAstOperand(inst, src5);
+        auto& op6 = this->symbolicEngine->getAstOperand(inst, src6);
+        auto& op7 = this->symbolicEngine->getAstOperand(inst, src7);
+        auto& op8 = this->symbolicEngine->getAstOperand(inst, src8);
+        auto& op9 = this->symbolicEngine->getAstOperand(inst, src9);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> eflags;
+        std::list<triton::ast::SharedAbstractNode> eflags;
         eflags.push_back(op9);
         eflags.push_back(op8);
         eflags.push_back(op7);
@@ -9779,8 +9785,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(op1, op2);
@@ -9802,10 +9808,10 @@ namespace triton {
         auto  srcCf = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2bis = this->symbolicEngine->buildSymbolicOperand(src);
-        auto op3    = this->symbolicEngine->buildSymbolicOperand(inst, srcCf);
+        auto& op1    = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2    = this->symbolicEngine->getAstOperand(inst, src);
+        auto op2bis = this->symbolicEngine->getAstOperand(src);
+        auto& op3    = this->symbolicEngine->getAstOperand(inst, srcCf);
 
         switch (dst.getBitSize()) {
           /* Mask: 0x1f without MOD */
@@ -9873,9 +9879,9 @@ namespace triton {
         auto  srcCf = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3    = this->symbolicEngine->buildSymbolicOperand(inst, srcCf);
+        auto& op1    = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2    = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3    = this->symbolicEngine->getAstOperand(inst, srcCf);
 
         switch (dst.getBitSize()) {
           /* Mask: 0x3f without MOD */
@@ -9965,7 +9971,7 @@ namespace triton {
         auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, sp);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, sp);
 
         /* Create the semantics */
         auto node = op1;
@@ -9982,7 +9988,7 @@ namespace triton {
         /* Create the semantics - side effect */
         if (inst.operands.size() > 0) {
           auto offset = inst.operands[0].getImmediate();
-          this->symbolicEngine->buildSymbolicImmediate(inst, offset);
+          this->symbolicEngine->getAstImmediate(inst, offset);
           alignAddStack_s(inst, static_cast<triton::uint32>(offset.getValue()));
         }
 
@@ -9996,9 +10002,9 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2bis = this->symbolicEngine->buildSymbolicOperand(src);
+        auto& op1    = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2    = this->symbolicEngine->getAstOperand(inst, src);
+        auto op2bis = this->symbolicEngine->getAstOperand(src);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -10060,9 +10066,9 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1    = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2    = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2bis = this->symbolicEngine->buildSymbolicOperand(src);
+        auto& op1    = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2    = this->symbolicEngine->getAstOperand(inst, src);
+        auto op2bis = this->symbolicEngine->getAstOperand(src);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -10125,8 +10131,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -10167,7 +10173,7 @@ namespace triton {
         auto src  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_AH));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(7, 7, op1);
@@ -10200,8 +10206,8 @@ namespace triton {
         auto& src   = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         if (dst.getBitSize() == QWORD_SIZE_BIT)
           op2 = this->astCtxt.bvand(op2, this->astCtxt.bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
@@ -10235,8 +10241,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -10274,9 +10280,9 @@ namespace triton {
         auto  srcCf = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->astCtxt.zx(src.getBitSize()-1, this->symbolicEngine->buildSymbolicOperand(inst, srcCf));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto op3 = this->astCtxt.zx(src.getBitSize()-1, this->symbolicEngine->getAstOperand(inst, srcCf));
 
         /* Create the semantics */
         auto node = this->astCtxt.bvsub(op1, this->astCtxt.bvadd(op2, op3));
@@ -10313,17 +10319,17 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -10366,17 +10372,17 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -10419,17 +10425,17 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -10472,17 +10478,17 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvsub(op1, op2);
@@ -10519,8 +10525,8 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10557,7 +10563,7 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10587,7 +10593,7 @@ namespace triton {
         auto  cf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_CF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, cf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10618,8 +10624,8 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, cf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, cf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10650,7 +10656,7 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10682,9 +10688,9 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10717,8 +10723,8 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10750,8 +10756,8 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10784,9 +10790,9 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, of);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, of);
+        auto& op4 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10818,7 +10824,7 @@ namespace triton {
         auto  zf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_ZF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, zf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, zf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10848,7 +10854,7 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10878,7 +10884,7 @@ namespace triton {
         auto  pf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_PF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, pf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10908,7 +10914,7 @@ namespace triton {
         auto  sf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10938,7 +10944,7 @@ namespace triton {
         auto  of  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_OF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, of);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, of);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10968,7 +10974,7 @@ namespace triton {
         auto  pf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_PF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, pf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, pf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -10998,7 +11004,7 @@ namespace triton {
         auto  sf  = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_SF));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, sf);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, sf);
 
         /* Create the semantics */
         auto node = this->astCtxt.ite(
@@ -11034,8 +11040,8 @@ namespace triton {
         auto& src   = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         if (dst.getBitSize() == QWORD_SIZE_BIT)
           op2 = this->astCtxt.bvand(op2, this->astCtxt.bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
@@ -11069,9 +11075,9 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11132,8 +11138,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11170,8 +11176,8 @@ namespace triton {
         auto& src   = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->buildSymbolicOperand(inst, src));
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getAstOperand(inst, src));
 
         if (dst.getBitSize() == QWORD_SIZE_BIT)
           op2 = this->astCtxt.bvand(op2, this->astCtxt.bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
@@ -11205,9 +11211,9 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11268,8 +11274,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11327,7 +11333,7 @@ namespace triton {
         auto  src = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_MXCSR));
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.extract(DWORD_SIZE_BIT-1, 0, op2);
@@ -11351,16 +11357,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -11391,16 +11397,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -11431,16 +11437,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -11471,16 +11477,16 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->buildSymbolicOperand(cx);
+        auto cnt = this->symbolicEngine->getAstOperand(cx);
         if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, index);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, df);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, index);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, df);
 
         /* Create the semantics */
         auto node1 = op1;
@@ -11508,8 +11514,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvsub(op1, op2);
@@ -11540,8 +11546,8 @@ namespace triton {
         auto src2 = triton::arch::OperandWrapper(architecture->getRegister(ID_REG_EFLAGS));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvadd(op1, this->astCtxt.bv(inst.getSize(), src1.getBitSize()));
@@ -11565,8 +11571,8 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op1, op2);
@@ -11596,10 +11602,10 @@ namespace triton {
         auto  bvSize2 = src.getBitSize();
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        triton::ast::AbstractNode* node = nullptr;
+        triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
           case BYTE_SIZE:
             node = this->astCtxt.ite(
@@ -11776,8 +11782,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.concat(
@@ -11801,11 +11807,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         unpack.push_back(this->astCtxt.extract(127, 96, op2));
         unpack.push_back(this->astCtxt.extract(127, 96, op1));
@@ -11830,8 +11836,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.concat(
@@ -11855,11 +11861,11 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> unpack;
+        std::list<triton::ast::SharedAbstractNode> unpack;
 
         unpack.push_back(this->astCtxt.extract(63, 32, op2));
         unpack.push_back(this->astCtxt.extract(63, 32, op1));
@@ -11884,7 +11890,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VMOVDQA operation");
@@ -11902,7 +11908,7 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create the semantics */
-        auto node = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& node = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VMOVDQU operation");
@@ -11921,8 +11927,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(op2, op3);
@@ -11944,8 +11950,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvand(this->astCtxt.bvnot(op2), op3);
@@ -11967,8 +11973,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvor(op2, op3);
@@ -11991,11 +11997,11 @@ namespace triton {
         triton::uint32 dstSize  = dst.getBitSize();
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, ord);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, ord);
 
         /* Create the semantics */
-        std::list<triton::ast::AbstractNode*> pack;
+        std::list<triton::ast::SharedAbstractNode> pack;
 
         switch (dstSize) {
 
@@ -12116,8 +12122,8 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvand(op1, op2);
@@ -12150,8 +12156,8 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src1);
+        auto& op3 = this->symbolicEngine->getAstOperand(inst, src2);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(op2, op3);
@@ -12186,12 +12192,13 @@ namespace triton {
         bool  srcT = this->taintEngine->isTainted(src);
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
-
         /* Create the semantics */
-        auto node1 = op2;
-        auto node2 = op1;
+        auto& op1_xchg = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2_xchg = this->symbolicEngine->getAstOperand(inst, src);
+
+        /* Create the semantic */
+        auto &node1 = op2_xchg;
+        auto &node2 = op1_xchg;
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
@@ -12202,8 +12209,8 @@ namespace triton {
         expr2->isTainted = this->taintEngine->setTaint(src, dstT);
 
         /* Create symbolic operands */
-        op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node3 = this->astCtxt.bvadd(op1, op2);
@@ -12234,8 +12241,8 @@ namespace triton {
         bool  srcT = this->taintEngine->isTainted(src);
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node1 = op2;
@@ -12259,8 +12266,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(op1, op2);
@@ -12288,8 +12295,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(op1, op2);
@@ -12310,8 +12317,8 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, dst);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src);
+        auto& op1 = this->symbolicEngine->getAstOperand(inst, dst);
+        auto& op2 = this->symbolicEngine->getAstOperand(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.bvxor(op1, op2);

@@ -50,11 +50,11 @@ int main(int ac, const char **av) {
   /* Process everything */
   api.processing(inst);
 
-  /* Get the RAX symbolic ID */
-  auto raxSymId = api.getSymbolicRegisterId(api.getRegister(ID_REG_RAX));
+  /* Get the RAX symbolic expr */
+  auto raxSym = api.getSymbolicRegister(api.getRegister(ID_REG_RAX));
 
   /* Get the RAX full AST */
-  auto raxFullAst = api.unrollAstFromId(raxSymId);
+  auto raxFullAst = api.unrollAst(raxSym->getShareAst());
 
   /* Display RAX's AST*/
   std::cout << "RAX expr: " << raxFullAst << std::endl;
@@ -69,7 +69,7 @@ int main(int ac, const char **av) {
   std::cout << "constraint: " << constraint << std::endl;
 
   /* Ask a model */
-  auto model = api.getModel(constraint);
+  auto model = api.getModel(constraint.get());
 
   /* Display all symbolic variable value contained in the model */
   std::cout << "Model:" << std::endl;

@@ -8,7 +8,7 @@
 #ifndef TRITON_SYMBOLICENUMS_H
 #define TRITON_SYMBOLICENUMS_H
 
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 /*! Defines the name of a symbolic variable. */
 #define TRITON_SYMVAR_NAME "SymVar_"
@@ -41,14 +41,12 @@ namespace triton {
      *  @{
      */
 
-      //! Defines an UNSET symbolic expression.
-      const triton::usize UNSET = static_cast<triton::usize>(-1);
-
       //! Enumerates all kinds of symbolic variable.
       enum symkind_e {
         UNDEF = 0, //!< Undefined
         REG,       //!< Assigned to a register.
-        MEM        //!< Assigned to a memory.
+        MEM,       //!< Assigned to a memory.
+        IMM        //!< Assigned to an immediate
       };
 
     /*! @} End of symbolic namespace */

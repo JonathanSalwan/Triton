@@ -8,7 +8,7 @@
 #ifndef TRITON_SYMBOLICSIMPLIFICATION_H
 #define TRITON_SYMBOLICSIMPLIFICATION_H
 
-#include <triton/ast.hpp>
+#include <tritonast/nodes.hpp>
 #include <triton/callbacks.hpp>
 
 
@@ -54,7 +54,7 @@ namespace triton {
           void copy(const SymbolicSimplification& other);
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node) const;
+          triton::ast::SharedAbstractNode processSimplification(triton::ast::SharedAbstractNode const& node) const;
 
           //! Copies a SymbolicSimplification.
           void operator=(const SymbolicSimplification& other);

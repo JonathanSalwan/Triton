@@ -8,7 +8,7 @@
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 
@@ -19,7 +19,6 @@ namespace triton {
       bool PyLong_AsBool(PyObject* obj) {
         return (PyObject_IsTrue(obj) != 0);
       }
-
 
       triton::__uint PyLong_AsUint(PyObject* vv) {
         PyLongObject* v;
@@ -230,7 +229,6 @@ namespace triton {
         return x;
       }
 
-
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUint(triton::__uint value) {
         PyLongObject* v;
@@ -254,7 +252,6 @@ namespace triton {
 
         return (PyObject*)v;
       }
-
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUsize(triton::usize value) {
@@ -403,6 +400,21 @@ namespace triton {
         }
 
         return (PyObject*)v;
+      }
+
+      int PyDict_SetItemStringSteal(PyObject *p, const char *key, PyObject *val)
+      {
+        int r = PyDict_SetItemString(p, key, val);
+        Py_DECREF(val);
+        return r;
+      }
+
+      int PyDict_SetItemSteal(PyObject *p, PyObject *key, PyObject *val)
+      {
+        int r = PyDict_SetItem(p, key, val);
+        Py_DECREF(val);
+        Py_DECREF(key);
+        return r;
       }
 
     }; /* python namespace */

@@ -37,9 +37,9 @@ namespace triton {
     namespace python {
 
       void initVersionNamespace(PyObject* versionDict) {
-        PyDict_SetItemString(versionDict, "MAJOR", PyLong_FromUint32(triton::MAJOR));
-        PyDict_SetItemString(versionDict, "MINOR", PyLong_FromUint32(triton::MINOR));
-        PyDict_SetItemString(versionDict, "BUILD", PyLong_FromUint32(triton::BUILD));
+        PyDict_SetItemStringSteal(versionDict, "MAJOR", PyLong_FromUint32(triton::MAJOR));
+        PyDict_SetItemStringSteal(versionDict, "MINOR", PyLong_FromUint32(triton::MINOR));
+        PyDict_SetItemStringSteal(versionDict, "BUILD", PyLong_FromUint32(triton::BUILD));
       }
 
     }; /* python namespace */

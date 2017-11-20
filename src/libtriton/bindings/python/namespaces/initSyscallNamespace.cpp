@@ -365,7 +365,7 @@ namespace triton {
         PyDict_Clear(syscallsDict64);
 
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL64; ++i)
-          PyDict_SetItemString(syscallsDict64, triton::os::unix::syscallmap64[i], PyLong_FromUint32(i));
+          PyDict_SetItemStringSteal(syscallsDict64, triton::os::unix::syscallmap64[i], PyLong_FromUint32(i));
       }
 
       void initSyscall32Namespace(PyObject* syscallsDict32) {
@@ -373,7 +373,7 @@ namespace triton {
 
         #if defined(__unix__)
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
-          PyDict_SetItemString(syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
+          PyDict_SetItemStringSteal(syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
         #endif
       }
 

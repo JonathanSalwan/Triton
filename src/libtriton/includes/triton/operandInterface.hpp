@@ -8,7 +8,7 @@
 #ifndef TRITON_OPERANDINTERFACE_H
 #define TRITON_OPERANDINTERFACE_H
 
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

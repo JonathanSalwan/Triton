@@ -37,19 +37,19 @@ from triton import ARCH, TritonContext, MemoryAccess, CPUSIZE, Instruction, MODE
 
 # Symbolic variables with random inputs at the first iteration.
 variables = {
-    0x00: 61,
-    0x01: 61,
-    0x02: 61,
-    0x03: 61,
-    0x04: 61,
-    0x05: 61,
-    0x06: 61,
-    0x07: 61,
-    0x08: 61,
-    0x09: 61,
-    0x0a: 61,
-    0x0b: 61,
-    0x0c: 61,
+    "SymVar_0": 61,
+    "SymVar_1": 61,
+    "SymVar_2": 61,
+    "SymVar_3": 61,
+    "SymVar_4": 61,
+    "SymVar_5": 61,
+    "SymVar_6": 61,
+    "SymVar_7": 61,
+    "SymVar_8": 61,
+    "SymVar_9": 61,
+    "SymVar_10": 61,
+    "SymVar_11": 61,
+    "SymVar_12": 61,
 }
 
 # Good values at specific points to take good branches.
@@ -128,19 +128,19 @@ def symbolizeInputs(Triton):
     user_input = Triton.getConcreteRegisterValue(Triton.registers.rdi)
 
     # Inject concrete models into the memory
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+0,  CPUSIZE.DWORD), variables[0x00])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+4,  CPUSIZE.DWORD), variables[0x01])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+8,  CPUSIZE.DWORD), variables[0x02])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+12, CPUSIZE.DWORD), variables[0x03])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+16, CPUSIZE.DWORD), variables[0x04])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+20, CPUSIZE.DWORD), variables[0x05])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+24, CPUSIZE.DWORD), variables[0x06])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+28, CPUSIZE.DWORD), variables[0x07])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+32, CPUSIZE.DWORD), variables[0x08])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+36, CPUSIZE.DWORD), variables[0x09])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+40, CPUSIZE.DWORD), variables[0x0a])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+44, CPUSIZE.DWORD), variables[0x0b])
-    Triton.setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD), variables[0x0c])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+0,  CPUSIZE.DWORD), variables["SymVar_0"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+4,  CPUSIZE.DWORD), variables["SymVar_1"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+8,  CPUSIZE.DWORD), variables["SymVar_2"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+12, CPUSIZE.DWORD), variables["SymVar_3"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+16, CPUSIZE.DWORD), variables["SymVar_4"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+20, CPUSIZE.DWORD), variables["SymVar_5"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+24, CPUSIZE.DWORD), variables["SymVar_6"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+28, CPUSIZE.DWORD), variables["SymVar_7"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+32, CPUSIZE.DWORD), variables["SymVar_8"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+36, CPUSIZE.DWORD), variables["SymVar_9"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+40, CPUSIZE.DWORD), variables["SymVar_10"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+44, CPUSIZE.DWORD), variables["SymVar_11"])
+    Triton.setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD), variables["SymVar_12"])
 
     # Create symbolic variables.
     Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
@@ -165,7 +165,7 @@ def solution():
     global variables
     print '[+] Final solution:'
     for k, v in variables.items():
-        print '[+] Symbolic variable %d = %02x (%c)' %(k, v, chr(v))
+        print '[+] Symbolic variable %s = %02x (%c)' %(k, v, chr(v))
     return
 
 

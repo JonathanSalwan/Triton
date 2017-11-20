@@ -11,7 +11,7 @@
 #include <exception>
 #include <string>
 
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 
@@ -152,30 +152,6 @@ namespace triton {
 
         //! Constructor.
         TaintEngine(const std::string& message) : triton::exceptions::Engines(message) {};
-    };
-
-
-    /*! \class SolverEngine
-     *  \brief The exception class used by the solver engine. */
-    class SolverEngine : public triton::exceptions::Engines {
-      public:
-        //! Constructor.
-        SolverEngine(const char* message) : triton::exceptions::Engines(message) {};
-
-        //! Constructor.
-        SolverEngine(const std::string& message) : triton::exceptions::Engines(message) {};
-    };
-
-
-    /*! \class SolverModel
-     *  \brief The exception class used by solver models. */
-    class SolverModel : public triton::exceptions::SolverEngine {
-      public:
-        //! Constructor.
-        SolverModel(const char* message) : triton::exceptions::SolverEngine(message) {};
-
-        //! Constructor.
-        SolverModel(const std::string& message) : triton::exceptions::SolverEngine(message) {};
     };
 
 
@@ -320,54 +296,6 @@ namespace triton {
 
         //! Constructor.
         Semantics(const std::string& message) : triton::exceptions::Cpu(message) {};
-    };
-
-
-    /*! \class Ast
-     *  \brief The exception class used by all AST nodes. */
-    class Ast : public triton::exceptions::Exception {
-      public:
-        //! Constructor.
-        Ast(const char* message) : triton::exceptions::Exception(message) {};
-
-        //! Constructor.
-        Ast(const std::string& message) : triton::exceptions::Exception(message) {};
-    };
-
-
-    /*! \class AstRepresentation
-     *  \brief The exception class used by all AST node representations. */
-    class AstRepresentation : public triton::exceptions::Ast {
-      public:
-        //! Constructor.
-        AstRepresentation(const char* message) : triton::exceptions::Ast(message) {};
-
-        //! Constructor.
-        AstRepresentation(const std::string& message) : triton::exceptions::Ast(message) {};
-    };
-
-
-    /*! \class AstTranslations
-     *  \brief The exception class used by all AST translations (`z3 <-> triton`). */
-    class AstTranslations : public triton::exceptions::Ast {
-      public:
-        //! Constructor.
-        AstTranslations(const char* message) : triton::exceptions::Ast(message) {};
-
-        //! Constructor.
-        AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
-    };
-
-
-    /*! \class AstGarbageCollector
-     *  \brief The exception class used by all AST garbage collector. */
-    class AstGarbageCollector : public triton::exceptions::Ast {
-      public:
-        //! Constructor.
-        AstGarbageCollector(const char* message) : triton::exceptions::Ast(message) {};
-
-        //! Constructor.
-        AstGarbageCollector(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 

@@ -16,7 +16,7 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

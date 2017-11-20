@@ -59,7 +59,7 @@ def signals(threadId, sig):
     for reg in regs:
         value  = getCurrentRegisterValue(reg)
         exprId = getTritonContext().getSymbolicRegisterId(reg)
-        print '%s:\t%#016x\t%s' %(reg.getName(), value, (getTritonContext().getSymbolicExpressionFromId(exprId).getAst() if exprId != SYMEXPR.UNSET else 'UNSET'))
+        print '%s:\t%#016x\t%s' %(reg.getName(), value, (getTritonContext().getSymbolicExpressionFromId(exprId).getAst() if exprId else 'UNSET'))
     return
 
 

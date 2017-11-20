@@ -9,7 +9,8 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/solverModel.hpp>
+
+#include <tritonast/solvers/model.hpp>
 
 
 
@@ -51,9 +52,9 @@ True
 
 >>> model = ctxt.getModel(constraint)
 >>> print model #doctest: +ELLIPSIS
-{0L: <SolverModel object at 0x...>}
+{'SymVar_0': <SolverModel object at 0x...>}
 
->>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
+>>> symvarModel =  model[symvar.getName()] # Model from the symvar's id
 >>> print symvarModel
 SymVar_0 = 0x11223344
 >>> hex(symvarModel.getValue())
@@ -63,9 +64,6 @@ SymVar_0 = 0x11223344
 
 \section SolverModel_py_api Python API - Methods of the SolverModel class
 <hr>
-
-- <b>integer getId(void)</b><br>
-Returns the id of the model. This id is the same that the variable id.
 
 - <b>string getName(void)</b><br>
 Returns the name of the model. This name is the same that the variable name. Names are always something like this: SymVar_X.
@@ -85,17 +83,7 @@ namespace triton {
       void SolverModel_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PySolverModel_AsSolverModel(self);
-        Py_DECREF(self);
-      }
-
-
-      static PyObject* SolverModel_getId(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PySolverModel_AsSolverModel(self)->getId());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -103,7 +91,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getName().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -113,7 +101,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -131,7 +119,7 @@ namespace triton {
           str << PySolverModel_AsSolverModel(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -139,7 +127,6 @@ namespace triton {
 
       //! SolverModel methods.
       PyMethodDef SolverModel_callbacks[] = {
-        {"getId",     SolverModel_getId,      METH_NOARGS,    ""},
         {"getName",   SolverModel_getName,    METH_NOARGS,    ""},
         {"getValue",  SolverModel_getValue,   METH_NOARGS,    ""},
         {nullptr,     nullptr,                0,              nullptr}
@@ -198,13 +185,13 @@ namespace triton {
       };
 
 
-      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model) {
+      PyObject* PySolverModel(const triton::ast::solvers::Model& model) {
         SolverModel_Object* object;
 
         PyType_Ready(&SolverModel_Type);
         object = PyObject_NEW(SolverModel_Object, &SolverModel_Type);
         if (object != NULL)
-          object->model = new triton::engines::solver::SolverModel(model);
+          object->model = new triton::ast::solvers::Model(model);
 
         return (PyObject*)object;
       }

@@ -15,45 +15,33 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicVariable::SymbolicVariable(symkind_e kind,
+      SymbolicVariable::SymbolicVariable(triton::AstContext& astCtxt,
+                                         symkind_e kind,
                                          triton::uint64 kindValue,
                                          triton::usize id,
                                          triton::uint32 size,
-                                         const std::string& comment) {
-        this->comment         = comment;
-        this->id              = id;
-        this->kind            = kind;
-        this->kindValue       = kindValue;
-        this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
-        this->size            = size;
-
+                                         const std::string& comment):
+      SymbolicValue(triton::ast::SharedAbstractNode(astCtxt.variable(TRITON_SYMVAR_NAME + std::to_string(id), size)),
+                    id, kind, comment),
+      name(TRITON_SYMVAR_NAME + std::to_string(id)),
+      kindValue(kindValue),
+      size(size)
+      {
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
       }
 
 
-      SymbolicVariable::SymbolicVariable(const SymbolicVariable& copy) {
-        this->comment         = copy.comment;
-        this->id              = copy.id;
-        this->kind            = copy.kind;
-        this->kindValue       = copy.kindValue;
-        this->name            = copy.name;
-        this->size            = copy.size;
-      }
-
-
-      symkind_e SymbolicVariable::getKind(void) const {
-        return this->kind;
-      }
+      SymbolicVariable::SymbolicVariable(const SymbolicVariable& copy):
+        SymbolicValue(copy),
+        name(copy.name),
+        kindValue(copy.kindValue),
+        size(copy.size)
+      { }
 
 
       const std::string& SymbolicVariable::getName(void) const {
         return this->name;
-      }
-
-
-      triton::usize SymbolicVariable::getId(void) const {
-        return this->id;
       }
 
 
@@ -64,16 +52,6 @@ namespace triton {
 
       triton::uint32 SymbolicVariable::getSize(void) const {
         return this->size;
-      }
-
-
-      const std::string& SymbolicVariable::getComment(void) const {
-        return this->comment;
-      }
-
-
-      void SymbolicVariable::setComment(const std::string& comment) {
-        this->comment = comment;
       }
 
 

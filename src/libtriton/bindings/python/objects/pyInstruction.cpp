@@ -219,7 +219,7 @@ namespace triton {
       void Instruction_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyInstruction_AsInstruction(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -227,7 +227,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getAddress());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -237,7 +237,7 @@ namespace triton {
         try {
           return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -253,13 +253,14 @@ namespace triton {
           for (auto it = loadAccess.cbegin(); it != loadAccess.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
+            // FIXME: Change interface?
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getShareAst()));
             PyList_SetItem(ret, index++, item);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -269,7 +270,7 @@ namespace triton {
         try {
           return PyLong_FromUint64(PyInstruction_AsInstruction(self)->getNextAddress());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -281,7 +282,7 @@ namespace triton {
           triton::uint32 size         = PyInstruction_AsInstruction(self)->getSize();
           return PyBytes_FromStringAndSize(reinterpret_cast<const char*>(opcode), size);
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -291,7 +292,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getSize());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -307,13 +308,14 @@ namespace triton {
           for (auto it = storeAccess.cbegin(); it != storeAccess.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
+            // FIXME: Should we fix the interface?
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getShareAst()));
             PyList_SetItem(ret, index++, item);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -352,7 +354,7 @@ namespace triton {
 
           return operands;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -362,7 +364,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getPrefix());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -378,13 +380,13 @@ namespace triton {
           for (auto it = readImmediates.cbegin(); it != readImmediates.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyImmediate(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getShareAst()));
             PyList_SetItem(ret, index++, item);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -400,13 +402,14 @@ namespace triton {
           for (auto it = readRegisters.cbegin(); it != readRegisters.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
+            // FIXME: SHould we change the interface?
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getShareAst()));
             PyList_SetItem(ret, index++, item);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -423,14 +426,13 @@ namespace triton {
           symExprs = xPyList_New(exprSize);
 
           for (triton::usize index = 0; index < exprSize; index++) {
-            PyObject* obj = nullptr;
-            obj = PySymbolicExpression(inst->symbolicExpressions[index]);
+            auto* obj = PySymbolicExpression(inst->symbolicExpressions[index]);
             PyList_SetItem(symExprs, index, obj);
           }
 
           return symExprs;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -440,7 +442,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getThreadId());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -450,7 +452,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyInstruction_AsInstruction(self)->getType());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -466,13 +468,14 @@ namespace triton {
           for (auto it = writtenRegisters.cbegin(); it != writtenRegisters.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
+            // FIXME: Should we change the interface?
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getShareAst()));
             PyList_SetItem(ret, index++, item);
           }
 
           return ret;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -484,7 +487,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -496,7 +499,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -508,7 +511,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -520,7 +523,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -532,7 +535,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -544,7 +547,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -556,7 +559,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -568,7 +571,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -582,7 +585,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -600,7 +603,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -615,7 +618,7 @@ namespace triton {
           Py_INCREF(Py_None);
           return Py_None;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -633,7 +636,7 @@ namespace triton {
           str << PyInstruction_AsInstruction(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

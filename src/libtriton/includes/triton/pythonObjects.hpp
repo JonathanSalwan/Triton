@@ -10,16 +10,18 @@
 #define TRITON_PYOBJECT_H
 
 #include <triton/pythonBindings.hpp>
-#include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/pathConstraint.hpp>
 #include <triton/register.hpp>
-#include <triton/solverModel.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
+
+#include <tritonast/solvers/model.hpp>
+
+#include <tritonast/nodes.hpp>
 
 
 
@@ -49,7 +51,7 @@ namespace triton {
      */
 
       //! Creates the AstNode python class.
-      PyObject* PyAstNode(triton::ast::AbstractNode* node);
+      PyObject* PyAstNode(triton::ast::SharedAbstractNode node);
 
       //! Creates the BitsVector python class.
       template<typename T> PyObject* PyBitsVector(const T& op);
@@ -79,16 +81,16 @@ namespace triton {
       PyObject* PyTritonContextRef(triton::API& api);
 
       //! Creates an AstContext python class.
-      PyObject* PyAstContext(triton::ast::AstContext& ctxt);
+      PyObject* PyAstContext(triton::AstContext& ctxt);
 
       //! Creates the Register python class.
       PyObject* PyRegister(const triton::arch::Register& reg);
 
-      //! Creates the SolverModel python class.
-      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
+      //! Creates the solvers::Model python class.
+      PyObject* PySolverModel(const triton::ast::solvers::Model& model);
 
       //! Creates the SymbolicExpression python class.
-      PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
+      PyObject* PySymbolicExpression(triton::SharedSymbolicExpression const& expr);
 
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
@@ -98,7 +100,7 @@ namespace triton {
       //! pyAstNode object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::AbstractNode* node;
+        triton::ast::SharedAbstractNode node;
       } AstNode_Object;
 
       //! pyAstNode type.
@@ -176,18 +178,19 @@ namespace triton {
       typedef struct {
         PyObject_HEAD
         triton::API* api;   //! Pointer to the cpp triton context
+        bool ref;
         PyObject* regAttr;  //! Pointer to the registers attribute
       } TritonContext_Object;
 
       //! pyRegister type.
       extern PyTypeObject TritonContextObject_Type;
 
-      /* AstContext ======================================================= */
+      /* Context ======================================================= */
 
       //! pyAstContext object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::AstContext* ctxt; //!< Pointer to the cpp ast context
+        triton::AstContext* ctxt; //!< Pointer to the cpp ast context
       } AstContext_Object;
 
       //! pyRegister type.
@@ -198,7 +201,7 @@ namespace triton {
       //! pySolverModel object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::solver::SolverModel* model; //! Pointer to the cpp solver model
+        triton::ast::solvers::Model* model; //! Pointer to the cpp solver model
       } SolverModel_Object;
 
       //! pySolverModel type.
@@ -209,7 +212,7 @@ namespace triton {
       //! pySymbolicExpression object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::symbolic::SymbolicExpression* symExpr;
+        triton::SharedSymbolicExpression symExpr;
       } SymbolicExpression_Object;
 
       //! pySymbolicExpression type.
@@ -285,10 +288,10 @@ namespace triton {
 /*! Returns the triton::arch::Register. */
 #define PyRegister_AsRegister(v) (((triton::bindings::python::Register_Object*)(v))->reg)
 
-/*! Checks if the pyObject is a triton::engines::solver::SolverModel. */
+/*! Checks if the pyObject is a triton::ast::solvers::Model. */
 #define PySolverModel_Check(v) ((v)->ob_type == &triton::bindings::python::SolverModel_Type)
 
-/*! Returns the triton::engines::solver::SolverModel. */
+/*! Returns the triton::ast::solvers::Model. */
 #define PySolverModel_AsSolverModel(v) (((triton::bindings::python::SolverModel_Object*)(v))->model)
 
 /*! Checks if the pyObject is a triton::ast::AbstractNode. */

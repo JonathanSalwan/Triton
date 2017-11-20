@@ -11,7 +11,7 @@
 #include <pin.H>
 
 /* libTriton */
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

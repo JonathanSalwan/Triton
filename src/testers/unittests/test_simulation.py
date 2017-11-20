@@ -76,10 +76,10 @@ class DefCamp2015(object):
 
                 model = self.Triton.getModel(cstr)
                 solution = str()
-                for k, v in model.items():
+                for k, v in sorted(model.items(), key=lambda x: int(x[0][(i for i, j in enumerate(x[0]) if j.isdigit()).next():])):
                     value = v.getValue()
                     solution += chr(value)
-                    self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
+                    self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromName(k), value)
 
             # Next
             pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
@@ -265,7 +265,7 @@ class SeedCoverage(object):
                         seed = dict()
                         for k, v in models.items():
                             # Get the symbolic variable assigned to the model
-                            symVar = self.Triton.getSymbolicVariableFromId(k)
+                            symVar = self.Triton.getSymbolicVariableFromName(k)
                             # Save the new input as seed.
                             seed.update({symVar.getKindValue(): v.getValue()})
                         if seed:
@@ -389,6 +389,9 @@ class TestSymbolicEngineNoOptim(BaseTestSimulation, unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
         super(TestSymbolicEngineNoOptim, self).setUp()
 
+    def test_emulate_concrete(self):
+        super(TestSymbolicEngineNoOptim, self).test_emulate(False)
+
 
 class TestSymbolicEngineAligned(BaseTestSimulation, unittest.TestCase):
 
@@ -425,62 +428,6 @@ class TestSymbolicEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestC
         self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
         self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
         super(TestSymbolicEngineAlignedOnlySymbolized, self).setUp()
-
-
-class TestSymbolicEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with ALIGNED_MEMORY and AST Dict."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineAlignedAst, self).setUp()
-
-    @unittest.skip("segfault")
-    def test_defcamp_2015(self):
-        pass
-
-
-class TestSymbolicEngineAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with AST Dictionnary."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineAst, self).setUp()
-
-    @unittest.skip("segfault")
-    def test_defcamp_2015(self):
-        pass
-
-
-class TestSymbolicEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with AST Dictionnary and concretization."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineConcreteAst, self).setUp()
-
-    def test_emulate(self):
-        super(TestSymbolicEngineConcreteAst, self).test_emulate(False)
-
-    @unittest.skip("No seed coverage with concretization.")
-    def test_seed_coverage(self):
-        pass
-
-    @unittest.skip("No defcamp with concretization")
-    def test_defcamp_2015(self):
-        pass
 
 
 class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):

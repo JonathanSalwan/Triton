@@ -14,7 +14,8 @@
 #include <pin.H>
 
 /* libTriton */
-#include <triton/ast.hpp>
+#include <tritonast/nodes.hpp>
+
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/x8664Cpu.hpp>
@@ -49,12 +50,6 @@ namespace tracer {
 
         //! Flag which defines if we must restore the snapshot.
         bool mustBeRestore;
-
-        //! AST node state.
-        std::set<triton::ast::AbstractNode*> nodesList;
-
-        //! Variables node state.
-        std::map<std::string, std::vector<triton::ast::AbstractNode*>> variablesMap;
 
         //! Snapshot of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine* snapshotSymEngine;

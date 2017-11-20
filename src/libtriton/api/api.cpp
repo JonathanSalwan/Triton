@@ -8,6 +8,9 @@
 #include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 
+#include <tritonast/solvers/z3/z3Interface.hpp>
+#include <tritonast/solvers/z3/solver.hpp>
+
 #include <list>
 #include <map>
 #include <new>
@@ -192,7 +195,7 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt{this->modes} {
+  API::API() : callbacks(*this), arch(&this->callbacks) {
   }
 
 
@@ -387,10 +390,6 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
-    if (this->solver == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
     this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
@@ -398,33 +397,25 @@ namespace triton {
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
-    this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
-    if (this->z3Interface == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
       delete this->irBuilder;
-      delete this->solver;
       delete this->symbolic;
       delete this->taint;
-      delete this->z3Interface;
 
       this->irBuilder           = nullptr;
-      this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
-      this->z3Interface         = nullptr;
     }
 
     // Use default modes.
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context
-    this->astCtxt = triton::ast::AstContext{this->modes};
+    this->astCtxt = triton::AstContext{};
   }
 
 
@@ -459,68 +450,9 @@ namespace triton {
   }
 
 
-  triton::ast::AstContext& API::getAstContext(void) {
+  triton::AstContext& API::getAstContext(void) {
     return this->astCtxt;
   }
-
-
-
-  /* AST garbage collector API ====================================================================== */
-
-  void API::freeAllAstNodes(void) {
-    this->astCtxt.getAstGarbageCollector().freeAllAstNodes();
-  }
-
-
-  void API::freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
-    this->astCtxt.getAstGarbageCollector().freeAstNodes(nodes);
-  }
-
-
-  void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
-    this->astCtxt.getAstGarbageCollector().extractUniqueAstNodes(uniqueNodes, root);
-  }
-
-
-  triton::ast::AbstractNode* API::recordAstNode(triton::ast::AbstractNode* node) {
-    return this->astCtxt.getAstGarbageCollector().recordAstNode(node);
-  }
-
-
-  void API::recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node) {
-    this->astCtxt.getAstGarbageCollector().recordVariableAstNode(name, node);
-  }
-
-
-  const std::set<triton::ast::AbstractNode*>& API::getAllocatedAstNodes(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAllocatedAstNodes();
-  }
-
-
-  std::map<std::string, triton::usize> API::getAstDictionariesStats(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAstDictionariesStats();
-  }
-
-
-  const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& API::getAstVariableNodes(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAstVariableNodes();
-  }
-
-
-  std::vector<triton::ast::AbstractNode*> API::getAstVariableNode(const std::string& name) const {
-    return this->astCtxt.getAstGarbageCollector().getAstVariableNode(name);
-  }
-
-
-  void API::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
-    this->astCtxt.getAstGarbageCollector().setAllocatedAstNodes(nodes);
-  }
-
-
-  void API::setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes) {
-    this->astCtxt.getAstGarbageCollector().setAstVariableNodes(nodes);
-  }
-
 
 
   /* AST representation API ========================================================================= */
@@ -573,7 +505,7 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const {
+  triton::ast::SharedAbstractNode API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode const& node) const {
     if (this->callbacks.isDefined)
       return this->callbacks.processCallbacks(kind, node);
     return node;
@@ -638,55 +570,55 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicOperand(const triton::arch::OperandWrapper& op) {
+  triton::ast::SharedAbstractNode API::getAstOperand(const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicOperand(op);
+    return this->symbolic->getAstOperand(op);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
+  triton::ast::SharedAbstractNode const& API::getAstOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicOperand(inst, op);
+    return this->symbolic->getAstOperand(inst, op);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
+  triton::ast::SharedAbstractNode API::getAstImmediate(const triton::arch::Immediate& imm) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicImmediate(imm);
+    return this->symbolic->getAstImmediate(imm);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
+  triton::ast::SharedAbstractNode const& API::getAstImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicImmediate(inst, imm);
+    return this->symbolic->getAstImmediate(inst, imm);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
+  triton::ast::SharedAbstractNode API::getAstMemory(const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicMemory(mem);
+    return this->symbolic->getAstMemory(mem);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
+  triton::ast::SharedAbstractNode const& API::getAstMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicMemory(inst, mem);
+    return this->symbolic->getAstMemory(inst, mem);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicRegister(const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode API::getAstRegister(const triton::arch::Register& reg) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicRegister(reg);
+    return this->symbolic->getAstRegister(reg);
   }
 
 
-  triton::ast::AbstractNode* API::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode const& API::getAstRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicRegister(inst, reg);
+    return this->symbolic->getAstRegister(inst, reg);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::newSymbolicExpression(triton::ast::AbstractNode* node, const std::string& comment) {
+  triton::SharedSymbolicExpression API::newSymbolicExpression(triton::ast::SharedAbstractNode const& node, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
   }
@@ -704,69 +636,69 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
+  triton::SharedSymbolicExpression const& API::createSymbolicExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicExpression(inst, node, dst, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
+  triton::SharedSymbolicExpression const& API::createSymbolicMemoryExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicMemoryExpression(inst, node, mem, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& reg, const std::string& comment) {
+  triton::SharedSymbolicExpression const& API::createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::Register& reg, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicRegisterExpression(inst, node, reg, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& flag, const std::string& comment) {
+  triton::SharedSymbolicExpression const& API::createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const triton::arch::Register& flag, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicFlagExpression(inst, node, flag, comment);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const std::string& comment) {
+  triton::SharedSymbolicExpression const& API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, triton::ast::SharedAbstractNode const& node, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicVolatileExpression(inst, node, comment);
   }
 
 
-  void API::assignSymbolicExpressionToMemory(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::MemoryAccess& mem) {
+  void API::assignSymbolicExpressionToMemory(triton::SharedSymbolicExpression const& se, const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
     this->symbolic->assignSymbolicExpressionToMemory(se, mem);
   }
 
 
-  void API::assignSymbolicExpressionToRegister(triton::engines::symbolic::SymbolicExpression* se, const triton::arch::Register& reg) {
+  void API::assignSymbolicExpressionToRegister(triton::SharedSymbolicExpression const& se, const triton::arch::Register& reg) {
     this->checkSymbolic();
     this->symbolic->assignSymbolicExpressionToRegister(se, reg);
   }
 
 
-  triton::usize API::getSymbolicMemoryId(triton::uint64 addr) const {
+  triton::SharedSymbolicExpression API::getSymbolicMemory(triton::uint64 addr) const {
     this->checkSymbolic();
-    return this->symbolic->getSymbolicMemoryId(addr);
+    return this->symbolic->getSymbolicMemory(addr);
   }
 
 
-  std::map<triton::arch::registers_e, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicRegisters(void) const {
+  std::map<triton::arch::registers_e, triton::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisters();
   }
 
 
-  std::map<triton::uint64, triton::engines::symbolic::SymbolicExpression*> API::getSymbolicMemory(void) const {
+  std::map<triton::uint64, triton::SharedSymbolicExpression> API::getSymbolicMemory(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicMemory();
   }
 
 
-  triton::usize API::getSymbolicRegisterId(const triton::arch::Register& reg) const {
+  triton::SharedSymbolicExpression const& API::getSymbolicRegister(const triton::arch::Register& reg) const {
     this->checkSymbolic();
-    return this->symbolic->getSymbolicRegisterId(reg);
+    return this->symbolic->getSymbolicRegister(reg);
   }
 
 
@@ -794,16 +726,17 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::processSimplification(triton::ast::AbstractNode* node, bool z3) const {
+  triton::ast::SharedAbstractNode API::processSimplification(triton::ast::SharedAbstractNode const& node, bool z3) const {
     this->checkSymbolic();
-    if (z3 == true)
-      node = this->processZ3Simplification(node);
-    node = this->symbolic->processSimplification(node);
-    return node;
+    if (z3 == true) {
+      auto snode = this->processZ3Simplification(node.get());
+      return this->symbolic->processSimplification(snode);
+    }
+    return this->symbolic->processSimplification(node);
   }
 
 
-  triton::engines::symbolic::SymbolicExpression* API::getSymbolicExpressionFromId(triton::usize symExprId) const {
+  triton::SharedSymbolicExpression API::getSymbolicExpressionFromId(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicExpressionFromId(symExprId);
   }
@@ -839,13 +772,13 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::getPathConstraintsAst(void) {
+  triton::ast::SharedAbstractNode API::getPathConstraintsAst(void) {
     this->checkSymbolic();
     return this->symbolic->getPathConstraintsAst();
   }
 
 
-  void API::addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr) {
+  void API::addPathConstraint(const triton::arch::Instruction& inst, triton::SharedSymbolicExpression const& expr) {
     this->checkSymbolic();
     this->symbolic->addPathConstraint(inst, expr);
   }
@@ -923,89 +856,70 @@ namespace triton {
   }
 
 
-  triton::ast::AbstractNode* API::unrollAst(triton::ast::AbstractNode* node) {
+  triton::ast::SharedAbstractNode API::unrollAst(triton::ast::SharedAbstractNode const& node) {
     this->checkSymbolic();
     return this->symbolic->unrollAst(node);
   }
 
 
-  triton::ast::AbstractNode* API::getAstFromId(triton::usize symExprId) {
+  triton::ast::SharedAbstractNode const& API::getAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
-    triton::engines::symbolic::SymbolicExpression* symExpr = this->getSymbolicExpressionFromId(symExprId);
-    return symExpr->getAst();
+    triton::SharedSymbolicExpression symExpr = this->getSymbolicExpressionFromId(symExprId);
+    return symExpr->getShareAst();
   }
 
 
-  triton::ast::AbstractNode* API::unrollAstFromId(triton::usize symExprId) {
+  triton::ast::SharedAbstractNode API::unrollAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
-    triton::ast::AbstractNode* partialAst = this->getAstFromId(symExprId);
+    triton::ast::SharedAbstractNode const& partialAst = this->getAstFromId(symExprId);
     return this->unrollAst(partialAst);
   }
 
 
-  std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*> API::sliceExpressions(triton::engines::symbolic::SymbolicExpression* expr) {
+  std::map<triton::usize, triton::SharedSymbolicExpression> API::sliceExpressions(triton::SharedSymbolicExpression const& expr) {
     this->checkSymbolic();
     return this->symbolic->sliceExpressions(expr);
   }
 
 
-  std::list<triton::engines::symbolic::SymbolicExpression*> API::getTaintedSymbolicExpressions(void) const {
+  std::list<triton::SharedSymbolicExpression> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();
   }
 
 
-  const std::map<triton::usize, triton::engines::symbolic::SymbolicExpression*>& API::getSymbolicExpressions(void) const {
+  std::unordered_map<triton::usize, triton::SharedSymbolicExpression> API::getSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicExpressions();
   }
 
 
-  const std::map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
+  const std::unordered_map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicVariables();
   }
 
 
-
-  /* Solver engine API ============================================================================= */
-
-  void API::checkSolver(void) const {
-    if (!this->solver)
-      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined.");
+  std::map<std::string, triton::ast::solvers::Model> API::getModel(triton::ast::AbstractNode* node) const {
+    return triton::ast::solvers::z3::getModel(node);
   }
 
 
-  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(triton::ast::AbstractNode* node) const {
-    this->checkSolver();
-    return this->solver->getModel(node);
-  }
-
-
-  std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
-    this->checkSolver();
-    return this->solver->getModels(node, limit);
+  std::list<std::map<std::string, triton::ast::solvers::Model>> API::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
+    return triton::ast::solvers::z3::getModels(node, limit);
   }
 
 
 
   /* Z3 interface API ============================================================================== */
 
-  void API::checkZ3Interface(void) const {
-    if (!this->z3Interface)
-      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined.");
-  }
-
-
   triton::uint512 API::evaluateAstViaZ3(triton::ast::AbstractNode* node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->evaluate(node);
+    return triton::ast::Z3Interface::evaluate(node);
   }
 
 
-  triton::ast::AbstractNode* API::processZ3Simplification(triton::ast::AbstractNode* node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->simplify(node);
+  triton::ast::SharedAbstractNode API::processZ3Simplification(triton::ast::AbstractNode* node) const {
+    return triton::ast::Z3Interface::simplify(node);
   }
 
 

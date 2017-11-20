@@ -29,7 +29,7 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_expressions(self):
         """Test expressions"""
-        self.assertEqual(len(self.inst1.getSymbolicExpressions()), 7)
+        self.assertEqual(len(self.inst1.getSymbolicExpressions()), 9)
 
     def test_getAst(self):
         """Test getAst"""
@@ -37,11 +37,11 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_getComment(self):
         """Test getComment"""
-        self.assertEqual(self.expr1.getComment(), "XOR operation")
+        self.assertEqual(self.expr1.getComment(), "Parent Reg - XOR operation")
 
     def test_getId(self):
         """Test getId"""
-        self.assertEqual(self.expr1.getId(), 0)
+        self.assertEqual(self.expr1.getId(), 2)
 
     def test_getKind(self):
         """Test getKind"""
@@ -83,4 +83,23 @@ class TestSymbolicExpression(unittest.TestCase):
         """Test setComment"""
         self.expr1.setComment("test")
         self.assertEqual(self.expr1.getComment(), "test")
+
+    def test_symExpr_from_ast(self):
+        """ Check we can get symExpr from ast afterRemoval from Reference Expressions."""
+        self.inst1 = Instruction("\x48\xC7\xC0\x04\x00\x00\x00") # mov rax, 0x4
+        self.inst2 = Instruction("\x48\x83\xC0\x08") # add rax, 0x8
+
+        self.ctx.processing(self.inst1)
+        self.ctx.processing(self.inst2)
+
+        expr_id = self.inst1.getSymbolicExpressions()[0].getId()
+        del self.inst1
+        del self.inst2
+
+        # Check this expression still exists
+        print "expr", self.ctx.getSymbolicExpressionFromId(expr_id)
+
+        with self.assertRaises(Exception):
+            # Old expressions doesn't exists anymore
+            print "expr", self.ctx.getSymbolicExpressionFromId(0)
 

@@ -61,7 +61,7 @@ namespace triton {
     }
 
 
-    triton::ast::AbstractNode* MemoryAccess::getLeaAst(void) const {
+    triton::ast::SharedAbstractNode const& MemoryAccess::getLeaAst(void) const {
       return this->leaAst;
     }
 
@@ -178,7 +178,7 @@ namespace triton {
     }
 
 
-    void MemoryAccess::setLeaAst(triton::ast::AbstractNode* ast) {
+    void MemoryAccess::setLeaAst(triton::ast::SharedAbstractNode const& ast) {
       this->leaAst = ast;
     }
 

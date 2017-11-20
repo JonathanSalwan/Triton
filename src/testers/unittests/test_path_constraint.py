@@ -64,4 +64,3 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['dstAddr'], 91)
         self.assertEqual(pc[1]['dstAddr'], 23)
-

@@ -68,7 +68,7 @@ def cafter(instruction):
         cvalue = Pintool.getCurrentRegisterValue(reg)
         seid   = Triton.getSymbolicRegisterId(reg)
 
-        if seid == SYMEXPR.UNSET:
+        if not seid:
             continue
 
         expr   = Triton.unrollAstFromId(seid)

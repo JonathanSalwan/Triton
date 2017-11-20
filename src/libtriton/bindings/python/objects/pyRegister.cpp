@@ -116,7 +116,7 @@ namespace triton {
       void Register_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyRegister_AsRegister(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -124,7 +124,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getBitSize());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -134,7 +134,7 @@ namespace triton {
         try {
           return PyBitsVector(*PyRegister_AsRegister(self));
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -144,7 +144,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getId());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -154,7 +154,7 @@ namespace triton {
         try {
           return Py_BuildValue("s", PyRegister_AsRegister(self)->getName().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -164,7 +164,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getSize());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -174,7 +174,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyRegister_AsRegister(self)->getType());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -192,7 +192,7 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -215,7 +215,7 @@ namespace triton {
           str << PyRegister_AsRegister(self);
           return PyString_FromFormat("%s", str.str().c_str());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

@@ -13,7 +13,7 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/symbolicEngine.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

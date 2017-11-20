@@ -63,25 +63,14 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Cpu.cpp
     arch/x86/x86Semantics.cpp
     arch/x86/x86Specifications.cpp
-    ast/ast.cpp
-    ast/astContext.cpp
-    ast/astDictionaries.cpp
-    ast/astGarbageCollector.cpp
-    ast/representations/astPythonRepresentation.cpp
-    ast/representations/astRepresentation.cpp
-    ast/representations/astSmtRepresentation.cpp
-    ast/z3/tritonToZ3Ast.cpp
-    ast/z3/z3Interface.cpp
-    ast/z3/z3ToTritonAst.cpp
     callbacks/callbacks.cpp
-    engines/solver/solverEngine.cpp
-    engines/solver/solverModel.cpp
     engines/symbolic/pathConstraint.cpp
     engines/symbolic/pathManager.cpp
     engines/symbolic/symbolicEngine.cpp
     engines/symbolic/symbolicExpression.cpp
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
+    engines/symbolic/symbolicValue.cpp
     engines/taint/taintEngine.cpp
     modes/modes.cpp
     os/unix/syscallNumberToString.cpp
@@ -206,9 +195,9 @@ target_link_libraries(
     ${PROJECT_LIBTRITON}
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
-    ${Z3_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
     ${LIBTRITON_OTHER_LIBS}
+    tritonast
 )
 add_dependencies(check triton)
 

@@ -78,7 +78,7 @@ namespace triton {
           triton::arch::Immediate imm(PyLong_AsUint64(value), PyLong_AsUint32(size));
           return PyImmediate(imm);
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -101,7 +101,7 @@ namespace triton {
           triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(opcodes));
           return PyInstruction(opc, size);
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -126,7 +126,7 @@ namespace triton {
           triton::arch::MemoryAccess mem(PyLong_AsUint64(address), PyLong_AsUint32(size));
           return PyMemoryAccess(mem);
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -136,7 +136,7 @@ namespace triton {
         try {
           return PyTritonContext();
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

@@ -17,7 +17,7 @@
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 #include <triton/x86Specifications.hpp>
 
 

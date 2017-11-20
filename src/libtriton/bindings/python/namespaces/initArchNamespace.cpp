@@ -36,8 +36,8 @@ namespace triton {
     namespace python {
 
       void initArchNamespace(PyObject* archDict) {
-        PyDict_SetItemString(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
-        PyDict_SetItemString(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
+        PyDict_SetItemStringSteal(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
+        PyDict_SetItemStringSteal(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
       }
 
     }; /* python namespace */

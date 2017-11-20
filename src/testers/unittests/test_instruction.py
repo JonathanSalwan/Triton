@@ -76,7 +76,7 @@ class TestInstruction(unittest.TestCase):
 
     def test_symbolic(self):
         """Check symbolic information."""
-        self.assertEqual(len(self.inst.getSymbolicExpressions()), 8)
+        self.assertEqual(len(self.inst.getSymbolicExpressions()), 10)
 
     def test_size(self):
         """Check size information."""

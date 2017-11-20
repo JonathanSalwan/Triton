@@ -72,7 +72,7 @@ namespace triton {
       void BitsVector_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyBitsVector_AsBitsVector(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -80,7 +80,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getHigh());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -90,7 +90,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getLow());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -100,7 +100,7 @@ namespace triton {
         try {
           return PyLong_FromUint512(PyBitsVector_AsBitsVector(self)->getMaxValue());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -110,7 +110,7 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyBitsVector_AsBitsVector(self)->getVectorSize());
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }
@@ -130,7 +130,7 @@ namespace triton {
           triton::uint32 low  = PyBitsVector_AsBitsVector(self)->getLow();
           return PyString_FromFormat("bv[%d..%d]", high, low);
         }
-        catch (const triton::exceptions::Exception& e) {
+        catch (const std::exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
       }

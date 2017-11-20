@@ -8,7 +8,7 @@
 #ifndef TRITON_CORE_UTIL_H
 #define TRITON_CORE_UTIL_H
 
-#include <triton/tritonTypes.hpp>
+#include <tritoncore/types.hpp>
 
 
 

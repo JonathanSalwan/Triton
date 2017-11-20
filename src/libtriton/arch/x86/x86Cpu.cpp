@@ -281,8 +281,9 @@ namespace triton {
 
       const triton::arch::Register& x86Cpu::getRegister(triton::arch::registers_e id) const {
         try {
+          // FIXME: Use find
           return this->registers_.at(id);
-        } catch(const std::out_of_range& e) {
+        } catch(const std::out_of_range&) {
           throw triton::exceptions::Cpu("x86Cpu::getRegister(): Invalid register for this architecture.");
         }
       }
