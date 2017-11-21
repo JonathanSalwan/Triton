@@ -379,7 +379,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "ref!" << node->getSymbolicExpression().getId();
+        stream << "ref!" << node->getId();
         return stream;
       }
 

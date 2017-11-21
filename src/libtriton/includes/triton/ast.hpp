@@ -521,13 +521,16 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::engines::symbolic::SymbolicExpression& expr;
+        triton::usize id;
+        AbstractNode* ast;
 
       public:
-        ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr);
+        ReferenceNode(AbstractNode* ast, triton::usize id);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
-        triton::engines::symbolic::SymbolicExpression& getSymbolicExpression(void) const;
+
+        triton::usize getId() const;
+        AbstractNode* getAst() const;
     };
 
 

@@ -409,8 +409,8 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::reference(triton::engines::symbolic::SymbolicExpression& expr) {
-      AbstractNode* node = new(std::nothrow) ReferenceNode(expr);
+    AbstractNode* AstContext::reference(AbstractNode* ast, triton::usize id) {
+      AbstractNode* node = new(std::nothrow) ReferenceNode(ast, id);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return this->astGarbageCollector.recordAstNode(node);

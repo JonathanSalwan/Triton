@@ -163,7 +163,7 @@ namespace triton {
         }
 
         case triton::ast::REFERENCE_NODE: {
-          auto value       = static_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getId();
+          auto value       = static_cast<triton::ast::ReferenceNode*>(node)->getId();
           auto dictionary  = static_cast<std::map<triton::usize, triton::ast::AbstractNode*>*>((this->dictionaries[kind]));
           if (dictionary->find(value) != dictionary->end()) {
             delete node;

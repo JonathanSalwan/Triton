@@ -189,7 +189,7 @@ namespace triton {
         AbstractNode* lor(const T& exprs);
 
         //! AST C++ API - reference node builder
-        AbstractNode* reference(triton::engines::symbolic::SymbolicExpression& expr);
+        AbstractNode* reference(AbstractNode* ast, triton::usize id);
 
         //! AST C++ API - string node builder
         AbstractNode* string(std::string value);
