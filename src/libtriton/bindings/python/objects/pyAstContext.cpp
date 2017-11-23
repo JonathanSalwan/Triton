@@ -1340,7 +1340,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->reference(*PySymbolicExpression_AsSymbolicExpression(symExpr)));
+          // FIXME: we should remove this interface and use only ast, id interface to have a distinct ast library
+          auto* se = PySymbolicExpression_AsSymbolicExpression(symExpr);
+          return PyAstNode(PyAstContext_AsAstContext(self)->reference(se->getAst(), se->getId()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1388,7 +1390,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "variable(): expected a SymbolicVariable as first argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
+          // FIXME: we should remove this interface and use only name, size interface to have a distinct ast library
+          auto* sV = PySymbolicVariable_AsSymbolicVariable(symVar);
+          return PyAstNode(PyAstContext_AsAstContext(self)->variable(sV->getName(), sV->getSize()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

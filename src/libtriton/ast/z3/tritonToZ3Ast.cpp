@@ -257,7 +257,7 @@ namespace triton {
         }
 
         case REFERENCE_NODE:
-          return this->convert(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getAst());
+          return this->convert(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getAst());
 
         case STRING_NODE: {
           std::string value = reinterpret_cast<triton::ast::StringNode*>(node)->getValue();
@@ -277,7 +277,7 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          std::string varName = reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getName();
+          std::string const& varName = reinterpret_cast<triton::ast::VariableNode*>(node)->getVarName();
           triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(varName);
 
           if (symVar == nullptr)

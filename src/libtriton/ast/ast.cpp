@@ -2027,20 +2027,21 @@ namespace triton {
     /* ====== Reference node */
 
 
-    ReferenceNode::ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr)
-      : AbstractNode(REFERENCE_NODE, expr.getAst()->getContext())
-      , expr(expr) {
+    ReferenceNode::ReferenceNode(AbstractNode* ast, triton::usize id)
+      : AbstractNode(REFERENCE_NODE, ast->getContext())
+      , id(id)
+      , ast(ast) {
       this->init();
     }
 
 
     void ReferenceNode::init(void) {
       /* Init attributes */
-      this->eval        = this->expr.getAst()->evaluate();
-      this->size        = this->expr.getAst()->getBitvectorSize();
-      this->symbolized  = this->expr.getAst()->isSymbolized();
+      this->eval        = this->ast->evaluate();
+      this->size        = this->ast->getBitvectorSize();
+      this->symbolized  = this->ast->isSymbolized();
 
-      this->expr.getAst()->setParent(this);
+      this->ast->setParent(this);
 
       /* Init parents */
       for (std::set<AbstractNode*>::iterator it = this->parents.begin(); it != this->parents.end(); it++)
@@ -2049,15 +2050,19 @@ namespace triton {
 
 
     triton::uint512 ReferenceNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->kind ^ this->expr.getId();
+      triton::uint512 hash = this->kind ^ this->getId();
       return hash;
     }
 
-
-    triton::engines::symbolic::SymbolicExpression& ReferenceNode::getSymbolicExpression(void) const {
-      return this->expr;
+    triton::usize ReferenceNode::getId() const
+    {
+      return this->id;
     }
 
+    AbstractNode* ReferenceNode::getAst() const
+    {
+      return this->ast;
+    }
 
     /* ====== String node */
 
@@ -2146,18 +2151,17 @@ namespace triton {
     /* ====== Variable node */
 
 
-    // WARNING: A variable ast node should not live once the SymbolicVariable is dead
-    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
+    VariableNode::VariableNode(std::string const& varName, triton::uint32 size, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
-        symVar(symVar) {
-      ctxt.initVariable(symVar.getName(), 0);
+        varName(varName) {
+      setBitvectorSize(size);
+      ctxt.initVariable(varName, 0);
       this->init();
     }
 
 
     void VariableNode::init(void) {
-      this->size        = this->symVar.getSize();
-      this->eval        = ctxt.getValueForVariable(this->symVar.getName()) & this->getBitvectorMask();
+      this->eval        = ctxt.getValueForVariable(this->varName) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */
@@ -2166,8 +2170,8 @@ namespace triton {
     }
 
 
-    triton::engines::symbolic::SymbolicVariable& VariableNode::getVar() {
-      return this->symVar;
+    std::string const& VariableNode::getVarName() const {
+      return this->varName;
     }
 
 
@@ -2175,7 +2179,7 @@ namespace triton {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
 
-      for (char c : this->symVar.getName())
+      for (char c : this->varName)
         h = h ^ triton::ast::pow(c, index++);
 
       return triton::ast::rotl(h, deep);

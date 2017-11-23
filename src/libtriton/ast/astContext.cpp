@@ -409,8 +409,8 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::reference(triton::engines::symbolic::SymbolicExpression& expr) {
-      AbstractNode* node = new(std::nothrow) ReferenceNode(expr);
+    AbstractNode* AstContext::reference(AbstractNode* ast, triton::usize id) {
+      AbstractNode* node = new(std::nothrow) ReferenceNode(ast, id);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       return this->astGarbageCollector.recordAstNode(node);
@@ -439,15 +439,15 @@ namespace triton {
     }
 
 
-    AbstractNode* AstContext::variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+    AbstractNode* AstContext::variable(std::string const& varName, triton::uint32 size) {
       AbstractNode* ret  = nullptr;
-      AbstractNode* node = new(std::nothrow) VariableNode(symVar, *this);
+      AbstractNode* node = new(std::nothrow) VariableNode(varName, size, *this);
 
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
 
       ret = this->astGarbageCollector.recordAstNode(node);
-      this->astGarbageCollector.recordVariableAstNode(symVar.getName(), ret);
+      this->astGarbageCollector.recordVariableAstNode(varName, ret);
 
       return ret;
     }
@@ -488,7 +488,7 @@ namespace triton {
       for (auto& kv: this->astGarbageCollector.getAstVariableNodes()) {
         if (kv.first == name) {
           assert(kv.second[0]->getType() == triton::ast::VARIABLE_NODE);
-          this->valueMapping[dynamic_cast<VariableNode*>(kv.second[0])->getVar().getName()] = value;
+          this->valueMapping[dynamic_cast<VariableNode*>(kv.second[0])->getVarName()] = value;
           for (auto* N: kv.second)
             N->init();
           return;

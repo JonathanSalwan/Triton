@@ -402,7 +402,7 @@ namespace triton {
           triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(name);
 
           if (symVar)
-            node = this->astCtxt.variable(*symVar);
+            node = this->astCtxt.variable(symVar->getName(), symVar->getSize());
           else
             node = this->astCtxt.string(name);
 

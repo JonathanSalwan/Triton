@@ -521,13 +521,16 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::engines::symbolic::SymbolicExpression& expr;
+        triton::usize id;
+        AbstractNode* ast;
 
       public:
-        ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr);
+        ReferenceNode(AbstractNode* ast, triton::usize id);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
-        triton::engines::symbolic::SymbolicExpression& getSymbolicExpression(void) const;
+
+        triton::usize getId() const;
+        AbstractNode* getAst() const;
     };
 
 
@@ -556,13 +559,13 @@ namespace triton {
     //! Variable node
     class VariableNode : public AbstractNode {
       protected:
-        triton::engines::symbolic::SymbolicVariable& symVar;
+        std::string varName;
 
       public:
-        VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt);
+        VariableNode(std::string const& varName, triton::uint32 size, AstContext& ctxt);
         void init(void);
         triton::uint512 hash(triton::uint32 deep) const;
-        triton::engines::symbolic::SymbolicVariable& getVar(void);
+        std::string const& getVarName() const;
     };
 
 
