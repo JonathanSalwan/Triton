@@ -511,11 +511,11 @@ namespace triton {
     }
 
     triton::uint32 AstContext::getRepresentationMode(void) const {
-      return astRepresentation.getMode();
+      return this->astRepresentation.getMode();
     }
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
-      return astRepresentation.print(stream, node);
+      return this->astRepresentation.print(stream, node);
     }
 
   }; /* ast namespace */
