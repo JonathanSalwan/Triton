@@ -21,6 +21,9 @@ class TestAstRepresentation(unittest.TestCase):
         self.v2  = self.astCtxt.variable(self.Triton.newSymbolicVariable(8))
         self.ref = self.Triton.newSymbolicExpression(self.v1 + self.v2, "ref test")
 
+        # Default
+        self.assertEqual(self.Triton.getAstRepresentationMode(), AST_REPRESENTATION.SMT)
+
         self.node = [
             # Overloaded operators                              # SMT                                                           # Python
             ((self.v1 & self.v2),                               "(bvand SymVar_0 SymVar_1)",                                    "(SymVar_0 & SymVar_1)"),
@@ -78,11 +81,13 @@ class TestAstRepresentation(unittest.TestCase):
 
     def test_smt_representation(self):
         self.Triton.setAstRepresentationMode(AST_REPRESENTATION.SMT)
+        self.assertEqual(self.Triton.getAstRepresentationMode(), AST_REPRESENTATION.SMT)
         for n in self.node:
             self.assertEqual(str(n[0]), n[1])
 
     def test_python_representation(self):
         self.Triton.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
+        self.assertEqual(self.Triton.getAstRepresentationMode(), AST_REPRESENTATION.PYTHON)
         for n in self.node:
             self.assertEqual(str(n[0]), n[2])
 
