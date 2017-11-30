@@ -61,7 +61,7 @@ zmm1:512 bv[511..0]
 
 */
 
-
+#include <triton/archVal.hpp>
 
 namespace triton {
   namespace bindings {
@@ -75,8 +75,8 @@ namespace triton {
         PyDict_SetItemString(registersDict, "X86", x86RegistersDictClass);
 
         // Init X86 REG namespace
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-          if (X86_AVAIL)                                                                                                                  \
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, ARCH_AVAIL)  \
+          if (X86_AVAIL || (X86_AVAIL | X8664_AVAIL))                                          \
             PyDict_SetItemString(x86RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -87,7 +87,7 @@ namespace triton {
         PyDict_SetItemString(registersDict, "X86_64", x8664RegistersDictClass);
 
         // Init X86_64 REG namespace
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, ARCH_AVAIL)  \
           PyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC

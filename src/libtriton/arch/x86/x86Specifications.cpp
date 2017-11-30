@@ -6,11 +6,11 @@
  */
 
 #include <triton/architecture.hpp>
+#include <triton/archVal.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/externalLibs.hpp>
 #include <triton/x86Specifications.hpp>
-
 
 
 namespace triton {
@@ -23,7 +23,7 @@ namespace triton {
 
         if (arch == triton::arch::ARCH_X86_64) {
           // Fill registers_ with those available in X86_64 from spec
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, ARCH_AVAIL)  \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                                                         \
                                triton::arch::Register(triton::arch::ID_REG_##UPPER_NAME,                                                    \
                                                       #LOWER_NAME,                                                                          \
@@ -38,7 +38,7 @@ namespace triton {
         else {
           assert(arch == triton::arch::ARCH_X86);
           // Fill registers_ with those available in X86 from spec
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)   \
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, ARCH_AVAIL)   \
           if (X86_AVAIL)                                                                                      \
             registers_.emplace(ID_REG_##UPPER_NAME,                                                           \
                                triton::arch::Register(triton::arch::ID_REG_##UPPER_NAME,                      \
@@ -59,7 +59,7 @@ namespace triton {
 
         switch (id) {
           // Convert registers from capstone value to triton value
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, ARCH_AVAIL)  \
           case triton::extlibs::capstone::X86_REG_##UPPER_NAME:                                                                             \
             tritonId = triton::arch::ID_REG_##UPPER_NAME;                                                                                   \
             break;
