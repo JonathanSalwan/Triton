@@ -1,5 +1,5 @@
-FROM ubuntu:15.10
-MAINTAINER Pete Markowsky <pete@markowsky.us>
+FROM ubuntu:16.04
+LABEL maintainer="David Manouchehri"
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y git cmake build-essential clang ca-certificates curl \
     unzip libboost-dev python-dev python-pip && apt-get clean
