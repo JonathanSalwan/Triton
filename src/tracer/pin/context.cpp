@@ -463,6 +463,12 @@ namespace tracer {
       }
 
 
+      void needConcreteMemoryValue(triton::API& api, const triton::arch::MemoryAccess& mem) {
+        triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(triton::arch::MemoryAccess(mem));
+        api.setConcreteMemoryValue(mem, value);
+      }
+
+
       void synchronizeContext(void) {
         if (tracer::pintool::api.isSymbolicEngineEnabled() == false)
           return;
