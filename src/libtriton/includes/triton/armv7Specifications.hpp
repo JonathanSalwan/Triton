@@ -6,7 +6,7 @@
 */
 
 #ifndef TRITON_ARMV7SPECIFICATIONS_H
-#define TRITON_ARMV7SPECIFICATION_H
+#define TRITON_ARMV7SPECIFICATIONS_H
 
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
@@ -46,4 +46,4 @@ namespace triton {
     }
   }
 }
-#endif /* TRITON_ARMV7SPECIFICATION_H */
+#endif /* TRITON_ARMV7SPECIFICATIONS_H */
