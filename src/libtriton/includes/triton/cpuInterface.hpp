@@ -54,6 +54,9 @@ namespace triton {
         //! Returns true if the register ID is valid.
         virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
 
+        //! Returns the endianness of the CPU
+        virtual triton::uint32 getEndianness() const = 0;
+
         //! Returns the max size (in byte) of the CPU registers (GPR).
         virtual triton::uint32 registerSize(void) const = 0;
 
