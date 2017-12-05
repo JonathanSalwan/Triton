@@ -6,7 +6,6 @@
  */
 
 #include <triton/architecture.hpp>
-#include <triton/archVal.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/externalLibs.hpp>

@@ -29,6 +29,11 @@ namespace triton {
         #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, ARCH_UPPER, ARCH_LOWER, ARCH_PARENT, SUBARCH_UPPER, SUBARCH_LOWER, SUBARCH_PARENT, SUBARCH_AVAIL) \
         ID_REG_##ARCH##_##UPPER_NAME,
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/armv7.spec"
+
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, ARCH_UPPER, ARCH_LOWER, ARCH_PARENT, SUBARCH_UPPER, SUBARCH_LOWER, SUBARCH_PARENT, SUBARCH_AVAIL) \
+        ID_REG_##ARCH##_##UPPER_NAME,
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 
         /* Must be the last item */
