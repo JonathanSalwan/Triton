@@ -9,6 +9,7 @@
 #define TRITON_X86SEMANTICS_H
 
 #include <triton/architecture.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/semanticsInterface.hpp>
 #include <triton/symbolicEngine.hpp>
@@ -62,7 +63,7 @@ namespace triton {
                        triton::ast::AstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-          bool buildSemantics(triton::arch::Instruction& inst);
+          TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
           //! Aligns the stack (add). Returns the new stack value.
           triton::uint64 alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta);

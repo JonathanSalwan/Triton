@@ -501,7 +501,7 @@ namespace triton {
     const triton::uint512& AstContext::getValueForVariable(const std::string& varName) const {
       try {
         return this->valueMapping.at(varName);
-      } catch(const std::out_of_range& e) {
+      } catch (const std::out_of_range&) {
         throw triton::exceptions::Ast("AstContext::getValueForVariable(): Variable doesn't exists");
       }
     }

@@ -9,7 +9,9 @@
 #define TRITON_SOLVERMODEL_H
 
 #include <string>
+
 #include <triton/tritonTypes.hpp>
+#include <triton/dllexport.hpp>
 
 
 
@@ -47,6 +49,10 @@ namespace triton {
           //! The value of the model.
           triton::uint512 value;
 
+        private:
+          //! Copies a SolverModel
+          void copy(const SolverModel& other);
+
         public:
           //! Constructor.
           SolverModel();
@@ -55,29 +61,26 @@ namespace triton {
           SolverModel(const std::string& name, triton::uint512 value);
 
           //! Constructor by copy.
-          SolverModel(const SolverModel& other);
+          TRITON_EXPORT SolverModel(const SolverModel& other);
 
           //! Copies a SolverModel
-          void operator=(const SolverModel& other);
+          TRITON_EXPORT void operator=(const SolverModel& other);
 
           //! Returns the name of the variable.
-          const std::string& getName(void) const;
+          TRITON_EXPORT const std::string& getName(void) const;
 
           //! Returns the id of the variable.
-          triton::uint32 getId(void) const;
+          TRITON_EXPORT triton::uint32 getId(void) const;
 
           //! Returns the value of the model.
-          triton::uint512 getValue(void) const;
-
-          //! Copies a SolverModel
-          void copy(const SolverModel& other);
+          TRITON_EXPORT triton::uint512 getValue(void) const;
       };
 
     //! Display a solver model.
-    std::ostream& operator<<(std::ostream& stream, const SolverModel& model);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SolverModel& model);
 
     //! Display a solver model.
-    std::ostream& operator<<(std::ostream& stream, const SolverModel* model);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SolverModel* model);
 
     /*! @} End of solver namespace */
     };

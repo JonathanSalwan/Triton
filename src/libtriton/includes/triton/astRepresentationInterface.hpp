@@ -10,6 +10,7 @@
 
 #include <iostream>
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 
 
 
@@ -43,9 +44,9 @@ namespace triton {
       class AstRepresentationInterface {
         public:
           //! Constructor.
-          virtual ~AstRepresentationInterface(){};
+          TRITON_EXPORT virtual ~AstRepresentationInterface(){};
           //! Entry point of print.
-          virtual std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node) = 0;
+          TRITON_EXPORT virtual std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node) = 0;
       };
 
     /*! @} End of representations namespace */

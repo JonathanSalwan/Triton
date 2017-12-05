@@ -10,6 +10,7 @@
 
 #include <string>
 
+#include <triton/dllexport.hpp>
 #include <triton/symbolicEnums.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -41,7 +42,6 @@ namespace triton {
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
       class SymbolicVariable {
-
         protected:
           //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
           symkind_e kind;
@@ -75,35 +75,35 @@ namespace triton {
                            const std::string& comment);
 
           //! Constructor by copy.
-          SymbolicVariable(const SymbolicVariable& copy);
+          TRITON_EXPORT SymbolicVariable(const SymbolicVariable& copy);
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
-          symkind_e getKind(void) const;
+          TRITON_EXPORT symkind_e getKind(void) const;
 
           //! Returns the comment of the symbolic variable.
-          const std::string& getComment(void) const;
+          TRITON_EXPORT const std::string& getComment(void) const;
 
           //! Returns the name of the symbolic variable.
-          const std::string& getName(void) const;
+          TRITON_EXPORT const std::string& getName(void) const;
 
           //! Returns the id of the symbolic variable. This id is unique.
-          triton::usize getId(void) const;
+          TRITON_EXPORT triton::usize getId(void) const;
 
           //! Returns the kind value of the symbolic variable.
-          triton::uint64 getKindValue(void) const;
+          TRITON_EXPORT triton::uint64 getKindValue(void) const;
 
           //! Returns the size (in bits) of the symbolic variable.
-          triton::uint32 getSize(void) const;
+          TRITON_EXPORT triton::uint32 getSize(void) const;
 
           //! Sets the comment of the symbolic variable.
-          void setComment(const std::string& comment);
+          TRITON_EXPORT void setComment(const std::string& comment);
       };
 
       //! Displays a symbolic variable.
-      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
+      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar);
 
       //! Displays a symbolic variable.
-      std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
+      TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
 
     /*! @} End of symbolic namespace */
     };

@@ -11,10 +11,11 @@
 #include <list>
 
 #include <triton/ast.hpp>
+#include <triton/comparableFunctor.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/comparableFunctor.hpp>
 
 
 
@@ -66,6 +67,10 @@ namespace triton {
     //! \class Callbacks
     /*! \brief The callbacks class */
     class Callbacks {
+      private:
+        //! Reference to the API handling these callbacks
+        triton::API& api;
+
       protected:
         //! [c++] Callbacks for all concrete memory needs.
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
@@ -87,38 +92,34 @@ namespace triton {
         Callbacks(triton::API& api);
 
         //! Adds a GET_CONCRETE_MEMORY_VALUE callback.
-        void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
+        TRITON_EXPORT void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
         //! Adds a GET_CONCRETE_REGISTER_VALUE callback.
-        void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
+        TRITON_EXPORT void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
         //! Adds a SYMBOLIC_SIMPLIFICATION callback.
-        void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
+        TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         //! Removes all recorded callbacks.
-        void removeAllCallbacks(void);
+        TRITON_EXPORT void removeAllCallbacks(void);
 
         //! Deletes a GET_CONCRETE_MEMORY_VALUE callback.
-        void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
+        TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
         //! Deletes a GET_CONCRETE_REGISTER_VALUE callback.
-        void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
+        TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
         //! Deletes a SYMBOLIC_SIMPLIFICATION callback.
-        void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
+        TRITON_EXPORT void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
+        TRITON_EXPORT triton::ast::AbstractNode* processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
-
-      private:
-        //! Reference to the API handling these callbacks
-        triton::API& api;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
     };
 
   /*! @} End of callbacks namespace */

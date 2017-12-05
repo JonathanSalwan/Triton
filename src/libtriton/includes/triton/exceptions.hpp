@@ -11,6 +11,7 @@
 #include <exception>
 #include <string>
 
+#include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -39,21 +40,21 @@ namespace triton {
 
       public:
         //! Constructor.
-        Exception(const char* message) {
+        TRITON_EXPORT Exception(const char* message) {
           this->message = std::string(message);
         };
 
         //! Constructor.
-        Exception(const std::string& message) {
+        TRITON_EXPORT Exception(const std::string& message) {
           this->message = message;
         };
 
         //! Destructor.
-        virtual ~Exception() throw() {
+        TRITON_EXPORT virtual ~Exception() throw() {
         };
 
         //! Returns the exception message.
-        const char* what() const throw () {
+        TRITON_EXPORT const char* what() const throw () {
           return this->message.c_str();
         };
     };
@@ -64,10 +65,10 @@ namespace triton {
     class Engines : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        Engines(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Engines(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        Engines(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Engines(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
@@ -76,10 +77,10 @@ namespace triton {
     class SymbolicEngine : public triton::exceptions::Engines {
       public:
         //! Constructor.
-        SymbolicEngine(const char* message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT SymbolicEngine(const char* message) : triton::exceptions::Engines(message) {};
 
         //! Constructor.
-        SymbolicEngine(const std::string& message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT SymbolicEngine(const std::string& message) : triton::exceptions::Engines(message) {};
     };
 
 
@@ -88,10 +89,10 @@ namespace triton {
     class SymbolicExpression : public triton::exceptions::SymbolicEngine {
       public:
         //! Constructor.
-        SymbolicExpression(const char* message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicExpression(const char* message) : triton::exceptions::SymbolicEngine(message) {};
 
         //! Constructor.
-        SymbolicExpression(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicExpression(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
     };
 
 
@@ -100,10 +101,10 @@ namespace triton {
     class SymbolicSimplification : public triton::exceptions::SymbolicEngine {
       public:
         //! Constructor.
-        SymbolicSimplification(const char* message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicSimplification(const char* message) : triton::exceptions::SymbolicEngine(message) {};
 
         //! Constructor.
-        SymbolicSimplification(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicSimplification(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
     };
 
 
@@ -112,10 +113,10 @@ namespace triton {
     class SymbolicVariable : public triton::exceptions::SymbolicEngine {
       public:
         //! Constructor.
-        SymbolicVariable(const char* message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicVariable(const char* message) : triton::exceptions::SymbolicEngine(message) {};
 
         //! Constructor.
-        SymbolicVariable(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT SymbolicVariable(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
     };
 
 
@@ -124,10 +125,10 @@ namespace triton {
     class PathConstraint : public triton::exceptions::SymbolicEngine {
       public:
         //! Constructor.
-        PathConstraint(const char* message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT PathConstraint(const char* message) : triton::exceptions::SymbolicEngine(message) {};
 
         //! Constructor.
-        PathConstraint(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT PathConstraint(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
     };
 
 
@@ -136,10 +137,10 @@ namespace triton {
     class PathManager : public triton::exceptions::SymbolicEngine {
       public:
         //! Constructor.
-        PathManager(const char* message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT PathManager(const char* message) : triton::exceptions::SymbolicEngine(message) {};
 
         //! Constructor.
-        PathManager(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
+        TRITON_EXPORT PathManager(const std::string& message) : triton::exceptions::SymbolicEngine(message) {};
     };
 
 
@@ -148,10 +149,10 @@ namespace triton {
     class TaintEngine : public triton::exceptions::Engines {
       public:
         //! Constructor.
-        TaintEngine(const char* message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT TaintEngine(const char* message) : triton::exceptions::Engines(message) {};
 
         //! Constructor.
-        TaintEngine(const std::string& message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT TaintEngine(const std::string& message) : triton::exceptions::Engines(message) {};
     };
 
 
@@ -160,10 +161,10 @@ namespace triton {
     class SolverEngine : public triton::exceptions::Engines {
       public:
         //! Constructor.
-        SolverEngine(const char* message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT SolverEngine(const char* message) : triton::exceptions::Engines(message) {};
 
         //! Constructor.
-        SolverEngine(const std::string& message) : triton::exceptions::Engines(message) {};
+        TRITON_EXPORT SolverEngine(const std::string& message) : triton::exceptions::Engines(message) {};
     };
 
 
@@ -172,10 +173,10 @@ namespace triton {
     class SolverModel : public triton::exceptions::SolverEngine {
       public:
         //! Constructor.
-        SolverModel(const char* message) : triton::exceptions::SolverEngine(message) {};
+        TRITON_EXPORT SolverModel(const char* message) : triton::exceptions::SolverEngine(message) {};
 
         //! Constructor.
-        SolverModel(const std::string& message) : triton::exceptions::SolverEngine(message) {};
+        TRITON_EXPORT SolverModel(const std::string& message) : triton::exceptions::SolverEngine(message) {};
     };
 
 
@@ -184,10 +185,10 @@ namespace triton {
     class API : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        API(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT API(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        API(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT API(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
@@ -196,10 +197,10 @@ namespace triton {
     class Architecture : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        Architecture(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Architecture(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        Architecture(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Architecture(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
@@ -208,10 +209,10 @@ namespace triton {
     class BitsVector : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        BitsVector(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT BitsVector(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        BitsVector(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT BitsVector(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -220,10 +221,10 @@ namespace triton {
     class Immediate : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        Immediate(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Immediate(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        Immediate(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Immediate(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -232,10 +233,10 @@ namespace triton {
     class Register : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        Register(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Register(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        Register(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Register(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -244,10 +245,10 @@ namespace triton {
     class MemoryAccess : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        MemoryAccess(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT MemoryAccess(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        MemoryAccess(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT MemoryAccess(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -256,10 +257,10 @@ namespace triton {
     class OperandWrapper : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        OperandWrapper(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT OperandWrapper(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        OperandWrapper(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT OperandWrapper(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -268,10 +269,10 @@ namespace triton {
     class Instruction : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        Instruction(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Instruction(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        Instruction(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Instruction(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -280,10 +281,10 @@ namespace triton {
     class Cpu : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        Cpu(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Cpu(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        Cpu(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT Cpu(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -292,10 +293,10 @@ namespace triton {
     class IrBuilder : public triton::exceptions::Architecture {
       public:
         //! Constructor.
-        IrBuilder(const char* message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT IrBuilder(const char* message) : triton::exceptions::Architecture(message) {};
 
         //! Constructor.
-        IrBuilder(const std::string& message) : triton::exceptions::Architecture(message) {};
+        TRITON_EXPORT IrBuilder(const std::string& message) : triton::exceptions::Architecture(message) {};
     };
 
 
@@ -304,10 +305,10 @@ namespace triton {
     class Disassembly : public triton::exceptions::Cpu {
       public:
         //! Constructor.
-        Disassembly(const char* message) : triton::exceptions::Cpu(message) {};
+        TRITON_EXPORT Disassembly(const char* message) : triton::exceptions::Cpu(message) {};
 
         //! Constructor.
-        Disassembly(const std::string& message) : triton::exceptions::Cpu(message) {};
+        TRITON_EXPORT Disassembly(const std::string& message) : triton::exceptions::Cpu(message) {};
     };
 
 
@@ -316,10 +317,10 @@ namespace triton {
     class Semantics : public triton::exceptions::Cpu {
       public:
         //! Constructor.
-        Semantics(const char* message) : triton::exceptions::Cpu(message) {};
+        TRITON_EXPORT Semantics(const char* message) : triton::exceptions::Cpu(message) {};
 
         //! Constructor.
-        Semantics(const std::string& message) : triton::exceptions::Cpu(message) {};
+        TRITON_EXPORT Semantics(const std::string& message) : triton::exceptions::Cpu(message) {};
     };
 
 
@@ -328,10 +329,10 @@ namespace triton {
     class Ast : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        Ast(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Ast(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        Ast(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Ast(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
@@ -340,10 +341,10 @@ namespace triton {
     class AstRepresentation : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        AstRepresentation(const char* message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstRepresentation(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        AstRepresentation(const std::string& message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstRepresentation(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 
@@ -352,10 +353,10 @@ namespace triton {
     class AstTranslations : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        AstTranslations(const char* message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstTranslations(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 
@@ -364,10 +365,10 @@ namespace triton {
     class AstGarbageCollector : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        AstGarbageCollector(const char* message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstGarbageCollector(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        AstGarbageCollector(const std::string& message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstGarbageCollector(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 
@@ -376,10 +377,10 @@ namespace triton {
     class Bindings : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        Bindings(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Bindings(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        Bindings(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Bindings(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 
@@ -388,10 +389,10 @@ namespace triton {
     class Callbacks : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        Callbacks(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Callbacks(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        Callbacks(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Callbacks(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
   /*! @} End of exceptions namespace */

@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
@@ -40,58 +41,58 @@ namespace triton {
     class CpuInterface {
       public:
         //! Destructor.
-        virtual ~CpuInterface(){};
+        TRITON_EXPORT virtual ~CpuInterface(){};
 
         //! Clears the architecture states (registers and memory).
-        virtual void clear(void) = 0;
+        TRITON_EXPORT virtual void clear(void) = 0;
 
         //! Returns true if the register ID is a flag.
-        virtual bool isFlag(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isFlag(triton::arch::registers_e regId) const = 0;
 
         //! Returns true if the register ID is a register.
-        virtual bool isRegister(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isRegister(triton::arch::registers_e regId) const = 0;
 
         //! Returns true if the register ID is valid.
-        virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
 
         //! Returns the max size (in byte) of the CPU registers (GPR).
-        virtual triton::uint32 registerSize(void) const = 0;
+        TRITON_EXPORT virtual triton::uint32 registerSize(void) const = 0;
 
         //! Returns the max size (in bit) of the CPU registers (GPR).
-        virtual triton::uint32 registerBitSize(void) const = 0;
+        TRITON_EXPORT virtual triton::uint32 registerBitSize(void) const = 0;
 
         //! Returns the number of registers according to the CPU architecture.
-        virtual triton::uint32 numberOfRegisters(void) const = 0;
+        TRITON_EXPORT virtual triton::uint32 numberOfRegisters(void) const = 0;
 
         //! Returns all parent registers.
-        virtual std::set<const triton::arch::Register*> getParentRegisters(void) const = 0;
+        TRITON_EXPORT virtual std::set<const triton::arch::Register*> getParentRegisters(void) const = 0;
 
         //! Returns all registers.
-        virtual const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
+        TRITON_EXPORT virtual const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
 
         //! Returns parent register from a given one.
-        virtual const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const = 0;
+        TRITON_EXPORT virtual const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const = 0;
 
         //! Returns parent register from a given one.
-        virtual const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const = 0;
+        TRITON_EXPORT virtual const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const = 0;
 
         //! Returns register from id
-        virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
+        TRITON_EXPORT virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
 
         //! Disassembles the instruction according to the architecture.
-        virtual void disassembly(triton::arch::Instruction& inst) const = 0;
+        TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) const = 0;
 
         //! Returns the concrete value of a memory cell.
-        virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const = 0;
+        TRITON_EXPORT virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const = 0;
 
         //! Returns the concrete value of memory cells.
-        virtual triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const = 0;
+        TRITON_EXPORT virtual triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const = 0;
 
         //! Returns the concrete value of a memory area.
-        virtual std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const = 0;
+        TRITON_EXPORT virtual std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const = 0;
 
         //! Returns the concrete value of a register.
-        virtual triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const = 0;
+        TRITON_EXPORT virtual triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory cell.
@@ -99,7 +100,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) = 0;
+        TRITON_EXPORT virtual void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of memory cells.
@@ -107,7 +108,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) = 0;
+        TRITON_EXPORT virtual void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
@@ -115,7 +116,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) = 0;
+        TRITON_EXPORT virtual void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a memory area.
@@ -123,7 +124,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) = 0;
+        TRITON_EXPORT virtual void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) = 0;
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a register.
@@ -131,13 +132,13 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        virtual void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) = 0;
+        TRITON_EXPORT virtual void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) = 0;
 
         //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
-        virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;
+        TRITON_EXPORT virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;
 
         //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
-        virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
+        TRITON_EXPORT virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
     };
 
   /*! @} End of arch namespace */

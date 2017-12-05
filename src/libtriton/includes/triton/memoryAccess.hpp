@@ -11,6 +11,7 @@
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
@@ -37,7 +38,6 @@ namespace triton {
      *  \brief This class is used to represent a memory access.
      */
     class MemoryAccess : public BitsVector, public OperandInterface {
-
       protected:
         //! The memory' address.
         triton::uint64 address;
@@ -63,118 +63,119 @@ namespace triton {
         //! The AST of the memory access (LEA).
         triton::ast::AbstractNode* leaAst;
 
+      private:
         //! Copy a MemoryAccess.
         void copy(const MemoryAccess& other);
 
       public:
         //! Constructor.
-        MemoryAccess();
+        TRITON_EXPORT MemoryAccess();
 
         //! Constructor.
-        MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
+        TRITON_EXPORT MemoryAccess(triton::uint64 address, triton::uint32 size /* bytes */);
 
         //! Constructor by copy.
-        MemoryAccess(const MemoryAccess& other);
+        TRITON_EXPORT MemoryAccess(const MemoryAccess& other);
 
         //! Returns the AST of the memory access (LEA).
-        triton::ast::AbstractNode* getLeaAst(void) const;
+        TRITON_EXPORT triton::ast::AbstractNode* getLeaAst(void) const;
 
         //! Returns the address of the memory.
-        triton::uint64 getAddress(void) const;
+        TRITON_EXPORT triton::uint64 getAddress(void) const;
 
         //! Returns the highest bit of the memory vector. \sa BitsVector::getHigh()
-        triton::uint32 getAbstractHigh(void) const;
+        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
 
         //! Returns the lower bit of the memory vector. \sa BitsVector::getLow()
-        triton::uint32 getAbstractLow(void) const;
+        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
 
         //! Returns the size (in bits) of the memory vector.
-        triton::uint32 getBitSize(void) const;
+        TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
         //! LEA - Gets pc relative.
-        triton::uint64 getPcRelative(void) const;
+        TRITON_EXPORT triton::uint64 getPcRelative(void) const;
 
         //! Returns the size (in bytes) of the memory vector.
-        triton::uint32 getSize(void) const;
+        TRITON_EXPORT triton::uint32 getSize(void) const;
 
         //! Returns the type of the operand (triton::arch::OP_MEM).
-        triton::uint32 getType(void) const;
+        TRITON_EXPORT triton::uint32 getType(void) const;
 
         //! LEA - Returns the segment register operand.
-        triton::arch::Register& getSegmentRegister(void);
+        TRITON_EXPORT triton::arch::Register& getSegmentRegister(void);
 
         //! LEA - Returns the base register operand.
-        triton::arch::Register& getBaseRegister(void);
+        TRITON_EXPORT triton::arch::Register& getBaseRegister(void);
 
         //! LEA - Returns the index register operand.
-        triton::arch::Register& getIndexRegister(void);
+        TRITON_EXPORT triton::arch::Register& getIndexRegister(void);
 
         //! LEA - Returns the displacement operand.
-        triton::arch::Immediate& getDisplacement(void);
+        TRITON_EXPORT triton::arch::Immediate& getDisplacement(void);
 
         //! LEA - Returns the scale operand.
-        triton::arch::Immediate& getScale(void);
+        TRITON_EXPORT triton::arch::Immediate& getScale(void);
 
         //! LEA - Returns the segment register operand.
-        const triton::arch::Register& getConstSegmentRegister(void) const;
+        TRITON_EXPORT const triton::arch::Register& getConstSegmentRegister(void) const;
 
         //! LEA - Returns the base register operand.
-        const triton::arch::Register& getConstBaseRegister(void) const;
+        TRITON_EXPORT const triton::arch::Register& getConstBaseRegister(void) const;
 
         //! LEA - Returns the index register operand.
-        const triton::arch::Register& getConstIndexRegister(void) const;
+        TRITON_EXPORT const triton::arch::Register& getConstIndexRegister(void) const;
 
         //! LEA - Returns the displacement operand.
-        const triton::arch::Immediate& getConstDisplacement(void) const;
+        TRITON_EXPORT const triton::arch::Immediate& getConstDisplacement(void) const;
 
         //! LEA - Returns the scale operand.
-        const triton::arch::Immediate& getConstScale(void) const;
+        TRITON_EXPORT const triton::arch::Immediate& getConstScale(void) const;
 
         //! Returns true if `other` and `self` overlap.
-        bool isOverlapWith(const MemoryAccess& other) const;
+        TRITON_EXPORT bool isOverlapWith(const MemoryAccess& other) const;
 
         //! Sets the address of the memory access.
-        void setAddress(triton::uint64 addr);
+        TRITON_EXPORT void setAddress(triton::uint64 addr);
 
         //! LEA - Sets pc relative.
-        void setPcRelative(triton::uint64 addr);
+        TRITON_EXPORT void setPcRelative(triton::uint64 addr);
 
         //! LEA - Sets the segment register operand.
-        void setSegmentRegister(const triton::arch::Register& segment);
+        TRITON_EXPORT void setSegmentRegister(const triton::arch::Register& segment);
 
         //! LEA - Sets the base register operand.
-        void setBaseRegister(const triton::arch::Register& base);
+        TRITON_EXPORT void setBaseRegister(const triton::arch::Register& base);
 
         //! LEA - Sets the index register operand.
-        void setIndexRegister(const triton::arch::Register& index);
+        TRITON_EXPORT void setIndexRegister(const triton::arch::Register& index);
 
         //! LEA - Sets the displacement operand.
-        void setDisplacement(const triton::arch::Immediate& displacement);
+        TRITON_EXPORT void setDisplacement(const triton::arch::Immediate& displacement);
 
         //! LEA - Sets the scale operand.
-        void setScale(const triton::arch::Immediate& scale);
+        TRITON_EXPORT void setScale(const triton::arch::Immediate& scale);
 
         //! Sets the AST of the memory access (LEA).
-        void setLeaAst(triton::ast::AbstractNode* ast);
+        TRITON_EXPORT void setLeaAst(triton::ast::AbstractNode* ast);
 
         //! Copies a MemoryAccess.
-        void operator=(const MemoryAccess& other);
+        TRITON_EXPORT void operator=(const MemoryAccess& other);
     };
 
     //! Displays an MemoryAccess.
-    std::ostream& operator<<(std::ostream& stream, const MemoryAccess& mem);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const MemoryAccess& mem);
 
     //! Displays an MemoryAccess.
-    std::ostream& operator<<(std::ostream& stream, const MemoryAccess* mem);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const MemoryAccess* mem);
 
     //! Compares two MemoryAccess.
-    bool operator==(const MemoryAccess& mem1, const MemoryAccess& mem2);
+    TRITON_EXPORT bool operator==(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
     //! Compares two MemoryAccess.
-    bool operator!=(const MemoryAccess& mem1, const MemoryAccess& mem2);
+    TRITON_EXPORT bool operator!=(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
     //! Compares two MemoryAccess (needed for std::map)
-    bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2);
+    TRITON_EXPORT bool operator<(const MemoryAccess& mem1, const MemoryAccess& mem2);
 
     //! Defines the force memory initialization constant.
     const bool FORCE_MEMORY_INITIALIZATION = true;

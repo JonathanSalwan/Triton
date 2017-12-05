@@ -8,6 +8,7 @@
 #ifndef TRITON_SEMANTICSINTERFACE_HPP
 #define TRITON_SEMANTICSINTERFACE_HPP
 
+#include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 
 
@@ -32,10 +33,10 @@ namespace triton {
     class SemanticsInterface {
       public:
         //! Destructor.
-        virtual ~SemanticsInterface(){};
+        TRITON_EXPORT virtual ~SemanticsInterface(){};
 
         //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-        virtual bool buildSemantics(triton::arch::Instruction& inst) = 0;
+        TRITON_EXPORT virtual bool buildSemantics(triton::arch::Instruction& inst) = 0;
     };
 
   /*! @} End of arch namespace */

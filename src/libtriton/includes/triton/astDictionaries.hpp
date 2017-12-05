@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -37,6 +38,12 @@ namespace triton {
       private:
         //! Defines if this instance is used as a backup.
         bool backupFlag;
+
+        //! Copies an AstDictionaries.
+        void copy(const AstDictionaries& other);
+
+        //! Links all sub dictionaries to the root one.
+        void linkDictionaries(void);
 
       protected:
         //! Total of allocated nodes.
@@ -188,25 +195,19 @@ namespace triton {
         AstDictionaries(bool isBackup=false);
 
         //! Constructor.
-        AstDictionaries(const AstDictionaries& copy);
+        TRITON_EXPORT AstDictionaries(const AstDictionaries& copy);
 
         //! Destructor.
-        virtual ~AstDictionaries();
+        TRITON_EXPORT virtual ~AstDictionaries();
 
         //! Copies an AstDictionaries.
-        void operator=(const AstDictionaries& other);
-
-        //! Copies an AstDictionaries.
-        void copy(const AstDictionaries& other);
-
-        //! Links all sub dictionaries to the root one.
-        void linkDictionaries(void);
+        TRITON_EXPORT void operator=(const AstDictionaries& other);
 
         //! Browses into dictionaries.
-        triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
+        TRITON_EXPORT triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);
 
         //! Returns stats about dictionaries.
-        std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
+        TRITON_EXPORT std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
     };
 
   /*! @} End of ast namespace */

@@ -13,6 +13,7 @@
 
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/registers_e.hpp>
 #include <triton/tritonTypes.hpp>
@@ -51,67 +52,68 @@ namespace triton {
         //! The parent id of the register.
         triton::arch::registers_e parent;
 
+      private:
         //! Copy a Register.
         void copy(const Register& other);
 
       public:
         //! Constructor.
-        Register();
+        TRITON_EXPORT Register();
 
         //! Constructor.
-        Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
+        TRITON_EXPORT Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
 
         //! Constructor.
-        Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+        TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
 
         //! Constructor.
-        Register(const Register& other);
+        TRITON_EXPORT Register(const Register& other);
 
         //! Returns the parent id of the register.
-        registers_e getParent(void) const;
+        TRITON_EXPORT registers_e getParent(void) const;
 
         //! Returns true if `other` and `self` overlap.
-        bool isOverlapWith(const Register& other) const;
+        TRITON_EXPORT bool isOverlapWith(const Register& other) const;
 
         //! Returns the name of the register.
-        std::string getName(void) const;
+        TRITON_EXPORT std::string getName(void) const;
 
         //! Returns the highest bit of the register vector. \sa BitsVector::getHigh()
-        triton::uint32 getAbstractHigh(void) const;
+        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
 
         //! Returns the lower bit of the register vector. \sa BitsVector::getLow()
-        triton::uint32 getAbstractLow(void) const;
+        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
 
         //! Returns the size (in bits) of the register.
-        triton::uint32 getBitSize(void) const;
+        TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
         //! Returns the id of the register.
-        triton::arch::registers_e getId(void) const;
+        TRITON_EXPORT triton::arch::registers_e getId(void) const;
 
         //! Returns the size (in bytes) of the register.
-        triton::uint32 getSize(void) const;
+        TRITON_EXPORT triton::uint32 getSize(void) const;
 
         //! Returns the type of the operand (triton::arch::OP_REG).
-        triton::uint32 getType(void) const;
+        TRITON_EXPORT triton::uint32 getType(void) const;
 
         //! Compare two registers specifications
-        bool operator==(const Register& other) const;
+        TRITON_EXPORT bool operator==(const Register& other) const;
 
         //! Compare two registers specifications
-        bool operator!=(const Register& other) const;
+        TRITON_EXPORT bool operator!=(const Register& other) const;
 
         //! Copies a Register.
-        void operator=(const Register& other);
+        TRITON_EXPORT void operator=(const Register& other);
     };
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const Register& reg);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const Register& reg);
 
     //! Displays a Register.
-    std::ostream& operator<<(std::ostream& stream, const Register* reg);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const Register* reg);
 
     //! Compares two Register
-    bool operator<(const Register& reg1, const Register& reg2);
+    TRITON_EXPORT bool operator<(const Register& reg1, const Register& reg2);
 
   /*! @} End of arch namespace */
   };

@@ -10,6 +10,7 @@
 
 #include <triton/architecture.hpp>
 #include <triton/astGarbageCollector.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
 #include <triton/semanticsInterface.hpp>
@@ -86,16 +87,16 @@ namespace triton {
                   triton::engines::taint::TaintEngine* taintEngine);
 
         //! Destructor.
-        virtual ~IrBuilder();
+        TRITON_EXPORT virtual ~IrBuilder();
 
         //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-        bool buildSemantics(triton::arch::Instruction& inst);
+        TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
         //! Everything which must be done before buiding the semantics
-        void preIrInit(triton::arch::Instruction& inst);
+        TRITON_EXPORT void preIrInit(triton::arch::Instruction& inst);
 
         //! Everything which must be done after building the semantics.
-        void postIrInit(triton::arch::Instruction& inst);
+        TRITON_EXPORT void postIrInit(triton::arch::Instruction& inst);
     };
 
   /*! @} End of arch namespace */

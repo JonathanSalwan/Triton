@@ -9,6 +9,7 @@
 #define TRITON_MODES_H
 
 #include <set>
+#include <triton/dllexport.hpp>
 
 
 
@@ -43,6 +44,10 @@ namespace triton {
     //! \class Modes
     /*! \brief The modes class */
     class Modes {
+      private:
+        //! Copies a Modes.
+        void copy(const Modes& other);
+
       protected:
         //! The set of enabled modes
         std::set<enum mode_e> enabledModes;
@@ -52,19 +57,16 @@ namespace triton {
         Modes();
 
         //! Constructor.
-        Modes(const Modes& copy);
-
-        //! Copies a Modes.
-        void copy(const Modes& other);
+        TRITON_EXPORT Modes(const Modes& copy);
 
         //! Returns true if the mode is enabled.
-        bool isModeEnabled(enum mode_e mode) const;
+        TRITON_EXPORT bool isModeEnabled(enum mode_e mode) const;
 
         //! Enables or disables a specific mode.
-        void enableMode(enum mode_e mode, bool flag);
+        TRITON_EXPORT void enableMode(enum mode_e mode, bool flag);
 
         //! Copies a Modes.
-        void operator=(const Modes& other);
+        TRITON_EXPORT void operator=(const Modes& other);
     };
 
   /*! @} End of modes namespace */

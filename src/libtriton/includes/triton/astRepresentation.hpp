@@ -15,6 +15,7 @@
 #include <triton/astRepresentationInterface.hpp>
 #include <triton/astSmtRepresentation.hpp>
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 
 
 
@@ -62,13 +63,13 @@ namespace triton {
           AstRepresentation();
 
           //! Returns the representation mode.
-          triton::uint32 getMode(void) const;
+          TRITON_EXPORT triton::uint32 getMode(void) const;
 
           //! Sets the representation mode.
-          void setMode(triton::uint32 mode);
+          TRITON_EXPORT void setMode(triton::uint32 mode);
 
           //! Displays the node according to the representation mode.
-          std::ostream& print(std::ostream& stream, AbstractNode* node);
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
       };
 
     /*! @} End of representations namespace */

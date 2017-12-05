@@ -36,26 +36,26 @@ namespace triton {
 
     public:
       //! Constructor
-      ComparableFunctor(std::function<Signature> F, void* ID): F_(std::move(F)), ID_(ID) {}
+      TRITON_EXPORT ComparableFunctor(std::function<Signature> F, void* ID): F_(std::move(F)), ID_(ID) {}
 
       //! Constructor
-      ComparableFunctor(Signature* F): F_(F), ID_((void*)F) {}
+      TRITON_EXPORT ComparableFunctor(Signature* F): F_(F), ID_((void*)F) {}
 
       //! Forward call to real functor
       template <class ...T>
-      auto operator()(T && ...t) const -> decltype(this->F_(std::forward<T>(t)...)) {
+      TRITON_EXPORT auto operator()(T && ...t) const -> decltype(this->F_(std::forward<T>(t)...)) {
         return F_(std::forward<T>(t)...);
       }
 
       //! Comparison of functor based on id
       template <class T>
-      bool operator==(const ComparableFunctor<T>& O) const {
+      TRITON_EXPORT bool operator==(const ComparableFunctor<T>& O) const {
         return this->ID_ == O.ID_;
       }
 
       //! Comparison of functor based on id
       template <class T>
-      bool operator!=(const ComparableFunctor<T>& O) const {
+      TRITON_EXPORT bool operator!=(const ComparableFunctor<T>& O) const {
         return !(this->ID_ == O.ID_);
       }
   };

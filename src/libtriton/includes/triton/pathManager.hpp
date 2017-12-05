@@ -10,6 +10,7 @@
 
 #include <vector>
 
+#include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
 #include <triton/pathConstraint.hpp>
@@ -49,7 +50,10 @@ namespace triton {
           const triton::modes::Modes& modes;
 
           //! AstContext API
-          triton::ast::AstContext & astCtxt;
+          triton::ast::AstContext& astCtxt;
+
+          //! Copies a PathManager.
+          void copy(const PathManager& other);
 
         protected:
           //! \brief The logical conjunction vector of path constraints.
@@ -60,28 +64,25 @@ namespace triton {
           PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
 
           //! Constructor by copy.
-          PathManager(const PathManager& copy);
-
-          //! Copies a PathManager.
-          void copy(const PathManager& other);
+          TRITON_EXPORT PathManager(const PathManager& copy);
 
           //! Returns the logical conjunction vector of path constraints.
-          const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
+          TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
           //! Returns the logical conjunction AST of path constraints.
-          triton::ast::AbstractNode* getPathConstraintsAst(void) const;
+          TRITON_EXPORT triton::ast::AbstractNode* getPathConstraintsAst(void) const;
 
           //! Returns the number of constraints.
-          triton::usize getNumberOfPathConstraints(void) const;
+          TRITON_EXPORT triton::usize getNumberOfPathConstraints(void) const;
 
           //! Adds a path constraint.
-          void addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr);
+          TRITON_EXPORT void addPathConstraint(const triton::arch::Instruction& inst, triton::engines::symbolic::SymbolicExpression* expr);
 
           //! Clears the logical conjunction vector of path constraints.
-          void clearPathConstraints(void);
+          TRITON_EXPORT void clearPathConstraints(void);
 
           //! Copies a PathManager.
-          void operator=(const PathManager& other);
+          TRITON_EXPORT void operator=(const PathManager& other);
       };
 
     /*! @} End of symbolic namespace */

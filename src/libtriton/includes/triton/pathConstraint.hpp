@@ -12,6 +12,7 @@
 #include <vector>
 
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -52,28 +53,27 @@ namespace triton {
            */
           std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>> branches;
 
-
         public:
           //! Constructor.
           PathConstraint();
 
           //! Constructor by copy.
-          PathConstraint(const PathConstraint &copy);
+          TRITON_EXPORT PathConstraint(const PathConstraint &copy);
 
           //! Adds a branch to the path constraint.
-          void addBranchConstraint(bool taken, triton::uint64 srdAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc);
+          TRITON_EXPORT void addBranchConstraint(bool taken, triton::uint64 srdAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc);
 
           //! Returns the branch constraints.
-          const std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
+          TRITON_EXPORT const std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::AbstractNode*>>& getBranchConstraints(void) const;
 
           //! Returns the address of the taken branch.
-          triton::uint64 getTakenAddress(void) const;
+          TRITON_EXPORT triton::uint64 getTakenAddress(void) const;
 
           //! Returns the path constraint AST of the taken branch.
-          triton::ast::AbstractNode* getTakenPathConstraintAst(void) const;
+          TRITON_EXPORT triton::ast::AbstractNode* getTakenPathConstraintAst(void) const;
 
           //! Returns true if it is not a direct jump.
-          bool isMultipleBranches(void) const;
+          TRITON_EXPORT bool isMultipleBranches(void) const;
       };
 
     /*! @} End of symbolic namespace */

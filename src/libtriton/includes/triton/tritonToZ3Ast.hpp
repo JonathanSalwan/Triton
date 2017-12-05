@@ -11,6 +11,7 @@
 #include <z3++.h>
 
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -56,10 +57,10 @@ namespace triton {
 
       public:
         //! Constructor.
-        TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval=true);
+        TRITON_EXPORT TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval=true);
 
         //! Converts to Z3's AST
-        z3::expr convert(triton::ast::AbstractNode* node);
+        TRITON_EXPORT z3::expr convert(triton::ast::AbstractNode* node);
     };
 
   /*! @} End of ast namespace */

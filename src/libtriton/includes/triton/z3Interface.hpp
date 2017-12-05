@@ -8,6 +8,7 @@
 #ifndef TRITON_Z3INTERFACE_HPP
 #define TRITON_Z3INTERFACE_HPP
 
+#include <triton/dllexport.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -37,13 +38,13 @@ namespace triton {
 
       public:
         //! Constructor.
-        Z3Interface(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+        TRITON_EXPORT Z3Interface(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
         //! Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
-        triton::ast::AbstractNode* simplify(triton::ast::AbstractNode* node) const;
+        TRITON_EXPORT triton::ast::AbstractNode* simplify(triton::ast::AbstractNode* node) const;
 
         //! Evaluates a Triton's AST via Z3 and returns a concrete value.
-        triton::uint512 evaluate(triton::ast::AbstractNode *node) const;
+        TRITON_EXPORT triton::uint512 evaluate(triton::ast::AbstractNode *node) const;
     };
 
   /*! @} End of ast namespace */

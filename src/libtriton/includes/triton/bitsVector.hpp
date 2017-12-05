@@ -9,6 +9,8 @@
 #define TRITON_BITSVECTOR_H
 
 #include <utility>
+
+#include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -41,44 +43,44 @@ namespace triton {
 
       public:
         //! Constructor.
-        BitsVector();
+        TRITON_EXPORT BitsVector();
 
         //! Constructor.
-        BitsVector(triton::uint32 high, triton::uint32 low);
+        TRITON_EXPORT BitsVector(triton::uint32 high, triton::uint32 low);
 
         //! Constructor by copy.
-        BitsVector(const triton::arch::BitsVector& copy);
+        TRITON_EXPORT BitsVector(const triton::arch::BitsVector& copy);
 
         //! Returns the highest bit
-        triton::uint32 getHigh(void) const;
+        TRITON_EXPORT triton::uint32 getHigh(void) const;
 
         //! Returns the lower bit
-        triton::uint32 getLow(void) const;
+        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the size of the vector
-        triton::uint32 getVectorSize(void) const;
+        TRITON_EXPORT triton::uint32 getVectorSize(void) const;
 
         //! Returns the max possible value of the bitvector.
-        triton::uint512 getMaxValue(void) const;
+        TRITON_EXPORT triton::uint512 getMaxValue(void) const;
 
         //! Copy a BitsVector.
-        void operator=(const BitsVector& other);
+        TRITON_EXPORT void operator=(const BitsVector& other);
 
         //! Sets the highest bit position
-        void setHigh(triton::uint32 v);
+        TRITON_EXPORT void setHigh(triton::uint32 v);
 
         //! Sets the lower bit position
-        void setLow(triton::uint32 v);
+        TRITON_EXPORT void setLow(triton::uint32 v);
 
         //! Sets the pair<high, low> position
-        void setPair(std::pair<triton::uint32, triton::uint32> p);
+        TRITON_EXPORT void setPair(std::pair<triton::uint32, triton::uint32> p);
     };
 
     //! Displays a BitsVector.
-    std::ostream& operator<<(std::ostream& stream, const BitsVector& bv);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const BitsVector& bv);
 
     //! Displays a BitsVector.
-    std::ostream& operator<<(std::ostream& stream, const BitsVector* bv);
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const BitsVector* bv);
 
   /*! @} End of arch namespace */
   };

@@ -108,23 +108,11 @@ matrix:
           compiler: clang
           env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
-        # OSX xcode 8.0
+        # OSX xcode 8.3
         - os: osx
-          osx_image: xcode8
+          osx_image: xcode8.3
           compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
-
-        # OSX xcode 8.1
-        - os: osx
-          osx_image: xcode8.1
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3 cmake', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
-
-        # OSX xcode 8.2
-        - os: osx
-          osx_image: xcode8.2
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_2/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_DEP_BREW_PKGS='pip z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
 notifications:
   email: false

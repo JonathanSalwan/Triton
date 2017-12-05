@@ -13,6 +13,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/astDictionaries.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/modes.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -43,6 +44,9 @@ namespace triton {
         //! Defines if this instance is used as a backup.
         bool backupFlag;
 
+        //! Copies an AstGarbageCollectors..
+        void copy(const AstGarbageCollector& other);
+
       protected:
         //! This container contains all allocated nodes.
         std::set<triton::ast::AbstractNode*> allocatedNodes;
@@ -55,46 +59,43 @@ namespace triton {
         AstGarbageCollector(const triton::modes::Modes& modes, bool isBackup=false);
 
         //! Constructor by copy.
-        AstGarbageCollector(const AstGarbageCollector& other);
+        TRITON_EXPORT AstGarbageCollector(const AstGarbageCollector& other);
 
         //! Destructor.
-        ~AstGarbageCollector();
+        TRITON_EXPORT ~AstGarbageCollector();
 
         //! Copies an AstGarbageCollectors.
-        void operator=(const AstGarbageCollector& other);
-
-        //! Copies an AstGarbageCollectors..
-        void copy(const AstGarbageCollector& other);
+        TRITON_EXPORT void operator=(const AstGarbageCollector& other);
 
         //! Go through every allocated nodes and free them.
-        void freeAllAstNodes(void);
+        TRITON_EXPORT void freeAllAstNodes(void);
 
         //! Frees a set of nodes and removes them from the global container.
-        void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
+        TRITON_EXPORT void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
 
         //! Extracts all unique nodes from a partial AST into the uniqueNodes set.
-        void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const;
+        TRITON_EXPORT void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const;
 
         //! Records the allocated node or returns the same node if it already exists inside the dictionaries.
-        triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
+        TRITON_EXPORT triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
 
         //! Records a variable AST node.
-        void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
 
         //! Returns all allocated nodes.
-        const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
+        TRITON_EXPORT const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
 
         //! Returns all variable nodes recorded.
-        const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
+        TRITON_EXPORT const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
 
         //! Returns the node of a recorded variable.
-        std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
+        TRITON_EXPORT std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
 
         //! Sets all allocated nodes.
-        void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
+        TRITON_EXPORT void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
 
         //! Sets all variable nodes recorded.
-        void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
+        TRITON_EXPORT void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
     };
 
   /*! @} End of ast namespace */
