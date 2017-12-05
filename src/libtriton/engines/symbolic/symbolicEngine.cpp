@@ -12,7 +12,7 @@
 #include <triton/coreUtils.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/astContext.hpp>
-
+#include <triton/swab.hpp>
 
 
 /*! \page engine_DSE_page Dynamic Symbolic Execution
@@ -568,6 +568,21 @@ namespace triton {
 
         memSymId = this->getSymbolicMemoryId(memAddr);
 
+        /*  Convert big endian addresses */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(symVarSize) {
+          case DQWORD_SIZE:
+            memAddr = swab16(memAddr);
+            break;
+          case QQWORD_SIZE:
+            memAddr = swab32(memAddr);
+            break;
+          case DQQWORD_SIZE:
+            memAddr = swab64(memAddr);
+            break;
+          default:
+            break;
+          }
         /* First we create a symbolic variable */
         symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
 
@@ -723,6 +738,20 @@ namespace triton {
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
         while (size) {
+          if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+            switch(size) {
+              case DQWORD_SIZE:
+                address = swab16(address);
+                break;
+              case QQWORD_SIZE:
+                address = swab32(address);
+                break;
+              case DQQWORD_SIZE:
+                address = swab64(address);
+                break;
+              default:
+                break;
+            }
           symMem = this->getSymbolicMemoryId(address + size - 1);
           /* Check if the memory cell is already symbolic */
           if (symMem != triton::engines::symbolic::UNSET) {
@@ -823,6 +852,21 @@ namespace triton {
         triton::uint64 address   = mem.getAddress();
         triton::uint32 writeSize = mem.getSize();
 
+        /* Convert big endian addresses. */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(writeSize) {
+          case DQWORD_SIZE:
+            address = swab16(address);
+            break;
+          case QQWORD_SIZE:
+            address = swab32(address);
+            break;
+          case DQQWORD_SIZE:
+            address = swab64(address);
+            break;
+          default:
+            break;
+          }
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
@@ -874,38 +918,12 @@ namespace triton {
         const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
         triton::ast::AbstractNode* finalExpr      = nullptr;
         triton::ast::AbstractNode* origReg        = nullptr;
-        triton::uint32 regSize                    = reg.getSize();
 
         if (this->architecture->isFlag(reg))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
 
-        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
-          origReg = this->buildSymbolicRegister(parentReg);
-
-        switch (regSize) {
-          case BYTE_SIZE:
-            if (reg.getLow() == 0) {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
-            }
-            else {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
-                            this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
-                          );
-            }
-            break;
-
-          case WORD_SIZE:
-            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
-            break;
-
-          case DWORD_SIZE:
-          case QWORD_SIZE:
-          case DQWORD_SIZE:
-          case QQWORD_SIZE:
-          case DQQWORD_SIZE:
-            finalExpr = this->astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
-            break;
-        }
+        if (this->architecture->getArchitecture() == triton::arch::ARCH_X86_64 || this->architecture->getArchitecture() == triton::arch::ARCH_X86)
+          finalExpr = this->createSymbolicX86RegisterExpression(node, reg, parentReg, origReg);
 
         triton::engines::symbolic::SymbolicExpression* se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
@@ -913,6 +931,42 @@ namespace triton {
         inst.setWrittenRegister(reg, node);
 
         return se;
+      }
+
+      /* Returns the abstract node expression for x86 */
+      triton::ast::AbstractNode* SymbolicEngine::createSymbolicX86RegisterExpression(triton::ast::AbstractNode* node, const triton::arch::Register& reg, const triton::arch::Register& parentReg, triton::ast::AbstractNode* origReg)
+      {
+        triton::ast::AbstractNode* finalExpr     = nullptr;
+        triton::uint32 regSize                   = reg.getSize();
+
+        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
+          origReg = this->buildSymbolicRegister(parentReg);
+
+        switch (regSize) {
+        case BYTE_SIZE:
+          if (reg.getLow() == 0) {
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+          }
+          else {
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
+                                             this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
+              );
+          }
+          break;
+
+        case WORD_SIZE:
+          finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+          break;
+
+        case DWORD_SIZE:
+        case QWORD_SIZE:
+        case DQWORD_SIZE:
+        case QQWORD_SIZE:
+        case DQQWORD_SIZE:
+          finalExpr = this->astCtxt.zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+            break;
+        }
+        return finalExpr;
       }
 
 
@@ -977,6 +1031,21 @@ namespace triton {
         if (node->getBitvectorSize() != mem.getBitSize())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
+        /* Convert big endian addresses. */
+        if (this->architecture->getCpu()->getEndianness() == triton::arch::ENDIAN_BIG)
+          switch(writeSize) {
+          case DQWORD_SIZE:
+            address = swab16(address);
+            break;
+          case QQWORD_SIZE:
+            address = swab32(address);
+            break;
+          case DQQWORD_SIZE:
+            address = swab64(address);
+            break;
+          default:
+            break;
+          }
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, node);
@@ -1119,4 +1188,3 @@ namespace triton {
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
-

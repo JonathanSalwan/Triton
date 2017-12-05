@@ -8,8 +8,6 @@
 #ifndef TRITON_REGISTERS_E_H
 #define TRITON_REGISTERS_E_H
 
-
-
 //! The Triton namespace
 namespace triton {
 /*!
@@ -28,8 +26,13 @@ namespace triton {
       enum registers_e {
         ID_REG_INVALID = 0, //!< invalid = 0
 
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
-        ID_REG_##UPPER_NAME,
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, ARCH_UPPER, ARCH_LOWER, ARCH_PARENT, SUBARCH_UPPER, SUBARCH_LOWER, SUBARCH_PARENT, SUBARCH_AVAIL) \
+        ID_REG_##ARCH##_##UPPER_NAME,
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/armv7.spec"
+
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, ARCH_UPPER, ARCH_LOWER, ARCH_PARENT, SUBARCH_UPPER, SUBARCH_LOWER, SUBARCH_PARENT, SUBARCH_AVAIL) \
+        ID_REG_##ARCH##_##UPPER_NAME,
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 

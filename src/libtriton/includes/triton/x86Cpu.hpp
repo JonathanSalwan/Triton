@@ -50,7 +50,7 @@ namespace triton {
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
       class x86Cpu : public CpuInterface, public x86Specifications {
 
-        static constexpr registers_e pcId = ID_REG_EIP;
+        static constexpr registers_e pcId = ID_REG_X86_EIP;
 
         private:
           //! Callbacks API
@@ -64,6 +64,9 @@ namespace triton {
            * **item2**: concrete value
            */
           std::map<triton::uint64, triton::uint8> memory;
+
+          //! Endianness
+          triton::uint32                          endian;
 
           //! Concrete value of eax
           triton::uint8 eax[DWORD_SIZE];
@@ -219,6 +222,7 @@ namespace triton {
           bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
           bool isRegister(triton::arch::registers_e regId) const;
           bool isRegisterValid(triton::arch::registers_e regId) const;
+          triton::uint32 getEndianness() const;
           const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
           const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
           const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;

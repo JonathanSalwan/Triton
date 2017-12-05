@@ -61,8 +61,6 @@ zmm1:512 bv[511..0]
 
 */
 
-
-
 namespace triton {
   namespace bindings {
     namespace python {
@@ -75,9 +73,9 @@ namespace triton {
         PyDict_SetItemString(registersDict, "X86", x86RegistersDictClass);
 
         // Init X86 REG namespace
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-          if (X86_AVAIL)                                                                                                                  \
-            PyDict_SetItemString(x86RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+          if (strcmp(#ARCH, "X86") == 0 && X86_AVAIL)                                                                                           \
+            PyDict_SetItemString(x86RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##ARCH##_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
@@ -87,8 +85,9 @@ namespace triton {
         PyDict_SetItemString(registersDict, "X86_64", x8664RegistersDictClass);
 
         // Init X86_64 REG namespace
-        #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-          PyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##UPPER_NAME));
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARCH, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
+          if (strcmp(#ARCH, "X86") == 0)                                                                                                        \
+            PyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_##ARCH##_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"

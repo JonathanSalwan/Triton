@@ -487,7 +487,7 @@ namespace triton {
     void AstContext::updateVariable(const std::string& name, const triton::uint512& value) {
       for (auto& kv: this->astGarbageCollector.getAstVariableNodes()) {
         if (kv.first == name) {
-          assert(kv.second[0]->getType() == triton::ast::VARIABLE_NODE);
+          assert(kv.second[0]->getKind() == triton::ast::VARIABLE_NODE);
           this->valueMapping[dynamic_cast<VariableNode*>(kv.second[0])->getVar().getName()] = value;
           for (auto* N: kv.second)
             N->init();
@@ -511,11 +511,11 @@ namespace triton {
     }
 
     triton::uint32 AstContext::getRepresentationMode(void) const {
-      return astRepresentation.getMode();
+      return this->astRepresentation.getMode();
     }
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
-      return astRepresentation.print(stream, node);
+      return this->astRepresentation.print(stream, node);
     }
 
   }; /* ast namespace */

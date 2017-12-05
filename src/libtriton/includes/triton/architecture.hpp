@@ -36,11 +36,21 @@ namespace triton {
    *  @{
    */
 
+    /*! The Endianness */
+    enum endianness_e {
+      ENDIAN_INVALID = 0, /*!< invalid Endianness. */
+      ENDIAN_LITTLE,      /*!< little endian. */
+      ENDIAN_BIG,         /*!< big endian. */
+      ENDIAN_LAST_ITEM    /*!< must be the last item */
+    };
+
     /*! The architectures */
     enum architectures_e {
       ARCH_INVALID = 0, /*!< invalid architecture. */
       ARCH_X86,         /*!< x86 architecture. */
       ARCH_X86_64,      /*!< x86_64 architecture. */
+      ARCH_ARMV7AR,
+      ARCH_ARMV7M,
       ARCH_LAST_ITEM    /*!< must be the last item.  */
     };
 
@@ -82,6 +92,10 @@ namespace triton {
 
         //! Returns true if the architecture is valid.
         bool isValid(void) const;
+
+
+        //! Returns the endianness as triton::arch::endianness_e.
+        triton::uint32 getEndianness(void) const;
 
         //! Returns the architecture as triton::arch::architecture_e.
         triton::uint32 getArchitecture(void) const;
@@ -190,4 +204,3 @@ namespace triton {
 };
 
 #endif /* TRITON_ARCHITECTURE_H */
-

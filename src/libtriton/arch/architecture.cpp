@@ -22,6 +22,11 @@ namespace triton {
       this->callbacks = callbacks;
     }
 
+    triton::uint32 Architecture::getEndianness(void) const {
+      if (!(this->cpu->getEndianness() > triton::arch::ENDIAN_INVALID && this->cpu->getEndianness() < triton::arch::ENDIAN_LAST_ITEM))
+        throw triton::exceptions::Architecture("Architecture::getEndianness(): Invalid Endianness.");
+      return this->cpu->getEndianness();
+    }
 
     triton::uint32 Architecture::getArchitecture(void) const {
       return this->arch;
@@ -42,7 +47,6 @@ namespace triton {
 
       /* Setup global variables */
       this->arch = arch;
-
       /* Allocate and init the good arch */
       switch (this->arch) {
         case triton::arch::ARCH_X86_64:
@@ -253,4 +257,3 @@ namespace triton {
 
   }; /* arch namespace */
 }; /* triton namespace */
-

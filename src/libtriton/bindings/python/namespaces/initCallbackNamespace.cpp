@@ -31,17 +31,17 @@ The CALLBACK namespace contains all kinds of callbacks.
 <hr>
 
 - **CALLBACK.GET_CONCRETE_MEMORY_VALUE**<br>
-The callback takes as unique argument a \ref py_MemoryAccess_page. Callbacks will be called each time that the
+The callback takes as arguments a \ref py_TritonContext_page and a \ref py_MemoryAccess_page. Callbacks will be called each time that the
 Triton library will need a concrete memory value. The callback must return nothing.
 
 - **CALLBACK.GET_CONCRETE_REGISTER_VALUE**<br>
-The callback takes as unique argument a \ref py_Register_page. Callbacks will be called each time that the
+The callback takes as arguments a \ref py_TritonContext_page and a \ref py_Register_page. Callbacks will be called each time that the
 Triton library will need a concrete register value. The callback must return nothing.
 
 - **CALLBACK.SYMBOLIC_SIMPLIFICATION**<br>
-Defines a callback which be called before all symbolic assignments. The callback takes as uniq argument
-an \ref py_AstNode_page and must return a valid \ref py_AstNode_page. The returned node is used as assignment.
-See also the page about \ref SMT_simplification_page.
+Defines a callback which be called before all symbolic assignments. The callback takes as arguments
+a \ref py_TritonContext_page and an \ref py_AstNode_page. This callback must return a valid \ref py_AstNode_page. The returned node is
+used as assignment. See also the page about \ref SMT_simplification_page.
 
 */
 

@@ -239,6 +239,9 @@ namespace triton {
           //! Returns the new symbolic register expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicRegisterExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& reg, const std::string& comment="");
 
+          //! Returns the abstract node expression for x86
+          triton::ast::AbstractNode* createSymbolicX86RegisterExpression(triton::ast::AbstractNode* node, const triton::arch::Register& reg, const triton::arch::Register& parentReg, triton::ast::AbstractNode* origReg);
+
           //! Returns the new symbolic flag expression expression and links this expression to the instruction.
           SymbolicExpression* createSymbolicFlagExpression(triton::arch::Instruction& inst, triton::ast::AbstractNode* node, const triton::arch::Register& flag, const std::string& comment="");
 
@@ -326,4 +329,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICENGINE_H */
-

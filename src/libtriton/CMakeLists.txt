@@ -59,6 +59,7 @@ set(LIBTRITON_SOURCE_FILES
     arch/instruction.cpp
     arch/memoryAccess.cpp
     arch/register.cpp
+    arch/armv7/armv7Specifications.cpp
     arch/x86/x8664Cpu.cpp
     arch/x86/x86Cpu.cpp
     arch/x86/x86Semantics.cpp

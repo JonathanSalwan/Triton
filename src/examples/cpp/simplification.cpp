@@ -52,7 +52,7 @@ int main(int ac, const char **av) {
   api.addCallback(xor_simplification);
 
   /* optional - Update register state */
-  api.setConcreteRegisterValue(api.getRegister(ID_REG_RAX), 12345);
+  api.setConcreteRegisterValue(api.getRegister(ID_REG_X86_RAX), 12345);
 
   for (unsigned int i = 0; trace[i].inst; i++) {
     /* Build an instruction */
@@ -78,4 +78,3 @@ int main(int ac, const char **av) {
 
   return 0;
 }
-

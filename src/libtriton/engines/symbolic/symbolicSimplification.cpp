@@ -36,7 +36,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
-triton::ast::AbstractNode* xor_simplification(triton::ast::AbstractNode* node) {
+triton::ast::AbstractNode* xor_simplification(triton::API& ctx, triton::ast::AbstractNode* node) {
 
   if (node->getKind() == triton::ast::BVXOR_NODE) {
     if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
@@ -58,7 +58,7 @@ Another example (this time in Python) which replaces a node with this rule \f$ (
 
 ~~~~~~~~~~~~~{.py}
 # Rule: if ((a & ~b) | (~a & b)) -> (a ^ b)
-def xor_bitwise(node):
+def xor_bitwise(ctx, node):
 
     def getNot(node):
         a = node.getChildren()[0]
@@ -92,18 +92,19 @@ def xor_bitwise(node):
 
 
 if __name__ == "__main__":
+    ctx = TritonContext()
 
     # Set arch to init engines
-    setArchitecture(ARCH.X86_64)
+    ctx.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    addCallback(xor_bitwise, SYMBOLIC_SIMPLIFICATION)
+    ctx.addCallback(xor_bitwise, SYMBOLIC_SIMPLIFICATION)
 
     a = bv(1, 8)
     b = bv(2, 8)
     c = (~b & a) | (~a & b)
     print 'Expr: ', c
-    c = simplify(c)
+    c = ctx.simplify(c)
     print 'Simp: ', c
 ~~~~~~~~~~~~~
 
@@ -114,8 +115,8 @@ As Triton is able to convert a Triton's AST to a Z3's AST and vice versa, you ca
 to simplify your expression, then, come back to a Triton's AST and apply your own rules.
 
 ~~~~~~~~~~~~~{.py}
->>> var = newSymbolicVariable(8)
->>> a = variable(var)
+>>> var = ctx.newSymbolicVariable(8)
+>>> a = ctx.getAstContext().variable(var)
 >>> b = bv(0x38, 8)
 >>> c = bv(0xde, 8)
 >>> d = bv(0x4f, 8)
@@ -125,7 +126,7 @@ to simplify your expression, then, come back to a Triton's AST and apply your ow
 (bvmul SymVar_0 (bvor (bvand (_ bv56 8) (_ bv222 8)) (_ bv79 8)))
 
 >>> usingZ3 = True
->>> f = simplify(e, usingZ3)
+>>> f = ctx.simplify(e, usingZ3)
 >>> print f
 (bvmul (_ bv95 8) SymVar_0)
 ~~~~~~~~~~~~~
@@ -135,14 +136,14 @@ For example, if we perform a simplification of a bitwise operation (as described
 new expression is not really useful for an humain.
 
 ~~~~~~~~~~~~~{.py}
->>> a = variable(var)
+>>> a = ctx.getAstContext().variable(var)
 >>> b = bv(2, 8)
 >>> c = (~b & a) | (~a & b) # a ^ b
 
 >>> print c
 (bvor (bvand (bvnot (_ bv2 8)) SymVar_0) (bvand (bvnot SymVar_0) (_ bv2 8)))
 
->>> d = simplify(c, True)
+>>> d = ctx.simplify(c, True)
 >>> print d
 (concat ((_ extract 7 2) SymVar_0) (bvnot ((_ extract 1 1) SymVar_0)) ((_ extract 0 0) SymVar_0))
 ~~~~~~~~~~~~~

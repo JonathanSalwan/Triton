@@ -45,6 +45,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_TAINTED, False)
+        self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), False)
 
         inst = Instruction("\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
@@ -54,6 +55,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         self.assertEqual(len(inst.getWrittenRegisters()), 2)
 
         ctx.enableMode(MODE.ONLY_ON_TAINTED, True)
+        self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), True)
 
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
@@ -68,7 +70,11 @@ class TestOnlyTaintedMode(unittest.TestCase):
     def test_2(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
+
+        self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), False)
         ctx.enableMode(MODE.ONLY_ON_TAINTED, True)
+        self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), True)
+
         ctx.taintRegister(ctx.registers.rax)
 
         inst = Instruction("\x48\x89\xc3") # mov rbx, rax
