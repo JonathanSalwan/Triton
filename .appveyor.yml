@@ -22,6 +22,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v140
       PYTHON: "C:\\Python27"
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
@@ -33,6 +34,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v141
       PYTHON: "C:\\Python27"
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
@@ -44,6 +46,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v140
       PYTHON: "C:\\Python27-x64"
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
@@ -55,6 +58,7 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v141
       PYTHON: "C:\\Python27-x64"
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
@@ -80,7 +84,7 @@ install:
 # but I would rather build everything I can with the same toolset:
 #   http://stackoverflow.com/questions/32418766/c-unresolved-external-symbol-sprintf-and-sscanf-in-visual-studio-2015
 # The switch /p:PlatformToolset allows you to override the toolset version specified in the solution/project files :-)
-  - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=v140 /t:capstone_static /m
+  - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
   - cmd: echo Running cmake...
   - cmd: cmake .. -G "%CMAKE_TEMPLATE%"
     # Install LIEF
