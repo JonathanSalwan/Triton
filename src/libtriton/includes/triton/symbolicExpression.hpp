@@ -70,7 +70,7 @@ namespace triton {
           bool isTainted;
 
           //! Constructor.
-          SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
+          TRITON_EXPORT SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
 
           //! Returns the symbolic expression id.
           TRITON_EXPORT triton::usize getId(void) const;

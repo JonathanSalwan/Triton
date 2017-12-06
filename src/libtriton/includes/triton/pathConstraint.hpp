@@ -55,7 +55,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          PathConstraint();
+          TRITON_EXPORT PathConstraint();
 
           //! Constructor by copy.
           TRITON_EXPORT PathConstraint(const PathConstraint &copy);

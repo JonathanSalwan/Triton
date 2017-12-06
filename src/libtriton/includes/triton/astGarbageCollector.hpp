@@ -56,7 +56,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        AstGarbageCollector(const triton::modes::Modes& modes, bool isBackup=false);
+        TRITON_EXPORT AstGarbageCollector(const triton::modes::Modes& modes, bool isBackup=false);
 
         //! Constructor by copy.
         TRITON_EXPORT AstGarbageCollector(const AstGarbageCollector& other);

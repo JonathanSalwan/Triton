@@ -57,14 +57,15 @@ namespace triton {
 
         public:
           //! Constructor.
-          x86Semantics(triton::arch::Architecture* architecture,
-                       triton::engines::symbolic::SymbolicEngine* symbolicEngine,
-                       triton::engines::taint::TaintEngine* taintEngine,
-                       triton::ast::AstContext& astCtxt);
+          TRITON_EXPORT x86Semantics(triton::arch::Architecture* architecture,
+                                     triton::engines::symbolic::SymbolicEngine* symbolicEngine,
+                                     triton::engines::taint::TaintEngine* taintEngine,
+                                     triton::ast::AstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
           TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
+        private:
           //! Aligns the stack (add). Returns the new stack value.
           triton::uint64 alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta);
 

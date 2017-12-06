@@ -43,7 +43,7 @@ namespace triton {
       class AstPythonRepresentation : public AstRepresentationInterface {
         public:
           //! Constructor.
-          AstPythonRepresentation();
+          TRITON_EXPORT AstPythonRepresentation();
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);

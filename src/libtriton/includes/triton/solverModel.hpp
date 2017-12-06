@@ -55,10 +55,10 @@ namespace triton {
 
         public:
           //! Constructor.
-          SolverModel();
+          TRITON_EXPORT SolverModel();
 
           //! Constructor.
-          SolverModel(const std::string& name, triton::uint512 value);
+          TRITON_EXPORT SolverModel(const std::string& name, triton::uint512 value);
 
           //! Constructor by copy.
           TRITON_EXPORT SolverModel(const SolverModel& other);

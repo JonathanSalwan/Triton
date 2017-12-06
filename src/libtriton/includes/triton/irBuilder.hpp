@@ -80,11 +80,11 @@ namespace triton {
 
       public:
         //! Constructor.
-        IrBuilder(triton::arch::Architecture* architecture,
-                  const triton::modes::Modes& modes,
-                  triton::ast::AstContext& astCtxt,
-                  triton::engines::symbolic::SymbolicEngine* symbolicEngine,
-                  triton::engines::taint::TaintEngine* taintEngine);
+        TRITON_EXPORT IrBuilder(triton::arch::Architecture* architecture,
+                                const triton::modes::Modes& modes,
+                                triton::ast::AstContext& astCtxt,
+                                triton::engines::symbolic::SymbolicEngine* symbolicEngine,
+                                triton::engines::taint::TaintEngine* taintEngine);
 
         //! Destructor.
         TRITON_EXPORT virtual ~IrBuilder();

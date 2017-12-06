@@ -61,7 +61,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
+          TRITON_EXPORT PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
 
           //! Constructor by copy.
           TRITON_EXPORT PathManager(const PathManager& copy);

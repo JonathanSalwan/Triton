@@ -53,7 +53,7 @@ namespace triton {
 
       public:
         //! Constructor
-        AstContext(const triton::modes::Modes& modes);
+        TRITON_EXPORT AstContext(const triton::modes::Modes& modes);
 
         //! AST C++ API - bv node builder
         TRITON_EXPORT AbstractNode* bv(triton::uint512 value, triton::uint32 size);
@@ -218,16 +218,16 @@ namespace triton {
         TRITON_EXPORT triton::ast::AstGarbageCollector& getAstGarbageCollector(void);
 
         //! Access to the underliying garbage collector
-        const triton::ast::AstGarbageCollector& getAstGarbageCollector(void) const;
+        TRITON_EXPORT const triton::ast::AstGarbageCollector& getAstGarbageCollector(void) const;
 
         //! Initialize a variable in the context
-        void initVariable(const std::string& name, const triton::uint512& value);
+        TRITON_EXPORT void initVariable(const std::string& name, const triton::uint512& value);
 
         //! Update a variable value in this context
-        void updateVariable(const std::string& name, const triton::uint512& value);
+        TRITON_EXPORT void updateVariable(const std::string& name, const triton::uint512& value);
 
         //! Access a variable value in this context
-        const triton::uint512& getValueForVariable(const std::string& varName) const;
+        TRITON_EXPORT const triton::uint512& getValueForVariable(const std::string& varName) const;
 
         //! Set the representation mode for this astContext
         TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);

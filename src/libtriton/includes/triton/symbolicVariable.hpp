@@ -68,11 +68,11 @@ namespace triton {
 
         public:
           //! Constructor.
-          SymbolicVariable(symkind_e kind,
-                           triton::uint64 kindValue,
-                           triton::usize id,
-                           triton::uint32 size,
-                           const std::string& comment);
+          TRITON_EXPORT SymbolicVariable(symkind_e kind,
+                                         triton::uint64 kindValue,
+                                         triton::usize id,
+                                         triton::uint32 size,
+                                         const std::string& comment);
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicVariable(const SymbolicVariable& copy);

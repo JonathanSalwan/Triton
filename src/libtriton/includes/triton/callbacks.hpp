@@ -89,7 +89,7 @@ namespace triton {
         bool isDefined;
 
         //! Constructor.
-        Callbacks(triton::API& api);
+        TRITON_EXPORT Callbacks(triton::API& api);
 
         //! Adds a GET_CONCRETE_MEMORY_VALUE callback.
         TRITON_EXPORT void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);

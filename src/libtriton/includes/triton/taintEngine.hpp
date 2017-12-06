@@ -74,7 +74,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
+          TRITON_EXPORT TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
 
           //! Constructor by copy.
           TRITON_EXPORT TaintEngine(const TaintEngine& copy);

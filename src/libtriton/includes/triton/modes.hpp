@@ -54,7 +54,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        Modes();
+        TRITON_EXPORT Modes();
 
         //! Constructor.
         TRITON_EXPORT Modes(const Modes& copy);

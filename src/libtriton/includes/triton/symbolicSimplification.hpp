@@ -49,7 +49,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
+          TRITON_EXPORT SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor.
           TRITON_EXPORT SymbolicSimplification(const SymbolicSimplification& copy);

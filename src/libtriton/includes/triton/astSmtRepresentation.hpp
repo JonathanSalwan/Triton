@@ -43,7 +43,7 @@ namespace triton {
       class AstSmtRepresentation : public AstRepresentationInterface {
         public:
           //! Constructor.
-          AstSmtRepresentation();
+          TRITON_EXPORT AstSmtRepresentation();
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);

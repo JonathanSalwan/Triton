@@ -129,11 +129,11 @@ namespace triton {
           triton::usize* symbolicReg;
 
           //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
-          SymbolicEngine(triton::arch::Architecture* architecture,
-                         const triton::modes::Modes& modes,
-                         triton::ast::AstContext& astCtxt,
-                         triton::callbacks::Callbacks* callbacks=nullptr,
-                         bool isBackup=false);
+          TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
+                                       const triton::modes::Modes& modes,
+                                       triton::ast::AstContext& astCtxt,
+                                       triton::callbacks::Callbacks* callbacks=nullptr,
+                                       bool isBackup=false);
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicEngine(const SymbolicEngine& copy);

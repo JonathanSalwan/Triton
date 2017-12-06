@@ -186,7 +186,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
+          TRITON_EXPORT x86Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Copy constructor
           TRITON_EXPORT x86Cpu(const x86Cpu& other);

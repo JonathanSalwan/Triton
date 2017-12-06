@@ -192,7 +192,7 @@ namespace triton {
 
     public:
         //! Constructor.
-        AstDictionaries(bool isBackup=false);
+        TRITON_EXPORT AstDictionaries(bool isBackup=false);
 
         //! Constructor.
         TRITON_EXPORT AstDictionaries(const AstDictionaries& copy);

@@ -53,7 +53,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+          TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model

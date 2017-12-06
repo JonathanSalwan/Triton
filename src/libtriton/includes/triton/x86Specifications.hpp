@@ -49,7 +49,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          x86Specifications(triton::arch::architectures_e);
+          TRITON_EXPORT x86Specifications(triton::arch::architectures_e);
 
           //! Converts a capstone's register id to a triton's register id.
           TRITON_EXPORT triton::arch::registers_e capstoneRegisterToTritonRegister(triton::uint32 id) const;

@@ -297,7 +297,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
+          TRITON_EXPORT x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor
           TRITON_EXPORT x8664Cpu(const x8664Cpu& other);

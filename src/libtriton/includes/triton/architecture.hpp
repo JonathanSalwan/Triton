@@ -61,7 +61,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
+        TRITON_EXPORT Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
 
         //! Returns true if the register ID is a flag.
         TRITON_EXPORT bool isFlag(triton::arch::registers_e regId) const;
