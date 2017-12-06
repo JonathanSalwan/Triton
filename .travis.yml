@@ -109,10 +109,10 @@ matrix:
           env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, PIP_CMD='pip', TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
         # OSX xcode 8.3
-        - os: osx
-          osx_image: xcode8.3
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, PIP_CMD='pip2', TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+        #- os: osx
+        #  osx_image: xcode8.3
+        #  compiler: clang
+        #  env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, PIP_CMD='pip2', TT_DEP_BREW_PKGS='z3', TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
 notifications:
   email: false
