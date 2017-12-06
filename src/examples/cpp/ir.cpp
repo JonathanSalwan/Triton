@@ -33,8 +33,9 @@ struct op trace[] = {
 
 
 int main(int ac, const char **av) {
-
+  /* Init the triton context */
   triton::API api;
+
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 

@@ -109,7 +109,7 @@ after_test:
   # generate artifact
   - cmd: cd src\libtriton\%configuration%
   - cmd: copy ..\..\..\%Z3_PKG_NAME%\bin\libz3.dll libz3.dll
-  - cmd: move triton.dll triton.pyd
+  - cmd: copy triton.dll triton.pyd
   - cmd: if "%platform%"=="Win32" 7z a -t7z ..\..\..\..\triton.x86.release.7z *
   - cmd: if "%platform%"=="x64" 7z a -t7z ..\..\..\..\triton.x64.release.7z *
 
