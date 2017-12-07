@@ -65,7 +65,10 @@ else()
     )
 endif()
 
-set(CMAKE_BUILD_TYPE Release)
+# Defaut build type as Release
+if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
+    set(CMAKE_BUILD_TYPE Release)
+endif()
 
 if(GCOV)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
