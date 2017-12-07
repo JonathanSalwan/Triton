@@ -20,6 +20,11 @@ class TestAstConversion(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
 
+        # Show seed use for tests
+        seed = random.random()
+        print "seed use is : ", seed
+        random.seed(seed)
+
         self.astCtxt = self.Triton.getAstContext()
 
         self.sv1 = self.Triton.newSymbolicVariable(8)
