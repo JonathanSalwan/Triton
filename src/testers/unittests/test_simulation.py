@@ -494,11 +494,11 @@ class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
         self.Triton.enableSymbolicEngine(False)
         super(TestSymbolicEngineDisable, self).setUp()
 
-    @unittest.skip("Not possible.")
+    @unittest.skip("Not possible")
     def test_seed_coverage(self):
         pass
 
-    @unittest.skip("Not possiblen")
+    @unittest.skip("Not possible")
     def test_defcamp_2015(self):
         pass
 

@@ -45,10 +45,16 @@ namespace triton {
       /* From Triton to Z3 */
       z3::expr expr = z3ast.convert(node);
 
-      /* Evaluate expr over the simplify function */
-      triton::uint512 nbResult{Z3_get_numeral_string(expr.ctx(), expr.simplify())};
+      /* Simplify the expression to get a constant */
+      expr = expr.simplify();
 
-      return nbResult;
+      triton::uint512 res = 0;
+      if (expr.get_sort().is_bool())
+        res = Z3_get_bool_value(expr.ctx(), expr) == Z3_L_TRUE ? true : false;
+      else
+        res = triton::uint512{Z3_get_numeral_string(expr.ctx(), expr)};
+
+      return res;
     }
 
   }; /* ast namespace */
