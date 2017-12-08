@@ -21,12 +21,35 @@ namespace triton {
     namespace symbolic {
 
       SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::usize id, symkind_e kind, const std::string& comment)
-        : originRegister() {
+        : originMemory(),
+          originRegister() {
         this->comment       = comment;
         this->ast           = node;
         this->id            = id;
         this->isTainted     = false;
         this->kind          = kind;
+      }
+
+
+      SymbolicExpression::SymbolicExpression(const SymbolicExpression& other) {
+        this->ast            = other.ast;
+        this->comment        = other.comment;
+        this->id             = other.id;
+        this->isTainted      = other.isTainted;
+        this->kind           = other.kind;
+        this->originMemory   = other.originMemory;
+        this->originRegister = other.originRegister;
+      }
+
+
+      void SymbolicExpression::operator=(const SymbolicExpression& other) {
+        this->ast            = other.ast;
+        this->comment        = other.comment;
+        this->id             = other.id;
+        this->isTainted      = other.isTainted;
+        this->kind           = other.kind;
+        this->originMemory   = other.originMemory;
+        this->originRegister = other.originRegister;
       }
 
 

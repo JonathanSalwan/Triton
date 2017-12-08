@@ -195,7 +195,7 @@ namespace triton {
         TRITON_EXPORT AstDictionaries(bool isBackup=false);
 
         //! Constructor.
-        TRITON_EXPORT AstDictionaries(const AstDictionaries& copy);
+        TRITON_EXPORT AstDictionaries(const AstDictionaries& other);
 
         //! Destructor.
         TRITON_EXPORT virtual ~AstDictionaries();

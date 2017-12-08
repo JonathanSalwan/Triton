@@ -18,8 +18,13 @@ namespace triton {
       }
 
 
-      PathConstraint::PathConstraint(const PathConstraint &copy) {
-        this->branches = copy.branches;
+      PathConstraint::PathConstraint(const PathConstraint &other) {
+        this->branches = other.branches;
+      }
+
+
+      void PathConstraint::operator=(const PathConstraint &other) {
+        this->branches = other.branches;
       }
 
 

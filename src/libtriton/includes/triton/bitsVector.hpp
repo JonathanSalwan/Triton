@@ -49,7 +49,7 @@ namespace triton {
         TRITON_EXPORT BitsVector(triton::uint32 high, triton::uint32 low);
 
         //! Constructor by copy.
-        TRITON_EXPORT BitsVector(const triton::arch::BitsVector& copy);
+        TRITON_EXPORT BitsVector(const triton::arch::BitsVector& other);
 
         //! Returns the highest bit
         TRITON_EXPORT triton::uint32 getHigh(void) const;

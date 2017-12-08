@@ -36,7 +36,7 @@ namespace triton {
      *  \brief This class is used as operand wrapper.
      */
     class OperandWrapper {
-      public:
+      private:
         //! If the operand is an immediate, this attribute is filled.
         triton::arch::Immediate imm;
 
@@ -49,6 +49,7 @@ namespace triton {
         //! The type of the operand.
         triton::uint32 type;
 
+      public:
         //! Immediate constructor.
         TRITON_EXPORT OperandWrapper(const triton::arch::Immediate& imm);
 
@@ -57,6 +58,9 @@ namespace triton {
 
         //! Register constructor.
         TRITON_EXPORT OperandWrapper(const triton::arch::Register& reg);
+
+        //! Constructor by copy.
+        TRITON_EXPORT OperandWrapper(const OperandWrapper& other);
 
         //! Returns the abstract type of the operand.
         TRITON_EXPORT triton::uint32 getType(void) const;

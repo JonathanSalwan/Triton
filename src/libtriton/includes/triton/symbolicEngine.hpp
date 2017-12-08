@@ -136,7 +136,7 @@ namespace triton {
                                        bool isBackup=false);
 
           //! Constructor by copy.
-          TRITON_EXPORT SymbolicEngine(const SymbolicEngine& copy);
+          TRITON_EXPORT SymbolicEngine(const SymbolicEngine& other);
 
           //! Destructor.
           TRITON_EXPORT ~SymbolicEngine();

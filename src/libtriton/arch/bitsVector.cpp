@@ -25,9 +25,9 @@ namespace triton {
     }
 
 
-    BitsVector::BitsVector(const BitsVector &copy) {
-      this->high = copy.high;
-      this->low  = copy.low;
+    BitsVector::BitsVector(const BitsVector &other) {
+      this->high = other.high;
+      this->low  = other.low;
     }
 
 

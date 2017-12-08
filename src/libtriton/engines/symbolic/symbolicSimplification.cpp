@@ -166,8 +166,8 @@ namespace triton {
       }
 
 
-      SymbolicSimplification::SymbolicSimplification(const SymbolicSimplification& copy) {
-        this->copy(copy);
+      SymbolicSimplification::SymbolicSimplification(const SymbolicSimplification& other) {
+        this->copy(other);
       }
 
 

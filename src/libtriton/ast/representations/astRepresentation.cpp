@@ -33,6 +33,17 @@ namespace triton {
       }
 
 
+      AstRepresentation::AstRepresentation(const AstRepresentation& other)
+      : AstRepresentation() {
+        this->mode = other.mode;
+      }
+
+
+      void AstRepresentation::operator=(const AstRepresentation& other) {
+        this->mode = other.mode;
+      }
+
+
       triton::uint32 AstRepresentation::getMode(void) const {
         return this->mode;
       }

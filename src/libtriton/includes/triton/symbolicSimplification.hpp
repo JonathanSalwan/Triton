@@ -52,7 +52,7 @@ namespace triton {
           TRITON_EXPORT SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor.
-          TRITON_EXPORT SymbolicSimplification(const SymbolicSimplification& copy);
+          TRITON_EXPORT SymbolicSimplification(const SymbolicSimplification& other);
 
           //! Processes all recorded simplifications. Returns the simplified node.
           TRITON_EXPORT triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node) const;

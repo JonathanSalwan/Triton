@@ -28,15 +28,16 @@ namespace triton {
       this->symbolized  = false;
     }
 
-    AbstractNode::AbstractNode(const AbstractNode& copy, AstContext& ctxt): ctxt(ctxt) {
-      this->eval        = copy.eval;
-      this->kind        = copy.kind;
-      this->parents     = copy.parents;
-      this->size        = copy.size;
-      this->symbolized  = copy.symbolized;
 
-      for (triton::uint32 index = 0; index < copy.children.size(); index++)
-        this->children.push_back(triton::ast::newInstance(copy.children[index]));
+    AbstractNode::AbstractNode(const AbstractNode& other, AstContext& ctxt): ctxt(ctxt) {
+      this->eval        = other.eval;
+      this->kind        = other.kind;
+      this->parents     = other.parents;
+      this->size        = other.size;
+      this->symbolized  = other.symbolized;
+
+      for (triton::uint32 index = 0; index < other.children.size(); index++)
+        this->children.push_back(triton::ast::newInstance(other.children[index]));
     }
 
 
@@ -1574,8 +1575,8 @@ namespace triton {
     }
 
 
-    template ConcatNode::ConcatNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
-    template ConcatNode::ConcatNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
     template <typename T>
     ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
       for (AbstractNode* expr : exprs)
@@ -1843,8 +1844,8 @@ namespace triton {
     }
 
 
-    template LandNode::LandNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
-    template LandNode::LandNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
     template <typename T>
     LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
       for (AbstractNode* expr : exprs)
@@ -1981,8 +1982,8 @@ namespace triton {
     }
 
 
-    template LorNode::LorNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
-    template LorNode::LorNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::vector<AbstractNode*>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::list<AbstractNode*>& exprs, AstContext& ctxt);
     template <typename T>
     LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
       for (AbstractNode* expr : exprs)

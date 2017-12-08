@@ -117,6 +117,16 @@ namespace triton {
       }
 
 
+      SolverEngine::SolverEngine(const SolverEngine& other) {
+        this->symbolicEngine = other.symbolicEngine;
+      }
+
+
+      void SolverEngine::operator=(const SolverEngine& other) {
+        this->symbolicEngine = other.symbolicEngine;
+      }
+
+
       std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};

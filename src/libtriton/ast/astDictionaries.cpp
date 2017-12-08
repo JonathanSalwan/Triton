@@ -22,8 +22,8 @@ namespace triton {
     }
 
 
-    AstDictionaries::AstDictionaries(const AstDictionaries& copy) {
-      this->copy(copy);
+    AstDictionaries::AstDictionaries(const AstDictionaries& other) {
+      this->copy(other);
     }
 
 

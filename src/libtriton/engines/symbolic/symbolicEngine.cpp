@@ -124,12 +124,12 @@ namespace triton {
       }
 
 
-      SymbolicEngine::SymbolicEngine(const SymbolicEngine& copy)
-        : triton::engines::symbolic::SymbolicSimplification(copy),
-          triton::engines::symbolic::PathManager(copy),
-          astCtxt(copy.astCtxt),
-          modes(copy.modes) {
-        this->copy(copy);
+      SymbolicEngine::SymbolicEngine(const SymbolicEngine& other)
+        : triton::engines::symbolic::SymbolicSimplification(other),
+          triton::engines::symbolic::PathManager(other),
+          astCtxt(other.astCtxt),
+          modes(other.modes) {
+        this->copy(other);
       }
 
 

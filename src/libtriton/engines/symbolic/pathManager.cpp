@@ -22,10 +22,10 @@ namespace triton {
       }
 
 
-      PathManager::PathManager(const PathManager& copy)
-        : modes(copy.modes),
-          astCtxt(copy.astCtxt) {
-        this->copy(copy);
+      PathManager::PathManager(const PathManager& other)
+        : modes(other.modes),
+          astCtxt(other.astCtxt) {
+        this->copy(other);
       }
 
 

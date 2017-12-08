@@ -75,7 +75,10 @@ namespace triton {
                                          const std::string& comment);
 
           //! Constructor by copy.
-          TRITON_EXPORT SymbolicVariable(const SymbolicVariable& copy);
+          TRITON_EXPORT SymbolicVariable(const SymbolicVariable& other);
+
+          //! Operator.
+          TRITON_EXPORT void operator=(const SymbolicVariable& other);
 
           //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
           TRITON_EXPORT symkind_e getKind(void) const;

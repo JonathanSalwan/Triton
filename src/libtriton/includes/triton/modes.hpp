@@ -57,7 +57,7 @@ namespace triton {
         TRITON_EXPORT Modes();
 
         //! Constructor.
-        TRITON_EXPORT Modes(const Modes& copy);
+        TRITON_EXPORT Modes(const Modes& other);
 
         //! Returns true if the mode is enabled.
         TRITON_EXPORT bool isModeEnabled(enum mode_e mode) const;

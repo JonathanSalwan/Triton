@@ -78,7 +78,7 @@ namespace triton {
         TRITON_EXPORT AbstractNode(enum kind_e kind, AstContext& ctxt);
 
         //! Constructor by copy.
-        TRITON_EXPORT AbstractNode(const AbstractNode& copy, AstContext& ctxt);
+        TRITON_EXPORT AbstractNode(const AbstractNode& other, AstContext& ctxt);
 
         //! Destructor.
         TRITON_EXPORT virtual ~AbstractNode();
@@ -426,7 +426,7 @@ namespace triton {
     class ConcatNode : public AbstractNode {
       public:
         TRITON_EXPORT ConcatNode(AbstractNode* expr1, AbstractNode* expr2);
-        template <typename T> TRITON_EXPORT ConcatNode(const T& exprs, AstContext& ctxt);
+        template <typename T> ConcatNode(const T& exprs, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -485,7 +485,7 @@ namespace triton {
     class LandNode : public AbstractNode {
       public:
         TRITON_EXPORT LandNode(AbstractNode* expr1, AbstractNode* expr2);
-        template <typename T> TRITON_EXPORT LandNode(const T& exprs, AstContext& ctxt);
+        template <typename T> LandNode(const T& exprs, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -513,7 +513,7 @@ namespace triton {
     class LorNode : public AbstractNode {
       public:
         TRITON_EXPORT LorNode(AbstractNode* expr1, AbstractNode* expr2);
-        template <typename T> TRITON_EXPORT LorNode(const T& exprs, AstContext& ctxt);
+        template <typename T> LorNode(const T& exprs, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };

@@ -77,7 +77,7 @@ namespace triton {
           TRITON_EXPORT TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
 
           //! Constructor by copy.
-          TRITON_EXPORT TaintEngine(const TaintEngine& copy);
+          TRITON_EXPORT TaintEngine(const TaintEngine& other);
 
           //! Copies a TaintEngine.
           TRITON_EXPORT void operator=(const TaintEngine& other);

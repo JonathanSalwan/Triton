@@ -14,7 +14,22 @@
 namespace triton {
   namespace ast {
 
-    AstContext::AstContext(const triton::modes::Modes& modes) : astGarbageCollector(modes) {
+    AstContext::AstContext(const AstContext& other)
+      : astGarbageCollector(other.astGarbageCollector),
+        astRepresentation(other.astRepresentation) {
+      this->valueMapping = other.valueMapping;
+    }
+
+
+    AstContext::AstContext(const triton::modes::Modes& modes)
+      : astGarbageCollector(modes) {
+    }
+
+
+    void AstContext::operator=(const AstContext& other) {
+      this->astGarbageCollector = other.astGarbageCollector;
+      this->astRepresentation = other.astRepresentation;
+      this->valueMapping = other.valueMapping;
     }
 
 
@@ -298,8 +313,8 @@ namespace triton {
     }
 
 
-    template AbstractNode* AstContext::concat(const std::vector<AbstractNode*>& exprs);
-    template AbstractNode* AstContext::concat(const std::list<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::concat(const std::vector<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::concat(const std::list<AbstractNode*>& exprs);
     template <typename T>
     AbstractNode* AstContext::concat(const T& exprs) {
       AbstractNode* node = new(std::nothrow) ConcatNode(exprs, *this);
@@ -363,8 +378,8 @@ namespace triton {
     }
 
 
-    template AbstractNode* AstContext::land(const std::vector<AbstractNode*>& exprs);
-    template AbstractNode* AstContext::land(const std::list<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::land(const std::vector<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::land(const std::list<AbstractNode*>& exprs);
     template <typename T>
     AbstractNode* AstContext::land(const T& exprs) {
       AbstractNode* node = new(std::nothrow) LandNode(exprs, *this);
@@ -398,8 +413,8 @@ namespace triton {
     }
 
 
-    template AbstractNode* AstContext::lor(const std::vector<AbstractNode*>& exprs);
-    template AbstractNode* AstContext::lor(const std::list<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::lor(const std::vector<AbstractNode*>& exprs);
+    template TRITON_EXPORT AbstractNode* AstContext::lor(const std::list<AbstractNode*>& exprs);
     template <typename T>
     AbstractNode* AstContext::lor(const T& exprs) {
       AbstractNode* node = new(std::nothrow) LorNode(exprs, *this);

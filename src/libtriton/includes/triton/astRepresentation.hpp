@@ -62,6 +62,12 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT AstRepresentation();
 
+          //! Constructor.
+          TRITON_EXPORT AstRepresentation(const AstRepresentation& other);
+
+          //! Operator.
+          TRITON_EXPORT void operator=(const AstRepresentation& other);
+
           //! Returns the representation mode.
           TRITON_EXPORT triton::uint32 getMode(void) const;
 

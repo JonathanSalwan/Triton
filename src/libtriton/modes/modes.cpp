@@ -17,8 +17,8 @@ namespace triton {
     }
 
 
-    Modes::Modes(const Modes& copy) {
-      this->copy(copy);
+    Modes::Modes(const Modes& other) {
+      this->copy(other);
     }
 
 

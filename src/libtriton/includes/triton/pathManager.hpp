@@ -64,7 +64,7 @@ namespace triton {
           TRITON_EXPORT PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
 
           //! Constructor by copy.
-          TRITON_EXPORT PathManager(const PathManager& copy);
+          TRITON_EXPORT PathManager(const PathManager& other);
 
           //! Returns the logical conjunction vector of path constraints.
           TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;

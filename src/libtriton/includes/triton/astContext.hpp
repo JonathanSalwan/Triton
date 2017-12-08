@@ -55,6 +55,12 @@ namespace triton {
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::Modes& modes);
 
+        //! Constructor by copy
+        TRITON_EXPORT AstContext(const AstContext& other);
+
+        //! Operator
+        TRITON_EXPORT void operator=(const AstContext& other);
+
         //! AST C++ API - bv node builder
         TRITON_EXPORT AbstractNode* bv(triton::uint512 value, triton::uint32 size);
 
@@ -162,7 +168,7 @@ namespace triton {
 
         //! AST C++ API - concat node builder
         template <typename T>
-        TRITON_EXPORT AbstractNode* concat(const T& exprs);
+        AbstractNode* concat(const T& exprs);
 
         //! AST C++ API - decimal node builder
         TRITON_EXPORT AbstractNode* decimal(triton::uint512 value);
@@ -184,7 +190,7 @@ namespace triton {
 
         //! AST C++ API - land node builder
         template <typename T>
-        TRITON_EXPORT AbstractNode* land(const T& exprs);
+        AbstractNode* land(const T& exprs);
 
         //! AST C++ API - let node builder
         TRITON_EXPORT AbstractNode* let(std::string alias, AbstractNode* expr2, AbstractNode* expr3);
@@ -197,7 +203,7 @@ namespace triton {
 
         //! AST C++ API - lor node builder
         template <typename T>
-        TRITON_EXPORT AbstractNode* lor(const T& exprs);
+        AbstractNode* lor(const T& exprs);
 
         //! AST C++ API - reference node builder
         TRITON_EXPORT AbstractNode* reference(triton::engines::symbolic::SymbolicExpression& expr);

@@ -32,13 +32,23 @@ namespace triton {
       }
 
 
-      SymbolicVariable::SymbolicVariable(const SymbolicVariable& copy) {
-        this->comment         = copy.comment;
-        this->id              = copy.id;
-        this->kind            = copy.kind;
-        this->kindValue       = copy.kindValue;
-        this->name            = copy.name;
-        this->size            = copy.size;
+      SymbolicVariable::SymbolicVariable(const SymbolicVariable& other) {
+        this->comment         = other.comment;
+        this->id              = other.id;
+        this->kind            = other.kind;
+        this->kindValue       = other.kindValue;
+        this->name            = other.name;
+        this->size            = other.size;
+      }
+
+
+      void SymbolicVariable::operator=(const SymbolicVariable& other) {
+        this->comment         = other.comment;
+        this->id              = other.id;
+        this->kind            = other.kind;
+        this->kindValue       = other.kindValue;
+        this->name            = other.name;
+        this->size            = other.size;
       }
 
 

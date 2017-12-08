@@ -72,6 +72,12 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
 
+          //! Constructor by copy.
+          TRITON_EXPORT SymbolicExpression(const SymbolicExpression& other);
+
+          //! Operator.
+          TRITON_EXPORT void operator=(const SymbolicExpression& other);
+
           //! Returns the symbolic expression id.
           TRITON_EXPORT triton::usize getId(void) const;
 

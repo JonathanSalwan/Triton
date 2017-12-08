@@ -31,6 +31,14 @@ namespace triton {
     }
 
 
+    OperandWrapper::OperandWrapper(const OperandWrapper& other)
+      : imm(other.imm),
+        mem(other.mem),
+        reg(other.reg) {
+      this->type = other.type;
+    }
+
+
     triton::uint32 OperandWrapper::getType(void) const {
       return this->type;
     }
