@@ -45,22 +45,23 @@ namespace triton {
 
     /*! \brief The prototype of a GET_CONCRETE_MEMORY_VALUE callback.
      *
-     * \details The callback takes as unique argument a memory access. Callbacks will
-     * be called each time that the Triton library will need a concrete memory value.
+     * \details The callback takes an API context as first argument and a memory access as second argument.
+     * Callbacks will be called each time that the Triton library will need a concrete memory value.
      */
     using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)>;
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
-     * \details The callback takes as unique argument a register. Callbacks will be
-     * called each time that the Triton library will need a concrete register value.
+     * \details The callback takes an API context as first argument and a register as second argument.
+     * Callbacks will be called each time that the Triton library will need a concrete register value.
      */
     using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::Register&)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
-     * \details The callback takes as uniq argument a triton::ast::AbstractNode and must return a valid triton::ast::AbstractNode.
-     * The returned node is used as assignment. See also the page about \ref SMT_simplification_page for more information.
+     * \details The callback takes as arguments an API context as first argument and an abstract node as second argument
+     * The callback must return a valid abstract node which will be used as assignment according to the instruction semantics.
+     * See also the page about \ref SMT_simplification_page for more information about semantic transformations.
      */
     using symbolicSimplificationCallback = ComparableFunctor<triton::ast::AbstractNode*(triton::API&, triton::ast::AbstractNode*)>;
 
