@@ -16,8 +16,8 @@ namespace triton {
 
     AstContext::AstContext(const AstContext& other)
       : astGarbageCollector(other.astGarbageCollector),
-        astRepresentation(other.astRepresentation) {
-      this->valueMapping = other.valueMapping;
+        astRepresentation(other.astRepresentation),
+        valueMapping(other.valueMapping) {
     }
 
 
@@ -26,10 +26,11 @@ namespace triton {
     }
 
 
-    void AstContext::operator=(const AstContext& other) {
+    AstContext& AstContext::operator=(const AstContext& other) {
       this->astGarbageCollector = other.astGarbageCollector;
       this->astRepresentation = other.astRepresentation;
       this->valueMapping = other.valueMapping;
+      return *this;
     }
 
 

@@ -57,8 +57,9 @@ namespace triton {
       }
 
 
-      void SolverModel::operator=(const SolverModel& other) {
+      SolverModel& SolverModel::operator=(const SolverModel& other) {
         this->copy(other);
+        return *this;
       }
 
 

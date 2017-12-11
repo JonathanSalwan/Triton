@@ -42,13 +42,14 @@ namespace triton {
       }
 
 
-      void SymbolicVariable::operator=(const SymbolicVariable& other) {
+      SymbolicVariable& SymbolicVariable::operator=(const SymbolicVariable& other) {
         this->comment         = other.comment;
         this->id              = other.id;
         this->kind            = other.kind;
         this->kindValue       = other.kindValue;
         this->name            = other.name;
         this->size            = other.size;
+        return *this;
       }
 
 

@@ -42,7 +42,7 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::operator=(const SymbolicExpression& other) {
+      SymbolicExpression& SymbolicExpression::operator=(const SymbolicExpression& other) {
         this->ast            = other.ast;
         this->comment        = other.comment;
         this->id             = other.id;
@@ -50,6 +50,7 @@ namespace triton {
         this->kind           = other.kind;
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
+        return *this;
       }
 
 

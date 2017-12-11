@@ -60,7 +60,8 @@ namespace triton {
           //! Constructor by copy.
           TRITON_EXPORT PathConstraint(const PathConstraint &other);
 
-          TRITON_EXPORT void operator=(const PathConstraint &other);
+          //! Operator.
+          TRITON_EXPORT PathConstraint& operator=(const PathConstraint &other);
 
           //! Adds a branch to the path constraint.
           TRITON_EXPORT void addBranchConstraint(bool taken, triton::uint64 srdAddr, triton::uint64 dstAddr, triton::ast::AbstractNode* pc);

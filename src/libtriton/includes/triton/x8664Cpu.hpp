@@ -306,7 +306,7 @@ namespace triton {
           TRITON_EXPORT virtual ~x8664Cpu();
 
           //! Copies a x8664Cpu class.
-          TRITON_EXPORT void operator=(const x8664Cpu& other);
+          TRITON_EXPORT x8664Cpu& operator=(const x8664Cpu& other);
 
           //! Returns true if regId is a GRP.
           TRITON_EXPORT bool isGPR(triton::arch::registers_e regId) const;

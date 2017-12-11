@@ -64,8 +64,8 @@ namespace triton {
         //! Destructor.
         TRITON_EXPORT ~AstGarbageCollector();
 
-        //! Copies an AstGarbageCollectors.
-        TRITON_EXPORT void operator=(const AstGarbageCollector& other);
+        //! Copies an AstGarbageCollector.
+        TRITON_EXPORT AstGarbageCollector& operator=(const AstGarbageCollector& other);
 
         //! Go through every allocated nodes and free them.
         TRITON_EXPORT void freeAllAstNodes(void);

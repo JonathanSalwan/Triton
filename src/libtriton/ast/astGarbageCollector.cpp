@@ -29,10 +29,11 @@ namespace triton {
     }
 
 
-    void AstGarbageCollector::operator=(const AstGarbageCollector& other) {
+    AstGarbageCollector& AstGarbageCollector::operator=(const AstGarbageCollector& other) {
       triton::ast::AstDictionaries::operator=(other);
       // We assume modes didn't change
       this->copy(other);
+      return *this;
     }
 
 

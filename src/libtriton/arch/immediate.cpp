@@ -90,9 +90,10 @@ namespace triton {
     }
 
 
-    void Immediate::operator=(const Immediate& other) {
+    Immediate& Immediate::operator=(const Immediate& other) {
       BitsVector::operator=(other);
       this->copy(other);
+      return *this;
     }
 
 

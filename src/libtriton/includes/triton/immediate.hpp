@@ -74,7 +74,7 @@ namespace triton {
         TRITON_EXPORT void setValue(triton::uint64 v);
 
         //! Copy an Immediate.
-        TRITON_EXPORT void operator=(const Immediate& other);
+        TRITON_EXPORT Immediate& operator=(const Immediate& other);
     };
 
     //! Displays an Immediate.

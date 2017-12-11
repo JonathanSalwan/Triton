@@ -103,7 +103,7 @@ namespace triton {
         TRITON_EXPORT bool operator!=(const Register& other) const;
 
         //! Copies a Register.
-        TRITON_EXPORT void operator=(const Register& other);
+        TRITON_EXPORT Register& operator=(const Register& other);
     };
 
     //! Displays a Register.

@@ -23,8 +23,9 @@ namespace triton {
       }
 
 
-      void PathConstraint::operator=(const PathConstraint &other) {
+      PathConstraint& PathConstraint::operator=(const PathConstraint &other) {
         this->branches = other.branches;
+        return *this;
       }
 
 

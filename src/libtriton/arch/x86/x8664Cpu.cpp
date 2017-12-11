@@ -278,8 +278,9 @@ namespace triton {
       }
 
 
-      void x8664Cpu::operator=(const x8664Cpu& other) {
+      x8664Cpu& x8664Cpu::operator=(const x8664Cpu& other) {
         this->copy(other);
+        return *this;
       }
 
 

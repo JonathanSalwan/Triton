@@ -35,8 +35,9 @@ namespace triton {
     }
 
 
-    void AstDictionaries::operator=(const AstDictionaries& other) {
+    AstDictionaries& AstDictionaries::operator=(const AstDictionaries& other) {
       this->copy(other);
+      return *this;
     }
 
 

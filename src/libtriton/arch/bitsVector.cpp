@@ -93,9 +93,10 @@ namespace triton {
     }
 
 
-    void BitsVector::operator=(const BitsVector& other) {
+    BitsVector& BitsVector::operator=(const BitsVector& other) {
       this->high = other.high;
       this->low  = other.low;
+      return *this;
     }
 
 

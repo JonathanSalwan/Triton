@@ -129,10 +129,11 @@ namespace triton {
       }
 
 
-      void PathManager::operator=(const PathManager& other) {
+      PathManager& PathManager::operator=(const PathManager& other) {
         // We assume astContext didn't change
         // We assume modes didn't change
         this->copy(other);
+        return *this;
       }
 
     }; /* symbolic namespace */

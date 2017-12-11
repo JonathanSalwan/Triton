@@ -159,7 +159,7 @@ namespace triton {
         TRITON_EXPORT void setLeaAst(triton::ast::AbstractNode* ast);
 
         //! Copies a MemoryAccess.
-        TRITON_EXPORT void operator=(const MemoryAccess& other);
+        TRITON_EXPORT MemoryAccess& operator=(const MemoryAccess& other);
     };
 
     //! Displays an MemoryAccess.

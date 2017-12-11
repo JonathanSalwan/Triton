@@ -80,7 +80,7 @@ namespace triton {
           TRITON_EXPORT TaintEngine(const TaintEngine& other);
 
           //! Copies a TaintEngine.
-          TRITON_EXPORT void operator=(const TaintEngine& other);
+          TRITON_EXPORT TaintEngine& operator=(const TaintEngine& other);
 
           //! Enables or disables the taint engine.
           TRITON_EXPORT void enable(bool flag);

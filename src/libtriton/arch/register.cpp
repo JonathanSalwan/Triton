@@ -106,9 +106,10 @@ namespace triton {
     }
 
 
-    void Register::operator=(const Register& other) {
+    Register& Register::operator=(const Register& other) {
       BitsVector::operator=(other);
       this->copy(other);
+      return *this;
     }
 
 

@@ -76,7 +76,7 @@ namespace triton {
           TRITON_EXPORT SymbolicExpression(const SymbolicExpression& other);
 
           //! Operator.
-          TRITON_EXPORT void operator=(const SymbolicExpression& other);
+          TRITON_EXPORT SymbolicExpression& operator=(const SymbolicExpression& other);
 
           //! Returns the symbolic expression id.
           TRITON_EXPORT triton::usize getId(void) const;

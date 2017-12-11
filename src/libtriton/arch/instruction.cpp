@@ -41,8 +41,9 @@ namespace triton {
     }
 
 
-    void Instruction::operator=(const Instruction& other) {
+    Instruction& Instruction::operator=(const Instruction& other) {
       this->copy(other);
+      return *this;
     }
 
 

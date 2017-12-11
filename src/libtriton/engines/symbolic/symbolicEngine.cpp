@@ -133,7 +133,7 @@ namespace triton {
       }
 
 
-      void SymbolicEngine::operator=(const SymbolicEngine& other) {
+      SymbolicEngine& SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
@@ -155,6 +155,8 @@ namespace triton {
         // We assume astCtxt didn't change
         // We assume modes didn't change
         this->copy(other);
+
+        return *this;
       }
 
 

@@ -64,7 +64,7 @@ namespace triton {
         TRITON_EXPORT triton::uint512 getMaxValue(void) const;
 
         //! Copy a BitsVector.
-        TRITON_EXPORT void operator=(const BitsVector& other);
+        TRITON_EXPORT BitsVector& operator=(const BitsVector& other);
 
         //! Sets the highest bit position
         TRITON_EXPORT void setHigh(triton::uint32 v);

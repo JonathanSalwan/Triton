@@ -59,7 +59,7 @@ namespace triton {
           TRITON_EXPORT SolverEngine(const SolverEngine& other);
 
           //! Operator.
-          TRITON_EXPORT void operator=(const SolverEngine& other);
+          TRITON_EXPORT SolverEngine& operator=(const SolverEngine& other);
 
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model

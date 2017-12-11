@@ -82,7 +82,7 @@ namespace triton {
           TRITON_EXPORT void clearPathConstraints(void);
 
           //! Copies a PathManager.
-          TRITON_EXPORT void operator=(const PathManager& other);
+          TRITON_EXPORT PathManager& operator=(const PathManager& other);
       };
 
     /*! @} End of symbolic namespace */

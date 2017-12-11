@@ -188,8 +188,9 @@ namespace triton {
       }
 
 
-      void SymbolicSimplification::operator=(const SymbolicSimplification& other) {
+      SymbolicSimplification& SymbolicSimplification::operator=(const SymbolicSimplification& other) {
         this->copy(other);
+        return *this;
       }
 
     }; /* symbolic namespace */

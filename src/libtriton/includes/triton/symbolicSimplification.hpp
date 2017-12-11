@@ -58,7 +58,7 @@ namespace triton {
           TRITON_EXPORT triton::ast::AbstractNode* processSimplification(triton::ast::AbstractNode* node) const;
 
           //! Copies a SymbolicSimplification.
-          TRITON_EXPORT void operator=(const SymbolicSimplification& other);
+          TRITON_EXPORT SymbolicSimplification& operator=(const SymbolicSimplification& other);
       };
 
     /*! @} End of symbolic namespace */

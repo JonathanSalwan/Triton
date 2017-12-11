@@ -45,11 +45,11 @@ namespace triton {
         //! The AST garbage collector interface.
         triton::ast::AstGarbageCollector astGarbageCollector;
 
-        //! Map a concrete value for a variable name.
-        std::map<std::string, triton::uint512> valueMapping;
-
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
+
+        //! Map a concrete value for a variable name.
+        std::map<std::string, triton::uint512> valueMapping;
 
       public:
         //! Constructor
@@ -59,7 +59,7 @@ namespace triton {
         TRITON_EXPORT AstContext(const AstContext& other);
 
         //! Operator
-        TRITON_EXPORT void operator=(const AstContext& other);
+        TRITON_EXPORT AstContext& operator=(const AstContext& other);
 
         //! AST C++ API - bv node builder
         TRITON_EXPORT AbstractNode* bv(triton::uint512 value, triton::uint32 size);

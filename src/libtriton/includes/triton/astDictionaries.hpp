@@ -201,7 +201,7 @@ namespace triton {
         TRITON_EXPORT virtual ~AstDictionaries();
 
         //! Copies an AstDictionaries.
-        TRITON_EXPORT void operator=(const AstDictionaries& other);
+        TRITON_EXPORT AstDictionaries& operator=(const AstDictionaries& other);
 
         //! Browses into dictionaries.
         TRITON_EXPORT triton::ast::AbstractNode* browseAstDictionaries(triton::ast::AbstractNode* node);

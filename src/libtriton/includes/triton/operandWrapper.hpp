@@ -108,7 +108,7 @@ namespace triton {
         TRITON_EXPORT triton::uint512 getConcreteValue(void) const;
 
         //! Copies a OperandWrapper.
-        TRITON_EXPORT void operator=(const OperandWrapper& other);
+        TRITON_EXPORT OperandWrapper& operator=(const OperandWrapper& other);
 
         //! Tests two OperandWrappers for equality.
         TRITON_EXPORT bool operator==(const OperandWrapper& other) const;

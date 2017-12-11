@@ -39,8 +39,9 @@ namespace triton {
       }
 
 
-      void AstRepresentation::operator=(const AstRepresentation& other) {
+      AstRepresentation& AstRepresentation::operator=(const AstRepresentation& other) {
         this->mode = other.mode;
+        return *this;
       }
 
 

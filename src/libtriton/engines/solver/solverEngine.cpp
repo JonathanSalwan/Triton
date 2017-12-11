@@ -122,8 +122,9 @@ namespace triton {
       }
 
 
-      void SolverEngine::operator=(const SolverEngine& other) {
+      SolverEngine& SolverEngine::operator=(const SolverEngine& other) {
         this->symbolicEngine = other.symbolicEngine;
+        return *this;
       }
 
 

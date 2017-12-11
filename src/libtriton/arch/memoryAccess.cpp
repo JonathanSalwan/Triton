@@ -183,9 +183,10 @@ namespace triton {
     }
 
 
-    void MemoryAccess::operator=(const MemoryAccess& other) {
+    MemoryAccess& MemoryAccess::operator=(const MemoryAccess& other) {
       BitsVector::operator=(other);
       this->copy(other);
+      return *this;
     }
 
 

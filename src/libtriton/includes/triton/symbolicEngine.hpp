@@ -142,7 +142,7 @@ namespace triton {
           TRITON_EXPORT ~SymbolicEngine();
 
           //! Copies a SymbolicEngine.
-          TRITON_EXPORT void operator=(const SymbolicEngine& other);
+          TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);
 
           //! Creates a new symbolic expression.
           TRITON_EXPORT SymbolicExpression* newSymbolicExpression(triton::ast::AbstractNode* node, symkind_e kind, const std::string& comment="");

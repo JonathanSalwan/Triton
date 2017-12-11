@@ -137,11 +137,12 @@ namespace triton {
     }
 
 
-    void OperandWrapper::operator=(const OperandWrapper& other) {
+    OperandWrapper& OperandWrapper::operator=(const OperandWrapper& other) {
       this->imm  = other.imm;
       this->mem  = other.mem;
       this->reg  = other.reg;
       this->type = other.type;
+      return *this;
     }
 
 

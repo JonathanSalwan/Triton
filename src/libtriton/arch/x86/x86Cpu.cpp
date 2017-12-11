@@ -165,8 +165,9 @@ namespace triton {
       }
 
 
-      void x86Cpu::operator=(const x86Cpu& other) {
+      x86Cpu& x86Cpu::operator=(const x86Cpu& other) {
         this->copy(other);
+        return *this;
       }
 
 

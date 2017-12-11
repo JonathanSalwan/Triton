@@ -66,7 +66,7 @@ namespace triton {
         TRITON_EXPORT void enableMode(enum mode_e mode, bool flag);
 
         //! Copies a Modes.
-        TRITON_EXPORT void operator=(const Modes& other);
+        TRITON_EXPORT Modes& operator=(const Modes& other);
     };
 
   /*! @} End of modes namespace */

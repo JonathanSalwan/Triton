@@ -64,7 +64,7 @@ namespace triton {
           TRITON_EXPORT SolverModel(const SolverModel& other);
 
           //! Copies a SolverModel
-          TRITON_EXPORT void operator=(const SolverModel& other);
+          TRITON_EXPORT SolverModel& operator=(const SolverModel& other);
 
           //! Returns the name of the variable.
           TRITON_EXPORT const std::string& getName(void) const;
