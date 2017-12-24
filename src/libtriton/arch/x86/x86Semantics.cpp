@@ -33,6 +33,7 @@ own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks
 Mnemonic                     | Extensions | Description
 -----------------------------|------------|----------------------------------------------------
 AAD                          |            | ASCII Adjust AX Before Division
+AAM                          |            | ASCII Adjust AX After Multiply
 ADC                          |            | Add with Carry
 ADCX                         | adx        | Unsigned Integer Addition of Two Operands with Carry Flag
 ADD                          |            | Add
@@ -347,6 +348,7 @@ namespace triton {
       bool x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
           case ID_INS_AAD:            this->aad_s(inst);          break;
+          case ID_INS_AAM:            this->aam_s(inst);          break;
           case ID_INS_ADC:            this->adc_s(inst);          break;
           case ID_INS_ADCX:           this->adcx_s(inst);         break;
           case ID_INS_ADD:            this->add_s(inst);          break;
@@ -2141,6 +2143,42 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAD operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Upate symbolic flags */
+        this->pf_s(inst, expr, dsttmp);
+        this->sf_s(inst, expr, dsttmp);
+        this->zf_s(inst, expr, dsttmp);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::aam_s(triton::arch::Instruction& inst) {
+        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, BYTE_SIZE)); /* D4 0A */
+        auto  src2   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+        auto  dst    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AX));
+        auto  dsttmp = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+
+        /* D4 ib */
+        if (inst.operands.size() == 1)
+          src1 = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.concat(
+                      this->astCtxt.bvudiv(op2, op1),
+                      this->astCtxt.bvurem(op2, op1)
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAM operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
