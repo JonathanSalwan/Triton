@@ -70,7 +70,7 @@ namespace triton {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION: {
           for (auto& function: this->symbolicSimplificationCallbacks) {
             // Reinject node in next callback
-            node = function(api, node);
+            node = function(this->api, node);
             if (node == nullptr)
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You cannot return a nullptr node.");
           }
@@ -88,7 +88,7 @@ namespace triton {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
            for (auto& function: this->getConcreteMemoryValueCallbacks) {
-             function(api, mem);
+             function(this->api, mem);
            }
           break;
         }
@@ -103,7 +103,7 @@ namespace triton {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE: {
            for (auto& function: this->getConcreteRegisterValueCallbacks) {
-             function(api, reg);
+             function(this->api, reg);
            }
           break;
         }
