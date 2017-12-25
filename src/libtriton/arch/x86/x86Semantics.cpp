@@ -35,6 +35,7 @@ Mnemonic                     | Extensions | Description
 AAA                          |            | ASCII Adjust After Addition
 AAD                          |            | ASCII Adjust AX Before Division
 AAM                          |            | ASCII Adjust AX After Multiply
+AAS                          |            | ASCII Adjust AL After Subtraction
 ADC                          |            | Add with Carry
 ADCX                         | adx        | Unsigned Integer Addition of Two Operands with Carry Flag
 ADD                          |            | Add
@@ -351,6 +352,7 @@ namespace triton {
           case ID_INS_AAA:            this->aaa_s(inst);          break;
           case ID_INS_AAD:            this->aad_s(inst);          break;
           case ID_INS_AAM:            this->aam_s(inst);          break;
+          case ID_INS_AAS:            this->aas_s(inst);          break;
           case ID_INS_ADC:            this->adc_s(inst);          break;
           case ID_INS_ADCX:           this->adcx_s(inst);         break;
           case ID_INS_ADD:            this->add_s(inst);          break;
@@ -2307,6 +2309,58 @@ namespace triton {
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::aas_s(triton::arch::Instruction& inst) {
+        auto  src1   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+        auto  src2   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AH));
+        auto  src3   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
+        auto  dst    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AX));
+        auto  dsttmp = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      // if
+                      this->astCtxt.lor(
+                        this->astCtxt.bvugt(
+                          this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, src1.getBitSize())),
+                          this->astCtxt.bv(9, src1.getBitSize())
+                        ),
+                        this->astCtxt.equal(op3, this->astCtxt.bvtrue())
+                      ),
+                      // then
+                      this->astCtxt.concat(
+                        this->astCtxt.bvsub(op2, this->astCtxt.bv(1, src2.getBitSize())),
+                        this->astCtxt.bvand(
+                          this->astCtxt.bvsub(op1, this->astCtxt.bv(6, src1.getBitSize())),
+                          this->astCtxt.bv(0xf, src1.getBitSize())
+                        )
+                      ),
+                      // else
+                      this->astCtxt.concat(
+                        op2,
+                        this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, src1.getBitSize()))
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAS operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Upate symbolic flags */
+        this->afAaa_s(inst, expr, dsttmp, op1, op3);
+        this->cfAaa_s(inst, expr, dsttmp, op1, op3);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

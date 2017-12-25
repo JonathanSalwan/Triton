@@ -422,6 +422,9 @@ namespace triton {
           //! The AAM semantics.
           void aam_s(triton::arch::Instruction& inst);
 
+          //! The AAS semantics.
+          void aas_s(triton::arch::Instruction& inst);
+
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
 
