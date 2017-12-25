@@ -90,10 +90,26 @@ namespace triton {
                     bool vol=false);
 
           //! The AF semantics.
+          void afAaa_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op3,
+                       bool vol=false);
+
+          //! The AF semantics.
           void afNeg_s(triton::arch::Instruction& inst,
                        triton::engines::symbolic::SymbolicExpression* parent,
                        triton::arch::OperandWrapper& dst,
                        triton::ast::AbstractNode* op1,
+                       bool vol=false);
+
+          //! The CF semantics.
+          void cfAaa_s(triton::arch::Instruction& inst,
+                       triton::engines::symbolic::SymbolicExpression* parent,
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::AbstractNode* op1,
+                       triton::ast::AbstractNode* op3,
                        bool vol=false);
 
           //! The CF semantics.
@@ -396,6 +412,9 @@ namespace triton {
                        triton::arch::OperandWrapper& dst,
                        triton::ast::AbstractNode* op2,
                        bool vol=false);
+
+          //! The AAA semantics.
+          void aaa_s(triton::arch::Instruction& inst);
 
           //! The AAD semantics.
           void aad_s(triton::arch::Instruction& inst);

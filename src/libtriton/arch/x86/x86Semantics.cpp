@@ -32,6 +32,7 @@ own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks
 
 Mnemonic                     | Extensions | Description
 -----------------------------|------------|----------------------------------------------------
+AAA                          |            | ASCII Adjust After Addition
 AAD                          |            | ASCII Adjust AX Before Division
 AAM                          |            | ASCII Adjust AX After Multiply
 ADC                          |            | Add with Carry
@@ -347,6 +348,7 @@ namespace triton {
 
       bool x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
+          case ID_INS_AAA:            this->aaa_s(inst);          break;
           case ID_INS_AAD:            this->aad_s(inst);          break;
           case ID_INS_AAM:            this->aam_s(inst);          break;
           case ID_INS_ADC:            this->adc_s(inst);          break;
@@ -856,6 +858,39 @@ namespace triton {
       }
 
 
+      void x86Semantics::afAaa_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op3,
+                                 bool vol) {
+
+        auto bvSize = dst.getBitSize();
+
+        /*
+         * Create the semantic.
+         * af = 1 if ((AL AND 0FH) > 9) or (AF = 1) then 0
+         */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.lor(
+                        this->astCtxt.bvugt(
+                          this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, bvSize)),
+                          this->astCtxt.bv(9, bvSize)
+                        ),
+                        this->astCtxt.equal(op3, this->astCtxt.bvtrue())
+                      ),
+                      this->astCtxt.bv(1, 1),
+                      this->astCtxt.bv(0, 1)
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_AF), "Adjust flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_AF), parent->isTainted);
+      }
+
+
       void x86Semantics::afNeg_s(triton::arch::Instruction& inst,
                                  triton::engines::symbolic::SymbolicExpression* parent,
                                  triton::arch::OperandWrapper& dst,
@@ -890,6 +925,39 @@ namespace triton {
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_AF), parent->isTainted);
+      }
+
+
+      void x86Semantics::cfAaa_s(triton::arch::Instruction& inst,
+                                 triton::engines::symbolic::SymbolicExpression* parent,
+                                 triton::arch::OperandWrapper& dst,
+                                 triton::ast::AbstractNode* op1,
+                                 triton::ast::AbstractNode* op3,
+                                 bool vol) {
+
+        auto bvSize = dst.getBitSize();
+
+        /*
+         * Create the semantic.
+         * cf = 1 if ((AL AND 0FH) > 9) or (AF = 1) then 0
+         */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.lor(
+                        this->astCtxt.bvugt(
+                          this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, bvSize)),
+                          this->astCtxt.bv(9, bvSize)
+                        ),
+                        this->astCtxt.equal(op3, this->astCtxt.bvtrue())
+                      ),
+                      this->astCtxt.bv(1, 1),
+                      this->astCtxt.bv(0, 1)
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_CF), "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_CF), parent->isTainted);
       }
 
 
@@ -2113,6 +2181,58 @@ namespace triton {
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_ZF), parent->isTainted);
+      }
+
+
+      void x86Semantics::aaa_s(triton::arch::Instruction& inst) {
+        auto  src1   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+        auto  src2   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AH));
+        auto  src3   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
+        auto  dst    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AX));
+        auto  dsttmp = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AL));
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      // if
+                      this->astCtxt.lor(
+                        this->astCtxt.bvugt(
+                          this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, src1.getBitSize())),
+                          this->astCtxt.bv(9, src1.getBitSize())
+                        ),
+                        this->astCtxt.equal(op3, this->astCtxt.bvtrue())
+                      ),
+                      // then
+                      this->astCtxt.concat(
+                        this->astCtxt.bvadd(op2, this->astCtxt.bv(1, src2.getBitSize())),
+                        this->astCtxt.bvand(
+                          this->astCtxt.bvadd(op1, this->astCtxt.bv(6, src1.getBitSize())),
+                          this->astCtxt.bv(0xf, src1.getBitSize())
+                        )
+                      ),
+                      // else
+                      this->astCtxt.concat(
+                        op2,
+                        this->astCtxt.bvand(op1, this->astCtxt.bv(0xf, src1.getBitSize()))
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AAA operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Upate symbolic flags */
+        this->afAaa_s(inst, expr, dsttmp, op1, op3);
+        this->cfAaa_s(inst, expr, dsttmp, op1, op3);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
