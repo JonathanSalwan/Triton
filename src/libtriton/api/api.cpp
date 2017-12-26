@@ -317,56 +317,67 @@ namespace triton {
 
 
   triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr) const {
+    this->checkArchitecture();
     return this->arch.getConcreteMemoryValue(addr);
   }
 
 
   triton::uint512 API::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks) const {
+    this->checkArchitecture();
     return this->arch.getConcreteMemoryValue(mem, execCallbacks);
   }
 
 
   std::vector<triton::uint8> API::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks) const {
+    this->checkArchitecture();
     return this->arch.getConcreteMemoryAreaValue(baseAddr, size, execCallbacks);
   }
 
 
   triton::uint512 API::getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks) const {
+    this->checkArchitecture();
     return this->arch.getConcreteRegisterValue(reg, execCallbacks);
   }
 
 
   void API::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
+    this->checkArchitecture();
     this->arch.setConcreteMemoryValue(addr, value);
   }
 
 
   void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
+    this->checkArchitecture();
     this->arch.setConcreteMemoryValue(mem, value);
   }
 
 
   void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+    this->checkArchitecture();
     this->arch.setConcreteMemoryAreaValue(baseAddr, values);
   }
 
 
   void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+    this->checkArchitecture();
     this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
   }
 
 
   void API::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
+    this->checkArchitecture();
     this->arch.setConcreteRegisterValue(reg, value);
   }
 
 
   bool API::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+    this->checkArchitecture();
     return this->arch.isMemoryMapped(baseAddr, size);
   }
 
 
   void API::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+    this->checkArchitecture();
     this->arch.unmapMemory(baseAddr, size);
   }
 
@@ -439,8 +450,8 @@ namespace triton {
 
   bool API::processing(triton::arch::Instruction& inst) {
     this->checkArchitecture();
-    this->disassembly(inst);
-    return this->buildSemantics(inst);
+    this->arch.disassembly(inst);
+    return this->irBuilder->buildSemantics(inst);
   }
 
 
@@ -449,7 +460,7 @@ namespace triton {
 
   void API::checkIrBuilder(void) const {
     if (!this->irBuilder)
-      throw triton::exceptions::API("API::checkIrBuilder(): IR builder is undefined.");
+      throw triton::exceptions::API("API::checkIrBuilder(): IR builder is undefined, you should define an architecture first.");
   }
 
 
@@ -610,7 +621,7 @@ namespace triton {
 
   void API::checkSymbolic(void) const {
     if (!this->symbolic)
-      throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined.");
+      throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined, you should define an architecture first.");
   }
 
 
@@ -972,7 +983,7 @@ namespace triton {
 
   void API::checkSolver(void) const {
     if (!this->solver)
-      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined.");
+      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined, you should define an architecture first.");
   }
 
 
@@ -993,7 +1004,7 @@ namespace triton {
 
   void API::checkZ3Interface(void) const {
     if (!this->z3Interface)
-      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined.");
+      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined, you should define an architecture first.");
   }
 
 
@@ -1014,7 +1025,7 @@ namespace triton {
 
   void API::checkTaint(void) const {
     if (!this->taint)
-      throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined.");
+      throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined, you should define an architecture first.");
   }
 
 

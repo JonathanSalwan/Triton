@@ -444,10 +444,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &function, &mode);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "addCallback(): Architecture is not defined.");
-
         if (function == nullptr || !PyCallable_Check(function))
           return PyErr_Format(PyExc_TypeError, "addCallback(): Expects a function as first argument.");
 
@@ -590,10 +586,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &se, &mem);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Architecture is not defined.");
-
         if (se == nullptr || (!PySymbolicExpression_Check(se)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Expects a SymbolicExpression as first argument.");
 
@@ -622,10 +614,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &se, &reg);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Architecture is not defined.");
-
         if (se == nullptr || (!PySymbolicExpression_Check(se)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a SymbolicExpression as first argument.");
 
@@ -648,10 +636,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_buildSemantics(PyObject* self, PyObject* inst) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "buildSemantics(): Architecture is not defined.");
-
         if (!PyInstruction_Check(inst))
           return PyErr_Format(PyExc_TypeError, "buildSemantics(): Expects an Instruction as argument.");
 
@@ -667,10 +651,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_buildSymbolicImmediate(PyObject* self, PyObject* imm) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Architecture is not defined.");
-
         if (!PyImmediate_Check(imm))
           return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Expects an Immediate as argument.");
 
@@ -684,10 +664,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_buildSymbolicMemory(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Architecture is not defined.");
-
         if (!PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Expects an MemoryAccess as argument.");
 
@@ -701,10 +677,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_buildSymbolicRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Expects an Register as argument.");
 
@@ -718,10 +690,12 @@ namespace triton {
 
 
       static PyObject* TritonContext_clearPathConstraints(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "clearPathConstraints(): Architecture is not defined.");
-        PyTritonContext_AsTritonContext(self)->clearPathConstraints();
+        try {
+          PyTritonContext_AsTritonContext(self)->clearPathConstraints();
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
 
         Py_INCREF(Py_None);
         return Py_None;
@@ -729,30 +703,32 @@ namespace triton {
 
 
       static PyObject* TritonContext_concretizeAllMemory(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeAllMemory(): Architecture is not defined.");
-        PyTritonContext_AsTritonContext(self)->concretizeAllMemory();
+        try {
+          PyTritonContext_AsTritonContext(self)->concretizeAllMemory();
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
       static PyObject* TritonContext_concretizeAllRegister(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeAllRegister(): Architecture is not defined.");
-        PyTritonContext_AsTritonContext(self)->concretizeAllRegister();
+        try {
+          PyTritonContext_AsTritonContext(self)->concretizeAllRegister();
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
         Py_INCREF(Py_None);
         return Py_None;
       }
 
 
       static PyObject* TritonContext_concretizeMemory(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeMemory(): Architecture is not defined.");
-
         /* If mem is an address */
         if (PyLong_Check(mem) || PyInt_Check(mem)) {
           try {
@@ -783,10 +759,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_concretizeRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "concretizeRegister(): Expects a Register as argument.");
 
@@ -810,10 +782,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Architecture is not defined.");
 
         if (exprId == nullptr || (!PyLong_Check(exprId) && !PyInt_Check(exprId)))
           return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects an integer as first argument.");
@@ -844,10 +812,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &comment);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Architecture is not defined.");
-
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a MemoryAccess as first argument.");
 
@@ -873,10 +837,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &comment);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Architecture is not defined.");
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a Register as first argument.");
@@ -905,10 +865,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Architecture is not defined.");
 
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
@@ -948,10 +904,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &mem, &comment);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Architecture is not defined.");
-
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
 
@@ -967,8 +919,8 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
         triton::arch::MemoryAccess arg3 = *PyMemoryAccess_AsMemoryAccess(mem);
 
         try {
@@ -990,10 +942,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &reg, &comment);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Architecture is not defined.");
-
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
 
@@ -1009,9 +957,9 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
-        triton::arch::Register arg3 = *PyRegister_AsRegister(reg);
+        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Register     arg3 = *PyRegister_AsRegister(reg);
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->createSymbolicRegisterExpression(arg1, arg2, arg3, ccomment));
@@ -1031,10 +979,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &inst, &node, &comment);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Architecture is not defined.");
-
         if (inst == nullptr || (!PyInstance_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
 
@@ -1047,8 +991,8 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->createSymbolicVolatileExpression(arg1, arg2, ccomment));
@@ -1060,10 +1004,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_disassembly(PyObject* self, PyObject* inst) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "disassembly(): Architecture is not defined.");
-
         if (!PyInstruction_Check(inst))
           return PyErr_Format(PyExc_TypeError, "disassembly(): Expects an Instruction as argument.");
 
@@ -1086,10 +1026,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mode, &flag);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableMode(): Architecture is not defined.");
-
         if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
           return PyErr_Format(PyExc_TypeError, "enableMode(): Expects a MODE as argument.");
 
@@ -1109,10 +1045,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_enableSymbolicEngine(PyObject* self, PyObject* flag) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Architecture is not defined.");
-
         if (!PyBool_Check(flag))
           return PyErr_Format(PyExc_TypeError, "enableSymbolicEngine(): Expects an boolean as argument.");
 
@@ -1129,10 +1061,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_enableTaintEngine(PyObject* self, PyObject* flag) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "enableTaintEngine(): Architecture is not defined.");
-
         if (!PyBool_Check(flag))
           return PyErr_Format(PyExc_TypeError, "enableTaintEngine(): Expects an boolean as argument.");
 
@@ -1149,10 +1077,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_evaluateAstViaZ3(PyObject* self, PyObject* node) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "evaluateAstViaZ3(): Architecture is not defined.");
-
         if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "evaluateAstViaZ3(): Expects a AstNode as argument.");
 
@@ -1174,10 +1098,6 @@ namespace triton {
       static PyObject* TritonContext_getAllRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAllRegisters(): Architecture is not defined.");
-
         try {
           triton::uint32 index = 0;
           auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
@@ -1195,7 +1115,12 @@ namespace triton {
 
 
       static PyObject* TritonContext_getArchitecture(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getArchitecture());
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getArchitecture());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1211,10 +1136,6 @@ namespace triton {
 
       static PyObject* TritonContext_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAstDictionariesStats(): Architecture is not defined.");
 
         try {
           std::map<std::string, triton::usize> stats = PyTritonContext_AsTritonContext(self)->getAstDictionariesStats();
@@ -1232,10 +1153,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getAstFromId(PyObject* self, PyObject* symExprId) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAstFromId(): Architecture is not defined.");
-
         if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "getAstFromId(): Expects an integer as argument.");
 
@@ -1249,11 +1166,12 @@ namespace triton {
 
 
       static PyObject* TritonContext_getAstRepresentationMode(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getAstRepresentationMode(): Architecture is not defined.");
-
-        return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getAstRepresentationMode());
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getAstRepresentationMode());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1265,10 +1183,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &addr, &size);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getConcreteMemoryAreaValue(): Architecture is not defined.");
 
         try {
           std::vector<triton::uint8> vv = PyTritonContext_AsTritonContext(self)->getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
@@ -1291,10 +1205,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getConcreteMemoryValue(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getConcreteMemoryValue(): Architecture is not defined.");
-
         try {
           if (PyLong_Check(mem) || PyInt_Check(mem))
               return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getConcreteMemoryValue(PyLong_AsUint64(mem)));
@@ -1310,10 +1220,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getConcreteRegisterValue(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "getConcreteRegisterValue(): Expects a Register as argument.");
 
@@ -1327,10 +1233,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getConcreteSymbolicVariableValue(PyObject* self, PyObject* symVar) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getConcreteSymbolicVariableValue(): Architecture is not defined.");
-
         if (!PySymbolicVariable_Check(symVar))
           return PyErr_Format(PyExc_TypeError, "getConcreteSymbolicVariableValue(): Expects a SymbolicVariable as argument.");
 
@@ -1345,10 +1247,6 @@ namespace triton {
 
       static PyObject* TritonContext_getModel(PyObject* self, PyObject* node) {
         PyObject* ret = nullptr;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getModel(): Architecture is not defined.");
 
         if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "getModel(): Expects a AstNode as argument.");
@@ -1375,10 +1273,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &limit);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getModels(): Architecture is not defined.");
 
         if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects a AstNode as first argument.");
@@ -1413,10 +1307,6 @@ namespace triton {
       static PyObject* TritonContext_getParentRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getParentRegisters(): Architecture is not defined.");
-
         try {
           triton::uint32 index = 0;
           auto regs = PyTritonContext_AsTritonContext(self)->getParentRegisters();
@@ -1437,10 +1327,6 @@ namespace triton {
       static PyObject* TritonContext_getPathConstraints(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
-
         try {
           triton::uint32 index = 0;
           const std::vector<triton::engines::symbolic::PathConstraint>& pc = PyTritonContext_AsTritonContext(self)->getPathConstraints();
@@ -1458,10 +1344,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getPathConstraintsAst(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getPathConstraintsAst(): Architecture is not defined.");
-
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathConstraintsAst());
         }
@@ -1473,10 +1355,6 @@ namespace triton {
 
       static PyObject* TritonContext_getRegister(PyObject* self, PyObject* regIn) {
         triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getRegister(): Architecture is not defined.");
 
         if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
           return PyErr_Format(PyExc_TypeError, "getRegister(): Expects an id as argument.");
@@ -1493,20 +1371,26 @@ namespace triton {
 
 
       static PyObject* TritonContext_getRegisterBitSize(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterBitSize());
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterBitSize());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_getRegisterSize(PyObject* self, PyObject* noarg) {
-        return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterSize());
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterSize());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_getSymbolicExpressionFromId(PyObject* self, PyObject* symExprId) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicExpressionFromId(): Architecture is not defined.");
-
         if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "getSymbolicExpressionFromId(): Expects an integer as argument.");
 
@@ -1521,10 +1405,6 @@ namespace triton {
 
       static PyObject* TritonContext_getSymbolicExpressions(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
 
         try {
           const auto& expressions = PyTritonContext_AsTritonContext(self)->getSymbolicExpressions();
@@ -1544,10 +1424,6 @@ namespace triton {
       static PyObject* TritonContext_getSymbolicMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Architecture is not defined.");
-
         try {
           auto regs = PyTritonContext_AsTritonContext(self)->getSymbolicMemory();
 
@@ -1565,10 +1441,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicMemoryId(PyObject* self, PyObject* addr) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryId(): Architecture is not defined.");
-
         if (!PyLong_Check(addr) && !PyInt_Check(addr))
           return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryId(): Expects an integer as argument.");
 
@@ -1582,10 +1454,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicMemoryValue(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryValue(): Architecture is not defined.");
-
         if (!PyLong_Check(mem) && !PyInt_Check(mem) && !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryValue(): Expects an integer or a MemoryAccess as argument.");
 
@@ -1602,10 +1470,6 @@ namespace triton {
 
       static PyObject* TritonContext_getSymbolicRegisters(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisters(): Architecture is not defined.");
 
         try {
           auto regs = PyTritonContext_AsTritonContext(self)->getSymbolicRegisters();
@@ -1624,10 +1488,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicRegisterId(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Expects a Register as argument.");
 
@@ -1641,10 +1501,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicRegisterValue(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterValue(): Expects a Register as argument.");
 
@@ -1658,10 +1514,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicVariableFromId(PyObject* self, PyObject* symVarId) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromId(): Architecture is not defined.");
-
         if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
           return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromId(): Expects an integer as argument.");
 
@@ -1675,10 +1527,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicVariableFromName(PyObject* self, PyObject* symVarName) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromName(): Architecture is not defined.");
-
         if (!PyString_Check(symVarName))
           return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromName(): Expects a string as argument.");
 
@@ -1694,10 +1542,6 @@ namespace triton {
 
       static PyObject* TritonContext_getSymbolicVariables(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicVariables(): Architecture is not defined.");
 
         try {
           const auto& variables = PyTritonContext_AsTritonContext(self)->getSymbolicVariables();
@@ -1717,10 +1561,6 @@ namespace triton {
       static PyObject* TritonContext_getTaintedMemory(PyObject* self, PyObject* noarg) {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getTaintedMemory(): Architecture is not defined.");
 
         try {
           std::set<triton::uint64> addresses = PyTritonContext_AsTritonContext(self)->getTaintedMemory();
@@ -1744,10 +1584,6 @@ namespace triton {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getTaintedRegisters(): Architecture is not defined.");
-
         try {
           std::set<const triton::arch::Register*> registers = PyTritonContext_AsTritonContext(self)->getTaintedRegisters();
 
@@ -1770,10 +1606,6 @@ namespace triton {
         PyObject* ret = nullptr;
         triton::usize size = 0, index = 0;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getTaintedSymbolicExpressions(): Architecture is not defined.");
-
         try {
           auto expressions = PyTritonContext_AsTritonContext(self)->getTaintedSymbolicExpressions();
 
@@ -1793,23 +1625,29 @@ namespace triton {
 
 
       static PyObject* TritonContext_isArchitectureValid(PyObject* self, PyObject* noarg) {
-        if (PyTritonContext_AsTritonContext(self)->isArchitectureValid() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isArchitectureValid() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isFlag(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isFlag(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "isFlag(): Expects a Register as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1821,10 +1659,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Architecture is not defined.");
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Expects a base address (integer) as first argument.");
@@ -1847,148 +1681,162 @@ namespace triton {
 
 
       static PyObject* TritonContext_isMemorySymbolized(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isMemorySymbolized(): Architecture is not defined.");
+        try {
+          if (PyMemoryAccess_Check(mem)) {
+            if (PyTritonContext_AsTritonContext(self)->isMemorySymbolized(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
+              Py_RETURN_TRUE;
+          }
 
-        if (PyMemoryAccess_Check(mem)) {
-          if (PyTritonContext_AsTritonContext(self)->isMemorySymbolized(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
+          else if (PyLong_Check(mem) || PyInt_Check(mem)) {
+            if (PyTritonContext_AsTritonContext(self)->isMemorySymbolized(PyLong_AsUint64(mem)) == true)
+              Py_RETURN_TRUE;
+          }
+
+          else
+            return PyErr_Format(PyExc_TypeError, "isMemorySymbolized(): Expects a MemoryAccess or an integer as argument.");
         }
-
-        else if (PyLong_Check(mem) || PyInt_Check(mem)) {
-          if (PyTritonContext_AsTritonContext(self)->isMemorySymbolized(PyLong_AsUint64(mem)) == true)
-            Py_RETURN_TRUE;
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
-        else
-          return PyErr_Format(PyExc_TypeError, "isMemorySymbolized(): Expects a MemoryAccess or an integer as argument.");
 
         Py_RETURN_FALSE;
       }
 
 
       static PyObject* TritonContext_isMemoryTainted(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isMemoryTainted(): Architecture is not defined.");
+        try {
+          if (PyMemoryAccess_Check(mem)) {
+            if (PyTritonContext_AsTritonContext(self)->isMemoryTainted(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
+              Py_RETURN_TRUE;
+          }
 
-        if (PyMemoryAccess_Check(mem)) {
-          if (PyTritonContext_AsTritonContext(self)->isMemoryTainted(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
+          else if (PyLong_Check(mem) || PyInt_Check(mem)) {
+            if (PyTritonContext_AsTritonContext(self)->isMemoryTainted(PyLong_AsUint64(mem)) == true)
+              Py_RETURN_TRUE;
+          }
+
+          else
+            return PyErr_Format(PyExc_TypeError, "isMemoryTainted(): Expects a MemoryAccess or an integer as argument.");
         }
-
-        else if (PyLong_Check(mem) || PyInt_Check(mem)) {
-          if (PyTritonContext_AsTritonContext(self)->isMemoryTainted(PyLong_AsUint64(mem)) == true)
-            Py_RETURN_TRUE;
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
-        else
-          return PyErr_Format(PyExc_TypeError, "isMemoryTainted(): Expects a MemoryAccess or an integer as argument.");
 
         Py_RETURN_FALSE;
       }
 
 
       static PyObject* TritonContext_isRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "isRegister(): Expects a Register as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isRegister(*PyRegister_AsRegister(reg)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isRegister(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isRegisterSymbolized(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isRegisterSymbolized(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "isRegisterSymbolized(): Expects a Register as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isRegisterSymbolized(*PyRegister_AsRegister(reg)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isRegisterSymbolized(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isRegisterTainted(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "isRegisterTainted(): Expects a Register as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isRegisterTainted(*PyRegister_AsRegister(reg)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isRegisterTainted(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isRegisterValid(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "isRegisterValid(): Expects a Register as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isRegisterValid(*PyRegister_AsRegister(reg)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isRegisterValid(*PyRegister_AsRegister(reg)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isSymbolicEngineEnabled(PyObject* self, PyObject* noarg) {
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicEngineEnabled(): Architecture is not defined.");
-
-        if (PyTritonContext_AsTritonContext(self)->isSymbolicEngineEnabled() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isSymbolicEngineEnabled() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isSymbolicExpressionIdExists(PyObject* self, PyObject* symExprId) {
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isSymbolicExpressionIdExists(): Architecture is not defined.");
-
         if (!PyInt_Check(symExprId) && !PyLong_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "isSymbolicExpressionIdExists(): Expects an integer as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isSymbolicExpressionIdExists(PyLong_AsUsize(symExprId)) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isSymbolicExpressionIdExists(PyLong_AsUsize(symExprId)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isModeEnabled(PyObject* self, PyObject* mode) {
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isModeEnabled(): Architecture is not defined.");
-
         if (!PyInt_Check(mode) && !PyLong_Check(mode))
           return PyErr_Format(PyExc_TypeError, "isModeEnabled(): Expects a MODE as argument.");
 
-        if (PyTritonContext_AsTritonContext(self)->isModeEnabled(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode))) == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isModeEnabled(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode))) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
       static PyObject* TritonContext_isTaintEngineEnabled(PyObject* self, PyObject* noarg) {
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "isTaintEngineEnabled(): Architecture is not defined.");
-
-        if (PyTritonContext_AsTritonContext(self)->isTaintEngineEnabled() == true)
-          Py_RETURN_TRUE;
-        Py_RETURN_FALSE;
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isTaintEngineEnabled() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -1999,10 +1847,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &comment);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Architecture is not defined.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a AstNode as first argument.");
@@ -2030,10 +1874,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &size, &comment);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Architecture is not defined.");
-
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects an integer as first argument.");
 
@@ -2053,10 +1893,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_processing(PyObject* self, PyObject* inst) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "processing(): Architecture is not defined.");
-
         if (!PyInstruction_Check(inst))
           return PyErr_Format(PyExc_TypeError, "processing(): Expects an Instruction as argument.");
 
@@ -2091,10 +1927,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &function, &mode);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "removeCallback(): Architecture is not defined.");
 
         if (function == nullptr || !PyCallable_Check(function))
           return PyErr_Format(PyExc_TypeError, "removeCallback(): Expects a function as first argument.");
@@ -2134,10 +1966,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_resetEngines(PyObject* self, PyObject* noarg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "resetEngines(): Architecture is not defined.");
-
         try {
           PyTritonContext_AsTritonContext(self)->resetEngines();
         }
@@ -2191,10 +2019,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &baseAddr, &values);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Architecture is not defined.");
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Expects an integer as first argument.");
@@ -2263,10 +2087,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &value);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Architecture is not defined.");
-
         /* setConcreteMemoryValue(integer, integer) */
         if (mem != nullptr && (PyLong_Check(mem) || PyInt_Check(mem))) {
           if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
@@ -2316,10 +2136,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &value);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Architecture is not defined.");
-
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a Register as first argument.");
 
@@ -2349,10 +2165,6 @@ namespace triton {
         if (symVar == nullptr || !PySymbolicVariable_Check(symVar))
           return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Bad argument type.");
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Architecture is not defined.");
-
         if (value == nullptr)
           return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument as integer value.");
 
@@ -2374,10 +2186,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &flag);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Architecture is not defined.");
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Expects a MemoryAccess as first argument.");
@@ -2403,10 +2211,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &flag);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Architecture is not defined.");
-
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a Register as first argument.");
 
@@ -2431,10 +2235,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &node, &z3Flag);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "simplify(): Architecture is not defined.");
-
         if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "simplify(): Expects a AstNode as first argument.");
 
@@ -2456,10 +2256,6 @@ namespace triton {
       static PyObject* TritonContext_sliceExpressions(PyObject* self, PyObject* expr) {
         PyObject* ret = nullptr;
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Architecture is not defined.");
-
         if (!PySymbolicExpression_Check(expr))
           return PyErr_Format(PyExc_TypeError, "sliceExpressions(): Expects a SymbolicExpression as argument.");
 
@@ -2479,10 +2275,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintAssignmentMemoryImmediate(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryImmediate(): Architecture is not defined.");
-
         if (!PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryImmediate(): Expects a MemoryAccess as argument.");
 
@@ -2503,10 +2295,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem1, &mem2);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryMemory(): Architecture is not defined.");
 
         if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryMemory(): Expects a MemoryAccess as first argument.");
@@ -2532,10 +2320,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &reg);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Architecture is not defined.");
-
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Expects a MemoryAccess as first argument.");
 
@@ -2554,10 +2338,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintAssignmentRegisterImmediate(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterImmediate(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterImmediate(): Expects a Register as argument.");
 
@@ -2578,10 +2358,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &mem);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Expects a Register as first argument.");
@@ -2607,10 +2383,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg1, &reg2);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Architecture is not defined.");
-
         if (reg1 == nullptr || !PyRegister_Check(reg1))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a Register as first argument.");
 
@@ -2629,10 +2401,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintMemory(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintMemory(): Architecture is not defined.");
-
         try {
           if (PyMemoryAccess_Check(mem)) {
             if (PyTritonContext_AsTritonContext(self)->taintMemory(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
@@ -2655,10 +2423,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintRegister(): Expects a Register as argument.");
 
@@ -2674,10 +2438,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintUnionMemoryImmediate(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryImmediate(): Architecture is not defined.");
-
         if (!PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryImmediate(): Expects a MemoryAccess as argument.");
 
@@ -2698,10 +2458,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem1, &mem2);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryMemory(): Architecture is not defined.");
 
         if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryMemory(): Expects a MemoryAccess as first argument.");
@@ -2727,10 +2483,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &mem, &reg);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Architecture is not defined.");
-
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Expects a MemoryAccess as first argument.");
 
@@ -2749,10 +2501,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_taintUnionRegisterImmediate(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterImmediate(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterImmediate(): Expects a Register as argument.");
 
@@ -2773,10 +2521,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg, &mem);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Architecture is not defined.");
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Expects a Register as first argument.");
@@ -2801,10 +2545,6 @@ namespace triton {
 
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &reg1, &reg2);
-
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Architecture is not defined.");
 
         if (reg1 == nullptr || !PyRegister_Check(reg1))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a Register as first argument.");
@@ -2832,10 +2572,6 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
 
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "unmapMemory(): Architecture is not defined.");
-
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "unmapMemory(): Expects a base address (integer) as first argument.");
 
@@ -2858,10 +2594,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_unrollAst(PyObject* self, PyObject* node) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "unrollAst(): Architecture is not defined.");
-
         if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "unrollAst(): Expects a AstNode as argument.");
 
@@ -2875,10 +2607,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_unrollAstFromId(PyObject* self, PyObject* symExprId) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "unrollAstFromId(): Architecture is not defined.");
-
         if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "unrollAstFromId(): Expects an integer as argument.");
 
@@ -2892,10 +2620,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_untaintMemory(PyObject* self, PyObject* mem) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "untaintMemory(): Architecture is not defined.");
-
         try {
           if (PyMemoryAccess_Check(mem)) {
             if (PyTritonContext_AsTritonContext(self)->untaintMemory(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
@@ -2918,10 +2642,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_untaintRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "untaintRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "untaintRegister(): Expects a Register as argument.");
 
@@ -2937,10 +2657,6 @@ namespace triton {
 
 
       static PyObject* TritonContext_getParentRegister(PyObject* self, PyObject* reg) {
-        /* Check if the architecture is definied */
-        if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
-          return PyErr_Format(PyExc_TypeError, "getParentRegister(): Architecture is not defined.");
-
         if (!PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "getParentRegister(): Expects a Register as argument.");
 
