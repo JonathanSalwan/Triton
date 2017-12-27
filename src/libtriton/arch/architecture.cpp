@@ -23,7 +23,7 @@ namespace triton {
     }
 
 
-    triton::uint32 Architecture::getArchitecture(void) const {
+    triton::arch::architectures_e Architecture::getArchitecture(void) const {
       return this->arch;
     }
 
@@ -35,16 +35,9 @@ namespace triton {
     }
 
 
-    void Architecture::setArchitecture(triton::uint32 arch) {
-      /* Check if the architecture is valid */
-      if (!(arch > triton::arch::ARCH_INVALID && arch < triton::arch::ARCH_LAST_ITEM))
-        throw triton::exceptions::Architecture("Architecture::setArchitecture(): Invalid architecture.");
-
-      /* Setup global variables */
-      this->arch = arch;
-
+    void Architecture::setArchitecture(triton::arch::architectures_e arch) {
       /* Allocate and init the good arch */
-      switch (this->arch) {
+      switch (arch) {
         case triton::arch::ARCH_X86_64:
           /* init the new instance */
           this->cpu.reset(new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks));
@@ -58,7 +51,14 @@ namespace triton {
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           break;
+
+        default:
+          throw triton::exceptions::Architecture("Architecture::setArchitecture(): Architecture not supported.");
+          break;
       }
+
+      /* Setup global variables */
+      this->arch = arch;
     }
 
 

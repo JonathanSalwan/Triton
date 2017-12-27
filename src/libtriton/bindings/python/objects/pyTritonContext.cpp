@@ -1984,7 +1984,7 @@ namespace triton {
 
         try {
           /* Set the architecture */
-          PyTritonContext_AsTritonContext(self)->setArchitecture(PyLong_AsUint32(arg));
+          PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<enum triton::arch::architectures_e>(PyLong_AsUint32(arg)));
           TritonContext_fillRegistersAttribute(self);
         }
         catch (const triton::exceptions::Exception& e) {

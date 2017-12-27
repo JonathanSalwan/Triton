@@ -54,7 +54,7 @@ namespace triton {
 
       protected:
         //! The kind of architecture.
-        triton::uint32 arch;
+        triton::arch::architectures_e arch;
 
         //! Instance to the real CPU class.
         std::unique_ptr<triton::arch::CpuInterface> cpu;
@@ -85,7 +85,7 @@ namespace triton {
         TRITON_EXPORT bool isValid(void) const;
 
         //! Returns the architecture as triton::arch::architecture_e.
-        TRITON_EXPORT triton::uint32 getArchitecture(void) const;
+        TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
 
         //! Returns the CPU
         TRITON_EXPORT triton::arch::CpuInterface* getCpu(void);
@@ -99,8 +99,8 @@ namespace triton {
         //! Returns the max size (in byte) of the CPU register (GPR).
         TRITON_EXPORT triton::uint32 registerSize(void) const;
 
-        //! Setup an architecture.
-        TRITON_EXPORT void setArchitecture(triton::uint32 arch);
+        //! Initializes an architecture.
+        TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
 
         //! Clears the architecture states (registers and memory).
         TRITON_EXPORT void clearArchitecture(void);

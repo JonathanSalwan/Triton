@@ -76,6 +76,11 @@ namespace triton {
         case triton::arch::ARCH_X86:
         case triton::arch::ARCH_X86_64:
           ret = this->x86Isa->buildSemantics(inst);
+          break;
+
+        default:
+          throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): Architecture not supported.");
+          break;
       }
 
       /* Post IR processing */

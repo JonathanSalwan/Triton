@@ -209,7 +209,7 @@ namespace triton {
   }
 
 
-  uint32 API::getArchitecture(void) const {
+  triton::arch::architectures_e API::getArchitecture(void) const {
     return this->arch.getArchitecture();
   }
 
@@ -227,7 +227,7 @@ namespace triton {
   }
 
 
-  void API::setArchitecture(triton::uint32 arch) {
+  void API::setArchitecture(triton::arch::architectures_e arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
 

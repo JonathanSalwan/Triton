@@ -83,7 +83,7 @@ namespace triton {
         TRITON_EXPORT bool isArchitectureValid(void) const;
 
         //! [**architecture api**] - Returns the architecture as triton::arch::architectures_e.
-        TRITON_EXPORT triton::uint32 getArchitecture(void) const;
+        TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
 
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
         TRITON_EXPORT void checkArchitecture(void) const;
@@ -91,8 +91,8 @@ namespace triton {
         //! [**architecture api**] - Returns the CPU instance.
         TRITON_EXPORT triton::arch::CpuInterface* getCpu(void);
 
-        //! [**architecture api**] - Setup an architecture. \sa triton::arch::architectures_e.
-        TRITON_EXPORT void setArchitecture(triton::uint32 arch);
+        //! [**architecture api**] - Initializes an architecture. \sa triton::arch::architectures_e.
+        TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
 
         //! [**architecture api**] - Clears the architecture states (registers and memory).
         TRITON_EXPORT void clearArchitecture(void);
