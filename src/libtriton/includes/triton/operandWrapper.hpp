@@ -104,9 +104,6 @@ namespace triton {
         //! Returns the lower bit position of the abstract operand.
         TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
 
-        //! Returns the abstract concrete value.
-        TRITON_EXPORT triton::uint512 getConcreteValue(void) const;
-
         //! Copies a OperandWrapper.
         TRITON_EXPORT OperandWrapper& operator=(const OperandWrapper& other);
 
