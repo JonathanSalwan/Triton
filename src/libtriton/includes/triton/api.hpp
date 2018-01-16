@@ -233,9 +233,6 @@ namespace triton {
 
         /* AST Garbage Collector API ===================================================================== */
 
-        //! [**AST garbage collector api**] - Raises an exception if the AST garbage collector interface is not initialized.
-        TRITON_EXPORT void checkAstGarbageCollector(void) const;
-
         //! [**AST garbage collector api**] - Go through every allocated nodes and free them.
         TRITON_EXPORT void freeAllAstNodes(void);
 
