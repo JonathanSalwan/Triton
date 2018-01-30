@@ -83,7 +83,7 @@ namespace triton {
         TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) const = 0;
 
         //! Returns the concrete value of a memory cell.
-        TRITON_EXPORT virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const = 0;
+        TRITON_EXPORT virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr,  bool execCallbacks=true) const = 0;
 
         //! Returns the concrete value of memory cells.
         TRITON_EXPORT virtual triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const = 0;

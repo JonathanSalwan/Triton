@@ -316,9 +316,9 @@ namespace triton {
   }
 
 
-  triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr) const {
+  triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
     this->checkArchitecture();
-    return this->arch.getConcreteMemoryValue(addr);
+    return this->arch.getConcreteMemoryValue(addr, execCallbacks);
   }
 
 

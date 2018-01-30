@@ -543,10 +543,14 @@ namespace triton {
       }
 
 
-      triton::uint8 x8664Cpu::getConcreteMemoryValue(triton::uint64 addr) const {
+      triton::uint8 x8664Cpu::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
+        if (execCallbacks && this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE));
+
         auto it = this->memory.find(addr);
         if (it == this->memory.end())
           return 0x00;
+
         return it->second;
       }
 
@@ -563,7 +567,7 @@ namespace triton {
           this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
 
         for (triton::sint32 i = size-1; i >= 0; i--)
-          ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i));
+          ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i, false));
 
         return ret;
       }
@@ -572,11 +576,8 @@ namespace triton {
       std::vector<triton::uint8> x8664Cpu::getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks) const {
         std::vector<triton::uint8> area;
 
-        for (triton::usize index = 0; index < size; index++) {
-          if (execCallbacks && this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(baseAddr+index, BYTE_SIZE));
+        for (triton::usize index = 0; index < size; index++)
           area.push_back(this->getConcreteMemoryValue(baseAddr+index));
-        }
 
         return area;
       }

@@ -175,10 +175,10 @@ namespace triton {
     }
 
 
-    triton::uint8 Architecture::getConcreteMemoryValue(triton::uint64 addr) const {
+    triton::uint8 Architecture::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");
-      return this->cpu->getConcreteMemoryValue(addr);
+      return this->cpu->getConcreteMemoryValue(addr, execCallbacks);
     }
 
 
