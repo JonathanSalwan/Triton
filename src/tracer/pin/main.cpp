@@ -684,7 +684,7 @@ namespace tracer {
       /* Init the Triton module */
       triton::bindings::python::inittriton();
 
-      /* During the execution provide concrete values only if Triton needs them - cf #376 and #632 */
+      /* During the execution provide concrete values only if Triton needs them - cf #376, #632 and #645 */
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
 
