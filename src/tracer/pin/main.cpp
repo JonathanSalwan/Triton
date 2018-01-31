@@ -684,6 +684,10 @@ namespace tracer {
       /* Init the Triton module */
       triton::bindings::python::inittriton();
 
+      /* During the execution provide concrete values only if Triton needs them - cf #376 and #632 */
+      tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
+      tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
+
       /* Image callback */
       IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
 
