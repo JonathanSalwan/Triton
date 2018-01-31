@@ -291,7 +291,7 @@ Removes all recorded callbacks.
 - <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
 
-- <b>void resetEngines(void)</b><br>
+- <b>void reset(void)</b><br>
 Resets everything.
 
 - <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
@@ -1965,9 +1965,9 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_resetEngines(PyObject* self, PyObject* noarg) {
+      static PyObject* TritonContext_reset(PyObject* self, PyObject* noarg) {
         try {
-          PyTritonContext_AsTritonContext(self)->resetEngines();
+          PyTritonContext_AsTritonContext(self)->reset();
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2771,7 +2771,7 @@ namespace triton {
         {"processing",                          (PyCFunction)TritonContext_processing,                             METH_O,             ""},
         {"removeAllCallbacks",                  (PyCFunction)TritonContext_removeAllCallbacks,                     METH_NOARGS,        ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                         METH_VARARGS,       ""},
-        {"resetEngines",                        (PyCFunction)TritonContext_resetEngines,                           METH_NOARGS,        ""},
+        {"reset",                               (PyCFunction)TritonContext_reset,                                  METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                        METH_O,             ""},
         {"setAstRepresentationMode",            (PyCFunction)TritonContext_setAstRepresentationMode,               METH_O,             ""},
         {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},

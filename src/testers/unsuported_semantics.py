@@ -23,7 +23,7 @@ def cbefore(instruction):
 
 
 def cafter(instruction):
-    Triton.resetEngines()
+    Triton.reset()
     return
 
 

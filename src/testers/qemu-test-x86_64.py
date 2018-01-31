@@ -75,7 +75,7 @@ def cafter(instruction):
         return
 
     # Reset everything
-    Triton.resetEngines()
+    Triton.reset()
 
     return
 

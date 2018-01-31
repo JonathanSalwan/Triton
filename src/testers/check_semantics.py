@@ -129,7 +129,7 @@ def cafter(instruction):
         pass
 
     # Reset everything
-    Triton.resetEngines()
+    Triton.reset()
 
     return
 

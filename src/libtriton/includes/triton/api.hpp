@@ -214,7 +214,7 @@ namespace triton {
         TRITON_EXPORT void removeEngines(void);
 
         //! [**proccesing api**] - Resets everything.
-        TRITON_EXPORT void resetEngines(void);
+        TRITON_EXPORT void reset(void);
 
 
 
