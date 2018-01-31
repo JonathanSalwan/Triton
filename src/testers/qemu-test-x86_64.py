@@ -8,6 +8,7 @@ Triton = Pintool.getTritonContext()
 
 
 def sbefore(instruction):
+    Triton.setArchitecture(ARCH.X86_64)
     Triton.concretizeAllMemory()
     Triton.concretizeAllRegister()
     return
@@ -73,9 +74,6 @@ def cafter(instruction):
         with open('./semantics_issues', 'a') as fd:
             fd.write(dump+'\n')
         return
-
-    # Reset everything
-    Triton.reset()
 
     return
 

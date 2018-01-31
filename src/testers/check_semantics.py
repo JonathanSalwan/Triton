@@ -40,6 +40,7 @@ Triton = Pintool.getTritonContext()
 #      Expression     : (ite (= ((_ extract 15 0) #348) ((_ extract 15 0) (_ bv2 64))) (_ bv0 1) (_ bv1 1))
 
 def sbefore(instruction):
+    Triton.setArchitecture(ARCH.X86_64)
     Triton.concretizeAllMemory()
     Triton.concretizeAllRegister()
     return
@@ -127,9 +128,6 @@ def cafter(instruction):
     else:
         #time.sleep(2)
         pass
-
-    # Reset everything
-    Triton.reset()
 
     return
 
