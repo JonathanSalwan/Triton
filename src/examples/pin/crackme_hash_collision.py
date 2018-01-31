@@ -90,8 +90,6 @@ def cafter(instruction):
 
 
 if __name__ == '__main__':
-    Triton.setArchitecture(ARCH.X86_64)
     startAnalysisFromSymbol('check')
     insertCall(cafter, INSERT_POINT.AFTER)
     runProgram()
-

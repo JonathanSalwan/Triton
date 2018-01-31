@@ -25,10 +25,6 @@ def mallocExit(threadId):
 
 
 if __name__ == '__main__':
-
-    # Set the architecture
-    Triton.setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
@@ -38,4 +34,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-

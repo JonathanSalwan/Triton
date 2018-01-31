@@ -23,18 +23,17 @@ def cb_fini():
 
 
 if __name__ == '__main__':
-    # Set arch
-    getTritonContext().setArchitecture(ARCH.X86_64)
+    # Triton Context
+    ctx = getTritonContext()
 
     # Start JIT at the entry point
     startAnalysisFromEntry()
 
     # Use AST Dictionaries
-    getTritonContext().enableMode(MODE.AST_DICTIONARIES, True)
+    ctx.enableMode(MODE.AST_DICTIONARIES, True)
 
     # Add callbacks
     insertCall(cb_fini, INSERT_POINT.FINI)
 
     # Run Program
     runProgram()
-

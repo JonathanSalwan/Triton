@@ -60,10 +60,8 @@ from database import Manager
 unpack_size = {1: 'B', 2: 'H', 4: 'I', 8: 'Q', 16: 'QQ'}
 
 if __name__ == '__main__':
-
+    # Get the current Triton context
     ctxt = getTritonContext()
-    # Set the arch
-    ctxt.setArchitecture(ARCH.X86_64)
 
     # Connect to the database
     db = Manager().connect()
@@ -683,6 +681,12 @@ namespace tracer {
 
       /* Init the Triton module */
       triton::bindings::python::inittriton();
+
+      /* Define Triton architecure */
+      if (sizeof(void*) == QWORD_SIZE)
+        tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86_64);
+      else
+        tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86);
 
       /* During the execution provide concrete values only if Triton needs them - cf #376, #632 and #645 */
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);

@@ -135,7 +135,6 @@ def cafter(instruction):
 
 
 if __name__ == '__main__':
-    Triton.setArchitecture(ARCH.X86_64)
     Pintool.startAnalysisFromEntry()
     #Pintool.startAnalysisFromSymbol('check')
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)

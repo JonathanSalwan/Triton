@@ -98,9 +98,6 @@ def fini():
 
 
 if __name__ == '__main__':
-    # Define the architecture
-    Triton.setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')
 

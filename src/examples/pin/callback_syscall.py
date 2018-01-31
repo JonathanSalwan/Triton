@@ -18,10 +18,6 @@ def my_callback_syscall_entry(threadId, std):
 
 
 if __name__ == '__main__':
-
-    # Set the architecture
-    getTritonContext().setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
@@ -29,4 +25,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-

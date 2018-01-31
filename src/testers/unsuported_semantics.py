@@ -40,7 +40,6 @@ def cfini():
 
 
 if __name__ == '__main__':
-    Triton.setArchitecture(ARCH.X86_64)
     startAnalysisFromEntry()
     insertCall(cbefore, INSERT_POINT.BEFORE)
     insertCall(cafter,  INSERT_POINT.AFTER)
