@@ -277,8 +277,8 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          std::string varName = reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getName();
-          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(varName);
+          triton::usize varId = reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getId();
+          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromId(varId);
 
           if (symVar == nullptr)
             throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): [VARIABLE_NODE] Can't get the symbolic variable (nullptr).");
