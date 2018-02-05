@@ -30,7 +30,7 @@ set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR
 if(PYTHON_BINDINGS)
     find_package(PythonInterp 2.7 REQUIRED)
     add_custom_target(test-python
-        COMMAND ${PYTHONPATH_CMD} python2 -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests
+        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests
         DEPENDS python-triton
     )
 else()
