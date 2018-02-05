@@ -91,7 +91,7 @@ install:
   - cmd: echo Downloading LIEF...
   - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/0.7.0/%LIEF_ZIP%
   - cmd: echo Install LIEF...
-  - cmd: python -m pip install %LIEF_ZIP%
+  - cmd: python2 -m pip install %LIEF_ZIP%
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python
