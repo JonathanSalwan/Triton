@@ -46,3 +46,10 @@ class TestAstReference(unittest.TestCase):
         self.assertEqual(str(self.Triton.unrollAst(ref1)), "SymVar_1")
         self.assertEqual(str(self.Triton.unrollAst(ref2)), "(bvadd SymVar_0 (_ bv2 8))")
         self.assertEqual(str(self.Triton.unrollAst(ref3)), "(bvadd SymVar_0 SymVar_1)")
+
+    def test_unroll_ssa_deep_ref(self):
+        v0   = self.astCtxt.variable(self.Triton.newSymbolicVariable(8))
+        exp0 = self.Triton.newSymbolicExpression(v0, "exp0")
+        exp1 = self.Triton.newSymbolicExpression(self.astCtxt.reference(self.Triton.getSymbolicExpressionFromId(0)), "exp1")
+        exp2 = self.Triton.newSymbolicExpression(self.astCtxt.reference(self.Triton.getSymbolicExpressionFromId(1)), "exp2")
+        self.assertEqual(str(self.Triton.unrollAst(exp2.getAst())), "SymVar_0")
