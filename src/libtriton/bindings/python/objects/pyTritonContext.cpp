@@ -11,6 +11,7 @@
 #include <triton/api.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
+#include <triton/tritonToZ3Ast.hpp>
 
 
 
@@ -775,6 +776,67 @@ namespace triton {
 
         Py_INCREF(Py_None);
         return Py_None;
+      }
+
+
+      static PyObject* TritonContext_convertAstToZ3(PyObject* self, PyObject* pyNode) {
+        triton::API*               tritonApi = nullptr;
+        triton::ast::AbstractNode* node      = nullptr;
+
+        if (pyNode == nullptr || (!PyAstNode_Check(pyNode)))
+          return PyErr_Format(PyExc_TypeError, "convertAstToZ3(): Expects a AstNode as argument.");
+
+        try {
+          tritonApi = PyTritonContext_AsTritonContext(self);
+          node = PyAstNode_AsAstNode(pyNode);
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        triton::ast::TritonToZ3Ast tritonToZ3Ast{tritonApi->getSymbolicEngine(), false};
+
+        // import z3
+        PyObject* z3 = PyImport_ImportModule("z3");
+        if (z3 == nullptr) {
+          return nullptr;
+        }
+
+        // z3.main_ctx().ctx.value
+        PyObject* z3MainCtx = PyObject_CallObject(PyObject_GetAttrString(z3, "main_ctx"), nullptr);
+        PyObject* z3CtxPtr = PyObject_GetAttrString(PyObject_GetAttrString(z3MainCtx, "ctx"), "value");
+        auto z3Ctx = (Z3_context) PyLong_AsVoidPtr(z3CtxPtr);
+        Py_DECREF(z3MainCtx);
+
+        // Convert the node to a Z3++ expression and translate it into
+        // python's z3 main context
+        z3::expr expr = tritonToZ3Ast.convert(node);
+        Z3_ast ast = Z3_translate(expr.ctx(), expr, z3Ctx);
+
+        // Check that everything went fine
+        Z3_error_code err = Z3_get_error_code(expr.ctx());
+        if (err != Z3_OK) {
+          Py_DECREF(z3);
+          return PyErr_Format(PyExc_RuntimeError, "convertAstToZ3(): Z3 AST translation failed.");
+        }
+
+        // retAst = ctypes.c_void_p(ctx_ptr); retAst.__class__ = z3.Ast
+        PyObject* pyArgs = Py_BuildValue("(O)", PyLong_FromVoidPtr(ast));
+        PyObject* retAst = PyObject_CallObject(PyObject_GetAttrString(z3, "c_void_p"), pyArgs);
+        PyObject_SetAttrString(retAst, "__class__", PyObject_GetAttrString(z3, "Ast"));
+        Py_DECREF(pyArgs);
+
+        // return z3.ExprRef(ast)
+        PyObject* z3ExprRef = PyObject_GetAttrString(z3, "ExprRef");
+        pyArgs = Py_BuildValue("(O)", retAst);
+        PyObject* retExpr = PyInstance_New(z3ExprRef, pyArgs, nullptr);
+        Py_DECREF(pyArgs);
+        Py_DECREF(retAst);
+
+        // Cleanup
+        Py_DECREF(z3);
+
+        return retExpr;
       }
 
 
@@ -2712,6 +2774,7 @@ namespace triton {
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
         {"concretizeMemory",                    (PyCFunction)TritonContext_concretizeMemory,                       METH_O,             ""},
         {"concretizeRegister",                  (PyCFunction)TritonContext_concretizeRegister,                     METH_O,             ""},
+        {"convertAstToZ3",                      (PyCFunction)TritonContext_convertAstToZ3,                         METH_O,             ""},
         {"convertExpressionToSymbolicVariable", (PyCFunction)TritonContext_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
         {"convertMemoryToSymbolicVariable",     (PyCFunction)TritonContext_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)TritonContext_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
