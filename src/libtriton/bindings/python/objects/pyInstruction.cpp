@@ -235,7 +235,10 @@ namespace triton {
 
       static PyObject* Instruction_getDisassembly(PyObject* self, PyObject* noarg) {
         try {
-          return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+          if (!PyInstruction_AsInstruction(self)->getDisassembly().empty())
+            return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+          Py_INCREF(Py_None);
+          return Py_None;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
