@@ -451,7 +451,7 @@ namespace triton {
         if (node->getKind() == triton::ast::REFERENCE_NODE) {
           SymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression();
           triton::ast::AbstractNode* ref = expr.getAst();
-          return ref;
+          return this->unrollAst(ref);
         }
 
         for (triton::uint32 index = 0; index < children.size(); index++)

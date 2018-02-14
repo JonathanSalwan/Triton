@@ -132,7 +132,10 @@ namespace triton {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
 
+        printf("[Debug]: Converting the z3Ast\n");
         z3::expr      expr = z3Ast.convert(node);
+        printf("[Debug]: Returned from z3Ast.convert\n");
+
         z3::context&  ctx  = expr.ctx();
         z3::solver    solver(ctx);
 
@@ -142,14 +145,20 @@ namespace triton {
         if (node->isLogical() == false)
           throw triton::exceptions::SolverEngine("SolverEngine::getModels(): Must be a logical node.");
 
+        printf("[Debug]: Creating a solver.\n");
+
         /* Create a solver and add the expression */
         solver.add(expr);
 
+        printf("[Debug]: Calling solver.check()\n");
         /* Check if it is sat */
         while (solver.check() == z3::sat && limit >= 1) {
 
+          printf("[Debug]: Solver.check said yes, getting the model()\n");
+
           /* Get model */
           z3::model m = solver.get_model();
+          printf("[Debug]: Got the model, start traversing it.\n");
 
           /* Traversing the model */
           std::map<triton::uint32, SolverModel> smodel;
