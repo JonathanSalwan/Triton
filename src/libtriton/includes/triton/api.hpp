@@ -140,7 +140,7 @@ namespace triton {
         TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the concrete value of a memory cell.
-        TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
+        TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
 
         //! [**architecture api**] - Returns the concrete value of memory cells.
         TRITON_EXPORT triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
@@ -214,7 +214,7 @@ namespace triton {
         TRITON_EXPORT void removeEngines(void);
 
         //! [**proccesing api**] - Resets everything.
-        TRITON_EXPORT void resetEngines(void);
+        TRITON_EXPORT void reset(void);
 
 
 

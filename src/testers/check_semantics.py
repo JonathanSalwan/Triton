@@ -1,5 +1,5 @@
 
-from triton import OPERAND, SYMEXPR, ARCH, OPCODE
+from triton import *
 import pintool as Pintool
 import os
 
@@ -39,9 +39,21 @@ Triton = Pintool.getTritonContext()
 #      Concrete Value : 0000000000000000
 #      Expression     : (ite (= ((_ extract 15 0) #348) ((_ extract 15 0) (_ bv2 64))) (_ bv0 1) (_ bv1 1))
 
+
+def needReg(ctx, reg):
+    ctx.setConcreteRegisterValue(reg, Pintool.getCurrentRegisterValue(reg))
+    return
+
+
+def needMem(ctx, mem):
+    ctx.setConcreteMemoryValue(mem, Pintool.getCurrentMemoryValue(mem))
+    return
+
+
 def sbefore(instruction):
-    Triton.concretizeAllMemory()
-    Triton.concretizeAllRegister()
+    Triton.reset()
+    Triton.addCallback(needReg, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+    Triton.addCallback(needMem, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
     return
 
 
@@ -128,14 +140,10 @@ def cafter(instruction):
         #time.sleep(2)
         pass
 
-    # Reset everything
-    Triton.resetEngines()
-
     return
 
 
 if __name__ == '__main__':
-    Triton.setArchitecture(ARCH.X86_64)
     Pintool.startAnalysisFromEntry()
     #Pintool.startAnalysisFromSymbol('check')
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)

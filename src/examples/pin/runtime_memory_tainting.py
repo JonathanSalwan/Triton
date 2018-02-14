@@ -31,10 +31,6 @@ def cafter(instruction):
 
 
 if __name__ == '__main__':
-
-    # Set architecture
-    Triton.setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the 'check' function
     startAnalysisFromSymbol('check')
 

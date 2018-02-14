@@ -291,7 +291,7 @@ Removes all recorded callbacks.
 - <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
 
-- <b>void resetEngines(void)</b><br>
+- <b>void reset(void)</b><br>
 Resets everything.
 
 - <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
@@ -453,8 +453,6 @@ namespace triton {
         if (PyMethod_Check(function)) {
           cb_self = PyMethod_GET_SELF(function);
           cb = PyMethod_GET_FUNCTION(function);
-          Py_INCREF(cb_self);
-          Py_INCREF(cb);
         }
         else {
           cb = function;
@@ -474,6 +472,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
@@ -482,6 +481,7 @@ namespace triton {
                 }
 
                 /* Call the callback */
+                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -506,6 +506,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
@@ -514,6 +515,7 @@ namespace triton {
                 }
 
                 /* Call the callback */
+                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -538,6 +540,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyAstNode(node));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
@@ -546,6 +549,7 @@ namespace triton {
                 }
 
                 /* Call the callback */
+                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -1965,9 +1969,9 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_resetEngines(PyObject* self, PyObject* noarg) {
+      static PyObject* TritonContext_reset(PyObject* self, PyObject* noarg) {
         try {
-          PyTritonContext_AsTritonContext(self)->resetEngines();
+          PyTritonContext_AsTritonContext(self)->reset();
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2771,7 +2775,7 @@ namespace triton {
         {"processing",                          (PyCFunction)TritonContext_processing,                             METH_O,             ""},
         {"removeAllCallbacks",                  (PyCFunction)TritonContext_removeAllCallbacks,                     METH_NOARGS,        ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                         METH_VARARGS,       ""},
-        {"resetEngines",                        (PyCFunction)TritonContext_resetEngines,                           METH_NOARGS,        ""},
+        {"reset",                               (PyCFunction)TritonContext_reset,                                  METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                        METH_O,             ""},
         {"setAstRepresentationMode",            (PyCFunction)TritonContext_setAstRepresentationMode,               METH_O,             ""},
         {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},

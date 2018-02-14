@@ -23,9 +23,6 @@ def cb_before(inst):
 
 
 if __name__ == '__main__':
-    # Set arch
-    getTritonContext().setArchitecture(ARCH.X86_64)
-
     # Start JIT at the entry point
     startAnalysisFromSymbol('check')
 
@@ -38,4 +35,3 @@ if __name__ == '__main__':
 
     # Run Program
     runProgram()
-

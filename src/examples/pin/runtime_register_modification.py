@@ -31,10 +31,8 @@ def cb2(inst):
 
 
 if __name__ == '__main__':
-    getTritonContext().setArchitecture(ARCH.X86_64)
     setupImageWhitelist(['crackme'])
     startAnalysisFromSymbol('main')
     insertCall(cb1, INSERT_POINT.BEFORE_SYMPROC)
     insertCall(cb2, INSERT_POINT.BEFORE)
     runProgram()
-

@@ -127,7 +127,7 @@ namespace triton {
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
         //! Returns the concrete value of a memory cell.
-        TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr) const;
+        TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
 
         //! Returns the concrete value of memory cells.
         TRITON_EXPORT triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;

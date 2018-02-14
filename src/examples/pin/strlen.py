@@ -74,9 +74,6 @@ def tainting(threadId):
 
 
 if __name__ == '__main__':
-    # Define the architecture
-    Triton.setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the 'main' function
     startAnalysisFromSymbol('main')
 
@@ -86,4 +83,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-
