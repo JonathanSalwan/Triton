@@ -133,7 +133,6 @@ namespace triton {
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
 
         z3::expr      expr = z3Ast.convert(node);
-
         z3::context&  ctx  = expr.ctx();
         z3::solver    solver(ctx);
 
