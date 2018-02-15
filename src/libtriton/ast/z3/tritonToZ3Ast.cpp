@@ -15,6 +15,8 @@
 
 namespace triton {
   namespace ast {
+    static bool setZ3logging = Z3_open_log("/tmp/z3_log");
+
     TritonToZ3Ast::TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval)
       : context() {
       if (symbolicEngine == nullptr)
@@ -91,10 +93,13 @@ namespace triton {
       return nullptr;
     }
 
-    bool NodeHasChild(triton::ast::AbstractNode* node, triton::ast::AbstractNode* child) {
-      for (const triton::ast::AbstractNode* node_ptr : node->getChildren()) {
-        if (node_ptr == child) {
-          return true;
+    bool NodeHasRightChild(triton::ast::AbstractNode* node, triton::ast::AbstractNode* child) {
+      const auto& children = node->getChildren();
+      if (children.size() > 1) {
+        for (uint32_t index = 1; index < children.size(); ++index) {
+          if (children[index] == child) {
+            return true;
+          }
         }
       }
       return false;
@@ -116,11 +121,18 @@ namespace triton {
 
       // Setup code to keep track of the internal stack and make sure we traverse
       // nodes in post-order.
+      
+      static uint32_t steps = 0;
       do {
         while (node) {
           const auto& children = node->getChildren();
-          for (int32_t max_index = children.size() - 1; max_index > 0; --max_index) {
-            workStack.push(children[max_index]);
+          // Push any right children. Right-to-left would probably be the proper
+          // way to go, but given that the recursive solution often went left-to
+          // right, this code does the same.
+          if (children.size() > 1) {
+            for (uint32_t index = 1; index < children.size(); ++index) {
+              workStack.push(children[index]);
+            }
           }
           workStack.push(node);
 
@@ -136,7 +148,10 @@ namespace triton {
         node = workStack.top();
         workStack.pop();
 
-        if (workStack.size() > 0 && NodeHasChild(node, workStack.top())) {
+        if (!(steps++ % 10000)) {
+          printf("[D] Done %d steps, stack size is %ld\n", steps, workStack.size());
+        }
+        if (workStack.size() > 0 && NodeHasRightChild(node, workStack.top())) {
           triton::ast::AbstractNode* temp = workStack.top();
           workStack.pop();
           workStack.push(node);
@@ -382,7 +397,7 @@ namespace triton {
           // times due to references makes it seem like this is a bad idea?)
 
           node = nullptr;
-        } // End of hasChild() else case.
+        } // End of NodeHasRightChild() else case.
       } while (!workStack.empty());
       return z3expressions.begin()->second;
     }
