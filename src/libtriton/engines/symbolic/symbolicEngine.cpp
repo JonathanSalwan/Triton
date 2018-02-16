@@ -314,6 +314,10 @@ namespace triton {
 
       /* Returns the symbolic variable otherwise returns nullptr */
       SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
+        /*
+         * FIXME: When there is a ton of symvar, this loop takes a while to go through.
+         *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
+         */
         for (auto& sv: this->symbolicVariables) {
           if (sv.second->getName() == symVarName)
             return sv.second;

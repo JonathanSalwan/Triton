@@ -64,13 +64,9 @@ def mycb(instruction):
 
 
 if __name__ == '__main__':
-
-    getTritonContext().setArchitecture(ARCH.X86_64)
-
     # libc and ld-linux will be unjited
     setupImageBlacklist(["libc", "ld-linux"])
 
     startAnalysisFromSymbol('main')
     insertCall(mycb, INSERT_POINT.BEFORE)
     runProgram()
-

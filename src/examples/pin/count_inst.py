@@ -14,9 +14,9 @@ def fini():
     print "Instruction count : ", count
 
 if __name__ == '__main__':
-    getTritonContext().setArchitecture(ARCH.X86_64)
-    getTritonContext().enableSymbolicEngine(False)
-    getTritonContext().enableTaintEngine(False)
+    ctx = getTritonContext()
+    ctx.enableSymbolicEngine(False)
+    ctx.enableTaintEngine(False)
     startAnalysisFromEntry()
     insertCall(mycb, INSERT_POINT.BEFORE)
     insertCall(fini, INSERT_POINT.FINI)

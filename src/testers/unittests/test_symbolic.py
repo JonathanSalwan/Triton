@@ -43,7 +43,7 @@ class TestSymbolic(unittest.TestCase):
         self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.registers.rax), 1, "Symbolic value is not update")
 
         # Try to reset engine after a backup to test if the bug #385 is fixed.
-        self.Triton.resetEngines()
+        self.Triton.reset()
 
     def test_bind_expr_to_memory(self):
         """Check symbolic expression binded to memory can be retrieve."""

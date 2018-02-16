@@ -263,9 +263,12 @@ namespace tracer {
 
       triton::uint512 getCurrentMemoryValue(triton::__uint addr) {
         triton::uint512 value = 0;
+
         if (PIN_CheckReadAccess(reinterpret_cast<triton::uint8*>(addr)) == false)
           throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
+
         value = *(reinterpret_cast<triton::uint8*>(addr));
+
         return value;
       }
 

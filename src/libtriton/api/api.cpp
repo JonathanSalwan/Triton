@@ -234,7 +234,6 @@ namespace triton {
     /* remove and re-init previous engines (when setArchitecture() has been called twice) */
     this->removeEngines();
     this->initEngines();
-    this->removeAllCallbacks();
   }
 
 
@@ -316,9 +315,9 @@ namespace triton {
   }
 
 
-  triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr) const {
+  triton::uint8 API::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
     this->checkArchitecture();
-    return this->arch.getConcreteMemoryValue(addr);
+    return this->arch.getConcreteMemoryValue(addr, execCallbacks);
   }
 
 
@@ -439,11 +438,12 @@ namespace triton {
   }
 
 
-  void API::resetEngines(void) {
+  void API::reset(void) {
     if (this->isArchitectureValid()) {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
+      this->removeAllCallbacks();
     }
   }
 

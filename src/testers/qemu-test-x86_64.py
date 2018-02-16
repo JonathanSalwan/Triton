@@ -1,15 +1,27 @@
 # $ ./triton ./src/testers/qemu-test-x86_64.py ./src/samples/ir_test_suite/qemu-test-x86_64
 
-from triton import ARCH, SYMEXPR, OPCODE
+from triton import *
 import pintool as Pintool
 
 # Get the Triton context over the pintool
 Triton = Pintool.getTritonContext()
 
 
+
+def needReg(ctx, reg):
+    ctx.setConcreteRegisterValue(reg, Pintool.getCurrentRegisterValue(reg))
+    return
+
+
+def needMem(ctx, mem):
+    ctx.setConcreteMemoryValue(mem, Pintool.getCurrentMemoryValue(mem))
+    return
+
+
 def sbefore(instruction):
-    Triton.concretizeAllMemory()
-    Triton.concretizeAllRegister()
+    Triton.reset()
+    Triton.addCallback(needReg, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+    Triton.addCallback(needMem, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
     return
 
 
@@ -38,8 +50,8 @@ def cafter(instruction):
         if seid == SYMEXPR.UNSET:
             continue
 
-        expr   = Triton.unrollAstFromId(seid)
-        svalue = expr.evaluate()
+        expr   = Triton.getSymbolicExpressionFromId(seid)
+        svalue = expr.getAst().evaluate()
         #svalue = Triton.evaluateAstViaZ3(expr)
 
         # Check register
@@ -49,7 +61,7 @@ def cafter(instruction):
                 continue
 
             bad.append({
-                'reg':    reg.getName() + str(instruction.getType()),
+                'reg':    reg.getName(),
                 'svalue': svalue,
                 'cvalue': cvalue,
                 'expr':   expr
@@ -74,14 +86,10 @@ def cafter(instruction):
             fd.write(dump+'\n')
         return
 
-    # Reset everything
-    Triton.resetEngines()
-
     return
 
 
 if __name__ == '__main__':
-    Triton.setArchitecture(ARCH.X86_64)
     Pintool.setupImageWhitelist(['qemu-test-x86_64'])
     Pintool.startAnalysisFromSymbol('main')
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)

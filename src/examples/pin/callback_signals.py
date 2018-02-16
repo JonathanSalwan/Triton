@@ -64,10 +64,6 @@ def signals(threadId, sig):
 
 
 if __name__ == '__main__':
-
-    # Set architecture
-    getTritonContext().setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
@@ -76,4 +72,3 @@ if __name__ == '__main__':
 
     # Run the instrumentation - Never returns
     runProgram()
-

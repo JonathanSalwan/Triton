@@ -42,9 +42,6 @@ def before(instruction):
 
 
 if __name__ == '__main__':
-    # Set the architecture
-    getTritonContext().setArchitecture(ARCH.X86_64)
-
     # Start the symbolic analysis from the Entry point
     startAnalysisFromEntry()
 
