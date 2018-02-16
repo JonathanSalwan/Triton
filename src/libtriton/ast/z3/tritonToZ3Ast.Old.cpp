@@ -5,21 +5,37 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <z3++.h>
+
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
 
-#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x " called\n"); return x(ctx, a, b); }
+/*
+#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x "(ctx, %8.8x, %8.8x)\n", Z3_get_ast_hash(ctx, a), Z3_get_ast_hash(ctx, b)); return x(ctx, a, b); }
 
-#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x " called\n"); return x(ctx, a); }
+#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x "(ctx, %8.8x)\n", Z3_get_ast_hash(ctx, a)); return x(ctx, a); }
 
-#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x " called\n"); return x(ctx, a, b); }
+#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x "(ctx, %d, %8.8x)\n", a, Z3_get_ast_hash(ctx, b)); return x(ctx, a, b); }
 
-#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x " called\n"); return x(ctx, a, b, c); }
+#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x "(ctx, %8.8x, %8.8x, %8.8x)\n", Z3_get_ast_hash(ctx, a), Z3_get_ast_hash(ctx, b), Z3_get_ast_hash(ctx, c)); return x(ctx, a, b, c); }
 
-#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x " called\n"); return x(ctx, a, b, c); }
+#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x "(ctx, %d, %d, %8.8x)\n", a, b, Z3_get_ast_hash(ctx, c)); return x(ctx, a, b, c); }
 
-#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x " called\n"); return x(ctx, a, ops); }
+#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x "(ctx, %d, %8.8x %8.8x)\n", a, Z3_get_ast_hash(ctx, ops[0]), Z3_get_ast_hash(ctx, ops[1]) ); return x(ctx, a, ops); } */
+
+#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x "(ctx, %s, %s)\n", Z3_ast_to_string(ctx, a), Z3_ast_to_string(ctx, b)); return x(ctx, a, b); }
+
+#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x "(ctx, %s)\n", Z3_ast_to_string(ctx, a)); return x(ctx, a); }
+
+#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x "(ctx, %d, %s)\n", a, Z3_ast_to_string(ctx, b)); return x(ctx, a, b); }
+
+#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x "(ctx, %s, %s, %s)\n", Z3_ast_to_string(ctx, a), Z3_ast_to_string(ctx, b), Z3_ast_to_string(ctx, c)); return x(ctx, a, b, c); }
+
+#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x "(ctx, %d, %d, %s)\n", a, b, Z3_ast_to_string(ctx, c)); return x(ctx, a, b, c); }
+
+#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x "(ctx, %d, %s %s)\n", a, Z3_ast_to_string(ctx, ops[0]), Z3_ast_to_string(ctx, ops[1]) ); return x(ctx, a, ops); } 
+
 
 MAKE_Z3_LOGGED(Z3_mk_bvadd);
 MAKE_Z3_LOGGED(Z3_mk_bvand);
@@ -221,6 +237,8 @@ namespace triton {
           z3::expr value        = children[0];
           z3::expr size         = children[1];
           triton::uint32 bvsize = static_cast<triton::uint32>(this->getUintValue(size));
+          printf("BV_NODE: %s, %d\n", this->getStringValue(value).c_str(), bvsize);
+
           return this->context.bv_val(this->getStringValue(value).c_str(), bvsize);
         }
 
@@ -233,12 +251,14 @@ namespace triton {
             nextValue = children[idx];
             currentValue = to_expr(this->context, log_Z3_mk_concat(this->context, currentValue, nextValue));
           }
-
+          printf("[Final] %s\n", Z3_ast_to_string(this->context, currentValue));
           return currentValue;
         }
 
         case DECIMAL_NODE: {
           std::string value(reinterpret_cast<triton::ast::DecimalNode*>(node)->getValue());
+          printf("DECIMAL_NODE: %s\n", value.c_str());
+
           return this->context.int_val(value.c_str());
         }
 
@@ -356,9 +376,12 @@ namespace triton {
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node)->evaluate();
             std::string strValue(value);
+            printf("VARIABLE_NODE (isEval): %s %d\n", strValue.c_str(), symVar->getSize());
+ 
             return this->context.bv_val(strValue.c_str(), symVar->getSize());
           }
-
+          printf("VARIABLE_NODE (!isEval): %s %d\n", symVar->getName().c_str(),
+            symVar->getSize());
           /* Otherwise, we keep the symbolic variables for a real conversion */
           return this->context.bv_const(symVar->getName().c_str(), symVar->getSize());
         }

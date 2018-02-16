@@ -10,18 +10,31 @@
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonToZ3Ast.hpp>
+/*
+#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x "(ctx, %8.8x, %8.8x)\n", Z3_get_ast_hash(ctx, a), Z3_get_ast_hash(ctx, b)); return x(ctx, a, b); }
 
-#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x " called\n"); return x(ctx, a, b); }
+#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x "(ctx, %8.8x)\n", Z3_get_ast_hash(ctx, a)); return x(ctx, a); }
 
-#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x " called\n"); return x(ctx, a); }
+#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x "(ctx, %d, %8.8x)\n", a, Z3_get_ast_hash(ctx, b)); return x(ctx, a, b); }
 
-#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x " called\n"); return x(ctx, a, b); }
+#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x "(ctx, %8.8x, %8.8x, %8.8x)\n", Z3_get_ast_hash(ctx, a), Z3_get_ast_hash(ctx, b), Z3_get_ast_hash(ctx, c)); return x(ctx, a, b, c); }
 
-#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x " called\n"); return x(ctx, a, b, c); }
+#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x "(ctx, %d, %d, %8.8x)\n", a, b, Z3_get_ast_hash(ctx, c)); return x(ctx, a, b, c); }
 
-#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x " called\n"); return x(ctx, a, b, c); }
+#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x "(ctx, %d, %8.8x %8.8x)\n", a, Z3_get_ast_hash(ctx, ops[0]), Z3_get_ast_hash(ctx, ops[1]) ); return x(ctx, a, ops); }
+*/
+#define MAKE_Z3_LOGGED(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b) { printf(#x "(ctx, %s, %s)\n", Z3_ast_to_string(ctx, a), Z3_ast_to_string(ctx, b)); return x(ctx, a, b); }
 
-#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x " called\n"); return x(ctx, a, ops); }
+#define MAKE_Z3_LOGGED1(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a) { printf(#x "(ctx, %s)\n", Z3_ast_to_string(ctx, a)); return x(ctx, a); }
+
+#define MAKE_Z3_LOGGED2(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast b) { printf(#x "(ctx, %d, %s)\n", a, Z3_ast_to_string(ctx, b)); return x(ctx, a, b); }
+
+#define MAKE_Z3_LOGGED3(x) _Z3_ast* log_##x(Z3_context ctx, Z3_ast a, Z3_ast b, Z3_ast c) { printf(#x "(ctx, %s, %s, %s)\n", Z3_ast_to_string(ctx, a), Z3_ast_to_string(ctx, b), Z3_ast_to_string(ctx, c)); return x(ctx, a, b, c); }
+
+#define MAKE_Z3_LOGGED4(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, uint32_t b, Z3_ast c) { printf(#x "(ctx, %d, %d, %s)\n", a, b, Z3_ast_to_string(ctx, c)); return x(ctx, a, b, c); }
+
+#define MAKE_Z3_LOGGED5(x) _Z3_ast* log_##x(Z3_context ctx, uint32_t a, Z3_ast* ops) { printf(#x "(ctx, %d, %s %s)\n", a, Z3_ast_to_string(ctx, ops[0]), Z3_ast_to_string(ctx, ops[1]) ); return x(ctx, a, ops); } 
+
 
 MAKE_Z3_LOGGED(Z3_mk_bvadd);
 MAKE_Z3_LOGGED(Z3_mk_bvand);
@@ -92,6 +105,20 @@ namespace triton {
       this->isEval = eval;
     }
 
+    triton::__uint TritonToZ3Ast::getUintValue(Z3_ast expr) {
+      triton::__uint result = 0;
+
+      #if defined(__x86_64__) || defined(_M_X64)
+      Z3_get_numeral_uint64(this->context, expr, &result);
+      #endif
+      #if defined(__i386) || defined(_M_IX86)
+      Z3_get_numeral_uint(this->context, expr, &result);
+      #endif
+
+      return result;
+    }
+
+
     triton::__uint TritonToZ3Ast::getUintValue(const z3::expr& expr) {
       triton::__uint result = 0;
 
@@ -111,6 +138,10 @@ namespace triton {
     std::string TritonToZ3Ast::getStringValue(const z3::expr& expr) {
       return Z3_get_numeral_string(this->context, expr);
     }
+    std::string TritonToZ3Ast::getStringValue(Z3_ast expr) {
+      return Z3_get_numeral_string(this->context, expr);
+    }
+
 
     typedef _Z3_ast* (*UnaryZ3Function)(Z3_context, Z3_ast);
     typedef _Z3_ast* (*BinaryZ3Function)(Z3_context, Z3_ast, Z3_ast);
@@ -190,6 +221,11 @@ namespace triton {
       printf("[D] result vector is %ld elements\n", result->size());
     }
 
+    bool TritonToZ3Ast::isBool(Z3_ast expr) {
+      return (Z3_get_sort_kind(this->context,
+        Z3_get_sort(this->context, expr)) == Z3_BOOL_SORT);
+    }
+
     // Convert a Triton AST to a Z3 AST without recursing, by doing postorder
     // traversal. While the recursive solution is more elegant to read, it ends
     // up running out of stack space on very deep ASTs easily.
@@ -199,7 +235,10 @@ namespace triton {
     // https://www.geeksforgeeks.org/iterative-postorder-traversal-using-stack/
     z3::expr TritonToZ3Ast::convert(triton::ast::AbstractNode* node) {
       std::stack<triton::ast::AbstractNode*> workStack;
-      std::unordered_map<triton::ast::AbstractNode*, z3::expr> z3expressions;
+      // In order to avoid unwanted interactions with the Z3 API, this code uses
+      // Z3_ast instead of z3::expr inside the container (z3::expr construction
+      // seems to change the state of the solver?).
+      std::unordered_map<triton::ast::AbstractNode*, Z3_ast> z3expressions;
 
       if (node == nullptr)
         throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert_iterative(): node cannot be null.");
@@ -218,7 +257,11 @@ namespace triton {
         // Get the function pointers (will be nullptrs potentially);
         auto z3FunctionBinary = getBinaryZ3Function(node->getKind());
         auto z3FunctionUnary = getUnaryZ3Function(node->getKind());
-
+        printf("====\n");
+        {
+          NodeLogger n(node);
+        }
+ 
         switch (node->getKind()) {
           // The "standard" cases with 2 operands.
           case BVADD_NODE:
@@ -247,17 +290,17 @@ namespace triton {
           case BVXNOR_NODE:
           case BVXOR_NODE:
           case EQUAL_NODE: {
-            z3expressions.insert(std::make_pair(node,
-              to_expr(this->context, z3FunctionBinary(this->context,
-                z3expressions.at(children[0]), z3expressions.at(children[1])))));
+            z3expressions.emplace(std::make_pair(node,
+              z3FunctionBinary(this->context,
+                z3expressions.at(children[0]), z3expressions.at(children[1]))));
             break;
           }
           // The "standard" cases with 1 operand.
           case BVNEG_NODE:
           case BVNOT_NODE: {
-            z3expressions.insert(std::make_pair(node,
-              to_expr(this->context, z3FunctionUnary(this->context,
-                z3expressions.at(children[0])))));
+            z3expressions.emplace(std::make_pair(node,
+              z3FunctionUnary(this->context,
+                z3expressions.at(children[0]))));
             break;
           }
           // The nonstandard cases with individual handling.
@@ -265,137 +308,138 @@ namespace triton {
             triton::uint32 op1 = reinterpret_cast<triton::ast::DecimalNode*>(
               children[0])->getValue().convert_to<triton::uint32>();
 
-            z3expressions.insert({node, to_expr(this->context, log_Z3_mk_rotate_left(
-              this->context, op1, z3expressions.at(children[1])))});
+            z3expressions.emplace(std::make_pair(node,
+              log_Z3_mk_rotate_left(this->context, op1,
+                z3expressions.at(children[1]))));
             break;
           }
           case BVROR_NODE: {
             triton::uint32 op1 = reinterpret_cast<triton::ast::DecimalNode*>(
               children[0])->getValue().convert_to<triton::uint32>();
 
-            z3expressions.insert(std::make_pair(node,
-              to_expr(this->context, log_Z3_mk_rotate_right(
-              this->context, op1, z3expressions.at(children[1])))));
+            z3expressions.emplace(std::make_pair(node,
+              log_Z3_mk_rotate_right(this->context, op1, 
+                z3expressions.at(children[1]))));
             break;
           }
           case BV_NODE: {
-            z3::expr value = z3expressions.at(children[0]);
-            z3::expr size = z3expressions.at(children[1]);
+            Z3_ast value = z3expressions.at(children[0]);
+            Z3_ast size = z3expressions.at(children[1]);
             triton::uint32 bvsize = static_cast<triton::uint32>(this->getUintValue(size));
-            z3expressions.insert({node,
-              this->context.bv_val(this->getStringValue(value).c_str(), bvsize)});
+            printf("BV_NODE: %s, %d\n", this->getStringValue(value).c_str(), bvsize);
+            z3expressions.emplace(std::make_pair(node,
+              Z3_mk_numeral(this->context, this->getStringValue(value).c_str(),
+                Z3_mk_bv_sort(this->context, bvsize))));
             break;
           }
           case CONCAT_NODE: {
-            z3::expr currentValue = z3expressions.at(children[0]);
-            z3::expr nextValue(this->context);
+            Z3_ast currentValue = z3expressions.at(children[0]);
+            //z3::expr nextValue(this->context);
 
             // Child[0] is the LSB
             for (triton::uint32 idx = 1; idx < children.size(); idx++) {
-              nextValue = z3expressions.at(children[idx]);
-              currentValue = to_expr(this->context, log_Z3_mk_concat(this->context, currentValue, nextValue));
+              currentValue = log_Z3_mk_concat(this->context, currentValue, z3expressions.at(children[idx]));
             }
-            z3expressions.insert({node, currentValue});
+            printf("[Final] %s\n", Z3_ast_to_string(this->context, currentValue));
+            z3expressions.emplace(std::make_pair(node, currentValue));
             break;
           }
           case DECIMAL_NODE: {
             std::string value(reinterpret_cast<triton::ast::DecimalNode*>(node)->getValue());
-            z3expressions.insert({node, this->context.int_val(value.c_str())});
+
+            printf("DECIMAL_NODE: %s\n", value.c_str());
+            z3expressions.emplace(std::make_pair(node,
+              Z3_mk_numeral(this->context, value.c_str(), Z3_mk_int_sort(this->context))));
             break;
           }
           case DISTINCT_NODE: {
-            z3::expr op1 = z3expressions.at(children[0]);
-            z3::expr op2 = z3expressions.at(children[1]);
+            Z3_ast op1 = z3expressions.at(children[0]);
+            Z3_ast op2 = z3expressions.at(children[1]);
             Z3_ast ops[] = {op1, op2};
 
-            z3expressions.insert({node, z3::to_expr(this->context, log_Z3_mk_distinct(this->context, 2, ops))});
+            z3expressions.emplace(std::make_pair(node, log_Z3_mk_distinct(this->context,
+              2, ops)));
             break;
           }
           case EXTRACT_NODE: {
-            z3::expr high = z3expressions.at(children[0]);
-            z3::expr low = z3expressions.at(children[1]);
-            z3::expr value = z3expressions.at(children[2]);
+            Z3_ast high = z3expressions.at(children[0]);
+            Z3_ast low = z3expressions.at(children[1]);
+            Z3_ast value = z3expressions.at(children[2]);
             triton::uint32 hv = static_cast<triton::uint32>(this->getUintValue(high));
             triton::uint32 lv = static_cast<triton::uint32>(this->getUintValue(low));
 
-            z3expressions.insert({node, to_expr(this->context, log_Z3_mk_extract(this->context, hv, lv, value))});
+            z3expressions.emplace(std::make_pair(node, 
+              log_Z3_mk_extract(this->context, hv, lv, value)));
 
             break;
           }
 
           case ITE_NODE: {
-            z3::expr op1 = z3expressions.at(children[0]);
-            // condition
-            z3::expr op2 = z3expressions.at(children[1]);
-            // if true
-            z3::expr op3 = z3expressions.at(children[2]);
-            // if false
+            Z3_ast op1 = z3expressions.at(children[0]); // condition
+            Z3_ast op2 = z3expressions.at(children[1]); // if true
+            Z3_ast op3 = z3expressions.at(children[2]); // if false
 
-            z3expressions.insert({node, to_expr(this->context, log_Z3_mk_ite(this->context, op1, op2, op3))});
+            z3expressions.emplace(std::make_pair(node, log_Z3_mk_ite(
+              this->context, op1, op2, op3)));
             break;
           }
 
           case LAND_NODE: {
-            z3::expr currentValue = to_expr(this->context, z3expressions.at(children[0]));
-            if (!currentValue.get_sort().is_bool()) {
+            Z3_ast currentValue = z3expressions.at(children[0]);
+            if (!isBool(currentValue)) {
               throw triton::exceptions::AstTranslations("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
             }
-            z3::expr nextValue(this->context);
 
             for (triton::uint32 idx = 1; idx < children.size(); idx++) {
-              nextValue = z3expressions.at(children[idx]);
-              if (!nextValue.get_sort().is_bool()) {
+              Z3_ast nextValue = z3expressions.at(children[idx]);
+              if (!isBool(nextValue)) {
                 throw triton::exceptions::AstTranslations("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
               }
               Z3_ast ops[] = {currentValue, nextValue};
-              currentValue = to_expr(this->context, log_Z3_mk_and(this->context, 2, ops));
+              currentValue = log_Z3_mk_and(this->context, 2, ops);
             }
-            z3expressions.insert({node, currentValue});
+            z3expressions.emplace(std::make_pair(node, currentValue));
             break;
           }
 
           case LET_NODE: {
-            std::string symbol    = reinterpret_cast<triton::ast::StringNode*>(children[0])->getValue();
+            std::string symbol = reinterpret_cast<triton::ast::StringNode*>(children[0])->getValue();
             this->symbols[symbol] = children[1];
-            z3expressions.insert({node, z3expressions.at(children[2])});
+            z3expressions.emplace(std::make_pair(node, z3expressions.at(children[2])));
             break;
           }
 
           case LNOT_NODE: {
-            z3::expr value = z3expressions.at(children[0]);
-            if (!value.get_sort().is_bool()) {
+            Z3_ast value = z3expressions.at(children[0]);
+            if (!isBool(value)) {
               throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
             }
-            z3expressions.insert({node,
-              to_expr(this->context, log_Z3_mk_not(this->context, value))});
+            z3expressions.emplace(std::make_pair(node,
+              log_Z3_mk_not(this->context, value)));
             break;
           }
 
           case LOR_NODE: {
-            z3::expr currentValue = z3expressions.at(children[0]);
-            if (!currentValue.get_sort().is_bool()) {
+            Z3_ast currentValue = z3expressions.at(children[0]);
+            if (!isBool(currentValue)) {
               throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
             }
-            z3::expr nextValue(this->context);
 
             for (triton::uint32 idx = 1; idx < children.size(); idx++) {
-              nextValue = z3expressions.at(children[idx]);
-              if (!nextValue.get_sort().is_bool()) {
+              Z3_ast nextValue = z3expressions.at(children[idx]);
+              if (!isBool(nextValue)) {
                 throw triton::exceptions::AstTranslations("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
               }
               Z3_ast ops[] = {currentValue, nextValue};
-              currentValue = to_expr(this->context, log_Z3_mk_or(this->context, 2, ops));
+              currentValue = log_Z3_mk_or(this->context, 2, ops);
             }
-            z3expressions.insert({node, currentValue});
+            z3expressions.emplace(std::make_pair(node, currentValue));
             break;
           }
 
           case REFERENCE_NODE: {
-            // Allow recursion for references. It breaks the intended goal of
-            // this function (e.g. conversion of the AST without recursion),
-            // but I see no clean way to avoid it right now.
-            z3::expr referenced = z3expressions.at(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getAst());
-            z3expressions.insert({node, referenced});
+            Z3_ast referenced = z3expressions.at(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getAst());
+            z3expressions.emplace(std::make_pair(node, referenced));
             break;
           }
 
@@ -405,16 +449,16 @@ namespace triton {
             if (this->symbols.find(value) == this->symbols.end())
               throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): [STRING_NODE] Symbols not found.");
 
-            z3expressions.insert({node, z3expressions.at(this->symbols[value])});
+            z3expressions.emplace(std::make_pair(node, z3expressions.at(this->symbols[value])));
             break;
           }
 
           case SX_NODE: {
-            z3::expr ext        = z3expressions.at(children[0]);
-            z3::expr value      = z3expressions.at(children[1]);
+            Z3_ast ext        = z3expressions.at(children[0]);
+            Z3_ast value      = z3expressions.at(children[1]);
             triton::uint32 extv = static_cast<triton::uint32>(this->getUintValue(ext));
 
-            z3expressions.insert({node,  to_expr(this->context, log_Z3_mk_sign_ext(this->context, extv, value))});
+            z3expressions.emplace(std::make_pair(node, log_Z3_mk_sign_ext(this->context, extv, value)));
             break;
           }
 
@@ -429,20 +473,27 @@ namespace triton {
             if (this->isEval) {
               triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node)->evaluate();
               std::string strValue(value);
-              z3expressions.insert({node, this->context.bv_val(strValue.c_str(), symVar->getSize())});
+              printf("VARIABLE_NODE (isEval): %s %d\n", strValue.c_str(), symVar->getSize());
+              z3expressions.emplace(std::make_pair(node,
+                Z3_mk_numeral(this->context, strValue.c_str(), Z3_mk_bv_sort(this->context, symVar->getSize()))));
             } else {
+              printf("VARIABLE_NODE (!isEval): %s %d\n", symVar->getName().c_str(),
+                symVar->getSize());
               // Otherwise, we keep the symbolic variables for a real conversion 
-              z3expressions.insert({node, this->context.bv_const(symVar->getName().c_str(), symVar->getSize())});
+              z3expressions.emplace(std::make_pair(node, 
+                Z3_mk_const(this->context, Z3_mk_string_symbol(this->context,
+                  symVar->getName().c_str()), Z3_mk_bv_sort(this->context, symVar->getSize()))));
             }
             break;
           }
 
           case ZX_NODE: {
-            z3::expr ext        = z3expressions.at(children[0]);
-            z3::expr value      = z3expressions.at(children[1]);
+            Z3_ast ext = z3expressions.at(children[0]);
+            Z3_ast value = z3expressions.at(children[1]);
             triton::uint32 extv = static_cast<triton::uint32>(this->getUintValue(ext));
 
-            z3expressions.insert({node, to_expr(this->context, log_Z3_mk_zero_ext(this->context, extv, value))});
+            z3expressions.emplace(std::make_pair(node,
+              log_Z3_mk_zero_ext(this->context, extv, value)));
             break;
           }
 
@@ -458,7 +509,7 @@ namespace triton {
         }
  
       } // End of iteration over nodes.
-      return z3expressions.begin()->second;
+      return to_expr(this->context, z3expressions.begin()->second);
     }
   }; /* ast namespace */
 }; /* triton namespace */
