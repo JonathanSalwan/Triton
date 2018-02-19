@@ -1,11 +1,8 @@
-diff --git a/fulldump.patch b/fulldump.patch
-new file mode 100644
-index 0000000..e69de29
 diff --git a/peda.py b/peda.py
-index 7c689c0..17d5451 100644
+index 31eae61..40b6f2c 100644
 --- a/peda.py
 +++ b/peda.py
-@@ -5997,6 +5997,50 @@ class PEDACmd(object):
+@@ -5999,6 +5999,52 @@ class PEDACmd(object):
          return
      utils.options = ["int2hexstr", "list2hexstr", "str2intlist"]
  
@@ -36,7 +33,9 @@ index 7c689c0..17d5451 100644
 +        regs = peda.getregs()
 +
 +        # XMM
-+        for i in range(16):
++        arch, bits = peda.getarch()
++        cnt = (8 if bits == 32 else 16)
++        for i in range(cnt):
 +            xmm = peda.execute_redirect("info registers xmm%d" % (i))
 +            xmm = xmm.splitlines()
 +            xmm = int(xmm[7].split()[2], 16)
