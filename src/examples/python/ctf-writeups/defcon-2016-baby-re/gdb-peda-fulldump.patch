@@ -1,17 +1,23 @@
+diff --git a/fulldump.patch b/fulldump.patch
+new file mode 100644
+index 0000000..e69de29
 diff --git a/peda.py b/peda.py
-index dc6f123..5d89ab2 100644
+index 7c689c0..17d5451 100644
 --- a/peda.py
 +++ b/peda.py
-@@ -5986,6 +5986,47 @@ class PEDACmd(object):
+@@ -5997,6 +5997,50 @@ class PEDACmd(object):
          return
      utils.options = ["int2hexstr", "list2hexstr", "str2intlist"]
  
-+    def fulldump(self, filename):
++    def fulldump(self, *arg):
 +        """
 +        Generate a full dump of the current execution
 +        Usage:
 +            fulldump <filename output>
 +        """
++        (filename,) = normalize_argv(arg, 1)
++        if not filename:
++            filename = "fulldump.dump"
 +
 +        pid = peda.getpid()
 +        if not pid:
@@ -30,10 +36,10 @@ index dc6f123..5d89ab2 100644
 +        regs = peda.getregs()
 +
 +        # XMM
-+        for i in xrange(16):
++        for i in range(16):
 +            xmm = peda.execute_redirect("info registers xmm%d" % (i))
 +            xmm = xmm.splitlines()
-+            xmm = long(xmm[7].split()[2], 16)
++            xmm = int(xmm[7].split()[2], 16)
 +            regs.update({"xmm%d" % (i): xmm})
 +
 +        dump = (regs, memory)
