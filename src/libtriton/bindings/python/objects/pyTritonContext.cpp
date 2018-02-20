@@ -486,8 +486,18 @@ namespace triton {
 
                 /* Check the call */
                 if (ret == nullptr) {
-                  PyErr_Print();
-                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_MEMORY_VALUE): Fail to call the python callback.");
+                  PyObject* type      = nullptr;
+                  PyObject* value     = nullptr;
+                  PyObject* traceback = nullptr;
+
+                  /* Fetch the last exception */
+                  PyErr_Fetch(&type, &value, &traceback);
+
+                  std::string str = PyString_AsString(PyObject_Str(value));
+                  Py_XDECREF(type);
+                  Py_XDECREF(value);
+                  Py_XDECREF(traceback);
+                  throw triton::exceptions::Callbacks(str);
                 }
 
                 Py_DECREF(args);
@@ -520,8 +530,18 @@ namespace triton {
 
                 /* Check the call */
                 if (ret == nullptr) {
-                  PyErr_Print();
-                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(GET_CONCRETE_REGISTER_VALUE): Fail to call the python callback.");
+                  PyObject* type      = nullptr;
+                  PyObject* value     = nullptr;
+                  PyObject* traceback = nullptr;
+
+                  /* Fetch the last exception */
+                  PyErr_Fetch(&type, &value, &traceback);
+
+                  std::string str = PyString_AsString(PyObject_Str(value));
+                  Py_XDECREF(type);
+                  Py_XDECREF(value);
+                  Py_XDECREF(traceback);
+                  throw triton::exceptions::Callbacks(str);
                 }
 
                 Py_DECREF(args);
@@ -554,8 +574,18 @@ namespace triton {
 
                 /* Check the call */
                 if (ret == nullptr) {
-                  PyErr_Print();
-                  throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): Fail to call the python callback.");
+                  PyObject* type      = nullptr;
+                  PyObject* value     = nullptr;
+                  PyObject* traceback = nullptr;
+
+                  /* Fetch the last exception */
+                  PyErr_Fetch(&type, &value, &traceback);
+
+                  std::string str = PyString_AsString(PyObject_Str(value));
+                  Py_XDECREF(type);
+                  Py_XDECREF(value);
+                  Py_XDECREF(traceback);
+                  throw triton::exceptions::Callbacks(str);
                 }
 
                 /* Check if the callback has returned a AbstractNode */
