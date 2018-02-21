@@ -81,6 +81,7 @@ namespace triton {
       std::string SymbolicExpression::getFormattedId(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
+
         if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
@@ -95,6 +96,7 @@ namespace triton {
       std::string SymbolicExpression::getFormattedComment(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
+
         if (this->getComment().empty())
           return "";
 

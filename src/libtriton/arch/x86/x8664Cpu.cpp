@@ -498,7 +498,7 @@ namespace triton {
                   triton::arch::Immediate scale(op->mem.scale, immsize);
 
                   /* Specify that LEA contains a PC relative */
-                  if (base.getId() == pcId)
+                  if (base.getId() == this->pcId)
                     mem.setPcRelative(inst.getNextAddress());
 
                   mem.setSegmentRegister(segment);
