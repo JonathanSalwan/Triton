@@ -280,11 +280,17 @@ namespace triton {
 
         /* Callbacks API ================================================================================= */
 
-        //! [**callbacks api**] - Adds a GET_CONCRETE_MEMORY_VALUE callback.
+        //! [**callbacks api**] - Adds a GET_CONCRETE_MEMORY_VALUE callback (LOAD).
         TRITON_EXPORT void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! [**callbacks api**] - Adds a GET_CONCRETE_REGISTER_VALUE callback.
+        //! [**callbacks api**] - Adds a GET_CONCRETE_REGISTER_VALUE callback (GET).
         TRITON_EXPORT void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
+
+        //! [**callbacks api**] - Adds a SET_CONCRETE_MEMORY_VALUE callback (STORE).
+        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
+
+        //! [**callbacks api**] - Adds a SET_CONCRETE_REGISTER_VALUE callback (PUT).
+        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
 
         //! [**callbacks api**] - Adds a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
@@ -292,11 +298,17 @@ namespace triton {
         //! [**callbacks api**] - Removes all recorded callbacks.
         TRITON_EXPORT void removeAllCallbacks(void);
 
-        //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback.
+        //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback (LOAD).
         TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
 
-        //! [**callbacks api**] - Deletes a GET_CONCRETE_REGISTER_VALUE callback.
+        //! [**callbacks api**] - Deletes a GET_CONCRETE_REGISTER_VALUE callback (GET).
         TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
+
+        //! [**callbacks api**] - Deletes a SET_CONCRETE_MEMORY_VALUE callback (STORE).
+        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
+
+        //! [**callbacks api**] - Deletes a SET_CONCRETE_REGISTER_VALUE callback (PUT).
+        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
 
         //! [**callbacks api**] - Deletes a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);

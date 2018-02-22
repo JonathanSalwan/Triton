@@ -38,24 +38,40 @@ namespace triton {
 
     /*! Enumerates all kinds callbacks. */
     enum callback_e {
-      GET_CONCRETE_MEMORY_VALUE,    /*!< Get concrete memory value callback */
-      GET_CONCRETE_REGISTER_VALUE,  /*!< Get concrete register value callback */
+      GET_CONCRETE_MEMORY_VALUE,    /*!< LOAD concrete memory value callback */
+      GET_CONCRETE_REGISTER_VALUE,  /*!< GET concrete register value callback */
+      SET_CONCRETE_MEMORY_VALUE,    /*!< STORE concrete memory value callback */
+      SET_CONCRETE_REGISTER_VALUE,  /*!< PUT concrete register value callback */
       SYMBOLIC_SIMPLIFICATION,      /*!< Symbolic simplification callback */
     };
 
     /*! \brief The prototype of a GET_CONCRETE_MEMORY_VALUE callback.
      *
      * \details The callback takes an API context as first argument and a memory access as second argument.
-     * Callbacks will be called each time that the Triton library will need a concrete memory value.
+     * Callbacks will be called each time that the Triton library will need to LOAD a concrete memory value.
      */
     using getConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)>;
 
     /*! \brief The prototype of a GET_CONCRETE_REGISTER_VALUE callback.
      *
      * \details The callback takes an API context as first argument and a register as second argument.
-     * Callbacks will be called each time that the Triton library will need a concrete register value.
+     * Callbacks will be called each time that the Triton library will need to GET a concrete register value.
      */
     using getConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::Register&)>;
+
+    /*! \brief The prototype of a SET_CONCRETE_MEMORY_VALUE callback.
+     *
+     * \details The callback takes an API context as first argument, a memory access as second argument and the value at third.
+     * Callbacks will be called each time that the Triton library will need to STORE a concrete memory value.
+     */
+    using setConcreteMemoryValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)>;
+
+    /*! \brief The prototype of a SET_CONCRETE_REGISTER_VALUE callback.
+     *
+     * \details The callback takes an API context as first argument, a register as second argument and the value at third.
+     * Callbacks will be called each time that the Triton library will neet to PUT a concrete register value.
+     */
+    using setConcreteRegisterValueCallback = ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)>;
 
     /*! \brief The prototype of a SYMBOLIC_SIMPLIFICATION callback.
      *
@@ -73,11 +89,17 @@ namespace triton {
         triton::API& api;
 
       protected:
-        //! [c++] Callbacks for all concrete memory needs.
+        //! [c++] Callbacks for all concrete memory needs (LOAD).
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
 
-        //! [c++] Callbacks for all concrete register needs.
+        //! [c++] Callbacks for all concrete register needs (GET).
         std::list<triton::callbacks::getConcreteRegisterValueCallback> getConcreteRegisterValueCallbacks;
+
+        //! [c++] Callbacks for all concrete memory needs (STORE).
+        std::list<triton::callbacks::setConcreteMemoryValueCallback> setConcreteMemoryValueCallbacks;
+
+        //! [c++] Callbacks for all concrete register needs (PUT).
+        std::list<triton::callbacks::setConcreteRegisterValueCallback> setConcreteRegisterValueCallbacks;
 
         //! [c++] Callbacks for all symbolic simplifications.
         std::list<triton::callbacks::symbolicSimplificationCallback> symbolicSimplificationCallbacks;
@@ -98,6 +120,12 @@ namespace triton {
         //! Adds a GET_CONCRETE_REGISTER_VALUE callback.
         TRITON_EXPORT void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
+        //! Adds a SET_CONCRETE_MEMORY_VALUE callback.
+        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
+
+        //! Adds a SET_CONCRETE_REGISTER_VALUE callback.
+        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
+
         //! Adds a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
@@ -110,6 +138,12 @@ namespace triton {
         //! Deletes a GET_CONCRETE_REGISTER_VALUE callback.
         TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
 
+        //! Deletes a SET_CONCRETE_MEMORY_VALUE callback.
+        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
+
+        //! Deletes a SET_CONCRETE_REGISTER_VALUE callback.
+        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
+
         //! Deletes a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
@@ -120,7 +154,13 @@ namespace triton {
         TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value) const;
+
+        //! Processes callbacks according to the kind and the C++ polymorphism.
         TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
+
+        //! Processes callbacks according to the kind and the C++ polymorphism.
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value) const;
     };
 
   /*! @} End of callbacks namespace */

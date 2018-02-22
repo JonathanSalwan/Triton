@@ -818,6 +818,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE), value);
         this->memory[addr] = value;
       }
 
@@ -833,6 +835,9 @@ namespace triton {
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x8664Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, mem, value);
+
         for (triton::uint32 i = 0; i < size; i++) {
           this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
           cv >>= 8;
@@ -842,14 +847,14 @@ namespace triton {
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
         for (triton::usize index = 0; index < values.size(); index++) {
-          this->memory[baseAddr+index] = values[index];
+          this->setConcreteMemoryValue(baseAddr+index, values[index]);
         }
       }
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
         for (triton::usize index = 0; index < size; index++) {
-          this->memory[baseAddr+index] = area[index];
+          this->setConcreteMemoryValue(baseAddr+index, area[index]);
         }
       }
 
@@ -857,6 +862,9 @@ namespace triton {
       void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
         if (value > reg.getMaxValue())
           throw triton::exceptions::Register("x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
+
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);
 
         switch (reg.getId()) {
           case triton::arch::ID_REG_RAX: (*((triton::uint64*)(this->rax)))  = value.convert_to<triton::uint64>(); break;

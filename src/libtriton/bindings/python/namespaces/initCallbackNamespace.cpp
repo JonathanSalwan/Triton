@@ -32,11 +32,19 @@ The CALLBACK namespace contains all kinds of callbacks.
 
 - **CALLBACK.GET_CONCRETE_MEMORY_VALUE**<br>
 The callback takes as arguments a \ref py_TritonContext_page and a \ref py_MemoryAccess_page. Callbacks will be called each time that the
-Triton library will need a concrete memory value. The callback must return nothing.
+Triton library will need to LOAD a concrete memory value. The callback must return nothing.
 
 - **CALLBACK.GET_CONCRETE_REGISTER_VALUE**<br>
 The callback takes as arguments a \ref py_TritonContext_page and a \ref py_Register_page. Callbacks will be called each time that the
-Triton library will need a concrete register value. The callback must return nothing.
+Triton library will need to GET a concrete register value. The callback must return nothing.
+
+- **CALLBACK.SET_CONCRETE_MEMORY_VALUE**<br>
+The callback takes as arguments a \ref py_TritonContext_page, a \ref py_MemoryAccess_page and an integer. Callbacks will be called
+each time that the Triton library will need to STORE a concrete memory value. The callback must return nothing.
+
+- **CALLBACK.SET_CONCRETE_REGISTER_VALUE**<br>
+The callback takes as arguments a \ref py_TritonContext_page, \ref py_Register_page and an integer. Callbacks will be called each time that the
+Triton library will need to PUT a concrete register value. The callback must return nothing.
 
 - **CALLBACK.SYMBOLIC_SIMPLIFICATION**<br>
 Defines a callback which be called before all symbolic assignments. The callback takes as arguments
@@ -54,6 +62,8 @@ namespace triton {
       void initCallbackNamespace(PyObject* callbackDict) {
         PyDict_SetItemString(callbackDict, "GET_CONCRETE_MEMORY_VALUE",   PyLong_FromUint32(triton::callbacks::GET_CONCRETE_MEMORY_VALUE));
         PyDict_SetItemString(callbackDict, "GET_CONCRETE_REGISTER_VALUE", PyLong_FromUint32(triton::callbacks::GET_CONCRETE_REGISTER_VALUE));
+        PyDict_SetItemString(callbackDict, "SET_CONCRETE_MEMORY_VALUE",   PyLong_FromUint32(triton::callbacks::SET_CONCRETE_MEMORY_VALUE));
+        PyDict_SetItemString(callbackDict, "SET_CONCRETE_REGISTER_VALUE", PyLong_FromUint32(triton::callbacks::SET_CONCRETE_REGISTER_VALUE));
         PyDict_SetItemString(callbackDict, "SYMBOLIC_SIMPLIFICATION",     PyLong_FromUint32(triton::callbacks::SYMBOLIC_SIMPLIFICATION));
       }
 
