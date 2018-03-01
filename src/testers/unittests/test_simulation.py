@@ -88,6 +88,7 @@ class DefCamp2015(object):
     def load_binary(self, filename):
         """Load in memory every opcode from an elf program."""
         import lief
+        lief.Logger.disable()
         binary = lief.parse(filename)
         phdrs  = binary.segments
         for phdr in phdrs:
