@@ -50,7 +50,7 @@ namespace triton {
       /*! \brief This class is used to describe the x86 (64-bits) spec. */
       class x8664Cpu : public CpuInterface, public x86Specifications {
 
-        static constexpr registers_e pcId = ID_REG_RIP;
+        static const registers_e pcId = ID_REG_RIP;
 
         private:
           //! Callbacks API
