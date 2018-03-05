@@ -46,9 +46,16 @@ namespace triton {
       }
 
       //! Forward call to real functor
-      template <class ...T>
-      auto operator()(T && ...t) const -> decltype(this->F_(std::forward<T>(t)...)) {
-        return F_(std::forward<T>(t)...);
+      template <class apiType, class paramType>
+      auto operator()(apiType& api, paramType& param) const -> decltype(F_(api, param)) {
+        return F_(api, param);
+      }
+
+      //! Forward call to real functor
+      template <class apiType, class paramType1, class paramType2>
+      auto operator()(apiType& api, paramType1& param1, paramType2& param2) const -> decltype(F_(api, param1, param2)) {
+        /* We don't use C++ variadic templates to support VS2013... */
+        return F_(api, param1, param2);
       }
 
       //! Comparison of functor based on id
