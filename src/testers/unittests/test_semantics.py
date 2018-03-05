@@ -69,7 +69,7 @@ class TestIR(unittest.TestCase):
     def load_binary(self, filename):
         """Load in memory every opcode from an elf program."""
         import lief
-        lief.Logger.disable()
+        #lief.Logger.disable()
         binary = lief.parse(filename)
         phdrs  = binary.segments
         for phdr in phdrs:
@@ -212,7 +212,7 @@ class TestIRQemu(unittest.TestCase):
     def load_binary(self, filename):
         """Load in memory every opcode from an elf program."""
         import lief
-        lief.Logger.disable()
+        #lief.Logger.disable()
         binary = lief.parse(filename)
         phdrs  = binary.segments
         for phdr in phdrs:
