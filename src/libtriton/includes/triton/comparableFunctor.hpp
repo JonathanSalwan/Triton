@@ -46,12 +46,12 @@ namespace triton {
       }
 
       //! Forward call to real functor
-      template <class ...T>
-      auto operator()(T && ...t) const -> decltype(this->F_(std::forward<T>(t)...)) {
-        return F_(std::forward<T>(t)...);
+      template <class apiType, class paramType>
+      auto operator()(apiType &api, paramType param) const -> decltype(F_(api, param)) {
+        return F_(api, param);
       }
-
-      //! Comparison of functor based on id
+	  
+	  //! Comparison of functor based on id
       template <class T>
       bool operator==(const ComparableFunctor<T>& O) const {
         return this->ID_ == O.ID_;
