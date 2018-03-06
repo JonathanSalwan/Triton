@@ -87,9 +87,9 @@ namespace triton {
     void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
-           for (auto& function: this->getConcreteMemoryValueCallbacks) {
-			   function(this->api, mem);
-           }
+          for (auto& function: this->getConcreteMemoryValueCallbacks) {
+            function(this->api, mem);
+          }
           break;
         }
 
