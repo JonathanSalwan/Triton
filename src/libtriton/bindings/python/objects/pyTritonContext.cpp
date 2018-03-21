@@ -135,9 +135,6 @@ Returns the current architecture used.
 - <b>\ref py_AstContext_page getAstContext(void)</b><br>
 Returns the AST context to create and modify nodes.
 
-- <b>dict getAstDictionariesStats(void)</b><br>
-Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
-
 - <b>\ref py_AstNode_page getAstFromId(integer symExprId)</b><br>
 Returns the partial AST from a symbolic expression id.
 
@@ -1257,24 +1254,6 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-      }
-
-
-      static PyObject* TritonContext_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
-
-        try {
-          std::map<std::string, triton::usize> stats = PyTritonContext_AsTritonContext(self)->getAstDictionariesStats();
-
-          ret = xPyDict_New();
-          for (auto it = stats.begin(); it != stats.end(); it++)
-            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        return ret;
       }
 
 
@@ -2855,7 +2834,6 @@ namespace triton {
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                          METH_NOARGS,        ""},
-        {"getAstDictionariesStats",             (PyCFunction)TritonContext_getAstDictionariesStats,                METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)TritonContext_getAstFromId,                           METH_O,             ""},
         {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,               METH_NOARGS,        ""},
         {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,             METH_VARARGS,       ""},

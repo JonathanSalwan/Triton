@@ -251,9 +251,6 @@ namespace triton {
         //! [**AST garbage collector api**] - Returns all allocated nodes.
         TRITON_EXPORT const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
 
-        //! [**AST garbage collector api**] - Returns all stats about AST Dictionaries.
-        TRITON_EXPORT std::map<std::string, triton::usize> getAstDictionariesStats(void) const;
-
         //! [**AST garbage collector api**] - Returns all variable nodes recorded.
         TRITON_EXPORT const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
 

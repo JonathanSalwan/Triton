@@ -12,7 +12,6 @@
 #include <string>
 
 #include <triton/ast.hpp>
-#include <triton/astDictionaries.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/modes.hpp>
 #include <triton/tritonTypes.hpp>
@@ -36,7 +35,7 @@ namespace triton {
 
     //! \class AstGarbageCollector
     /*! \brief The AST garbage collector class */
-    class AstGarbageCollector : public triton::ast::AstDictionaries {
+    class AstGarbageCollector {
       private:
         //! Modes API
         const triton::modes::Modes& modes;

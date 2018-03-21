@@ -33,9 +33,6 @@ The MODE namespace contains all kinds of mode.
 - **MODE.ALIGNED_MEMORY**<br>
 Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` acceess.
 
-- **MODE.AST_DICTIONARIES**<br>
-Enabled, Triton will record all AST nodes into several dictionaries and try to return node already allocated instead of allocate twice the same node.
-
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
 Enabled, Triton will perform symbolic execution only on symbolized expressions.
 
@@ -55,7 +52,6 @@ namespace triton {
 
       void initModeNamespace(PyObject* modeDict) {
         PyDict_SetItemString(modeDict, "ALIGNED_MEMORY",         PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
-        PyDict_SetItemString(modeDict, "AST_DICTIONARIES",       PyLong_FromUint32(triton::modes::AST_DICTIONARIES));
         PyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         PyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         PyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));

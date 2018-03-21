@@ -508,11 +508,6 @@ namespace triton {
   }
 
 
-  std::map<std::string, triton::usize> API::getAstDictionariesStats(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAstDictionariesStats();
-  }
-
-
   const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& API::getAstVariableNodes(void) const {
     return this->astCtxt.getAstGarbageCollector().getAstVariableNodes();
   }
