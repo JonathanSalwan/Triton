@@ -7,6 +7,7 @@
 
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 #include <triton/modes.hpp>
 
 
@@ -51,10 +52,10 @@ namespace triton {
     namespace python {
 
       void initModeNamespace(PyObject* modeDict) {
-        PyDict_SetItemString(modeDict, "ALIGNED_MEMORY",         PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
-        PyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
-        PyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
-        PyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
+        xPyDict_SetItemString(modeDict, "ALIGNED_MEMORY",         PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
+        xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
+        xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
+        xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
       }
 
     }; /* python namespace */

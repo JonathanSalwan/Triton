@@ -425,7 +425,7 @@ namespace triton {
 
         PyObject* registersDict = xPyDict_New();
         for (auto& reg : regs)
-          PyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
+          xPyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
 
         Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
         ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
@@ -1360,7 +1360,7 @@ namespace triton {
           ret = xPyDict_New();
           auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node));
           for (auto it = model.begin(); it != model.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1395,7 +1395,7 @@ namespace triton {
             auto model = *it;
 
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
-              PyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
+              xPyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
             }
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);
@@ -1516,7 +1516,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = expressions.begin(); it != expressions.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1534,7 +1534,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1581,7 +1581,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1653,7 +1653,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto sv: variables)
-            PyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2375,7 +2375,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = exprs.begin(); it != exprs.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
