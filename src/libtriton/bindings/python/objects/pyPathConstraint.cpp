@@ -100,7 +100,7 @@ namespace triton {
       void PathConstraint_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyPathConstraint_AsPathConstraint(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 

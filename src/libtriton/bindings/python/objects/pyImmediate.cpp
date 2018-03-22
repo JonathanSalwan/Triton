@@ -105,7 +105,7 @@ namespace triton {
       void Immediate_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyImmediate_AsImmediate(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
