@@ -15,6 +15,8 @@
     #else
       #define TRITON_EXPORT __declspec(dllexport) // Note: actually gcc seems to also supports this syntax.
     #endif
+  #elif BUILDING_LIB
+    #define TRITON_EXPORT
   #else
     #ifdef __GNUC__
       #define TRITON_EXPORT __attribute__ ((dllimport))
