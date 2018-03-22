@@ -254,11 +254,8 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         TRITON_EXPORT void setConditionTaken(bool flag);
 
-        //! Resets all instruction information.
-        TRITON_EXPORT void reset(void);
-
-        //! Resets partially instruction information. All except memory and register states.
-        TRITON_EXPORT void partialReset(void);
+        //! Clears all instruction information.
+        TRITON_EXPORT void clear(void);
     };
 
     //! Displays an Instruction.
