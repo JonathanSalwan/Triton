@@ -14,11 +14,11 @@ clone_folder: c:\projects\triton
 
 environment:
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
-  BOOST_ROOT: c:\Libraries\boost_1_62_0
 
   matrix:
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 12 2013
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
@@ -30,6 +30,7 @@ environment:
 
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
@@ -41,6 +42,7 @@ environment:
 
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
@@ -52,6 +54,7 @@ environment:
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 12 2013 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
@@ -63,6 +66,7 @@ environment:
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
@@ -74,6 +78,7 @@ environment:
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
