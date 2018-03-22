@@ -161,16 +161,16 @@ namespace tracer {
       PyObject *idCallbackClassDict = triton::bindings::python::xPyDict_New();
 
       /* Add callback ref into the INSERT_POINT class namespace */
-      PyDict_SetItemString(idCallbackClassDict, "AFTER",            triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_AFTER));
-      PyDict_SetItemString(idCallbackClassDict, "BEFORE",           triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE));
-      PyDict_SetItemString(idCallbackClassDict, "BEFORE_SYMPROC",   triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE_SYMPROC));
-      PyDict_SetItemString(idCallbackClassDict, "FINI",             triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_FINI));
-      PyDict_SetItemString(idCallbackClassDict, "ROUTINE_ENTRY",    triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_ROUTINE_ENTRY));
-      PyDict_SetItemString(idCallbackClassDict, "ROUTINE_EXIT",     triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_ROUTINE_EXIT));
-      PyDict_SetItemString(idCallbackClassDict, "SIGNALS",          triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SIGNALS));
-      PyDict_SetItemString(idCallbackClassDict, "SYSCALL_ENTRY",    triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SYSCALL_ENTRY));
-      PyDict_SetItemString(idCallbackClassDict, "SYSCALL_EXIT",     triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SYSCALL_EXIT));
-      PyDict_SetItemString(idCallbackClassDict, "IMAGE_LOAD",       triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_IMAGE_LOAD));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "AFTER",            triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_AFTER));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "BEFORE",           triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "BEFORE_SYMPROC",   triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_BEFORE_SYMPROC));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "FINI",             triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_FINI));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "ROUTINE_ENTRY",    triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_ROUTINE_ENTRY));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "ROUTINE_EXIT",     triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_ROUTINE_EXIT));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "SIGNALS",          triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SIGNALS));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "SYSCALL_ENTRY",    triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SYSCALL_ENTRY));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "SYSCALL_EXIT",     triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_SYSCALL_EXIT));
+      triton::bindings::python::xPyDict_SetItemString(idCallbackClassDict, "IMAGE_LOAD",       triton::bindings::python::PyLong_FromUint32(tracer::pintool::options::CB_IMAGE_LOAD));
 
       /* Create the INSERT_POINT class */
       PyObject *idCallbackClass = triton::bindings::python::xPyClass_New(nullptr, idCallbackClassDict, idCallbackClassName);
@@ -182,16 +182,16 @@ namespace tracer {
       PyObject *idStandardClassDict = triton::bindings::python::xPyDict_New();
 
       /* Add callback ref into the STANDARD class namespace */
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_INVALID",             triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_INVALID));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_LINUX",          triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_LINUX));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_LINUX",         triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_LINUX));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_MAC",            triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_MAC));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_MAC",           triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_MAC));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_WINDOWS_FAST",   triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_WINDOWS_FAST));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_WINDOWS_FAST",  triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_WINDOWS_FAST));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_WINDOWS_ALT",    triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_WINDOWS_ALT));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_WOW64",               triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_WOW64));
-      PyDict_SetItemString(idStandardClassDict, "STANDARD_WINDOWS_INT",         triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_WINDOWS_INT));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_INVALID",             triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_INVALID));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_LINUX",          triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_LINUX));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_LINUX",         triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_LINUX));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_MAC",            triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_MAC));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_MAC",           triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_MAC));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_WINDOWS_FAST",   triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_WINDOWS_FAST));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32E_WINDOWS_FAST",  triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32E_WINDOWS_FAST));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_IA32_WINDOWS_ALT",    triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_IA32_WINDOWS_ALT));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_WOW64",               triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_WOW64));
+      triton::bindings::python::xPyDict_SetItemString(idStandardClassDict, "STANDARD_WINDOWS_INT",         triton::bindings::python::PyLong_FromUint32(LEVEL_CORE::SYSCALL_STANDARD_WINDOWS_INT));
 
       /* Create the STANDARD class */
       PyObject *idStandardClass = triton::bindings::python::xPyClass_New(nullptr, idStandardClassDict, idStandardClassName);

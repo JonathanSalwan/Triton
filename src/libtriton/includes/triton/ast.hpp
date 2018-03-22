@@ -116,12 +116,7 @@ namespace triton {
         //! Returns the children of the node.
         TRITON_EXPORT std::vector<AbstractNode*>& getChildren(void);
 
-        /*!
-         * \brief Returns the parents of node or an empty set if there is still no parent defined.
-         *
-         * Note that if there is the `AST_DICTIONARIES` optimization enabled, this feature will
-         * probably not represent the real tree of your expression.
-         */
+        //! Returns the parents of node or an empty set if there is still no parent defined.
         TRITON_EXPORT std::set<AbstractNode*>& getParents(void);
 
         //! Removes a parent node.

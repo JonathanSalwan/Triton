@@ -72,7 +72,7 @@ namespace triton {
       void BitsVector_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyBitsVector_AsBitsVector(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 

@@ -135,9 +135,6 @@ Returns the current architecture used.
 - <b>\ref py_AstContext_page getAstContext(void)</b><br>
 Returns the AST context to create and modify nodes.
 
-- <b>dict getAstDictionariesStats(void)</b><br>
-Returns a dictionary which contains all information about number of nodes allocated via AST dictionaries.
-
 - <b>\ref py_AstNode_page getAstFromId(integer symExprId)</b><br>
 Returns the partial AST from a symbolic expression id.
 
@@ -418,7 +415,7 @@ namespace triton {
       static void TritonContext_dealloc(PyObject* self) {
         delete PyTritonContext_AsTritonContext(self);
         Py_XDECREF(((TritonContext_Object*)self)->regAttr);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -428,7 +425,7 @@ namespace triton {
 
         PyObject* registersDict = xPyDict_New();
         for (auto& reg : regs)
-          PyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
+          xPyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
 
         Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
         ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
@@ -1260,24 +1257,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getAstDictionariesStats(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
-
-        try {
-          std::map<std::string, triton::usize> stats = PyTritonContext_AsTritonContext(self)->getAstDictionariesStats();
-
-          ret = xPyDict_New();
-          for (auto it = stats.begin(); it != stats.end(); it++)
-            PyDict_SetItem(ret, PyString_FromString(it->first.c_str()), PyLong_FromUsize(it->second));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        return ret;
-      }
-
-
       static PyObject* TritonContext_getAstFromId(PyObject* self, PyObject* symExprId) {
         if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "getAstFromId(): Expects an integer as argument.");
@@ -1381,7 +1360,7 @@ namespace triton {
           ret = xPyDict_New();
           auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node));
           for (auto it = model.begin(); it != model.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1416,7 +1395,7 @@ namespace triton {
             auto model = *it;
 
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
-              PyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
+              xPyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
             }
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);
@@ -1537,7 +1516,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = expressions.begin(); it != expressions.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1555,7 +1534,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1602,7 +1581,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = regs.begin(); it != regs.end(); it++) {
-            PyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1674,7 +1653,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto sv: variables)
-            PyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2396,7 +2375,7 @@ namespace triton {
 
           ret = xPyDict_New();
           for (auto it = exprs.begin(); it != exprs.end(); it++)
-            PyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2855,7 +2834,6 @@ namespace triton {
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                          METH_NOARGS,        ""},
-        {"getAstDictionariesStats",             (PyCFunction)TritonContext_getAstDictionariesStats,                METH_NOARGS,        ""},
         {"getAstFromId",                        (PyCFunction)TritonContext_getAstFromId,                           METH_O,             ""},
         {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,               METH_NOARGS,        ""},
         {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,             METH_VARARGS,       ""},

@@ -133,7 +133,7 @@ namespace triton {
       //! AstNode destructor.
       void AstNode_dealloc(PyObject* self) {
         std::cout << std::flush;
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 

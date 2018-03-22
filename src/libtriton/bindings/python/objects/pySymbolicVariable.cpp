@@ -79,7 +79,7 @@ namespace triton {
       //! SymbolicVariable destructor.
       void SymbolicVariable_dealloc(PyObject* self) {
         std::cout << std::flush;
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 

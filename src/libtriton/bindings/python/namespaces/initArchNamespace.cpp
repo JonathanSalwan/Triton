@@ -7,6 +7,7 @@
 
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 #include <triton/architecture.hpp>
 
 
@@ -36,8 +37,8 @@ namespace triton {
     namespace python {
 
       void initArchNamespace(PyObject* archDict) {
-        PyDict_SetItemString(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
-        PyDict_SetItemString(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
+        xPyDict_SetItemString(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
+        xPyDict_SetItemString(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
       }
 
     }; /* python namespace */

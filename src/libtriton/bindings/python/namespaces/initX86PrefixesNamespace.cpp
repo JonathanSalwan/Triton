@@ -7,6 +7,7 @@
 
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 #include <triton/x86Specifications.hpp>
 
 
@@ -42,11 +43,11 @@ namespace triton {
       void initX86PrefixesNamespace(PyObject* prefixesDict) {
         PyDict_Clear(prefixesDict);
 
-        PyDict_SetItemString(prefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
-        PyDict_SetItemString(prefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
-        PyDict_SetItemString(prefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
-        PyDict_SetItemString(prefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
-        PyDict_SetItemString(prefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
+        xPyDict_SetItemString(prefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
+        xPyDict_SetItemString(prefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
+        xPyDict_SetItemString(prefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
+        xPyDict_SetItemString(prefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
+        xPyDict_SetItemString(prefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
       }
 
     }; /* python namespace */
