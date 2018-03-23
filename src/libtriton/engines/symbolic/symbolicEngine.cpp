@@ -944,6 +944,12 @@ namespace triton {
 
       /* Adds and assign a new memory reference */
       void SymbolicEngine::addMemoryReference(triton::uint64 mem, triton::usize id) {
+        boost::bimap<triton::uint64, triton::usize>::left_map::iterator it;
+
+        if ((it = this->memoryReference.left.find(mem)) != this->memoryReference.left.end()) {
+          this->memoryReference.left.erase(it);
+        }
+
         auto val = boost::bimap<triton::uint64, triton::usize>::value_type(mem, id);
         this->memoryReference.insert(val);
       }
