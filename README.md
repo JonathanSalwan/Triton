@@ -5,7 +5,7 @@ engine, a Taint engine, AST representations of the x86 and the x86-64 instructio
 passes, an SMT Solver Interface and, the last but not least, Python bindings.
 
 <p align="center">
-    <img src="http://triton.quarkslab.com/files/triton_v03_architecture.svg"/></br>
+    <img src="http://triton.quarkslab.com/files/triton_v06_architecture.svg" width="50%" height="50%"/></br>
     <img src="http://triton.quarkslab.com/files/triton_multi_os.png"/>
 </p>
 
