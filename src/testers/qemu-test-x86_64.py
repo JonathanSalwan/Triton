@@ -45,13 +45,12 @@ def cafter(instruction):
     for reg in regs:
 
         cvalue = Pintool.getCurrentRegisterValue(reg)
-        seid   = Triton.getSymbolicRegisterId(reg)
+        se     = Triton.getSymbolicRegister(reg)
 
-        if seid == SYMEXPR.UNSET:
+        if se is None:
             continue
 
-        expr   = Triton.getSymbolicExpressionFromId(seid)
-        svalue = expr.getAst().evaluate()
+        svalue = se.getAst().evaluate()
         #svalue = Triton.evaluateAstViaZ3(expr)
 
         # Check register

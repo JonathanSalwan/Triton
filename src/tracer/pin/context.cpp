@@ -480,7 +480,7 @@ namespace tracer {
           if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 
-          if (tracer::pintool::api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
+          if (tracer::pintool::api.getSymbolicRegister(*reg) == nullptr)
             continue;
 
           triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(*reg));
