@@ -388,10 +388,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = flag;
         }
 
@@ -409,10 +408,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = this->isMemoryTainted(memAddrDst + i) | this->isMemoryTainted(memAddrSrc + i);
         }
 
@@ -429,10 +427,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = flag;
         }
 
@@ -464,10 +461,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = flag;
         }
 
@@ -485,10 +481,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = this->isMemoryTainted(memAddrSrc + i);
         }
 
@@ -505,10 +500,9 @@ namespace triton {
 
         /* Taint each byte of reference expression */
         for (triton::uint32 i = 0; i != writeSize; i++) {
-          triton::usize byteId = this->symbolicEngine->getSymbolicMemoryId(memAddrDst + i);
-          if (byteId == triton::engines::symbolic::UNSET)
+          auto byte = this->symbolicEngine->getSymbolicMemory(memAddrDst + i);
+          if (byte == nullptr)
             continue;
-          triton::engines::symbolic::SymbolicExpression* byte = this->symbolicEngine->getSymbolicExpressionFromId(byteId);
           byte->isTainted = flag;
         }
 

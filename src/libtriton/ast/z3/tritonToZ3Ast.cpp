@@ -257,7 +257,7 @@ namespace triton {
         }
 
         case REFERENCE_NODE:
-          return this->convert(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getAst());
+          return this->convert(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression()->getAst());
 
         case STRING_NODE: {
           std::string value = reinterpret_cast<triton::ast::StringNode*>(node)->getValue();

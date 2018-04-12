@@ -71,10 +71,10 @@ For example, if there are two symbolic variables in your constraint, the triton:
 
 ~~~~~~~~~~~~~{cpp}
 // Get the symbolic id of RAX
-auto raxSymId = api.getSymbolicRegisterId(TRITON_X86_REG_RAX);
+auto raxSym = api.getSymbolicRegister(TRITON_X86_REG_RAX);
 
 // Get the full AST of RAX
-auto raxFullAst = api.unrollAstFromId(raxSymId);
+auto raxFullAst = api.unrollAst(raxSym.getAst());
 
 // Modify the AST of RAX to build the constraint
 auto constraint = triton::ast::equal(raxFullAst, triton::ast::bv(0, raxFullAst->getBitvectorSize()));
