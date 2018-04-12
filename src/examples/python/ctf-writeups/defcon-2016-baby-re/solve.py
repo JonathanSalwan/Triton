@@ -201,7 +201,7 @@ def emulate(Triton, pc):
             astCtxt = Triton.getAstContext()
 
             # Slice expressions
-            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.registers.rax))
+            rax   = Triton.getSymbolicRegister(Triton.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint

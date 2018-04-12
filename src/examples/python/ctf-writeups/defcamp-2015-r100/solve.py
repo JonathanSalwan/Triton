@@ -67,7 +67,7 @@ def emulate(pc):
         # eax must be equal to 1 at each round.
         if instruction.getAddress() == 0x40078B:
             # Slice expressions
-            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.registers.rax))
+            rax   = Triton.getSymbolicRegister(Triton.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
