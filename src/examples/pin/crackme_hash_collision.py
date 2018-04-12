@@ -57,8 +57,7 @@ def cafter(instruction):
     # RAX must be equal to 0xad6d to win
     if instruction.getAddress() == 0x4005ce:
         print '[+] Please wait, computing in progress...'
-        raxId = Triton.getSymbolicRegisterId(Triton.registers.rax)
-        raxExpr = Triton.getAstFromId(raxId)
+        rax = Triton.getSymbolicRegister(Triton.registers.rax)
 
         SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')
         SymVar_1 = Triton.getSymbolicVariableFromName('SymVar_1')
@@ -80,7 +79,7 @@ def cafter(instruction):
                  astCtxt.bvult(astCtxt.variable(SymVar_3), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
                  astCtxt.bvugt(astCtxt.variable(SymVar_4), astCtxt.bv(96,  CPUSIZE.QWORD_BIT)),
                  astCtxt.bvult(astCtxt.variable(SymVar_4), astCtxt.bv(123, CPUSIZE.QWORD_BIT)),
-                 astCtxt.equal(raxExpr, astCtxt.bv(0xad6d, CPUSIZE.QWORD_BIT)) # collision: (assert (= rax 0xad6d)
+                 astCtxt.equal(rax.getAst(), astCtxt.bv(0xad6d, CPUSIZE.QWORD_BIT)) # collision: (assert (= rax 0xad6d)
                ])
 
         # Get max 20 different models
