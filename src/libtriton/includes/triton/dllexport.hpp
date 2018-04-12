@@ -19,7 +19,7 @@
     #ifdef __GNUC__
       #define TRITON_EXPORT __attribute__ ((dllimport))
     #else
-      #define TRITON_EXPORT __declspec(dllimport) // Note: actually gcc seems to also supports this syntax.
+      #define TRITON_EXPORT
     #endif
   #endif
 #else
