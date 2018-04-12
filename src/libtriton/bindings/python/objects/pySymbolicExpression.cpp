@@ -299,6 +299,16 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicExpression_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+        return type->tp_alloc(type, 0);
+      }
+
+
+      static int SymbolicExpression_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
+        return 0;
+      }
+
+
       //! SymbolicExpression methods.
       PyMethodDef SymbolicExpression_callbacks[] = {
         {"getAst",            SymbolicExpression_getAst,            METH_NOARGS,    ""},
@@ -354,9 +364,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,                                          /* tp_init */
+        (initproc)SymbolicExpression_init,          /* tp_init */
         0,                                          /* tp_alloc */
-        0,                                          /* tp_new */
+        SymbolicExpression_new,                     /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -369,18 +379,18 @@ namespace triton {
       };
 
 
-      PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* symExpr) {
-        SymbolicExpression_Object* object;
-
+      PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& symExpr) {
         if (symExpr == nullptr) {
           Py_INCREF(Py_None);
           return Py_None;
         }
 
         PyType_Ready(&SymbolicExpression_Type);
-        object = PyObject_NEW(SymbolicExpression_Object, &SymbolicExpression_Type);
-        if (object != NULL)
+        auto* object = (triton::bindings::python::SymbolicExpression_Object*)PyObject_CallObject((PyObject*)&SymbolicExpression_Type, nullptr);
+        if (object != NULL) {
+          new (&object->symExpr) triton::engines::symbolic::SharedSymbolicExpression();
           object->symExpr = symExpr;
+        }
 
         return (PyObject*)object;
       }

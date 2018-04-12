@@ -9,6 +9,7 @@
 #define TRITON_SYMBOLICEXPRESSION_H
 
 #include <string>
+#include <memory>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -130,6 +131,9 @@ namespace triton {
           TRITON_EXPORT void setOriginRegister(const triton::arch::Register& reg);
       };
 
+      //! A shared symbolic expression.
+      using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
+
       //! Displays a symbolic expression.
       TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
 
@@ -144,4 +148,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICEXPRESSION_H */
-

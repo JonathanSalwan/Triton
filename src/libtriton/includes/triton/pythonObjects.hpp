@@ -88,7 +88,7 @@ namespace triton {
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
 
       //! Creates the SymbolicExpression python class.
-      PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
+      PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
@@ -209,7 +209,7 @@ namespace triton {
       //! pySymbolicExpression object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::symbolic::SymbolicExpression* symExpr;
+        triton::engines::symbolic::SharedSymbolicExpression symExpr;
       } SymbolicExpression_Object;
 
       //! pySymbolicExpression type.

@@ -68,7 +68,7 @@ class DefCamp2015(object):
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(self.Triton.registers.rax))
+                rax = self.Triton.getSymbolicRegister(self.Triton.registers.rax)
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint

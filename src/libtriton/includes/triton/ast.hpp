@@ -10,6 +10,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <ostream>
 #include <set>
 #include <stdexcept>
@@ -30,9 +31,11 @@ namespace triton {
  *  @{
  */
 
+  /* Forward declarations */
   namespace engines {
     namespace symbolic {
       class SymbolicExpression;
+      using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
     };
   };
 
@@ -520,13 +523,13 @@ namespace triton {
     //! Reference node
     class ReferenceNode : public AbstractNode {
       protected:
-        triton::engines::symbolic::SymbolicExpression& expr;
+        triton::engines::symbolic::SharedSymbolicExpression expr;
 
       public:
-        TRITON_EXPORT ReferenceNode(triton::engines::symbolic::SymbolicExpression& expr);
+        TRITON_EXPORT ReferenceNode(const triton::engines::symbolic::SharedSymbolicExpression& expr);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT triton::engines::symbolic::SymbolicExpression& getSymbolicExpression(void) const;
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& getSymbolicExpression(void) const;
     };
 
 
