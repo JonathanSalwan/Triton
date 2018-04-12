@@ -192,8 +192,8 @@ Returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py
 - <b>dict getSymbolicMemory(void)</b><br>
 Returns the map of symbolic memory as {integer address : \ref py_SymbolicExpression_page expr}.
 
-- <b>integer getSymbolicMemoryId(intger addr)</b><br>
-Returns the symbolic expression id corresponding to a memory address.
+- <b>\ref py_SymbolicExpression_page getSymbolicMemory(intger addr)</b><br>
+Returns the \ref py_SymbolicExpression_page corresponding to a memory address.
 
 - <b>integer getSymbolicMemoryValue(intger addr)</b><br>
 Returns the symbolic memory value.
@@ -204,8 +204,8 @@ Returns the symbolic memory value.
 - <b>dict getSymbolicRegisters(void)</b><br>
 Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
-- <b>integer getSymbolicRegisterId(\ref py_Register_page reg)</b><br>
-Returns the symbolic expression id corresponding to a register.
+- <b>\ref py_SymbolicExpression_page getSymbolicRegister(\ref py_Register_page reg)</b><br>
+Returns the \ref py_SymbolicExpression_page corresponding to a register.
 
 - <b>integer getSymbolicRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the symbolic register value.
@@ -715,7 +715,7 @@ namespace triton {
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Expects a MemoryAccess as second argument.");
 
-        triton::engines::symbolic::SymbolicExpression* arg1 = PySymbolicExpression_AsSymbolicExpression(se);
+        const triton::engines::symbolic::SharedSymbolicExpression& arg1 = PySymbolicExpression_AsSymbolicExpression(se);
         triton::arch::MemoryAccess arg2 = *PyMemoryAccess_AsMemoryAccess(mem);
 
         try {
@@ -743,7 +743,7 @@ namespace triton {
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a Register as second argument.");
 
-        triton::engines::symbolic::SymbolicExpression* arg1 = PySymbolicExpression_AsSymbolicExpression(se);
+        const triton::engines::symbolic::SharedSymbolicExpression& arg1 = PySymbolicExpression_AsSymbolicExpression(se);
         triton::arch::Register arg2 = *PyRegister_AsRegister(reg);
 
         try {
@@ -1526,35 +1526,33 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getSymbolicMemory(PyObject* self, PyObject* noarg) {
-        PyObject* ret = nullptr;
+      static PyObject* TritonContext_getSymbolicMemory(PyObject* self, PyObject* args) {
+        PyObject* ret  = nullptr;
+        PyObject* addr = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|O", &addr);
 
         try {
-          auto regs = PyTritonContext_AsTritonContext(self)->getSymbolicMemory();
+          if (addr == nullptr) {
+            auto regs = PyTritonContext_AsTritonContext(self)->getSymbolicMemory();
 
-          ret = xPyDict_New();
-          for (auto it = regs.begin(); it != regs.end(); it++) {
-            xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            ret = xPyDict_New();
+            for (auto it = regs.begin(); it != regs.end(); it++) {
+              xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
+            }
           }
+          else if (addr != nullptr && (PyLong_Check(addr) || PyInt_Check(addr))) {
+            ret = PySymbolicExpression(PyTritonContext_AsTritonContext(self)->getSymbolicMemory(PyLong_AsUint64(addr)));
+          }
+          else
+            return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Expects an integer or nothing as argument.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
         return ret;
-      }
-
-
-      static PyObject* TritonContext_getSymbolicMemoryId(PyObject* self, PyObject* addr) {
-        if (!PyLong_Check(addr) && !PyInt_Check(addr))
-          return PyErr_Format(PyExc_TypeError, "getSymbolicMemoryId(): Expects an integer as argument.");
-
-        try {
-          return PyLong_FromUsize(PyTritonContext_AsTritonContext(self)->getSymbolicMemoryId(PyLong_AsUint64(addr)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -1592,12 +1590,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getSymbolicRegisterId(PyObject* self, PyObject* reg) {
+      static PyObject* TritonContext_getSymbolicRegister(PyObject* self, PyObject* reg) {
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getSymbolicRegisterId(): Expects a Register as argument.");
+          return PyErr_Format(PyExc_TypeError, "getSymbolicRegister(): Expects a Register as argument.");
 
         try {
-          return PyLong_FromUsize(PyTritonContext_AsTritonContext(self)->getSymbolicRegisterId(*PyRegister_AsRegister(reg)));
+          return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->getSymbolicRegister(*PyRegister_AsRegister(reg)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2851,10 +2849,9 @@ namespace triton {
         {"getRegisterSize",                     (PyCFunction)TritonContext_getRegisterSize,                        METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)TritonContext_getSymbolicExpressions,                 METH_NOARGS,        ""},
-        {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                      METH_NOARGS,        ""},
-        {"getSymbolicMemoryId",                 (PyCFunction)TritonContext_getSymbolicMemoryId,                    METH_O,             ""},
+        {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                      METH_VARARGS,       ""},
         {"getSymbolicMemoryValue",              (PyCFunction)TritonContext_getSymbolicMemoryValue,                 METH_O,             ""},
-        {"getSymbolicRegisterId",               (PyCFunction)TritonContext_getSymbolicRegisterId,                  METH_O,             ""},
+        {"getSymbolicRegister",                 (PyCFunction)TritonContext_getSymbolicRegister,                    METH_O,             ""},
         {"getSymbolicRegisterValue",            (PyCFunction)TritonContext_getSymbolicRegisterValue,               METH_O,             ""},
         {"getSymbolicRegisters",                (PyCFunction)TritonContext_getSymbolicRegisters,                   METH_NOARGS,        ""},
         {"getSymbolicVariableFromId",           (PyCFunction)TritonContext_getSymbolicVariableFromId,              METH_O,             ""},

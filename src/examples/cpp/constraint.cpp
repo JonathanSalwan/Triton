@@ -51,10 +51,10 @@ int main(int ac, const char **av) {
   api.processing(inst);
 
   /* Get the RAX symbolic ID */
-  auto raxSymId = api.getSymbolicRegisterId(api.getRegister(ID_REG_RAX));
+  auto raxSym = api.getSymbolicRegister(api.getRegister(ID_REG_RAX));
 
   /* Get the RAX full AST */
-  auto raxFullAst = api.unrollAstFromId(raxSymId);
+  auto raxFullAst = api.unrollAst(raxSym->getAst());
 
   /* Display RAX's AST*/
   std::cout << "RAX expr: " << raxFullAst << std::endl;

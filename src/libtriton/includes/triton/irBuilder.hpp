@@ -9,7 +9,6 @@
 #define TRITON_IRBUILDER_H
 
 #include <triton/architecture.hpp>
-#include <triton/astGarbageCollector.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
@@ -44,12 +43,6 @@ namespace triton {
         //! Modes API
         const triton::modes::Modes& modes;
 
-        //! AST garbage collector API
-        triton::ast::AstGarbageCollector& astGarbageCollector;
-
-        //! Backup AST garbage collector
-        triton::ast::AstGarbageCollector backupAstGarbageCollector;
-
         //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
@@ -60,19 +53,19 @@ namespace triton {
         triton::engines::taint::TaintEngine* taintEngine;
 
         //! Removes all symbolic expressions of an instruction.
-        void removeSymbolicExpressions(triton::arch::Instruction& inst, std::set<triton::ast::AbstractNode*>& uniqueNodes);
+        void removeSymbolicExpressions(triton::arch::Instruction& inst);
 
         //! Collects nodes from a set.
-        template <typename T> void collectNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, T& items) const;
+        template <typename T> void collectNodes(T& items) const;
 
         //! Collects nodes from operands.
-        void collectNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands, bool gc) const;
+        void collectNodes(std::vector<triton::arch::OperandWrapper>& operands) const;
 
         //! Collects unsymbolized nodes from a set.
         template <typename T> void collectUnsymbolizedNodes(T& items) const;
 
         //! Collects unsymbolized nodes from operands.
-        void collectUnsymbolizedNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, std::vector<triton::arch::OperandWrapper>& operands) const;
+        void collectUnsymbolizedNodes(std::vector<triton::arch::OperandWrapper>& operands) const;
 
       protected:
         //! x86 ISA builder.
