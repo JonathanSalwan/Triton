@@ -1712,8 +1712,8 @@ namespace triton {
                       this->astCtxt.land(
                         this->astCtxt.equal(
                           /* #672 */
-                          this->astCtxt.reference(*parent),
-                          this->astCtxt.reference(*parent)
+                          this->astCtxt.reference(parent),
+                          this->astCtxt.reference(parent)
                           /* ---- */
                         ),
                         this->astCtxt.equal(
