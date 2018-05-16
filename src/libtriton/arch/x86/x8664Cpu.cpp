@@ -285,7 +285,7 @@ namespace triton {
 
 
       bool x8664Cpu::isFlag(triton::arch::registers_e regId) const {
-        return ((regId >= triton::arch::ID_REG_AF && regId <= triton::arch::ID_REG_FZ) ? true : false);
+        return ((regId >= triton::arch::ID_REG_AC && regId <= triton::arch::ID_REG_FZ) ? true : false);
       }
 
 
@@ -792,15 +792,22 @@ namespace triton {
           case triton::arch::ID_REG_RH:  return (((*((triton::uint64*)(this->mxcsr))) >> 14) & 1);
           case triton::arch::ID_REG_FZ:  return (((*((triton::uint64*)(this->mxcsr))) >> 15) & 1);
 
-          case triton::arch::ID_REG_CF: return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
-          case triton::arch::ID_REG_PF: return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
-          case triton::arch::ID_REG_AF: return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
-          case triton::arch::ID_REG_ZF: return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
-          case triton::arch::ID_REG_SF: return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
-          case triton::arch::ID_REG_TF: return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
-          case triton::arch::ID_REG_IF: return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
-          case triton::arch::ID_REG_DF: return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
-          case triton::arch::ID_REG_OF: return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
+          case triton::arch::ID_REG_CF:  return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
+          case triton::arch::ID_REG_PF:  return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
+          case triton::arch::ID_REG_AF:  return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
+          case triton::arch::ID_REG_ZF:  return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
+          case triton::arch::ID_REG_SF:  return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
+          case triton::arch::ID_REG_TF:  return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
+          case triton::arch::ID_REG_IF:  return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
+          case triton::arch::ID_REG_DF:  return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
+          case triton::arch::ID_REG_OF:  return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
+          case triton::arch::ID_REG_NT:  return (((*((triton::uint64*)(this->eflags))) >> 14) & 1);
+          case triton::arch::ID_REG_RF:  return (((*((triton::uint64*)(this->eflags))) >> 16) & 1);
+          case triton::arch::ID_REG_VM:  return (((*((triton::uint64*)(this->eflags))) >> 17) & 1);
+          case triton::arch::ID_REG_AC:  return (((*((triton::uint64*)(this->eflags))) >> 18) & 1);
+          case triton::arch::ID_REG_VIF: return (((*((triton::uint64*)(this->eflags))) >> 19) & 1);
+          case triton::arch::ID_REG_VIP: return (((*((triton::uint64*)(this->eflags))) >> 20) & 1);
+          case triton::arch::ID_REG_ID:  return (((*((triton::uint64*)(this->eflags))) >> 21) & 1);
 
           case triton::arch::ID_REG_CS: return (*((triton::uint64*)(this->cs)));
           case triton::arch::ID_REG_DS: return (*((triton::uint64*)(this->ds)));
@@ -960,6 +967,41 @@ namespace triton {
           case triton::arch::ID_REG_OF: {
             triton::uint64 b = (*((triton::uint64*)(this->eflags)));
             (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
+            break;
+          }
+          case triton::arch::ID_REG_NT: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
+            break;
+          }
+          case triton::arch::ID_REG_RF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 16) : b & ~(1 << 16);
+            break;
+          }
+          case triton::arch::ID_REG_VM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 17) : b & ~(1 << 17);
+            break;
+          }
+          case triton::arch::ID_REG_AC: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 18) : b & ~(1 << 18);
+            break;
+          }
+          case triton::arch::ID_REG_VIF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 19) : b & ~(1 << 19);
+            break;
+          }
+          case triton::arch::ID_REG_VIP: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 20) : b & ~(1 << 20);
+            break;
+          }
+          case triton::arch::ID_REG_ID: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 21) : b & ~(1 << 21);
             break;
           }
 

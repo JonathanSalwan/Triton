@@ -8685,43 +8685,63 @@ namespace triton {
         auto  dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
         auto  dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
         auto  dst9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto  dst10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto  dst11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_RF));
+        auto  dst12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
+        auto  dst13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
         /* Create the semantics */
-        auto node1 = this->astCtxt.extract(0,  0,  op1);
-        auto node2 = this->astCtxt.extract(2,  2,  op1);
-        auto node3 = this->astCtxt.extract(4,  4,  op1);
-        auto node4 = this->astCtxt.extract(6,  6,  op1);
-        auto node5 = this->astCtxt.extract(7,  7,  op1);
-        auto node6 = this->astCtxt.extract(8,  8,  op1);
-        auto node7 = this->astCtxt.bvtrue(); /* TODO IF and IOPL */
-        auto node8 = this->astCtxt.extract(10, 10, op1);
-        auto node9 = this->astCtxt.extract(11, 11, op1);
+        auto node1  = this->astCtxt.extract(0,  0,  op1);
+        auto node2  = this->astCtxt.extract(2,  2,  op1);
+        auto node3  = this->astCtxt.extract(4,  4,  op1);
+        auto node4  = this->astCtxt.extract(6,  6,  op1);
+        auto node5  = this->astCtxt.extract(7,  7,  op1);
+        auto node6  = this->astCtxt.extract(8,  8,  op1);
+        auto node7  = this->astCtxt.bvtrue(); /* IF true? */
+        auto node8  = this->astCtxt.extract(10, 10, op1);
+        auto node9  = this->astCtxt.extract(11, 11, op1);
+        /* IOPL don't support */
+        auto node10 = this->astCtxt.extract(14, 14, op1);
+        auto node11 = this->astCtxt.bvfalse(); /* RF clear */
+        /* VM not changed */
+        auto node12 = this->astCtxt.extract(18, 18, op1);
+        /* VIP not changed */
+        /* VIF not changed */
+        auto node13 = this->astCtxt.extract(21, 21, op1);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "POPFD CF operation");
-        auto expr2 = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "POPFD PF operation");
-        auto expr3 = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "POPFD AF operation");
-        auto expr4 = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "POPFD ZF operation");
-        auto expr5 = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "POPFD SF operation");
-        auto expr6 = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(), "POPFD TF operation");
-        auto expr7 = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(), "POPFD IF operation");
-        auto expr8 = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(), "POPFD DF operation");
-        auto expr9 = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(), "POPFD OF operation");
+        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPFD CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPFD PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPFD AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPFD ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPFD SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPFD TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPFD IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPFD DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPFD OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
+        auto expr11 = this->symbolicEngine->createSymbolicFlagExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
+        auto expr12 = this->symbolicEngine->createSymbolicFlagExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
+        auto expr13 = this->symbolicEngine->createSymbolicFlagExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
-        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
-        expr3->isTainted = this->taintEngine->taintAssignment(dst3, src);
-        expr4->isTainted = this->taintEngine->taintAssignment(dst4, src);
-        expr5->isTainted = this->taintEngine->taintAssignment(dst5, src);
-        expr6->isTainted = this->taintEngine->taintAssignment(dst6, src);
-        expr7->isTainted = this->taintEngine->taintAssignment(dst7, src);
-        expr8->isTainted = this->taintEngine->taintAssignment(dst8, src);
-        expr9->isTainted = this->taintEngine->taintAssignment(dst9, src);
+        expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted  = this->taintEngine->taintAssignment(dst2, src);
+        expr3->isTainted  = this->taintEngine->taintAssignment(dst3, src);
+        expr4->isTainted  = this->taintEngine->taintAssignment(dst4, src);
+        expr5->isTainted  = this->taintEngine->taintAssignment(dst5, src);
+        expr6->isTainted  = this->taintEngine->taintAssignment(dst6, src);
+        expr7->isTainted  = this->taintEngine->taintAssignment(dst7, src);
+        expr8->isTainted  = this->taintEngine->taintAssignment(dst8, src);
+        expr9->isTainted  = this->taintEngine->taintAssignment(dst9, src);
+        expr10->isTainted = this->taintEngine->taintAssignment(dst10, src);
+        expr11->isTainted = this->taintEngine->taintAssignment(dst11, src);
+        expr12->isTainted = this->taintEngine->taintAssignment(dst12, src);
+        expr13->isTainted = this->taintEngine->taintAssignment(dst13, src);
 
         /* Create the semantics - side effect */
         alignAddStack_s(inst, src.getSize());
@@ -8743,43 +8763,63 @@ namespace triton {
         auto  dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
         auto  dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
         auto  dst9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto  dst10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto  dst11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_RF));
+        auto  dst12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
+        auto  dst13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
         auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src);
 
         /* Create the semantics */
-        auto node1 = this->astCtxt.extract(0,  0,  op1);
-        auto node2 = this->astCtxt.extract(2,  2,  op1);
-        auto node3 = this->astCtxt.extract(4,  4,  op1);
-        auto node4 = this->astCtxt.extract(6,  6,  op1);
-        auto node5 = this->astCtxt.extract(7,  7,  op1);
-        auto node6 = this->astCtxt.extract(8,  8,  op1);
-        auto node7 = this->astCtxt.bvtrue(); /* TODO IF and IOPL */
-        auto node8 = this->astCtxt.extract(10, 10, op1);
-        auto node9 = this->astCtxt.extract(11, 11, op1);
+        auto node1  = this->astCtxt.extract(0,  0,  op1);
+        auto node2  = this->astCtxt.extract(2,  2,  op1);
+        auto node3  = this->astCtxt.extract(4,  4,  op1);
+        auto node4  = this->astCtxt.extract(6,  6,  op1);
+        auto node5  = this->astCtxt.extract(7,  7,  op1);
+        auto node6  = this->astCtxt.extract(8,  8,  op1);
+        auto node7  = this->astCtxt.bvtrue(); /* IF true? */
+        auto node8  = this->astCtxt.extract(10, 10, op1);
+        auto node9  = this->astCtxt.extract(11, 11, op1);
+        /* IOPL don't support */
+        auto node10 = this->astCtxt.extract(14, 14, op1);
+        auto node11 = this->astCtxt.bvfalse(); /* RF clear */
+        /* VM not changed */
+        auto node12 = this->astCtxt.extract(18, 18, op1);
+        /* VIP not changed */
+        /* VIF not changed */
+        auto node13 = this->astCtxt.extract(21, 21, op1);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "POPFQ CF operation");
-        auto expr2 = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "POPFQ PF operation");
-        auto expr3 = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "POPFQ AF operation");
-        auto expr4 = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "POPFQ ZF operation");
-        auto expr5 = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "POPFQ SF operation");
-        auto expr6 = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(), "POPFQ TF operation");
-        auto expr7 = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(), "POPFQ IF operation");
-        auto expr8 = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(), "POPFQ DF operation");
-        auto expr9 = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(), "POPFQ OF operation");
+        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPFQ CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPFQ PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPFQ AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPFQ ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPFQ SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPFQ TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPFQ IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPFQ DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPFQ OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
+        auto expr11 = this->symbolicEngine->createSymbolicFlagExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
+        auto expr12 = this->symbolicEngine->createSymbolicFlagExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
+        auto expr13 = this->symbolicEngine->createSymbolicFlagExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
-        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
-        expr3->isTainted = this->taintEngine->taintAssignment(dst3, src);
-        expr4->isTainted = this->taintEngine->taintAssignment(dst4, src);
-        expr5->isTainted = this->taintEngine->taintAssignment(dst5, src);
-        expr6->isTainted = this->taintEngine->taintAssignment(dst6, src);
-        expr7->isTainted = this->taintEngine->taintAssignment(dst7, src);
-        expr8->isTainted = this->taintEngine->taintAssignment(dst8, src);
-        expr9->isTainted = this->taintEngine->taintAssignment(dst9, src);
+        expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted  = this->taintEngine->taintAssignment(dst2, src);
+        expr3->isTainted  = this->taintEngine->taintAssignment(dst3, src);
+        expr4->isTainted  = this->taintEngine->taintAssignment(dst4, src);
+        expr5->isTainted  = this->taintEngine->taintAssignment(dst5, src);
+        expr6->isTainted  = this->taintEngine->taintAssignment(dst6, src);
+        expr7->isTainted  = this->taintEngine->taintAssignment(dst7, src);
+        expr8->isTainted  = this->taintEngine->taintAssignment(dst8, src);
+        expr9->isTainted  = this->taintEngine->taintAssignment(dst9, src);
+        expr10->isTainted = this->taintEngine->taintAssignment(dst10, src);
+        expr11->isTainted = this->taintEngine->taintAssignment(dst11, src);
+        expr12->isTainted = this->taintEngine->taintAssignment(dst12, src);
+        expr13->isTainted = this->taintEngine->taintAssignment(dst13, src);
 
         /* Create the semantics - side effect */
         alignAddStack_s(inst, src.getSize());
@@ -9878,20 +9918,40 @@ namespace triton {
         auto src7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
         auto src8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
         auto src9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto src10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto src11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
+        auto src12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_VIF));
+        auto src13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_VIP));
+        auto src14      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto op7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto op8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
-        auto op9 = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+        auto op4  = this->symbolicEngine->buildSymbolicOperand(inst, src4);
+        auto op5  = this->symbolicEngine->buildSymbolicOperand(inst, src5);
+        auto op6  = this->symbolicEngine->buildSymbolicOperand(inst, src6);
+        auto op7  = this->symbolicEngine->buildSymbolicOperand(inst, src7);
+        auto op8  = this->symbolicEngine->buildSymbolicOperand(inst, src8);
+        auto op9  = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto op10 = this->symbolicEngine->buildSymbolicOperand(inst, src10);
+        auto op11 = this->symbolicEngine->buildSymbolicOperand(inst, src11);
+        auto op12 = this->symbolicEngine->buildSymbolicOperand(inst, src12);
+        auto op13 = this->symbolicEngine->buildSymbolicOperand(inst, src13);
+        auto op14 = this->symbolicEngine->buildSymbolicOperand(inst, src14);
 
         /* Create the semantics */
         std::list<triton::ast::AbstractNode*> eflags;
+        eflags.push_back(op14);
+        eflags.push_back(op13);
+        eflags.push_back(op12);
+        eflags.push_back(op11);
+        eflags.push_back(this->astCtxt.bvfalse()); /* vm */
+        eflags.push_back(this->astCtxt.bvfalse()); /* rf */
+        eflags.push_back(this->astCtxt.bvfalse()); /* Reserved */
+        eflags.push_back(op10);
+        eflags.push_back(this->astCtxt.bvfalse()); /* iopl */
+        eflags.push_back(this->astCtxt.bvfalse()); /* iopl */
         eflags.push_back(op9);
         eflags.push_back(op8);
         eflags.push_back(op7);
@@ -9923,6 +9983,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src7);
         expr->isTainted = this->taintEngine->taintUnion(dst, src8);
         expr->isTainted = this->taintEngine->taintUnion(dst, src9);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src10);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src11);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src12);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src13);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src14);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -9944,20 +10009,40 @@ namespace triton {
         auto src7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
         auto src8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
         auto src9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto src10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto src11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
+        auto src12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_VIF));
+        auto src13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_VIP));
+        auto src14      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->buildSymbolicOperand(inst, src1);
-        auto op2 = this->symbolicEngine->buildSymbolicOperand(inst, src2);
-        auto op3 = this->symbolicEngine->buildSymbolicOperand(inst, src3);
-        auto op4 = this->symbolicEngine->buildSymbolicOperand(inst, src4);
-        auto op5 = this->symbolicEngine->buildSymbolicOperand(inst, src5);
-        auto op6 = this->symbolicEngine->buildSymbolicOperand(inst, src6);
-        auto op7 = this->symbolicEngine->buildSymbolicOperand(inst, src7);
-        auto op8 = this->symbolicEngine->buildSymbolicOperand(inst, src8);
-        auto op9 = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto op1  = this->symbolicEngine->buildSymbolicOperand(inst, src1);
+        auto op2  = this->symbolicEngine->buildSymbolicOperand(inst, src2);
+        auto op3  = this->symbolicEngine->buildSymbolicOperand(inst, src3);
+        auto op4  = this->symbolicEngine->buildSymbolicOperand(inst, src4);
+        auto op5  = this->symbolicEngine->buildSymbolicOperand(inst, src5);
+        auto op6  = this->symbolicEngine->buildSymbolicOperand(inst, src6);
+        auto op7  = this->symbolicEngine->buildSymbolicOperand(inst, src7);
+        auto op8  = this->symbolicEngine->buildSymbolicOperand(inst, src8);
+        auto op9  = this->symbolicEngine->buildSymbolicOperand(inst, src9);
+        auto op10 = this->symbolicEngine->buildSymbolicOperand(inst, src10);
+        auto op11 = this->symbolicEngine->buildSymbolicOperand(inst, src11);
+        auto op12 = this->symbolicEngine->buildSymbolicOperand(inst, src12);
+        auto op13 = this->symbolicEngine->buildSymbolicOperand(inst, src13);
+        auto op14 = this->symbolicEngine->buildSymbolicOperand(inst, src14);
 
         /* Create the semantics */
         std::list<triton::ast::AbstractNode*> eflags;
+        eflags.push_back(op14);
+        eflags.push_back(op13);
+        eflags.push_back(op12);
+        eflags.push_back(op11);
+        eflags.push_back(this->astCtxt.bvfalse()); /* vm */
+        eflags.push_back(this->astCtxt.bvfalse()); /* rf */
+        eflags.push_back(this->astCtxt.bvfalse()); /* Reserved */
+        eflags.push_back(op10);
+        eflags.push_back(this->astCtxt.bvfalse()); /* iopl */
+        eflags.push_back(this->astCtxt.bvfalse()); /* iopl */
         eflags.push_back(op9);
         eflags.push_back(op8);
         eflags.push_back(op7);
@@ -9989,6 +10074,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src7);
         expr->isTainted = this->taintEngine->taintUnion(dst, src8);
         expr->isTainted = this->taintEngine->taintUnion(dst, src9);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src10);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src11);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src12);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src13);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src14);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
