@@ -686,11 +686,7 @@ namespace triton {
       /* Returns a symbolic immediate and defines the immediate as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
         auto node = this->buildSymbolicImmediate(imm);
-        auto se   = this->newSymbolicExpression(node, triton::engines::symbolic::IMM, "Symbolic Immediate");
-
-        inst.setReadImmediate(imm, se);
-        //inst.addSymbolicExpression(se); // FIXME: ?
-
+        inst.setReadImmediate(imm, node);
         return node;
       }
 
@@ -752,10 +748,9 @@ namespace triton {
       /* Returns a symbolic memory and defines the memory as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
         auto node = this->buildSymbolicMemory(mem);
-        auto se   = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Symbolic Memory");
 
-        inst.setLoadAccess(mem, se);
-        //inst.addSymbolicExpression(se); // FIXME: ?
+        /* Set load access */
+        inst.setLoadAccess(mem, node);
 
         /* Set implicit read of the base register (LEA) */
         if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
@@ -792,11 +787,7 @@ namespace triton {
       /* Returns a symbolic register and defines the register as input of the instruction */
       triton::ast::AbstractNode* SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
         auto node = this->buildSymbolicRegister(reg);
-        auto se   = this->newSymbolicExpression(node, triton::engines::symbolic::REG, "Symbolic Register");
-
-        inst.setReadRegister(reg, se);
-        //inst.addSymbolicExpression(se); // FIXME: ?
-
+        inst.setReadRegister(reg, node);
         return node;
       }
 
@@ -824,7 +815,6 @@ namespace triton {
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           auto aligned = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Aligned Byte reference - " + comment);
           this->addAlignedMemory(address, writeSize, aligned);
-          //inst.addSymbolicExpression(aligned); // FIXME: ?
         }
 
         /*
@@ -849,7 +839,9 @@ namespace triton {
           /* Synchronize the concrete state */
           this->architecture->setConcreteMemoryValue(mem, tmp->evaluate());
           /* Define the memory store */
-          return inst.setStoreAccess(mem, se);
+          inst.setStoreAccess(mem, node);
+          /* It will return se */
+          return inst.symbolicExpressions.back();
         }
 
         /* Otherwise, we return the concatenation of all symbolic expressions */
@@ -862,7 +854,7 @@ namespace triton {
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize()));
 
         /* Define the memory store */
-        inst.setStoreAccess(mem, se);
+        inst.setStoreAccess(mem, node);
         return inst.addSymbolicExpression(se);
       }
 
@@ -907,7 +899,7 @@ namespace triton {
 
         auto se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
-        inst.setWrittenRegister(reg, se);
+        inst.setWrittenRegister(reg, node);
         return inst.addSymbolicExpression(se);
       }
 
@@ -919,7 +911,7 @@ namespace triton {
 
         auto se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, flag);
-        inst.setWrittenRegister(flag, se);
+        inst.setWrittenRegister(flag, node);
         return inst.addSymbolicExpression(se);
       }
 

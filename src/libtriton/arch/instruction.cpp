@@ -128,33 +128,33 @@ namespace triton {
     }
 
 
-    std::set<std::pair<triton::arch::MemoryAccess, triton::engines::symbolic::SharedSymbolicExpression>>& Instruction::getLoadAccess(void) {
+    std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getLoadAccess(void) {
       return this->loadAccess;
     }
 
 
-    std::set<std::pair<triton::arch::MemoryAccess, triton::engines::symbolic::SharedSymbolicExpression>>& Instruction::getStoreAccess(void) {
+    std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& Instruction::getStoreAccess(void) {
       return this->storeAccess;
     }
 
 
-    std::set<std::pair<triton::arch::Register, triton::engines::symbolic::SharedSymbolicExpression>>& Instruction::getReadRegisters(void) {
+    std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getReadRegisters(void) {
       return this->readRegisters;
     }
 
 
-    std::set<std::pair<triton::arch::Register, triton::engines::symbolic::SharedSymbolicExpression>>& Instruction::getWrittenRegisters(void) {
+    std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& Instruction::getWrittenRegisters(void) {
       return this->writtenRegisters;
     }
 
 
-    std::set<std::pair<triton::arch::Immediate, triton::engines::symbolic::SharedSymbolicExpression>>& Instruction::getReadImmediates(void) {
+    std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& Instruction::getReadImmediates(void) {
       return this->readImmediates;
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicExpression& Instruction::setLoadAccess(const triton::arch::MemoryAccess& mem, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-      return this->loadAccess.insert(std::make_pair(mem, expr)).first->second;
+    void Instruction::setLoadAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node) {
+      this->loadAccess.insert(std::make_pair(mem, node));
     }
 
 
@@ -170,8 +170,8 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicExpression& Instruction::setStoreAccess(const triton::arch::MemoryAccess& mem, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-      return this->storeAccess.insert(std::make_pair(mem, expr)).first->second;
+    void Instruction::setStoreAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node) {
+      this->storeAccess.insert(std::make_pair(mem, node));
     }
 
 
@@ -187,8 +187,8 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicExpression& Instruction::setReadRegister(const triton::arch::Register& reg, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-      return this->readRegisters.insert(std::make_pair(reg, expr)).first->second;
+    void Instruction::setReadRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node) {
+      this->readRegisters.insert(std::make_pair(reg, node));
     }
 
 
@@ -204,8 +204,8 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicExpression& Instruction::setWrittenRegister(const triton::arch::Register& reg, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-      return this->writtenRegisters.insert(std::make_pair(reg, expr)).first->second;
+    void Instruction::setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node) {
+      this->writtenRegisters.insert(std::make_pair(reg, node));
     }
 
 
@@ -221,8 +221,8 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicExpression& Instruction::setReadImmediate(const triton::arch::Immediate& imm, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-      return this->readImmediates.insert(std::make_pair(imm, expr)).first->second;
+    void Instruction::setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node) {
+      this->readImmediates.insert(std::make_pair(imm, node));
     }
 
 
