@@ -256,7 +256,7 @@ namespace triton {
           for (auto it = loadAccess.cbegin(); it != loadAccess.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getAst()));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
 
@@ -310,7 +310,7 @@ namespace triton {
           for (auto it = storeAccess.cbegin(); it != storeAccess.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyMemoryAccess(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getAst()));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
 
@@ -381,7 +381,7 @@ namespace triton {
           for (auto it = readImmediates.cbegin(); it != readImmediates.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyImmediate(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getAst()));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
 
@@ -403,7 +403,7 @@ namespace triton {
           for (auto it = readRegisters.cbegin(); it != readRegisters.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getAst()));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
 
@@ -468,7 +468,7 @@ namespace triton {
           for (auto it = writtenRegisters.cbegin(); it != writtenRegisters.cend(); it++) {
             PyObject* item = xPyTuple_New(2);
             PyTuple_SetItem(item, 0, PyRegister(std::get<0>(*it)));
-            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)->getAst()));
+            PyTuple_SetItem(item, 1, PyAstNode(std::get<1>(*it)));
             PyList_SetItem(ret, index++, item);
           }
 
