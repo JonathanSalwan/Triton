@@ -117,6 +117,8 @@ namespace triton {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
            for (auto& function: this->getConcreteMemoryValueCallbacks) {
              function(this->api, mem);
+             if (mem.getLeaAst() != nullptr)
+                 this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem), true);
            }
           break;
         }
