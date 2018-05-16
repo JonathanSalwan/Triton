@@ -226,19 +226,19 @@ namespace triton {
         //! Access to the underliying garbage collector
         TRITON_EXPORT const triton::ast::AstGarbageCollector& getAstGarbageCollector(void) const;
 
-        //! Initialize a variable in the context
+        //! Initializes a variable in the context
         TRITON_EXPORT void initVariable(const std::string& name, const triton::uint512& value);
 
-        //! Update a variable value in this context
+        //! Updates a variable value in this context
         TRITON_EXPORT void updateVariable(const std::string& name, const triton::uint512& value);
 
         //! Access a variable value in this context
         TRITON_EXPORT const triton::uint512& getValueForVariable(const std::string& varName) const;
 
-        //! Set the representation mode for this astContext
+        //! Sets the representation mode for this astContext
         TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);
 
-        //! Get the representations mode of this astContext
+        //! Gets the representations mode of this astContext
         TRITON_EXPORT triton::uint32 getRepresentationMode(void) const;
 
         //! Print the given node with this context representation

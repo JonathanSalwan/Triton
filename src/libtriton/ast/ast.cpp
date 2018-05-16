@@ -176,6 +176,15 @@ namespace triton {
     }
 
 
+    const char* AbstractNode::str(void) {
+      std::stringstream s;
+      s << this;
+      if (!s.str().empty())
+        return s.str().c_str();
+      return nullptr;
+    }
+
+
     /* ====== bvadd */
 
 
