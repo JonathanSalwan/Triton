@@ -812,10 +812,10 @@ namespace triton {
         triton::uint32 writeSize       = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        //if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
-        //  auto aligned = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Aligned Byte reference - " + comment);
-        //  this->addAlignedMemory(address, writeSize, aligned);
-        //}
+        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+          auto aligned = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Aligned Byte reference - " + comment);
+          this->addAlignedMemory(address, writeSize, aligned);
+        }
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
