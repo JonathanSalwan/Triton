@@ -2167,7 +2167,7 @@ namespace triton {
 
     void VariableNode::init(void) {
       this->size        = this->symVar.getSize();
-      this->eval        = ctxt.getValueForVariable(this->symVar.getName()) & this->getBitvectorMask();
+      this->eval        = ctxt.getVariableValue(this->symVar.getName()) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */

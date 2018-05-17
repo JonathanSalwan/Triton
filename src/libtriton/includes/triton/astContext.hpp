@@ -223,11 +223,11 @@ namespace triton {
         //! Updates a variable value in this context
         TRITON_EXPORT void updateVariable(const std::string& name, const triton::uint512& value);
 
-        //! Gets existing variable node if present or nullptr
+        //! Gets a variable node from its name.
         AbstractNode* getVariableNode(const std::string& name);
 
-        //! Gets a variable value in this context
-        TRITON_EXPORT const triton::uint512& getValueForVariable(const std::string& varName) const;
+        //! Gets a variable value from its name.
+        TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& varName) const;
 
         //! Sets the representation mode for this astContext
         TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);
