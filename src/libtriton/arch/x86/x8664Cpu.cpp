@@ -557,14 +557,17 @@ namespace triton {
 
       triton::uint512 x8664Cpu::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks) const {
         triton::uint512 ret = 0;
-        triton::uint64 addr = mem.getAddress();
-        triton::uint32 size = mem.getSize();
-
-        if (size == 0 || size > DQQWORD_SIZE)
-          throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
+        triton::uint64 addr = 0;
+        triton::uint32 size = 0;
 
         if (execCallbacks && this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
+
+        addr = mem.getAddress();
+        size = mem.getSize();
+
+        if (size == 0 || size > DQQWORD_SIZE)
+          throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i, false));
