@@ -231,39 +231,6 @@ namespace triton {
 
 
 
-        /* AST Garbage Collector API ===================================================================== */
-
-        //! [**AST garbage collector api**] - Go through every allocated nodes and free them.
-        TRITON_EXPORT void freeAllAstNodes(void);
-
-        //! [**AST garbage collector api**] - Frees a set of nodes and removes them from the global container.
-        TRITON_EXPORT void freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes);
-
-        //! [**AST garbage collector api**] - Extracts all unique nodes from a partial AST into the uniqueNodes set.
-        TRITON_EXPORT void extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const;
-
-        //! [**AST garbage collector api**] - Records the allocated node or returns the same node if it already exists inside the dictionaries.
-        TRITON_EXPORT triton::ast::AbstractNode* recordAstNode(triton::ast::AbstractNode* node);
-
-        //! [**AST garbage collector api**] - Records a variable AST node.
-        TRITON_EXPORT void recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node);
-
-        //! [**AST garbage collector api**] - Returns all allocated nodes.
-        TRITON_EXPORT const std::set<triton::ast::AbstractNode*>& getAllocatedAstNodes(void) const;
-
-        //! [**AST garbage collector api**] - Returns all variable nodes recorded.
-        TRITON_EXPORT const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& getAstVariableNodes(void) const;
-
-        //! [**AST garbage collector api**] - Returns the node of a recorded variable.
-        TRITON_EXPORT std::vector<triton::ast::AbstractNode*> getAstVariableNode(const std::string& name) const;
-
-        //! [**AST garbage collector api**] - Sets all allocated nodes.
-        TRITON_EXPORT void setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes);
-
-        //! [**AST garbage collector api**] - Sets all variable nodes recorded.
-        TRITON_EXPORT void setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes);
-
-
 
         /* AST Representation API ======================================================================== */
 

@@ -66,7 +66,6 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Specifications.cpp
     ast/ast.cpp
     ast/astContext.cpp
-    ast/astGarbageCollector.cpp
     ast/representations/astPythonRepresentation.cpp
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp

@@ -9,10 +9,10 @@
 #define TRITON_AST_CONTEXT_H
 
 #include <triton/ast.hpp>
-#include <triton/astGarbageCollector.hpp>
 #include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/dllexport.hpp>
 
+#include <map>
 #include <vector>
 
 
@@ -42,18 +42,15 @@ namespace triton {
     /*! \brief AST Context - Used as AST builder. */
     class AstContext {
       private:
-        //! The AST garbage collector interface.
-        triton::ast::AstGarbageCollector astGarbageCollector;
-
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
-        //! Map a concrete value for a variable name.
-        std::map<std::string, triton::uint512> valueMapping;
+        //! Map a concrete value and ast node for a variable name.
+        std::map<std::string, std::pair<triton::ast::AbstractNode*, triton::uint512>> valueMapping;
 
       public:
         //! Constructor
-        TRITON_EXPORT AstContext(const triton::modes::Modes& modes);
+        TRITON_EXPORT AstContext();
 
         //! Constructor by copy
         TRITON_EXPORT AstContext(const AstContext& other);
@@ -220,19 +217,16 @@ namespace triton {
         //! AST C++ API - zx node builder
         TRITON_EXPORT AbstractNode* zx(triton::uint32 sizeExt, AbstractNode* expr);
 
-        //! Access to the underliying garbage collector
-        TRITON_EXPORT triton::ast::AstGarbageCollector& getAstGarbageCollector(void);
-
-        //! Access to the underliying garbage collector
-        TRITON_EXPORT const triton::ast::AstGarbageCollector& getAstGarbageCollector(void) const;
-
         //! Initializes a variable in the context
-        TRITON_EXPORT void initVariable(const std::string& name, const triton::uint512& value);
+        TRITON_EXPORT void initVariable(const std::string& name, const triton::uint512& value, AbstractNode* node);
 
         //! Updates a variable value in this context
         TRITON_EXPORT void updateVariable(const std::string& name, const triton::uint512& value);
 
-        //! Access a variable value in this context
+        //! Gets existing variable node if present or nullptr
+        AbstractNode* getVariableNode(const std::string& name);
+
+        //! Gets a variable value in this context
         TRITON_EXPORT const triton::uint512& getValueForVariable(const std::string& varName) const;
 
         //! Sets the representation mode for this astContext

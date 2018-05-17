@@ -2160,7 +2160,7 @@ namespace triton {
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
         symVar(symVar) {
-      ctxt.initVariable(symVar.getName(), 0);
+      ctxt.initVariable(symVar.getName(), 0, this);
       this->init();
     }
 
@@ -2363,7 +2363,7 @@ namespace triton {
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
-      return node->getContext().getAstGarbageCollector().recordAstNode(newNode);
+      return newNode;
     }
 
   }; /* ast namespace */

@@ -192,7 +192,7 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt{this->modes} {
+  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt() {
   }
 
 
@@ -434,7 +434,7 @@ namespace triton {
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context
-    this->astCtxt = triton::ast::AstContext{this->modes};
+    this->astCtxt = triton::ast::AstContext();
   }
 
 
@@ -472,59 +472,6 @@ namespace triton {
 
   triton::ast::AstContext& API::getAstContext(void) {
     return this->astCtxt;
-  }
-
-
-
-  /* AST garbage collector API ====================================================================== */
-
-  void API::freeAllAstNodes(void) {
-    this->astCtxt.getAstGarbageCollector().freeAllAstNodes();
-  }
-
-
-  void API::freeAstNodes(std::set<triton::ast::AbstractNode*>& nodes) {
-    this->astCtxt.getAstGarbageCollector().freeAstNodes(nodes);
-  }
-
-
-  void API::extractUniqueAstNodes(std::set<triton::ast::AbstractNode*>& uniqueNodes, triton::ast::AbstractNode* root) const {
-    this->astCtxt.getAstGarbageCollector().extractUniqueAstNodes(uniqueNodes, root);
-  }
-
-
-  triton::ast::AbstractNode* API::recordAstNode(triton::ast::AbstractNode* node) {
-    return this->astCtxt.getAstGarbageCollector().recordAstNode(node);
-  }
-
-
-  void API::recordVariableAstNode(const std::string& name, triton::ast::AbstractNode* node) {
-    this->astCtxt.getAstGarbageCollector().recordVariableAstNode(name, node);
-  }
-
-
-  const std::set<triton::ast::AbstractNode*>& API::getAllocatedAstNodes(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAllocatedAstNodes();
-  }
-
-
-  const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& API::getAstVariableNodes(void) const {
-    return this->astCtxt.getAstGarbageCollector().getAstVariableNodes();
-  }
-
-
-  std::vector<triton::ast::AbstractNode*> API::getAstVariableNode(const std::string& name) const {
-    return this->astCtxt.getAstGarbageCollector().getAstVariableNode(name);
-  }
-
-
-  void API::setAllocatedAstNodes(const std::set<triton::ast::AbstractNode*>& nodes) {
-    this->astCtxt.getAstGarbageCollector().setAllocatedAstNodes(nodes);
-  }
-
-
-  void API::setAstVariableNodes(const std::map<std::string, std::vector<triton::ast::AbstractNode*>>& nodes) {
-    this->astCtxt.getAstGarbageCollector().setAstVariableNodes(nodes);
   }
 
 
