@@ -137,6 +137,9 @@ namespace triton {
         //! Sets a child at an index.
         TRITON_EXPORT void setChild(triton::uint32 index, AbstractNode* child);
 
+        //! Returns the string representation of the node.
+        TRITON_EXPORT const char* str(void);
+
         //! Init stuffs like size and eval.
         TRITON_EXPORT virtual void init(void) = 0;
 

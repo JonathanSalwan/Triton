@@ -1709,9 +1709,18 @@ namespace triton {
          * of = 0 if op2 == 1
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(
-                        op2,
-                        this->astCtxt.bv(1, bvSize)),
+                      this->astCtxt.land(
+                        this->astCtxt.equal(
+                          /* #672 */
+                          this->astCtxt.reference(*parent),
+                          this->astCtxt.reference(*parent)
+                          /* ---- */
+                        ),
+                        this->astCtxt.equal(
+                          op2,
+                          this->astCtxt.bv(1, bvSize)
+                        )
+                      ),
                       this->astCtxt.bv(0, 1),
                       this->symbolicEngine->buildSymbolicOperand(inst, of)
                     );

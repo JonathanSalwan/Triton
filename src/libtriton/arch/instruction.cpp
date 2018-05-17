@@ -420,16 +420,12 @@ namespace triton {
     }
 
 
-    void Instruction::reset(void) {
-      this->partialReset();
-    }
-
-
-    void Instruction::partialReset(void) {
+    void Instruction::clear(void) {
       this->address         = 0;
       this->branch          = false;
       this->conditionTaken  = false;
       this->controlFlow     = false;
+      this->prefix          = 0;
       this->size            = 0;
       this->tainted         = false;
       this->tid             = 0;
