@@ -138,7 +138,7 @@ namespace triton {
         TRITON_EXPORT void setChild(triton::uint32 index, AbstractNode* child);
 
         //! Returns the string representation of the node.
-        TRITON_EXPORT const char* str(void);
+        TRITON_EXPORT std::string str(void);
 
         //! Init stuffs like size and eval.
         TRITON_EXPORT virtual void init(void) = 0;
