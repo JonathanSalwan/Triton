@@ -131,8 +131,11 @@ namespace triton {
           TRITON_EXPORT void setOriginRegister(const triton::arch::Register& reg);
       };
 
-      //! A shared symbolic expression.
+      //! Shared Symbolic Expression.
       using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
+
+      //! Weak Symbolic Expression.
+      using WeakSymbolicExpression = std::weak_ptr<triton::engines::symbolic::SymbolicExpression>;
 
       //! Displays a symbolic expression.
       TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);

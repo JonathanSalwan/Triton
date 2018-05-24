@@ -577,6 +577,11 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
+    //! Shared Abstract Node
+    using SharedAbstractNode = std::shared_ptr<triton::ast::AbstractNode>;
+
+    //! Weak Abstract Node
+    using WeakAbstractNode = std::weak_ptr<triton::ast::AbstractNode>;
 
     //! Displays the node in ast representation.
     TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);

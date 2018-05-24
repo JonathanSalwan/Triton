@@ -89,7 +89,7 @@ namespace triton {
            * **item1**: symbolic reference id<br>
            * **item2**: symbolic expression
            */
-          mutable std::unordered_map<triton::usize, std::weak_ptr<SymbolicExpression>> symbolicExpressions;
+          mutable std::unordered_map<triton::usize, WeakSymbolicExpression> symbolicExpressions;
 
           /*! \brief map of address -> symbolic expression
            *
