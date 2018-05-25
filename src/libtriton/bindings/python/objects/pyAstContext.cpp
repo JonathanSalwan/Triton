@@ -1139,7 +1139,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr)));
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr).get()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1148,7 +1148,7 @@ namespace triton {
 
 
       static PyObject* AstContext_concat(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "concat(): expected a list of AstNodes as first argument");
@@ -1247,7 +1247,7 @@ namespace triton {
 
 
       static PyObject* AstContext_land(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "land(): expected a list of AstNodes as first argument");
@@ -1311,7 +1311,7 @@ namespace triton {
 
 
       static PyObject* AstContext_lor(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "lor(): expected a list of AstNodes as first argument");

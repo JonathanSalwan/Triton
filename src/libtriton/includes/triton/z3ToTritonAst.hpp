@@ -47,7 +47,7 @@ namespace triton {
         TRITON_EXPORT Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::ast::AstContext& ctxt);
 
         //! Converts to Triton's AST
-        TRITON_EXPORT triton::ast::AbstractNode* convert(const z3::expr& expr);
+        TRITON_EXPORT triton::ast::SharedAbstractNode convert(const z3::expr& expr);
     };
 
   /*! @} End of ast namespace */

@@ -639,7 +639,7 @@ namespace triton {
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([cb_self, cb](triton::API& api, triton::ast::AbstractNode* node) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::symbolicSimplificationCallback([cb_self, cb](triton::API& api, triton::ast::SharedAbstractNode node) {
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -1005,7 +1005,7 @@ namespace triton {
           ccomment = PyString_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode *arg2 = PyAstNode_AsAstNode(node);
+        triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
         triton::arch::Register arg3 = *PyRegister_AsRegister(flag);
 
         try {
@@ -1042,8 +1042,8 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
         triton::arch::MemoryAccess arg3 = *PyMemoryAccess_AsMemoryAccess(mem);
 
         try {
@@ -1080,9 +1080,9 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
-        triton::arch::Register     arg3 = *PyRegister_AsRegister(reg);
+        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Register arg3 = *PyRegister_AsRegister(reg);
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->createSymbolicRegisterExpression(arg1, arg2, arg3, ccomment));
@@ -1114,8 +1114,8 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyString_AsString(comment);
 
-        triton::arch::Instruction  arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::AbstractNode* arg2 = PyAstNode_AsAstNode(node);
+        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->createSymbolicVolatileExpression(arg1, arg2, ccomment));

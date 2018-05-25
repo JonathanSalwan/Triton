@@ -70,7 +70,7 @@ namespace triton {
           TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
           //! Returns the logical conjunction AST of path constraints.
-          TRITON_EXPORT triton::ast::AbstractNode* getPathConstraintsAst(void) const;
+          TRITON_EXPORT triton::ast::SharedAbstractNode getPathConstraintsAst(void) const;
 
           //! Returns the number of constraints.
           TRITON_EXPORT triton::usize getNumberOfPathConstraints(void) const;
