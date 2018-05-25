@@ -115,10 +115,7 @@ namespace triton {
         TRITON_EXPORT bool isLogical(void) const;
 
         //! Returns true if the current tree is equal to the second one.
-        TRITON_EXPORT bool equalTo(const AbstractNode&) const;
-
-        //! Returns true if the current tree is equal to the second one.
-        TRITON_EXPORT bool equalTo(AbstractNode*) const;
+        TRITON_EXPORT bool equalTo(const SharedAbstractNode&) const;
 
         //! Evaluates the tree.
         TRITON_EXPORT virtual triton::uint512 evaluate(void) const;

@@ -142,7 +142,7 @@ namespace triton {
           if (other == nullptr || !PyAstNode_Check(other))
             return PyErr_Format(PyExc_TypeError, "AstNode::equalTo(): Expected a AstNode as argument.");
 
-          if (PyAstNode_AsAstNode(self)->equalTo(PyAstNode_AsAstNode(other).get()))
+          if (PyAstNode_AsAstNode(self)->equalTo(PyAstNode_AsAstNode(other)))
             Py_RETURN_TRUE;
 
           Py_RETURN_FALSE;

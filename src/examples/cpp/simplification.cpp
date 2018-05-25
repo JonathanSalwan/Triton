@@ -35,7 +35,7 @@ ast::SharedAbstractNode xor_simplification(API&, const ast::SharedAbstractNode& 
   }
 
   if (node->getKind() == ast::BVXOR_NODE) {
-    if (node->getChildren()[0]->equalTo(node->getChildren()[1].get()))
+    if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
       return node->getContext().bv(0, node->getBitvectorSize());
   }
 

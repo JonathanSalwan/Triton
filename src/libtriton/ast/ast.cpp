@@ -105,15 +105,10 @@ namespace triton {
     }
 
 
-    bool AbstractNode::equalTo(const AbstractNode& other) const {
-      return (this->evaluate() == other.evaluate()) &&
-             (this->getBitvectorSize() == other.getBitvectorSize()) &&
-             (this->hash(1) == other.hash(1));
-    }
-
-
-    bool AbstractNode::equalTo(AbstractNode* other) const {
-      return this->equalTo(*other);
+    bool AbstractNode::equalTo(const SharedAbstractNode& other) const {
+      return (this->evaluate() == other->evaluate()) &&
+             (this->getBitvectorSize() == other->getBitvectorSize()) &&
+             (this->hash(1) == other->hash(1));
     }
 
 
