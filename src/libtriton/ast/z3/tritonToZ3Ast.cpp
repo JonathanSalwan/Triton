@@ -25,19 +25,15 @@ namespace triton {
 
 
     triton::__uint TritonToZ3Ast::getUintValue(const z3::expr& expr) {
-      triton::__uint result = 0;
-
       if (!expr.is_int())
         throw triton::exceptions::Exception("TritonToZ3Ast::getUintValue(): The ast is not a numerical value.");
 
       #if defined(__x86_64__) || defined(_M_X64)
-      Z3_get_numeral_uint64(this->context, expr, &result);
+      return expr.get_numeral_uint64();
       #endif
       #if defined(__i386) || defined(_M_IX86)
-      Z3_get_numeral_uint(this->context, expr, &result);
+      return expr.get_numeral_uint();
       #endif
-
-      return result;
     }
 
 
