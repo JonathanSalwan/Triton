@@ -35,6 +35,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvNode>(new(std::nothrow) BvNode(value, size, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -43,6 +44,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvaddNode>(new(std::nothrow) BvaddNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -51,6 +53,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvandNode>(new(std::nothrow) BvandNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -59,6 +62,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvashrNode>(new(std::nothrow) BvashrNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -67,6 +71,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvNode>(new(std::nothrow) BvNode(0, 1, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -75,6 +80,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvlshrNode>(new(std::nothrow) BvlshrNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -83,6 +89,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvmulNode>(new(std::nothrow) BvmulNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -91,6 +98,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvnandNode>(new(std::nothrow) BvnandNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -99,6 +107,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvnegNode>(new(std::nothrow) BvnegNode(expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -107,6 +116,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvnorNode>(new(std::nothrow) BvnorNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -115,6 +125,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvnotNode>(new(std::nothrow) BvnotNode(expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -123,6 +134,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvorNode>(new(std::nothrow) BvorNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -131,6 +143,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvrolNode>(new(std::nothrow) BvrolNode(rot, expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -139,6 +152,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvrolNode>(new(std::nothrow) BvrolNode(rot, expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -147,6 +161,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvrorNode>(new(std::nothrow) BvrorNode(rot, expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -155,6 +170,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvrorNode>(new(std::nothrow) BvrorNode(rot, expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -163,6 +179,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsdivNode>(new(std::nothrow) BvsdivNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -171,6 +188,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsgeNode>(new(std::nothrow) BvsgeNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -179,6 +197,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsgtNode>(new(std::nothrow) BvsgtNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -187,6 +206,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvshlNode>(new(std::nothrow) BvshlNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -195,6 +215,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsleNode>(new(std::nothrow) BvsleNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -203,6 +224,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsltNode>(new(std::nothrow) BvsltNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -211,6 +233,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsmodNode>(new(std::nothrow) BvsmodNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -219,6 +242,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsremNode>(new(std::nothrow) BvsremNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -227,6 +251,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvsubNode>(new(std::nothrow) BvsubNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -235,6 +260,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvNode>(new(std::nothrow) BvNode(1, 1, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -243,6 +269,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvudivNode>(new(std::nothrow) BvudivNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -251,6 +278,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvugeNode>(new(std::nothrow) BvugeNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -259,6 +287,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvugtNode>(new(std::nothrow) BvugtNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -267,6 +296,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvuleNode>(new(std::nothrow) BvuleNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -275,6 +305,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvultNode>(new(std::nothrow) BvultNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -283,6 +314,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvuremNode>(new(std::nothrow) BvuremNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -291,6 +323,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvxnorNode>(new(std::nothrow) BvxnorNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -299,6 +332,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<BvxorNode>(new(std::nothrow) BvxorNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -307,6 +341,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<ConcatNode>(new(std::nothrow) ConcatNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -318,6 +353,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<ConcatNode>(new(std::nothrow) ConcatNode(exprs, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -326,6 +362,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<DecimalNode>(new(std::nothrow) DecimalNode(value, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -334,6 +371,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<DistinctNode>(new(std::nothrow) DistinctNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -342,6 +380,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<EqualNode>(new(std::nothrow) EqualNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -356,6 +395,7 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
 
+      node->init();
       return node;
     }
 
@@ -364,6 +404,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<IteNode>(new(std::nothrow) IteNode(ifExpr, thenExpr, elseExpr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -372,6 +413,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LandNode>(new(std::nothrow) LandNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -383,6 +425,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LandNode>(new(std::nothrow) LandNode(exprs, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -391,6 +434,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LetNode>(new(std::nothrow) LetNode(alias, expr2, expr3));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -399,6 +443,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LnotNode>(new(std::nothrow) LnotNode(expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -407,6 +452,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LorNode>(new(std::nothrow) LorNode(expr1, expr2));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -418,6 +464,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<LorNode>(new(std::nothrow) LorNode(exprs, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -426,6 +473,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<ReferenceNode>(new(std::nothrow) ReferenceNode(expr));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -434,6 +482,7 @@ namespace triton {
       SharedAbstractNode node = std::shared_ptr<StringNode>(new(std::nothrow) StringNode(value, *this));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
       return node;
     }
 
@@ -448,6 +497,7 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
 
+      node->init();
       return node;
     }
 
@@ -462,12 +512,16 @@ namespace triton {
           throw triton::exceptions::Ast("Node builders - Missmatching variable size.");
 
         // This node already exist, just return it
+        node->init();
         return node;
-      } else {
+      }
+      else {
         // if not found, create a new variable node
         SharedAbstractNode node = std::shared_ptr<VariableNode>(new(std::nothrow) VariableNode(symVar, *this));
+        this->initVariable(symVar.getName(), 0, node);
         if (node == nullptr)
           throw triton::exceptions::Ast("Node builders - Not enough memory");
+        node->init();
         return node;
       }
     }
@@ -483,6 +537,7 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
 
+      node->init();
       return node;
     }
 

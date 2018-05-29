@@ -118,7 +118,7 @@ namespace triton {
 
 
     void AbstractNode::initParents(void) {
-      for(auto& sp : this->getParents())
+      for (auto& sp : this->getParents())
         sp->init();
     }
 
@@ -131,38 +131,42 @@ namespace triton {
     std::vector<SharedAbstractNode> AbstractNode::getParents(void) {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
-      for (auto& kv : this->parents) {
+
+      for (auto& kv: parents) {
         if (auto sp = kv.second.lock())
           res.push_back(sp);
         else
           toRemove.push_back(kv.first);
       }
-      for (auto* an : toRemove)
-        this->parents.erase(an);
+
+      for(auto* an: toRemove)
+        parents.erase(an);
+
       return res;
     }
 
 
     void AbstractNode::setParent(AbstractNode* p) {
-      auto it = this->parents.find(p);
-      if (it == this->parents.end()) {
+      auto it = parents.find(p);
+      if (it == parents.end()) {
         auto A = p->shared_from_this();
         this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
       }
       else {
         if (it->second.expired()) {
-          this->parents.erase(it);
+          parents.erase(it);
           auto A = p->shared_from_this();
           this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
         }
-        else
-        {}; // Ptr already in
+        else {
+          /* Ptr already in */
+        }
       }
     }
 
 
     void AbstractNode::removeParent(AbstractNode* p) {
-      this->parents.erase(p);
+      this->parents.erase(parents.find(p));
     }
 
 
@@ -173,7 +177,6 @@ namespace triton {
 
 
     void AbstractNode::addChild(const SharedAbstractNode& child) {
-      child->setParent(this);
       this->children.push_back(child);
     }
 
@@ -216,7 +219,6 @@ namespace triton {
     BvaddNode::BvaddNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVADD_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -233,6 +235,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -256,7 +259,6 @@ namespace triton {
     BvandNode::BvandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -273,6 +275,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -297,7 +300,6 @@ namespace triton {
     BvashrNode::BvashrNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVASHR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -346,6 +348,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -369,7 +372,6 @@ namespace triton {
     BvlshrNode::BvlshrNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVLSHR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -386,6 +388,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -409,7 +412,6 @@ namespace triton {
     BvmulNode::BvmulNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVMUL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -426,6 +428,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -449,7 +452,6 @@ namespace triton {
     BvnandNode::BvnandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVNAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -466,6 +468,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -488,7 +491,6 @@ namespace triton {
 
     BvnegNode::BvnegNode(const SharedAbstractNode& expr): AbstractNode(BVNEG_NODE, expr->getContext()) {
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -502,6 +504,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -525,7 +528,6 @@ namespace triton {
     BvnorNode::BvnorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVNOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -542,6 +544,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -564,7 +567,6 @@ namespace triton {
 
     BvnotNode::BvnotNode(const SharedAbstractNode& expr): AbstractNode(BVNOT_NODE, expr->getContext()) {
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -578,6 +580,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -601,7 +604,6 @@ namespace triton {
     BvorNode::BvorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -618,6 +620,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -645,7 +648,6 @@ namespace triton {
     BvrolNode::BvrolNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROL_NODE, rot->getContext()) {
       this->addChild(rot);
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -669,6 +671,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -696,7 +699,6 @@ namespace triton {
     BvrorNode::BvrorNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROR_NODE, expr->getContext()) {
       this->addChild(rot);
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -720,6 +722,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -743,7 +746,6 @@ namespace triton {
     BvsdivNode::BvsdivNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSDIV_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -773,6 +775,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -796,7 +799,6 @@ namespace triton {
     BvsgeNode::BvsgeNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSGE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -820,6 +822,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -843,7 +846,6 @@ namespace triton {
     BvsgtNode::BvsgtNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSGT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -867,6 +869,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -890,7 +893,6 @@ namespace triton {
     BvshlNode::BvshlNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSHL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -907,6 +909,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -930,7 +933,6 @@ namespace triton {
     BvsleNode::BvsleNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSLE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
     void BvsleNode::init(void) {
@@ -953,6 +955,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -976,7 +979,6 @@ namespace triton {
     BvsltNode::BvsltNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSLT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1000,6 +1002,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1023,7 +1026,6 @@ namespace triton {
     BvsmodNode::BvsmodNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSMOD_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1051,6 +1053,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1074,7 +1077,6 @@ namespace triton {
     BvsremNode::BvsremNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSREM_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1102,6 +1104,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1125,7 +1128,6 @@ namespace triton {
     BvsubNode::BvsubNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVSUB_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1142,6 +1144,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1165,7 +1168,6 @@ namespace triton {
     BvudivNode::BvudivNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVUDIV_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1186,6 +1188,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1209,7 +1212,6 @@ namespace triton {
     BvugeNode::BvugeNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVUGE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1226,6 +1228,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1249,7 +1252,6 @@ namespace triton {
     BvugtNode::BvugtNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVUGT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1266,6 +1268,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1289,7 +1292,6 @@ namespace triton {
     BvuleNode::BvuleNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVULE_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1306,6 +1308,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1329,7 +1332,6 @@ namespace triton {
     BvultNode::BvultNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVULT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1346,6 +1348,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1369,7 +1372,6 @@ namespace triton {
     BvuremNode::BvuremNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVUREM_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1390,6 +1392,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1413,7 +1416,6 @@ namespace triton {
     BvxnorNode::BvxnorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVXNOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1430,6 +1432,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1453,7 +1456,6 @@ namespace triton {
     BvxorNode::BvxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(BVXOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1470,6 +1472,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1493,7 +1496,6 @@ namespace triton {
     BvNode::BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
       this->addChild(ctxt.decimal(value));
       this->addChild(ctxt.decimal(size));
-      this->init();
     }
 
 
@@ -1522,6 +1524,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1545,7 +1548,6 @@ namespace triton {
     ConcatNode::ConcatNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(CONCAT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1555,7 +1557,6 @@ namespace triton {
     ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
       for (auto expr : exprs)
         this->addChild(expr);
-      this->init();
     }
 
 
@@ -1578,6 +1579,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1600,7 +1602,6 @@ namespace triton {
 
     DecimalNode::DecimalNode(triton::uint512 value, AstContext& ctxt): AbstractNode(DECIMAL_NODE, ctxt) {
       this->value = value;
-      this->init();
     }
 
 
@@ -1632,7 +1633,6 @@ namespace triton {
     DistinctNode::DistinctNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(DISTINCT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1646,6 +1646,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1669,7 +1670,6 @@ namespace triton {
     EqualNode::EqualNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(EQUAL_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1683,6 +1683,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1707,7 +1708,6 @@ namespace triton {
       this->addChild(this->ctxt.decimal(high));
       this->addChild(this->ctxt.decimal(low));
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -1736,6 +1736,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1760,7 +1761,6 @@ namespace triton {
       this->addChild(ifExpr);
       this->addChild(thenExpr);
       this->addChild(elseExpr);
-      this->init();
     }
 
 
@@ -1780,6 +1780,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1803,7 +1804,6 @@ namespace triton {
     LandNode::LandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(LAND_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1813,7 +1813,6 @@ namespace triton {
     LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
       for (auto expr : exprs)
         this->addChild(expr);
-      this->init();
     }
 
 
@@ -1827,6 +1826,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval && this->children[index]->evaluate();
 
@@ -1855,7 +1855,6 @@ namespace triton {
       this->addChild(ctxt.string(alias));
       this->addChild(expr2);
       this->addChild(expr3);
-      this->init();
     }
 
 
@@ -1872,6 +1871,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -1894,7 +1894,6 @@ namespace triton {
 
     LnotNode::LnotNode(const SharedAbstractNode& expr): AbstractNode(LNOT_NODE, expr->getContext()) {
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -1908,6 +1907,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
 
         if (this->children[index]->isLogical() == false)
@@ -1935,7 +1935,6 @@ namespace triton {
     LorNode::LorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(LOR_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-      this->init();
     }
 
 
@@ -1945,7 +1944,6 @@ namespace triton {
     LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
       for (auto expr : exprs)
         this->addChild(expr);
-      this->init();
     }
 
 
@@ -1959,6 +1957,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval || this->children[index]->evaluate();
 
@@ -1986,7 +1985,6 @@ namespace triton {
     ReferenceNode::ReferenceNode(const triton::engines::symbolic::SharedSymbolicExpression& expr)
       : AbstractNode(REFERENCE_NODE, expr->getAst()->getContext())
       , expr(expr) {
-      this->init();
     }
 
 
@@ -2019,7 +2017,6 @@ namespace triton {
 
     StringNode::StringNode(std::string value, AstContext& ctxt): AbstractNode(STRING_NODE, ctxt) {
       this->value = value;
-      this->init();
     }
 
 
@@ -2054,7 +2051,6 @@ namespace triton {
     SxNode::SxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(SX_NODE, expr->getContext()) {
       this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -2078,6 +2074,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 
@@ -2102,8 +2099,6 @@ namespace triton {
     VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
         symVar(symVar) {
-      ctxt.initVariable(symVar.getName(), 0, std::shared_ptr<VariableNode>(this));
-      this->init();
     }
 
 
@@ -2139,7 +2134,6 @@ namespace triton {
     ZxNode::ZxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(ZX_NODE, expr->getContext()) {
       this->addChild(ctxt.decimal(sizeExt));
       this->addChild(expr);
-      this->init();
     }
 
 
@@ -2163,6 +2157,7 @@ namespace triton {
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
 

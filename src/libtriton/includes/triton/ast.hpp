@@ -66,7 +66,8 @@ namespace triton {
         std::vector<SharedAbstractNode> children;
 
         //! The parents of the node. Empty if there is still no parent.
-        std::map<AbstractNode*, WeakAbstractNode> parents;
+        //std::vector<AbstractNode*> parents;
+        std::map<AbstractNode*, std::weak_ptr<AbstractNode>> parents;
 
         //! The size of the node.
         triton::uint32 size;
