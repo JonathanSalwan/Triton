@@ -11,6 +11,7 @@
 #include <list>
 #include <map>
 #include <string>
+#include <boost/bimap.hpp>
 
 #include <triton/architecture.hpp>
 #include <triton/ast.hpp>
@@ -95,7 +96,7 @@ namespace triton {
            * **item1**: memory address<br>
            * **item2**: symbolic reference id
            */
-          std::map<triton::uint64, triton::usize> memoryReference;
+          boost::bimap<triton::uint64, triton::usize> memoryReference;
 
           /*! \brief map of <address:size> -> symbolic expression.
            *
