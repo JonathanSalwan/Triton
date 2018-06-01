@@ -552,12 +552,12 @@ namespace triton {
       }
 
 
-      static PyObject *AstNode_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+      static PyObject* AstNode_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
         return type->tp_alloc(type, 0);
       }
 
 
-      static int AstNode_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
+      static int AstNode_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
         return 0;
       }
 
@@ -686,10 +686,9 @@ namespace triton {
         PyType_Ready(&AstNode_Type);
         // Build the new object the python way (calling operator() on the type) as
         // it crash otherwise (certainly due to incorrect shared_ptr initialization).
-        auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject*)&AstNode_Type, nullptr);
-
+        auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject*) &AstNode_Type, nullptr);
         if (object != NULL) {
-          new (&object->node) triton::ast::SharedAbstractNode();
+          //new (&object->node) triton::ast::SharedAbstractNode();
           object->node = node;
         }
 

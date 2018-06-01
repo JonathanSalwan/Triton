@@ -388,7 +388,7 @@ namespace triton {
         PyType_Ready(&SymbolicExpression_Type);
         auto* object = (triton::bindings::python::SymbolicExpression_Object*)PyObject_CallObject((PyObject*)&SymbolicExpression_Type, nullptr);
         if (object != NULL) {
-          new (&object->symExpr) triton::engines::symbolic::SharedSymbolicExpression();
+          //new (&object->symExpr) triton::engines::symbolic::SharedSymbolicExpression();
           object->symExpr = symExpr;
         }
 

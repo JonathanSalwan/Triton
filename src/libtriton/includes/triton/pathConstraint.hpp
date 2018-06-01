@@ -60,6 +60,9 @@ namespace triton {
           //! Constructor by copy.
           TRITON_EXPORT PathConstraint(const PathConstraint &other);
 
+          //! Destructor.
+          TRITON_EXPORT ~PathConstraint();
+
           //! Operator.
           TRITON_EXPORT PathConstraint& operator=(const PathConstraint &other);
 

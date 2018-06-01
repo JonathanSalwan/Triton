@@ -43,6 +43,8 @@ namespace triton {
 
     AbstractNode::~AbstractNode() {
       /* virtual */
+      this->children.clear();
+      this->parents.clear();
     }
 
 

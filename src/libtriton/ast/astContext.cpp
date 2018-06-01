@@ -24,6 +24,11 @@ namespace triton {
     }
 
 
+    AstContext::~AstContext() {
+      this->valueMapping.clear();
+    }
+
+
     AstContext& AstContext::operator=(const AstContext& other) {
       this->astRepresentation = other.astRepresentation;
       this->valueMapping = other.valueMapping;

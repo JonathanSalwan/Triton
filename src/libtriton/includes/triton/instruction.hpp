@@ -113,6 +113,9 @@ namespace triton {
         //! Constructor by copy.
         TRITON_EXPORT Instruction(const Instruction& other);
 
+        //! Destructor.
+        TRITON_EXPORT ~Instruction();
+
         //! Copies an Instruction.
         TRITON_EXPORT Instruction& operator=(const Instruction& other);
 
