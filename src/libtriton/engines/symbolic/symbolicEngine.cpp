@@ -130,7 +130,7 @@ namespace triton {
         triton::engines::symbolic::PathManager::operator=(other);
 
         /* Delete unused variables */
-        for (auto& sv: this->symbolicVariables) {
+        for (auto& sv : this->symbolicVariables) {
           if (other.symbolicVariables.find(sv.first) == other.symbolicVariables.end())
             delete this->symbolicVariables[sv.first];
         }
@@ -151,7 +151,7 @@ namespace triton {
          */
         if (this->backupFlag == false) {
           /* Delete all symbolic variables */
-          for (auto sv: this->symbolicVariables)
+          for (auto sv : this->symbolicVariables)
             delete sv.second;
         }
       }
@@ -326,7 +326,7 @@ namespace triton {
 
       /* Returns the symbolic memory value */
       triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryAccess& mem) {
-        triton::ast::SharedAbstractNode node = this->buildSymbolicMemory(mem);
+        const triton::ast::SharedAbstractNode& node = this->buildSymbolicMemory(mem);
         return node->evaluate();
       }
 
@@ -370,10 +370,10 @@ namespace triton {
         triton::usize id = this->getUniqueSymExprId();
 
         /* Performes transformation if there are rules recorded */
-        auto snode = this->processSimplification(node);
+        const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
 
         /* Allocates the new shared symbolic expression */
-        auto expr = SharedSymbolicExpression(new(std::nothrow) SymbolicExpression(snode, id, kind, comment));
+        SharedSymbolicExpression expr = SharedSymbolicExpression(new(std::nothrow) SymbolicExpression(snode, id, kind, comment));
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicExpression(): not enough memory");
 
@@ -451,7 +451,7 @@ namespace triton {
 
         if (node->getKind() == triton::ast::REFERENCE_NODE) {
           const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          triton::ast::SharedAbstractNode ref = expr->getAst();
+          const triton::ast::SharedAbstractNode& ref = expr->getAst();
           return this->unrollAst(ref);
         }
 
@@ -467,7 +467,7 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode>& children = node->getChildren();
 
         if (node->getKind() == triton::ast::REFERENCE_NODE) {
-          SharedSymbolicExpression expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
+          const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
           triton::usize id = expr->getId();
           if (exprs.find(id) == exprs.end()) {
             exprs[id] = expr;
@@ -545,9 +545,9 @@ namespace triton {
        * #43 = SymVar_4
        */
       SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
-        SharedSymbolicExpression expression = this->getSymbolicExpressionFromId(exprId);
-        SymbolicVariable* symVar            = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
-        triton::ast::SharedAbstractNode tmp = this->astCtxt.variable(*symVar);
+        const SharedSymbolicExpression& expression = this->getSymbolicExpressionFromId(exprId);
+        SymbolicVariable* symVar                   = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
+        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.variable(*symVar);
 
         if (expression->getAst())
            this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
@@ -565,27 +565,27 @@ namespace triton {
         triton::uint512 cv              = this->architecture->getConcreteMemoryValue(mem);
 
         /* First we create a symbolic variable */
-        auto symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+        SymbolicVariable* symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
 
         /* Create the AST node */
-        auto symVarNode = this->astCtxt.variable(*symVar);
+        const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt.variable(*symVar);
 
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteSymbolicVariableValue(*symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
-          auto se = this->newSymbolicExpression(symVarNode, triton::engines::symbolic::MEM, "aligned Byte reference");
+          const SharedSymbolicExpression& se = this->newSymbolicExpression(symVarNode, triton::engines::symbolic::MEM, "aligned Byte reference");
           this->addAlignedMemory(memAddr, symVarSize, se);
         }
 
         /*  Split expression in bytes */
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
           /* Isolate the good part of the symbolic variable */
-          auto tmp = this->astCtxt.extract(((BYTE_SIZE_BIT * (index+1)) - 1), ((BYTE_SIZE_BIT * (index+1)) - BYTE_SIZE_BIT), symVarNode);
+          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(((BYTE_SIZE_BIT * (index+1)) - 1), ((BYTE_SIZE_BIT * (index+1)) - BYTE_SIZE_BIT), symVarNode);
 
           /* Check if the memory address is already defined */
-          auto se = this->getSymbolicMemory(memAddr+index);
+          SharedSymbolicExpression se = this->getSymbolicMemory(memAddr+index);
           if (se == nullptr) {
             se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
             /* Add the new memory reference */
@@ -614,20 +614,20 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
         /* Get the symbolic expression */
-        const auto& expression = this->getSymbolicRegister(reg);
+        const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);
 
         /* Create the symbolic variable */
         SymbolicVariable* symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parent.getId(), symVarSize, symVarComment);
 
         /* Create the AST node */
-        auto tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
+        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
 
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteSymbolicVariableValue(*symVar, cv);
 
         if (expression == nullptr) {
           /* Create the symbolic expression */
-          auto se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
+          const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, triton::engines::symbolic::REG);
           se->setOriginRegister(reg);
           this->symbolicReg[parent.getId()] = se;
         } else {
@@ -685,7 +685,7 @@ namespace triton {
 
       /* Returns a symbolic immediate and defines the immediate as input of the instruction */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
-        auto node = this->buildSymbolicImmediate(imm);
+        triton::ast::SharedAbstractNode node = this->buildSymbolicImmediate(imm);
         inst.setReadImmediate(imm, node);
         return node;
       }
@@ -712,7 +712,7 @@ namespace triton {
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
         while (size) {
-          auto symMem = this->getSymbolicMemory(address + size - 1);
+          const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
           /* Check if the memory cell is already symbolic */
           if (symMem != nullptr) {
             tmp = this->astCtxt.reference(symMem);
@@ -747,7 +747,7 @@ namespace triton {
 
       /* Returns a symbolic memory and defines the memory as input of the instruction */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
-        auto node = this->buildSymbolicMemory(mem);
+        triton::ast::SharedAbstractNode node = this->buildSymbolicMemory(mem);
 
         /* Set load access */
         inst.setLoadAccess(mem, node);
@@ -772,7 +772,7 @@ namespace triton {
         triton::uint32 low                 = reg.getLow();
 
         /* Check if the register is already symbolic */
-        if (const auto& symReg = this->getSymbolicRegister(reg)) {
+        if (const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg)) {
           op = this->astCtxt.extract(high, low, this->astCtxt.reference(symReg));
         }
         /* Otherwise, use the concerte value */
@@ -786,7 +786,7 @@ namespace triton {
 
       /* Returns a symbolic register and defines the register as input of the instruction */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
-        auto node = this->buildSymbolicRegister(reg);
+        triton::ast::SharedAbstractNode node = this->buildSymbolicRegister(reg);
         inst.setReadRegister(reg, node);
         return node;
       }
@@ -813,7 +813,7 @@ namespace triton {
 
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
-          auto aligned = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Aligned Byte reference - " + comment);
+          const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Aligned Byte reference - " + comment);
           this->addAlignedMemory(address, writeSize, aligned);
         }
 
@@ -897,7 +897,7 @@ namespace triton {
             break;
         }
 
-        auto se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
+        const SharedSymbolicExpression& se = this->newSymbolicExpression(finalExpr, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
         inst.setWrittenRegister(reg, node);
         return inst.addSymbolicExpression(se);
@@ -909,7 +909,7 @@ namespace triton {
         if (!this->architecture->isFlag(flag))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
 
-        auto se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
+        const SharedSymbolicExpression& se = this->newSymbolicExpression(node, triton::engines::symbolic::REG, comment);
         this->assignSymbolicExpressionToRegister(se, flag);
         inst.setWrittenRegister(flag, node);
         return inst.addSymbolicExpression(se);
@@ -918,7 +918,7 @@ namespace triton {
 
       /* Returns the new symbolic volatile expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment) {
-        auto se = this->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
+        const SharedSymbolicExpression& se = this->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
         return inst.addSymbolicExpression(se);
       }
 
@@ -973,7 +973,7 @@ namespace triton {
         while (writeSize) {
           /* Extract each byte of the memory */
           triton::ast::SharedAbstractNode tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
-          SharedSymbolicExpression byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
+          const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, byteRef);
@@ -1011,7 +1011,7 @@ namespace triton {
       /* Returns true if memory cell expressions contain symbolic variables. */
       bool SymbolicEngine::isMemorySymbolized(triton::uint64 addr, triton::uint32 size) const {
         for (triton::uint32 i = 0; i < size; i++) {
-          auto expr = this->getSymbolicMemory(addr + i);
+          const SharedSymbolicExpression& expr = this->getSymbolicMemory(addr + i);
 
           if(expr == nullptr)
             continue;
