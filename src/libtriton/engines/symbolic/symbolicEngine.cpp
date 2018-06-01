@@ -931,8 +931,8 @@ namespace triton {
 
       /* Assigns a symbolic expression to a register */
       void SymbolicEngine::assignSymbolicExpressionToRegister(const SharedSymbolicExpression& se, const triton::arch::Register& reg) {
-        triton::ast::SharedAbstractNode node = se->getAst();
-        triton::uint32 id                    = reg.getParent();
+        const triton::ast::SharedAbstractNode& node = se->getAst();
+        triton::uint32 id                           = reg.getParent();
 
         /* We can assign an expression only on parent registers */
         if (reg.getId() != id)
@@ -954,9 +954,9 @@ namespace triton {
 
       /* Assigns a symbolic expression to a memory */
       void SymbolicEngine::assignSymbolicExpressionToMemory(const SharedSymbolicExpression& se, const triton::arch::MemoryAccess& mem) {
-        triton::ast::SharedAbstractNode node = se->getAst();
-        triton::uint64 address               = mem.getAddress();
-        triton::uint32 writeSize             = mem.getSize();
+        const triton::ast::SharedAbstractNode& node = se->getAst();
+        triton::uint64 address                      = mem.getAddress();
+        triton::uint32 writeSize                    = mem.getSize();
 
         /* Check if the size of the symbolic expression is equal to the memory access */
         if (node->getBitvectorSize() != mem.getBitSize())
@@ -972,7 +972,7 @@ namespace triton {
          */
         while (writeSize) {
           /* Extract each byte of the memory */
-          triton::ast::SharedAbstractNode tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
           const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
           /* Assign memory with little endian */
@@ -1026,7 +1026,7 @@ namespace triton {
 
       /* Returns true if the register expression contains a symbolic variable. */
       bool SymbolicEngine::isRegisterSymbolized(const triton::arch::Register& reg) const {
-        const auto& expr = this->getSymbolicRegister(reg);
+        const SharedSymbolicExpression& expr = this->getSymbolicRegister(reg);
 
         if (expr == nullptr)
           return false;

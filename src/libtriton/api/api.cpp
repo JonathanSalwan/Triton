@@ -903,16 +903,16 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::getAstFromId(triton::usize symExprId) {
+  const triton::ast::SharedAbstractNode& API::getAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
-    triton::engines::symbolic::SharedSymbolicExpression symExpr = this->getSymbolicExpressionFromId(symExprId);
+    const triton::engines::symbolic::SharedSymbolicExpression& symExpr = this->getSymbolicExpressionFromId(symExprId);
     return symExpr->getAst();
   }
 
 
   triton::ast::SharedAbstractNode API::unrollAstFromId(triton::usize symExprId) {
     this->checkSymbolic();
-    triton::ast::SharedAbstractNode partialAst = this->getAstFromId(symExprId);
+    const triton::ast::SharedAbstractNode& partialAst = this->getAstFromId(symExprId);
     return this->unrollAst(partialAst);
   }
 

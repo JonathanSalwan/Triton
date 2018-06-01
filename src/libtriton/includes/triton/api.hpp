@@ -454,7 +454,7 @@ namespace triton {
         TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getAstFromId(triton::usize symExprId);
+        TRITON_EXPORT const triton::ast::SharedAbstractNode& getAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Unrolls the SSA form of a given AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node);

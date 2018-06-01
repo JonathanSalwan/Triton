@@ -95,7 +95,7 @@ namespace triton {
           TRITON_EXPORT symkind_e getKind(void) const;
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getAst(void) const;
+          TRITON_EXPORT const triton::ast::SharedAbstractNode& getAst(void) const;
 
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
           TRITON_EXPORT triton::ast::SharedAbstractNode getNewAst(void) const;

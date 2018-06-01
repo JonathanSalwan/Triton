@@ -54,7 +54,7 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicExpression::getAst(void) const {
+      const triton::ast::SharedAbstractNode& SymbolicExpression::getAst(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
