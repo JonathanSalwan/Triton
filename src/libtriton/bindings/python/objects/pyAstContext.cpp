@@ -483,7 +483,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -506,7 +505,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -529,7 +527,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {

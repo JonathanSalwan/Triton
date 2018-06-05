@@ -548,7 +548,6 @@ namespace triton {
 
 
     void AstContext::initVariable(const std::string& name, const triton::uint512& value, const SharedAbstractNode& node) {
-      // FIXME: Use insert and check result
       auto it = this->valueMapping.find(name);
       if (it == this->valueMapping.end())
         this->valueMapping.insert(std::make_pair(name, std::make_pair(node, value)));

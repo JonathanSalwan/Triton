@@ -99,7 +99,6 @@ namespace triton {
     namespace solver {
 
       //! Wrapper to handle variadict number of arguments or'd togethers
-      // FIXME : It is already implemented in the new Z3 interface.
       z3::expr mk_or(z3::expr_vector args) {
         std::vector<Z3_ast> array;
 
