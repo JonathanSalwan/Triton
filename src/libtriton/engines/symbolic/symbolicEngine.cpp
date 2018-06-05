@@ -373,7 +373,7 @@ namespace triton {
         const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
 
         /* Allocates the new shared symbolic expression */
-        SharedSymbolicExpression expr = SharedSymbolicExpression(new(std::nothrow) SymbolicExpression(snode, id, kind, comment));
+        SharedSymbolicExpression expr = std::make_shared<SymbolicExpression>(snode, id, kind, comment);
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicExpression(): not enough memory");
 
