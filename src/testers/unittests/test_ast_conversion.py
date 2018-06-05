@@ -326,7 +326,6 @@ class TestAstConversion(unittest.TestCase):
                 self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
                 self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
                 self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-                self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     def new_node(self, depth, possible):
         """Recursive function to create a random ast."""
