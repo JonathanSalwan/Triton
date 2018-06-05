@@ -41,11 +41,6 @@ namespace triton {
     }
 
 
-    Instruction::~Instruction() {
-      this->clear();
-    }
-
-
     Instruction& Instruction::operator=(const Instruction& other) {
       this->copy(other);
       return *this;

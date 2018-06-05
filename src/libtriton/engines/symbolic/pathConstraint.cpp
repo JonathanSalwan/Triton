@@ -23,11 +23,6 @@ namespace triton {
       }
 
 
-      PathConstraint::~PathConstraint() {
-        this->branches.clear();
-      }
-
-
       PathConstraint& PathConstraint::operator=(const PathConstraint &other) {
         this->branches = other.branches;
         return *this;

@@ -142,7 +142,6 @@ before_install:
   - export CXX="$CXX_COMPILER"
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PREFIX="/usr/local"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew link --overwrite python@2; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3 capstone; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export DYLD_LIBRARY_PATH=/usr/local/opt/capstone/lib/:$DYLD_LIBRARY_PATH; fi
   # Back to /home/travis/build/JonathanSalwan
