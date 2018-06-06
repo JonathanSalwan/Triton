@@ -193,7 +193,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)BitsVector_dealloc,             /* tp_del */
         0                                           /* tp_version_tag */
       };
 

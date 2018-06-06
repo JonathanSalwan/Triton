@@ -53,7 +53,7 @@ class TestSymbolic(unittest.TestCase):
         self.Triton.assignSymbolicExpressionToMemory(expr1, mem)
 
         # Get expr from memory
-        expr2 = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicMemoryId(0x100))
+        expr2 = self.Triton.getSymbolicMemory(0x100)
 
         self.assertEqual(expr1.getAst().evaluate(), expr2.getAst().evaluate())
 
@@ -65,10 +65,10 @@ class TestSymbolic(unittest.TestCase):
         self.Triton.assignSymbolicExpressionToMemory(expr1, mem)
 
         # Check we can get back the same values
-        expr2 = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicMemoryId(0x100))
-        expr3 = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicMemoryId(0x101))
-        expr4 = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicMemoryId(0x102))
-        expr5 = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicMemoryId(0x103))
+        expr2 = self.Triton.getSymbolicMemory(0x100)
+        expr3 = self.Triton.getSymbolicMemory(0x101)
+        expr4 = self.Triton.getSymbolicMemory(0x102)
+        expr5 = self.Triton.getSymbolicMemory(0x103)
 
         self.assertEqual(expr2.getAst().evaluate(), 0x44)
         self.assertEqual(expr3.getAst().evaluate(), 0x33)

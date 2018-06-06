@@ -27,10 +27,11 @@ struct op trace[] = {
 
 
 /* if (bvxor x x) -> (_ bv0 x_size) */
-ast::AbstractNode* xor_simplification(API&, ast::AbstractNode* node) {
+ast::SharedAbstractNode xor_simplification(API&, const ast::SharedAbstractNode& snode) {
+  ast::AbstractNode* node = snode.get();
 
   if (node->getKind() == ast::ZX_NODE) {
-    node = node->getChildren()[1];
+    node = node->getChildren()[1].get();
   }
 
   if (node->getKind() == ast::BVXOR_NODE) {
@@ -38,7 +39,7 @@ ast::AbstractNode* xor_simplification(API&, ast::AbstractNode* node) {
       return node->getContext().bv(0, node->getBitvectorSize());
   }
 
-  return node;
+  return snode;
 }
 
 

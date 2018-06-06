@@ -8,7 +8,8 @@ endif()
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DHAVE_ROUND /MT /MP")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DHAVE_ROUND /MTd /MP")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -66,7 +67,6 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Specifications.cpp
     ast/ast.cpp
     ast/astContext.cpp
-    ast/astGarbageCollector.cpp
     ast/representations/astPythonRepresentation.cpp
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp

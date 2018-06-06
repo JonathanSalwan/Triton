@@ -24,8 +24,8 @@ or a volatile symbolic expression.
 
 The record of a simplification pass is really straightforward. You have to record your simplification
 callback using the triton::API::addCallback() function. Your simplification callback
-must takes as unique parameter a pointer of triton::ast::AbstractNode and returns a pointer of
-triton::ast::AbstractNode. Then, your callback will be called before every symbolic assignment.
+must takes as unique parameter a triton::ast::SharedAbstractNode and returns a triton::ast::SharedAbstractNode.
+Then, your callback will be called before every symbolic assignment.
 Note that you can record several simplification callbacks or remove a specific callback using the
 triton::API::removeCallback() function.
 
@@ -36,7 +36,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
-triton::ast::AbstractNode* xor_simplification(triton::API& ctx, triton::ast::AbstractNode* node) {
+triton::ast::SharedAbstractNode xor_simplification(triton::API& ctx, const triton::ast::SharedAbstractNode& node) {
 
   if (node->getKind() == triton::ast::BVXOR_NODE) {
     if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
@@ -176,13 +176,13 @@ namespace triton {
       }
 
 
-      triton::ast::AbstractNode* SymbolicSimplification::processSimplification(triton::ast::AbstractNode* node) const {
+      triton::ast::SharedAbstractNode SymbolicSimplification::processSimplification(const triton::ast::SharedAbstractNode& node) const {
         if (node == nullptr)
           throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
         /* process recorded callback about symbolic simplifications */
         if (this->callbacks)
-          node = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
+          return this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
 
         return node;
       }

@@ -200,15 +200,22 @@ REG_SPEC(CR14, cr14, QWORD_SIZE_BIT-1, 0, CR14, DWORD_SIZE_BIT-1, 0, CR14, true)
 REG_SPEC(CR15, cr15, QWORD_SIZE_BIT-1, 0, CR15, DWORD_SIZE_BIT-1, 0, CR15, true)    //!< cr15
 
 /* Flags ID used in the Taint and Symbolic Engines */
-REG_SPEC_NO_CAPSTONE(AF, af, 0, 0, AF, 0, 0, AF, true) //!< af
-REG_SPEC_NO_CAPSTONE(CF, cf, 0, 0, CF, 0, 0, CF, true) //!< cf
-REG_SPEC_NO_CAPSTONE(DF, df, 0, 0, DF, 0, 0, DF, true) //!< df
-REG_SPEC_NO_CAPSTONE(IF, if, 0, 0, IF, 0, 0, IF, true) //!< if
-REG_SPEC_NO_CAPSTONE(OF, of, 0, 0, OF, 0, 0, OF, true) //!< of
-REG_SPEC_NO_CAPSTONE(PF, pf, 0, 0, PF, 0, 0, PF, true) //!< pf
-REG_SPEC_NO_CAPSTONE(SF, sf, 0, 0, SF, 0, 0, SF, true) //!< sf
-REG_SPEC_NO_CAPSTONE(TF, tf, 0, 0, TF, 0, 0, TF, true) //!< tf
-REG_SPEC_NO_CAPSTONE(ZF, zf, 0, 0, ZF, 0, 0, ZF, true) //!< zf
+REG_SPEC_NO_CAPSTONE(AC, ac, 0, 0, AC, 0, 0, AC, true)      //!< ac
+REG_SPEC_NO_CAPSTONE(AF, af, 0, 0, AF, 0, 0, AF, true)      //!< af
+REG_SPEC_NO_CAPSTONE(CF, cf, 0, 0, CF, 0, 0, CF, true)      //!< cf
+REG_SPEC_NO_CAPSTONE(DF, df, 0, 0, DF, 0, 0, DF, true)      //!< df
+REG_SPEC_NO_CAPSTONE(ID, id, 0, 0, ID, 0, 0, ID, true)      //!< id
+REG_SPEC_NO_CAPSTONE(IF, if, 0, 0, IF, 0, 0, IF, true)      //!< if
+REG_SPEC_NO_CAPSTONE(NT, nt, 0, 0, NT, 0, 0, NT, true)      //!< nt
+REG_SPEC_NO_CAPSTONE(OF, of, 0, 0, OF, 0, 0, OF, true)      //!< of
+REG_SPEC_NO_CAPSTONE(PF, pf, 0, 0, PF, 0, 0, PF, true)      //!< pf
+REG_SPEC_NO_CAPSTONE(RF, rf, 0, 0, RF, 0, 0, RF, true)      //!< rf
+REG_SPEC_NO_CAPSTONE(SF, sf, 0, 0, SF, 0, 0, SF, true)      //!< sf
+REG_SPEC_NO_CAPSTONE(TF, tf, 0, 0, TF, 0, 0, TF, true)      //!< tf
+REG_SPEC_NO_CAPSTONE(VIF, vif, 0, 0, VIF, 0, 0, VIF, true)  //!< vif
+REG_SPEC_NO_CAPSTONE(VIP, vip, 0, 0, VIP, 0, 0, VIP, true)  //!< vip
+REG_SPEC_NO_CAPSTONE(VM, vm, 0, 0, VM, 0, 0, VM, true)      //!< vm
+REG_SPEC_NO_CAPSTONE(ZF, zf, 0, 0, ZF, 0, 0, ZF, true)      //!< zf
 
 /* SSE flags */
 REG_SPEC_NO_CAPSTONE(IE, ie, 0, 0, IE, 0, 0, IE, true)      //!< ie (Invalid Operation Flag)

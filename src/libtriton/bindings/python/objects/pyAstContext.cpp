@@ -116,8 +116,8 @@ If you try to go through the full AST you will fail at the first reference node 
 The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::unrollAst() function.
 
 ~~~~~~~~~~~~~{.py}
->>> zfId = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
->>> partialTree = ctxt.getSymbolicExpressionFromId(zfId).getAst()
+>>> zf = ctxt.getSymbolicRegister(ctxt.registers.zf)
+>>> partialTree = zf.getAst()
 >>> print partialTree
 (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 
@@ -168,8 +168,8 @@ ref_7 = 0x400003 # Program Counter
 
 ~~~~~~~~~~~~~{.py}
 >>> # Get the symbolic expression of the ZF flag
->>> zfId    = ctxt.getSymbolicRegisterId(ctxt.registers.zf)
->>> zfExpr  = ctxt.unrollAst(ctxt.getSymbolicExpressionFromId(zfId).getAst())
+>>> zf      = ctxt.getSymbolicRegister(ctxt.registers.zf)
+>>> zfExpr  = ctxt.unrollAst(zf.getAst())
 
 >>> astCtxt = ctxt.getAstContext()
 
@@ -421,7 +421,7 @@ e.g: `(not expr)`.
 Creates a logical `OR` on several nodes.
 e.g: `(or expr1 expr2 expr3 expr4)`.
 
-- <b>\ref py_AstNode_page reference(integer exprId)</b><br>
+- <b>\ref py_AstNode_page reference(integer expr)</b><br>
 Creates a reference node (SSA-based).<br>
 e.g: `ref!123`.
 
@@ -483,7 +483,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvadd(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -506,7 +505,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvand(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -529,7 +527,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as second argument");
 
         try {
-          // FIXME: Should we check all astContext are sames
           return PyAstNode(PyAstContext_AsAstContext(self)->bvashr(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1139,7 +1136,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr)));
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr).get()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1148,7 +1145,7 @@ namespace triton {
 
 
       static PyObject* AstContext_concat(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "concat(): expected a list of AstNodes as first argument");
@@ -1247,7 +1244,7 @@ namespace triton {
 
 
       static PyObject* AstContext_land(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "land(): expected a list of AstNodes as first argument");
@@ -1311,7 +1308,7 @@ namespace triton {
 
 
       static PyObject* AstContext_lor(PyObject* self, PyObject* exprsList) {
-        std::vector<triton::ast::AbstractNode *> exprs;
+        std::vector<triton::ast::SharedAbstractNode> exprs;
 
         if (exprsList == nullptr || !PyList_Check(exprsList))
           return PyErr_Format(PyExc_TypeError, "lor(): expected a list of AstNodes as first argument");
@@ -1340,7 +1337,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->reference(*PySymbolicExpression_AsSymbolicExpression(symExpr)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->reference(PySymbolicExpression_AsSymbolicExpression(symExpr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

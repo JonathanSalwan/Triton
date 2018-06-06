@@ -39,8 +39,8 @@ Triton = getTritonContext()
 
 def before(instruction):
     if instruction.getAddress() == 0x4005c5:
-        rax = Triton.getSymbolicRegisterId(Triton.registers.rax)
-        raxAst = Triton.getAstFromId(rax)
+        rax = Triton.getSymbolicRegister(Triton.registers.rax)
+        raxAst = rax.getAst()
         astCtxt = Triton.getAstContext()
         constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
         models = Triton.getModels(constraint, SOLUTIONS)

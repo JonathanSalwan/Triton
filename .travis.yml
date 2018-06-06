@@ -112,11 +112,11 @@ matrix:
               packages: ['clang-5.0', 'ccache', 'libpython2.7', 'libboost1.55-all-dev', 'cmake', 'cmake-data']
           env: [ CXX_COMPILER=clang++-5.0, C_COMPILER=clang-5.0, PYTHON_VERSION=2.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04 ]
 
-        # OSX xcode 7.3
-        - os: osx
-          osx_image: xcode7.3
-          compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
+        ## OSX xcode 7.3
+        #- os: osx
+        #  osx_image: xcode7.3
+        #  compiler: clang
+        #  env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7, TT_PYTHON_ENV='-DPYTHON_INCLUDE_DIR=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Headers -DPYTHON_LIBRARY=/usr/local/Cellar/python/2.7.12_1/Frameworks/Python.framework/Versions/2.7/lib/libpython2.7.dylib' ]
 
         ## OSX xcode 8.3
         #- os: osx
@@ -185,7 +185,7 @@ script:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then mkdir -p /Users/travis/Library/Python/2.7/lib/python/site-packages; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then echo 'import site; site.addsitedir("/usr/local/lib/python2.7/site-packages")' >> /Users/travis/Library/Python/2.7/lib/python/site-packages/homebrew.pth; fi
-  - make check
+  - travis_wait 60 make check
   # Check installation succeed
   - sudo make install
 

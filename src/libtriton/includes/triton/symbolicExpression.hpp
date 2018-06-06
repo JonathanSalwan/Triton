@@ -9,6 +9,7 @@
 #define TRITON_SYMBOLICEXPRESSION_H
 
 #include <string>
+#include <memory>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -51,7 +52,7 @@ namespace triton {
           symkind_e kind;
 
           //! The root node (AST) of the symbolic expression.
-          triton::ast::AbstractNode* ast;
+          triton::ast::SharedAbstractNode ast;
 
           //! The comment of the symbolic expression.
           std::string comment;
@@ -70,7 +71,7 @@ namespace triton {
           bool isTainted;
 
           //! Constructor.
-          TRITON_EXPORT SymbolicExpression(triton::ast::AbstractNode* expr, triton::usize id, symkind_e kind, const std::string& comment="");
+          TRITON_EXPORT SymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::usize id, symkind_e kind, const std::string& comment="");
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicExpression(const SymbolicExpression& other);
@@ -94,10 +95,10 @@ namespace triton {
           TRITON_EXPORT symkind_e getKind(void) const;
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
-          TRITON_EXPORT triton::ast::AbstractNode* getAst(void) const;
+          TRITON_EXPORT const triton::ast::SharedAbstractNode& getAst(void) const;
 
           //! Returns a new SMT AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
-          TRITON_EXPORT triton::ast::AbstractNode* getNewAst(void) const;
+          TRITON_EXPORT triton::ast::SharedAbstractNode getNewAst(void) const;
 
           //! Returns the comment of the symbolic expression.
           TRITON_EXPORT const std::string& getComment(void) const;
@@ -115,7 +116,7 @@ namespace triton {
           TRITON_EXPORT const triton::arch::Register& getOriginRegister(void) const;
 
           //! Sets a root node.
-          TRITON_EXPORT void setAst(triton::ast::AbstractNode* node);
+          TRITON_EXPORT void setAst(const triton::ast::SharedAbstractNode& node);
 
           //! Sets a comment to the symbolic expression.
           TRITON_EXPORT void setComment(const std::string& comment);
@@ -129,6 +130,12 @@ namespace triton {
           //! Sets the origin register.
           TRITON_EXPORT void setOriginRegister(const triton::arch::Register& reg);
       };
+
+      //! Shared Symbolic Expression.
+      using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
+
+      //! Weak Symbolic Expression.
+      using WeakSymbolicExpression = std::weak_ptr<triton::engines::symbolic::SymbolicExpression>;
 
       //! Displays a symbolic expression.
       TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr);
@@ -144,4 +151,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICEXPRESSION_H */
-

@@ -43,7 +43,7 @@ namespace triton {
         bool isEval;
 
         //! The map of symbols. E.g: (let (symbols expr1) expr2)
-        std::map<std::string, triton::ast::AbstractNode*> symbols;
+        std::map<std::string, triton::ast::SharedAbstractNode> symbols;
 
         //! Returns the integer of the z3 expression (expr must be an int).
         triton::__uint getUintValue(const z3::expr& expr);
@@ -60,7 +60,7 @@ namespace triton {
         TRITON_EXPORT TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval=true);
 
         //! Converts to Z3's AST
-        TRITON_EXPORT z3::expr convert(triton::ast::AbstractNode* node);
+        TRITON_EXPORT z3::expr convert(const triton::ast::SharedAbstractNode& node);
     };
 
   /*! @} End of ast namespace */

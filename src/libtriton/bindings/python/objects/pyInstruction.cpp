@@ -426,8 +426,7 @@ namespace triton {
           symExprs = xPyList_New(exprSize);
 
           for (triton::usize index = 0; index < exprSize; index++) {
-            PyObject* obj = nullptr;
-            obj = PySymbolicExpression(inst->symbolicExpressions[index]);
+            PyObject* obj = PySymbolicExpression(inst->symbolicExpressions[index]);
             PyList_SetItem(symExprs, index, obj);
           }
 
@@ -721,7 +720,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)Instruction_dealloc,            /* tp_del */
         0                                           /* tp_version_tag */
       };
 
