@@ -2920,7 +2920,7 @@ namespace triton {
         "TritonContext",                            /* tp_name */
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        TritonContext_dealloc,                      /* tp_dealloc */
+        (destructor)TritonContext_dealloc,          /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
@@ -2961,7 +2961,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)TritonContext_dealloc,          /* tp_del */
         0                                           /* tp_version_tag */
       };
 

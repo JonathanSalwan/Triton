@@ -626,4 +626,3 @@ namespace triton {
 };
 
 #endif /* TRITON_API_H */
-
