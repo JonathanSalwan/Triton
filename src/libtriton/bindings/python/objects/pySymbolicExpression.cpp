@@ -367,7 +367,7 @@ namespace triton {
         0,                                          /* tp_dictoffset */
         (initproc)SymbolicExpression_init,          /* tp_init */
         0,                                          /* tp_alloc */
-        SymbolicExpression_new,                     /* tp_new */
+        (newfunc)SymbolicExpression_new,            /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -375,7 +375,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)SymbolicExpression_dealloc,     /* tp_del */
         0                                           /* tp_version_tag */
       };
 
@@ -389,7 +389,6 @@ namespace triton {
         PyType_Ready(&SymbolicExpression_Type);
         auto* object = (triton::bindings::python::SymbolicExpression_Object*)PyObject_CallObject((PyObject*)&SymbolicExpression_Type, nullptr);
         if (object != NULL) {
-          //new (&object->symExpr) triton::engines::symbolic::SharedSymbolicExpression();
           object->symExpr = symExpr;
         }
 

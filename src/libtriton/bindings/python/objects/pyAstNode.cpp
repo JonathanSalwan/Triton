@@ -665,7 +665,7 @@ namespace triton {
         0,                                          /* tp_dictoffset */
         (initproc)AstNode_init,                     /* tp_init */
         0,                                          /* tp_alloc */
-        AstNode_new,                                /* tp_new */
+        (newfunc)AstNode_new,                       /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -673,7 +673,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)AstNode_dealloc,                /* tp_del */
         0                                           /* tp_version_tag */
       };
 
@@ -689,7 +689,6 @@ namespace triton {
         // it crash otherwise (certainly due to incorrect shared_ptr initialization).
         auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject*) &AstNode_Type, nullptr);
         if (object != NULL) {
-          //new (&object->node) triton::ast::SharedAbstractNode();
           object->node = node;
         }
 
