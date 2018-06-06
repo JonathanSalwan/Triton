@@ -1,9 +1,9 @@
-/* @file
- *
- *  Copyright (C) - Triton
- *
- *  This program is under the terms of the BSD License.
- */
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the BSD License.
+*/
 
 #ifndef TRITON_REGISTERS_E_H
 #define TRITON_REGISTERS_E_H
