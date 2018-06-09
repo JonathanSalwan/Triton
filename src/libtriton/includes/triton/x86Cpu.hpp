@@ -105,22 +105,6 @@ namespace triton {
           triton::uint8 mm6[QWORD_SIZE];
           //! Concrete value of mm7
           triton::uint8 mm7[QWORD_SIZE];
-          //! Concrete value of xmm0
-          triton::uint8 xmm0[DQWORD_SIZE];
-          //! Concrete value of xmm1
-          triton::uint8 xmm1[DQWORD_SIZE];
-          //! Concrete value of xmm2
-          triton::uint8 xmm2[DQWORD_SIZE];
-          //! Concrete value of xmm3
-          triton::uint8 xmm3[DQWORD_SIZE];
-          //! Concrete value of xmm4
-          triton::uint8 xmm4[DQWORD_SIZE];
-          //! Concrete value of xmm5
-          triton::uint8 xmm5[DQWORD_SIZE];
-          //! Concrete value of xmm6
-          triton::uint8 xmm6[DQWORD_SIZE];
-          //! Concrete value of xmm7
-          triton::uint8 xmm7[DQWORD_SIZE];
           //! Concrete value of ymm0
           triton::uint8 ymm0[QQWORD_SIZE];
           //! Concrete value of ymm1
