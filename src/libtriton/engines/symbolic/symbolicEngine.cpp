@@ -652,10 +652,10 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic operand based on the abstract wrapper. */
+      /* Returns the AST corresponding to the operand. */
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
-          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(op.getConstImmediate());
+          case triton::arch::OP_IMM: return this->getImmediateAst(op.getConstImmediate());
           case triton::arch::OP_MEM: return this->buildSymbolicMemory(op.getConstMemory());
           case triton::arch::OP_REG: return this->buildSymbolicRegister(op.getConstRegister());
           default:
@@ -664,10 +664,10 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic operand based on the abstract wrapper. */
+      /* Returns the AST corresponding to the operand. */
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
-          case triton::arch::OP_IMM: return this->buildSymbolicImmediate(inst, op.getConstImmediate());
+          case triton::arch::OP_IMM: return this->getImmediateAst(inst, op.getConstImmediate());
           case triton::arch::OP_MEM: return this->buildSymbolicMemory(inst, op.getConstMemory());
           case triton::arch::OP_REG: return this->buildSymbolicRegister(inst, op.getConstRegister());
           default:
@@ -676,22 +676,22 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic immediate */
-      triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
+      /* Returns the AST corresponding to the immediate */
+      triton::ast::SharedAbstractNode SymbolicEngine::getImmediateAst(const triton::arch::Immediate& imm) {
         triton::ast::SharedAbstractNode node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
         return node;
       }
 
 
-      /* Returns a symbolic immediate and defines the immediate as input of the instruction */
-      triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
-        triton::ast::SharedAbstractNode node = this->buildSymbolicImmediate(imm);
+      /* Returns the AST corresponding to the immediate and defines the immediate as input of the instruction */
+      triton::ast::SharedAbstractNode SymbolicEngine::getImmediateAst(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
+        triton::ast::SharedAbstractNode node = this->getImmediateAst(imm);
         inst.setReadImmediate(imm, node);
         return node;
       }
 
 
-      /* Returns a symbolic memory */
+      /* Returns the AST corresponding to the memory */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
         std::list<triton::ast::SharedAbstractNode> opVec;
 
@@ -745,7 +745,7 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic memory and defines the memory as input of the instruction */
+      /* Returns the AST corresponding to the memory and defines the memory as input of the instruction */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
         triton::ast::SharedAbstractNode node = this->buildSymbolicMemory(mem);
 
@@ -764,7 +764,7 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic register */
+      /* Returns the AST corresponding to the register */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicRegister(const triton::arch::Register& reg) {
         triton::ast::SharedAbstractNode op = nullptr;
         triton::uint32 bvSize              = reg.getBitSize();
@@ -784,7 +784,7 @@ namespace triton {
       }
 
 
-      /* Returns a symbolic register and defines the register as input of the instruction */
+      /* Returns the AST corresponding to the register and defines the register as input of the instruction */
       triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
         triton::ast::SharedAbstractNode node = this->buildSymbolicRegister(reg);
         inst.setReadRegister(reg, node);

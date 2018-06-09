@@ -349,10 +349,10 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
 
         //! [**symbolic api**] - Returns the AST corresponding to the immediate.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(const triton::arch::Immediate& imm);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getImmediateAst(const triton::arch::Immediate& imm);
 
         //! [**symbolic api**] - Returns the AST corresponding to the immediate and defines the immediate as input of the instruction..
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getImmediateAst(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
 
         //! [**symbolic api**] - Returns the AST corresponding to the memory.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(const triton::arch::MemoryAccess& mem);

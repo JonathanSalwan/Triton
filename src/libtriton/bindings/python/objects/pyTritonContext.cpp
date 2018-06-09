@@ -63,7 +63,7 @@ expression to a sub-register like `AX`, `AH` or `AL`, please, craft your express
 - <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>\ref py_AstNode_page buildSymbolicImmediate(\ref py_Immediate_page imm)</b><br>
+- <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
 Returns the AST corresponding to the \ref py_Immediate_page.
 
 - <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
@@ -774,12 +774,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_buildSymbolicImmediate(PyObject* self, PyObject* imm) {
+      static PyObject* TritonContext_getImmediateAst(PyObject* self, PyObject* imm) {
         if (!PyImmediate_Check(imm))
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicImmediate(): Expects an Immediate as argument.");
+          return PyErr_Format(PyExc_TypeError, "getImmediateAst(): Expects an Immediate as argument.");
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->buildSymbolicImmediate(*PyImmediate_AsImmediate(imm)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getImmediateAst(*PyImmediate_AsImmediate(imm)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2810,7 +2810,7 @@ namespace triton {
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                         METH_O,             ""},
-        {"buildSymbolicImmediate",              (PyCFunction)TritonContext_buildSymbolicImmediate,                 METH_O,             ""},
+        {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"buildSymbolicMemory",                 (PyCFunction)TritonContext_buildSymbolicMemory,                    METH_O,             ""},
         {"buildSymbolicRegister",               (PyCFunction)TritonContext_buildSymbolicRegister,                  METH_O,             ""},
         {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},

@@ -623,15 +623,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicImmediate(const triton::arch::Immediate& imm) {
+  triton::ast::SharedAbstractNode API::getImmediateAst(const triton::arch::Immediate& imm) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicImmediate(imm);
+    return this->symbolic->getImmediateAst(imm);
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
+  triton::ast::SharedAbstractNode API::getImmediateAst(triton::arch::Instruction& inst, const triton::arch::Immediate& imm) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicImmediate(inst, imm);
+    return this->symbolic->getImmediateAst(inst, imm);
   }
 
 
