@@ -635,15 +635,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
+  triton::ast::SharedAbstractNode API::getMemoryAst(const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicMemory(mem);
+    return this->symbolic->getMemoryAst(mem);
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
+  triton::ast::SharedAbstractNode API::getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicMemory(inst, mem);
+    return this->symbolic->getMemoryAst(inst, mem);
   }
 
 

@@ -355,10 +355,10 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode getImmediateAst(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
 
         //! [**symbolic api**] - Returns the AST corresponding to the memory.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(const triton::arch::MemoryAccess& mem);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns the AST corresponding to the memory and defines the memory cell as input of the instruction.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns the AST corresponding to the register.
         TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);

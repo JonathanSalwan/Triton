@@ -326,7 +326,7 @@ namespace triton {
 
       /* Returns the symbolic memory value */
       triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryAccess& mem) {
-        const triton::ast::SharedAbstractNode& node = this->buildSymbolicMemory(mem);
+        const triton::ast::SharedAbstractNode& node = this->getMemoryAst(mem);
         return node->evaluate();
       }
 
@@ -656,7 +656,7 @@ namespace triton {
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
           case triton::arch::OP_IMM: return this->getImmediateAst(op.getConstImmediate());
-          case triton::arch::OP_MEM: return this->buildSymbolicMemory(op.getConstMemory());
+          case triton::arch::OP_MEM: return this->getMemoryAst(op.getConstMemory());
           case triton::arch::OP_REG: return this->getRegisterAst(op.getConstRegister());
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getOperandAst(): Invalid operand.");
@@ -668,7 +668,7 @@ namespace triton {
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
           case triton::arch::OP_IMM: return this->getImmediateAst(inst, op.getConstImmediate());
-          case triton::arch::OP_MEM: return this->buildSymbolicMemory(inst, op.getConstMemory());
+          case triton::arch::OP_MEM: return this->getMemoryAst(inst, op.getConstMemory());
           case triton::arch::OP_REG: return this->getRegisterAst(inst, op.getConstRegister());
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getOperandAst(): Invalid operand.");
@@ -692,7 +692,7 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the memory */
-      triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicMemory(const triton::arch::MemoryAccess& mem) {
+      triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::MemoryAccess& mem) {
         std::list<triton::ast::SharedAbstractNode> opVec;
 
         triton::ast::SharedAbstractNode tmp       = nullptr;
@@ -746,8 +746,8 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the memory and defines the memory as input of the instruction */
-      triton::ast::SharedAbstractNode SymbolicEngine::buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
-        triton::ast::SharedAbstractNode node = this->buildSymbolicMemory(mem);
+      triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
+        triton::ast::SharedAbstractNode node = this->getMemoryAst(mem);
 
         /* Set load access */
         inst.setLoadAccess(mem, node);

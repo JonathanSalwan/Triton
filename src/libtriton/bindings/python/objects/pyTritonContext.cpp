@@ -63,15 +63,6 @@ expression to a sub-register like `AX`, `AH` or `AL`, please, craft your express
 - <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
-Returns the AST corresponding to the \ref py_Immediate_page.
-
-- <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
-Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
-
-- <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
-Returns the AST corresponding to the \ref py_Register_page with the SSA form.
-
 - <b>void clearPathConstraints(void)</b><br>
 Clears the logical conjunction vector of path constraints.
 
@@ -156,6 +147,12 @@ Returns the concrete value of a register.
 - <b>integer getConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
 Returns the concrete value of a symbolic variable.
 
+- <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
+Returns the AST corresponding to the \ref py_Immediate_page.
+
+- <b>\ref py_AstNode_page getMemoryAst(\ref py_MemoryAccess_page mem)</b><br>
+Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
+
 - <b>dict getModel(\ref py_AstNode_page node)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 
@@ -176,6 +173,9 @@ Returns the logical conjunction AST of path constraints.
 
 - <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
 Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
+
+- <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
+Returns the AST corresponding to the \ref py_Register_page with the SSA form.
 
 - <b>integer getRegisterBitSize(void)</b><br>
 Returns the max size (in bit) of the CPU register (GPR).
@@ -774,45 +774,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getImmediateAst(PyObject* self, PyObject* imm) {
-        if (!PyImmediate_Check(imm))
-          return PyErr_Format(PyExc_TypeError, "getImmediateAst(): Expects an Immediate as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getImmediateAst(*PyImmediate_AsImmediate(imm)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_buildSymbolicMemory(PyObject* self, PyObject* mem) {
-        if (!PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicMemory(): Expects an MemoryAccess as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->buildSymbolicMemory(*PyMemoryAccess_AsMemoryAccess(mem)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getRegisterAst(PyObject* self, PyObject* reg) {
-        if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "getRegisterAst(): Expects an Register as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* TritonContext_clearPathConstraints(PyObject* self, PyObject* noarg) {
         try {
           PyTritonContext_AsTritonContext(self)->clearPathConstraints();
@@ -1351,6 +1312,32 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_getImmediateAst(PyObject* self, PyObject* imm) {
+        if (!PyImmediate_Check(imm))
+          return PyErr_Format(PyExc_TypeError, "getImmediateAst(): Expects an Immediate as argument.");
+
+        try {
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getImmediateAst(*PyImmediate_AsImmediate(imm)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getMemoryAst(PyObject* self, PyObject* mem) {
+        if (!PyMemoryAccess_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an MemoryAccess as argument.");
+
+        try {
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyMemoryAccess_AsMemoryAccess(mem)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_getModel(PyObject* self, PyObject* node) {
         PyObject* ret = nullptr;
 
@@ -1469,6 +1456,19 @@ namespace triton {
           rid = static_cast<triton::arch::registers_e>(PyLong_AsUint32(regIn));
           triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
           return PyRegister(regOut);
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getRegisterAst(PyObject* self, PyObject* reg) {
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "getRegisterAst(): Expects an Register as argument.");
+
+        try {
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2810,9 +2810,6 @@ namespace triton {
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                         METH_O,             ""},
-        {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
-        {"buildSymbolicMemory",                 (PyCFunction)TritonContext_buildSymbolicMemory,                    METH_O,             ""},
-        {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
@@ -2839,6 +2836,8 @@ namespace triton {
         {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                 METH_O,             ""},
         {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,               METH_O,             ""},
         {"getConcreteSymbolicVariableValue",    (PyCFunction)TritonContext_getConcreteSymbolicVariableValue,       METH_O,             ""},
+        {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
+        {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
@@ -2846,6 +2845,7 @@ namespace triton {
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
+        {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"getRegisterBitSize",                  (PyCFunction)TritonContext_getRegisterBitSize,                     METH_NOARGS,        ""},
         {"getRegisterSize",                     (PyCFunction)TritonContext_getRegisterSize,                        METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},
