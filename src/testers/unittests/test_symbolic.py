@@ -102,7 +102,7 @@ class TestSymbolicBuilding(unittest.TestCase):
 
     def test_build_immediate(self):
         """Check symbolic immediate has correct size and evaluation."""
-        node = self.Triton.buildSymbolicImmediate(Immediate(0x10, CPUSIZE.BYTE))
+        node = self.Triton.getImmediateAst(Immediate(0x10, CPUSIZE.BYTE))
         self.assertEqual(node.evaluate(), 0x10)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.BYTE_BIT)
 
