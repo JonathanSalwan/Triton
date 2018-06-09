@@ -611,15 +611,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicOperand(const triton::arch::OperandWrapper& op) {
+  triton::ast::SharedAbstractNode API::getOperandAst(const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicOperand(op);
+    return this->symbolic->getOperandAst(op);
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
+  triton::ast::SharedAbstractNode API::getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicOperand(inst, op);
+    return this->symbolic->getOperandAst(inst, op);
   }
 
 

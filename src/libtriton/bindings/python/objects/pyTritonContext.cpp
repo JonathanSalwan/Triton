@@ -64,13 +64,13 @@ expression to a sub-register like `AX`, `AH` or `AL`, please, craft your express
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
 - <b>\ref py_AstNode_page buildSymbolicImmediate(\ref py_Immediate_page imm)</b><br>
-Builds a symbolic immediate from a \ref py_Immediate_page.
+Returns the AST corresponding to the \ref py_Immediate_page.
 
 - <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
-Builds a symbolic memory cell from a \ref py_MemoryAccess_page with the SSA form.
+Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
 - <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_Register_page reg)</b><br>
-Builds a symbolic register from a \ref py_Register_page with the SSA form.
+Returns the AST corresponding to the \ref py_Register_page with the SSA form.
 
 - <b>void clearPathConstraints(void)</b><br>
 Clears the logical conjunction vector of path constraints.

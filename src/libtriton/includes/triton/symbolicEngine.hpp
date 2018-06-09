@@ -209,28 +209,28 @@ namespace triton {
           //! Returns the symbolic register value.
           TRITON_EXPORT triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
-          //! Returns a symbolic operand based on the abstract wrapper.
-          TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicOperand(const triton::arch::OperandWrapper& op);
+          //! Returns the AST corresponding to the operand.
+          TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
 
-          //! Returns a symbolic operand based on the abstract wrapper.
-          TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
+          //! Returns the AST corresponding to the operand.
+          TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
 
-          //! Returns a symbolic immediate.
+          //! Returns the AST corresponding to the immediate.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(const triton::arch::Immediate& imm);
 
-          //! Returns a symbolic immediate and defines the immediate as input of the instruction.
+          //! Returns the AST corresponding to the immediate and defines the immediate as input of the instruction.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
 
-          //! Returns a symbolic memory.
+          //! Returns the AST corresponding to the memory.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(const triton::arch::MemoryAccess& mem);
 
-          //! Returns a symbolic memory and defines the memory as input of the instruction.
+          //! Returns the AST corresponding to the memory and defines the memory as input of the instruction.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
-          //! Returns a symbolic register.
+          //! Returns the AST corresponding to the register.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(const triton::arch::Register& reg);
 
-          //! Returns a symbolic register and defines the register as input of the instruction.
+          //! Returns the AST corresponding to the register and defines the register as input of the instruction.
           TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg);
 
           //! Returns the new shared symbolic abstract expression and links this expression to the instruction.

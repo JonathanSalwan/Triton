@@ -342,28 +342,28 @@ namespace triton {
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
         TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
-        //! [**symbolic api**] - Returns a symbolic operand.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicOperand(const triton::arch::OperandWrapper& op);
+        //! [**symbolic api**] - Returns the AST corresponding to the operand.
+        TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
 
-        //! [**symbolic api**] - Returns a symbolic operand.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicOperand(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
+        //! [**symbolic api**] - Returns the AST corresponding to the operand.
+        TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(triton::arch::Instruction& inst, const triton::arch::OperandWrapper& op);
 
-        //! [**symbolic api**] - Returns an immediate symbolic.
+        //! [**symbolic api**] - Returns the AST corresponding to the immediate.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(const triton::arch::Immediate& imm);
 
-        //! [**symbolic api**] - Returns an immediate symbolic and defines the immediate as input of the instruction..
+        //! [**symbolic api**] - Returns the AST corresponding to the immediate and defines the immediate as input of the instruction..
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicImmediate(triton::arch::Instruction& inst, const triton::arch::Immediate& imm);
 
-        //! [**symbolic api**] - Returns a symbolic memory cell.
+        //! [**symbolic api**] - Returns the AST corresponding to the memory.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(const triton::arch::MemoryAccess& mem);
 
-        //! [**symbolic api**] - Returns a symbolic memory cell and defines the memory cell as input of the instruction.
+        //! [**symbolic api**] - Returns the AST corresponding to the memory and defines the memory cell as input of the instruction.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
-        //! [**symbolic api**] - Returns a symbolic register.
+        //! [**symbolic api**] - Returns the AST corresponding to the register.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Returns a symbolic register and defines the register as input of the instruction.
+        //! [**symbolic api**] - Returns the AST corresponding to the register and defines the register as input of the instruction.
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns a new shared symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
