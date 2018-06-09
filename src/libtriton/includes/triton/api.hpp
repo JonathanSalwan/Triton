@@ -361,10 +361,10 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicMemory(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
         //! [**symbolic api**] - Returns the AST corresponding to the register.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(const triton::arch::Register& reg);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns the AST corresponding to the register and defines the register as input of the instruction.
-        TRITON_EXPORT triton::ast::SharedAbstractNode buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Returns a new shared symbolic expression. Note that if there are simplification passes recorded, simplification will be applied.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment="");

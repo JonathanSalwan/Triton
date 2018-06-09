@@ -69,7 +69,7 @@ Returns the AST corresponding to the \ref py_Immediate_page.
 - <b>\ref py_AstNode_page buildSymbolicMemory(\ref py_MemoryAccess_page mem)</b><br>
 Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
-- <b>\ref py_AstNode_page buildSymbolicRegister(\ref py_Register_page reg)</b><br>
+- <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
 Returns the AST corresponding to the \ref py_Register_page with the SSA form.
 
 - <b>void clearPathConstraints(void)</b><br>
@@ -800,12 +800,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_buildSymbolicRegister(PyObject* self, PyObject* reg) {
+      static PyObject* TritonContext_getRegisterAst(PyObject* self, PyObject* reg) {
         if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "buildSymbolicRegister(): Expects an Register as argument.");
+          return PyErr_Format(PyExc_TypeError, "getRegisterAst(): Expects an Register as argument.");
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->buildSymbolicRegister(*PyRegister_AsRegister(reg)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2812,7 +2812,7 @@ namespace triton {
         {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                         METH_O,             ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"buildSymbolicMemory",                 (PyCFunction)TritonContext_buildSymbolicMemory,                    METH_O,             ""},
-        {"buildSymbolicRegister",               (PyCFunction)TritonContext_buildSymbolicRegister,                  METH_O,             ""},
+        {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},

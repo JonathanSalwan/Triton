@@ -4296,8 +4296,8 @@ namespace triton {
         auto op2  = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3  = this->symbolicEngine->getOperandAst(inst, src2);
         auto op1p = this->symbolicEngine->getOperandAst(accumulatorp);
-        auto op2p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(this->architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
-        auto op3p = this->symbolicEngine->buildSymbolicRegister((src1.getType() == triton::arch::OP_REG ? Register(this->architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
+        auto op2p = this->symbolicEngine->getRegisterAst((src1.getType() == triton::arch::OP_REG ? Register(this->architecture->getParentRegister(src1.getRegister())) : accumulatorp.getRegister()));
+        auto op3p = this->symbolicEngine->getRegisterAst((src1.getType() == triton::arch::OP_REG ? Register(this->architecture->getParentRegister(src2.getRegister())) : accumulatorp.getRegister()));
 
         /* Create the semantics */
         auto nodeq  = this->astCtxt.equal(op1, op2);
@@ -5718,7 +5718,7 @@ namespace triton {
         /* Base */
         triton::ast::SharedAbstractNode op3 = nullptr;
         if (this->architecture->isRegisterValid(srcBase))
-          op3 = this->symbolicEngine->buildSymbolicRegister(inst, srcBase);
+          op3 = this->symbolicEngine->getRegisterAst(inst, srcBase);
         else
           op3 = this->astCtxt.bv(0, leaSize);
 
@@ -5729,7 +5729,7 @@ namespace triton {
         /* Index */
         triton::ast::SharedAbstractNode op4 = nullptr;
         if (this->architecture->isRegisterValid(srcIndex))
-          op4 = this->symbolicEngine->buildSymbolicRegister(inst, srcIndex);
+          op4 = this->symbolicEngine->getRegisterAst(inst, srcIndex);
         else
           op4 = this->astCtxt.bv(0, leaSize);
 

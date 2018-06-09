@@ -131,7 +131,7 @@ if __name__ == '__main__':
     print
     print 'Craft symbolic stuffs'
     print '~~~~~~~~~~~~~~~~~~~~~'
-    ah  = Triton.buildSymbolicRegister(Triton.registers.ah)
+    ah  = Triton.getRegisterAst(Triton.registers.ah)
     mem = Triton.buildSymbolicMemory(MemoryAccess(0x11248, 4))
     print 'Memory at 0x11248 :', mem
     print 'Compute memory    :', hex(mem.evaluate())

@@ -647,15 +647,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicRegister(const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode API::getRegisterAst(const triton::arch::Register& reg) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicRegister(reg);
+    return this->symbolic->getRegisterAst(reg);
   }
 
 
-  triton::ast::SharedAbstractNode API::buildSymbolicRegister(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
+  triton::ast::SharedAbstractNode API::getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
     this->checkSymbolic();
-    return this->symbolic->buildSymbolicRegister(inst, reg);
+    return this->symbolic->getRegisterAst(inst, reg);
   }
 
 

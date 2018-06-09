@@ -237,7 +237,7 @@ class SeedCoverage(object):
             self.assertTrue(checkAstIntegrity(inst))
 
             # Next instruction
-            ip = self.Triton.buildSymbolicRegister(self.Triton.registers.rip).evaluate()
+            ip = self.Triton.getRegisterAst(self.Triton.registers.rip).evaluate()
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""

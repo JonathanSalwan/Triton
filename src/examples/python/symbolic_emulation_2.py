@@ -59,7 +59,7 @@ def run(ip):
         print 'Curr ip:', inst
 
         # Next instruction
-        ip = Triton.buildSymbolicRegister(Triton.registers.rip).evaluate()
+        ip = Triton.getRegisterAst(Triton.registers.rip).evaluate()
         print 'Next ip:', hex(ip)
         print
     return

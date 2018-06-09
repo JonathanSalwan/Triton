@@ -111,22 +111,22 @@ class TestSymbolicBuilding(unittest.TestCase):
         expr1 = self.Triton.newSymbolicExpression(self.astCtxt.bv(0x1122334455667788, CPUSIZE.QWORD_BIT))
         self.Triton.assignSymbolicExpressionToRegister(expr1, self.Triton.registers.rax)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.registers.rax)
+        node = self.Triton.getRegisterAst(self.Triton.registers.rax)
         self.assertEqual(node.evaluate(), 0x1122334455667788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.QWORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.registers.eax)
+        node = self.Triton.getRegisterAst(self.Triton.registers.eax)
         self.assertEqual(node.evaluate(), 0x55667788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.DWORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.registers.ax)
+        node = self.Triton.getRegisterAst(self.Triton.registers.ax)
         self.assertEqual(node.evaluate(), 0x7788)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.WORD_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.registers.ah)
+        node = self.Triton.getRegisterAst(self.Triton.registers.ah)
         self.assertEqual(node.evaluate(), 0x77)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.BYTE_BIT)
 
-        node = self.Triton.buildSymbolicRegister(self.Triton.registers.al)
+        node = self.Triton.getRegisterAst(self.Triton.registers.al)
         self.assertEqual(node.evaluate(), 0x88)
         self.assertEqual(node.getBitvectorSize(), CPUSIZE.BYTE_BIT)
