@@ -31,7 +31,7 @@ own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks
 
 
 Mnemonic                     | Extensions | Description
------------------------------|------------|----------------------------------------------------
+-----------------------------|------------|------------
 AAA                          |            | ASCII Adjust After Addition
 AAD                          |            | ASCII Adjust AX Before Division
 AAM                          |            | ASCII Adjust AX After Multiply

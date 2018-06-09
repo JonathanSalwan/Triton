@@ -233,7 +233,7 @@ True
 As we can't overload all AST's operators only these following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
-------------------|------------------
+------------------|---------------------
 a + b             | (bvadd a b)
 a - b             | (bvsub a b)
 a \* b            | (bvmul a b)
