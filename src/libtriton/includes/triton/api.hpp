@@ -318,7 +318,7 @@ namespace triton {
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to the memory address.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicMemory(triton::uint64 addr) const;
 
-        //! [**symbolic api**] - Returns the shared symbolic expression corresponding to the register.
+        //! [**symbolic api**] - Returns the shared symbolic expression corresponding to the parent register.
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& getSymbolicRegister(const triton::arch::Register& reg) const;
 
         //! [**symbolic api**] - Returns the symbolic memory value.

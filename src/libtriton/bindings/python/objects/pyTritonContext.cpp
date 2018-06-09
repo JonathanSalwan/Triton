@@ -205,7 +205,7 @@ Returns the symbolic memory value.
 Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
 - <b>\ref py_SymbolicExpression_page getSymbolicRegister(\ref py_Register_page reg)</b><br>
-Returns the \ref py_SymbolicExpression_page corresponding to a register.
+Returns the \ref py_SymbolicExpression_page corresponding to the parent register.
 
 - <b>integer getSymbolicRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the symbolic register value.

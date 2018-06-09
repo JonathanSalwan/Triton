@@ -191,7 +191,7 @@ namespace triton {
           //! Returns the map (addr:expr) of all symbolic memory defined.
           TRITON_EXPORT const std::map<triton::uint64, SharedSymbolicExpression>& getSymbolicMemory(void) const;
 
-          //! Returns the shared symbolic expression corresponding to the register.
+          //! Returns the shared symbolic expression corresponding to the parent register.
           TRITON_EXPORT const SharedSymbolicExpression& getSymbolicRegister(const triton::arch::Register& reg) const;
 
           //! Returns the map of symbolic registers defined.
