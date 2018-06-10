@@ -55,11 +55,11 @@ namespace triton {
         //! Returns true if the register ID is valid.
         TRITON_EXPORT virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
 
-        //! Returns the max size (in byte) of the CPU registers (GPR).
-        TRITON_EXPORT virtual triton::uint32 registerSize(void) const = 0;
+        //! Returns the bit in byte of the General Purpose Registers.
+        TRITON_EXPORT virtual triton::uint32 gprSize(void) const = 0;
 
-        //! Returns the max size (in bit) of the CPU registers (GPR).
-        TRITON_EXPORT virtual triton::uint32 registerBitSize(void) const = 0;
+        //! Returns the bit in bit of the General Purpose Registers.
+        TRITON_EXPORT virtual triton::uint32 gprBitSize(void) const = 0;
 
         //! Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT virtual triton::uint32 numberOfRegisters(void) const = 0;

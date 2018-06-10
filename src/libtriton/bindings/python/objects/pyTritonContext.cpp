@@ -144,6 +144,12 @@ Returns the concrete value of a register.
 - <b>integer getConcreteVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
 Returns the concrete value of a symbolic variable.
 
+- <b>integer getGprBitSize(void)</b><br>
+Returns the size in bit of the General Purpose Registers.
+
+- <b>integer getGprSize(void)</b><br>
+Returns the size in byte of the General Purpose Registers.
+
 - <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
 Returns the AST corresponding to the \ref py_Immediate_page.
 
@@ -173,12 +179,6 @@ Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
 
 - <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
 Returns the AST corresponding to the \ref py_Register_page with the SSA form.
-
-- <b>integer getRegisterBitSize(void)</b><br>
-Returns the max size (in bit) of the CPU register (GPR).
-
-- <b>integer getRegisterSize(void)</b><br>
-Returns the max size (in byte) of the CPU register (GPR).
 
 - <b>\ref py_SymbolicExpression_page getSymbolicExpressionFromId(intger symExprId)</b><br>
 Returns the symbolic expression corresponding to an id.
@@ -1293,6 +1293,26 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_getGprBitSize(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getGprBitSize());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getGprSize(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getGprSize());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_getImmediateAst(PyObject* self, PyObject* imm) {
         if (!PyImmediate_Check(imm))
           return PyErr_Format(PyExc_TypeError, "getImmediateAst(): Expects an Immediate as argument.");
@@ -1450,26 +1470,6 @@ namespace triton {
 
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getRegisterBitSize(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterBitSize());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getRegisterSize(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getRegisterSize());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2803,6 +2803,8 @@ namespace triton {
         {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                 METH_O,             ""},
         {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,               METH_O,             ""},
         {"getConcreteVariableValue",            (PyCFunction)TritonContext_getConcreteVariableValue,               METH_O,             ""},
+        {"getGprBitSize",                       (PyCFunction)TritonContext_getGprBitSize,                          METH_NOARGS,        ""},
+        {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                             METH_NOARGS,        ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
@@ -2813,8 +2815,6 @@ namespace triton {
         {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
-        {"getRegisterBitSize",                  (PyCFunction)TritonContext_getRegisterBitSize,                     METH_NOARGS,        ""},
-        {"getRegisterSize",                     (PyCFunction)TritonContext_getRegisterSize,                        METH_NOARGS,        ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},
         {"getSymbolicExpressions",              (PyCFunction)TritonContext_getSymbolicExpressions,                 METH_NOARGS,        ""},
         {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                      METH_VARARGS,       ""},

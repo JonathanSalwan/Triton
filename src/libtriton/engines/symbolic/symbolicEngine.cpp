@@ -875,17 +875,17 @@ namespace triton {
         switch (regSize) {
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg),
+              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg),
                             this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
             break;
 
           case WORD_SIZE:
-            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->registerBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
 
           case DWORD_SIZE:
@@ -1053,7 +1053,7 @@ namespace triton {
           triton::uint32 bitSize              = (this->architecture->isRegisterValid(index) ? index.getBitSize() :
                                                   (this->architecture->isRegisterValid(base) ? base.getBitSize() :
                                                     (mem.getConstDisplacement().getBitSize() ? mem.getConstDisplacement().getBitSize() :
-                                                      this->architecture->registerBitSize()
+                                                      this->architecture->gprBitSize()
                                                     )
                                                   )
                                                 );

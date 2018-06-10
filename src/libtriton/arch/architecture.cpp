@@ -119,17 +119,17 @@ namespace triton {
     }
 
 
-    triton::uint32 Architecture::registerSize(void) const {
+    triton::uint32 Architecture::gprSize(void) const {
       if (!this->cpu)
         return 0;
-      return this->cpu->registerSize();
+      return this->cpu->gprSize();
     }
 
 
-    triton::uint32 Architecture::registerBitSize(void) const {
+    triton::uint32 Architecture::gprBitSize(void) const {
       if (!this->cpu)
         return 0;
-      return this->cpu->registerBitSize();
+      return this->cpu->gprBitSize();
     }
 
 

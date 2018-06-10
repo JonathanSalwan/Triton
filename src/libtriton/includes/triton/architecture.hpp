@@ -93,11 +93,11 @@ namespace triton {
         //! Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT triton::uint32 numberOfRegisters(void) const;
 
-        //! Returns the max size (in bit) of the CPU register (GPR).
-        TRITON_EXPORT triton::uint32 registerBitSize(void) const;
+        //! Returns the bit in bit of the General Purpose Registers.
+        TRITON_EXPORT triton::uint32 gprBitSize(void) const;
 
-        //! Returns the max size (in byte) of the CPU register (GPR).
-        TRITON_EXPORT triton::uint32 registerSize(void) const;
+        //! Returns the bit in byte of the General Purpose Registers.
+        TRITON_EXPORT triton::uint32 gprSize(void) const;
 
         //! Initializes an architecture.
         TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);

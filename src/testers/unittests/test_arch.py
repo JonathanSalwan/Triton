@@ -48,11 +48,11 @@ class TestX86Arch(unittest.TestCase):
 
     def test_register_bit_size(self):
         """Check GPR register bit size."""
-        self.assertEqual(self.Triton.getRegisterBitSize(), 32)
+        self.assertEqual(self.Triton.getGprBitSize(), 32)
 
     def test_register_size(self):
         """Check GPR register size."""
-        self.assertEqual(self.Triton.getRegisterSize(), 4)
+        self.assertEqual(self.Triton.getGprSize(), 4)
 
 
 class TestX8664Arch(unittest.TestCase):
@@ -74,8 +74,8 @@ class TestX8664Arch(unittest.TestCase):
 
     def test_register_bit_size(self):
         """Check GPR register bit size."""
-        self.assertEqual(self.Triton.getRegisterBitSize(), 64)
+        self.assertEqual(self.Triton.getGprBitSize(), 64)
 
     def test_register_size(self):
         """Check GPR register size."""
-        self.assertEqual(self.Triton.getRegisterSize(), 8)
+        self.assertEqual(self.Triton.getGprSize(), 8)

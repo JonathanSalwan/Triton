@@ -124,11 +124,11 @@ namespace triton {
         //! [**architecture api**] - Returns true if the regId is a register or a flag.
         TRITON_EXPORT bool isRegisterValid(const triton::arch::Register& reg) const;
 
-        //! [**architecture api**] - Returns the max size (in bit) of the CPU register (GPR).
-        TRITON_EXPORT triton::uint32 getRegisterBitSize(void) const;
+        //! [**architecture api**] - Returns the bit in byte of the General Purpose Registers.
+        TRITON_EXPORT triton::uint32 getGprBitSize(void) const;
 
-        //! [**architecture api**] - Returns the max size (in byte) of the CPU register (GPR).
-        TRITON_EXPORT triton::uint32 getRegisterSize(void) const;
+        //! [**architecture api**] - Returns the size in byte of the General Purpose Registers.
+        TRITON_EXPORT triton::uint32 getGprSize(void) const;
 
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT triton::uint32 getNumberOfRegisters(void) const;

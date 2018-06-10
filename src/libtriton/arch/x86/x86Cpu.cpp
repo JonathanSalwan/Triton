@@ -212,12 +212,12 @@ namespace triton {
       }
 
 
-      triton::uint32 x86Cpu::registerSize(void) const {
+      triton::uint32 x86Cpu::gprSize(void) const {
         return DWORD_SIZE;
       }
 
 
-      triton::uint32 x86Cpu::registerBitSize(void) const {
+      triton::uint32 x86Cpu::gprBitSize(void) const {
         return DWORD_SIZE_BIT;
       }
 
@@ -236,7 +236,7 @@ namespace triton {
           const auto& reg = kv.second;
 
           /* Add GPR */
-          if (reg.getSize() == this->registerSize())
+          if (reg.getSize() == this->gprSize())
             ret.insert(&reg);
 
           /* Add Flags */
@@ -353,7 +353,7 @@ namespace triton {
                   triton::uint32 immsize = (
                                             this->isRegisterValid(base.getId()) ? base.getSize() :
                                             this->isRegisterValid(index.getId()) ? index.getSize() :
-                                            this->registerSize()
+                                            this->gprSize()
                                           );
 
                   triton::arch::Immediate disp(op->mem.disp, immsize);

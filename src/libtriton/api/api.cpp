@@ -288,13 +288,13 @@ namespace triton {
   }
 
 
-  triton::uint32 API::getRegisterBitSize(void) const {
-    return this->arch.registerBitSize();
+  triton::uint32 API::getGprBitSize(void) const {
+    return this->arch.gprBitSize();
   }
 
 
-  triton::uint32 API::getRegisterSize(void) const {
-    return this->arch.registerSize();
+  triton::uint32 API::getGprSize(void) const {
+    return this->arch.gprSize();
   }
 
 
