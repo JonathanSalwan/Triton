@@ -144,7 +144,7 @@ Returns the concrete value of memory cells.
 - <b>integer getConcreteRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the concrete value of a register.
 
-- <b>integer getConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
+- <b>integer getConcreteVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
 Returns the concrete value of a symbolic variable.
 
 - <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
@@ -1299,12 +1299,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getConcreteSymbolicVariableValue(PyObject* self, PyObject* symVar) {
+      static PyObject* TritonContext_getConcreteVariableValue(PyObject* self, PyObject* symVar) {
         if (!PySymbolicVariable_Check(symVar))
-          return PyErr_Format(PyExc_TypeError, "getConcreteSymbolicVariableValue(): Expects a SymbolicVariable as argument.");
+          return PyErr_Format(PyExc_TypeError, "getConcreteVariableValue(): Expects a SymbolicVariable as argument.");
 
         try {
-          return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar)));
+          return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getConcreteVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2835,7 +2835,7 @@ namespace triton {
         {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                 METH_O,             ""},
         {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,               METH_O,             ""},
-        {"getConcreteSymbolicVariableValue",    (PyCFunction)TritonContext_getConcreteSymbolicVariableValue,       METH_O,             ""},
+        {"getConcreteVariableValue",            (PyCFunction)TritonContext_getConcreteVariableValue,               METH_O,             ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},

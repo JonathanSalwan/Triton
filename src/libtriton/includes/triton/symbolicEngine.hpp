@@ -315,7 +315,7 @@ namespace triton {
           TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=false);
 
           //! Gets the concrete value of a symbolic variable.
-          TRITON_EXPORT const triton::uint512& getConcreteSymbolicVariableValue(const SymbolicVariable& symVar) const;
+          TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const SymbolicVariable& symVar) const;
 
           //! Sets the concrete value of a symbolic variable.
           TRITON_EXPORT void setConcreteSymbolicVariableValue(const SymbolicVariable& symVar, const triton::uint512& value);
