@@ -12,7 +12,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
-
+#include <z3++.h>
 
 /*! \page py_TritonContext_page TritonContext
     \brief [**python api**] All information about the Triton Context class
