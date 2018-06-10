@@ -903,20 +903,6 @@ namespace triton {
   }
 
 
-  const triton::ast::SharedAbstractNode& API::getAstFromId(triton::usize symExprId) {
-    this->checkSymbolic();
-    const triton::engines::symbolic::SharedSymbolicExpression& symExpr = this->getSymbolicExpressionFromId(symExprId);
-    return symExpr->getAst();
-  }
-
-
-  triton::ast::SharedAbstractNode API::unrollAstFromId(triton::usize symExprId) {
-    this->checkSymbolic();
-    const triton::ast::SharedAbstractNode& partialAst = this->getAstFromId(symExprId);
-    return this->unrollAst(partialAst);
-  }
-
-
   std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> API::sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
     this->checkSymbolic();
     return this->symbolic->sliceExpressions(expr);

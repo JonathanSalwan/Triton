@@ -453,14 +453,8 @@ namespace triton {
         //! [**symbolic api**] - Concretizes a specific symbolic register reference.
         TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Returns the partial AST from a symbolic expression id.
-        TRITON_EXPORT const triton::ast::SharedAbstractNode& getAstFromId(triton::usize symExprId);
-
         //! [**symbolic api**] - Unrolls the SSA form of a given AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node);
-
-        //! [**symbolic api**] - Unrolls the SSA form of a given symbolic expression id.
-        TRITON_EXPORT triton::ast::SharedAbstractNode unrollAstFromId(triton::usize symExprId);
 
         //! [**symbolic api**] - Slices all expressions from a given one.
         TRITON_EXPORT std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);

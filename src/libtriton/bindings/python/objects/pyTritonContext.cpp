@@ -126,9 +126,6 @@ Returns the current architecture used.
 - <b>\ref py_AstContext_page getAstContext(void)</b><br>
 Returns the AST context to create and modify nodes.
 
-- <b>\ref py_AstNode_page getAstFromId(integer symExprId)</b><br>
-Returns the partial AST from a symbolic expression id.
-
 - <b>\ref py_AST_REPRESENTATION_page getAstRepresentationMode(void)</b><br>
 Returns the current AST representation mode.
 
@@ -391,9 +388,6 @@ Removes the range `[baseAddr:size]` from the internal memory representation.
 
 - <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
-
-- <b>\ref py_AstNode_page unrollAstFromId(integer symExprId)</b><br>
-Unrolls the SSA form of a given symbolic expression id.
 
 - <b>bool untaintMemory(intger addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
@@ -1212,19 +1206,6 @@ namespace triton {
       static PyObject* TritonContext_getAstContext(PyObject* self, PyObject* noarg) {
         try {
           return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_getAstFromId(PyObject* self, PyObject* symExprId) {
-        if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
-          return PyErr_Format(PyExc_TypeError, "getAstFromId(): Expects an integer as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getAstFromId(PyLong_AsUsize(symExprId)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2716,19 +2697,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_unrollAstFromId(PyObject* self, PyObject* symExprId) {
-        if (!PyLong_Check(symExprId) && !PyInt_Check(symExprId))
-          return PyErr_Format(PyExc_TypeError, "unrollAstFromId(): Expects an integer as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->unrollAstFromId(PyLong_AsUsize(symExprId)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* TritonContext_untaintMemory(PyObject* self, PyObject* mem) {
         try {
           if (PyMemoryAccess_Check(mem)) {
@@ -2830,7 +2798,6 @@ namespace triton {
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                        METH_NOARGS,        ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                        METH_NOARGS,        ""},
         {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                          METH_NOARGS,        ""},
-        {"getAstFromId",                        (PyCFunction)TritonContext_getAstFromId,                           METH_O,             ""},
         {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,               METH_NOARGS,        ""},
         {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                 METH_O,             ""},
@@ -2906,7 +2873,6 @@ namespace triton {
         {"taintUnionRegisterRegister",          (PyCFunction)TritonContext_taintUnionRegisterRegister,             METH_VARARGS,       ""},
         {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
         {"unrollAst",                           (PyCFunction)TritonContext_unrollAst,                              METH_O,             ""},
-        {"unrollAstFromId",                     (PyCFunction)TritonContext_unrollAstFromId,                        METH_O,             ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
         {nullptr,                               nullptr,                                                           0,                  nullptr}
