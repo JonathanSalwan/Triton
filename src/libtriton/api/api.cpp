@@ -397,7 +397,7 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
+    this->solver = new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolic);
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 

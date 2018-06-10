@@ -7,11 +7,11 @@
 
 #include <z3++.h>                        // for expr, model, solver, expr_ve...
 #include <z3_api.h>                      // for Z3_ast, _Z3_ast
-#include <iosfwd>                        // for ostringstream
 #include <string>                        // for string
+
 #include <triton/astContext.hpp>         // for AstContext
 #include <triton/exceptions.hpp>         // for SolverEngine
-#include <triton/solverEngine.hpp>       // for SolverEngine
+#include <triton/z3Solver.hpp>           // for Z3Solver
 #include <triton/solverModel.hpp>        // for SolverModel
 #include <triton/tritonToZ3Ast.hpp>      // for TritonToZ3Ast
 #include <triton/tritonTypes.hpp>        // for uint32, uint512
@@ -109,25 +109,25 @@ namespace triton {
       }
 
 
-      SolverEngine::SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
+      Z3Solver::Z3Solver(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
         if (symbolicEngine == nullptr)
-          throw triton::exceptions::SolverEngine("SolverEngine::SolverEngine(): The symbolicEngine API cannot be null.");
+          throw triton::exceptions::SolverEngine("Z3Solver::Z3Solver(): The symbolicEngine API cannot be null.");
         this->symbolicEngine = symbolicEngine;
       }
 
 
-      SolverEngine::SolverEngine(const SolverEngine& other) {
+      Z3Solver::Z3Solver(const Z3Solver& other) {
         this->symbolicEngine = other.symbolicEngine;
       }
 
 
-      SolverEngine& SolverEngine::operator=(const SolverEngine& other) {
+      Z3Solver& Z3Solver::operator=(const Z3Solver& other) {
         this->symbolicEngine = other.symbolicEngine;
         return *this;
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+      std::list<std::map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
 
@@ -136,10 +136,10 @@ namespace triton {
         z3::solver    solver(ctx);
 
         if (node == nullptr)
-          throw triton::exceptions::SolverEngine("SolverEngine::getModels(): node cannot be null.");
+          throw triton::exceptions::SolverEngine("Z3Solver::getModels(): node cannot be null.");
 
         if (node->isLogical() == false)
-          throw triton::exceptions::SolverEngine("SolverEngine::getModels(): Must be a logical node.");
+          throw triton::exceptions::SolverEngine("Z3Solver::getModels(): Must be a logical node.");
 
         /* Create a solver and add the expression */
         solver.add(expr);
@@ -200,7 +200,7 @@ namespace triton {
       }
 
 
-      std::map<triton::uint32, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node) const {
+      std::map<triton::uint32, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node) const {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;
 
@@ -209,6 +209,11 @@ namespace triton {
           ret = allModels.front();
 
         return ret;
+      }
+
+
+      std::string Z3Solver::getName(void) const {
+        return "z3";
       }
 
     };

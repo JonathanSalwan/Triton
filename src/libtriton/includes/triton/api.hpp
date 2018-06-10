@@ -22,11 +22,11 @@
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
-#include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
 #include <triton/z3Interface.hpp>
+#include <triton/z3Solver.hpp>
 
 
 
@@ -57,7 +57,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicEngine* symbolic = nullptr;
 
         //! The solver engine.
-        triton::engines::solver::SolverEngine* solver = nullptr;
+        triton::engines::solver::SolverInterface* solver = nullptr;
 
         //! The AST Context interface.
         triton::ast::AstContext astCtxt;

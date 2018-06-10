@@ -1165,9 +1165,6 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-        catch (const z3::exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.msg());
-        }
 
         Py_INCREF(Py_None);
         return Py_None;

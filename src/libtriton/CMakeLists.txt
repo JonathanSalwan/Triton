@@ -74,8 +74,8 @@ set(LIBTRITON_SOURCE_FILES
     ast/z3/z3Interface.cpp
     ast/z3/z3ToTritonAst.cpp
     callbacks/callbacks.cpp
-    engines/solver/solverEngine.cpp
     engines/solver/solverModel.cpp
+    engines/solver/z3/z3Solver.cpp
     engines/symbolic/pathConstraint.cpp
     engines/symbolic/pathManager.cpp
     engines/symbolic/symbolicEngine.cpp

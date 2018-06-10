@@ -40,21 +40,26 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::AstTranslations("Z3Interface::evaluate(): node cannot be null.");
 
-      triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
+      try {
+        triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
 
-      /* From Triton to Z3 */
-      z3::expr expr = z3ast.convert(node);
+        /* From Triton to Z3 */
+        z3::expr expr = z3ast.convert(node);
 
-      /* Simplify the expression to get a constant */
-      expr = expr.simplify();
+        /* Simplify the expression to get a constant */
+        expr = expr.simplify();
 
-      triton::uint512 res = 0;
-      if (expr.get_sort().is_bool())
-        res = Z3_get_bool_value(expr.ctx(), expr) == Z3_L_TRUE ? true : false;
-      else
-        res = triton::uint512{Z3_get_numeral_string(expr.ctx(), expr)};
+        triton::uint512 res = 0;
+        if (expr.get_sort().is_bool())
+          res = Z3_get_bool_value(expr.ctx(), expr) == Z3_L_TRUE ? true : false;
+        else
+          res = triton::uint512{Z3_get_numeral_string(expr.ctx(), expr)};
 
-      return res;
+        return res;
+      }
+      catch (const z3::exception& e) {
+        throw triton::exceptions::AstTranslations(std::string("Z3Interface::evaluate(): ") + e.msg());
+      }
     }
 
   }; /* ast namespace */
