@@ -65,9 +65,10 @@ namespace triton {
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
 
+#ifdef Z3_INTERFACE
         //! The Z3 interface between Triton and Z3.
         triton::ast::Z3Interface* z3Interface = nullptr;
-
+#endif
 
       public:
         //! Constructor of the API.
@@ -477,6 +478,9 @@ namespace triton {
 
 
         /* Solver engine API ============================================================================= */
+
+		//! [**solver api**] - Sets a SMT solver to be used by Triton.
+		TRITON_EXPORT void setSolver(triton::engines::solver::SolverInterface* solver);
 
         //! [**solver api**] - Raises an exception if the solver engine is not initialized.
         TRITON_EXPORT void checkSolver(void) const;

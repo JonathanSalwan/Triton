@@ -427,13 +427,17 @@ namespace triton {
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
+#ifdef Z3_INTERFACE
       delete this->z3Interface;
+#endif
 
       this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
+#ifdef Z3_INTERFACE
       this->z3Interface         = nullptr;
+#endif
     }
 
     // Use default modes.
@@ -941,6 +945,11 @@ namespace triton {
   void API::checkSolver(void) const {
     if (!this->solver)
       throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined, you should define an architecture first.");
+  }
+
+
+  void API::setSolver(triton::engines::solver::SolverInterface* solver) {
+	  this->solver = solver;
   }
 
 
