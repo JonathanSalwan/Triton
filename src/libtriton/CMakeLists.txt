@@ -69,13 +69,9 @@ set(LIBTRITON_SOURCE_FILES
     ast/astContext.cpp
     ast/representations/astPythonRepresentation.cpp
     ast/representations/astRepresentation.cpp
-    ast/representations/astSmtRepresentation.cpp
-    ast/z3/tritonToZ3Ast.cpp
-    ast/z3/z3Interface.cpp
-    ast/z3/z3ToTritonAst.cpp
+    ast/representations/astSmtRepresentation.cpp  
     callbacks/callbacks.cpp
-    engines/solver/solverModel.cpp
-    engines/solver/z3/z3Solver.cpp
+    engines/solver/solverModel.cpp   
     engines/symbolic/pathConstraint.cpp
     engines/symbolic/pathManager.cpp
     engines/symbolic/symbolicEngine.cpp
@@ -87,6 +83,17 @@ set(LIBTRITON_SOURCE_FILES
     os/unix/syscallNumberToString.cpp
     utils/coreUtils.cpp
 )
+
+if(Z3_INTERFACE)
+	set(Z3_SOURCE_FILES
+	ast/z3/tritonToZ3Ast.cpp
+    ast/z3/z3Interface.cpp
+    ast/z3/z3ToTritonAst.cpp
+	engines/solver/z3/z3Solver.cpp
+	)
+else()
+    set(Z3_SOURCE_FILES)
+endif()
 
 if(PYTHON_BINDINGS)
     set(LIBTRITON_PYTHON_SOURCE_FILES
@@ -198,7 +205,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "
 endif()
 
 # Define library's properties
-add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
+add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES} ${Z3_SOURCE_FILES})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies

@@ -65,9 +65,10 @@ namespace triton {
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
 
+#ifdef Z3_INTERFACE
         //! The Z3 interface between Triton and Z3.
         triton::ast::Z3Interface* z3Interface = nullptr;
-
+#endif
 
       public:
         //! Constructor of the API.
@@ -478,6 +479,9 @@ namespace triton {
 
         /* Solver engine API ============================================================================= */
 
+		//! [**solver api**] - Sets a SMT solver to be used by Triton.
+		TRITON_EXPORT void setSolver(triton::engines::solver::SolverInterface* solver);
+
         //! [**solver api**] - Raises an exception if the solver engine is not initialized.
         TRITON_EXPORT void checkSolver(void) const;
 
@@ -500,7 +504,7 @@ namespace triton {
         TRITON_EXPORT std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
 
-
+#ifdef Z3_INTERFACE
         /* Z3 interface API ============================================================================== */
 
         //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
@@ -511,7 +515,7 @@ namespace triton {
 
         //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
-
+#endif
 
 
         /* Taint engine API ============================================================================== */

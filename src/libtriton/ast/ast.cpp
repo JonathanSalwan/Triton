@@ -12,7 +12,14 @@
 #include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/exceptions.hpp>
+
+
+#ifdef Z3_INTERFACE
 #include <triton/tritonToZ3Ast.hpp>
+#else
+#include <triton/cpuSize.hpp>
+#include <triton/symbolicEngine.hpp>
+#endif
 
 
 

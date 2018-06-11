@@ -17,6 +17,7 @@ option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(STATICLIB "Build a static library" OFF)
+option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
 
 if(PINTOOL AND NOT PYTHON_BINDINGS)
     MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
@@ -133,23 +134,26 @@ endif()
 # Look for dependencies as they may be required by examples
 # FIXME: We should move the tracer away to not link with these libraries
 
-# Find Z3
-if(NOT Z3_INCLUDE_DIRS)
-    set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
-endif()
+if(Z3_INTERFACE)
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DZ3_INTERFACE")
+	# Find Z3
+	if(NOT Z3_INCLUDE_DIRS)
+		set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
+	endif()
 
-if(NOT Z3_LIBRARIES)
-    set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
-endif()
+	if(NOT Z3_LIBRARIES)
+		set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
+	endif()
 
-if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
-    find_package(Z3 REQUIRED)
-    if(NOT Z3_FOUND)
-        message(FATAL_ERROR "Z3 not found")
-    endif()
-endif()
+	if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
+		find_package(Z3 REQUIRED)
+		if(NOT Z3_FOUND)
+			message(FATAL_ERROR "Z3 not found")
+		endif()
+	endif()
 
-include_directories(${Z3_INCLUDE_DIRS})
+	include_directories(${Z3_INCLUDE_DIRS})
+endif()
 
 # Find Capstone
 if(NOT CAPSTONE_INCLUDE_DIRS)
