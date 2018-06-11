@@ -5,7 +5,7 @@
 #include <triton/astContext.hpp>         // for AstContext
 #include <triton/exceptions.hpp>         // for SolverEngine
 
-#include "MyCustomSolver.h"
+#include "myCustomSolver.h"
 
 namespace triton {
 	namespace engines {
