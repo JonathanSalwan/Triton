@@ -18,6 +18,7 @@
 #include <triton/tritonToZ3Ast.hpp>
 #else
 #include <triton/cpuSize.hpp>
+#include <triton/symbolicEngine.hpp>
 #endif
 
 
