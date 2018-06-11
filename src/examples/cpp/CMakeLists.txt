@@ -5,8 +5,10 @@ if(NOT STATICLIB)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -fsanitize=address -shared-libasan")
     endif()
 
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
-
+	if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
+		set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fPIC")
+	endif()
+	
     add_executable(taint_reg taint_reg.cpp)
     target_link_libraries(taint_reg triton)
     add_test(TaintRegister taint_reg)
@@ -31,4 +33,8 @@ if(NOT STATICLIB)
     target_link_libraries(constraint triton)
     add_test(Constraint constraint)
     add_dependencies(check constraint)
+	
+	add_executable(custom_solver customSolver.cpp myCustomSolver.cpp)
+    target_link_libraries(custom_solver triton)
+    
 endif()

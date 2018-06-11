@@ -949,6 +949,8 @@ namespace triton {
 
 
   void API::setSolver(triton::engines::solver::SolverInterface* solver) {
+	  if (this->solver)
+		  delete this->solver;
 	  this->solver = solver;
   }
 
