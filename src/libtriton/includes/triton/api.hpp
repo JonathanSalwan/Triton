@@ -500,7 +500,7 @@ namespace triton {
         TRITON_EXPORT std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
 
-
+#ifdef Z3_INTERFACE
         /* Z3 interface API ============================================================================== */
 
         //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
@@ -511,7 +511,7 @@ namespace triton {
 
         //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
-
+#endif
 
 
         /* Taint engine API ============================================================================== */

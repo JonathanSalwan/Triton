@@ -397,9 +397,13 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
+#ifdef Z3_INTERFACE
     this->solver = new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolic);
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
+#else
+	this->solver = nullptr; // Needs to be implemented in the client
+#endif
 
     this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
     if (this->taint == nullptr)
@@ -409,9 +413,11 @@ namespace triton {
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
+#ifdef Z3_INTERFACE
     this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
     if (this->z3Interface == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
+#endif
   }
 
 
@@ -769,10 +775,12 @@ namespace triton {
 
   triton::ast::SharedAbstractNode API::processSimplification(const triton::ast::SharedAbstractNode& node, bool z3) const {
     this->checkSymbolic();
+#ifdef Z3_INTERFACE
     if (z3 == true) {
       auto snode = this->processZ3Simplification(node);
       return this->symbolic->processSimplification(snode);
     }
+#endif
     return this->symbolic->processSimplification(node);
   }
 
@@ -948,7 +956,7 @@ namespace triton {
   }
 
 
-
+#ifdef Z3_INTERFACE
   /* Z3 interface API ============================================================================== */
 
   void API::checkZ3Interface(void) const {
@@ -967,7 +975,7 @@ namespace triton {
     this->checkZ3Interface();
     return this->z3Interface->simplify(node);
   }
-
+#endif
 
 
   /* Taint engine API ============================================================================== */
