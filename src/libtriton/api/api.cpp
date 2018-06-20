@@ -948,6 +948,12 @@ namespace triton {
   }
 
 
+  bool API::isSat(const triton::ast::SharedAbstractNode& node) const {
+    this->checkSolver();
+    return this->solver->isSat(node);
+  }
+
+
 
   /* Z3 interface API ============================================================================== */
 

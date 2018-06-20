@@ -261,6 +261,9 @@ Returns true if the register is tainted.
 - <b>bool isRegisterValid(\ref py_Register_page reg)</b><br>
 Returns true if the register is valid.
 
+- <b>bool isSat(\ref py_AstNode_page node)</b><br>
+Returns true if an expression is satisfiable.
+
 - <b>bool isSymbolicEngineEnabled(void)</b><br>
 Returns true if the symbolic execution engine is enabled.
 
@@ -1868,6 +1871,21 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_isSat(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "isSat(): Expects a AstNode as argument.");
+
+        try {
+          if (PyTritonContext_AsTritonContext(self)->isSat(PyAstNode_AsAstNode(node)) == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* TritonContext_isSymbolicEngineEnabled(PyObject* self, PyObject* noarg) {
         try {
           if (PyTritonContext_AsTritonContext(self)->isSymbolicEngineEnabled() == true)
@@ -2835,6 +2853,7 @@ namespace triton {
         {"isRegisterSymbolized",                (PyCFunction)TritonContext_isRegisterSymbolized,                   METH_O,             ""},
         {"isRegisterTainted",                   (PyCFunction)TritonContext_isRegisterTainted,                      METH_O,             ""},
         {"isRegisterValid",                     (PyCFunction)TritonContext_isRegisterValid,                        METH_O,             ""},
+        {"isSat",                               (PyCFunction)TritonContext_isSat,                                  METH_O     ,        ""},
         {"isSymbolicEngineEnabled",             (PyCFunction)TritonContext_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionIdExists",        (PyCFunction)TritonContext_isSymbolicExpressionIdExists,           METH_O,             ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                   METH_NOARGS,        ""},

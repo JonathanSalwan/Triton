@@ -200,6 +200,27 @@ namespace triton {
       }
 
 
+      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node) const {
+        triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+
+        z3::expr      expr = z3Ast.convert(node);
+        z3::context&  ctx  = expr.ctx();
+        z3::solver    solver(ctx);
+
+        if (node == nullptr)
+          throw triton::exceptions::SolverEngine("Z3Solver::isSat(): node cannot be null.");
+
+        if (node->isLogical() == false)
+          throw triton::exceptions::SolverEngine("Z3Solver::isSat(): Must be a logical node.");
+
+        /* Create a solver and add the expression */
+        solver.add(expr);
+
+        /* Check if it is sat */
+        return solver.check() == z3::sat;
+      }
+
+
       std::map<triton::uint32, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node) const {
         std::map<triton::uint32, SolverModel> ret;
         std::list<std::map<triton::uint32, SolverModel>> allModels;

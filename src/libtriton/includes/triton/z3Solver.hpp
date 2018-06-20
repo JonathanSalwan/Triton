@@ -77,6 +77,9 @@ namespace triton {
            */
           TRITON_EXPORT std::list<std::map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
+          //! Returns true if an expression is satisfiable.
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
+
           //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;
       };
