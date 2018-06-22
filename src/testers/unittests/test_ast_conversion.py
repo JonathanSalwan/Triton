@@ -59,8 +59,8 @@ class TestAstConversion(unittest.TestCase):
         for _ in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv2, cv2)
             for op in binop:
                 n = op(self.v1, self.v2)
                 if op == operator.div and cv2 == 0:
@@ -93,7 +93,7 @@ class TestAstConversion(unittest.TestCase):
         ]
 
         for cv1 in xrange(0, 256):
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
             for op in unop:
                 n = op(self.v1)
                 ref = op(cv1) % (2 ** 8)
@@ -151,8 +151,8 @@ class TestAstConversion(unittest.TestCase):
         for _ in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv2, cv2)
             for op in smtbinop:
                 if op == self.astCtxt.concat:
                     n = op([self.v1, self.v2])
@@ -196,7 +196,7 @@ class TestAstConversion(unittest.TestCase):
         ]
 
         for cv1 in xrange(0, 256):
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
             for op in smtunop:
                 if op == self.astCtxt.lnot:
                     n = op(self.v1 != 0)
@@ -217,7 +217,7 @@ class TestAstConversion(unittest.TestCase):
         """Check bit extraction from bitvector."""
         for _ in xrange(100):
             cv1 = random.randint(0, 255)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
             for lo in xrange(0, 8):
                 for hi in xrange(lo, 8):
                     n = self.astCtxt.extract(hi, lo, self.v1)
@@ -235,8 +235,8 @@ class TestAstConversion(unittest.TestCase):
         for _ in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
@@ -255,8 +255,8 @@ class TestAstConversion(unittest.TestCase):
         for run in xrange(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.Triton.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
@@ -323,8 +323,8 @@ class TestAstConversion(unittest.TestCase):
             for _ in xrange(10):
                 cv1 = random.randint(0, 255)
                 cv2 = random.randint(0, 255)
-                self.Triton.setConcreteSymbolicVariableValue(self.sv1, cv1)
-                self.Triton.setConcreteSymbolicVariableValue(self.sv2, cv2)
+                self.Triton.setConcreteVariableValue(self.sv1, cv1)
+                self.Triton.setConcreteVariableValue(self.sv2, cv2)
                 self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
 
     def new_node(self, depth, possible):

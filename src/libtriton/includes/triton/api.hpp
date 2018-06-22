@@ -472,7 +472,7 @@ namespace triton {
         TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const;
 
         //! [**symbolic api**] - Sets the concrete value of a symbolic variable.
-        TRITON_EXPORT void setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value);
+        TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value);
 
 
 

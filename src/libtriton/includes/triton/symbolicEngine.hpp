@@ -318,7 +318,7 @@ namespace triton {
           TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const SymbolicVariable& symVar) const;
 
           //! Sets the concrete value of a symbolic variable.
-          TRITON_EXPORT void setConcreteSymbolicVariableValue(const SymbolicVariable& symVar, const triton::uint512& value);
+          TRITON_EXPORT void setConcreteVariableValue(const SymbolicVariable& symVar, const triton::uint512& value);
       };
 
     /*! @} End of symbolic namespace */

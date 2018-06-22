@@ -809,6 +809,6 @@ class TestAstEval(unittest.TestCase):
         subnode = self.astCtxt.bvadd(self.v1, self.v1)
         expr = self.Triton.newSymbolicExpression(subnode)
         final_node = self.astCtxt.bvsub(self.astCtxt.reference(expr), self.astCtxt.bv(8, 8))
-        self.Triton.setConcreteSymbolicVariableValue(self.sv1, 10)
+        self.Triton.setConcreteVariableValue(self.sv1, 10)
         trv = final_node.evaluate()
         self.assertEqual(trv, 12)

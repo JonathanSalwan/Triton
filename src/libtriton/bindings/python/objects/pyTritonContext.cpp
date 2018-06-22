@@ -317,7 +317,7 @@ the symbolic state (if it exists). You should probably use the concretize functi
 Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteSymbolicVariableValue(\ref py_SymbolicVariable_page symVar, integer value)</b><br>
+- <b>void setConcreteVariableValue(\ref py_SymbolicVariable_page symVar, integer value)</b><br>
 Sets the concrete value of a symbolic variable.
 
 - <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
@@ -2261,7 +2261,7 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_setConcreteSymbolicVariableValue(PyObject* self, PyObject* args) {
+      static PyObject* TritonContext_setConcreteVariableValue(PyObject* self, PyObject* args) {
         PyObject* symVar = nullptr;
         PyObject* value  = nullptr;
 
@@ -2269,13 +2269,13 @@ namespace triton {
         PyArg_ParseTuple(args, "|OO", &symVar, &value);
 
         if (symVar == nullptr || !PySymbolicVariable_Check(symVar))
-          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Bad argument type.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteVariableValue(): Bad argument type.");
 
         if (value == nullptr)
-          return PyErr_Format(PyExc_TypeError, "setConcreteSymbolicVariableValue(): Expects a second argument as integer value.");
+          return PyErr_Format(PyExc_TypeError, "setConcreteVariableValue(): Expects a second argument as integer value.");
 
         try {
-          PyTritonContext_AsTritonContext(self)->setConcreteSymbolicVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
+          PyTritonContext_AsTritonContext(self)->setConcreteVariableValue(*PySymbolicVariable_AsSymbolicVariable(symVar), PyLong_AsUint512(value));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2868,7 +2868,7 @@ namespace triton {
         {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,             METH_VARARGS,       ""},
         {"setConcreteMemoryValue",              (PyCFunction)TritonContext_setConcreteMemoryValue,                 METH_VARARGS,       ""},
         {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,               METH_VARARGS,       ""},
-        {"setConcreteSymbolicVariableValue",    (PyCFunction)TritonContext_setConcreteSymbolicVariableValue,       METH_VARARGS,       ""},
+        {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,               METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)TritonContext_simplify,                               METH_VARARGS,       ""},

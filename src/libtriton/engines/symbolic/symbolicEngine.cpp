@@ -550,7 +550,7 @@ namespace triton {
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt.variable(*symVar);
 
         if (expression->getAst())
-           this->setConcreteSymbolicVariableValue(*symVar, expression->getAst()->evaluate());
+           this->setConcreteVariableValue(*symVar, expression->getAst()->evaluate());
 
         expression->setAst(tmp);
 
@@ -571,7 +571,7 @@ namespace triton {
         const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt.variable(*symVar);
 
         /* Setup the concrete value to the symbolic variable */
-        this->setConcreteSymbolicVariableValue(*symVar, cv);
+        this->setConcreteVariableValue(*symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
@@ -623,7 +623,7 @@ namespace triton {
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
 
         /* Setup the concrete value to the symbolic variable */
-        this->setConcreteSymbolicVariableValue(*symVar, cv);
+        this->setConcreteVariableValue(*symVar, cv);
 
         if (expression == nullptr) {
           /* Create the symbolic expression */
@@ -1098,7 +1098,7 @@ namespace triton {
       }
 
 
-      void SymbolicEngine::setConcreteSymbolicVariableValue(const SymbolicVariable& symVar, const triton::uint512& value) {
+      void SymbolicEngine::setConcreteVariableValue(const SymbolicVariable& symVar, const triton::uint512& value) {
         this->astCtxt.updateVariable(symVar.getName(), value);
       }
 

@@ -80,7 +80,7 @@ def emulate(pc):
             model = Triton.getModel(cstr)
             for k, v in model.items():
                 value = v.getValue()
-                Triton.setConcreteSymbolicVariableValue(Triton.getSymbolicVariableFromId(k), value)
+                Triton.setConcreteVariableValue(Triton.getSymbolicVariableFromId(k), value)
                 print '[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value))
 
         # Next

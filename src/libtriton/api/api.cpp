@@ -119,7 +119,7 @@ To be able to compile Triton, you must install these libraries before:
 -------------------------------------------------------------------------------|---------
  [libboost](http://www.boost.org/)                                             | >= 1.55
  [libpython](https://www.python.org/)                                          | 2.7.x
- [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.4.1
+ [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
  [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | 71313
 
@@ -158,6 +158,8 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of the
 ~~~~~~~~~~~~~
 
 However, if you prefer to directly download precompiled libraries, check out our [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
+Note that if you use AppVeyor's artefacts, you probably have to install the [Visual C++ Redistributable](https://www.microsoft.com/en-US/download/details.aspx?id=30679)
+packages for Visual Studio 2012.
 
 <hr>
 \subsection libpintool_install_sec Pintool for Linux users
@@ -789,9 +791,9 @@ namespace triton {
   }
 
 
-  void API::setConcreteSymbolicVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
+  void API::setConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
     this->checkSymbolic();
-    this->symbolic->setConcreteSymbolicVariableValue(symVar, value);
+    this->symbolic->setConcreteVariableValue(symVar, value);
   }
 
 

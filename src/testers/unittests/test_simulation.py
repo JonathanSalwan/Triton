@@ -79,7 +79,7 @@ class DefCamp2015(object):
                 for k, v in model.items():
                     value = v.getValue()
                     solution += chr(value)
-                    self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
+                    self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
 
             # Next
             pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
