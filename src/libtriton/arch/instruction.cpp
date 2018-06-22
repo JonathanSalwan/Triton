@@ -55,6 +55,8 @@ namespace triton {
       this->loadAccess          = other.loadAccess;
       this->operands            = other.operands;
       this->prefix              = other.prefix;
+      this->readImmediates      = other.readImmediates;
+      this->readRegisters       = other.readRegisters;
       this->size                = other.size;
       this->storeAccess         = other.storeAccess;
       this->symbolicExpressions = other.symbolicExpressions;
