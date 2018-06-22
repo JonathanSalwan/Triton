@@ -34,6 +34,9 @@ namespace tracer {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
         triton::uint512 value = 0;
 
+        if (tracer::pintool::context::lastContext == nullptr)
+          return 0;
+
         #if defined(__x86_64__) || defined(_M_X64)
           switch (reg.getParent()) {
             case triton::arch::ID_REG_RAX:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RAX,    reinterpret_cast<triton::uint8*>(buffer)); break;
@@ -298,6 +301,9 @@ namespace tracer {
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
           throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): You cannot set a Pin register value on a sub-register or a flag.");
+
+        if (tracer::pintool::context::lastContext == nullptr)
+          return;
 
         triton::utils::fromUintToBuffer(value, buffer);
 
