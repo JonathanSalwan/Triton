@@ -31,19 +31,8 @@ The libTriton offers Python bindings on its C++ API which allow you to build ana
 
 ~~~~~~~~~~~~~
 
-\section tritonContext_py_api Python API - Classes and methods of the TritonContext class
+\section tritonContext_py_api Python API - Methods of the TritonContext class
 <hr>
-
-\subsection TritonContext_py_api_classes Classes
-
-- \ref py_AstNode_page
-- \ref py_AstContext_page
-- \ref py_BitsVector_page
-- \ref py_PathConstraint_page
-- \ref py_Register_page
-- \ref py_SolverModel_page
-- \ref py_SymbolicExpression_page
-- \ref py_SymbolicVariable_page
 
 \subsection TritonContext_py_api_methods Methods
 
