@@ -131,69 +131,74 @@ namespace triton {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
 
-        z3::expr      expr = z3Ast.convert(node);
-        z3::context&  ctx  = expr.ctx();
-        z3::solver    solver(ctx);
+        try {
+          z3::expr      expr = z3Ast.convert(node);
+          z3::context&  ctx  = expr.ctx();
+          z3::solver    solver(ctx);
 
-        if (node == nullptr)
-          throw triton::exceptions::SolverEngine("Z3Solver::getModels(): node cannot be null.");
+          if (node == nullptr)
+            throw triton::exceptions::SolverEngine("Z3Solver::getModels(): node cannot be null.");
 
-        if (node->isLogical() == false)
-          throw triton::exceptions::SolverEngine("Z3Solver::getModels(): Must be a logical node.");
+          if (node->isLogical() == false)
+            throw triton::exceptions::SolverEngine("Z3Solver::getModels(): Must be a logical node.");
 
-        /* Create a solver and add the expression */
-        solver.add(expr);
+          /* Create a solver and add the expression */
+          solver.add(expr);
 
-        /* Check if it is sat */
-        while (solver.check() == z3::sat && limit >= 1) {
+          /* Check if it is sat */
+          while (solver.check() == z3::sat && limit >= 1) {
 
-          /* Get model */
-          z3::model m = solver.get_model();
+            /* Get model */
+            z3::model m = solver.get_model();
 
-          /* Traversing the model */
-          std::map<triton::uint32, SolverModel> smodel;
-          z3::expr_vector args(ctx);
-          for (triton::uint32 i = 0; i < m.size(); i++) {
+            /* Traversing the model */
+            std::map<triton::uint32, SolverModel> smodel;
+            z3::expr_vector args(ctx);
+            for (triton::uint32 i = 0; i < m.size(); i++) {
 
-            /* Get the z3 variable */
-            z3::func_decl z3Variable = m[i];
+              /* Get the z3 variable */
+              z3::func_decl z3Variable = m[i];
 
-            /* Get the name as std::string from a z3 variable */
-            std::string varName = z3Variable.name().str();
+              /* Get the name as std::string from a z3 variable */
+              std::string varName = z3Variable.name().str();
 
-            /* Get z3 expr */
-            z3::expr exp = m.get_const_interp(z3Variable);
+              /* Get z3 expr */
+              z3::expr exp = m.get_const_interp(z3Variable);
 
-            /* Get the size of a z3 expr */
-            triton::uint32 bvSize = exp.get_sort().bv_size();
+              /* Get the size of a z3 expr */
+              triton::uint32 bvSize = exp.get_sort().bv_size();
 
-            /* Get the value of a z3 expr */
-            std::string svalue = Z3_get_numeral_string(ctx, exp);
+              /* Get the value of a z3 expr */
+              std::string svalue = Z3_get_numeral_string(ctx, exp);
 
-            /* Convert a string value to a integer value */
-            triton::uint512 value = triton::uint512(svalue);
+              /* Convert a string value to a integer value */
+              triton::uint512 value = triton::uint512(svalue);
 
-            /* Create a triton model */
-            SolverModel trionModel = SolverModel(varName, value);
+              /* Create a triton model */
+              SolverModel trionModel = SolverModel(varName, value);
 
-            /* Map the result */
-            smodel[trionModel.getId()] = trionModel;
+              /* Map the result */
+              smodel[trionModel.getId()] = trionModel;
 
-            /* Uniq result */
-            if (exp.get_sort().is_bv())
-              args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(svalue.c_str(), bvSize));
+              /* Uniq result */
+              if (exp.get_sort().is_bv())
+                args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(svalue.c_str(), bvSize));
 
+            }
+
+            /* Escape last models */
+            solver.add(triton::engines::solver::mk_or(args));
+
+            /* If there is model available */
+            if (smodel.size() > 0)
+              ret.push_back(smodel);
+
+            /* Decrement the limit */
+            limit--;
           }
-
-          /* Escape last models */
-          solver.add(triton::engines::solver::mk_or(args));
-
-          /* If there is model available */
-          if (smodel.size() > 0)
-            ret.push_back(smodel);
-
-          /* Decrement the limit */
-          limit--;
+        }
+        catch (const z3::exception& e) {
+          throw triton::exceptions::SolverEngine(std::string("Z3Solver::getModels(): ") + e.msg());
         }
 
         return ret;
