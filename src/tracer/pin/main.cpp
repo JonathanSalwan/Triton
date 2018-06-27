@@ -719,6 +719,7 @@ namespace tracer {
       PIN_InterceptSignal(SIGPIPE, callbackSignals, nullptr);
       PIN_InterceptSignal(SIGALRM, callbackSignals, nullptr);
       PIN_InterceptSignal(SIGTERM, callbackSignals, nullptr);
+      PIN_InterceptSignal(SIGBUS,  callbackSignals, nullptr);
 
       /* Exec the Pin's python bindings */
       tracer::pintool::initBindings(argc, argv);

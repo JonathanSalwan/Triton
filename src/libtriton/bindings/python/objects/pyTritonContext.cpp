@@ -12,6 +12,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
+#include <z3++.h>
 
 
 /*! \page py_TritonContext_page TritonContext
@@ -1343,6 +1344,9 @@ namespace triton {
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+        catch (z3::exception e) {
+          std::cerr << "PyObject* TritonContext_getModel(): z3::exception: " << e.msg() << std::endl;
         }
 
         return ret;
