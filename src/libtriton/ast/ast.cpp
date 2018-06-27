@@ -1640,6 +1640,9 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("DistinctNode::init(): Must take at least two children.");
 
+      if (this->children[0]->getBitvectorSize() != this->children[1]->getBitvectorSize())
+        throw triton::exceptions::Ast("DistinctNode::init(): Must take two nodes of same size.");
+
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() != this->children[1]->evaluate());
@@ -1676,6 +1679,9 @@ namespace triton {
     void EqualNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("EqualNode::init(): Must take at least two children.");
+
+      if (this->children[0]->getBitvectorSize() != this->children[1]->getBitvectorSize())
+        throw triton::exceptions::Ast("EqualNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
       this->size = 1;

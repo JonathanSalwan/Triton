@@ -1623,7 +1623,7 @@ namespace triton {
         auto of     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
 
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op2, this->astCtxt.bv(1, bvSize)),
+                      this->astCtxt.equal(this->astCtxt.zx(bvSize - op2->getBitvectorSize(), op2), this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(high, high, this->astCtxt.reference(parent)),
                         this->symbolicEngine->getOperandAst(inst, cf)
@@ -1785,7 +1785,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(
-                        op3,
+                        this->astCtxt.zx(bvSize - op3->getBitvectorSize(), op3),
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(
@@ -1855,7 +1855,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(
-                        op3,
+                        this->astCtxt.zx(bvSize - op3->getBitvectorSize(), op3),
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(
@@ -1972,7 +1972,7 @@ namespace triton {
         }
 
         auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
+                       this->astCtxt.equal(this->astCtxt.zx(bvSize - op2->getBitvectorSize(), op2), this->astCtxt.bv(0, bvSize)),
                        this->symbolicEngine->getOperandAst(inst, pf),
                        node1
                      );
@@ -2175,7 +2175,7 @@ namespace triton {
          * zf if op2 != 0
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
+                      this->astCtxt.equal(this->astCtxt.zx(bvSize - op2->getBitvectorSize(), op2), this->astCtxt.bv(0, bvSize)),
                       this->symbolicEngine->getOperandAst(inst, zf),
                       this->astCtxt.ite(
                         this->astCtxt.equal(
