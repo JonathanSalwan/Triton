@@ -8,7 +8,8 @@ endif()
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DHAVE_ROUND /MT")
+    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DHAVE_ROUND /MT /MP")
+    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DHAVE_ROUND /MTd /MP")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
@@ -21,7 +22,8 @@ endif()
 # Global UNIX CXX Flags
 if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     # Flags
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas -Wno-mismatched-tags")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Werror -Wno-unused-parameter -Wno-unknown-pragmas")
+    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
     if(NOT GCOV)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
     endif()
@@ -35,6 +37,15 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     # Disable fall-through warnings
     if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wimplicit-fallthrough=0")
+    endif()
+    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 8.1)
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=cast-function-type")
+    endif()
+    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) # Really?
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
+    endif()
+    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register")
     endif()
 endif()
 
@@ -66,8 +77,6 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Specifications.cpp
     ast/ast.cpp
     ast/astContext.cpp
-    ast/astDictionaries.cpp
-    ast/astGarbageCollector.cpp
     ast/representations/astPythonRepresentation.cpp
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp
@@ -75,8 +84,8 @@ set(LIBTRITON_SOURCE_FILES
     ast/z3/z3Interface.cpp
     ast/z3/z3ToTritonAst.cpp
     callbacks/callbacks.cpp
-    engines/solver/solverEngine.cpp
     engines/solver/solverModel.cpp
+    engines/solver/z3/z3Solver.cpp
     engines/symbolic/pathConstraint.cpp
     engines/symbolic/pathManager.cpp
     engines/symbolic/symbolicEngine.cpp

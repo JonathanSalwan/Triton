@@ -51,7 +51,7 @@ namespace triton {
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
       class x86Cpu : public CpuInterface, public x86Specifications {
 
-        static constexpr registers_e pcId = ID_REG_EIP;
+        static const registers_e pcId = ID_REG_EIP;
 
         private:
           //! Callbacks API
@@ -105,22 +105,6 @@ namespace triton {
           triton::uint8 mm6[QWORD_SIZE];
           //! Concrete value of mm7
           triton::uint8 mm7[QWORD_SIZE];
-          //! Concrete value of xmm0
-          triton::uint8 xmm0[DQWORD_SIZE];
-          //! Concrete value of xmm1
-          triton::uint8 xmm1[DQWORD_SIZE];
-          //! Concrete value of xmm2
-          triton::uint8 xmm2[DQWORD_SIZE];
-          //! Concrete value of xmm3
-          triton::uint8 xmm3[DQWORD_SIZE];
-          //! Concrete value of xmm4
-          triton::uint8 xmm4[DQWORD_SIZE];
-          //! Concrete value of xmm5
-          triton::uint8 xmm5[DQWORD_SIZE];
-          //! Concrete value of xmm6
-          triton::uint8 xmm6[DQWORD_SIZE];
-          //! Concrete value of xmm7
-          triton::uint8 xmm7[DQWORD_SIZE];
           //! Concrete value of ymm0
           triton::uint8 ymm0[QQWORD_SIZE];
           //! Concrete value of ymm1
@@ -227,8 +211,8 @@ namespace triton {
           TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
           TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
           TRITON_EXPORT triton::uint32 numberOfRegisters(void) const;
-          TRITON_EXPORT triton::uint32 registerBitSize(void) const;
-          TRITON_EXPORT triton::uint32 registerSize(void) const;
+          TRITON_EXPORT triton::uint32 gprBitSize(void) const;
+          TRITON_EXPORT triton::uint32 gprSize(void) const;
           TRITON_EXPORT triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
           TRITON_EXPORT triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
           TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;

@@ -77,7 +77,7 @@ def test5():
     Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
-    eaxAst = Triton.getAstFromId(Triton.getSymbolicRegisterId(Triton.registers.eax))
+    eaxAst = Triton.getSymbolicRegister(Triton.registers.eax).getAst()
 
     # constraint
     c = eaxAst ^ 0x11223344 == 0xdeadbeaf

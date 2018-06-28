@@ -5,20 +5,15 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_SOLVERENGINE_H
-#define TRITON_SOLVERENGINE_H
+#ifndef TRITON_SOLVERINTERFACE_HPP
+#define TRITON_SOLVERINTERFACE_HPP
 
-#include <cstdlib>
 #include <list>
 #include <map>
-#include <string>
-
-#include <z3++.h>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/solverModel.hpp>
-#include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -44,22 +39,12 @@ namespace triton {
      *  @{
      */
 
-      //! \class SolverEngine
-      /*! \brief The solver engine class. */
-      class SolverEngine {
-        private:
-          //! Symbolic Engine API
-          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
-
+      /*! \interface SolverInterface
+          \brief This interface is used to interface with solvers */
+      class SolverInterface {
         public:
-          //! Constructor.
-          TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
-
-          //! Constructor by copy.
-          TRITON_EXPORT SolverEngine(const SolverEngine& other);
-
-          //! Operator.
-          TRITON_EXPORT SolverEngine& operator=(const SolverEngine& other);
+          //! Destructor.
+          TRITON_EXPORT virtual ~SolverInterface(){};
 
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model
@@ -68,16 +53,22 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::map<triton::uint32, SolverModel> getModel(triton::ast::AbstractNode* node) const;
+          TRITON_EXPORT virtual std::map<triton::uint32, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const = 0;
 
-          //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
+          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
           /*! \brief list of map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::list<std::map<triton::uint32, SolverModel>> getModels(triton::ast::AbstractNode* node, triton::uint32 limit) const;
+          TRITON_EXPORT virtual std::list<std::map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const = 0;
+
+          //! Returns true if an expression is satisfiable.
+          TRITON_EXPORT virtual bool isSat(const triton::ast::SharedAbstractNode& node) const = 0;
+
+          //! Returns the name of the solver.
+          TRITON_EXPORT virtual std::string getName(void) const = 0;
       };
 
     /*! @} End of solver namespace */
@@ -87,4 +78,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_SOLVERENGINE_H */
+#endif /* TRITON_SOLVERINTERFACE_HPP */

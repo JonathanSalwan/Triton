@@ -17,6 +17,18 @@ environment:
 
   matrix:
     - platform: Win32
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      CMAKE_TEMPLATE: Visual Studio 12 2013
+      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v120
+      PYTHON: "C:\\Python27"
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x86-win
+
+    - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       BOOST_ROOT: c:\Libraries\boost_1_62_0
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
@@ -24,9 +36,9 @@ environment:
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v140
       PYTHON: "C:\\Python27"
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x86-win
 
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -36,9 +48,21 @@ environment:
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v141
       PYTHON: "C:\\Python27"
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x86-win
+
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
+      BOOST_ROOT: c:\Libraries\boost_1_62_0
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      CMAKE_TEMPLATE: Visual Studio 12 2013 Win64
+      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
+      PLATFORM_TOOLSET: v120
+      PYTHON: "C:\\Python27-x64"
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x64-win
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
@@ -48,9 +72,9 @@ environment:
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v140
       PYTHON: "C:\\Python27-x64"
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x64-win
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
@@ -60,9 +84,9 @@ environment:
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v141
       PYTHON: "C:\\Python27-x64"
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.5.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.5.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.5.0-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.6.0-x64-win
 
 install:
   - set PATH=%PYTHON%;%PATH%
@@ -70,7 +94,7 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.5.0/%Z3_PKG_NAME%.zip
+  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
     # Install z3 in the path
   - set PATH=%Z3_PKG_NAME%/bin;%PATH%

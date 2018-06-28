@@ -231,7 +231,7 @@ namespace tracer {
       tracer::pintool::context::lastContext = ctx;
 
       /* Setup Triton information */
-      tritonInst->partialReset();
+      tritonInst->clear();
       tritonInst->setOpcode(addr, size);
       tritonInst->setAddress(reinterpret_cast<triton::__uint>(addr));
       tritonInst->setThreadId(reinterpret_cast<triton::uint32>(threadId));
@@ -247,7 +247,7 @@ namespace tracer {
 
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true) {
-        tritonInst->reset();
+        tritonInst->clear();
         tracer::pintool::context::executeContext();
       }
 
@@ -264,7 +264,7 @@ namespace tracer {
 
       /* Check if we must restore the snapshot */
       if (tracer::pintool::snapshot.mustBeRestored() == true) {
-        tritonInst->reset();
+        tritonInst->clear();
         tracer::pintool::snapshot.restoreSnapshot(ctx);
       }
 
@@ -295,7 +295,7 @@ namespace tracer {
       tracer::pintool::callbacks::postProcessing(tritonInst, threadId);
 
       /* Clear Instruction information because of the Pin's cache */
-      tritonInst->reset();
+      tritonInst->clear();
 
       /* Check if we must execute a new context */
       if (tracer::pintool::context::mustBeExecuted == true)
@@ -719,6 +719,7 @@ namespace tracer {
       PIN_InterceptSignal(SIGPIPE, callbackSignals, nullptr);
       PIN_InterceptSignal(SIGALRM, callbackSignals, nullptr);
       PIN_InterceptSignal(SIGTERM, callbackSignals, nullptr);
+      PIN_InterceptSignal(SIGBUS,  callbackSignals, nullptr);
 
       /* Exec the Pin's python bindings */
       tracer::pintool::initBindings(argc, argv);

@@ -287,7 +287,7 @@ namespace triton {
 
       /* concat representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
-        std::vector<triton::ast::AbstractNode*> children = node->getChildren();
+        std::vector<triton::ast::SharedAbstractNode> children = node->getChildren();
         triton::usize size = children.size();
 
         if (size < 2)
@@ -379,7 +379,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "ref!" << node->getSymbolicExpression().getId();
+        stream << "ref!" << node->getSymbolicExpression()->getId();
         return stream;
       }
 

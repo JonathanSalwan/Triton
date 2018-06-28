@@ -116,7 +116,7 @@ namespace triton {
       void Register_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyRegister_AsRegister(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -321,7 +321,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)Register_dealloc,               /* tp_del */
         0                                           /* tp_version_tag */
       };
 

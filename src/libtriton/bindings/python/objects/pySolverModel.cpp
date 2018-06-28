@@ -40,7 +40,7 @@ True
 >>> print inst
 0x0: xor rax, 0x11223344
 
->>> raxAst = ctxt.unrollAstFromId(ctxt.getSymbolicRegisterId(ctxt.registers.rax))
+>>> raxAst = ctxt.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
 >>> print raxAst
 (bvxor SymVar_0 (_ bv287454020 64))
 
@@ -85,7 +85,7 @@ namespace triton {
       void SolverModel_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PySolverModel_AsSolverModel(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -193,7 +193,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)SolverModel_dealloc,            /* tp_del */
         0                                           /* tp_version_tag */
       };
 

@@ -67,7 +67,7 @@ def emulate(pc):
         # eax must be equal to 1 at each round.
         if instruction.getAddress() == 0x40078B:
             # Slice expressions
-            rax   = Triton.getSymbolicExpressionFromId(Triton.getSymbolicRegisterId(Triton.registers.rax))
+            rax   = Triton.getSymbolicRegister(Triton.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
@@ -80,7 +80,7 @@ def emulate(pc):
             model = Triton.getModel(cstr)
             for k, v in model.items():
                 value = v.getValue()
-                Triton.setConcreteSymbolicVariableValue(Triton.getSymbolicVariableFromId(k), value)
+                Triton.setConcreteVariableValue(Triton.getSymbolicVariableFromId(k), value)
                 print '[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value))
 
         # Next

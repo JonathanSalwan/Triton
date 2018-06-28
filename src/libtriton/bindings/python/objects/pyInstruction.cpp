@@ -219,7 +219,7 @@ namespace triton {
       void Instruction_dealloc(PyObject* self) {
         std::cout << std::flush;
         delete PyInstruction_AsInstruction(self);
-        Py_DECREF(self);
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -235,7 +235,10 @@ namespace triton {
 
       static PyObject* Instruction_getDisassembly(PyObject* self, PyObject* noarg) {
         try {
-          return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+          if (!PyInstruction_AsInstruction(self)->getDisassembly().empty())
+            return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+          Py_INCREF(Py_None);
+          return Py_None;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -423,8 +426,7 @@ namespace triton {
           symExprs = xPyList_New(exprSize);
 
           for (triton::usize index = 0; index < exprSize; index++) {
-            PyObject* obj = nullptr;
-            obj = PySymbolicExpression(inst->symbolicExpressions[index]);
+            PyObject* obj = PySymbolicExpression(inst->symbolicExpressions[index]);
             PyList_SetItem(symExprs, index, obj);
           }
 
@@ -718,7 +720,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)Instruction_dealloc,            /* tp_del */
         0                                           /* tp_version_tag */
       };
 

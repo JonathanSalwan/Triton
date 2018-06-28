@@ -97,7 +97,7 @@ if __name__ == '__main__':
         print inst
 
         # Next instruction
-        pc = Triton.buildSymbolicRegister(Triton.registers.rip).evaluate()
+        pc = Triton.getRegisterAst(Triton.registers.rip).evaluate()
 
     sys.exit(0)
 

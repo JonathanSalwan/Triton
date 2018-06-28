@@ -31,6 +31,18 @@ namespace triton {
     }
 
 
+    void Callbacks::addCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
+      this->setConcreteMemoryValueCallbacks.push_back(cb);
+      this->isDefined = true;
+    }
+
+
+    void Callbacks::addCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
+      this->setConcreteRegisterValueCallbacks.push_back(cb);
+      this->isDefined = true;
+    }
+
+
     void Callbacks::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
       this->symbolicSimplificationCallbacks.push_back(cb);
       this->isDefined = true;
@@ -40,6 +52,8 @@ namespace triton {
     void Callbacks::removeAllCallbacks(void) {
       this->getConcreteMemoryValueCallbacks.clear();
       this->getConcreteRegisterValueCallbacks.clear();
+      this->setConcreteMemoryValueCallbacks.clear();
+      this->setConcreteRegisterValueCallbacks.clear();
       this->symbolicSimplificationCallbacks.clear();
     }
 
@@ -58,6 +72,20 @@ namespace triton {
     }
 
 
+    void Callbacks::removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
+      this->setConcreteMemoryValueCallbacks.remove(cb);
+      if (this->countCallbacks() == 0)
+        this->isDefined = false;
+    }
+
+
+    void Callbacks::removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
+      this->setConcreteRegisterValueCallbacks.remove(cb);
+      if (this->countCallbacks() == 0)
+        this->isDefined = false;
+    }
+
+
     void Callbacks::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
       this->symbolicSimplificationCallbacks.remove(cb);
       if (this->countCallbacks() == 0)
@@ -65,7 +93,7 @@ namespace triton {
     }
 
 
-    triton::ast::AbstractNode* Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::ast::AbstractNode* node) const {
+    triton::ast::SharedAbstractNode Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) const {
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION: {
           for (auto& function: this->symbolicSimplificationCallbacks) {
@@ -89,6 +117,8 @@ namespace triton {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
            for (auto& function: this->getConcreteMemoryValueCallbacks) {
              function(this->api, mem);
+             if (mem.getLeaAst() != nullptr)
+                 this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem), true);
            }
           break;
         }
@@ -114,11 +144,43 @@ namespace triton {
     }
 
 
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value) const {
+      switch (kind) {
+        case triton::callbacks::SET_CONCRETE_MEMORY_VALUE: {
+           for (auto& function: this->setConcreteMemoryValueCallbacks) {
+             function(this->api, mem, value);
+           }
+          break;
+        }
+
+        default:
+          throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");
+      };
+    }
+
+
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value) const {
+      switch (kind) {
+        case triton::callbacks::SET_CONCRETE_REGISTER_VALUE: {
+           for (auto& function: this->setConcreteRegisterValueCallbacks) {
+             function(this->api, reg, value);
+           }
+          break;
+        }
+
+        default:
+          throw triton::exceptions::Callbacks("Callbacks::processCallbacks(): Invalid kind of callback for this C++ polymorphism.");
+      };
+    }
+
+
     triton::usize Callbacks::countCallbacks(void) const {
       triton::usize count = 0;
 
       count += this->getConcreteMemoryValueCallbacks.size();
       count += this->getConcreteRegisterValueCallbacks.size();
+      count += this->setConcreteMemoryValueCallbacks.size();
+      count += this->setConcreteRegisterValueCallbacks.size();
       count += this->symbolicSimplificationCallbacks.size();
 
       return count;

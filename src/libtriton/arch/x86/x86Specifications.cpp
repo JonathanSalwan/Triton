@@ -1,9 +1,9 @@
-/* @file
- *
- *  Copyright (C) - Triton
- *
- *  This program is under the terms of the BSD License.
- */
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the BSD License.
+*/
 
 #include <triton/architecture.hpp>
 #include <triton/cpuSize.hpp>

@@ -30,9 +30,17 @@ to wrap more generic concepts.
 
 \subsection triton_py_api_classes Classes
 
+- \ref py_AstContext_page
+- \ref py_AstNode_page
+- \ref py_BitsVector_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
 - \ref py_MemoryAccess_page
+- \ref py_PathConstraint_page
+- \ref py_Register_page
+- \ref py_SolverModel_page
+- \ref py_SymbolicExpression_page
+- \ref py_SymbolicVariable_page
 - \ref py_TritonContext_page
 
 

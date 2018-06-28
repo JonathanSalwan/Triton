@@ -61,7 +61,7 @@ namespace triton {
         triton::arch::Immediate scale;
 
         //! The AST of the memory access (LEA).
-        triton::ast::AbstractNode* leaAst;
+        triton::ast::SharedAbstractNode leaAst;
 
       private:
         //! Copy a MemoryAccess.
@@ -78,7 +78,7 @@ namespace triton {
         TRITON_EXPORT MemoryAccess(const MemoryAccess& other);
 
         //! Returns the AST of the memory access (LEA).
-        TRITON_EXPORT triton::ast::AbstractNode* getLeaAst(void) const;
+        TRITON_EXPORT triton::ast::SharedAbstractNode getLeaAst(void) const;
 
         //! Returns the address of the memory.
         TRITON_EXPORT triton::uint64 getAddress(void) const;
@@ -156,7 +156,7 @@ namespace triton {
         TRITON_EXPORT void setScale(const triton::arch::Immediate& scale);
 
         //! Sets the AST of the memory access (LEA).
-        TRITON_EXPORT void setLeaAst(triton::ast::AbstractNode* ast);
+        TRITON_EXPORT void setLeaAst(const triton::ast::SharedAbstractNode& ast);
 
         //! Copies a MemoryAccess.
         TRITON_EXPORT MemoryAccess& operator=(const MemoryAccess& other);

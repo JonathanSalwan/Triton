@@ -102,7 +102,7 @@ Replaces a child node.
 As we can't overload all AST's operators only these following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
-------------------|------------------
+------------------|---------------------
 a + b             | (bvadd a b)
 a - b             | (bvsub a b)
 a \* b            | (bvmul a b)
@@ -133,7 +133,8 @@ namespace triton {
       //! AstNode destructor.
       void AstNode_dealloc(PyObject* self) {
         std::cout << std::flush;
-        Py_DECREF(self);
+        PyAstNode_AsAstNode(self) = nullptr; // decref the shared_ptr
+        Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
 
@@ -186,7 +187,7 @@ namespace triton {
       static PyObject* AstNode_getChildren(PyObject* self, PyObject* noarg) {
         try {
           PyObject* children;
-          triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self);
+          triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
 
           triton::usize size = node->getChildren().size();
           children = xPyList_New(size);
@@ -224,11 +225,11 @@ namespace triton {
       static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
-          std::set<triton::ast::AbstractNode*>& parents = PyAstNode_AsAstNode(self)->getParents();
+          auto parents = PyAstNode_AsAstNode(self)->getParents();
           ret = xPyList_New(parents.size());
           triton::uint32 index = 0;
-          for (std::set<triton::ast::AbstractNode*>::iterator it = parents.begin(); it != parents.end(); it++)
-            PyList_SetItem(ret, index++, PyAstNode(*it));
+          for (auto& sp : parents)
+            PyList_SetItem(ret, index++, PyAstNode(sp));
           return ret;
           }
         catch (const triton::exceptions::Exception& e) {
@@ -239,19 +240,19 @@ namespace triton {
 
       static PyObject* AstNode_getValue(PyObject* self, PyObject* noarg) {
         try {
-          triton::ast::AbstractNode* node = PyAstNode_AsAstNode(self);
+          triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
 
           if (node->getKind() == triton::ast::DECIMAL_NODE)
-            return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node)->getValue());
+            return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue());
 
           else if (node->getKind() == triton::ast::REFERENCE_NODE)
-            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node)->getSymbolicExpression().getId());
+            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getId());
 
           else if (node->getKind() == triton::ast::STRING_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node)->getValue().c_str());
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getValue().c_str());
 
           else if (node->getKind() == triton::ast::VARIABLE_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node)->getVar().getName().c_str());
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar().getName().c_str());
 
           return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
         }
@@ -302,7 +303,7 @@ namespace triton {
           PyObject* index = nullptr;
           PyObject* node = nullptr;
           triton::uint32 idx;
-          triton::ast::AbstractNode* dst,* src;
+          triton::ast::SharedAbstractNode dst, src;
 
           PyArg_ParseTuple(args, "|OO", &index, &node);
 
@@ -507,11 +508,8 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_richcompare(PyObject* self, PyObject* other, int op)
-      {
-        PyObject* result                 = nullptr;
-        triton::ast::AbstractNode* node1 = nullptr;
-        triton::ast::AbstractNode* node2 = nullptr;
+      static PyObject* AstNode_richcompare(PyObject* self, PyObject* other, int op) {
+        PyObject* result = nullptr;
 
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
@@ -525,8 +523,8 @@ namespace triton {
         }
 
         else {
-          node1 = PyAstNode_AsAstNode(self);
-          node2 = PyAstNode_AsAstNode(other);
+          auto node1 = PyAstNode_AsAstNode(self);
+          auto node2 = PyAstNode_AsAstNode(other);
 
           switch (op) {
             case Py_LT:
@@ -552,6 +550,16 @@ namespace triton {
 
         Py_INCREF(result);
         return result;
+      }
+
+
+      static PyObject* AstNode_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+        return type->tp_alloc(type, 0);
+      }
+
+
+      static int AstNode_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
+        return 0;
       }
 
 
@@ -655,9 +663,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,                                          /* tp_init */
+        (initproc)AstNode_init,                     /* tp_init */
         0,                                          /* tp_alloc */
-        0,                                          /* tp_new */
+        (newfunc)AstNode_new,                       /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -665,23 +673,24 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)AstNode_dealloc,                /* tp_del */
         0                                           /* tp_version_tag */
       };
 
 
-      PyObject* PyAstNode(triton::ast::AbstractNode* node) {
-        AstNode_Object* object;
-
+      PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node) {
         if (node == nullptr) {
           Py_INCREF(Py_None);
           return Py_None;
         }
 
         PyType_Ready(&AstNode_Type);
-        object = PyObject_NEW(AstNode_Object, &AstNode_Type);
-        if (object != NULL)
+        // Build the new object the python way (calling operator() on the type) as
+        // it crash otherwise (certainly due to incorrect shared_ptr initialization).
+        auto* object = (triton::bindings::python::AstNode_Object*)PyObject_CallObject((PyObject*) &AstNode_Type, nullptr);
+        if (object != NULL) {
           object->node = node;
+        }
 
         return (PyObject*)object;
       }

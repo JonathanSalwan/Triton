@@ -67,38 +67,6 @@ namespace triton {
         std::memcpy(this->mm5,     other.mm5,    sizeof(this->mm5));
         std::memcpy(this->mm6,     other.mm6,    sizeof(this->mm6));
         std::memcpy(this->mm7,     other.mm7,    sizeof(this->mm7));
-        std::memcpy(this->xmm0,    other.xmm0,   sizeof(this->xmm0));
-        std::memcpy(this->xmm1,    other.xmm1,   sizeof(this->xmm1));
-        std::memcpy(this->xmm2,    other.xmm2,   sizeof(this->xmm2));
-        std::memcpy(this->xmm3,    other.xmm3,   sizeof(this->xmm3));
-        std::memcpy(this->xmm4,    other.xmm4,   sizeof(this->xmm4));
-        std::memcpy(this->xmm5,    other.xmm5,   sizeof(this->xmm5));
-        std::memcpy(this->xmm6,    other.xmm6,   sizeof(this->xmm6));
-        std::memcpy(this->xmm7,    other.xmm7,   sizeof(this->xmm7));
-        std::memcpy(this->xmm8,    other.xmm8,   sizeof(this->xmm8));
-        std::memcpy(this->xmm9,    other.xmm9,   sizeof(this->xmm9));
-        std::memcpy(this->xmm10,   other.xmm10,  sizeof(this->xmm10));
-        std::memcpy(this->xmm11,   other.xmm11,  sizeof(this->xmm11));
-        std::memcpy(this->xmm12,   other.xmm12,  sizeof(this->xmm12));
-        std::memcpy(this->xmm13,   other.xmm13,  sizeof(this->xmm13));
-        std::memcpy(this->xmm14,   other.xmm14,  sizeof(this->xmm14));
-        std::memcpy(this->xmm15,   other.xmm15,  sizeof(this->xmm15));
-        std::memcpy(this->ymm0,    other.ymm0,   sizeof(this->ymm0));
-        std::memcpy(this->ymm1,    other.ymm1,   sizeof(this->ymm1));
-        std::memcpy(this->ymm2,    other.ymm2,   sizeof(this->ymm2));
-        std::memcpy(this->ymm3,    other.ymm3,   sizeof(this->ymm3));
-        std::memcpy(this->ymm4,    other.ymm4,   sizeof(this->ymm4));
-        std::memcpy(this->ymm5,    other.ymm5,   sizeof(this->ymm5));
-        std::memcpy(this->ymm6,    other.ymm6,   sizeof(this->ymm6));
-        std::memcpy(this->ymm7,    other.ymm7,   sizeof(this->ymm7));
-        std::memcpy(this->ymm8,    other.ymm8,   sizeof(this->ymm8));
-        std::memcpy(this->ymm9,    other.ymm9,   sizeof(this->ymm9));
-        std::memcpy(this->ymm10,   other.ymm10,  sizeof(this->ymm10));
-        std::memcpy(this->ymm11,   other.ymm11,  sizeof(this->ymm11));
-        std::memcpy(this->ymm12,   other.ymm12,  sizeof(this->ymm12));
-        std::memcpy(this->ymm13,   other.ymm13,  sizeof(this->ymm13));
-        std::memcpy(this->ymm14,   other.ymm14,  sizeof(this->ymm14));
-        std::memcpy(this->ymm15,   other.ymm15,  sizeof(this->ymm15));
         std::memcpy(this->zmm0,    other.zmm0,   sizeof(this->zmm0));
         std::memcpy(this->zmm1,    other.zmm1,   sizeof(this->zmm1));
         std::memcpy(this->zmm2,    other.zmm2,   sizeof(this->zmm2));
@@ -188,38 +156,6 @@ namespace triton {
         std::memset(this->mm5,     0x00, sizeof(this->mm5));
         std::memset(this->mm6,     0x00, sizeof(this->mm6));
         std::memset(this->mm7,     0x00, sizeof(this->mm7));
-        std::memset(this->xmm0,    0x00, sizeof(this->xmm0));
-        std::memset(this->xmm1,    0x00, sizeof(this->xmm1));
-        std::memset(this->xmm2,    0x00, sizeof(this->xmm2));
-        std::memset(this->xmm3,    0x00, sizeof(this->xmm3));
-        std::memset(this->xmm4,    0x00, sizeof(this->xmm4));
-        std::memset(this->xmm5,    0x00, sizeof(this->xmm5));
-        std::memset(this->xmm6,    0x00, sizeof(this->xmm6));
-        std::memset(this->xmm7,    0x00, sizeof(this->xmm7));
-        std::memset(this->xmm8,    0x00, sizeof(this->xmm8));
-        std::memset(this->xmm9,    0x00, sizeof(this->xmm9));
-        std::memset(this->xmm10,   0x00, sizeof(this->xmm10));
-        std::memset(this->xmm11,   0x00, sizeof(this->xmm11));
-        std::memset(this->xmm12,   0x00, sizeof(this->xmm12));
-        std::memset(this->xmm13,   0x00, sizeof(this->xmm13));
-        std::memset(this->xmm14,   0x00, sizeof(this->xmm14));
-        std::memset(this->xmm15,   0x00, sizeof(this->xmm15));
-        std::memset(this->ymm0,    0x00, sizeof(this->ymm0));
-        std::memset(this->ymm1,    0x00, sizeof(this->ymm1));
-        std::memset(this->ymm2,    0x00, sizeof(this->ymm2));
-        std::memset(this->ymm3,    0x00, sizeof(this->ymm3));
-        std::memset(this->ymm4,    0x00, sizeof(this->ymm4));
-        std::memset(this->ymm5,    0x00, sizeof(this->ymm5));
-        std::memset(this->ymm6,    0x00, sizeof(this->ymm6));
-        std::memset(this->ymm7,    0x00, sizeof(this->ymm7));
-        std::memset(this->ymm8,    0x00, sizeof(this->ymm8));
-        std::memset(this->ymm9,    0x00, sizeof(this->ymm9));
-        std::memset(this->ymm10,   0x00, sizeof(this->ymm10));
-        std::memset(this->ymm11,   0x00, sizeof(this->ymm11));
-        std::memset(this->ymm12,   0x00, sizeof(this->ymm12));
-        std::memset(this->ymm13,   0x00, sizeof(this->ymm13));
-        std::memset(this->ymm14,   0x00, sizeof(this->ymm14));
-        std::memset(this->ymm15,   0x00, sizeof(this->ymm15));
         std::memset(this->zmm0,    0x00, sizeof(this->zmm0));
         std::memset(this->zmm1,    0x00, sizeof(this->zmm1));
         std::memset(this->zmm2,    0x00, sizeof(this->zmm2));
@@ -285,7 +221,7 @@ namespace triton {
 
 
       bool x8664Cpu::isFlag(triton::arch::registers_e regId) const {
-        return ((regId >= triton::arch::ID_REG_AF && regId <= triton::arch::ID_REG_FZ) ? true : false);
+        return ((regId >= triton::arch::ID_REG_AC && regId <= triton::arch::ID_REG_FZ) ? true : false);
       }
 
 
@@ -347,12 +283,12 @@ namespace triton {
       }
 
 
-      triton::uint32 x8664Cpu::registerSize(void) const {
+      triton::uint32 x8664Cpu::gprSize(void) const {
         return QWORD_SIZE;
       }
 
 
-      triton::uint32 x8664Cpu::registerBitSize(void) const {
+      triton::uint32 x8664Cpu::gprBitSize(void) const {
         return QWORD_SIZE_BIT;
       }
 
@@ -370,7 +306,7 @@ namespace triton {
           const auto& reg = kv.second;
 
           /* Add GPR */
-          if (reg.getSize() == this->registerSize())
+          if (reg.getSize() == this->gprSize())
             ret.insert(&reg);
 
           /* Add Flags */
@@ -491,14 +427,14 @@ namespace triton {
                   triton::uint32 immsize = (
                                             this->isRegisterValid(base.getId()) ? base.getSize() :
                                             this->isRegisterValid(index.getId()) ? index.getSize() :
-                                            this->registerSize()
+                                            this->gprSize()
                                           );
 
                   triton::arch::Immediate disp(op->mem.disp, immsize);
                   triton::arch::Immediate scale(op->mem.scale, immsize);
 
                   /* Specify that LEA contains a PC relative */
-                  if (base.getId() == pcId)
+                  if (base.getId() == this->pcId)
                     mem.setPcRelative(inst.getNextAddress());
 
                   mem.setSegmentRegister(segment);
@@ -557,14 +493,17 @@ namespace triton {
 
       triton::uint512 x8664Cpu::getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks) const {
         triton::uint512 ret = 0;
-        triton::uint64 addr = mem.getAddress();
-        triton::uint32 size = mem.getSize();
-
-        if (size == 0 || size > DQQWORD_SIZE)
-          throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
+        triton::uint64 addr = 0;
+        triton::uint32 size = 0;
 
         if (execCallbacks && this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, mem);
+
+        addr = mem.getAddress();
+        size = mem.getSize();
+
+        if (size == 0 || size > DQQWORD_SIZE)
+          throw triton::exceptions::Cpu("x8664Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
         for (triton::sint32 i = size-1; i >= 0; i--)
           ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i, false));
@@ -689,39 +628,39 @@ namespace triton {
           case triton::arch::ID_REG_MM6:  return (*((triton::uint64*)(this->mm6)));
           case triton::arch::ID_REG_MM7:  return (*((triton::uint64*)(this->mm7)));
 
-          case triton::arch::ID_REG_XMM0:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm0);  return value;
-          case triton::arch::ID_REG_XMM1:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm1);  return value;
-          case triton::arch::ID_REG_XMM2:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm2);  return value;
-          case triton::arch::ID_REG_XMM3:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm3);  return value;
-          case triton::arch::ID_REG_XMM4:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm4);  return value;
-          case triton::arch::ID_REG_XMM5:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm5);  return value;
-          case triton::arch::ID_REG_XMM6:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm6);  return value;
-          case triton::arch::ID_REG_XMM7:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm7);  return value;
-          case triton::arch::ID_REG_XMM8:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm8);  return value;
-          case triton::arch::ID_REG_XMM9:  value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm9);  return value;
-          case triton::arch::ID_REG_XMM10: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm10); return value;
-          case triton::arch::ID_REG_XMM11: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm11); return value;
-          case triton::arch::ID_REG_XMM12: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm12); return value;
-          case triton::arch::ID_REG_XMM13: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm13); return value;
-          case triton::arch::ID_REG_XMM14: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm14); return value;
-          case triton::arch::ID_REG_XMM15: value = triton::utils::fromBufferToUint<triton::uint128>(this->xmm15); return value;
+          case triton::arch::ID_REG_XMM0:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm0);  return value;
+          case triton::arch::ID_REG_XMM1:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm1);  return value;
+          case triton::arch::ID_REG_XMM2:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm2);  return value;
+          case triton::arch::ID_REG_XMM3:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm3);  return value;
+          case triton::arch::ID_REG_XMM4:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm4);  return value;
+          case triton::arch::ID_REG_XMM5:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm5);  return value;
+          case triton::arch::ID_REG_XMM6:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm6);  return value;
+          case triton::arch::ID_REG_XMM7:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm7);  return value;
+          case triton::arch::ID_REG_XMM8:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm8);  return value;
+          case triton::arch::ID_REG_XMM9:  value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm9);  return value;
+          case triton::arch::ID_REG_XMM10: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm10); return value;
+          case triton::arch::ID_REG_XMM11: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm11); return value;
+          case triton::arch::ID_REG_XMM12: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm12); return value;
+          case triton::arch::ID_REG_XMM13: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm13); return value;
+          case triton::arch::ID_REG_XMM14: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm14); return value;
+          case triton::arch::ID_REG_XMM15: value = triton::utils::fromBufferToUint<triton::uint128>(this->zmm15); return value;
 
-          case triton::arch::ID_REG_YMM0:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm0);  return value;
-          case triton::arch::ID_REG_YMM1:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm1);  return value;
-          case triton::arch::ID_REG_YMM2:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm2);  return value;
-          case triton::arch::ID_REG_YMM3:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm3);  return value;
-          case triton::arch::ID_REG_YMM4:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm4);  return value;
-          case triton::arch::ID_REG_YMM5:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm5);  return value;
-          case triton::arch::ID_REG_YMM6:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm6);  return value;
-          case triton::arch::ID_REG_YMM7:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm7);  return value;
-          case triton::arch::ID_REG_YMM8:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm8);  return value;
-          case triton::arch::ID_REG_YMM9:  value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm9);  return value;
-          case triton::arch::ID_REG_YMM10: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm10); return value;
-          case triton::arch::ID_REG_YMM11: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm11); return value;
-          case triton::arch::ID_REG_YMM12: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm12); return value;
-          case triton::arch::ID_REG_YMM13: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm13); return value;
-          case triton::arch::ID_REG_YMM14: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm14); return value;
-          case triton::arch::ID_REG_YMM15: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm15); return value;
+          case triton::arch::ID_REG_YMM0:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm0);  return value;
+          case triton::arch::ID_REG_YMM1:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm1);  return value;
+          case triton::arch::ID_REG_YMM2:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm2);  return value;
+          case triton::arch::ID_REG_YMM3:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm3);  return value;
+          case triton::arch::ID_REG_YMM4:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm4);  return value;
+          case triton::arch::ID_REG_YMM5:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm5);  return value;
+          case triton::arch::ID_REG_YMM6:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm6);  return value;
+          case triton::arch::ID_REG_YMM7:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm7);  return value;
+          case triton::arch::ID_REG_YMM8:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm8);  return value;
+          case triton::arch::ID_REG_YMM9:  value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm9);  return value;
+          case triton::arch::ID_REG_YMM10: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm10); return value;
+          case triton::arch::ID_REG_YMM11: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm11); return value;
+          case triton::arch::ID_REG_YMM12: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm12); return value;
+          case triton::arch::ID_REG_YMM13: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm13); return value;
+          case triton::arch::ID_REG_YMM14: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm14); return value;
+          case triton::arch::ID_REG_YMM15: value = triton::utils::fromBufferToUint<triton::uint256>(this->zmm15); return value;
 
           case triton::arch::ID_REG_ZMM0:  value = triton::utils::fromBufferToUint<triton::uint512>(this->zmm0);  return value;
           case triton::arch::ID_REG_ZMM1:  value = triton::utils::fromBufferToUint<triton::uint512>(this->zmm1);  return value;
@@ -792,15 +731,22 @@ namespace triton {
           case triton::arch::ID_REG_RH:  return (((*((triton::uint64*)(this->mxcsr))) >> 14) & 1);
           case triton::arch::ID_REG_FZ:  return (((*((triton::uint64*)(this->mxcsr))) >> 15) & 1);
 
-          case triton::arch::ID_REG_CF: return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
-          case triton::arch::ID_REG_PF: return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
-          case triton::arch::ID_REG_AF: return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
-          case triton::arch::ID_REG_ZF: return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
-          case triton::arch::ID_REG_SF: return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
-          case triton::arch::ID_REG_TF: return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
-          case triton::arch::ID_REG_IF: return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
-          case triton::arch::ID_REG_DF: return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
-          case triton::arch::ID_REG_OF: return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
+          case triton::arch::ID_REG_CF:  return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
+          case triton::arch::ID_REG_PF:  return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
+          case triton::arch::ID_REG_AF:  return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
+          case triton::arch::ID_REG_ZF:  return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
+          case triton::arch::ID_REG_SF:  return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
+          case triton::arch::ID_REG_TF:  return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
+          case triton::arch::ID_REG_IF:  return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
+          case triton::arch::ID_REG_DF:  return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
+          case triton::arch::ID_REG_OF:  return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
+          case triton::arch::ID_REG_NT:  return (((*((triton::uint64*)(this->eflags))) >> 14) & 1);
+          case triton::arch::ID_REG_RF:  return (((*((triton::uint64*)(this->eflags))) >> 16) & 1);
+          case triton::arch::ID_REG_VM:  return (((*((triton::uint64*)(this->eflags))) >> 17) & 1);
+          case triton::arch::ID_REG_AC:  return (((*((triton::uint64*)(this->eflags))) >> 18) & 1);
+          case triton::arch::ID_REG_VIF: return (((*((triton::uint64*)(this->eflags))) >> 19) & 1);
+          case triton::arch::ID_REG_VIP: return (((*((triton::uint64*)(this->eflags))) >> 20) & 1);
+          case triton::arch::ID_REG_ID:  return (((*((triton::uint64*)(this->eflags))) >> 21) & 1);
 
           case triton::arch::ID_REG_CS: return (*((triton::uint64*)(this->cs)));
           case triton::arch::ID_REG_DS: return (*((triton::uint64*)(this->ds)));
@@ -818,6 +764,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE), value);
         this->memory[addr] = value;
       }
 
@@ -833,6 +781,9 @@ namespace triton {
         if (size == 0 || size > DQQWORD_SIZE)
           throw triton::exceptions::Cpu("x8664Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, mem, value);
+
         for (triton::uint32 i = 0; i < size; i++) {
           this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
           cv >>= 8;
@@ -842,14 +793,14 @@ namespace triton {
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
         for (triton::usize index = 0; index < values.size(); index++) {
-          this->memory[baseAddr+index] = values[index];
+          this->setConcreteMemoryValue(baseAddr+index, values[index]);
         }
       }
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
         for (triton::usize index = 0; index < size; index++) {
-          this->memory[baseAddr+index] = area[index];
+          this->setConcreteMemoryValue(baseAddr+index, area[index]);
         }
       }
 
@@ -857,6 +808,9 @@ namespace triton {
       void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
         if (value > reg.getMaxValue())
           throw triton::exceptions::Register("x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
+
+        if (this->callbacks)
+          this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);
 
         switch (reg.getId()) {
           case triton::arch::ID_REG_RAX: (*((triton::uint64*)(this->rax)))  = value.convert_to<triton::uint64>(); break;
@@ -954,6 +908,41 @@ namespace triton {
             (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
             break;
           }
+          case triton::arch::ID_REG_NT: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
+            break;
+          }
+          case triton::arch::ID_REG_RF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 16) : b & ~(1 << 16);
+            break;
+          }
+          case triton::arch::ID_REG_VM: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 17) : b & ~(1 << 17);
+            break;
+          }
+          case triton::arch::ID_REG_AC: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 18) : b & ~(1 << 18);
+            break;
+          }
+          case triton::arch::ID_REG_VIF: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 19) : b & ~(1 << 19);
+            break;
+          }
+          case triton::arch::ID_REG_VIP: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 20) : b & ~(1 << 20);
+            break;
+          }
+          case triton::arch::ID_REG_ID: {
+            triton::uint64 b = (*((triton::uint64*)(this->eflags)));
+            (*((triton::uint64*)(this->eflags))) = !value.is_zero() ? b | (1 << 21) : b & ~(1 << 21);
+            break;
+          }
 
           case triton::arch::ID_REG_R8:  (*((triton::uint64*)(this->r8))) = value.convert_to<triton::uint64>(); break;
           case triton::arch::ID_REG_R8D: (*((triton::uint32*)(this->r8))) = value.convert_to<triton::uint32>(); break;
@@ -1004,39 +993,39 @@ namespace triton {
           case triton::arch::ID_REG_MM6:  (*((triton::uint64*)(this->mm6))) = value.convert_to<triton::uint64>(); break;
           case triton::arch::ID_REG_MM7:  (*((triton::uint64*)(this->mm7))) = value.convert_to<triton::uint64>(); break;
 
-          case triton::arch::ID_REG_XMM0:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm0); break;
-          case triton::arch::ID_REG_XMM1:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm1); break;
-          case triton::arch::ID_REG_XMM2:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm2); break;
-          case triton::arch::ID_REG_XMM3:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm3); break;
-          case triton::arch::ID_REG_XMM4:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm4); break;
-          case triton::arch::ID_REG_XMM5:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm5); break;
-          case triton::arch::ID_REG_XMM6:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm6); break;
-          case triton::arch::ID_REG_XMM7:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm7); break;
-          case triton::arch::ID_REG_XMM8:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm8); break;
-          case triton::arch::ID_REG_XMM9:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm9); break;
-          case triton::arch::ID_REG_XMM10: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm10); break;
-          case triton::arch::ID_REG_XMM11: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm11); break;
-          case triton::arch::ID_REG_XMM12: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm12); break;
-          case triton::arch::ID_REG_XMM13: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm13); break;
-          case triton::arch::ID_REG_XMM14: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm14); break;
-          case triton::arch::ID_REG_XMM15: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->xmm15); break;
+          case triton::arch::ID_REG_XMM0:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm0); break;
+          case triton::arch::ID_REG_XMM1:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm1); break;
+          case triton::arch::ID_REG_XMM2:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm2); break;
+          case triton::arch::ID_REG_XMM3:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm3); break;
+          case triton::arch::ID_REG_XMM4:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm4); break;
+          case triton::arch::ID_REG_XMM5:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm5); break;
+          case triton::arch::ID_REG_XMM6:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm6); break;
+          case triton::arch::ID_REG_XMM7:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm7); break;
+          case triton::arch::ID_REG_XMM8:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm8); break;
+          case triton::arch::ID_REG_XMM9:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm9); break;
+          case triton::arch::ID_REG_XMM10: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm10); break;
+          case triton::arch::ID_REG_XMM11: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm11); break;
+          case triton::arch::ID_REG_XMM12: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm12); break;
+          case triton::arch::ID_REG_XMM13: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm13); break;
+          case triton::arch::ID_REG_XMM14: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm14); break;
+          case triton::arch::ID_REG_XMM15: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->zmm15); break;
 
-          case triton::arch::ID_REG_YMM0:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm0); break;
-          case triton::arch::ID_REG_YMM1:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm1); break;
-          case triton::arch::ID_REG_YMM2:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm2); break;
-          case triton::arch::ID_REG_YMM3:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm3); break;
-          case triton::arch::ID_REG_YMM4:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm4); break;
-          case triton::arch::ID_REG_YMM5:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm5); break;
-          case triton::arch::ID_REG_YMM6:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm6); break;
-          case triton::arch::ID_REG_YMM7:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm7); break;
-          case triton::arch::ID_REG_YMM8:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm8); break;
-          case triton::arch::ID_REG_YMM9:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm9); break;
-          case triton::arch::ID_REG_YMM10: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm10); break;
-          case triton::arch::ID_REG_YMM11: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm11); break;
-          case triton::arch::ID_REG_YMM12: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm12); break;
-          case triton::arch::ID_REG_YMM13: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm13); break;
-          case triton::arch::ID_REG_YMM14: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm14); break;
-          case triton::arch::ID_REG_YMM15: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm15); break;
+          case triton::arch::ID_REG_YMM0:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm0); break;
+          case triton::arch::ID_REG_YMM1:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm1); break;
+          case triton::arch::ID_REG_YMM2:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm2); break;
+          case triton::arch::ID_REG_YMM3:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm3); break;
+          case triton::arch::ID_REG_YMM4:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm4); break;
+          case triton::arch::ID_REG_YMM5:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm5); break;
+          case triton::arch::ID_REG_YMM6:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm6); break;
+          case triton::arch::ID_REG_YMM7:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm7); break;
+          case triton::arch::ID_REG_YMM8:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm8); break;
+          case triton::arch::ID_REG_YMM9:  triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm9); break;
+          case triton::arch::ID_REG_YMM10: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm10); break;
+          case triton::arch::ID_REG_YMM11: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm11); break;
+          case triton::arch::ID_REG_YMM12: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm12); break;
+          case triton::arch::ID_REG_YMM13: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm13); break;
+          case triton::arch::ID_REG_YMM14: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm14); break;
+          case triton::arch::ID_REG_YMM15: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->zmm15); break;
 
           case triton::arch::ID_REG_ZMM0:  triton::utils::fromUintToBuffer(value, this->zmm0); break;
           case triton::arch::ID_REG_ZMM1:  triton::utils::fromUintToBuffer(value, this->zmm1); break;

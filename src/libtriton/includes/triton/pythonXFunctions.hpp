@@ -50,6 +50,12 @@ namespace triton {
       //! Creates a PyTuple and raises an exception if it fails.
       PyObject* xPyTuple_New(Py_ssize_t len);
 
+      //! Same as PyDict_SetItemString but decrements reference on object
+      int xPyDict_SetItemString(PyObject *p, const char *key, PyObject *val);
+
+      //! Same as PyDict_SetItem but decrements reference on object and key
+      int xPyDict_SetItem(PyObject *p, PyObject* key, PyObject *val);
+
     /*! @} End of python namespace */
     };
   /*! @} End of bindings namespace */

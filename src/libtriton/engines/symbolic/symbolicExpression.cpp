@@ -20,7 +20,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(triton::ast::AbstractNode* node, triton::usize id, symkind_e kind, const std::string& comment)
+      SymbolicExpression::SymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::usize id, symkind_e kind, const std::string& comment)
         : originMemory(),
           originRegister() {
         this->comment       = comment;
@@ -54,17 +54,17 @@ namespace triton {
       }
 
 
-      triton::ast::AbstractNode* SymbolicExpression::getAst(void) const {
+      const triton::ast::SharedAbstractNode& SymbolicExpression::getAst(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
         return this->ast;
       }
 
 
-      triton::ast::AbstractNode* SymbolicExpression::getNewAst(void) const {
+      triton::ast::SharedAbstractNode SymbolicExpression::getNewAst(void) const {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getNewAst(): No AST defined.");
-        return triton::ast::newInstance(this->ast);
+        return triton::ast::newInstance(this->ast.get());
       }
 
 
@@ -80,7 +80,8 @@ namespace triton {
 
       std::string SymbolicExpression::getFormattedId(void) const {
         if (this->ast == nullptr)
-          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedId(): No AST defined.");
+
         if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
@@ -94,7 +95,8 @@ namespace triton {
 
       std::string SymbolicExpression::getFormattedComment(void) const {
         if (this->ast == nullptr)
-          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getAst(): No AST defined.");
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedComment(): No AST defined.");
+
         if (this->getComment().empty())
           return "";
 
@@ -124,8 +126,10 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setAst(triton::ast::AbstractNode* node) {
-        node->setParent(this->ast->getParents());
+      void SymbolicExpression::setAst(const triton::ast::SharedAbstractNode& node) {
+        for(auto sp : this->ast->getParents()) {
+          node->setParent(sp.get());
+        }
         this->ast = node;
         this->ast->init();
       }

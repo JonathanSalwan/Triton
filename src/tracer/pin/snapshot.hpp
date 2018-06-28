@@ -50,17 +50,14 @@ namespace tracer {
         //! Flag which defines if we must restore the snapshot.
         bool mustBeRestore;
 
-        //! AST node state.
-        std::set<triton::ast::AbstractNode*> nodesList;
-
-        //! Variables node state.
-        std::map<std::string, std::vector<triton::ast::AbstractNode*>> variablesMap;
-
         //! Snapshot of the symbolic engine.
         triton::engines::symbolic::SymbolicEngine* snapshotSymEngine;
 
         //! Snapshot of the taint engine.
         triton::engines::taint::TaintEngine* snapshotTaintEngine;
+
+        //! AST Context
+        triton::ast::AstContext* astCtx;
 
         //! Snapshot of triton CPU.
         #if defined(__x86_64__) || defined(_M_X64)

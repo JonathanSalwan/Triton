@@ -68,7 +68,7 @@ class DefCamp2015(object):
             # eax must be equal to 1 at each round.
             if instruction.getAddress() == 0x40078B:
                 # Slice expressions
-                rax = self.Triton.getSymbolicExpressionFromId(self.Triton.getSymbolicRegisterId(self.Triton.registers.rax))
+                rax = self.Triton.getSymbolicRegister(self.Triton.registers.rax)
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
@@ -79,7 +79,7 @@ class DefCamp2015(object):
                 for k, v in model.items():
                     value = v.getValue()
                     solution += chr(value)
-                    self.Triton.setConcreteSymbolicVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
+                    self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
 
             # Next
             pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
@@ -88,6 +88,7 @@ class DefCamp2015(object):
     def load_binary(self, filename):
         """Load in memory every opcode from an elf program."""
         import lief
+        #lief.Logger.disable()
         binary = lief.parse(filename)
         phdrs  = binary.segments
         for phdr in phdrs:
@@ -236,7 +237,7 @@ class SeedCoverage(object):
             self.assertTrue(checkAstIntegrity(inst))
 
             # Next instruction
-            ip = self.Triton.buildSymbolicRegister(self.Triton.registers.rip).evaluate()
+            ip = self.Triton.getRegisterAst(self.Triton.registers.rip).evaluate()
 
     def new_inputs(self):
         """Look for another branching using current constraints found."""
@@ -427,62 +428,6 @@ class TestSymbolicEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestC
         super(TestSymbolicEngineAlignedOnlySymbolized, self).setUp()
 
 
-class TestSymbolicEngineAlignedAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with ALIGNED_MEMORY and AST Dict."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineAlignedAst, self).setUp()
-
-    @unittest.skip("segfault")
-    def test_defcamp_2015(self):
-        pass
-
-
-class TestSymbolicEngineAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with AST Dictionnary."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineAst, self).setUp()
-
-    @unittest.skip("segfault")
-    def test_defcamp_2015(self):
-        pass
-
-
-class TestSymbolicEngineConcreteAst(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the symbolic engine with AST Dictionnary and concretization."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.AST_DICTIONARIES, True)
-        super(TestSymbolicEngineConcreteAst, self).setUp()
-
-    def test_emulate(self):
-        super(TestSymbolicEngineConcreteAst, self).test_emulate(False)
-
-    @unittest.skip("No seed coverage with concretization.")
-    def test_seed_coverage(self):
-        pass
-
-    @unittest.skip("No defcamp with concretization")
-    def test_defcamp_2015(self):
-        pass
-
-
 class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
 
     """Testing the emulation with the symbolic engine disabled."""
@@ -501,4 +446,3 @@ class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
     @unittest.skip("Not possible")
     def test_defcamp_2015(self):
         pass
-

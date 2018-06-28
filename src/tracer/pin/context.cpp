@@ -34,6 +34,9 @@ namespace tracer {
         triton::uint8 buffer[DQQWORD_SIZE] = {0};
         triton::uint512 value = 0;
 
+        if (tracer::pintool::context::lastContext == nullptr)
+          return 0;
+
         #if defined(__x86_64__) || defined(_M_X64)
           switch (reg.getParent()) {
             case triton::arch::ID_REG_RAX:     PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RAX,    reinterpret_cast<triton::uint8*>(buffer)); break;
@@ -94,22 +97,22 @@ namespace tracer {
             case triton::arch::ID_REG_YMM13:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM13,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::ID_REG_YMM14:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM14,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::ID_REG_YMM15:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM15,  reinterpret_cast<triton::uint8*>(buffer)); break;
-            case triton::arch::ID_REG_ZMM0:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM1:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM2:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM3:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM4:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM5:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM6:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM7:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM8:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM9:    return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM10:   return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM11:   return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM12:   return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM13:   return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM14:   return 0; /* Pin doesn't support AVX-512 */
-            case triton::arch::ID_REG_ZMM15:   return 0; /* Pin doesn't support AVX-512 */
+            case triton::arch::ID_REG_ZMM0:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM0,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM1:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM1,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM2:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM2,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM3:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM3,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM4:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM4,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM5:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM5,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM6:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM6,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM7:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM7,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM8:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM8,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM9:    PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM9,   reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM10:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM10,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM11:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM11,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM12:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM12,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM13:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM13,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM14:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM14,  reinterpret_cast<triton::uint8*>(buffer)); break;
+            case triton::arch::ID_REG_ZMM15:   PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_YMM15,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::ID_REG_ZMM16:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::ID_REG_ZMM17:   return 0; /* Pin doesn't support AVX-512 */
             case triton::arch::ID_REG_ZMM18:   return 0; /* Pin doesn't support AVX-512 */
@@ -150,7 +153,7 @@ namespace tracer {
             case triton::arch::ID_REG_GS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_GS_BASE,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::ID_REG_SS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_SS,       reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
-              if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
+              if (reg.getId() >= triton::arch::ID_REG_AC && reg.getId() <= triton::arch::ID_REG_ZF)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RFLAGS, reinterpret_cast<triton::uint8*>(buffer));
               else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8*>(buffer));
@@ -161,7 +164,7 @@ namespace tracer {
 
         /* Sync with the libTriton */
         const triton::arch::Register* syncReg = nullptr;
-        if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
+        if (reg.getId() >= triton::arch::ID_REG_AC && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_MXCSR);
@@ -229,7 +232,7 @@ namespace tracer {
             case triton::arch::ID_REG_GS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_GS_BASE,  reinterpret_cast<triton::uint8*>(buffer)); break;
             case triton::arch::ID_REG_SS:      PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_SEG_SS,       reinterpret_cast<triton::uint8*>(buffer)); break;
             default:
-              if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
+              if (reg.getId() >= triton::arch::ID_REG_AC && reg.getId() <= triton::arch::ID_REG_ZF)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_EFLAGS, reinterpret_cast<triton::uint8*>(buffer));
               else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8*>(buffer));
@@ -240,7 +243,7 @@ namespace tracer {
 
         /* Sync with the libTriton */
         const triton::arch::Register* syncReg = nullptr;
-        if (reg.getId() >= triton::arch::ID_REG_AF && reg.getId() <= triton::arch::ID_REG_ZF)
+        if (reg.getId() >= triton::arch::ID_REG_AC && reg.getId() <= triton::arch::ID_REG_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_EFLAGS);
         else if (reg.getId() >= triton::arch::ID_REG_IE && reg.getId() <= triton::arch::ID_REG_FZ)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_MXCSR);
@@ -298,6 +301,9 @@ namespace tracer {
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
           throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): You cannot set a Pin register value on a sub-register or a flag.");
+
+        if (tracer::pintool::context::lastContext == nullptr)
+          return;
 
         triton::utils::fromUintToBuffer(value, buffer);
 
@@ -480,7 +486,7 @@ namespace tracer {
           if (reg->getId() > triton::arch::ID_REG_EFLAGS)
             continue;
 
-          if (tracer::pintool::api.getSymbolicRegisterId(*reg) == triton::engines::symbolic::UNSET)
+          if (tracer::pintool::api.getSymbolicRegister(*reg) == nullptr)
             continue;
 
           triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(*reg));

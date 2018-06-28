@@ -67,19 +67,19 @@ namespace triton {
         triton::uint32 prefix;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> loadAccess;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> loadAccess;
 
         //! Implicit and explicit store access (write). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>> storeAccess;
+        std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> storeAccess;
 
         //! Implicit and explicit register inputs (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> readRegisters;
+        std::set<std::pair<triton::arch::Register, triton::ast::SharedAbstractNode>> readRegisters;
 
         //! Implicit and explicit register outputs (write). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>> writtenRegisters;
+        std::set<std::pair<triton::arch::Register, triton::ast::SharedAbstractNode>> writtenRegisters;
 
         //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
-        std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>> readImmediates;
+        std::set<std::pair<triton::arch::Immediate, triton::ast::SharedAbstractNode>> readImmediates;
 
         //! True if this instruction is a branch. This field is set at the disassembly level.
         bool branch;
@@ -102,7 +102,7 @@ namespace triton {
         std::vector<triton::arch::OperandWrapper> operands;
 
         //! The semantics set of the instruction.
-        std::vector<triton::engines::symbolic::SymbolicExpression*> symbolicExpressions;
+        std::vector<triton::engines::symbolic::SharedSymbolicExpression> symbolicExpressions;
 
         //! Constructor.
         TRITON_EXPORT Instruction();
@@ -144,19 +144,19 @@ namespace triton {
         TRITON_EXPORT triton::uint32 getPrefix(void) const;
 
         //! Returns the list of all implicit and explicit load access
-        TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getLoadAccess(void);
+        TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getLoadAccess(void);
 
         //! Returns the list of all implicit and explicit store access
-        TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::AbstractNode*>>& getStoreAccess(void);
+        TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getStoreAccess(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) inputs (read)
-        TRITON_EXPORT std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getReadRegisters(void);
+        TRITON_EXPORT std::set<std::pair<triton::arch::Register, triton::ast::SharedAbstractNode>>& getReadRegisters(void);
 
         //! Returns the list of all implicit and explicit register (flags includes) outputs (write)
-        TRITON_EXPORT std::set<std::pair<triton::arch::Register, triton::ast::AbstractNode*>>& getWrittenRegisters(void);
+        TRITON_EXPORT std::set<std::pair<triton::arch::Register, triton::ast::SharedAbstractNode>>& getWrittenRegisters(void);
 
         //! Returns the list of all implicit and explicit immediate inputs (read)
-        TRITON_EXPORT std::set<std::pair<triton::arch::Immediate, triton::ast::AbstractNode*>>& getReadImmediates(void);
+        TRITON_EXPORT std::set<std::pair<triton::arch::Immediate, triton::ast::SharedAbstractNode>>& getReadImmediates(void);
 
         //! Sets the opcode of the instruction.
         TRITON_EXPORT void setOpcode(const triton::uint8* opcode, triton::uint32 size);
@@ -165,31 +165,31 @@ namespace triton {
         TRITON_EXPORT triton::uint32 getSize(void) const;
 
         //! Sets a load access.
-        TRITON_EXPORT void setLoadAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void setLoadAccess(const triton::arch::MemoryAccess& mem, const triton::ast::SharedAbstractNode& node);
 
         //! Removes a load access.
         TRITON_EXPORT void removeLoadAccess(const triton::arch::MemoryAccess& mem);
 
         //! Sets a store access.
-        TRITON_EXPORT void setStoreAccess(const triton::arch::MemoryAccess& mem, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void setStoreAccess(const triton::arch::MemoryAccess& mem, const triton::ast::SharedAbstractNode& node);
 
         //! Removes a store access.
         TRITON_EXPORT void removeStoreAccess(const triton::arch::MemoryAccess& mem);
 
         //! Sets a read register.
-        TRITON_EXPORT void setReadRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void setReadRegister(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node);
 
         //! Removes a read register.
         TRITON_EXPORT void removeReadRegister(const triton::arch::Register& reg);
 
         //! Sets a written register.
-        TRITON_EXPORT void setWrittenRegister(const triton::arch::Register& reg, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void setWrittenRegister(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node);
 
         //! Removes a written register.
         TRITON_EXPORT void removeWrittenRegister(const triton::arch::Register& reg);
 
         //! Sets a read immediate.
-        TRITON_EXPORT void setReadImmediate(const triton::arch::Immediate& imm, triton::ast::AbstractNode* node);
+        TRITON_EXPORT void setReadImmediate(const triton::arch::Immediate& imm, const triton::ast::SharedAbstractNode& node);
 
         //! Removes a read immediate.
         TRITON_EXPORT void removeReadImmediate(const triton::arch::Immediate& imm);
@@ -213,7 +213,7 @@ namespace triton {
         TRITON_EXPORT void setTaint(void);
 
         //! Adds a symbolic expression
-        TRITON_EXPORT void addSymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
         //! Returns true if this instruction is a branch
         TRITON_EXPORT bool isBranch(void) const;
@@ -254,11 +254,8 @@ namespace triton {
         //! Sets flag to define if the condition is taken or not.
         TRITON_EXPORT void setConditionTaken(bool flag);
 
-        //! Resets all instruction information.
-        TRITON_EXPORT void reset(void);
-
-        //! Resets partially instruction information. All except memory and register states.
-        TRITON_EXPORT void partialReset(void);
+        //! Clears all instruction information.
+        TRITON_EXPORT void clear(void);
     };
 
     //! Displays an Instruction.

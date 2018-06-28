@@ -49,7 +49,7 @@ namespace triton {
      */
 
       //! Creates the AstNode python class.
-      PyObject* PyAstNode(triton::ast::AbstractNode* node);
+      PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node);
 
       //! Creates the BitsVector python class.
       template<typename T> PyObject* PyBitsVector(const T& op);
@@ -88,7 +88,7 @@ namespace triton {
       PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
 
       //! Creates the SymbolicExpression python class.
-      PyObject* PySymbolicExpression(triton::engines::symbolic::SymbolicExpression* expr);
+      PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
       //! Creates the SymbolicVariable python class.
       PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
@@ -98,7 +98,7 @@ namespace triton {
       //! pyAstNode object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::AbstractNode* node;
+        triton::ast::SharedAbstractNode node;
       } AstNode_Object;
 
       //! pyAstNode type.
@@ -176,6 +176,7 @@ namespace triton {
       typedef struct {
         PyObject_HEAD
         triton::API* api;   //! Pointer to the cpp triton context
+        bool ref;           //! Determine if this instance is a reference or not.
         PyObject* regAttr;  //! Pointer to the registers attribute
       } TritonContext_Object;
 
@@ -209,7 +210,7 @@ namespace triton {
       //! pySymbolicExpression object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::symbolic::SymbolicExpression* symExpr;
+        triton::engines::symbolic::SharedSymbolicExpression symExpr;
       } SymbolicExpression_Object;
 
       //! pySymbolicExpression type.
@@ -234,7 +235,7 @@ namespace triton {
 };
 
 
-/*! Returns the triton::ast::AbstractNode. */
+/*! Returns the triton::ast::SharedAbstractNode. */
 #define PyAstNode_AsAstNode(v) (((triton::bindings::python::AstNode_Object*)(v))->node)
 
 /*! Checks if the pyObject is a triton::arch::BitsVector. */

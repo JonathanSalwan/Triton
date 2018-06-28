@@ -7,6 +7,7 @@
 
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
+#include <triton/pythonXFunctions.hpp>
 #include <triton/symbolicExpression.hpp>
 
 
@@ -24,7 +25,6 @@ The SYMEXPR namespace contains all kinds and states of a symbolic expression.
 \section SYMEXPR_py_api Python API - Items of the SYMEXPR namespace
 <hr>
 
-- **SYMEXPR.UNSET**
 - **SYMEXPR.UNDEF**
 - **SYMEXPR.MEM**
 - **SYMEXPR.REG**
@@ -38,10 +38,9 @@ namespace triton {
     namespace python {
 
       void initSymExprNamespace(PyObject* symExprDict) {
-        PyDict_SetItemString(symExprDict, "UNSET",  PyLong_FromUsize(static_cast<triton::usize>(-1)));
-        PyDict_SetItemString(symExprDict, "UNDEF",  PyLong_FromUint32(triton::engines::symbolic::UNDEF));
-        PyDict_SetItemString(symExprDict, "MEM",    PyLong_FromUint32(triton::engines::symbolic::MEM));
-        PyDict_SetItemString(symExprDict, "REG",    PyLong_FromUint32(triton::engines::symbolic::REG));
+        xPyDict_SetItemString(symExprDict, "UNDEF",  PyLong_FromUint32(triton::engines::symbolic::UNDEF));
+        xPyDict_SetItemString(symExprDict, "MEM",    PyLong_FromUint32(triton::engines::symbolic::MEM));
+        xPyDict_SetItemString(symExprDict, "REG",    PyLong_FromUint32(triton::engines::symbolic::REG));
       }
 
     }; /* python namespace */
