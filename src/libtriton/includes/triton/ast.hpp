@@ -159,6 +159,15 @@ namespace triton {
     };
 
 
+    //! `(assert <expr>)` node
+    class AssertNode : public AbstractNode {
+      public:
+        TRITON_EXPORT AssertNode(const SharedAbstractNode& expr);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
     //! `(bvadd <expr1> <expr2>)` node
     class BvaddNode : public AbstractNode {
       public:
@@ -431,6 +440,15 @@ namespace triton {
     };
 
 
+    //! `[<expr1> <expr2> <expr3> ...]` node
+    class CompoundNode : public AbstractNode {
+      public:
+        template <typename T> CompoundNode(const T& exprs, AstContext& ctxt);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
     //! `(concat <expr1> <expr2> ...)` node
     class ConcatNode : public AbstractNode {
       public:
@@ -451,6 +469,15 @@ namespace triton {
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT triton::uint512 getValue(void);
+    };
+
+
+    //! `(declare-fun <var_name> () (_ BitVec <var_size>))` node
+    class DeclareNode : public AbstractNode {
+      public:
+        TRITON_EXPORT DeclareNode(const SharedAbstractNode& var);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
 

@@ -129,18 +129,23 @@ namespace triton {
 
       std::list<std::map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
+        triton::ast::SharedAbstractNode onode = node;
         triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
 
         try {
-          z3::expr      expr = z3Ast.convert(node);
-          z3::context&  ctx  = expr.ctx();
-          z3::solver    solver(ctx);
-
-          if (node == nullptr)
+          if (onode == nullptr)
             throw triton::exceptions::SolverEngine("Z3Solver::getModels(): node cannot be null.");
 
-          if (node->isLogical() == false)
+          /* Z3 does not need an assert() as root node */
+          if (node->getKind() == triton::ast::ASSERT_NODE)
+            onode = node->getChildren()[0];
+
+          if (onode->isLogical() == false)
             throw triton::exceptions::SolverEngine("Z3Solver::getModels(): Must be a logical node.");
+
+          z3::expr      expr = z3Ast.convert(onode);
+          z3::context&  ctx  = expr.ctx();
+          z3::solver    solver(ctx);
 
           /* Create a solver and add the expression */
           solver.add(expr);

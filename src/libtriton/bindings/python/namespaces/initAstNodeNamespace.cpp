@@ -25,6 +25,7 @@ The AST_NODE namespace contains all kinds of node.
 \section AST_NODE_py_api Python API - Items of the AST_NODE namespace
 <hr>
 
+- **AST_NODE.ASSERT**
 - **AST_NODE.BV**
 - **AST_NODE.BVADD**
 - **AST_NODE.BVAND**
@@ -55,8 +56,10 @@ The AST_NODE namespace contains all kinds of node.
 - **AST_NODE.BVUREM**
 - **AST_NODE.BVXNOR**
 - **AST_NODE.BVXOR**
+- **AST_NODE.COMPOUND**
 - **AST_NODE.CONCAT**
 - **AST_NODE.DECIMAL**
+- **AST_NODE.DECLARE**
 - **AST_NODE.DISTINCT**
 - **AST_NODE.EQUAL**
 - **AST_NODE.EXTRACT**
@@ -81,6 +84,7 @@ namespace triton {
     namespace python {
 
       void initAstNodeNamespace(PyObject* astNodeDict) {
+        xPyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint32(triton::ast::ASSERT_NODE));
         xPyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint32(triton::ast::BV_NODE));
         xPyDict_SetItemString(astNodeDict, "BVADD",             PyLong_FromUint32(triton::ast::BVADD_NODE));
         xPyDict_SetItemString(astNodeDict, "BVAND",             PyLong_FromUint32(triton::ast::BVAND_NODE));
@@ -111,8 +115,10 @@ namespace triton {
         xPyDict_SetItemString(astNodeDict, "BVUREM",            PyLong_FromUint32(triton::ast::BVUREM_NODE));
         xPyDict_SetItemString(astNodeDict, "BVXNOR",            PyLong_FromUint32(triton::ast::BVXNOR_NODE));
         xPyDict_SetItemString(astNodeDict, "BVXOR",             PyLong_FromUint32(triton::ast::BVXOR_NODE));
+        xPyDict_SetItemString(astNodeDict, "COMPOUND",          PyLong_FromUint32(triton::ast::COMPOUND_NODE));
         xPyDict_SetItemString(astNodeDict, "CONCAT",            PyLong_FromUint32(triton::ast::CONCAT_NODE));
         xPyDict_SetItemString(astNodeDict, "DECIMAL",           PyLong_FromUint32(triton::ast::DECIMAL_NODE));
+        xPyDict_SetItemString(astNodeDict, "DECLARE",           PyLong_FromUint32(triton::ast::DECLARE_NODE));
         xPyDict_SetItemString(astNodeDict, "DISTINCT",          PyLong_FromUint32(triton::ast::DISTINCT_NODE));
         xPyDict_SetItemString(astNodeDict, "EQUAL",             PyLong_FromUint32(triton::ast::EQUAL_NODE));
         xPyDict_SetItemString(astNodeDict, "EXTRACT",           PyLong_FromUint32(triton::ast::EXTRACT_NODE));
