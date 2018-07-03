@@ -424,10 +424,6 @@ namespace triton {
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
-    this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
-    if (this->z3Interface == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
 
@@ -437,13 +433,11 @@ namespace triton {
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
-      delete this->z3Interface;
 
       this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
-      this->z3Interface         = nullptr;
     }
 
     // Use default modes.
@@ -952,7 +946,7 @@ namespace triton {
   }
 
 
-  triton::engines::solver::SolverInterface* API::getSolver(void) {
+  const triton::engines::solver::SolverInterface* API::getSolver(void) const {
     this->checkSolver();
     return this->solver->getSolver();
   }
@@ -1000,24 +994,21 @@ namespace triton {
   }
 
 
-
-  /* Z3 interface API ============================================================================== */
-
-  void API::checkZ3Interface(void) const {
-    if (!this->z3Interface)
-      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined, you should define an architecture first.");
-  }
-
-
   triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->evaluate(node);
+    this->checkSolver();
+    if (this->getSolverKind() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolver())->evaluate(node);
+    }
+    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
   }
 
 
   triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->simplify(node);
+    this->checkSolver();
+    if (this->getSolverKind() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolver())->simplify(node);
+    }
+    throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
   }
 
 

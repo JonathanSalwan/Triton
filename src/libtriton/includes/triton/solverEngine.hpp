@@ -69,7 +69,7 @@ namespace triton {
           TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
           //! Returns the instance of the initialized solver
-          TRITON_EXPORT triton::engines::solver::SolverInterface* getSolver(void);
+          TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolver(void) const;
 
           //! Returns the kind of solver as triton::engines::solver::solvers_e.
           TRITON_EXPORT triton::engines::solver::solvers_e getSolverKind(void) const;

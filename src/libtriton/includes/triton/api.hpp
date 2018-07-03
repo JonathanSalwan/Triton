@@ -26,7 +26,6 @@
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/z3Interface.hpp>
 
 
 
@@ -64,9 +63,6 @@ namespace triton {
 
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
-
-        //! The Z3 interface between Triton and Z3.
-        triton::ast::Z3Interface* z3Interface = nullptr;
 
 
       public:
@@ -503,7 +499,7 @@ namespace triton {
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
 
         //! Returns the instance of the initialized solver
-        TRITON_EXPORT triton::engines::solver::SolverInterface* getSolver(void);
+        TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolver(void) const;
 
         //! Returns the kind of solver as triton::engines::solver::solvers_e.
         TRITON_EXPORT triton::engines::solver::solvers_e getSolverKind(void) const;
@@ -517,17 +513,10 @@ namespace triton {
         //! Returns true if the solver is valid.
         TRITON_EXPORT bool isSolverValid(void) const;
 
-
-
-        /* Z3 interface API ============================================================================== */
-
-        //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
-        TRITON_EXPORT void checkZ3Interface(void) const;
-
-        //! [**z3 api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
+        //! [**solver api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
         TRITON_EXPORT triton::uint512 evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const;
 
-        //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
+        //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
 
 

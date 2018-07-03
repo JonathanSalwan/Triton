@@ -23,7 +23,7 @@ namespace triton {
       }
 
 
-      triton::engines::solver::SolverInterface* SolverEngine::getSolver(void) {
+      const triton::engines::solver::SolverInterface* SolverEngine::getSolver(void) const {
         if (!this->solver)
           throw triton::exceptions::SolverEngine("SolverEngine::getSolver(): Solver undefined.");
         return this->solver.get();

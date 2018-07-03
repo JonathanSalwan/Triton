@@ -11,11 +11,11 @@
 
 #include <triton/astContext.hpp>         // for AstContext
 #include <triton/exceptions.hpp>         // for SolverEngine
-#include <triton/z3Solver.hpp>           // for Z3Solver
 #include <triton/solverModel.hpp>        // for SolverModel
 #include <triton/tritonToZ3Ast.hpp>      // for TritonToZ3Ast
 #include <triton/tritonTypes.hpp>        // for uint32, uint512
-
+#include <triton/z3Solver.hpp>           // for Z3Solver
+#include <triton/z3ToTritonAst.hpp>      // for Z3ToTritonAst
 
 /*! \page solver_interface_page SMT Solver Interface
     \brief [**internal**] All information about the SMT solver interface.
@@ -245,6 +245,55 @@ namespace triton {
           ret = allModels.front();
 
         return ret;
+      }
+
+
+      triton::ast::SharedAbstractNode Z3Solver::simplify(const triton::ast::SharedAbstractNode& node) const {
+        if (node == nullptr)
+          throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
+
+        try {
+          triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+          triton::ast::Z3ToTritonAst tritonAst{this->symbolicEngine, node->getContext()};
+
+          /* From Triton to Z3 */
+          z3::expr expr = z3Ast.convert(node);
+
+          /* Simplify and back to Triton's AST */
+          auto snode = tritonAst.convert(expr.simplify());
+
+          return snode;
+        }
+        catch (const z3::exception& e) {
+          throw triton::exceptions::AstTranslations(std::string("Z3Solver::evaluate(): ") + e.msg());
+        }
+      }
+
+
+      triton::uint512 Z3Solver::evaluate(const triton::ast::SharedAbstractNode& node) const {
+        if (node == nullptr)
+          throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
+
+        try {
+          triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
+
+          /* From Triton to Z3 */
+          z3::expr expr = z3ast.convert(node);
+
+          /* Simplify the expression to get a constant */
+          expr = expr.simplify();
+
+          triton::uint512 res = 0;
+          if (expr.get_sort().is_bool())
+            res = Z3_get_bool_value(expr.ctx(), expr) == Z3_L_TRUE ? true : false;
+          else
+            res = triton::uint512{Z3_get_numeral_string(expr.ctx(), expr)};
+
+          return res;
+        }
+        catch (const z3::exception& e) {
+          throw triton::exceptions::AstTranslations(std::string("Z3Solver::evaluate(): ") + e.msg());
+        }
       }
 
 

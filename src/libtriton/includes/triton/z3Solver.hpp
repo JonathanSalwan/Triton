@@ -80,6 +80,12 @@ namespace triton {
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
 
+          //! Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
+          TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
+
+          //! Evaluates a Triton's AST via Z3 and returns a concrete value.
+          TRITON_EXPORT triton::uint512 evaluate(const triton::ast::SharedAbstractNode& node) const;
+
           //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;
       };
