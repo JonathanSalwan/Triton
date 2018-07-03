@@ -87,8 +87,8 @@ namespace triton {
         //! Returns the kind of architecture as triton::arch::architecture_e.
         TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
 
-        //! Returns the CPU
-        TRITON_EXPORT triton::arch::CpuInterface* getCpu(void);
+        //! Returns the instance of the current CPU used.
+        TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
 
         //! Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT triton::uint32 numberOfRegisters(void) const;

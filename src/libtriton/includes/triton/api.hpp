@@ -84,8 +84,8 @@ namespace triton {
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
         TRITON_EXPORT void checkArchitecture(void) const;
 
-        //! [**architecture api**] - Returns the CPU instance.
-        TRITON_EXPORT triton::arch::CpuInterface* getCpu(void);
+        //! [**architecture api**] - Returns the instance of the current CPU used.
+        TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
 
         //! [**architecture api**] - Initializes an architecture. \sa triton::arch::architectures_e.
         TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
@@ -498,11 +498,11 @@ namespace triton {
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
 
-        //! Returns the instance of the initialized solver
-        TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolver(void) const;
-
         //! Returns the kind of solver as triton::engines::solver::solvers_e.
-        TRITON_EXPORT triton::engines::solver::solvers_e getSolverKind(void) const;
+        TRITON_EXPORT triton::engines::solver::solvers_e getSolver(void) const;
+
+        //! Returns the instance of the initialized solver
+        TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
 
         //! Initializes a predefined solver.
         TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);

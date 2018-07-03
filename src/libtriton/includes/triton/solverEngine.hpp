@@ -15,10 +15,13 @@
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/z3Solver.hpp>
+#ifdef Z3_INTERFACE
+  #include <triton/z3Solver.hpp>
+#endif
 
 
 
@@ -43,11 +46,13 @@ namespace triton {
      *  @{
      */
 
-      /*! The solvers */
+      /*! The different kind of solvers */
       enum solvers_e {
         SOLVER_INVALID = 0, /*!< invalid solver. */
         SOLVER_CUSTOM,      /*!< custom solver. */
+        #ifdef Z3_INTERFACE
         SOLVER_Z3,          /*!< z3 solver. */
+        #endif
         SOLVER_LAST_ITEM    /*!< must be the last item.  */
       };
 
@@ -58,8 +63,8 @@ namespace triton {
           triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
         protected:
-          //! The kind of solver used.
-          triton::engines::solver::solvers_e solverKind;
+          //! The kind of the current solver used.
+          triton::engines::solver::solvers_e kind;
 
           //! Instance to the real solver class.
           std::unique_ptr<triton::engines::solver::SolverInterface> solver;
@@ -68,11 +73,11 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
-          //! Returns the instance of the initialized solver
-          TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolver(void) const;
-
           //! Returns the kind of solver as triton::engines::solver::solvers_e.
-          TRITON_EXPORT triton::engines::solver::solvers_e getSolverKind(void) const;
+          TRITON_EXPORT triton::engines::solver::solvers_e getSolver(void) const;
+
+          //! Returns the instance of the initialized solver
+          TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
 
           //! Initializes a predefined solver.
           TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);

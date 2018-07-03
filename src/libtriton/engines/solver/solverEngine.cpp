@@ -15,42 +15,47 @@ namespace triton {
     namespace solver {
 
       SolverEngine::SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
-        this->solverKind     = triton::engines::solver::SOLVER_INVALID;
+        this->kind           = triton::engines::solver::SOLVER_INVALID;
         this->symbolicEngine = symbolicEngine;
 
+        #ifdef Z3_INTERFACE
         /* By default we initialized the z3 solver */
         this->setSolver(triton::engines::solver::SOLVER_Z3);
+        #endif
       }
 
 
-      const triton::engines::solver::SolverInterface* SolverEngine::getSolver(void) const {
+      triton::engines::solver::solvers_e SolverEngine::getSolver(void) const {
+        return this->kind;
+      }
+
+
+      const triton::engines::solver::SolverInterface* SolverEngine::getSolverInstance(void) const {
         if (!this->solver)
           throw triton::exceptions::SolverEngine("SolverEngine::getSolver(): Solver undefined.");
         return this->solver.get();
       }
 
 
-      triton::engines::solver::solvers_e SolverEngine::getSolverKind(void) const {
-        return this->solverKind;
-      }
-
-
       void SolverEngine::setSolver(triton::engines::solver::solvers_e kind) {
         /* Allocate and init the good solver */
         switch (kind) {
+          #ifdef Z3_INTERFACE
           case triton::engines::solver::SOLVER_Z3:
             /* init the new instance */
             this->solver.reset(new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolicEngine));
             if (this->solver == nullptr)
               throw triton::exceptions::SolverEngine("SolverEngine::setSolver(): Not enough memory.");
             break;
+          #endif
 
           default:
             throw triton::exceptions::SolverEngine("SolverEngine::setSolver(): Solver not supported.");
             break;
         }
+
         /* Setup global variables */
-        this->solverKind = kind;
+        this->kind = kind;
       }
 
 
@@ -62,12 +67,12 @@ namespace triton {
         this->solver.reset(customSolver);
 
         /* Setup global variables */
-        this->solverKind = triton::engines::solver::SOLVER_CUSTOM;
+        this->kind = triton::engines::solver::SOLVER_CUSTOM;
       }
 
 
       bool SolverEngine::isValid(void) const {
-        if (this->solverKind == triton::engines::solver::SOLVER_INVALID)
+        if (this->kind == triton::engines::solver::SOLVER_INVALID)
           return false;
         return true;
       }

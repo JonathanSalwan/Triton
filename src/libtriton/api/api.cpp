@@ -225,21 +225,21 @@ namespace triton {
   }
 
 
-  triton::arch::architectures_e API::getArchitecture(void) const {
-    return this->arch.getArchitecture();
-  }
-
-
   void API::checkArchitecture(void) const {
     if (!this->isArchitectureValid())
       throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
   }
 
 
-  triton::arch::CpuInterface* API::getCpu(void) {
+  triton::arch::architectures_e API::getArchitecture(void) const {
+    return this->arch.getArchitecture();
+  }
+
+
+  triton::arch::CpuInterface* API::getCpuInstance(void) {
     if (!this->isArchitectureValid())
       throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
-    return this->arch.getCpu();
+    return this->arch.getCpuInstance();
   }
 
 
@@ -417,7 +417,7 @@ namespace triton {
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
+    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpuInstance());
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -946,15 +946,15 @@ namespace triton {
   }
 
 
-  const triton::engines::solver::SolverInterface* API::getSolver(void) const {
+  triton::engines::solver::solvers_e API::getSolver(void) const {
     this->checkSolver();
     return this->solver->getSolver();
   }
 
 
-  triton::engines::solver::solvers_e API::getSolverKind(void) const {
+  const triton::engines::solver::SolverInterface* API::getSolverInstance(void) const {
     this->checkSolver();
-    return this->solver->getSolverKind();
+    return this->solver->getSolverInstance();
   }
 
 
@@ -996,18 +996,22 @@ namespace triton {
 
   triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    if (this->getSolverKind() == triton::engines::solver::SOLVER_Z3) {
-      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolver())->evaluate(node);
+    #ifdef Z3_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
+    #endif
     throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
   }
 
 
   triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    if (this->getSolverKind() == triton::engines::solver::SOLVER_Z3) {
-      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolver())->simplify(node);
+    #ifdef Z3_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }
+    #endif
     throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
   }
 
