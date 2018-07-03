@@ -61,6 +61,9 @@ namespace triton {
         //! Operator
         TRITON_EXPORT AstContext& operator=(const AstContext& other);
 
+        //! AST C++ API - assert node builder
+        TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
+
         //! AST C++ API - bv node builder
         TRITON_EXPORT SharedAbstractNode bv(triton::uint512 value, triton::uint32 size);
 
@@ -163,6 +166,10 @@ namespace triton {
         //! AST C++ API - bvxor node builder
         TRITON_EXPORT SharedAbstractNode bvxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
+        //! AST C++ API - compound node builder
+        template <typename T>
+        SharedAbstractNode compound(const T& exprs);
+
         //! AST C++ API - concat node builder
         TRITON_EXPORT SharedAbstractNode concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
@@ -172,6 +179,9 @@ namespace triton {
 
         //! AST C++ API - decimal node builder
         TRITON_EXPORT SharedAbstractNode decimal(triton::uint512 value);
+
+        //! AST C++ API - declare node builder
+        TRITON_EXPORT SharedAbstractNode declare(const SharedAbstractNode& var);
 
         //! AST C++ API - distinct node builder
         TRITON_EXPORT SharedAbstractNode distinct(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);

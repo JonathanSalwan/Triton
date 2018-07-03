@@ -32,6 +32,20 @@ an <b>SMT Solver</b> Interface and, the last but not least, <b>Python bindings</
 \section publications_sec Presentations and Publications
 
 <ul>
+  <li><b>Symbolic Deobfuscation: From Virtualized Code Back to the Original</b><br>
+  Talk at DIMVA, Paris-Saclay, 2018.
+  [<a href="https://triton.quarkslab.com/files/DIMVA2018-deobfuscation-salwan-bardin-potet.pdf">paper</a>]
+  [<a href="https://triton.quarkslab.com/files/DIMVA2018-slide-deobfuscation-salwan-bardin-potet.pdf">slide</a>]
+  [<a href="https://triton.quarkslab.com/files/DeobfuscationDIMVA2018.txt">bibtex</a>]<br>
+  Abstract: <i>Software protection has taken an important place during the last decade in order to protect legit
+  software against reverse engineering or tampering. Virtualization is considered as one of the very best defenses
+  against such attacks. We present a generic approach based on symbolic path exploration, taint and recompilation
+  allowing to recover, from a virtualized code, a devirtualized code semantically identical to the original one
+  and close in size. We define criteria and metrics to evaluate the relevance of the deobfuscated results in terms
+  of correctness and precision. Finally we propose an open-source setup allowing to evaluate the proposed approach
+  against several forms of virtualization.
+  </i></li>
+
   <li><b>Deobfuscation of VM based software protection </b><br>
   Talk at SSTIC, Rennes, 2017.
   [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-paper.pdf">french paper</a>]
@@ -211,21 +225,21 @@ namespace triton {
   }
 
 
-  triton::arch::architectures_e API::getArchitecture(void) const {
-    return this->arch.getArchitecture();
-  }
-
-
   void API::checkArchitecture(void) const {
     if (!this->isArchitectureValid())
       throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
   }
 
 
-  triton::arch::CpuInterface* API::getCpu(void) {
+  triton::arch::architectures_e API::getArchitecture(void) const {
+    return this->arch.getArchitecture();
+  }
+
+
+  triton::arch::CpuInterface* API::getCpuInstance(void) {
     if (!this->isArchitectureValid())
       throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
-    return this->arch.getCpu();
+    return this->arch.getCpuInstance();
   }
 
 
@@ -399,20 +413,16 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolic);
+    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpu());
+    this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->symbolic, *this->getCpuInstance());
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
-
-    this->z3Interface = new(std::nothrow) triton::ast::Z3Interface(this->symbolic);
-    if (this->z3Interface == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
   }
 
@@ -423,13 +433,11 @@ namespace triton {
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
-      delete this->z3Interface;
 
       this->irBuilder           = nullptr;
       this->solver              = nullptr;
       this->symbolic            = nullptr;
       this->taint               = nullptr;
-      this->z3Interface         = nullptr;
     }
 
     // Use default modes.
@@ -938,6 +946,36 @@ namespace triton {
   }
 
 
+  triton::engines::solver::solvers_e API::getSolver(void) const {
+    this->checkSolver();
+    return this->solver->getSolver();
+  }
+
+
+  const triton::engines::solver::SolverInterface* API::getSolverInstance(void) const {
+    this->checkSolver();
+    return this->solver->getSolverInstance();
+  }
+
+
+  void API::setSolver(triton::engines::solver::solvers_e kind) {
+    this->checkSolver();
+    this->solver->setSolver(kind);
+  }
+
+
+  void API::setCustomSolver(triton::engines::solver::SolverInterface* customSolver) {
+    this->checkSolver();
+    this->solver->setCustomSolver(customSolver);
+  }
+
+
+  bool API::isSolverValid(void) const {
+    this->checkSolver();
+    return this->solver->isValid();
+  }
+
+
   std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     return this->solver->getModel(node);
@@ -956,24 +994,25 @@ namespace triton {
   }
 
 
-
-  /* Z3 interface API ============================================================================== */
-
-  void API::checkZ3Interface(void) const {
-    if (!this->z3Interface)
-      throw triton::exceptions::API("API::checkZ3Interface(): Z3 interface is undefined, you should define an architecture first.");
-  }
-
-
   triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->evaluate(node);
+    this->checkSolver();
+    #ifdef Z3_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
+    }
+    #endif
+    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
   }
 
 
   triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
-    this->checkZ3Interface();
-    return this->z3Interface->simplify(node);
+    this->checkSolver();
+    #ifdef Z3_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
+      return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
+    }
+    #endif
+    throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
   }
 
 

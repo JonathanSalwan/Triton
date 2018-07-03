@@ -215,7 +215,6 @@ namespace triton {
           return currentValue;
         }
 
-
         case LET_NODE: {
           std::string symbol    = reinterpret_cast<triton::ast::StringNode*>(node->getChildren()[0].get())->getValue();
           this->symbols[symbol] = node->getChildren()[1];

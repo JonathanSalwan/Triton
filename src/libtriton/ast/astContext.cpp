@@ -36,6 +36,15 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::assert_(const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<AssertNode>(expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
+      return node;
+    }
+
+
     SharedAbstractNode AstContext::bv(triton::uint512 value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, *this);
       if (node == nullptr)
@@ -342,6 +351,18 @@ namespace triton {
     }
 
 
+    template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::vector<SharedAbstractNode>& exprs);
+    template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::list<SharedAbstractNode>& exprs);
+    template <typename T>
+    SharedAbstractNode AstContext::compound(const T& exprs) {
+      SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, *this);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
+      return node;
+    }
+
+
     SharedAbstractNode AstContext::concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
       SharedAbstractNode node = std::make_shared<ConcatNode>(expr1, expr2);
       if (node == nullptr)
@@ -365,6 +386,15 @@ namespace triton {
 
     SharedAbstractNode AstContext::decimal(triton::uint512 value) {
       SharedAbstractNode node = std::make_shared<DecimalNode>(value, *this);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
+      return node;
+    }
+
+
+    SharedAbstractNode AstContext::declare(const SharedAbstractNode& var) {
+      SharedAbstractNode node = std::make_shared<DeclareNode>(var);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();

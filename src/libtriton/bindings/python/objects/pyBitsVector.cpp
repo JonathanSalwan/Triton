@@ -117,18 +117,16 @@ namespace triton {
 
 
       static int BitsVector_print(PyObject* self) {
-        triton::uint32 high = PyBitsVector_AsBitsVector(self)->getHigh();
-        triton::uint32 low  = PyBitsVector_AsBitsVector(self)->getLow();
-        std::cout << "bv[" << std::dec << high << ".." << low << "]";
+        std::cout << PyBitsVector_AsBitsVector(self);
         return 0;
       }
 
 
       static PyObject* BitsVector_str(PyObject* self) {
         try {
-          triton::uint32 high = PyBitsVector_AsBitsVector(self)->getHigh();
-          triton::uint32 low  = PyBitsVector_AsBitsVector(self)->getLow();
-          return PyString_FromFormat("bv[%d..%d]", high, low);
+          std::stringstream str;
+          str << PyBitsVector_AsBitsVector(self);
+          return PyString_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
