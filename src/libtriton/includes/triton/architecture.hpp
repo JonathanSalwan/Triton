@@ -53,7 +53,7 @@ namespace triton {
         triton::callbacks::Callbacks* callbacks;
 
       protected:
-        //! The kind of architecture.
+        //! The kind of architecture used.
         triton::arch::architectures_e arch;
 
         //! Instance to the real CPU class.
@@ -84,7 +84,7 @@ namespace triton {
         //! Returns true if the architecture is valid.
         TRITON_EXPORT bool isValid(void) const;
 
-        //! Returns the architecture as triton::arch::architecture_e.
+        //! Returns the kind of architecture as triton::arch::architecture_e.
         TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
 
         //! Returns the CPU

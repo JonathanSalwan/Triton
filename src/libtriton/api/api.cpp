@@ -32,6 +32,20 @@ an <b>SMT Solver</b> Interface and, the last but not least, <b>Python bindings</
 \section publications_sec Presentations and Publications
 
 <ul>
+  <li><b>Symbolic Deobfuscation: From Virtualized Code Back to the Original</b><br>
+  Talk at DIMVA, Paris-Saclay, 2018.
+  [<a href="https://triton.quarkslab.com/files/DIMVA2018-deobfuscation-salwan-bardin-potet.pdf">paper</a>]
+  [<a href="https://triton.quarkslab.com/files/DIMVA2018-slide-deobfuscation-salwan-bardin-potet.pdf">slide</a>]
+  [<a href="https://triton.quarkslab.com/files/DeobfuscationDIMVA2018.txt">bibtex</a>]<br>
+  Abstract: <i>Software protection has taken an important place during the last decade in order to protect legit
+  software against reverse engineering or tampering. Virtualization is considered as one of the very best defenses
+  against such attacks. We present a generic approach based on symbolic path exploration, taint and recompilation
+  allowing to recover, from a virtualized code, a devirtualized code semantically identical to the original one
+  and close in size. We define criteria and metrics to evaluate the relevance of the deobfuscated results in terms
+  of correctness and precision. Finally we propose an open-source setup allowing to evaluate the proposed approach
+  against several forms of virtualization.
+  </i></li>
+
   <li><b>Deobfuscation of VM based software protection </b><br>
   Talk at SSTIC, Rennes, 2017.
   [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-paper.pdf">french paper</a>]
@@ -399,7 +413,7 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolic);
+    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -935,6 +949,36 @@ namespace triton {
   void API::checkSolver(void) const {
     if (!this->solver)
       throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined, you should define an architecture first.");
+  }
+
+
+  triton::engines::solver::SolverInterface* API::getSolver(void) {
+    this->checkSolver();
+    return this->solver->getSolver();
+  }
+
+
+  triton::engines::solver::solvers_e API::getSolverKind(void) const {
+    this->checkSolver();
+    return this->solver->getSolverKind();
+  }
+
+
+  void API::setSolver(triton::engines::solver::solvers_e kind) {
+    this->checkSolver();
+    this->solver->setSolver(kind);
+  }
+
+
+  void API::setCustomSolver(triton::engines::solver::SolverInterface* customSolver) {
+    this->checkSolver();
+    this->solver->setCustomSolver(customSolver);
+  }
+
+
+  bool API::isSolverValid(void) const {
+    this->checkSolver();
+    return this->solver->isValid();
   }
 
 

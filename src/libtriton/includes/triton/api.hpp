@@ -22,11 +22,11 @@
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
+#include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
 #include <triton/z3Interface.hpp>
-#include <triton/z3Solver.hpp>
 
 
 
@@ -57,7 +57,7 @@ namespace triton {
         triton::engines::symbolic::SymbolicEngine* symbolic = nullptr;
 
         //! The solver engine.
-        triton::engines::solver::SolverInterface* solver = nullptr;
+        triton::engines::solver::SolverEngine* solver = nullptr;
 
         //! The AST Context interface.
         triton::ast::AstContext astCtxt;
@@ -501,6 +501,21 @@ namespace triton {
 
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
+
+        //! Returns the instance of the initialized solver
+        TRITON_EXPORT triton::engines::solver::SolverInterface* getSolver(void);
+
+        //! Returns the kind of solver as triton::engines::solver::solvers_e.
+        TRITON_EXPORT triton::engines::solver::solvers_e getSolverKind(void) const;
+
+        //! Initializes a predefined solver.
+        TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);
+
+        //! Initializes a custom solver.
+        TRITON_EXPORT void setCustomSolver(triton::engines::solver::SolverInterface* customSolver);
+
+        //! Returns true if the solver is valid.
+        TRITON_EXPORT bool isSolverValid(void) const;
 
 
 
