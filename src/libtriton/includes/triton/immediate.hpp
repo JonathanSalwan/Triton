@@ -71,7 +71,7 @@ namespace triton {
         TRITON_EXPORT triton::uint32 getType(void) const;
 
         //! Sets the value of the operand.
-        TRITON_EXPORT void setValue(triton::uint64 v);
+        TRITON_EXPORT void setValue(triton::uint64 v, triton::uint32 size /* bytes*/);
 
         //! Copy an Immediate.
         TRITON_EXPORT Immediate& operator=(const Immediate& other);
