@@ -6,6 +6,9 @@
 #include <triton/api.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/immediate.hpp>
+#include <triton/memoryAccess.hpp>
+#include <triton/operandWrapper.hpp>
+#include <triton/register.hpp>
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
@@ -101,7 +104,102 @@ int test_4(void) {
     return 1;
   }
 
+  triton::arch::Immediate imm1(12345, 8);
+  triton::arch::Immediate imm2(12345, 8);
+  if (imm1 != imm2) {
+    std::cerr << "test_4: KO (" << imm2 << " != " << imm2 << ")" << std::endl;
+    return 1;
+  }
+
   std::cout << "test_4: OK" << std::endl;
+  return 0;
+}
+
+
+int test_5(void) {
+  triton::arch::Immediate imm1(0xff, 1);
+  triton::arch::Immediate imm2(0xff, 2);
+  triton::arch::MemoryAccess mem1(0x1000, 1);
+  triton::arch::MemoryAccess mem2(0x1001, 1);
+  triton::arch::OperandWrapper op1(imm1);
+  triton::arch::OperandWrapper op2(imm2);
+  triton::arch::OperandWrapper op3(mem1);
+  triton::arch::OperandWrapper op4(mem2);
+  std::stringstream s1;
+  std::stringstream s2;
+
+  if (op1 == op2) {
+    std::cerr << "test_5: KO (" << op1 << " == " << op2 << ")" << std::endl;
+    return 1;
+  }
+
+  if (op1.getType() != op2.getType()) {
+    std::cerr << "test_5: KO (" << op1.getType() << " == " << op2.getType() << ")" << std::endl;
+    return 1;
+  }
+
+  if (op1.getImmediate() != imm1) {
+    std::cerr << "test_5: KO (" << op1.getImmediate() << " != " << imm1 << ")" << std::endl;
+    return 1;
+  }
+
+  if (op1.getSize() != imm1.getSize()) {
+    std::cerr << "test_5: KO (" << op1.getSize() << " != " << imm1.getSize() << ")" << std::endl;
+    return 1;
+  }
+
+  if (op1.getAbstractHigh() != imm1.getAbstractHigh()) {
+    std::cerr << "test_5: KO (" << op1.getAbstractHigh() << " != " << imm1.getAbstractHigh() << ")" << std::endl;
+    return 1;
+  }
+
+  if (op1.getAbstractLow() != imm1.getAbstractLow()) {
+    std::cerr << "test_5: KO (" << op1.getAbstractLow() << " != " << imm1.getAbstractLow() << ")" << std::endl;
+    return 1;
+  }
+
+  triton::arch::OperandWrapper opx = op1;
+  if (opx != op1) {
+    std::cerr << "test_5: KO (" << opx << " == " << op1 << ")" << std::endl;
+    return 1;
+  }
+
+  s1 << &op1;
+  s2 << &imm1;
+  if (s1.str() != s2.str()) {
+    std::cerr << "test_3: KO (" << s1.str() << " != " << s2.str() << ")" << std::endl;
+    return 1;
+  }
+
+  if (op2 < op1) {
+    std::cerr << "test_3: KO (" << op2 << " < " << op1 << ")" << std::endl;
+    return 1;
+  }
+
+  if (op3 == op4) {
+    std::cerr << "test_5: KO (" << op3 << " == " << op4 << ")" << std::endl;
+    return 1;
+  }
+
+  op3 = op4;
+  if (op3 != op4) {
+    std::cerr << "test_5: KO (" << op3 << " != " << op4 << ")" << std::endl;
+    return 1;
+  }
+
+  op3.setMemory(mem2);
+  if (op3.getMemory() != mem2) {
+    std::cerr << "test_5: KO (" << op3.getMemory() << " != " << mem2 << ")" << std::endl;
+    return 1;
+  }
+
+  op1.setImmediate(imm2);
+  if (op1.getImmediate() != imm2) {
+    std::cerr << "test_5: KO (" << op1.getImmediate() << " != " << imm2 << ")" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_5: OK" << std::endl;
   return 0;
 }
 
@@ -117,6 +215,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_4())
+    return 1;
+
+  if (test_5())
     return 1;
 
   return 0;

@@ -110,6 +110,9 @@ namespace triton {
         //! Tests two OperandWrappers for equality.
         TRITON_EXPORT bool operator==(const OperandWrapper& other) const;
 
+        //! Tests two OperandWrappers for not equality.
+        TRITON_EXPORT bool operator!=(const OperandWrapper& other) const;
+
         //! Compares two OperandWrappers for ordering.
         TRITON_EXPORT bool operator<(const OperandWrapper& other) const;
     };

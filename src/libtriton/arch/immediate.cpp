@@ -108,7 +108,7 @@ namespace triton {
 
     std::ostream& operator<<(std::ostream& stream, const Immediate& imm) {
       stream << "0x"
-             << std::hex << std::nouppercase << imm.getValue()
+             << std::hex << imm.getValue()
              << ":"
              << std::dec << imm.getBitSize()
              << " bv["

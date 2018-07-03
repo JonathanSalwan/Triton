@@ -160,6 +160,11 @@ namespace triton {
     }
 
 
+    bool OperandWrapper::operator!=(const OperandWrapper& other) const {
+      return !(*this == other);
+    }
+
+
     bool OperandWrapper::operator<(const OperandWrapper& other) const {
       if (this->type < other.type)
         return true;
