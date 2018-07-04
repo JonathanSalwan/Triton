@@ -6,6 +6,7 @@
 #include <triton/api.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/immediate.hpp>
+#include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
@@ -204,6 +205,109 @@ int test_5(void) {
 }
 
 
+int test_6(void) {
+  triton::API ctx;
+
+  ctx.setArchitecture(triton::arch::ARCH_X86_64);
+  triton::arch::Instruction inst1((const unsigned char*)"\x48\x89\xd8", 3); // mov rax, rbx
+  triton::arch::Instruction inst2;
+
+  ctx.processing(inst1);
+  inst2 = inst1;
+
+  if (inst2.getType() != inst1.getType()) {
+    std::cerr << "test_6: KO (" << inst2.getType() << " != " << inst1.getType() << ")" << std::endl;
+    return 1;
+  }
+
+  triton::arch::Instruction inst3(inst2);
+  if (inst3.getType() != inst2.getType()) {
+    std::cerr << "test_6: KO (" << inst3.getType() << " != " << inst2.getType() << ")" << std::endl;
+    return 1;
+  }
+
+  if (!inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+    std::cerr << "test_6: KO (!isReadFrom(rbx))" << std::endl;
+    return 1;
+  }
+
+  inst3.removeReadRegister(ctx.getRegister(triton::arch::ID_REG_RBX));
+  if (inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+    std::cerr << "test_6: KO (isReadFrom(rbx))" << std::endl;
+    return 1;
+  }
+
+  if (!inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+    std::cerr << "test_6: KO (!isWriteTo(rax))" << std::endl;
+    return 1;
+  }
+
+  inst3.removeWrittenRegister(ctx.getRegister(triton::arch::ID_REG_RAX));
+  if (inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+    std::cerr << "test_6: KO (isReadFrom(rax))" << std::endl;
+    return 1;
+  }
+
+  if (inst3.isSymbolized()) {
+    std::cerr << "test_6: KO (isSymbolized)" << std::endl;
+    return 1;
+  }
+
+  if (inst3.isTainted()) {
+    std::cerr << "test_6: KO (isTainted)" << std::endl;
+    return 1;
+  }
+
+  inst3.setTaint(true);
+  if (!inst3.isTainted()) {
+    std::cerr << "test_6: KO (!isTainted)" << std::endl;
+    return 1;
+  }
+
+  triton::arch::Instruction inst4((const unsigned char*)"\x48\x8b\x03", 3); // mov rax, [rbx]
+  ctx.processing(inst4);
+  if (!inst4.isReadFrom(triton::arch::OperandWrapper(triton::arch::MemoryAccess(0, 8)))) {
+    std::cerr << "test_6: KO (!isReadFrom(0x0))" << std::endl;
+    return 1;
+  }
+
+  inst4.removeLoadAccess(triton::arch::MemoryAccess(0, 8));
+  if (inst4.isReadFrom(triton::arch::OperandWrapper(triton::arch::MemoryAccess(0, 8)))) {
+    std::cerr << "test_6: KO (isReadFrom(0x0))" << std::endl;
+    return 1;
+  }
+
+  triton::arch::Instruction inst5((const unsigned char*)"\x48\x89\x18", 3); // mov [rax], rbx
+  ctx.processing(inst5);
+  if (!inst5.isWriteTo(triton::arch::OperandWrapper(triton::arch::MemoryAccess(0, 8)))) {
+    std::cerr << "test_6: KO (!isWriteTo(0x0))" << std::endl;
+    return 1;
+  }
+
+  inst5.removeStoreAccess(triton::arch::MemoryAccess(0, 8));
+  if (inst5.isWriteTo(triton::arch::OperandWrapper(triton::arch::MemoryAccess(0, 8)))) {
+    std::cerr << "test_6: KO (isWriteTo(0x0))" << std::endl;
+    return 1;
+  }
+
+  triton::arch::Instruction inst6((const unsigned char*)"\xb0\x01", 2); // mov al, 1
+  ctx.processing(inst6);
+  if (!inst6.isReadFrom(triton::arch::OperandWrapper(triton::arch::Immediate(1, 1)))) {
+    std::cerr << "test_6: KO (!isReadFrom(1))" << std::endl;
+    return 1;
+  }
+
+  inst5.removeReadImmediate(triton::arch::Immediate(1, 1));
+  if (inst5.isReadFrom(triton::arch::OperandWrapper(triton::arch::Immediate(1, 1)))) {
+    std::cerr << "test_6: KO (isReadFrom(1))" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_6: OK" << std::endl;
+  return 0;
+}
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -218,6 +322,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_5())
+    return 1;
+
+  if (test_6())
     return 1;
 
   return 0;
