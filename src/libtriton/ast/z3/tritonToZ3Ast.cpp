@@ -272,21 +272,17 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          triton::usize varId = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar().getId();
-          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromId(varId);
-
-          if (symVar == nullptr)
-            throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): [VARIABLE_NODE] Can't get the symbolic variable (nullptr).");
+          const triton::engines::symbolic::SymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar();
 
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
             std::string strValue(value);
-            return this->context.bv_val(strValue.c_str(), symVar->getSize());
+            return this->context.bv_val(strValue.c_str(), symVar.getSize());
           }
 
           /* Otherwise, we keep the symbolic variables for a real conversion */
-          return this->context.bv_const(symVar->getName().c_str(), symVar->getSize());
+          return this->context.bv_const(symVar.getName().c_str(), symVar.getSize());
         }
 
         case ZX_NODE: {
