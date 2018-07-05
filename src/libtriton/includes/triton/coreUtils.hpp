@@ -45,4 +45,3 @@ namespace triton {
 };
 
 #endif /* TRITON_CORE_UTIL_H */
-

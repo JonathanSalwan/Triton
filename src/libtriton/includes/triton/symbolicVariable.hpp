@@ -116,4 +116,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICVARIABLE_H */
-

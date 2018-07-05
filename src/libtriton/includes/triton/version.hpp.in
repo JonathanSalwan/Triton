@@ -28,4 +28,3 @@ namespace triton {
 };
 
 #endif // TRITON_VERSION_H
-

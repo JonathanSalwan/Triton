@@ -129,4 +129,3 @@ namespace triton {
 };
 
 #endif /* TRITON_OPERANDWRAPPER_H */
-

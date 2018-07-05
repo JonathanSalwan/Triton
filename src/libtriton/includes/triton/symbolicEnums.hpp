@@ -57,4 +57,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICENUMS_H */
-

@@ -88,4 +88,3 @@ namespace triton {
 };
 
 #endif /* TRITON_BITSVECTOR_H */
-

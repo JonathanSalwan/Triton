@@ -68,4 +68,3 @@ namespace triton {
 };
 
 #endif /* TRITON_OPERANDINTERFACE_H */
-

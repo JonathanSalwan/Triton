@@ -28,10 +28,10 @@ namespace triton {
     /*! Enumerates all kinds of node. Must be prime numbers. */
     enum kind_e {
       UNDEFINED_NODE = 0,             /*!< Unknown node */
-      ASSERT_NODE = 3,              /*!< (assert x) */
+      ASSERT_NODE = 3,                /*!< (assert x) */
       BVADD_NODE = 5,                 /*!< (bvadd x y) */
       BVAND_NODE = 7,                 /*!< (bvand x y) */
-      BVASHR_NODE = 12,                /*!< (bvashr x y) */
+      BVASHR_NODE = 12,               /*!< (bvashr x y) */
       BVLSHR_NODE = 17,               /*!< (bvlshr x y) */
       BVMUL_NODE = 19,                /*!< (bvmul x y) */
       BVNAND_NODE = 23,               /*!< (bvnand x y) */
@@ -51,7 +51,7 @@ namespace triton {
       BVSREM_NODE = 83,               /*!< (bvsrem x y) */
       BVSUB_NODE = 89,                /*!< (bvsub x y) */
       BVUDIV_NODE = 97,               /*!< (bvudiv x y) */
-      BVUGE_NODE = 101,                /*!< (bvuge x y) */
+      BVUGE_NODE = 101,               /*!< (bvuge x y) */
       BVUGT_NODE = 103,               /*!< (bvugt x y) */
       BVULE_NODE = 107,               /*!< (bvule x y) */
       BVULT_NODE = 109,               /*!< (bvult x y) */
@@ -85,4 +85,3 @@ namespace triton {
 
 
 #endif /* TRITON_ASTENUMS_H */
-

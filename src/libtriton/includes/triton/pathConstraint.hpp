@@ -87,4 +87,3 @@ namespace triton {
 };
 
 #endif /* TRITON_PATHCONSTAINT_H */
-

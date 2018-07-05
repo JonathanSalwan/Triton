@@ -191,4 +191,3 @@ namespace triton {
 };
 
 #endif /* TRITON_ARCHITECTURE_H */
-
