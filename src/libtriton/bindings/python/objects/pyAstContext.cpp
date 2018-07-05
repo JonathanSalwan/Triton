@@ -1436,7 +1436,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "variable(): expected a SymbolicVariable as first argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->variable(PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

@@ -334,8 +334,8 @@ namespace triton {
 
       /* declare representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
-        triton::engines::symbolic::SymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
-        stream << "(declare-fun " << var.getName() << " () (_ BitVec " << var.getSize() << "))";
+        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
+        stream << "(declare-fun " << var->getName() << " () (_ BitVec " << var->getSize() << "))";
         return stream;
       }
 
@@ -431,7 +431,7 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        stream << node->getVar().getName();
+        stream << node->getVar()->getName();
         return stream;
       }
 
@@ -445,4 +445,3 @@ namespace triton {
     };
   };
 };
-

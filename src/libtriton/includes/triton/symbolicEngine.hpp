@@ -81,7 +81,7 @@ namespace triton {
            * **item1**: variable id<br>
            * **item2**: symbolic variable
            */
-          std::unordered_map<triton::usize, SymbolicVariable*> symbolicVariables;
+          std::unordered_map<triton::usize, SharedSymbolicVariable> symbolicVariables;
 
           /*! \brief The map of symbolic expressions
            *
@@ -120,9 +120,6 @@ namespace triton {
           //! Modes API.
           const triton::modes::Modes& modes;
 
-          //! Defines if this instance is used as a backup.
-          bool backupFlag;
-
           //! Slices all expressions from a given node.
           void sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs);
 
@@ -130,18 +127,14 @@ namespace triton {
           void copy(const SymbolicEngine& other);
 
         public:
-          //! Constructor. If you use this class as backup or copy you should define the `isBackup` flag as true.
+          //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
                                        const triton::modes::Modes& modes,
                                        triton::ast::AstContext& astCtxt,
-                                       triton::callbacks::Callbacks* callbacks=nullptr,
-                                       bool isBackup=false);
+                                       triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicEngine(const SymbolicEngine& other);
-
-          //! Destructor.
-          TRITON_EXPORT ~SymbolicEngine();
 
           //! Copies a SymbolicEngine.
           TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);
@@ -165,22 +158,22 @@ namespace triton {
           TRITON_EXPORT void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds a symbolic variable.
-          TRITON_EXPORT SymbolicVariable* newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");
+          TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          TRITON_EXPORT SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
           //! Converts a symbolic memory expression to a symbolic variable.
-          TRITON_EXPORT SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
 
           //! Converts a symbolic register expression to a symbolic variable.
-          TRITON_EXPORT SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
-          TRITON_EXPORT SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
-          TRITON_EXPORT SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
 
           //! Returns the symbolic expression corresponding to an id.
           TRITON_EXPORT SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
@@ -273,7 +266,7 @@ namespace triton {
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> getSymbolicExpressions(void) const;
 
           //! Returns all symbolic variables.
-          TRITON_EXPORT const std::unordered_map<triton::usize, SymbolicVariable*>& getSymbolicVariables(void) const;
+          TRITON_EXPORT const std::unordered_map<triton::usize, SharedSymbolicVariable>& getSymbolicVariables(void) const;
 
           //! Adds a symbolic memory reference.
           TRITON_EXPORT void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
@@ -315,10 +308,10 @@ namespace triton {
           TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=false);
 
           //! Gets the concrete value of a symbolic variable.
-          TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const SymbolicVariable& symVar) const;
+          TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const SharedSymbolicVariable& symVar) const;
 
           //! Sets the concrete value of a symbolic variable.
-          TRITON_EXPORT void setConcreteVariableValue(const SymbolicVariable& symVar, const triton::uint512& value);
+          TRITON_EXPORT void setConcreteVariableValue(const SharedSymbolicVariable& symVar, const triton::uint512& value);
       };
 
     /*! @} End of symbolic namespace */

@@ -79,6 +79,7 @@ namespace triton {
       //! SymbolicVariable destructor.
       void SymbolicVariable_dealloc(PyObject* self) {
         std::cout << std::flush;
+        PySymbolicVariable_AsSymbolicVariable(self) = nullptr; // decref the shared_ptr
         Py_TYPE(self)->tp_free((PyObject*)self);
       }
 
@@ -175,6 +176,16 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicVariable_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+        return type->tp_alloc(type, 0);
+      }
+
+
+      static int SymbolicVariable_init(AstNode_Object* self, PyObject* args, PyObject* kwds) {
+        return 0;
+      }
+
+
       //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
@@ -225,9 +236,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,                                          /* tp_init */
+        (initproc)SymbolicVariable_init,            /* tp_init */
         0,                                          /* tp_alloc */
-        0,                                          /* tp_new */
+        (newfunc)SymbolicVariable_new,              /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -240,18 +251,19 @@ namespace triton {
       };
 
 
-      PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar) {
-        SymbolicVariable_Object* object;
-
+      PyObject* PySymbolicVariable(const triton::engines::symbolic::SharedSymbolicVariable& symVar) {
         if (symVar == nullptr) {
           Py_INCREF(Py_None);
           return Py_None;
         }
 
         PyType_Ready(&SymbolicVariable_Type);
-        object = PyObject_NEW(SymbolicVariable_Object, &SymbolicVariable_Type);
-        if (object != NULL)
+        // Build the new object the python way (calling operator() on the type) as
+        // it crash otherwise (certainly due to incorrect shared_ptr initialization).
+        auto* object = (triton::bindings::python::SymbolicVariable_Object*)PyObject_CallObject((PyObject*)&SymbolicVariable_Type, nullptr);
+        if (object != NULL) {
           object->symVar = symVar;
+        }
 
         return (PyObject*)object;
       }

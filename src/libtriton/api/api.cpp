@@ -603,19 +603,19 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
     this->checkSymbolic();
     return this->symbolic->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
     this->checkSymbolic();
     return this->symbolic->convertMemoryToSymbolicVariable(mem, symVarComment);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
     this->checkSymbolic();
     return this->symbolic->convertRegisterToSymbolicVariable(reg, symVarComment);
   }
@@ -675,7 +675,7 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
   }
@@ -793,25 +793,25 @@ namespace triton {
   }
 
 
-  const triton::uint512& API::getConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const {
+  const triton::uint512& API::getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const {
     this->checkSymbolic();
     return this->symbolic->getConcreteVariableValue(symVar);
   }
 
 
-  void API::setConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value) {
+  void API::setConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const triton::uint512& value) {
     this->checkSymbolic();
     this->symbolic->setConcreteVariableValue(symVar, value);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromId(triton::usize symVarId) const {
+  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariableFromId(triton::usize symVarId) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicVariableFromId(symVarId);
   }
 
 
-  triton::engines::symbolic::SymbolicVariable* API::getSymbolicVariableFromName(const std::string& symVarName) const {
+  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariableFromName(const std::string& symVarName) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicVariableFromName(symVarName);
   }
@@ -931,7 +931,7 @@ namespace triton {
   }
 
 
-  const std::unordered_map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& API::getSymbolicVariables(void) const {
+  const std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable>& API::getSymbolicVariables(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicVariables();
   }

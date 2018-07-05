@@ -8,6 +8,7 @@
 #ifndef TRITON_SYMBOLICVARIABLE_H
 #define TRITON_SYMBOLICVARIABLE_H
 
+#include <memory>
 #include <string>
 
 #include <triton/dllexport.hpp>
@@ -38,6 +39,11 @@ namespace triton {
      *  \addtogroup symbolic
      *  @{
      */
+
+      class SymbolicVariable;
+
+      //! Shared Symbolic variable
+      using SharedSymbolicVariable = std::shared_ptr<triton::engines::symbolic::SymbolicVariable>;
 
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
