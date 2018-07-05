@@ -131,6 +131,7 @@ namespace triton {
     std::vector<SharedAbstractNode> AbstractNode::getParents(void) {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
+
       // FIXME: Could be done in a background thread
       for (auto& kv: parents) {
         if (auto sp = kv.second.second.lock())
@@ -148,18 +149,19 @@ namespace triton {
 
     void AbstractNode::setParent(AbstractNode* p) {
       auto it = parents.find(p);
+
       if (it == parents.end()) {
         auto A = p->shared_from_this();
-        this->parents.insert(std::make_pair(p, std::make_pair(1, std::weak_ptr<AbstractNode>(A))));
+        this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
       }
       else {
         if (it->second.second.expired()) {
           parents.erase(it);
           auto A = p->shared_from_this();
-          this->parents.insert(std::make_pair(p, std::make_pair(1, std::weak_ptr<AbstractNode>(A))));
+          this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
         }
-        else // Ptr already in, add it for the counter
-        {
+        // Ptr already in, add it for the counter
+        else {
           it->second.first += 1;
         }
       }

@@ -67,7 +67,7 @@ namespace triton {
 
         // This structure counter the number of use of a given parent as a node may have
         // multiple time the same parent: eg. xor rax rax
-        std::map<AbstractNode*, std::pair<unsigned, std::weak_ptr<AbstractNode>>> parents;
+        std::map<AbstractNode*, std::pair<triton::uint32, WeakAbstractNode>> parents;
 
         //! The size of the node.
         triton::uint32 size;
