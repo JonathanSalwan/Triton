@@ -131,9 +131,9 @@ namespace triton {
     std::vector<SharedAbstractNode> AbstractNode::getParents(void) {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
-
+      // FIXME: Could be done in a background thread
       for (auto& kv: parents) {
-        if (auto sp = kv.second.lock())
+        if (auto sp = kv.second.second.lock())
           res.push_back(sp);
         else
           toRemove.push_back(kv.first);
@@ -150,23 +150,31 @@ namespace triton {
       auto it = parents.find(p);
       if (it == parents.end()) {
         auto A = p->shared_from_this();
-        this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
+        this->parents.insert(std::make_pair(p, std::make_pair(1, std::weak_ptr<AbstractNode>(A))));
       }
       else {
-        if (it->second.expired()) {
+        if (it->second.second.expired()) {
           parents.erase(it);
           auto A = p->shared_from_this();
-          this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
+          this->parents.insert(std::make_pair(p, std::make_pair(1, std::weak_ptr<AbstractNode>(A))));
         }
-        else {
-          /* Ptr already in */
+        else // Ptr already in, add it for the counter
+        {
+          it->second.first += 1;
         }
       }
     }
 
 
     void AbstractNode::removeParent(AbstractNode* p) {
-      this->parents.erase(parents.find(p));
+      auto it = this->parents.find(p);
+
+      if(it == parents.end())
+        throw triton::exceptions::Ast("AbstractNode::removeParent(): Can't remove a parent that is not our.");
+
+      it->second.first--;
+      if(it->second.first == 0)
+        this->parents.erase(it);
     }
 
 
