@@ -5,6 +5,7 @@
 
 #include <triton/api.hpp>
 #include <triton/bitsVector.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
@@ -308,6 +309,114 @@ int test_6(void) {
 }
 
 
+int test_7(void) {
+  triton::API ctx;
+
+  ctx.setArchitecture(triton::arch::ARCH_X86);
+
+  triton::arch::Instruction  inst1((const unsigned char*)"\x37", 1); // aaa
+  triton::arch::Instruction  inst2((const unsigned char*)"\xd5\x0a", 2); // aad
+  triton::arch::Instruction  inst3((const unsigned char*)"\xd5\x08", 2); // aad 8
+  triton::arch::Instruction  inst4((const unsigned char*)"\xd4\x08", 2); // aam
+  triton::arch::Instruction  inst5((const unsigned char*)"\xd4\x08", 2); // aam 8
+  triton::arch::Instruction  inst6((const unsigned char*)"\x3f", 1); // aas
+  triton::arch::Instruction  inst7((const unsigned char*)"\x0f\x06", 2); // clts
+  triton::arch::Instruction  inst8((const unsigned char*)"\xfa", 1); // cli
+  triton::arch::Instruction  inst9((const unsigned char*)"\x0f\xa2", 2); // cpuid
+  triton::arch::Instruction inst10((const unsigned char*)"\x0f\x08", 2); // invd
+  triton::arch::Instruction inst11((const unsigned char*)"\x0f\x01\x38", 3); // invlpg [eax]
+  triton::arch::Instruction inst12((const unsigned char*)"\x0f\xae\x38", 3); // clflush [eax]
+  triton::arch::Instruction inst13((const unsigned char*)"\x98", 1); // cwde
+  triton::arch::Instruction inst14((const unsigned char*)"\x0f\xae\x10", 3); // ldmxcsr [eax]
+  triton::arch::Instruction inst15((const unsigned char*)"\x0f\xae\xe8", 3); // lfence
+  triton::arch::Instruction inst16((const unsigned char*)"\x0f\xae\xf0", 3); // mfence
+  triton::arch::Instruction inst17((const unsigned char*)"\xf2\x0f\xd6\xc9", 4); // movdq2q mm1, xmm1
+  triton::arch::Instruction inst18((const unsigned char*)"\x66\x0f\xe7\x08", 4); // movntdq [eax], xmm1
+  triton::arch::Instruction inst19((const unsigned char*)"\x0f\xc3\x18", 3); // movnti [eax], ebx
+  triton::arch::Instruction inst20((const unsigned char*)"\x66\x0f\x2b\x08", 4); // movntpd [eax], xmm1
+  triton::arch::Instruction inst21((const unsigned char*)"\x0f\x2b\x08", 3); // movntps [eax], xmm1
+  triton::arch::Instruction inst22((const unsigned char*)"\x0f\xe7\x08", 3); // movntq [eax], mm1
+  triton::arch::Instruction inst23((const unsigned char*)"\x0f\xe7\x08", 3); // movntq [eax], mm1
+  triton::arch::Instruction inst24((const unsigned char*)"\xf3\x0f\xd6\xca", 4); // movq2dq xmm1, mm2
+  triton::arch::Instruction inst25((const unsigned char*)"\x66\x0f\xd6\x08", 4); // movq [eax], xmm1
+  triton::arch::Instruction inst26((const unsigned char*)"\x66\x0f\xdb\xca", 4); // pand xmm1, xmm2
+  triton::arch::Instruction inst27((const unsigned char*)"\x66\x0f\xdf\xca", 4); // pandn xmm1, xmm2
+  triton::arch::Instruction inst28((const unsigned char*)"\xf3\x90", 2); // pause
+  triton::arch::Instruction inst29((const unsigned char*)"\x61", 1); // popal
+  triton::arch::Instruction inst30((const unsigned char*)"\x9d", 1); // popfd
+  triton::arch::Instruction inst31((const unsigned char*)"\x66\x0f\xeb\xca", 4); // por xmm1, xmm2
+  triton::arch::Instruction inst33((const unsigned char*)"\x0f\x18\x00", 3); // prefetchnta [eax]
+  triton::arch::Instruction inst34((const unsigned char*)"\x0f\x18\x08", 3); // prefetcht0 [eax]
+  triton::arch::Instruction inst35((const unsigned char*)"\x0f\x18\x10", 3); // prefetcht1 [eax]
+  triton::arch::Instruction inst36((const unsigned char*)"\x0f\x18\x18", 3); // prefetcht2 [eax]
+  triton::arch::Instruction inst37((const unsigned char*)"\x0f\x0d\x08", 3); // prefetchw [eax]
+  triton::arch::Instruction inst38((const unsigned char*)"\x0f\x70\xca\x08", 4); // pshufw mm1, mm2, 8
+  triton::arch::Instruction inst39((const unsigned char*)"\x60", 1); // pushal
+  triton::arch::Instruction inst40((const unsigned char*)"\x9c", 1); // pushfd
+  triton::arch::Instruction inst41((const unsigned char*)"\x0f\x31", 2); // rdtsc
+  triton::arch::Instruction inst42((const unsigned char*)"\x0f\xae\xf8", 3); // sfence
+  triton::arch::Instruction inst43((const unsigned char*)"\xfb", 1); // sti
+  triton::arch::Instruction inst44((const unsigned char*)"\x0f\xae\x18", 3); // stmxcsr [eax]
+  triton::arch::Instruction inst45((const unsigned char*)"\x9b", 1); // wait
+  triton::arch::Instruction inst46((const unsigned char*)"\x0f\x09", 2); // wbinvd
+
+  try {
+    ctx.processing(inst1);
+    ctx.processing(inst2);
+    ctx.processing(inst3);
+    ctx.processing(inst4);
+    ctx.processing(inst5);
+    ctx.processing(inst6);
+    ctx.processing(inst7);
+    ctx.processing(inst8);
+    ctx.processing(inst9);
+    ctx.processing(inst10);
+    ctx.processing(inst11);
+    ctx.processing(inst12);
+    ctx.processing(inst13);
+    ctx.processing(inst14);
+    ctx.processing(inst15);
+    ctx.processing(inst16);
+    ctx.processing(inst17);
+    ctx.processing(inst18);
+    ctx.processing(inst19);
+    ctx.processing(inst20);
+    ctx.processing(inst21);
+    ctx.processing(inst22);
+    ctx.processing(inst23);
+    ctx.processing(inst24);
+    ctx.processing(inst25);
+    ctx.processing(inst26);
+    ctx.processing(inst27);
+    ctx.processing(inst28);
+    ctx.processing(inst29);
+    ctx.processing(inst30);
+    ctx.processing(inst31);
+    ctx.processing(inst33);
+    ctx.processing(inst34);
+    ctx.processing(inst35);
+    ctx.processing(inst36);
+    ctx.processing(inst37);
+    ctx.processing(inst38);
+    ctx.processing(inst39);
+    ctx.processing(inst40);
+    ctx.processing(inst41);
+    ctx.processing(inst42);
+    ctx.processing(inst43);
+    ctx.processing(inst44);
+    ctx.processing(inst45);
+    ctx.processing(inst46);
+  }
+  catch (const triton::exceptions::Exception& e) {
+    std::cerr << "test_7: KO (bad semantics building)" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_7: OK" << std::endl;
+  return 0;
+}
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -325,6 +434,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_6())
+    return 1;
+
+  if (test_7())
     return 1;
 
   return 0;
