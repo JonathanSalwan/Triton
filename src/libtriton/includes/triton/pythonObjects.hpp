@@ -52,7 +52,7 @@ namespace triton {
       PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node);
 
       //! Creates the BitsVector python class.
-      template<typename T> PyObject* PyBitsVector(const T& op);
+      template <typename T> PyObject* PyBitsVector(const T& op);
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
