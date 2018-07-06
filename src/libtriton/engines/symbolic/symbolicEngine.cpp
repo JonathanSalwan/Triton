@@ -254,7 +254,7 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise raises an exception */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
+      const SharedSymbolicVariable& SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
         auto it = this->symbolicVariables.find(symVarId);
         if (it == this->symbolicVariables.end())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromId(): Unregistred variable.");
@@ -263,7 +263,7 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
+      const SharedSymbolicVariable& SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
         /*
          * FIXME: When there is a ton of symvar, this loop takes a while to go through.
          *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
@@ -521,7 +521,7 @@ namespace triton {
        * convertExpressionToSymbolicVariable(43, 8)
        * #43 = SymVar_4
        */
-      SharedSymbolicVariable SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
         const SharedSymbolicExpression& expression = this->getSymbolicExpressionFromId(exprId);
         const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt.variable(symVar);
@@ -536,7 +536,7 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SharedSymbolicVariable SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
         triton::uint512 cv              = this->architecture->getConcreteMemoryValue(mem);
@@ -582,7 +582,7 @@ namespace triton {
       }
 
 
-      SharedSymbolicVariable SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
         const triton::arch::Register& parent  = this->architecture->getRegister(reg.getParent());
         triton::uint32 symVarSize             = reg.getBitSize();
         triton::uint512 cv                    = this->architecture->getConcreteRegisterValue(reg);
@@ -617,7 +617,7 @@ namespace triton {
 
 
       /* Adds a new symbolic variable */
-      SharedSymbolicVariable SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
+      const SharedSymbolicVariable& SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
         triton::usize uniqueId = this->getUniqueSymVarId();
 
         SharedSymbolicVariable symVar = std::make_shared<SymbolicVariable>(kind, kindValue, uniqueId, size, comment);
@@ -625,7 +625,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
 
         this->symbolicVariables[uniqueId] = symVar;
-        return symVar;
+        return this->symbolicVariables[uniqueId];
       }
 
 
