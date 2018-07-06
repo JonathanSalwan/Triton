@@ -1594,10 +1594,6 @@ namespace triton {
     /* ====== compound */
 
 
-    template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-
-
     void CompoundNode::init(void) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
@@ -1633,10 +1629,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
     }
-
-
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
 
 
     void ConcatNode::init(void) {
@@ -1931,10 +1923,6 @@ namespace triton {
     }
 
 
-    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-
-
     void LandNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two children.");
@@ -2055,10 +2043,6 @@ namespace triton {
       this->addChild(expr1);
       this->addChild(expr2);
     }
-
-
-    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
 
 
     void LorNode::init(void) {
@@ -2287,6 +2271,25 @@ namespace triton {
         h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
     }
+
+  }; /* ast namespace */
+}; /* triton namespace */
+
+
+
+/* ====== Force templates declarations */
+
+namespace triton {
+  namespace ast {
+
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
 
   }; /* ast namespace */
 }; /* triton namespace */
