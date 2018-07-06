@@ -593,13 +593,13 @@ namespace triton {
     //! Variable node
     class VariableNode : public AbstractNode {
       protected:
-        triton::engines::symbolic::SymbolicVariable& symVar;
+        triton::engines::symbolic::SharedSymbolicVariable symVar;
 
       public:
-        TRITON_EXPORT VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt);
+        TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable& getVar(void);
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getVar(void);
     };
 
 
@@ -631,6 +631,5 @@ namespace triton {
   };
 /*! @} End of triton namespace */
 };
-
 
 #endif /* TRITON_AST_H */

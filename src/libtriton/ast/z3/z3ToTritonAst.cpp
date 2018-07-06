@@ -399,10 +399,10 @@ namespace triton {
         /* Variable or string */
         case Z3_OP_UNINTERPRETED: {
           std::string name = function.name().str();
-          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromName(name);
+          const triton::engines::symbolic::SharedSymbolicVariable& symVar = this->symbolicEngine->getSymbolicVariableFromName(name);
 
           if (symVar)
-            node = this->astCtxt.variable(*symVar);
+            node = this->astCtxt.variable(symVar);
           else
             node = this->astCtxt.string(name);
 

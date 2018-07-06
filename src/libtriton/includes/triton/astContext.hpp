@@ -225,7 +225,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode sx(triton::uint32 sizeExt, const SharedAbstractNode& expr);
 
         //! AST C++ API - variable node builder
-        TRITON_EXPORT SharedAbstractNode variable(triton::engines::symbolic::SymbolicVariable& symVar);
+        TRITON_EXPORT SharedAbstractNode variable(const triton::engines::symbolic::SharedSymbolicVariable& symVar);
 
         //! AST C++ API - zx node builder
         TRITON_EXPORT SharedAbstractNode zx(triton::uint32 sizeExt, const SharedAbstractNode& expr);

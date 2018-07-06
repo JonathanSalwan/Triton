@@ -537,13 +537,13 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+    SharedAbstractNode AstContext::variable(const triton::engines::symbolic::SharedSymbolicVariable& symVar) {
       // try to get node from variable pool
-      auto it = this->valueMapping.find(symVar.getName());
+      auto it = this->valueMapping.find(symVar->getName());
       if (it != this->valueMapping.end()) {
         auto& node = it->second.first;
 
-        if (node->getBitvectorSize() != symVar.getSize())
+        if (node->getBitvectorSize() != symVar->getSize())
           throw triton::exceptions::Ast("Node builders - Missmatching variable size.");
 
         // This node already exist, just return it
@@ -553,7 +553,7 @@ namespace triton {
       else {
         // if not found, create a new variable node
         SharedAbstractNode node = std::make_shared<VariableNode>(symVar, *this);
-        this->initVariable(symVar.getName(), 0, node);
+        this->initVariable(symVar->getName(), 0, node);
         if (node == nullptr)
           throw triton::exceptions::Ast("Node builders - Not enough memory");
         node->init();

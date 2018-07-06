@@ -330,13 +330,13 @@ namespace triton {
         TRITON_EXPORT triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Returns the AST corresponding to the operand.
         TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
@@ -366,7 +366,7 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
         //! [**symbolic api**] - Returns a new symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
 
         //! [**symbolic api**] - Removes the symbolic expression corresponding to the id.
         TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
@@ -399,10 +399,10 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariableFromId(triton::usize symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariableFromName(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
@@ -462,13 +462,13 @@ namespace triton {
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
-        TRITON_EXPORT const std::unordered_map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
+        TRITON_EXPORT const std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable>& getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Gets the concrete value of a symbolic variable.
-        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const;
+        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
 
         //! [**symbolic api**] - Sets the concrete value of a symbolic variable.
-        TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value);
+        TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const triton::uint512& value);
 
 
 
