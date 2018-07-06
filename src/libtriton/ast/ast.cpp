@@ -1596,11 +1596,6 @@ namespace triton {
 
     template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
     template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    CompoundNode::CompoundNode(const T& exprs, AstContext& ctxt): AbstractNode(COMPOUND_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
 
 
     void CompoundNode::init(void) {
@@ -1642,11 +1637,6 @@ namespace triton {
 
     template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
     template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
 
 
     void ConcatNode::init(void) {
@@ -1943,11 +1933,6 @@ namespace triton {
 
     template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
     template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
 
 
     void LandNode::init(void) {
@@ -2074,11 +2059,6 @@ namespace triton {
 
     template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
 
 
     void LorNode::init(void) {

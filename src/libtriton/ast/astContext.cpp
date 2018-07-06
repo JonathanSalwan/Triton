@@ -353,14 +353,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::compound(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
@@ -374,14 +366,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::concat(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::concat(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::concat(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::decimal(triton::uint512 value) {
@@ -455,14 +439,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::land(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::land(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::land(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<LandNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::let(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3) {
@@ -494,14 +470,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::lor(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<LorNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::reference(const triton::engines::symbolic::SharedSymbolicExpression& expr) {

@@ -11,6 +11,7 @@
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/dllexport.hpp>
+#include <triton/exceptions.hpp>
 
 #include <map>
 #include <vector>
@@ -168,14 +169,26 @@ namespace triton {
 
         //! AST C++ API - compound node builder
         template <typename T>
-        SharedAbstractNode compound(const T& exprs);
+          SharedAbstractNode compound(const T& exprs) {
+            SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, *this);
+            if (node == nullptr)
+              throw triton::exceptions::Ast("Node builders - Not enough memory");
+            node->init();
+            return node;
+          }
 
         //! AST C++ API - concat node builder
         TRITON_EXPORT SharedAbstractNode concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - concat node builder
         template <typename T>
-        SharedAbstractNode concat(const T& exprs);
+          SharedAbstractNode concat(const T& exprs) {
+            SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, *this);
+            if (node == nullptr)
+              throw triton::exceptions::Ast("Node builders - Not enough memory");
+            node->init();
+            return node;
+          }
 
         //! AST C++ API - decimal node builder
         TRITON_EXPORT SharedAbstractNode decimal(triton::uint512 value);
@@ -200,7 +213,13 @@ namespace triton {
 
         //! AST C++ API - land node builder
         template <typename T>
-        SharedAbstractNode land(const T& exprs);
+          SharedAbstractNode land(const T& exprs) {
+            SharedAbstractNode node = std::make_shared<LandNode>(exprs, *this);
+            if (node == nullptr)
+              throw triton::exceptions::Ast("Node builders - Not enough memory");
+            node->init();
+            return node;
+          }
 
         //! AST C++ API - let node builder
         TRITON_EXPORT SharedAbstractNode let(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3);
@@ -213,7 +232,13 @@ namespace triton {
 
         //! AST C++ API - lor node builder
         template <typename T>
-        SharedAbstractNode lor(const T& exprs);
+          SharedAbstractNode lor(const T& exprs) {
+            SharedAbstractNode node = std::make_shared<LorNode>(exprs, *this);
+            if (node == nullptr)
+              throw triton::exceptions::Ast("Node builders - Not enough memory");
+            node->init();
+            return node;
+          }
 
         //! AST C++ API - reference node builder
         TRITON_EXPORT SharedAbstractNode reference(const triton::engines::symbolic::SharedSymbolicExpression& expr);
