@@ -68,10 +68,10 @@ from    triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
 
 
 code = [
-    (0x400000, "\x48\xB8\x48\x47\x46\x45\x44\x43\x42\x41"),     # movabs rax, 0x4142434445464748
-    (0x40000a, "\x48\xC7\xC6\x08\x00\x00\x00"),                 # mov    rsi, 0x8
-    (0x400011, "\x48\xC7\xC7\x00\x00\x01\x00"),                 # mov    rdi, 0x10000
-    (0x400018, "\x48\x89\x84\x77\x34\x12\x00\x00"),             # mov    QWORD PTR [rdi+rsi*2+0x1234], rax
+    (0x400000, b"\x48\xB8\x48\x47\x46\x45\x44\x43\x42\x41"),     # movabs rax, 0x4142434445464748
+    (0x40000a, b"\x48\xC7\xC6\x08\x00\x00\x00"),                 # mov    rsi, 0x8
+    (0x400011, b"\x48\xC7\xC7\x00\x00\x01\x00"),                 # mov    rdi, 0x10000
+    (0x400018, b"\x48\x89\x84\x77\x34\x12\x00\x00"),             # mov    QWORD PTR [rdi+rsi*2+0x1234], rax
 ]
 
 
@@ -96,47 +96,47 @@ if __name__ == '__main__':
         Triton.processing(inst)
 
         # Display instruction
-        print inst
+        print(inst)
 
         # Display symbolic expressions
         for expr in inst.getSymbolicExpressions():
-            print '\t', expr
+            print('\t', expr)
 
-        print
+        print()
 
 
-    print 'Display emulated information'
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    print('Display emulated information')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     write = inst.getOperands()[0].getAddress()
-    print 'Instruction :', inst.getDisassembly()
-    print 'Write at    :', hex(write)
-    print 'Content     :', hex(Triton.getConcreteMemoryValue(MemoryAccess(write+4, CPUSIZE.DWORD)))
-    print 'RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rax))
-    print 'RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rsi))
-    print 'RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rdi))
+    print('Instruction :', inst.getDisassembly())
+    print('Write at    :', hex(write))
+    print('Content     :', hex(Triton.getConcreteMemoryValue(MemoryAccess(write+4, CPUSIZE.DWORD))))
+    print('RAX value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rax)))
+    print('RSI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rsi)))
+    print('RDI value   :', hex(Triton.getConcreteRegisterValue(Triton.registers.rdi)))
 
 
-    print
-    print 'Symbolic registers information'
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    print()
+    print('Symbolic registers information')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     for k, v in Triton.getSymbolicRegisters().items():
-        print Triton.getRegister(k), v
+        print(Triton.getRegister(k), v)
 
-    print
-    print 'Symbolic memory information'
-    print '~~~~~~~~~~~~~~~~~~~~~~~~~~~'
+    print()
+    print('Symbolic memory information')
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     for k, v in Triton.getSymbolicMemory().items():
-        print hex(k), v
+        print(hex(k), v)
 
-    print
-    print 'Craft symbolic stuffs'
-    print '~~~~~~~~~~~~~~~~~~~~~'
+    print()
+    print('Craft symbolic stuffs')
+    print('~~~~~~~~~~~~~~~~~~~~~')
     ah  = Triton.getRegisterAst(Triton.registers.ah)
     mem = Triton.getMemoryAst(MemoryAccess(0x11248, 4))
-    print 'Memory at 0x11248 :', mem
-    print 'Compute memory    :', hex(mem.evaluate())
-    print 'Register AH       :', ah
-    print 'Compute  AH       :', hex(ah.evaluate())
+    print('Memory at 0x11248 :', mem)
+    print('Compute memory    :', hex(mem.evaluate()))
+    print('Register AH       :', ah)
+    print('Compute  AH       :', hex(ah.evaluate()))
 
     sys.exit(0)
 

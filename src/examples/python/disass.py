@@ -118,18 +118,18 @@ from  triton import TritonContext, ARCH, Instruction, OPERAND
 
 
 code = [
-    (0x40000, "\x40\xf6\xee"),      # imul   sil
-    (0x40003, "\x66\xf7\xe9"),      # imul   cx
-    (0x40006, "\x48\xf7\xe9"),      # imul   rcx
-    (0x40009, "\x6b\xc9\x01"),      # imul   ecx,ecx,0x1
-    (0x4000c, "\x0f\xaf\xca"),      # imul   ecx,edx
-    (0x4000f, "\x48\x6b\xd1\x04"),  # imul   rdx,rcx,0x4
-    (0x40013, "\xC6\x00\x01"),      # mov    BYTE PTR [rax],0x1
-    (0x40016, "\x48\x8B\x10"),      # mov    rdx,QWORD PTR [rax]
-    (0x40019, "\xFF\xD0"),          # call   rax
-    (0x4001b, "\xc3"),              # ret
-    (0x4001c, "\x80\x00\x01"),      # add    BYTE PTR [rax],0x1
-    (0x4001f, "\x64\x48\x8B\x03"),  # mov    rax,QWORD PTR fs:[rbx]
+    (0x40000, b"\x40\xf6\xee"),      # imul   sil
+    (0x40003, b"\x66\xf7\xe9"),      # imul   cx
+    (0x40006, b"\x48\xf7\xe9"),      # imul   rcx
+    (0x40009, b"\x6b\xc9\x01"),      # imul   ecx,ecx,0x1
+    (0x4000c, b"\x0f\xaf\xca"),      # imul   ecx,edx
+    (0x4000f, b"\x48\x6b\xd1\x04"),  # imul   rdx,rcx,0x4
+    (0x40013, b"\xC6\x00\x01"),      # mov    BYTE PTR [rax],0x1
+    (0x40016, b"\x48\x8B\x10"),      # mov    rdx,QWORD PTR [rax]
+    (0x40019, b"\xFF\xD0"),          # call   rax
+    (0x4001b, b"\xc3"),              # ret
+    (0x4001c, b"\x80\x00\x01"),      # add    BYTE PTR [rax],0x1
+    (0x4001f, b"\x64\x48\x8B\x03"),  # mov    rax,QWORD PTR fs:[rbx]
 ]
 
 
@@ -155,22 +155,22 @@ if __name__ == '__main__':
         Triton.processing(inst)
 
         # Display instruction
-        print inst
-        print '    ---------------'
-        print '    Is memory read :', inst.isMemoryRead()
-        print '    Is memory write:', inst.isMemoryWrite()
-        print '    ---------------'
+        print(inst)
+        print('    ---------------')
+        print('    Is memory read :', inst.isMemoryRead())
+        print('    Is memory write:', inst.isMemoryWrite())
+        print('    ---------------')
         for op in inst.getOperands():
-            print '    Operand:', op
+            print('    Operand:', op)
             if op.getType() == OPERAND.MEM:
-                print '    - segment :', op.getSegmentRegister()
-                print '    - base    :', op.getBaseRegister()
-                print '    - index   :', op.getIndexRegister()
-                print '    - scale   :', op.getScale()
-                print '    - disp    :', op.getDisplacement()
-            print '    ---------------'
+                print('    - segment :', op.getSegmentRegister())
+                print('    - base    :', op.getBaseRegister())
+                print('    - index   :', op.getIndexRegister())
+                print('    - scale   :', op.getScale())
+                print('    - disp    :', op.getDisplacement())
+            print('    ---------------')
 
-        print
+        print()
 
     sys.exit(0)
 

@@ -45,36 +45,36 @@ import sys
 from   triton import TritonContext, ARCH, Instruction
 
 trace_1 = [
-    "\x31\xC0",                  # xor eax, eax
-    "\x0F\x80\x01\x00\x00\x00",  # jo 7
+    b"\x31\xC0",                  # xor eax, eax
+    b"\x0F\x80\x01\x00\x00\x00",  # jo 7
 ]
 
 trace_2 = [
-    "\x31\xC0",                  # xor eax, eax
-    "\x0F\x84\x01\x00\x00\x00",  # je 7
+    b"\x31\xC0",                  # xor eax, eax
+    b"\x0F\x84\x01\x00\x00\x00",  # je 7
 ]
 
 trace_3 = [
-    "\x31\xD8",                  # xor eax, ebx
-    "\x0F\x84\x01\x00\x00\x00",  # je 7
+    b"\x31\xD8",                  # xor eax, ebx
+    b"\x0F\x84\x01\x00\x00\x00",  # je 7
 ]
 
 trace_4 = [
-    "\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
-    "\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
-    "\x31\xd1",                  # xor ecx, edx
-    "\x31\xfa",                  # xor edx, edi
-    "\x01\xd8",                  # add eax, ebx
-    "\x0f\x80\x10\x00\x00\x00",  # jo 27
+    b"\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
+    b"\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
+    b"\x31\xd1",                  # xor ecx, edx
+    b"\x31\xfa",                  # xor edx, edi
+    b"\x01\xd8",                  # add eax, ebx
+    b"\x0f\x80\x10\x00\x00\x00",  # jo 27
 ]
 
 trace_5 = [
-    "\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
-    "\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
-    "\x31\xd1",                  # xor ecx, edx
-    "\x31\xfa",                  # xor edx, edi
-    "\x31\xD8",                  # xor eax, ebx
-    "\x0F\x84\x10\x00\x00\x00",  # je 16
+    b"\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
+    b"\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
+    b"\x31\xd1",                  # xor ecx, edx
+    b"\x31\xfa",                  # xor edx, edi
+    b"\x31\xD8",                  # xor eax, ebx
+    b"\x0F\x84\x10\x00\x00\x00",  # je 16
 ]
 
 Triton = TritonContext()
@@ -97,7 +97,7 @@ def test_trace(trace):
         instruction = Instruction()
         instruction.setOpcode(opcode)
         Triton.processing(instruction)
-        print instruction.getDisassembly()
+        print(instruction.getDisassembly())
 
         if instruction.isBranch():
             # Opaque Predicate AST
@@ -105,14 +105,14 @@ def test_trace(trace):
             # Try another model
             model = Triton.getModel(astCtxt.lnot(op_ast))
             if model:
-                print "not an opaque predicate"
+                print("not an opaque predicate")
             else:
                 if instruction.isConditionTaken():
-                    print "opaque predicate: always taken"
+                    print("opaque predicate: always taken")
                 else:
-                    print "opaque predicate: never taken"
+                    print("opaque predicate: never taken")
 
-    print '----------------------------------'
+    print('----------------------------------')
     return
 
 if __name__ == '__main__':

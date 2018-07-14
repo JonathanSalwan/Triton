@@ -21,7 +21,7 @@ def test1():
             ),
             astCtxt.bv(0x10, 32)
         )
-    print 'Test 1:', Triton.getModel(c)[0]
+    print('Test 1:', Triton.getModel(c)[0])
 
     return
 
@@ -33,7 +33,7 @@ def test2():
 
     x = Triton.newSymbolicVariable(32)
     c = ((astCtxt.variable(x) ^ 0x40) - 1 == 0x10)
-    print 'Test 2:', Triton.getModel(c)[0]
+    print('Test 2:', Triton.getModel(c)[0])
 
     return
 
@@ -48,7 +48,7 @@ def test3():
             astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20,
             astCtxt.variable(x) != 0x11
         ])
-    print 'Test 3:', Triton.getModel(c)[0]
+    print('Test 3:', Triton.getModel(c)[0])
 
     return
 
@@ -60,7 +60,7 @@ def test4():
 
     x = Triton.newSymbolicVariable(8)
     c = astCtxt.variable(x) * astCtxt.variable(x) - 1 == 0x20
-    print 'Test 4:', Triton.getModels(c, 10)
+    print('Test 4:', Triton.getModels(c, 10))
 
     return
 
@@ -74,7 +74,7 @@ def test5():
     Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
 
     # process instruction
-    Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
+    Triton.processing(Instruction(b"\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
     eaxAst = Triton.getSymbolicRegister(Triton.registers.eax).getAst()
@@ -82,7 +82,7 @@ def test5():
     # constraint
     c = eaxAst ^ 0x11223344 == 0xdeadbeaf
 
-    print 'Test 5:', Triton.getModel(c)[0]
+    print('Test 5:', Triton.getModel(c)[0])
 
     return
 

@@ -92,7 +92,7 @@ def getFormatString(addr):
 
 # Simulate the strlen() function
 def strlenHandler():
-    print '[+] Strlen hooked'
+    print('[+] Strlen hooked')
 
     # Get arguments
     arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
@@ -103,7 +103,7 @@ def strlenHandler():
 
 # Simulate the printf() function
 def printfHandler():
-    print '[+] printf hooked'
+    print('[+] printf hooked')
 
     # Get arguments
     arg1   = getFormatString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
@@ -123,7 +123,7 @@ def printfHandler():
 
 
 def libcMainHandler():
-    print '[+] __libc_start_main hooked'
+    print('[+] __libc_start_main hooked')
 
     # Get arguments
     main = Triton.getConcreteRegisterValue(Triton.registers.rdi)
@@ -151,7 +151,7 @@ def libcMainHandler():
 
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, str.encode(argv)+b'\x00')
         base += len(argv)+1
 
     argc = len(argvs)
@@ -197,7 +197,7 @@ def hookingHandler():
 
 # Emulate the CheckSolution() function.
 def emulate(pc):
-    print '[+] Starting emulation.'
+    print('[+] Starting emulation.')
 
     while pc:
         # Fetch opcode
@@ -210,7 +210,7 @@ def emulate(pc):
 
         # Process
         Triton.processing(instruction)
-        print instruction
+        print(instruction)
 
         if instruction.getType() == OPCODE.HLT:
             break
@@ -221,7 +221,7 @@ def emulate(pc):
         # Next
         pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
 
-    print '[+] Emulation done.'
+    print('[+] Emulation done.')
     return
 
 
@@ -232,7 +232,7 @@ def loadBinary(path):
     for phdr in phdrs:
         size   = phdr.physical_size
         vaddr  = phdr.virtual_address
-        print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
+        print('[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
         Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
     return binary
 
@@ -244,7 +244,7 @@ def makeRelocation(binary):
         symbolRelo = rel.address
         for crel in customRelocation:
             if symbolName == crel[0]:
-                print '[+] Hooking %s' %(symbolName)
+                print('[+] Hooking %s' %(symbolName))
                 Triton.setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD), crel[2])
     return
 

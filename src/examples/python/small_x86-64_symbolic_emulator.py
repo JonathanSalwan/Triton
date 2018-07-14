@@ -258,7 +258,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, str.encode(argv)+b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):
@@ -415,7 +415,7 @@ def makeRelocation(binary):
 
 def debug(s):
     if DEBUG:
-        print '[Triton] %s' %(s)
+        print('[Triton] %s' %(s))
     return
 
 
