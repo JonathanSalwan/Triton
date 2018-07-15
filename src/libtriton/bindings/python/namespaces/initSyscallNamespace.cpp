@@ -362,20 +362,42 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(SYSCALL64, Syscall64Namespace)
+
+      PyObject* initSyscall64Namespace() {
+        PyType_Ready(&Syscall64Namespace_Type);
+        PyObject* syscallsDict64 = Syscall64Namespace_Type.tp_dict;
+#else
       void initSyscall64Namespace(PyObject* syscallsDict64) {
         PyDict_Clear(syscallsDict64);
+#endif
 
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL64; ++i)
           xPyDict_SetItemString(syscallsDict64, triton::os::unix::syscallmap64[i], PyLong_FromUint32(i));
+#ifdef IS_PY3
+        return _PyObject_New(&Syscall64Namespace_Type);
+#endif
       }
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(SYSCALL32, Syscall32Namespace)
+
+      PyObject* initSyscall32Namespace() {
+        PyType_Ready(&Syscall32Namespace_Type);
+        PyObject* syscallsDict32 = Syscall32Namespace_Type.tp_dict;
+#else
       void initSyscall32Namespace(PyObject* syscallsDict32) {
         PyDict_Clear(syscallsDict32);
+#endif
 
         #if defined(__unix__)
         for (triton::uint32 i = 0; i < triton::os::unix::NB_SYSCALL32; ++i)
           xPyDict_SetItemString(syscallsDict32, triton::os::unix::syscallmap32[i], PyLong_FromUint32(i));
         #endif
+#ifdef IS_PY3
+        return _PyObject_New(&Syscall32Namespace_Type);
+#endif
       }
 
     }; /* python namespace */

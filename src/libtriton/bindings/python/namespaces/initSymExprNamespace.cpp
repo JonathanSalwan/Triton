@@ -37,10 +37,21 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(SYMEXPR, SymExprNamespace)
+
+      PyObject* initSymExprNamespace() {
+        PyType_Ready(&SymExprNamespace_Type);
+        PyObject* symExprDict = SymExprNamespace_Type.tp_dict;
+#else
       void initSymExprNamespace(PyObject* symExprDict) {
+#endif
         xPyDict_SetItemString(symExprDict, "UNDEF",  PyLong_FromUint32(triton::engines::symbolic::UNDEF));
         xPyDict_SetItemString(symExprDict, "MEM",    PyLong_FromUint32(triton::engines::symbolic::MEM));
         xPyDict_SetItemString(symExprDict, "REG",    PyLong_FromUint32(triton::engines::symbolic::REG));
+#ifdef IS_PY3
+        return _PyObject_New(&SymExprNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

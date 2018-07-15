@@ -147,8 +147,12 @@ namespace triton {
 
 
       PyTypeObject SolverModel_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "SolverModel",                              /* tp_name */
         sizeof(SolverModel_Object),                 /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -157,7 +161,11 @@ namespace triton {
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
+#ifdef IS_PY3
+        (reprfunc)SolverModel_str,                  /* tp_repr */
+#else
         0,                                          /* tp_repr */
+#endif
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */
@@ -194,7 +202,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)SolverModel_dealloc,            /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        (destructor)SolverModel_dealloc,            /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

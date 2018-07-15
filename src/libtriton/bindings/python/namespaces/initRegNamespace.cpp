@@ -67,11 +67,25 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(REG, RegNamespace)
+      NAMESPACE_TYPE(X86, X86RegNamespace)
+      NAMESPACE_TYPE(X86_64, X86_64RegNamespace)
+
+      PyObject* initRegNamespace() {
+        PyType_Ready(&RegNamespace_Type);
+        PyObject *registersDict = RegNamespace_Type.tp_dict;
+
+        PyType_Ready(&X86RegNamespace_Type);
+        PyObject *x86RegistersDictClass = _PyObject_New(&X86RegNamespace_Type);
+        PyObject *x86RegistersDict = X86RegNamespace_Type.tp_dict;
+#else
       void initRegNamespace(PyObject* registersDict) {
         PyDict_Clear(registersDict);
 
         PyObject* x86RegistersDict      = xPyDict_New();
         PyObject* x86RegistersDictClass = xPyClass_New(nullptr, x86RegistersDict, xPyString_FromString("X86"));
+#endif
         xPyDict_SetItemString(registersDict, "X86", x86RegistersDictClass);
 
         // Init X86 REG namespace
@@ -82,8 +96,14 @@ namespace triton {
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 
+#ifdef IS_PY3
+        PyType_Ready(&X86_64RegNamespace_Type);
+        PyObject* x8664RegistersDict      = X86_64RegNamespace_Type.tp_dict;
+        PyObject* x8664RegistersDictClass = _PyObject_New(&X86_64RegNamespace_Type);
+#else
         PyObject* x8664RegistersDict      = xPyDict_New();
         PyObject* x8664RegistersDictClass = xPyClass_New(nullptr, x8664RegistersDict, xPyString_FromString("X86_64"));
+#endif
         xPyDict_SetItemString(registersDict, "X86_64", x8664RegistersDictClass);
 
         // Init X86_64 REG namespace
@@ -92,6 +112,9 @@ namespace triton {
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
+#ifdef IS_PY3
+        return _PyObject_New(&RegNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

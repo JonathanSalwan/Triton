@@ -83,7 +83,15 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(AST_NODE, AstNodeNameSpace)
+
+      PyObject* initAstNodeNamespace() {
+        PyType_Ready(&AstNodeNameSpace_Type);
+        PyObject *astNodeDict = AstNodeNameSpace_Type.tp_dict;
+#else
       void initAstNodeNamespace(PyObject* astNodeDict) {
+#endif
         xPyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint32(triton::ast::ASSERT_NODE));
         xPyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint32(triton::ast::BV_NODE));
         xPyDict_SetItemString(astNodeDict, "BVADD",             PyLong_FromUint32(triton::ast::BVADD_NODE));
@@ -133,6 +141,9 @@ namespace triton {
         xPyDict_SetItemString(astNodeDict, "UNDEFINED",         PyLong_FromUint32(triton::ast::UNDEFINED_NODE));
         xPyDict_SetItemString(astNodeDict, "VARIABLE",          PyLong_FromUint32(triton::ast::VARIABLE_NODE));
         xPyDict_SetItemString(astNodeDict, "ZX",                PyLong_FromUint32(triton::ast::ZX_NODE));
+#ifdef IS_PY3
+        return _PyObject_New(&AstNodeNameSpace_Type);
+#endif
       }
 
     }; /* python namespace */

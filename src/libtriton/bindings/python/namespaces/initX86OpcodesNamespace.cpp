@@ -1330,8 +1330,16 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(OPCODE, OpcodeNamespace)
+
+      PyObject *initX86OpcodesNamespace() {
+        PyType_Ready(&OpcodeNamespace_Type);
+        PyObject *opcodesDict = OpcodeNamespace_Type.tp_dict;
+#else
       void initX86OpcodesNamespace(PyObject* opcodesDict) {
         PyDict_Clear(opcodesDict);
+#endif
 
         xPyDict_SetItemString(opcodesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_INST_INVALID));
         xPyDict_SetItemString(opcodesDict, "AAA", PyLong_FromUint32(triton::arch::x86::ID_INS_AAA));
@@ -2628,6 +2636,9 @@ namespace triton {
         xPyDict_SetItemString(opcodesDict, "XSHA256", PyLong_FromUint32(triton::arch::x86::ID_INS_XSHA256));
         xPyDict_SetItemString(opcodesDict, "XSTORE", PyLong_FromUint32(triton::arch::x86::ID_INS_XSTORE));
         xPyDict_SetItemString(opcodesDict, "XTEST", PyLong_FromUint32(triton::arch::x86::ID_INS_XTEST));
+#ifdef IS_PY3
+        return _PyObject_New(&OpcodeNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

@@ -75,9 +75,17 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(CPUSIZE, cpuSizeNamespace)
+
+      PyObject* initCpuSizeNamespace() {
+        PyType_Ready(&cpuSizeNamespace_Type);
+        PyObject *cpuSizeDict = cpuSizeNamespace_Type.tp_dict;
+#else
       void initCpuSizeNamespace(PyObject* cpuSizeDict) {
         PyDict_Clear(cpuSizeDict);
 
+#endif
         xPyDict_SetItemString(cpuSizeDict, "BYTE",        PyLong_FromUint32(BYTE_SIZE));
         xPyDict_SetItemString(cpuSizeDict, "BYTE_BIT",    PyLong_FromUint32(BYTE_SIZE_BIT));
         xPyDict_SetItemString(cpuSizeDict, "WORD",        PyLong_FromUint32(WORD_SIZE));
@@ -92,6 +100,9 @@ namespace triton {
         xPyDict_SetItemString(cpuSizeDict, "QQWORD_BIT",  PyLong_FromUint32(QQWORD_SIZE_BIT));
         xPyDict_SetItemString(cpuSizeDict, "DQQWORD",     PyLong_FromUint32(DQQWORD_SIZE));
         xPyDict_SetItemString(cpuSizeDict, "DQQWORD_BIT", PyLong_FromUint32(DQQWORD_SIZE_BIT));
+#ifdef IS_PY3
+        return _PyObject_New(&cpuSizeNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

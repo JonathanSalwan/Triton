@@ -1524,8 +1524,12 @@ namespace triton {
 
       //! Python description for an ast context.
       PyTypeObject AstContext_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "AstContext",                               /* tp_name */
         sizeof(AstContext_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -1571,7 +1575,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         0,                                          /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

@@ -200,8 +200,12 @@ namespace triton {
 
 
       PyTypeObject SymbolicVariable_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "SymbolicVariable",                         /* tp_name */
         sizeof(SymbolicVariable_Object),            /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -247,7 +251,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)SymbolicVariable_dealloc,       /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        (destructor)SymbolicVariable_dealloc,       /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

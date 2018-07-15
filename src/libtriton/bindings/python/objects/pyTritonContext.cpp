@@ -398,6 +398,11 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(registers, TritonRegisters)
+      PyAPI_DATA(PyTypeObject) Instruction_Type;
+#endif
+
       static void TritonContext_dealloc(PyObject* self) {
         if (((TritonContext_Object*)self)->ref == false)
           delete PyTritonContext_AsTritonContext(self);
@@ -410,12 +415,21 @@ namespace triton {
         /* Fill self->regAttr */
         auto& regs = PyTritonContext_AsTritonContext(self)->getAllRegisters();
 
+#ifdef IS_PY3
+        PyType_Ready(&TritonRegisters_Type);
+        PyObject* registersDict = TritonRegisters_Type.tp_dict;
+#else
         PyObject* registersDict = xPyDict_New();
+#endif
         for (auto& reg : regs)
           xPyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
 
         Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
+#ifdef IS_PY3
+        ((TritonContext_Object*)(self))->regAttr = _PyObject_New(&TritonRegisters_Type);
+#else
         ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
+#endif
       }
 
 
@@ -937,7 +951,11 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment);
 
+#ifdef IS_PY3
+        if (inst == nullptr || (Py_TYPE(inst) == &Instruction_Type))
+#else
         if (inst == nullptr || (!PyInstance_Check(inst)))
+#endif
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -975,7 +993,11 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &mem, &comment);
 
+#ifdef IS_PY3
+        if (inst == nullptr || (Py_TYPE(inst) == &Instruction_Type))
+#else
         if (inst == nullptr || (!PyInstance_Check(inst)))
+#endif
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1013,7 +1035,11 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &reg, &comment);
 
+#ifdef IS_PY3
+        if (inst == nullptr || (Py_TYPE(inst) == &Instruction_Type))
+#else
         if (inst == nullptr || (!PyInstance_Check(inst)))
+#endif
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1050,7 +1076,11 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &inst, &node, &comment);
 
+#ifdef IS_PY3
+        if (inst == nullptr || (Py_TYPE(inst) == &Instruction_Type))
+#else
         if (inst == nullptr || (!PyInstance_Check(inst)))
+#endif
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -2886,8 +2916,12 @@ namespace triton {
 
       //! Description of the python representation of a TritonContext
       PyTypeObject TritonContext_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "TritonContext",                            /* tp_name */
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -2933,7 +2967,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)TritonContext_dealloc,          /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        (destructor)TritonContext_dealloc,          /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

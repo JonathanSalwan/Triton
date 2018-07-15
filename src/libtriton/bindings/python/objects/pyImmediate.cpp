@@ -214,8 +214,12 @@ namespace triton {
 
 
       PyTypeObject Immediate_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "Immediate",                                /* tp_name */
         sizeof(Immediate_Object),                   /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -261,7 +265,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)Immediate_dealloc,              /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        (destructor)Immediate_dealloc,              /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

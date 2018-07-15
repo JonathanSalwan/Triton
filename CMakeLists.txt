@@ -16,6 +16,7 @@ option(INCBUILD "Increment the build number" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
+option(PYTHON3 "Enable python3 bindings" OFF)
 option(STATICLIB "Build a static library" OFF)
 option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
 
@@ -29,7 +30,11 @@ include(CTest)
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
 if(PYTHON_BINDINGS)
-    find_package(PythonInterp 2.7 REQUIRED)
+    if (PYTHON3)
+      find_package(PythonInterp 3.5 REQUIRED)
+    else()
+      find_package(PythonInterp 2.7 REQUIRED)
+    endif()
     add_custom_target(test-python
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${CMAKE_SOURCE_DIR}/src/testers/unittests
         DEPENDS python-triton
@@ -113,9 +118,13 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 # Custom cmake search
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/CMakeModules/")
 
-# Find Python 2.7
+# Find Python
 if(PYTHON_BINDINGS)
-    find_package(PythonInterp 2.7 REQUIRED)
+    if (PYTHON3)
+      find_package(PythonInterp 3.5 REQUIRED)
+    else()
+      find_package(PythonInterp 2.7 REQUIRED)
+    endif()
     if(NOT PYTHON_INCLUDE_DIRS)
         set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
     endif()
@@ -123,12 +132,19 @@ if(PYTHON_BINDINGS)
             set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
         endif()
         if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
-            find_package(PythonLibs 2.7 REQUIRED)
+            if (PYTHON3)
+              find_package(PythonLibs 3.5 REQUIRED)
+            else()
+              find_package(PythonLibs 2.7 REQUIRED)
+            endif()
         elseif(NOT (PYTHON_INCLUDE_DIRS AND PYTHON_LIBRARIES))
             message(FATAL_ERROR "Inconsistent PYTHON_INCLUDE_DIRS and PYTHON_LIBRARIES")
         endif()
     include_directories(${PYTHON_INCLUDE_DIRS})
     add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
+    if (PYTHON3)
+      add_definitions("-DIS_PY3")
+    endif()
 endif()
 
 # Find Z3

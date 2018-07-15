@@ -145,8 +145,12 @@ namespace triton {
 
 
       PyTypeObject BitsVector_Type = {
+#ifdef IS_PY3
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
+#else
         PyObject_HEAD_INIT(&PyType_Type)
         0,                                          /* ob_size */
+#endif
         "BitsVector",                               /* tp_name */
         sizeof(BitsVector_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -192,7 +196,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)BitsVector_dealloc,             /* tp_del */
+#ifdef IS_PY3
+        0,                                          /* tp_version_tag */
+        (destructor)BitsVector_dealloc,             /* tp_dealloc */
+#else
         0                                           /* tp_version_tag */
+#endif
       };
 
 

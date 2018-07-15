@@ -51,11 +51,22 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(MODE, ModeNamespace)
+
+      PyObject* initModeNamespace() {
+        PyType_Ready(&ModeNamespace_Type);
+        PyObject *modeDict = ModeNamespace_Type.tp_dict;
+#else
       void initModeNamespace(PyObject* modeDict) {
+#endif
         xPyDict_SetItemString(modeDict, "ALIGNED_MEMORY",         PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
+#ifdef IS_PY3
+        return _PyObject_New(&ModeNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

@@ -52,6 +52,7 @@ namespace triton {
       }
 
 
+#ifndef IS_PY3
       PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n) {
         PyObject* c = PyClass_New(b, d, n);
 
@@ -64,6 +65,7 @@ namespace triton {
 
         return c;
       }
+#endif
 
 
       int xPyDict_SetItemString(PyObject* p, const char* key, PyObject* val) {

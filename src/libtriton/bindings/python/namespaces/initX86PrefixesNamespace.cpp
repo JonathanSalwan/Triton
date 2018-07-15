@@ -40,14 +40,25 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(PREFIX, PrefixNamespace)
+
+      PyObject* initX86PrefixesNamespace() {
+        PyType_Ready(&PrefixNamespace_Type);
+        PyObject* prefixesDict = PrefixNamespace_Type.tp_dict;
+#else
       void initX86PrefixesNamespace(PyObject* prefixesDict) {
         PyDict_Clear(prefixesDict);
+#endif
 
         xPyDict_SetItemString(prefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
         xPyDict_SetItemString(prefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
         xPyDict_SetItemString(prefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
         xPyDict_SetItemString(prefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
         xPyDict_SetItemString(prefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
+#ifdef IS_PY3
+        return _PyObject_New(&PrefixNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

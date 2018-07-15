@@ -38,11 +38,22 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(OPERAND, OperandNamespace)
+
+      PyObject* initOperandNamespace() {
+        PyType_Ready(&OperandNamespace_Type);
+        PyObject *operandDict = OperandNamespace_Type.tp_dict;
+#else
       void initOperandNamespace(PyObject* operandDict) {
+#endif
         xPyDict_SetItemString(operandDict, "INVALID",  PyLong_FromUint32(triton::arch::OP_INVALID));
         xPyDict_SetItemString(operandDict, "IMM",      PyLong_FromUint32(triton::arch::OP_IMM));
         xPyDict_SetItemString(operandDict, "MEM",      PyLong_FromUint32(triton::arch::OP_MEM));
         xPyDict_SetItemString(operandDict, "REG",      PyLong_FromUint32(triton::arch::OP_REG));
+#ifdef IS_PY3
+        return _PyObject_New(&OperandNamespace_Type);
+#endif
       }
 
     }; /* python namespace */

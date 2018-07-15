@@ -46,9 +46,20 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+      NAMESPACE_TYPE(AST_REPRESENTATION, AstRepresentation)
+
+      PyObject* initAstRepresentationNamespace() {
+        PyType_Ready(&AstRepresentation_Type);
+        PyObject *astRepresentationDict = AstRepresentation_Type.tp_dict;
+#else
       void initAstRepresentationNamespace(PyObject* astRepresentationDict) {
+#endif
         xPyDict_SetItemString(astRepresentationDict, "SMT",    PyLong_FromUint32(triton::ast::representations::SMT_REPRESENTATION));
         xPyDict_SetItemString(astRepresentationDict, "PYTHON", PyLong_FromUint32(triton::ast::representations::PYTHON_REPRESENTATION));
+#ifdef IS_PY3
+        return _PyObject_New(&AstRepresentation_Type);
+#endif
       }
 
     }; /* python namespace */

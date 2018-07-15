@@ -60,12 +60,23 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+#ifdef IS_PY3
+    NAMESPACE_TYPE(CALLBACK, CallbackNamespace)
+
+      PyObject* initCallbackNamespace() {
+        PyType_Ready(&CallbackNamespace_Type);
+        PyObject *callbackDict = CallbackNamespace_Type.tp_dict;
+#else
       void initCallbackNamespace(PyObject* callbackDict) {
+#endif
         xPyDict_SetItemString(callbackDict, "GET_CONCRETE_MEMORY_VALUE",   PyLong_FromUint32(triton::callbacks::GET_CONCRETE_MEMORY_VALUE));
         xPyDict_SetItemString(callbackDict, "GET_CONCRETE_REGISTER_VALUE", PyLong_FromUint32(triton::callbacks::GET_CONCRETE_REGISTER_VALUE));
         xPyDict_SetItemString(callbackDict, "SET_CONCRETE_MEMORY_VALUE",   PyLong_FromUint32(triton::callbacks::SET_CONCRETE_MEMORY_VALUE));
         xPyDict_SetItemString(callbackDict, "SET_CONCRETE_REGISTER_VALUE", PyLong_FromUint32(triton::callbacks::SET_CONCRETE_REGISTER_VALUE));
         xPyDict_SetItemString(callbackDict, "SYMBOLIC_SIMPLIFICATION",     PyLong_FromUint32(triton::callbacks::SYMBOLIC_SIMPLIFICATION));
+#ifdef IS_PY3
+        return _PyObject_New(&CallbackNamespace_Type);
+#endif
       }
 
     }; /* python namespace */
