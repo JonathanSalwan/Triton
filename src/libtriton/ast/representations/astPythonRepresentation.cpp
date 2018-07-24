@@ -442,6 +442,9 @@ namespace triton {
       /* variable representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
         stream << node->getVar()->getName();
+        stream << ":" << node->getVar()->getSize();
+        if (!node->getVar()->getComment().empty())
+          stream << ":" << node->getVar()->getComment();
         return stream;
       }
 
