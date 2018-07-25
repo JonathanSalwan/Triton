@@ -1466,6 +1466,67 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_array(PyObject* self, PyObject* addrSize) {
+        if (!PyLong_Check(addrSize) && !PyInt_Check(addrSize))
+          return PyErr_Format(PyExc_TypeError, "array(): expected an integer as first argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->array(PyLong_AsUint32(addrSize)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstContext_select(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "select(): expected a AstNode as first argument");
+
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "select(): expected a AstNode as second argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->select(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstContext_store(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+        PyObject* op3 = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
+
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "store(): expected a AstNode as first argument");
+
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "store(): expected a AstNode as second argument");
+
+        if (op3 == nullptr || !PyAstNode_Check(op3))
+          return PyErr_Format(PyExc_TypeError, "store(): expected a AstNode as third argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->store(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
         {"assert_",       AstContext_assert,          METH_O,           ""},
@@ -1518,6 +1579,9 @@ namespace triton {
         {"sx",            AstContext_sx,              METH_VARARGS,     ""},
         {"variable",      AstContext_variable,        METH_O,           ""},
         {"zx",            AstContext_zx,              METH_VARARGS,     ""},
+        {"array",         AstContext_array,           METH_O,           ""},
+        {"select",        AstContext_select,          METH_VARARGS,     ""},
+        {"store",         AstContext_store,           METH_VARARGS,     ""},
         {nullptr,         nullptr,                    0,                nullptr}
       };
 

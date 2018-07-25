@@ -71,6 +71,9 @@ namespace triton {
           case SX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::SxNode*>(node)); break;
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
           case ZX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::ZxNode*>(node)); break;
+          case ARRAY_NODE:                return this->print(stream, reinterpret_cast<triton::ast::ArrayNode*>(node)); break;
+          case SELECT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::SelectNode*>(node)); break;
+          case STORE_NODE:                return this->print(stream, reinterpret_cast<triton::ast::StoreNode*>(node)); break;
           default:
             throw triton::exceptions::AstRepresentation("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
         }
@@ -449,6 +452,27 @@ namespace triton {
       /* zx representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ZxNode* node) {
         stream << node->getChildren()[1];
+        return stream;
+      }
+
+
+      /* array representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ArrayNode* node) {
+        stream << 'M';
+        return stream;
+      }
+
+
+      /* select representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::SelectNode* node) {
+        stream << node->getChildren()[0] << '[' << node->getChildren()[1] << ']';
+        return stream;
+      }
+
+
+      /* store representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::StoreNode* node) {
+        stream << '(' << node->getChildren()[0] << '[' << node->getChildren()[1] << "] = " << node->getChildren()[2] << ")";
         return stream;
       }
 

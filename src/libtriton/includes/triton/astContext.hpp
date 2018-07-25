@@ -256,6 +256,15 @@ namespace triton {
         //! AST C++ API - zx node builder
         TRITON_EXPORT SharedAbstractNode zx(triton::uint32 sizeExt, const SharedAbstractNode& expr);
 
+        //! AST C++ API - array node builder
+        TRITON_EXPORT SharedAbstractNode array(triton::uint32 addrSize);
+
+        //! AST C++ API - select node builder
+        TRITON_EXPORT SharedAbstractNode select(const SharedAbstractNode& a, const SharedAbstractNode& i);
+
+        //! AST C++ API - store node builder
+        TRITON_EXPORT SharedAbstractNode store(const SharedAbstractNode& a, const SharedAbstractNode& i, const SharedAbstractNode& v);
+
         //! Initializes a variable in the context
         TRITON_EXPORT void initVariable(const std::string& name, const triton::uint512& value, const SharedAbstractNode& node);
 

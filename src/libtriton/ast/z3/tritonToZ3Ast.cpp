@@ -293,6 +293,31 @@ namespace triton {
           return to_expr(this->context, Z3_mk_zero_ext(this->context, extv, value));
         }
 
+        case ARRAY_NODE: {
+          z3::expr size        = this->convert(node->getChildren()[0]);
+          triton::uint32 sizev = static_cast<triton::uint32>(this->getUintValue(size));
+          auto isort           = this->context.bv_sort(sizev);
+          auto vsort           = this->context.bv_sort(8);
+          auto asort           = this->context.array_sort(isort, vsort);
+
+          return this->context.constant(("M" + std::to_string(sizev)).c_str(), asort);
+        }
+
+        case SELECT_NODE: {
+          z3::expr a = this->convert(node->getChildren()[0]);
+          z3::expr i = this->convert(node->getChildren()[1]);
+
+          return to_expr(this->context, Z3_mk_select(this->context, a, i));
+        }
+
+        case STORE_NODE: {
+          z3::expr a = this->convert(node->getChildren()[0]);
+          z3::expr i = this->convert(node->getChildren()[1]);
+          z3::expr v = this->convert(node->getChildren()[2]);
+
+          return to_expr(this->context, Z3_mk_store(this->context, a, i, v));
+        }
+
         default:
           throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): Invalid kind of node.");
       }

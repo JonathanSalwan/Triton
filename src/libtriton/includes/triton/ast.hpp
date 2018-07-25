@@ -635,6 +635,33 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
+
+    //! `(Array (_ BitVec <addrSize>) (_ BitVec 8))` node
+    class ArrayNode : public AbstractNode {
+      public:
+        TRITON_EXPORT ArrayNode(triton::uint32 addrSize, AstContext& ctxt);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
+    //! `(select <a> <i>)` node
+    class SelectNode : public AbstractNode {
+      public:
+        TRITON_EXPORT SelectNode(const SharedAbstractNode& a, const SharedAbstractNode& i);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
+    //! `(store <a> <i> <v>)` node
+    class StoreNode : public AbstractNode {
+      public:
+        TRITON_EXPORT StoreNode(const SharedAbstractNode& a, const SharedAbstractNode& i, const SharedAbstractNode& v);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
     //! Displays the node in ast representation.
     TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
 

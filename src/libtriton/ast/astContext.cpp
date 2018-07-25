@@ -547,6 +547,39 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::array(triton::uint32 addrSize) {
+      SharedAbstractNode node = std::make_shared<ArrayNode>(addrSize, *this);
+
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+
+      node->init();
+      return node;
+    }
+
+
+    SharedAbstractNode AstContext::select(const SharedAbstractNode& a, const SharedAbstractNode& i) {
+      SharedAbstractNode node = std::make_shared<SelectNode>(a, i);
+
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+
+      node->init();
+      return node;
+    }
+
+
+    SharedAbstractNode AstContext::store(const SharedAbstractNode& a, const SharedAbstractNode& i, const SharedAbstractNode& v) {
+      SharedAbstractNode node = std::make_shared<StoreNode>(a, i, v);
+
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+
+      node->init();
+      return node;
+    }
+
+
     void AstContext::initVariable(const std::string& name, const triton::uint512& value, const SharedAbstractNode& node) {
       auto it = this->valueMapping.find(name);
       if (it == this->valueMapping.end())

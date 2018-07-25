@@ -191,6 +191,15 @@ namespace triton {
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ZxNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ArrayNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::SelectNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::StoreNode* node);
       };
 
 

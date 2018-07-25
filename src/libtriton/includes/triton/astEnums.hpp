@@ -76,6 +76,9 @@ namespace triton {
       SX_NODE = 229,                  /*!< ((_ sign_extend x) y) */
       VARIABLE_NODE = 233,            /*!< Variable node */
       ZX_NODE = 239,                  /*!< ((_ zero_extend x) y) */
+      ARRAY_NODE = 241,               /*!< (Array (_ BitVec addrSize) (_ BitVec 8)) */
+      SELECT_NODE = 251,              /*!< (select a i) */
+      STORE_NODE = 257                /*!< (store a i v) */
     };
 
   /*! @} End of ast namespace */
