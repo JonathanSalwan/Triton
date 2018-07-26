@@ -762,18 +762,17 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the memory [reg + offset] */
-      triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::Register& reg, triton::uint64 offset, triton::uint32 size) {
-        if (reg.getSize() != this->architecture->gprSize())
+      triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::ast::SharedAbstractNode& reg, triton::uint64 offset, triton::uint32 size) {
+        auto addrSize = this->architecture->gprBitSize();
+        if (reg->getBitvectorSize() != addrSize)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Invalid register size.");
 
         triton::arch::MemoryAccess mem(offset, size);
-        mem.setBaseRegister(reg);
-        auto base = this->getRegisterAst(reg);
         if (!offset) {
-          mem.setLeaAst(base);
+          mem.setLeaAst(reg);
         } else {
-          auto off = this->astCtxt.bv(offset, this->architecture->gprBitSize());
-          mem.setLeaAst(this->astCtxt.bvadd(base, off));
+          auto off = this->astCtxt.bv(offset, addrSize);
+          mem.setLeaAst(this->astCtxt.bvadd(reg, off));
         }
 
         return this->getMemoryAst(mem);

@@ -224,7 +224,7 @@ namespace triton {
           TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
           //! Returns the AST corresponding to the memory [reg + offset].
-          TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(const triton::arch::Register& reg, triton::uint64 offset, triton::uint32 size);
+          TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(const triton::ast::SharedAbstractNode& reg, triton::uint64 offset, triton::uint32 size);
 
           //! Returns the AST corresponding to the register.
           TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);

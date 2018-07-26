@@ -1338,8 +1338,8 @@ namespace triton {
           }
         }
 
-        if (!PyRegister_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects a Register as first argument.");
+        if (!PyAstNode_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an AstNode as first argument.");
 
         if (offset == nullptr || (!PyLong_Check(offset) && !PyInt_Check(offset)))
           return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an offset as second argument.");
@@ -1348,7 +1348,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects a size as third argument.");
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyRegister_AsRegister(mem), PyLong_AsUint64(offset), PyLong_AsUint32(size)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(PyAstNode_AsAstNode(mem), PyLong_AsUint64(offset), PyLong_AsUint32(size)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
