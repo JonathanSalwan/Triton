@@ -673,6 +673,12 @@ namespace triton {
   }
 
 
+  triton::ast::SharedAbstractNode API::getMemoryAst(const triton::arch::Register& reg, triton::uint64 offset, triton::uint32 size) {
+    this->checkSymbolic();
+    return this->symbolic->getMemoryAst(reg, offset, size);
+  }
+
+
   triton::ast::SharedAbstractNode API::getRegisterAst(const triton::arch::Register& reg) {
     this->checkSymbolic();
     return this->symbolic->getRegisterAst(reg);

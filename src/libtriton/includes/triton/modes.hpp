@@ -35,6 +35,7 @@ namespace triton {
       ONLY_ON_TAINTED,        //!< [symbolic mode] Perform symbolic execution only on tainted instructions.
       PC_TRACKING_SYMBOLIC,   //!< [symbolic mode] Track path constraints only if they are symbolized.
       TAINT_THROUGH_POINTERS, //!< [taint mode] Spread the taint if an index pointer is already tainted (see #725).
+      SYMBOLIZED_POINTERS,    //!< [symbolic mode] Symbolize all memory pointers.
     };
 
 

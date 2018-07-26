@@ -59,6 +59,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
         xPyDict_SetItemString(modeDict, "TAINT_THROUGH_POINTERS", PyLong_FromUint32(triton::modes::TAINT_THROUGH_POINTERS));
+        xPyDict_SetItemString(modeDict, "SYMBOLIZED_POINTERS",    PyLong_FromUint32(triton::modes::SYMBOLIZED_POINTERS));
       }
 
     }; /* python namespace */

@@ -1315,12 +1315,40 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getMemoryAst(PyObject* self, PyObject* mem) {
-        if (!PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an MemoryAccess as argument.");
+      static PyObject* TritonContext_getMemoryAst(PyObject* self, PyObject* args) {
+        PyObject*       mem    = nullptr;
+        PyObject*       offset = nullptr;
+        PyObject*       size   = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OOO", &mem, &offset, &size);
+
+        if (mem == nullptr)
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects at least one argument.");
+
+        if (PyMemoryAccess_Check(mem)) {
+          if (offset != nullptr || size != nullptr)
+            return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an MemoryAccess as single argument.");
+
+          try {
+            return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyMemoryAccess_AsMemoryAccess(mem)));
+          }
+          catch (const triton::exceptions::Exception& e) {
+            return PyErr_Format(PyExc_TypeError, "%s", e.what());
+          }
+        }
+
+        if (!PyRegister_Check(mem))
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects a Register as first argument.");
+
+        if (offset == nullptr || (!PyLong_Check(offset) && !PyInt_Check(offset)))
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects an offset as second argument.");
+
+        if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
+          return PyErr_Format(PyExc_TypeError, "getMemoryAst(): Expects a size as third argument.");
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyMemoryAccess_AsMemoryAccess(mem)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyRegister_AsRegister(mem), PyLong_AsUint64(offset), PyLong_AsUint32(size)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2810,7 +2838,7 @@ namespace triton {
         {"getGprBitSize",                       (PyCFunction)TritonContext_getGprBitSize,                          METH_NOARGS,        ""},
         {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                             METH_NOARGS,        ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
-        {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
+        {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_VARARGS,       ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},

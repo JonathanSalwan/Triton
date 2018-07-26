@@ -110,6 +110,9 @@ namespace triton {
           //! Symbolic register state.
           std::vector<SharedSymbolicExpression> symbolicReg;
 
+          //! Symbolic memory state.
+          triton::ast::SharedAbstractNode symbolicMem;
+
         private:
           //! Architecture API
           triton::arch::Architecture* architecture;
@@ -219,6 +222,9 @@ namespace triton {
 
           //! Returns the AST corresponding to the memory and defines the memory as input of the instruction.
           TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
+
+          //! Returns the AST corresponding to the memory [reg + offset].
+          TRITON_EXPORT triton::ast::SharedAbstractNode getMemoryAst(const triton::arch::Register& reg, triton::uint64 offset, triton::uint32 size);
 
           //! Returns the AST corresponding to the register.
           TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(const triton::arch::Register& reg);
