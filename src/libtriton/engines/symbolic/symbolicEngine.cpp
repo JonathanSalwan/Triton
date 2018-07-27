@@ -680,6 +680,8 @@ namespace triton {
          */
         if (this->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
           triton::ast::SharedAbstractNode address = mem.getLeaAst();
+          if (!address)
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Memory operand lea AST is not present.");
           triton::uint32 size                     = mem.getSize();
           if (size == 1)
             return this->astCtxt.select(this->symbolicMem, address);
@@ -826,6 +828,8 @@ namespace triton {
          */
         if (this->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
           triton::ast::SharedAbstractNode address = mem.getLeaAst();
+          if (!address)
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand lea AST is not present.");
           triton::uint32 writeSize                = mem.getSize();
           if (writeSize == 1) {
             this->symbolicMem = this->astCtxt.store(this->symbolicMem, address, node);
