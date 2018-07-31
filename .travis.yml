@@ -154,8 +154,9 @@ install:
   - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
   # Install capstone
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then git clone https://github.com/aquynh/capstone.git; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd capstone; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/aquynh/capstone/archive/3.0.5.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf ./3.0.5.tar.gz; fi
+  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ./capstone-3.0.5; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash ./make.sh; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ../; fi
