@@ -111,7 +111,15 @@ namespace triton {
           std::vector<SharedSymbolicExpression> symbolicReg;
 
           //! Symbolic memory state.
-          triton::ast::SharedAbstractNode symbolicMem;
+          SharedSymbolicExpression symbolicMem;
+
+          /*! \brief map of <lea AST hash:size> -> symbolic expression.
+           *
+           * \details
+           * **item1**: <lea AST hash:size><br>
+           * **item2**: shared symbolic expression
+           */
+          std::map<std::pair<triton::uint512, triton::uint32>, SharedSymbolicExpression> symbolicMemoryReference;
 
         private:
           //! Architecture API

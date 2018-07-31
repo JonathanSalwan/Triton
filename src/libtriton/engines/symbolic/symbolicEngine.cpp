@@ -91,7 +91,8 @@ namespace triton {
         this->uniqueSymVarId    = 0;
 
         this->symbolicReg.resize(this->numberOfRegisters);
-        this->symbolicMem = this->astCtxt.array(this->architecture->gprBitSize());
+        auto tmp = this->astCtxt.array(this->architecture->gprBitSize());
+        this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Initial memory Array reference");
       }
 
 
@@ -673,6 +674,7 @@ namespace triton {
       /* Returns the AST corresponding to the memory */
       triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::MemoryAccess& mem) {
         std::list<triton::ast::SharedAbstractNode> opVec;
+        triton::ast::SharedAbstractNode tmp       = nullptr;
 
         /*
          * Symbolize memory pointers
@@ -682,19 +684,31 @@ namespace triton {
           triton::ast::SharedAbstractNode address = mem.getLeaAst();
           if (!address)
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Memory operand lea AST is not present.");
-          triton::uint32 size                     = mem.getSize();
-          if (size == 1)
-            return this->astCtxt.select(this->symbolicMem, address);
-          opVec.push_front(this->astCtxt.select(this->symbolicMem, address));
           auto addrSize = this->architecture->gprBitSize();
+          if (address->getBitvectorSize() != addrSize)
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Memory operand size is not consistent.");
+          triton::uint32 size                     = mem.getSize();
+          auto h = std::make_pair(address->hash(1), size);
+          if (this->symbolicMemoryReference.count(h))
+            return this->astCtxt.reference(this->symbolicMemoryReference[h]);
+          tmp = this->astCtxt.reference(this->symbolicMem);
+          if (size == 1) {
+            tmp = this->astCtxt.select(tmp, address);
+            auto se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Byte reference");
+            this->symbolicMemoryReference[h] = se;
+            return this->astCtxt.reference(se);
+          }
+          opVec.push_front(this->astCtxt.select(tmp, address));
           for (triton::uint32 i = 1; i != size; ++i) {
             auto addr = this->astCtxt.bvadd(address, this->astCtxt.bv(i, addrSize));
-            opVec.push_front(this->astCtxt.select(this->symbolicMem, addr));
+            opVec.push_front(this->astCtxt.select(tmp, addr));
           }
-          return this->astCtxt.concat(opVec);
+          tmp = this->astCtxt.concat(opVec);
+          auto se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Memory concatenation reference");
+          this->symbolicMemoryReference[h] = se;
+          return this->astCtxt.reference(se);
         }
 
-        triton::ast::SharedAbstractNode tmp       = nullptr;
         triton::uint64 address                    = mem.getAddress();
         triton::uint32 size                       = mem.getSize();
         triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
@@ -822,34 +836,57 @@ namespace triton {
 
       /* Returns the new symbolic memory expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
+        std::list<triton::ast::SharedAbstractNode> ret;
+        triton::ast::SharedAbstractNode tmp = nullptr;
+        SharedSymbolicExpression se         = nullptr;
+
         /*
          * Symbolize memory pointers
          * Store memory to array.
          */
         if (this->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          this->symbolicMemoryReference.clear();
           triton::ast::SharedAbstractNode address = mem.getLeaAst();
           if (!address)
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand lea AST is not present.");
+          auto addrSize = this->architecture->gprBitSize();
+          if (address->getBitvectorSize() != addrSize)
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand size is not consistent.");
           triton::uint32 writeSize                = mem.getSize();
+          auto h = std::make_pair(address->hash(1), writeSize);
           if (writeSize == 1) {
-            this->symbolicMem = this->astCtxt.store(this->symbolicMem, address, node);
+            tmp = this->astCtxt.reference(this->symbolicMem);
+            tmp = this->astCtxt.store(tmp, address, node);
+            this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Array reference - " + comment);
+            se = this->newSymbolicExpression(node, triton::engines::symbolic::MEM, "Byte reference - " + comment);
+            se->setOriginMemory(mem);
+            inst.addSymbolicExpression(se);
+            inst.setStoreAccess(mem, node);
+            this->symbolicMemoryReference[h] = se;
+            return inst.symbolicExpressions.back();
           }
-          else
-          {
-            auto addrSize = this->architecture->gprBitSize();
-            for (triton::uint32 i = 0; i != writeSize; ++i) {
-              auto addr = i == 0 ? address : this->astCtxt.bvadd(address, this->astCtxt.bv(i, addrSize));
-              auto val  = this->astCtxt.extract(8 * i + 7, 8 * i, node);
-              this->symbolicMem = this->astCtxt.store(this->symbolicMem, addr, val);
-            }
+          for (triton::uint32 i = 0; i != writeSize; ++i) {
+            auto addr = i == 0 ? address : this->astCtxt.bvadd(address, this->astCtxt.bv(i, addrSize));
+            auto val = this->astCtxt.extract(8 * i + 7, 8 * i, node);
+            tmp = this->astCtxt.reference(this->symbolicMem);
+            tmp = this->astCtxt.store(tmp, addr, val);
+            this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Array reference - " + comment);
+            se = this->newSymbolicExpression(val, triton::engines::symbolic::MEM, "Byte reference - " + comment);
+            auto m = mem;
+            m.setAddress(mem.getAddress() + 1);
+            m.setLeaAst(addr);
+            se->setOriginMemory(m);
+            ret.push_front(val);
+            inst.addSymbolicExpression(se);
           }
-          SharedSymbolicExpression se = this->newSymbolicExpression(this->symbolicMem, triton::engines::symbolic::MEM, "Array reference - " + comment);
+          tmp = this->astCtxt.concat(ret);
+          se = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Memory concatenation reference - " + comment);
+          se->setOriginMemory(mem);
+          inst.setStoreAccess(mem, node);
+          this->symbolicMemoryReference[h] = se;
           return inst.addSymbolicExpression(se);
         }
 
-        std::list<triton::ast::SharedAbstractNode> ret;
-        triton::ast::SharedAbstractNode tmp = nullptr;
-        SharedSymbolicExpression se         = nullptr;
         triton::uint64 address              = mem.getAddress();
         triton::uint32 writeSize            = mem.getSize();
 
