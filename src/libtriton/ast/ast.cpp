@@ -214,7 +214,7 @@ namespace triton {
     }
 
 
-    std::string AbstractNode::str(void) {
+    std::string AbstractNode::str(void) const {
       std::stringstream s;
       s << this;
       if (!s.str().empty())
