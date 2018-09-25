@@ -962,6 +962,9 @@ namespace triton {
           //! The POPAL semantics.
           void popal_s(triton::arch::Instruction& inst);
 
+          //! The POPF semantics.
+          void popf_s(triton::arch::Instruction& inst);
+
           //! The POPFD semantics.
           void popfd_s(triton::arch::Instruction& inst);
 

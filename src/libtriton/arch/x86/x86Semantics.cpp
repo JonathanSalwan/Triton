@@ -215,6 +215,7 @@ PMOVZXWD                     | sse4.1     | Zero Extend 4 Packed Signed 16-bit I
 PMOVZXWQ                     | sse4.1     | Zero Extend 2 Packed Signed 16-bit Integers
 POP                          |            | Pop a Value from the Stack
 POPAL/POPAD                  |            | Pop All General-Purpose Registers
+POPF                         |            | Pop Stack into lower 16-bit of EFLAGS Register
 POPFD                        |            | Pop Stack into EFLAGS Register
 POPFQ                        |            | Pop Stack into RFLAGS Register
 POR                          | mmx/sse2   | Bitwise Logical OR
@@ -532,6 +533,7 @@ namespace triton {
           case ID_INS_PMOVZXWQ:       this->pmovzxwq_s(inst);     break;
           case ID_INS_POP:            this->pop_s(inst);          break;
           case ID_INS_POPAL:          this->popal_s(inst);        break;
+          case ID_INS_POPF:           this->popf_s(inst);         break;
           case ID_INS_POPFD:          this->popfd_s(inst);        break;
           case ID_INS_POPFQ:          this->popfq_s(inst);        break;
           case ID_INS_POR:            this->por_s(inst);          break;
@@ -8665,6 +8667,69 @@ namespace triton {
 
         /* Create the semantics - side effect */
         alignAddStack_s(inst, stack.getSize() * 8);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::popf_s(triton::arch::Instruction& inst) {
+        auto  stack      = this->architecture->getParentRegister(ID_REG_SP);
+        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_CF));
+        auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_PF));
+        auto  dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
+        auto  dst4       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ZF));
+        auto  dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_SF));
+        auto  dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_TF));
+        auto  dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
+        auto  dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
+        auto  dst9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto  dst10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node1  = this->astCtxt.extract(0,  0,  op1);
+        auto node2  = this->astCtxt.extract(2,  2,  op1);
+        auto node3  = this->astCtxt.extract(4,  4,  op1);
+        auto node4  = this->astCtxt.extract(6,  6,  op1);
+        auto node5  = this->astCtxt.extract(7,  7,  op1);
+        auto node6  = this->astCtxt.extract(8,  8,  op1);
+        auto node7  = this->astCtxt.bvtrue(); /* IF true? */
+        auto node8  = this->astCtxt.extract(10, 10, op1);
+        auto node9  = this->astCtxt.extract(11, 11, op1);
+        /* IOPL don't support */
+        auto node10 = this->astCtxt.extract(14, 14, op1);
+
+        /* Create symbolic expression */
+        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPF CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPF PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPF AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPF ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPF SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPF TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPF IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPF DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPF OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPF NT operation");
+
+        /* Spread taint */
+        expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted  = this->taintEngine->taintAssignment(dst2, src);
+        expr3->isTainted  = this->taintEngine->taintAssignment(dst3, src);
+        expr4->isTainted  = this->taintEngine->taintAssignment(dst4, src);
+        expr5->isTainted  = this->taintEngine->taintAssignment(dst5, src);
+        expr6->isTainted  = this->taintEngine->taintAssignment(dst6, src);
+        expr7->isTainted  = this->taintEngine->taintAssignment(dst7, src);
+        expr8->isTainted  = this->taintEngine->taintAssignment(dst8, src);
+        expr9->isTainted  = this->taintEngine->taintAssignment(dst9, src);
+        expr10->isTainted = this->taintEngine->taintAssignment(dst10, src);
+
+        /* Create the semantics - side effect */
+        alignAddStack_s(inst, src.getSize());
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
