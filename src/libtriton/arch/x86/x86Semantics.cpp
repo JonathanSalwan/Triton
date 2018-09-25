@@ -9816,12 +9816,12 @@ namespace triton {
         if (src.getType() != triton::arch::OP_IMM)
           size = src.getSize();
 
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, size);
         auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
-
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -12640,4 +12640,3 @@ namespace triton {
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */
-
