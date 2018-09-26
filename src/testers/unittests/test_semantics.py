@@ -5,8 +5,8 @@
 import os
 import unittest
 
-from triton import (TritonContext, ARCH, Instruction, OPCODE, CPUSIZE,
-                    MemoryAccess, MODE)
+from triton import *
+
 
 
 def checkAstIntegrity(instruction):
@@ -255,4 +255,54 @@ class TestIRQemu(unittest.TestCase):
 
         self.emulate(binary.entrypoint)
         return
+
+
+class TestCustomIR(unittest.TestCase):
+    """Test custom IR"""
+
+    def test_push_esp(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86)
+        esp = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
+        code = [
+            (0xdeadbeaf, "\x54"),  # push esp
+            (0xdeadbeb0, "\xc3"),  # ret
+        ]
+        for addr, opcode in code:
+            insn = Instruction()
+            insn.setOpcode(opcode)
+            insn.setAddress(addr)
+            ctx.processing(insn)
+        eip = ctx.getRegisterAst(ctx.getRegister(REG.X86.EIP))
+        self.assertTrue(ctx.isSat(eip == esp))
+
+    def test_popal(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86)
+        esp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
+        insn = Instruction()
+        insn.setOpcode("\x61")  # popal
+        ctx.processing(insn)
+        esp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
+        self.assertTrue(ctx.isSat(esp_new == esp_old + 32))
+
+    def test_popf_x86(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86)
+        esp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
+        insn = Instruction()
+        insn.setOpcode("\x66\x9d")  # popf
+        ctx.processing(insn)
+        esp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
+        self.assertTrue(ctx.isSat(esp_new == esp_old + 4))
+
+    def test_popf_x86_64(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        rsp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
+        insn = Instruction()
+        insn.setOpcode("\x66\x9d")  # popf
+        ctx.processing(insn)
+        rsp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
+        self.assertTrue(ctx.isSat(rsp_new == rsp_old + 8))
 
