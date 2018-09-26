@@ -3342,7 +3342,10 @@ namespace triton {
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, stack.getSize());
         auto  pc         = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_IP));
-        auto  sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem         = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto sp          = triton::arch::OperandWrapper(mem);
         auto& src        = inst.operands[0];
 
         /* Create symbolic operands */
@@ -5767,7 +5770,10 @@ namespace triton {
         auto stack     = this->architecture->getParentRegister(ID_REG_SP);
         auto base      = this->architecture->getParentRegister(ID_REG_BP);
         auto baseValue = this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>();
-        auto bp1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(baseValue, base.getSize()));
+        auto mem       = triton::arch::MemoryAccess(baseValue, base.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(base));
+        auto bp1       = triton::arch::OperandWrapper(mem);
         auto bp2       = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_BP));
         auto sp        = triton::arch::OperandWrapper(stack);
 
@@ -8580,7 +8586,10 @@ namespace triton {
         auto  stack         = this->architecture->getParentRegister(ID_REG_SP);
         auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto& dst           = inst.operands[0];
-        auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
+        auto mem            = triton::arch::MemoryAccess(stackValue, dst.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto  src           = triton::arch::OperandWrapper(mem);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -8632,14 +8641,47 @@ namespace triton {
         auto dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDX));
         auto dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ECX));
         auto dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EAX));
-        auto src1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize()));
-        auto src2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize()));
-        auto src3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize()));
+        auto mem1       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem1.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto src1       = triton::arch::OperandWrapper(mem1);
+        auto mem2       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 1, stack.getBitSize());
+          mem2.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src2       = triton::arch::OperandWrapper(mem2);
+        auto mem3       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 2, stack.getBitSize());
+          mem3.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src3       = triton::arch::OperandWrapper(mem3);
         /* stack.getSize() * 3 (ESP) is voluntarily omitted */
-        auto src4       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize()));
-        auto src5       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize()));
-        auto src6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize()));
-        auto src7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize()));
+        auto mem4       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 4, stack.getBitSize());
+          mem4.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src4       = triton::arch::OperandWrapper(mem4);
+        auto mem5       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 5, stack.getBitSize());
+          mem5.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src5      = triton::arch::OperandWrapper(mem5);
+        auto mem6       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 6, stack.getBitSize());
+          mem6.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src6       = triton::arch::OperandWrapper(mem6);
+        auto mem7       = triton::arch::MemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 7, stack.getBitSize());
+          mem7.setLeaAst(this->astCtxt.bvadd(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto src7       = triton::arch::OperandWrapper(mem7);
 
         /* Create symbolic operands and semantics */
         auto node1 = this->symbolicEngine->getOperandAst(inst, src1);
@@ -8689,7 +8731,10 @@ namespace triton {
         auto  dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
         auto  dst9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
         auto  dst10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
-        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem         = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto  src        = triton::arch::OperandWrapper(mem);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -8755,7 +8800,10 @@ namespace triton {
         auto  dst11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_RF));
         auto  dst12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
         auto  dst13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
-        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem         = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto  src        = triton::arch::OperandWrapper(mem);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -8833,7 +8881,10 @@ namespace triton {
         auto  dst11      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_RF));
         auto  dst12      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AC));
         auto  dst13      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ID));
-        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem         = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto  src        = triton::arch::OperandWrapper(mem);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -9887,7 +9938,10 @@ namespace triton {
 
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, size);
-        auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+        auto mem         = triton::arch::MemoryAccess(stackValue, size);
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(inst.symbolicExpressions.back()->getAst());
+        auto  dst        = triton::arch::OperandWrapper(mem);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -9906,14 +9960,54 @@ namespace triton {
       void x86Semantics::pushal_s(triton::arch::Instruction& inst) {
         auto stack      = this->architecture->getParentRegister(ID_REG_SP);
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto dst1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
-        auto dst2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
-        auto dst3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 3), stack.getSize()));
-        auto dst4       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 4), stack.getSize()));
-        auto dst5       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 5), stack.getSize()));
-        auto dst6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 6), stack.getSize()));
-        auto dst7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 7), stack.getSize()));
-        auto dst8       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 8), stack.getSize()));
+        auto mem1       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 1, stack.getBitSize());
+          mem1.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst1       = triton::arch::OperandWrapper(mem1);
+        auto mem2       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 2, stack.getBitSize());
+          mem2.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst2       = triton::arch::OperandWrapper(mem2);
+        auto mem3       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 3), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 3, stack.getBitSize());
+          mem3.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst3       = triton::arch::OperandWrapper(mem3);
+        auto mem4       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 4), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 4, stack.getBitSize());
+          mem4.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst4       = triton::arch::OperandWrapper(mem4);
+        auto mem5       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 5), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 5, stack.getBitSize());
+          mem5.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst5       = triton::arch::OperandWrapper(mem5);
+        auto mem6       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 6), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 6, stack.getBitSize());
+          mem6.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst6       = triton::arch::OperandWrapper(mem6);
+        auto mem7       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 7), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 7, stack.getBitSize());
+          mem7.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst7       = triton::arch::OperandWrapper(mem7);
+        auto mem8       = triton::arch::MemoryAccess(stackValue-(stack.getSize() * 8), stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS)) {
+          auto off = this->astCtxt.bv(stack.getSize() * 8, stack.getBitSize());
+          mem8.setLeaAst(this->astCtxt.bvsub(this->symbolicEngine->getRegisterAst(stack), off));
+        }
+        auto dst8       = triton::arch::OperandWrapper(mem8);
         auto src1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EAX));
         auto src2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ECX));
         auto src3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDX));
@@ -9974,7 +10068,10 @@ namespace triton {
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
-        auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem        = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto dst        = triton::arch::OperandWrapper(mem);
         auto src1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_CF));
         auto src2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_PF));
         auto src3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
@@ -10065,7 +10162,10 @@ namespace triton {
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
-        auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem        = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto dst        = triton::arch::OperandWrapper(mem);
         auto src1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_CF));
         auto src2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_PF));
         auto src3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
@@ -10339,7 +10439,10 @@ namespace triton {
         auto stack      = this->architecture->getParentRegister(ID_REG_SP);
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto pc         = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_IP));
-        auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+        auto mem        = triton::arch::MemoryAccess(stackValue, stack.getSize());
+        if (this->symbolicEngine->modes.isModeEnabled(triton::modes::SYMBOLIZED_POINTERS))
+          mem.setLeaAst(this->symbolicEngine->getRegisterAst(stack));
+        auto sp         = triton::arch::OperandWrapper(mem);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, sp);
