@@ -8626,44 +8626,45 @@ namespace triton {
         auto dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDI));
         auto dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ESI));
         auto dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EBP));
-        auto dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EBX));
-        auto dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDX));
-        auto dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ECX));
-        auto dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EAX));
+        auto dst4       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EBX));
+        auto dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDX));
+        auto dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ECX));
+        auto dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EAX));
         auto src1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize()));
         auto src2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize()));
         auto src3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize()));
-        auto src5       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize()));
-        auto src6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize()));
-        auto src7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize()));
-        auto src8       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize()));
+        /* stack.getSize() * 3 (ESP) is voluntarily omitted */
+        auto src4       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize()));
+        auto src5       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize()));
+        auto src6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize()));
+        auto src7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 7), stack.getSize()));
 
         /* Create symbolic operands and semantics */
         auto node1 = this->symbolicEngine->getOperandAst(inst, src1);
         auto node2 = this->symbolicEngine->getOperandAst(inst, src2);
         auto node3 = this->symbolicEngine->getOperandAst(inst, src3);
+        auto node4 = this->symbolicEngine->getOperandAst(inst, src4);
         auto node5 = this->symbolicEngine->getOperandAst(inst, src5);
         auto node6 = this->symbolicEngine->getOperandAst(inst, src6);
         auto node7 = this->symbolicEngine->getOperandAst(inst, src7);
-        auto node8 = this->symbolicEngine->getOperandAst(inst, src8);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "POPAL EDI operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "POPAL ESI operation");
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3, "POPAL EBP operation");
-        auto expr5 = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5, "POPAL EBX operation");
-        auto expr6 = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6, "POPAL EDX operation");
-        auto expr7 = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7, "POPAL ECX operation");
-        auto expr8 = this->symbolicEngine->createSymbolicExpression(inst, node8, dst8, "POPAL EAX operation");
+        auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4, "POPAL EBX operation");
+        auto expr5 = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5, "POPAL EDX operation");
+        auto expr6 = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6, "POPAL ECX operation");
+        auto expr7 = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7, "POPAL EAX operation");
 
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src1);
         expr2->isTainted = this->taintEngine->taintAssignment(dst2, src2);
         expr3->isTainted = this->taintEngine->taintAssignment(dst3, src3);
+        expr4->isTainted = this->taintEngine->taintAssignment(dst4, src4);
         expr5->isTainted = this->taintEngine->taintAssignment(dst5, src5);
         expr6->isTainted = this->taintEngine->taintAssignment(dst6, src6);
         expr7->isTainted = this->taintEngine->taintAssignment(dst7, src7);
-        expr8->isTainted = this->taintEngine->taintAssignment(dst8, src8);
 
         /* Create the semantics - side effect */
         alignAddStack_s(inst, stack.getSize() * 8);
