@@ -11,6 +11,7 @@
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/dllexport.hpp>
+#include <triton/exceptions.hpp>
 
 #include <map>
 #include <vector>
@@ -60,6 +61,9 @@ namespace triton {
 
         //! Operator
         TRITON_EXPORT AstContext& operator=(const AstContext& other);
+
+        //! AST C++ API - assert node builder
+        TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
         //! AST C++ API - bv node builder
         TRITON_EXPORT SharedAbstractNode bv(triton::uint512 value, triton::uint32 size);
@@ -163,15 +167,32 @@ namespace triton {
         //! AST C++ API - bvxor node builder
         TRITON_EXPORT SharedAbstractNode bvxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
+        //! AST C++ API - compound node builder
+        template <typename T> SharedAbstractNode compound(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, *this);
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
+
         //! AST C++ API - concat node builder
         TRITON_EXPORT SharedAbstractNode concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - concat node builder
-        template <typename T>
-        SharedAbstractNode concat(const T& exprs);
+        template <typename T> SharedAbstractNode concat(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, *this);
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
 
         //! AST C++ API - decimal node builder
         TRITON_EXPORT SharedAbstractNode decimal(triton::uint512 value);
+
+        //! AST C++ API - declare node builder
+        TRITON_EXPORT SharedAbstractNode declare(const SharedAbstractNode& var);
 
         //! AST C++ API - distinct node builder
         TRITON_EXPORT SharedAbstractNode distinct(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
@@ -189,8 +210,13 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode land(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - land node builder
-        template <typename T>
-        SharedAbstractNode land(const T& exprs);
+        template <typename T> SharedAbstractNode land(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<LandNode>(exprs, *this);
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
 
         //! AST C++ API - let node builder
         TRITON_EXPORT SharedAbstractNode let(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3);
@@ -202,8 +228,13 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode lor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - lor node builder
-        template <typename T>
-        SharedAbstractNode lor(const T& exprs);
+        template <typename T> SharedAbstractNode lor(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<LorNode>(exprs, *this);
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
 
         //! AST C++ API - reference node builder
         TRITON_EXPORT SharedAbstractNode reference(const triton::engines::symbolic::SharedSymbolicExpression& expr);
@@ -215,7 +246,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode sx(triton::uint32 sizeExt, const SharedAbstractNode& expr);
 
         //! AST C++ API - variable node builder
-        TRITON_EXPORT SharedAbstractNode variable(triton::engines::symbolic::SymbolicVariable& symVar);
+        TRITON_EXPORT SharedAbstractNode variable(const triton::engines::symbolic::SharedSymbolicVariable& symVar);
 
         //! AST C++ API - zx node builder
         TRITON_EXPORT SharedAbstractNode zx(triton::uint32 sizeExt, const SharedAbstractNode& expr);

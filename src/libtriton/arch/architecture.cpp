@@ -28,9 +28,9 @@ namespace triton {
     }
 
 
-    triton::arch::CpuInterface* Architecture::getCpu(void) {
+    triton::arch::CpuInterface* Architecture::getCpuInstance(void) {
       if (!this->cpu)
-        throw triton::exceptions::Architecture("Architecture::getCpu(): CPU undefined.");
+        throw triton::exceptions::Architecture("Architecture::getCpuInstance(): CPU undefined.");
       return this->cpu.get();
     }
 

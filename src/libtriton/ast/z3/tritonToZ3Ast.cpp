@@ -215,7 +215,6 @@ namespace triton {
           return currentValue;
         }
 
-
         case LET_NODE: {
           std::string symbol    = reinterpret_cast<triton::ast::StringNode*>(node->getChildren()[0].get())->getValue();
           this->symbols[symbol] = node->getChildren()[1];
@@ -273,11 +272,7 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          triton::usize varId = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar().getId();
-          triton::engines::symbolic::SymbolicVariable* symVar = this->symbolicEngine->getSymbolicVariableFromId(varId);
-
-          if (symVar == nullptr)
-            throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): [VARIABLE_NODE] Can't get the symbolic variable (nullptr).");
+          const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar();
 
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {

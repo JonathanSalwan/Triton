@@ -22,11 +22,10 @@
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/registers_e.hpp>
+#include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/z3Interface.hpp>
-#include <triton/z3Solver.hpp>
 
 
 
@@ -57,16 +56,13 @@ namespace triton {
         triton::engines::symbolic::SymbolicEngine* symbolic = nullptr;
 
         //! The solver engine.
-        triton::engines::solver::SolverInterface* solver = nullptr;
+        triton::engines::solver::SolverEngine* solver = nullptr;
 
         //! The AST Context interface.
         triton::ast::AstContext astCtxt;
 
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
-
-        //! The Z3 interface between Triton and Z3.
-        triton::ast::Z3Interface* z3Interface = nullptr;
 
 
       public:
@@ -88,8 +84,8 @@ namespace triton {
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
         TRITON_EXPORT void checkArchitecture(void) const;
 
-        //! [**architecture api**] - Returns the CPU instance.
-        TRITON_EXPORT triton::arch::CpuInterface* getCpu(void);
+        //! [**architecture api**] - Returns the instance of the current CPU used.
+        TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
 
         //! [**architecture api**] - Initializes an architecture. \sa triton::arch::architectures_e.
         TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
@@ -334,13 +330,13 @@ namespace triton {
         TRITON_EXPORT triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Returns the AST corresponding to the operand.
         TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
@@ -370,7 +366,7 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
         //! [**symbolic api**] - Returns a new symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& newSymbolicVariable(triton::uint32 varSize, const std::string& comment="");
 
         //! [**symbolic api**] - Removes the symbolic expression corresponding to the id.
         TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
@@ -403,10 +399,10 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromId(triton::usize symVarId) const;
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariableFromId(triton::usize symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        TRITON_EXPORT triton::engines::symbolic::SymbolicVariable* getSymbolicVariableFromName(const std::string& symVarName) const;
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariableFromName(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
@@ -466,13 +462,13 @@ namespace triton {
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic variables as a map of <SymVarId : SymVar>
-        TRITON_EXPORT const std::unordered_map<triton::usize, triton::engines::symbolic::SymbolicVariable*>& getSymbolicVariables(void) const;
+        TRITON_EXPORT const std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable>& getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Gets the concrete value of a symbolic variable.
-        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar) const;
+        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
 
         //! [**symbolic api**] - Sets the concrete value of a symbolic variable.
-        TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SymbolicVariable& symVar, const triton::uint512& value);
+        TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const triton::uint512& value);
 
 
 
@@ -502,17 +498,25 @@ namespace triton {
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
 
+        //! Returns the kind of solver as triton::engines::solver::solvers_e.
+        TRITON_EXPORT triton::engines::solver::solvers_e getSolver(void) const;
 
+        //! Returns the instance of the initialized solver
+        TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
 
-        /* Z3 interface API ============================================================================== */
+        //! Initializes a predefined solver.
+        TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);
 
-        //! [**z3 api**] - Raises an exception if the z3 interface is not initialized.
-        TRITON_EXPORT void checkZ3Interface(void) const;
+        //! Initializes a custom solver.
+        TRITON_EXPORT void setCustomSolver(triton::engines::solver::SolverInterface* customSolver);
 
-        //! [**z3 api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
+        //! Returns true if the solver is valid.
+        TRITON_EXPORT bool isSolverValid(void) const;
+
+        //! [**solver api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
         TRITON_EXPORT triton::uint512 evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const;
 
-        //! [**z3 api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
+        //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
 
 

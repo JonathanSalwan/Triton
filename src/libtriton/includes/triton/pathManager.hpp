@@ -93,4 +93,3 @@ namespace triton {
 };
 
 #endif /* TRITON_PATHMANAGER_H */
-

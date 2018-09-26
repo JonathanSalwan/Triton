@@ -23,6 +23,7 @@ namespace triton {
       /* Representation dispatcher from an abstract node */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getKind()) {
+          case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
           case BVAND_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvandNode*>(node)); break;
           case BVASHR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvashrNode*>(node)); break;
@@ -53,8 +54,10 @@ namespace triton {
           case BVXNOR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvxnorNode*>(node)); break;
           case BVXOR_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvxorNode*>(node)); break;
           case BV_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::BvNode*>(node)); break;
+          case COMPOUND_NODE:             return this->print(stream, reinterpret_cast<triton::ast::CompoundNode*>(node)); break;
           case CONCAT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::ConcatNode*>(node)); break;
           case DECIMAL_NODE:              return this->print(stream, reinterpret_cast<triton::ast::DecimalNode*>(node)); break;
+          case DECLARE_NODE:              return this->print(stream, reinterpret_cast<triton::ast::DeclareNode*>(node)); break;
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
@@ -71,6 +74,13 @@ namespace triton {
           default:
             throw triton::exceptions::AstRepresentation("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
         }
+        return stream;
+      }
+
+
+      /* assert representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
+        stream << "assert_(" << node->getChildren()[0] << ")";
         return stream;
       }
 
@@ -285,6 +295,19 @@ namespace triton {
       }
 
 
+      /* compound representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
+        std::vector<triton::ast::SharedAbstractNode> children = node->getChildren();
+        triton::usize size = children.size();
+
+        for (triton::usize index = 0; index < size-1; index++)
+          stream << children[index] << std::endl;
+        stream << children[size-1];
+
+        return stream;
+      }
+
+
       /* concat representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
         triton::usize size = node->getChildren().size();
@@ -303,6 +326,14 @@ namespace triton {
       /* decimal representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DecimalNode* node) {
         stream << std::hex << "0x" << node->getValue() << std::dec;
+        return stream;
+      }
+
+
+      /* declare representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
+        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
+        stream << var->getName() << " = " << "0xdeadbeef";
         return stream;
       }
 
@@ -410,7 +441,7 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        stream << node->getVar().getName();
+        stream << node->getVar()->getName();
         return stream;
       }
 
@@ -424,5 +455,3 @@ namespace triton {
     };
   };
 };
-
-

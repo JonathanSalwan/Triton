@@ -86,4 +86,3 @@ namespace triton {
 }; /* triton namespace */
 
 #endif /* TRITONTYPES_H */
-

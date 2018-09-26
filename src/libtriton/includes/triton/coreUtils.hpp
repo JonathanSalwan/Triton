@@ -37,7 +37,16 @@ namespace triton {
     void fromUintToBuffer(triton::uint512 value, triton::uint8* buffer);
 
     //! Returns the value located into the buffer.
-    template <typename T> T fromBufferToUint(const triton::uint8* buffer);
+    template <typename T> T fromBufferToUint(const triton::uint8* buffer) {
+      // We want to always trigger the static assert when this function is defined (use with a type without specialization)
+      // so we have to set the value to false with dependency on T type.
+      static_assert(not std::is_same<T, T>::value, "fromBufferToUint have no implementation for this type");
+      return {};
+    }
+
+    template <> triton::uint128 fromBufferToUint(const triton::uint8* buffer);
+    template <> triton::uint256 fromBufferToUint(const triton::uint8* buffer);
+    template <> triton::uint512 fromBufferToUint(const triton::uint8* buffer);
 
   /*! @} End of triton namespace */
   };
@@ -45,4 +54,3 @@ namespace triton {
 };
 
 #endif /* TRITON_CORE_UTIL_H */
-

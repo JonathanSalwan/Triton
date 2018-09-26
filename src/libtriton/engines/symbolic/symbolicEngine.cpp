@@ -74,8 +74,7 @@ namespace triton {
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
                                      const triton::modes::Modes& modes,
                                      triton::ast::AstContext& astCtxt,
-                                     triton::callbacks::Callbacks* callbacks,
-                                     bool isBackup)
+                                     triton::callbacks::Callbacks* callbacks)
         : triton::engines::symbolic::SymbolicSimplification(callbacks),
           triton::engines::symbolic::PathManager(modes, astCtxt),
           astCtxt(astCtxt),
@@ -87,7 +86,6 @@ namespace triton {
         this->architecture      = architecture;
         this->numberOfRegisters = this->architecture->numberOfRegisters();
         this->callbacks         = callbacks;
-        this->backupFlag        = isBackup;
         this->enableFlag        = true;
         this->uniqueSymExprId   = 0;
         this->uniqueSymVarId    = 0;
@@ -103,7 +101,6 @@ namespace triton {
          */
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->architecture                = other.architecture;
-        this->backupFlag                  = true;
         this->callbacks                   = other.callbacks;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
@@ -129,31 +126,11 @@ namespace triton {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
-        /* Delete unused variables */
-        for (auto& sv : this->symbolicVariables) {
-          if (other.symbolicVariables.find(sv.first) == other.symbolicVariables.end())
-            delete this->symbolicVariables[sv.first];
-        }
-
         // We assume astCtxt didn't change
         // We assume modes didn't change
         this->copy(other);
 
         return *this;
-      }
-
-
-      SymbolicEngine::~SymbolicEngine() {
-        /*
-         * Don't delete symbolic variables if this class is used as
-         * backup engine. Otherwise that may result in a double-free
-         * bug if the original symbolic engine is deleted too (cf: #385).
-         */
-        if (this->backupFlag == false) {
-          /* Delete all symbolic variables */
-          for (auto sv : this->symbolicVariables)
-            delete sv.second;
-        }
       }
 
 
@@ -277,7 +254,7 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise raises an exception */
-      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
+      const SharedSymbolicVariable& SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
         auto it = this->symbolicVariables.find(symVarId);
         if (it == this->symbolicVariables.end())
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromId(): Unregistred variable.");
@@ -286,7 +263,7 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SymbolicVariable* SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
+      const SharedSymbolicVariable& SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
         /*
          * FIXME: When there is a ton of symvar, this loop takes a while to go through.
          *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
@@ -296,12 +273,12 @@ namespace triton {
             return sv.second;
         }
 
-        return nullptr;
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromName(): Unregistred variable.");
       }
 
 
       /* Returns all symbolic variables */
-      const std::unordered_map<triton::usize, SymbolicVariable*>& SymbolicEngine::getSymbolicVariables(void) const {
+      const std::unordered_map<triton::usize, SharedSymbolicVariable>& SymbolicEngine::getSymbolicVariables(void) const {
         return this->symbolicVariables;
       }
 
@@ -544,13 +521,13 @@ namespace triton {
        * convertExpressionToSymbolicVariable(43, 8)
        * #43 = SymVar_4
        */
-      SymbolicVariable* SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
         const SharedSymbolicExpression& expression = this->getSymbolicExpressionFromId(exprId);
-        SymbolicVariable* symVar                   = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
-        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.variable(*symVar);
+        const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, symVarSize, symVarComment);
+        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.variable(symVar);
 
         if (expression->getAst())
-           this->setConcreteVariableValue(*symVar, expression->getAst()->evaluate());
+           this->setConcreteVariableValue(symVar, expression->getAst()->evaluate());
 
         expression->setAst(tmp);
 
@@ -559,19 +536,19 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SymbolicVariable* SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
         triton::uint512 cv              = this->architecture->getConcreteMemoryValue(mem);
 
         /* First we create a symbolic variable */
-        SymbolicVariable* symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(triton::engines::symbolic::MEM, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
 
         /* Create the AST node */
-        const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt.variable(*symVar);
+        const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt.variable(symVar);
 
         /* Setup the concrete value to the symbolic variable */
-        this->setConcreteVariableValue(*symVar, cv);
+        this->setConcreteVariableValue(symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
@@ -605,7 +582,7 @@ namespace triton {
       }
 
 
-      SymbolicVariable* SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
+      const SharedSymbolicVariable& SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
         const triton::arch::Register& parent  = this->architecture->getRegister(reg.getParent());
         triton::uint32 symVarSize             = reg.getBitSize();
         triton::uint512 cv                    = this->architecture->getConcreteRegisterValue(reg);
@@ -617,13 +594,13 @@ namespace triton {
         const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);
 
         /* Create the symbolic variable */
-        SymbolicVariable* symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parent.getId(), symVarSize, symVarComment);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(triton::engines::symbolic::REG, parent.getId(), symVarSize, symVarComment);
 
         /* Create the AST node */
-        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(*symVar));
+        const triton::ast::SharedAbstractNode& tmp = this->astCtxt.zx(parent.getBitSize() - symVarSize, this->astCtxt.variable(symVar));
 
         /* Setup the concrete value to the symbolic variable */
-        this->setConcreteVariableValue(*symVar, cv);
+        this->setConcreteVariableValue(symVar, cv);
 
         if (expression == nullptr) {
           /* Create the symbolic expression */
@@ -640,15 +617,15 @@ namespace triton {
 
 
       /* Adds a new symbolic variable */
-      SymbolicVariable* SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
+      const SharedSymbolicVariable& SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment) {
         triton::usize uniqueId = this->getUniqueSymVarId();
-        SymbolicVariable* symVar = new(std::nothrow) SymbolicVariable(kind, kindValue, uniqueId, size, comment);
 
+        SharedSymbolicVariable symVar = std::make_shared<SymbolicVariable>(kind, kindValue, uniqueId, size, comment);
         if (symVar == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
 
         this->symbolicVariables[uniqueId] = symVar;
-        return symVar;
+        return this->symbolicVariables[uniqueId];
       }
 
 
@@ -1093,16 +1070,15 @@ namespace triton {
       }
 
 
-      const triton::uint512& SymbolicEngine::getConcreteVariableValue(const SymbolicVariable& symVar) const {
-        return this->astCtxt.getVariableValue(symVar.getName());
+      const triton::uint512& SymbolicEngine::getConcreteVariableValue(const SharedSymbolicVariable& symVar) const {
+        return this->astCtxt.getVariableValue(symVar->getName());
       }
 
 
-      void SymbolicEngine::setConcreteVariableValue(const SymbolicVariable& symVar, const triton::uint512& value) {
-        this->astCtxt.updateVariable(symVar.getName(), value);
+      void SymbolicEngine::setConcreteVariableValue(const SharedSymbolicVariable& symVar, const triton::uint512& value) {
+        this->astCtxt.updateVariable(symVar->getName(), value);
       }
 
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
-

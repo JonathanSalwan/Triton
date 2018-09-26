@@ -52,7 +52,7 @@ namespace triton {
       PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node);
 
       //! Creates the BitsVector python class.
-      template<typename T> PyObject* PyBitsVector(const T& op);
+      template <typename T> PyObject* PyBitsVector(const T& op);
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
@@ -91,7 +91,7 @@ namespace triton {
       PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
       //! Creates the SymbolicVariable python class.
-      PyObject* PySymbolicVariable(triton::engines::symbolic::SymbolicVariable* symVar);
+      PyObject* PySymbolicVariable(const triton::engines::symbolic::SharedSymbolicVariable& symVar);
 
       /* AstNode ======================================================== */
 
@@ -221,7 +221,7 @@ namespace triton {
       //! pySymbolicVariable object.
       typedef struct {
         PyObject_HEAD
-        triton::engines::symbolic::SymbolicVariable* symVar;
+        triton::engines::symbolic::SharedSymbolicVariable symVar;
       } SymbolicVariable_Object;
 
       //! pySymbolicVariable type.

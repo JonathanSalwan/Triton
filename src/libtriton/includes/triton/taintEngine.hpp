@@ -224,4 +224,3 @@ namespace triton {
 };
 
 #endif /* !__TRITON_TAINTENGINE_H__ */
-

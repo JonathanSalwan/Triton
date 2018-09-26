@@ -69,4 +69,3 @@ namespace triton {
 };
 
 #endif /* TRITON_SYMBOLICSIMPLIFICATION_H */
-

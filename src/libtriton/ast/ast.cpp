@@ -97,6 +97,9 @@ namespace triton {
         case LOR_NODE:
           return true;
 
+        case REFERENCE_NODE:
+          return this->logical;
+
         default:
           break;
       }
@@ -132,8 +135,9 @@ namespace triton {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
 
+      // FIXME: Could be done in a background thread
       for (auto& kv: parents) {
-        if (auto sp = kv.second.lock())
+        if (auto sp = kv.second.second.lock())
           res.push_back(sp);
         else
           toRemove.push_back(kv.first);
@@ -148,25 +152,34 @@ namespace triton {
 
     void AbstractNode::setParent(AbstractNode* p) {
       auto it = parents.find(p);
+
       if (it == parents.end()) {
         auto A = p->shared_from_this();
-        this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
+        this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
       }
       else {
-        if (it->second.expired()) {
+        if (it->second.second.expired()) {
           parents.erase(it);
           auto A = p->shared_from_this();
-          this->parents.insert(std::make_pair(p, std::weak_ptr<AbstractNode>(A)));
+          this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
         }
+        // Ptr already in, add it for the counter
         else {
-          /* Ptr already in */
+          it->second.first += 1;
         }
       }
     }
 
 
     void AbstractNode::removeParent(AbstractNode* p) {
-      this->parents.erase(parents.find(p));
+      auto it = this->parents.find(p);
+
+      if(it == parents.end())
+        throw triton::exceptions::Ast("AbstractNode::removeParent(): Can't remove a parent that is not our.");
+
+      it->second.first--;
+      if(it->second.first == 0)
+        this->parents.erase(it);
     }
 
 
@@ -204,12 +217,51 @@ namespace triton {
     }
 
 
-    std::string AbstractNode::str(void) {
+    std::string AbstractNode::str(void) const {
       std::stringstream s;
       s << this;
       if (!s.str().empty())
         return s.str();
       return nullptr;
+    }
+
+
+    /* ====== assert */
+
+
+    AssertNode::AssertNode(const SharedAbstractNode& expr): AbstractNode(ASSERT_NODE, expr->getContext()) {
+      this->addChild(expr);
+    }
+
+
+    void AssertNode::init(void) {
+      if (this->children.size() < 1)
+        throw triton::exceptions::Ast("AssertNode::init(): Must take at least one child.");
+
+      if (this->children[0]->isLogical() == false)
+        throw triton::exceptions::Ast("AssertNode::init(): Must take a logical node as argument.");
+
+      /* Init attributes */
+      this->size = this->children[0]->getBitvectorSize();
+      this->eval = ((this->children[0]->evaluate()) & this->getBitvectorMask());
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 AssertNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->kind, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * this->children[index]->hash(deep+1);
+      return triton::ast::rotl(h, deep);
     }
 
 
@@ -1542,21 +1594,43 @@ namespace triton {
     }
 
 
+    /* ====== compound */
+
+
+    void CompoundNode::init(void) {
+      if (this->children.size() < 1)
+        throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
+
+      /* Init attributes */
+      this->size = 0;
+      this->eval = 0;
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 CompoundNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->kind, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
+      return triton::ast::rotl(h, deep);
+    }
+
+
     /* ====== concat */
 
 
     ConcatNode::ConcatNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(CONCAT_NODE, expr1->getContext()) {
       this->addChild(expr1);
       this->addChild(expr2);
-    }
-
-
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    ConcatNode::ConcatNode(const T& exprs, AstContext& ctxt): AbstractNode(CONCAT_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
     }
 
 
@@ -1624,6 +1698,45 @@ namespace triton {
     triton::uint512 DecimalNode::hash(triton::uint32 deep) const {
       triton::uint512 hash = this->kind ^ this->value;
       return hash;
+    }
+
+
+    /* ====== Declare */
+
+
+    DeclareNode::DeclareNode(const SharedAbstractNode& var): AbstractNode(DECLARE_NODE, var->getContext()) {
+      this->addChild(var);
+    }
+
+
+    void DeclareNode::init(void) {
+      if (this->children.size() < 1)
+        throw triton::exceptions::Ast("DeclareNode::init(): Must take at least one child.");
+
+      if (this->children[0]->getKind() != VARIABLE_NODE)
+        throw triton::exceptions::Ast("DeclareNode::init(): The child node must be a VARIABLE_NODE.");
+
+      /* Init attributes */
+      this->size = this->children[0]->getBitvectorSize();
+      this->eval = this->children[0]->evaluate();
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 DeclareNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->kind, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
+      return triton::ast::rotl(h, deep);
     }
 
 
@@ -1813,15 +1926,6 @@ namespace triton {
     }
 
 
-    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    LandNode::LandNode(const T& exprs, AstContext& ctxt): AbstractNode(LAND_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
-
-
     void LandNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two children.");
@@ -1944,15 +2048,6 @@ namespace triton {
     }
 
 
-    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template <typename T>
-    LorNode::LorNode(const T& exprs, AstContext& ctxt): AbstractNode(LOR_NODE, ctxt) {
-      for (auto expr : exprs)
-        this->addChild(expr);
-    }
-
-
     void LorNode::init(void) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LorNode::init(): Must take at least two children.");
@@ -1999,6 +2094,7 @@ namespace triton {
       this->eval        = this->expr->getAst()->evaluate();
       this->size        = this->expr->getAst()->getBitvectorSize();
       this->symbolized  = this->expr->getAst()->isSymbolized();
+      this->logical     = this->expr->getAst()->isLogical();
 
       this->expr->getAst()->setParent(this);
 
@@ -2102,15 +2198,15 @@ namespace triton {
 
 
     // WARNING: A variable ast node should not live once the SymbolicVariable is dead
-    VariableNode::VariableNode(triton::engines::symbolic::SymbolicVariable& symVar, AstContext& ctxt)
+    VariableNode::VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
         symVar(symVar) {
     }
 
 
     void VariableNode::init(void) {
-      this->size        = this->symVar.getSize();
-      this->eval        = ctxt.getVariableValue(this->symVar.getName()) & this->getBitvectorMask();
+      this->size        = this->symVar->getSize();
+      this->eval        = ctxt.getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */
@@ -2118,7 +2214,7 @@ namespace triton {
     }
 
 
-    triton::engines::symbolic::SymbolicVariable& VariableNode::getVar() {
+    const triton::engines::symbolic::SharedSymbolicVariable& VariableNode::getVar() {
       return this->symVar;
     }
 
@@ -2127,7 +2223,7 @@ namespace triton {
       triton::uint512 h = this->kind;
       triton::uint32 index = 1;
 
-      for (char c : this->symVar.getName())
+      for (char c : this->symVar->getName())
         h = h ^ triton::ast::pow(c, index++);
 
       return triton::ast::rotl(h, deep);
@@ -2179,6 +2275,25 @@ namespace triton {
         h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
     }
+
+  }; /* ast namespace */
+}; /* triton namespace */
+
+
+
+/* ====== Force templates declarations */
+
+namespace triton {
+  namespace ast {
+
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
 
   }; /* ast namespace */
 }; /* triton namespace */
@@ -2251,6 +2366,7 @@ namespace triton {
         return nullptr;
 
       switch (node->getKind()) {
+        case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node)); break;
         case BVADD_NODE:                newNode = std::make_shared<BvaddNode>(*reinterpret_cast<BvaddNode*>(node)); break;
         case BVAND_NODE:                newNode = std::make_shared<BvandNode>(*reinterpret_cast<BvandNode*>(node)); break;
         case BVASHR_NODE:               newNode = std::make_shared<BvashrNode>(*reinterpret_cast<BvashrNode*>(node)); break;
@@ -2281,8 +2397,10 @@ namespace triton {
         case BVXNOR_NODE:               newNode = std::make_shared<BvxnorNode>(*reinterpret_cast<BvxnorNode*>(node)); break;
         case BVXOR_NODE:                newNode = std::make_shared<BvxorNode>(*reinterpret_cast<BvxorNode*>(node)); break;
         case BV_NODE:                   newNode = std::make_shared<BvNode>(*reinterpret_cast<BvNode*>(node)); break;
+        case COMPOUND_NODE:             newNode = std::make_shared<CompoundNode>(*reinterpret_cast<CompoundNode*>(node)); break;
         case CONCAT_NODE:               newNode = std::make_shared<ConcatNode>(*reinterpret_cast<ConcatNode*>(node)); break;
         case DECIMAL_NODE:              newNode = std::make_shared<DecimalNode>(*reinterpret_cast<DecimalNode*>(node)); break;
+        case DECLARE_NODE:              newNode = std::make_shared<DeclareNode>(*reinterpret_cast<DeclareNode*>(node)); break;
         case DISTINCT_NODE:             newNode = std::make_shared<DistinctNode>(*reinterpret_cast<DistinctNode*>(node)); break;
         case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node)); break;
         case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node)); break;
@@ -2308,4 +2426,3 @@ namespace triton {
 
   }; /* ast namespace */
 }; /* triton namespace */
-

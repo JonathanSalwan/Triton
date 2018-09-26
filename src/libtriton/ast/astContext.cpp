@@ -36,6 +36,15 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::assert_(const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<AssertNode>(expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
+      return node;
+    }
+
+
     SharedAbstractNode AstContext::bv(triton::uint512 value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, *this);
       if (node == nullptr)
@@ -342,6 +351,10 @@ namespace triton {
     }
 
 
+    template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::vector<SharedAbstractNode>& exprs);
+    template TRITON_EXPORT SharedAbstractNode AstContext::compound(const std::list<SharedAbstractNode>& exprs);
+
+
     SharedAbstractNode AstContext::concat(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
       SharedAbstractNode node = std::make_shared<ConcatNode>(expr1, expr2);
       if (node == nullptr)
@@ -353,9 +366,10 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::concat(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::concat(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::concat(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, *this);
+
+
+    SharedAbstractNode AstContext::decimal(triton::uint512 value) {
+      SharedAbstractNode node = std::make_shared<DecimalNode>(value, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -363,8 +377,8 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::decimal(triton::uint512 value) {
-      SharedAbstractNode node = std::make_shared<DecimalNode>(value, *this);
+    SharedAbstractNode AstContext::declare(const SharedAbstractNode& var) {
+      SharedAbstractNode node = std::make_shared<DeclareNode>(var);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -425,14 +439,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::land(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::land(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::land(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<LandNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::let(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3) {
@@ -464,14 +470,6 @@ namespace triton {
 
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::vector<SharedAbstractNode>& exprs);
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::list<SharedAbstractNode>& exprs);
-    template <typename T>
-    SharedAbstractNode AstContext::lor(const T& exprs) {
-      SharedAbstractNode node = std::make_shared<LorNode>(exprs, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
 
 
     SharedAbstractNode AstContext::reference(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
@@ -507,13 +505,13 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::variable(triton::engines::symbolic::SymbolicVariable& symVar) {
+    SharedAbstractNode AstContext::variable(const triton::engines::symbolic::SharedSymbolicVariable& symVar) {
       // try to get node from variable pool
-      auto it = this->valueMapping.find(symVar.getName());
+      auto it = this->valueMapping.find(symVar->getName());
       if (it != this->valueMapping.end()) {
         auto& node = it->second.first;
 
-        if (node->getBitvectorSize() != symVar.getSize())
+        if (node->getBitvectorSize() != symVar->getSize())
           throw triton::exceptions::Ast("Node builders - Missmatching variable size.");
 
         // This node already exist, just return it
@@ -523,7 +521,7 @@ namespace triton {
       else {
         // if not found, create a new variable node
         SharedAbstractNode node = std::make_shared<VariableNode>(symVar, *this);
-        this->initVariable(symVar.getName(), 0, node);
+        this->initVariable(symVar->getName(), 0, node);
         if (node == nullptr)
           throw triton::exceptions::Ast("Node builders - Not enough memory");
         node->init();

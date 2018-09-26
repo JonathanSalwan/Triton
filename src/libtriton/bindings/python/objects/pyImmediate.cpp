@@ -90,7 +90,7 @@ Returns the type of the immediate. In this case this function returns `OPERAND.I
 - <b>integer getValue(void)</b><br>
 Returns the immediate value.
 
-- <b>setValue(integer value)</b><br>
+- <b>setValue(integer value, integer size)</b><br>
 Sets the immediate value.
 
 */
@@ -159,11 +159,21 @@ namespace triton {
       }
 
 
-      static PyObject* Immediate_setValue(PyObject* self, PyObject* value) {
+      static PyObject* Immediate_setValue(PyObject* self, PyObject* args) {
+        PyObject* value = nullptr;
+        PyObject* size  = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &value, &size);
+
         try {
           if (!PyLong_Check(value) && !PyInt_Check(value))
-            return PyErr_Format(PyExc_TypeError, "Immediate::setValue(): expected an integer as argument");
-          PyImmediate_AsImmediate(self)->setValue(PyLong_AsUint64(value));
+            return PyErr_Format(PyExc_TypeError, "Immediate::setValue(): expected an integer as first argument");
+
+          if (!PyLong_Check(size) && !PyInt_Check(size))
+            return PyErr_Format(PyExc_TypeError, "Immediate::setValue(): expected an integer as second argument");
+
+          PyImmediate_AsImmediate(self)->setValue(PyLong_AsUint64(value), PyLong_AsUint32(size));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -198,7 +208,7 @@ namespace triton {
         {"getSize",       Immediate_getSize,        METH_NOARGS,     ""},
         {"getType",       Immediate_getType,        METH_NOARGS,     ""},
         {"getValue",      Immediate_getValue,       METH_NOARGS,     ""},
-        {"setValue",      Immediate_setValue,       METH_O,          ""},
+        {"setValue",      Immediate_setValue,       METH_VARARGS,    ""},
         {nullptr,         nullptr,                  0,               nullptr}
       };
 

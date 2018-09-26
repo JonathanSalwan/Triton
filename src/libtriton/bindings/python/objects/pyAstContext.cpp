@@ -447,6 +447,19 @@ namespace triton {
     namespace python {
 
 
+      static PyObject* AstContext_assert(PyObject* self, PyObject* op1) {
+        if (!PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(op1)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_bv(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1109,6 +1122,19 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_declare(PyObject* self, PyObject* var) {
+        if (!PyAstNode_Check(var))
+          return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->declare(PyAstNode_AsAstNode(var)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_distinct(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1137,6 +1163,31 @@ namespace triton {
 
         try {
           return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr).get()));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstContext_compound(PyObject* self, PyObject* exprsList) {
+        std::vector<triton::ast::SharedAbstractNode> exprs;
+
+        if (exprsList == nullptr || !PyList_Check(exprsList))
+          return PyErr_Format(PyExc_TypeError, "compound(): expected a list of AstNodes as first argument");
+
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+          PyObject* item = PyList_GetItem(exprsList, i);
+
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "compound(): Each element from the list must be a AstNode");
+
+          exprs.push_back(PyAstNode_AsAstNode(item));
+        }
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->compound(exprs));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1385,7 +1436,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "variable(): expected a SymbolicVariable as first argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->variable(*PySymbolicVariable_AsSymbolicVariable(symVar)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->variable(PySymbolicVariable_AsSymbolicVariable(symVar)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1417,6 +1468,7 @@ namespace triton {
 
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
+        {"assert_",       AstContext_assert,          METH_O,           ""},
         {"bv",            AstContext_bv,              METH_VARARGS,     ""},
         {"bvadd",         AstContext_bvadd,           METH_VARARGS,     ""},
         {"bvand",         AstContext_bvand,           METH_VARARGS,     ""},
@@ -1449,7 +1501,9 @@ namespace triton {
         {"bvurem",        AstContext_bvurem,          METH_VARARGS,     ""},
         {"bvxnor",        AstContext_bvxnor ,         METH_VARARGS,     ""},
         {"bvxor",         AstContext_bvxor,           METH_VARARGS,     ""},
+        {"compound",      AstContext_compound,        METH_O,           ""},
         {"concat",        AstContext_concat,          METH_O,           ""},
+        {"declare",       AstContext_declare,         METH_O,           ""},
         {"distinct",      AstContext_distinct,        METH_VARARGS,     ""},
         {"duplicate",     AstContext_duplicate,       METH_O,           ""},
         {"equal",         AstContext_equal,           METH_VARARGS,     ""},
