@@ -215,6 +215,7 @@ PMOVZXWD                     | sse4.1     | Zero Extend 4 Packed Signed 16-bit I
 PMOVZXWQ                     | sse4.1     | Zero Extend 2 Packed Signed 16-bit Integers
 POP                          |            | Pop a Value from the Stack
 POPAL/POPAD                  |            | Pop All General-Purpose Registers
+POPF                         |            | Pop Stack into lower 16-bit of EFLAGS Register
 POPFD                        |            | Pop Stack into EFLAGS Register
 POPFQ                        |            | Pop Stack into RFLAGS Register
 POR                          | mmx/sse2   | Bitwise Logical OR
@@ -532,6 +533,7 @@ namespace triton {
           case ID_INS_PMOVZXWQ:       this->pmovzxwq_s(inst);     break;
           case ID_INS_POP:            this->pop_s(inst);          break;
           case ID_INS_POPAL:          this->popal_s(inst);        break;
+          case ID_INS_POPF:           this->popf_s(inst);         break;
           case ID_INS_POPFD:          this->popfd_s(inst);        break;
           case ID_INS_POPFQ:          this->popfq_s(inst);        break;
           case ID_INS_POR:            this->por_s(inst);          break;
@@ -8624,7 +8626,6 @@ namespace triton {
         auto dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDI));
         auto dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ESI));
         auto dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EBP));
-        auto dst4       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ESP));
         auto dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EBX));
         auto dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_EDX));
         auto dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ECX));
@@ -8632,7 +8633,6 @@ namespace triton {
         auto src1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 0), stack.getSize()));
         auto src2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 1), stack.getSize()));
         auto src3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 2), stack.getSize()));
-        auto src4       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 3), stack.getSize()));
         auto src5       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 4), stack.getSize()));
         auto src6       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 5), stack.getSize()));
         auto src7       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue+(stack.getSize() * 6), stack.getSize()));
@@ -8642,7 +8642,6 @@ namespace triton {
         auto node1 = this->symbolicEngine->getOperandAst(inst, src1);
         auto node2 = this->symbolicEngine->getOperandAst(inst, src2);
         auto node3 = this->symbolicEngine->getOperandAst(inst, src3);
-        auto node4 = this->symbolicEngine->getOperandAst(inst, src4);
         auto node5 = this->symbolicEngine->getOperandAst(inst, src5);
         auto node6 = this->symbolicEngine->getOperandAst(inst, src6);
         auto node7 = this->symbolicEngine->getOperandAst(inst, src7);
@@ -8652,7 +8651,6 @@ namespace triton {
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "POPAL EDI operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "POPAL ESI operation");
         auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3, "POPAL EBP operation");
-        auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4, "POPAL ESP operation");
         auto expr5 = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5, "POPAL EBX operation");
         auto expr6 = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6, "POPAL EDX operation");
         auto expr7 = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7, "POPAL ECX operation");
@@ -8662,11 +8660,76 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src1);
         expr2->isTainted = this->taintEngine->taintAssignment(dst2, src2);
         expr3->isTainted = this->taintEngine->taintAssignment(dst3, src3);
-        expr4->isTainted = this->taintEngine->taintAssignment(dst4, src4);
         expr5->isTainted = this->taintEngine->taintAssignment(dst5, src5);
         expr6->isTainted = this->taintEngine->taintAssignment(dst6, src6);
         expr7->isTainted = this->taintEngine->taintAssignment(dst7, src7);
         expr8->isTainted = this->taintEngine->taintAssignment(dst8, src8);
+
+        /* Create the semantics - side effect */
+        alignAddStack_s(inst, stack.getSize() * 8);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::popf_s(triton::arch::Instruction& inst) {
+        auto  stack      = this->architecture->getParentRegister(ID_REG_SP);
+        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_CF));
+        auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_PF));
+        auto  dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AF));
+        auto  dst4       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ZF));
+        auto  dst5       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_SF));
+        auto  dst6       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_TF));
+        auto  dst7       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_IF));
+        auto  dst8       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_DF));
+        auto  dst9       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_OF));
+        auto  dst10      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_NT));
+        auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node1  = this->astCtxt.extract(0,  0,  op1);
+        auto node2  = this->astCtxt.extract(2,  2,  op1);
+        auto node3  = this->astCtxt.extract(4,  4,  op1);
+        auto node4  = this->astCtxt.extract(6,  6,  op1);
+        auto node5  = this->astCtxt.extract(7,  7,  op1);
+        auto node6  = this->astCtxt.extract(8,  8,  op1);
+        auto node7  = this->astCtxt.bvtrue(); /* IF true? */
+        auto node8  = this->astCtxt.extract(10, 10, op1);
+        auto node9  = this->astCtxt.extract(11, 11, op1);
+        /* IOPL don't support */
+        auto node10 = this->astCtxt.extract(14, 14, op1);
+
+        /* Create symbolic expression */
+        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPF CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPF PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPF AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPF ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPF SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPF TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPF IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPF DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPF OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPF NT operation");
+
+        /* Spread taint */
+        expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted  = this->taintEngine->taintAssignment(dst2, src);
+        expr3->isTainted  = this->taintEngine->taintAssignment(dst3, src);
+        expr4->isTainted  = this->taintEngine->taintAssignment(dst4, src);
+        expr5->isTainted  = this->taintEngine->taintAssignment(dst5, src);
+        expr6->isTainted  = this->taintEngine->taintAssignment(dst6, src);
+        expr7->isTainted  = this->taintEngine->taintAssignment(dst7, src);
+        expr8->isTainted  = this->taintEngine->taintAssignment(dst8, src);
+        expr9->isTainted  = this->taintEngine->taintAssignment(dst9, src);
+        expr10->isTainted = this->taintEngine->taintAssignment(dst10, src);
+
+        /* Create the semantics - side effect */
+        alignAddStack_s(inst, src.getSize());
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -9816,12 +9879,12 @@ namespace triton {
         if (src.getType() != triton::arch::OP_IMM)
           size = src.getSize();
 
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, size);
         auto  dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
-
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         auto node = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), op1);
@@ -12640,4 +12703,3 @@ namespace triton {
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */
-

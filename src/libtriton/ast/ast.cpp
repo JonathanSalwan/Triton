@@ -82,6 +82,9 @@ namespace triton {
 
     bool AbstractNode::isLogical(void) const {
       switch (this->kind) {
+        case REFERENCE_NODE:
+          return this->logical;
+
         case BVSGE_NODE:
         case BVSGT_NODE:
         case BVSLE_NODE:
@@ -2091,6 +2094,7 @@ namespace triton {
       this->eval        = this->expr->getAst()->evaluate();
       this->size        = this->expr->getAst()->getBitvectorSize();
       this->symbolized  = this->expr->getAst()->isSymbolized();
+      this->logical     = this->expr->getAst()->isLogical();
 
       this->expr->getAst()->setParent(this);
 
