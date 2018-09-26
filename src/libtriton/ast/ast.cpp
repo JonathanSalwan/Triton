@@ -82,9 +82,6 @@ namespace triton {
 
     bool AbstractNode::isLogical(void) const {
       switch (this->kind) {
-        case REFERENCE_NODE:
-          return this->logical;
-
         case BVSGE_NODE:
         case BVSGT_NODE:
         case BVSLE_NODE:
@@ -99,6 +96,9 @@ namespace triton {
         case LNOT_NODE:
         case LOR_NODE:
           return true;
+
+        case REFERENCE_NODE:
+          return this->logical;
 
         default:
           break;
