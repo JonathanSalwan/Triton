@@ -121,15 +121,16 @@ namespace triton {
            */
           std::map<std::pair<triton::uint512, triton::uint32>, SharedSymbolicExpression> symbolicMemoryReference;
 
+        public:
+          //! Modes API.
+          const triton::modes::Modes& modes;
+
         private:
           //! Architecture API
           triton::arch::Architecture* architecture;
 
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
-
-          //! Modes API.
-          const triton::modes::Modes& modes;
 
           //! Slices all expressions from a given node.
           void sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs);
