@@ -91,8 +91,6 @@ namespace triton {
         this->uniqueSymVarId    = 0;
 
         this->symbolicReg.resize(this->numberOfRegisters);
-        auto tmp = this->astCtxt.array(this->architecture->gprBitSize());
-        this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Initial memory Array reference");
       }
 
 
@@ -691,6 +689,10 @@ namespace triton {
           auto h = std::make_pair(address->hash(1), size);
           if (this->symbolicMemoryReference.count(h))
             return this->astCtxt.reference(this->symbolicMemoryReference[h]);
+          if (!this->symbolicMem) {
+            tmp = this->astCtxt.array(this->architecture->gprBitSize());
+            this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Initial memory Array reference");
+          }
           tmp = this->astCtxt.reference(this->symbolicMem);
           if (size == 1) {
             tmp = this->astCtxt.select(tmp, address);
@@ -852,6 +854,10 @@ namespace triton {
           auto addrSize = this->architecture->gprBitSize();
           if (address->getBitvectorSize() != addrSize)
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand size is not consistent.");
+          if (!this->symbolicMem) {
+            tmp = this->astCtxt.array(this->architecture->gprBitSize());
+            this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Initial memory Array reference");
+          }
           triton::uint32 writeSize                = mem.getSize();
           auto h = std::make_pair(address->hash(1), writeSize);
           if (writeSize == 1) {
