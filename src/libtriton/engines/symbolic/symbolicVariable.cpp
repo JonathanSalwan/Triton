@@ -5,6 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <cctype>
+
 #include <triton/exceptions.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/symbolicVariable.hpp>
@@ -83,6 +85,20 @@ namespace triton {
       }
 
 
+      std::string SymbolicVariable::getAlnumComment(void) const {
+        std::string ret;
+        for (auto c : this->comment) {
+          if (isspace(c)) {
+            ret += '_';
+            continue;
+          }
+          if (isalnum(c))
+            ret += c;
+        }
+        return ret;
+      }
+
+
       void SymbolicVariable::setComment(const std::string& comment) {
         this->comment = comment;
       }
@@ -90,8 +106,9 @@ namespace triton {
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
         stream << symVar.getName() << ":" << symVar.getSize();
-        if (!symVar.getComment().empty())
-          stream << ":" << symVar.getComment();
+        auto comment = symVar.getAlnumComment();
+        if (!comment.empty())
+          stream << ":" << comment;
         return stream;
       }
 

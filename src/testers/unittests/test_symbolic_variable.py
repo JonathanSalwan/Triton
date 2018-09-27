@@ -59,5 +59,4 @@ class TestSymbolicVariable(unittest.TestCase):
         """Test variable representation"""
         self.assertEqual(str(self.v0), "SymVar_0:8")
         self.assertEqual(str(self.v1), "SymVar_1:16")
-        self.assertEqual(str(self.v2), "SymVar_2:32")
-
+        self.assertEqual(str(self.v2), "SymVar_2:32:test_com")

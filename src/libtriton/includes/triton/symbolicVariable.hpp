@@ -92,6 +92,9 @@ namespace triton {
           //! Returns the comment of the symbolic variable.
           TRITON_EXPORT const std::string& getComment(void) const;
 
+          //! Returns the alphanumeric comment of the symbolic variable.
+          TRITON_EXPORT std::string getAlnumComment(void) const;
+
           //! Returns the name of the symbolic variable.
           TRITON_EXPORT const std::string& getName(void) const;
 
