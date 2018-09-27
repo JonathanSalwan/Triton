@@ -333,7 +333,12 @@ namespace triton {
       /* declare representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
         const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
-        stream << var->getName() << " = " << "0xdeadbeef";
+        stream << var->getName();
+        stream << "_" << var->getSize();
+        auto comment = var->getAlnumComment();
+        if (!comment.empty())
+          stream << "_" << comment;
+        stream << " = " << "0xdeadbeef";
         return stream;
       }
 
