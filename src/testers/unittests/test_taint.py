@@ -483,6 +483,8 @@ class TestTaint(unittest.TestCase):
 
         self.assertFalse(ctx.isRegisterTainted(ctx.registers.rbx))
 
+        ###########
+
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
@@ -492,6 +494,200 @@ class TestTaint(unittest.TestCase):
 
         inst = Instruction("\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
         inst.setAddress(0)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rax)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
+
+        inst = Instruction("\x48\x89\x18") # mov [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertFalse(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rbx)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        inst = Instruction("\x48\x89\x18") # mov [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rax)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
+
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertFalse(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rbx)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintMemory(0)
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintMemory(0)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rax)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rbx)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintRegister(ctx.registers.rax)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
+
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertFalse(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintRegister(ctx.registers.rbx)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintMemory(0)
+        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isMemoryTainted(0))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintMemory(0)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintRegister(ctx.registers.rax)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
+        ctx.processing(inst)
+
+        self.assertFalse(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ###########
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintRegister(ctx.registers.rbx)
+        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst.setAddress(0x1000)
         ctx.processing(inst)
 
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
