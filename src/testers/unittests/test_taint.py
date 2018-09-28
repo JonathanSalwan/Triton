@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, Instruction, MemoryAccess, TritonContext
+from triton import ARCH, Instruction, MemoryAccess, TritonContext, MODE
 
 
 class TestTaint(unittest.TestCase):
@@ -469,3 +469,29 @@ class TestTaint(unittest.TestCase):
         Triton.setTaintRegister(Triton.registers.rax, False)
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.rax))
 
+    def test_taint_through_pointers(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+
+        ctx.taintRegister(ctx.registers.rax)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
+
+        inst = Instruction("\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
+        inst.setAddress(0)
+        ctx.processing(inst)
+
+        self.assertFalse(ctx.isRegisterTainted(ctx.registers.rbx))
+
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+
+        ctx.taintRegister(ctx.registers.rax)
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
+
+        inst = Instruction("\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
+        inst.setAddress(0)
+        ctx.processing(inst)
+
+        self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))

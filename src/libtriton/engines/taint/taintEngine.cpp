@@ -112,8 +112,9 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintEngine::TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu)
-        : symbolicEngine(symbolicEngine),
+      TaintEngine::TaintEngine(const triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu)
+        : modes(modes),
+          symbolicEngine(symbolicEngine),
           cpu(cpu),
           enableFlag(true) {
 
@@ -130,13 +131,15 @@ namespace triton {
       }
 
 
-      TaintEngine::TaintEngine(const TaintEngine& other) : cpu(other.cpu) {
+      TaintEngine::TaintEngine(const TaintEngine& other)
+        : modes(other.modes),
+          cpu(other.cpu) {
         this->copy(other);
       }
 
 
       TaintEngine& TaintEngine::operator=(const TaintEngine& other) {
-        // We assume the cpu didn't change
+        // We assume the cpu and modes didn't change
         this->copy(other);
         return *this;
       }
@@ -176,6 +179,16 @@ namespace triton {
 
         for (triton::uint32 index = 0; index < size; index++) {
           if (this->taintedMemory.find(addr+index) != this->taintedMemory.end())
+            return TAINTED;
+        }
+
+        /* Spread the taint through pointers if the mode is enabled */
+        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+          if (this->isRegisterTainted(mem.getConstBaseRegister()))
+            return TAINTED;
+          if (this->isRegisterTainted(mem.getConstIndexRegister()))
+            return TAINTED;
+          if (this->isRegisterTainted(mem.getConstSegmentRegister()))
             return TAINTED;
         }
 
@@ -583,6 +596,14 @@ namespace triton {
             this->untaintMemory(addrDst+offset);
         }
 
+        /* Spread the taint through pointers if the mode is enabled */
+        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+          if (this->isMemoryTainted(memSrc)) {
+            this->taintMemory(memDst);
+            isTainted = TAINTED;
+          }
+        }
+
         return isTainted;
       }
 
@@ -637,7 +658,7 @@ namespace triton {
 
       /* mem U mem */
       bool TaintEngine::unionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
-        bool tainted             = !TAINTED;
+        bool isTainted           = !TAINTED;
         triton::uint32 writeSize = memDst.getSize();
         triton::uint64 addrDst   = memDst.getAddress();
         triton::uint64 addrSrc   = memSrc.getAddress();
@@ -649,7 +670,15 @@ namespace triton {
         for (triton::uint32 offset = 0; offset < writeSize; offset++) {
           if (this->isMemoryTainted(addrSrc+offset)) {
             this->taintMemory(addrDst+offset);
-            tainted = TAINTED;
+            isTainted = TAINTED;
+          }
+        }
+
+        /* Spread the taint through pointers if the mode is enabled */
+        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+          if (this->isMemoryTainted(memSrc) || this->isMemoryTainted(memDst)) {
+            this->taintMemory(memDst);
+            isTainted = TAINTED;
           }
         }
 
@@ -658,7 +687,7 @@ namespace triton {
           return TAINTED;
         }
 
-        return tainted;
+        return isTainted;
       }
 
 
@@ -682,6 +711,9 @@ namespace triton {
           return this->isMemoryTainted(memDst);
 
         if (this->isMemoryTainted(memDst)) {
+          if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+              this->taintMemory(memDst);
+          }
           return TAINTED;
         }
 
@@ -699,8 +731,12 @@ namespace triton {
           return TAINTED;
         }
 
-        if (this->isMemoryTainted(memDst))
+        if (this->isMemoryTainted(memDst)) {
+          if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+              this->taintMemory(memDst);
+          }
           return TAINTED;
+        }
 
         return !TAINTED;
       }
@@ -708,4 +744,3 @@ namespace triton {
     }; /* taint namespace */
   }; /* engines namespace */
 }; /* triton namespace */
-

@@ -403,6 +403,19 @@ class TestSymbolicEngineAligned(BaseTestSimulation, unittest.TestCase):
         super(TestSymbolicEngineAligned, self).setUp()
 
 
+class TestSymbolicEngineAlignedAndTaintPtr(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ALIGNED_MEMORY."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        super(TestSymbolicEngineAlignedAndTaintPtr, self).setUp()
+
+
 class TestSymbolicEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ONLY_ON_SYMBOLIZED."""

@@ -12,6 +12,7 @@
 
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
+#include <triton/modes.hpp>
 #include <triton/register.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
@@ -51,6 +52,9 @@ namespace triton {
           \brief The taint engine class. */
       class TaintEngine {
         private:
+          //! Modes API
+          const triton::modes::Modes& modes;
+
           //! Symbolic Engine API
           triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
@@ -74,7 +78,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT TaintEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
+          TRITON_EXPORT TaintEngine(const triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
 
           //! Constructor by copy.
           TRITON_EXPORT TaintEngine(const TaintEngine& other);

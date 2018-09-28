@@ -30,10 +30,11 @@ namespace triton {
 
     //! Enumerates all kinds of mode.
     enum mode_e {
-      ALIGNED_MEMORY,        //!< [symbolic mode] Keep a map of aligned memory.
-      ONLY_ON_SYMBOLIZED,    //!< [symbolic mode] Perform symbolic execution only on symbolized expressions.
-      ONLY_ON_TAINTED,       //!< [symbolic mode] Perform symbolic execution only on tainted instructions.
-      PC_TRACKING_SYMBOLIC,  //!< [symbolic mode] Track path constraints only if they are symbolized.
+      ALIGNED_MEMORY,         //!< [symbolic mode] Keep a map of aligned memory.
+      ONLY_ON_SYMBOLIZED,     //!< [symbolic mode] Perform symbolic execution only on symbolized expressions.
+      ONLY_ON_TAINTED,        //!< [symbolic mode] Perform symbolic execution only on tainted instructions.
+      PC_TRACKING_SYMBOLIC,   //!< [symbolic mode] Track path constraints only if they are symbolized.
+      TAINT_THROUGH_POINTERS, //!< [taint mode] Spread the taint if a pointer index is already tainted (see #725).
     };
 
 

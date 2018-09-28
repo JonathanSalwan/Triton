@@ -43,6 +43,8 @@ Enabled, Triton will perform symbolic execution only on tainted instructions.
 - **MODE.PC_TRACKING_SYMBOLIC**<br>
 Enabled, Triton will track path constraints only if they are symbolized. This mode is enabled by default.
 
+- **MODE.TAINT_THROUGH_POINTERS**<br>
+Enabled, the taint is spread if a pointer index is already tainted (see #725).
 */
 
 
@@ -56,6 +58,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",     PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",        PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",   PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
+        xPyDict_SetItemString(modeDict, "TAINT_THROUGH_POINTERS", PyLong_FromUint32(triton::modes::TAINT_THROUGH_POINTERS));
       }
 
     }; /* python namespace */
