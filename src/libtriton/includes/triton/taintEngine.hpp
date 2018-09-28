@@ -102,7 +102,7 @@ namespace triton {
           TRITON_EXPORT bool isMemoryTainted(triton::uint64 addr, triton::uint32 size=1) const;
 
           //! Returns true if the memory is tainted.
-          TRITON_EXPORT bool isMemoryTainted(const triton::arch::MemoryAccess& mem, bool throughMode=true) const;
+          TRITON_EXPORT bool isMemoryTainted(const triton::arch::MemoryAccess& mem, bool mode=true) const;
 
           //! Returns true if the register is tainted.
           TRITON_EXPORT bool isRegisterTainted(const triton::arch::Register& reg) const;

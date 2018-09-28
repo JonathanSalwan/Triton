@@ -173,7 +173,7 @@ namespace triton {
 
 
       /* Returns true of false if the memory address is currently tainted */
-      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryAccess& mem, bool throughMode) const {
+      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryAccess& mem, bool mode) const {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -183,7 +183,7 @@ namespace triton {
         }
 
         /* Spread the taint through pointers if the mode is enabled */
-        if (throughMode && this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+        if (mode && this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
           if (this->isRegisterTainted(mem.getConstBaseRegister()))
             return TAINTED;
           if (this->isRegisterTainted(mem.getConstIndexRegister()))
