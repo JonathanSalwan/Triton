@@ -173,7 +173,7 @@ namespace triton {
 
 
       /* Returns true of false if the memory address is currently tainted */
-      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryAccess& mem) const {
+      bool TaintEngine::isMemoryTainted(const triton::arch::MemoryAccess& mem, bool throughMode) const {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -183,7 +183,7 @@ namespace triton {
         }
 
         /* Spread the taint through pointers if the mode is enabled */
-        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+        if (throughMode && this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
           if (this->isRegisterTainted(mem.getConstBaseRegister()))
             return TAINTED;
           if (this->isRegisterTainted(mem.getConstIndexRegister()))
@@ -676,14 +676,14 @@ namespace triton {
 
         /* Spread the taint through pointers if the mode is enabled */
         if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
-          if (this->isMemoryTainted(memSrc) || this->isMemoryTainted(memDst)) {
+          if (this->isMemoryTainted(memSrc)) {
             this->taintMemory(memDst);
             isTainted = TAINTED;
           }
         }
 
         /* Check destination */
-        if (this->isMemoryTainted(memDst)) {
+        if (this->isMemoryTainted(memDst, false)) {
           return TAINTED;
         }
 
@@ -710,10 +710,7 @@ namespace triton {
         if (!this->isEnabled())
           return this->isMemoryTainted(memDst);
 
-        if (this->isMemoryTainted(memDst)) {
-          if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
-              this->taintMemory(memDst);
-          }
+        if (this->isMemoryTainted(memDst), false) {
           return TAINTED;
         }
 
@@ -731,10 +728,7 @@ namespace triton {
           return TAINTED;
         }
 
-        if (this->isMemoryTainted(memDst)) {
-          if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
-              this->taintMemory(memDst);
-          }
+        if (this->isMemoryTainted(memDst), false) {
           return TAINTED;
         }
 
