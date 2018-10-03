@@ -44,7 +44,7 @@ Enabled, Triton will perform symbolic execution only on tainted instructions.
 Enabled, Triton will track path constraints only if they are symbolized. This mode is enabled by default.
 
 - **MODE.TAINT_THROUGH_POINTERS**<br>
-Enabled, the taint is spread if a pointer index is already tainted (see #725).
+Enabled, the taint is spread if an index pointer is already tainted (see #725).
 */
 
 
