@@ -148,8 +148,19 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
 endif()
 
+macro(find_osx_syscall path)
+    if(NOT OSX_SYSCALL_H AND EXISTS ${path})
+        set(OSX_SYSCALL_H ${path})
+    endif()
+endmacro()
+
 if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    FILE(GLOB_RECURSE syscalls64_table_files /usr/include/sys/syscall.h)
+    find_osx_syscall("/usr/include/sys/syscall.h")
+    find_osx_syscall("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/syscall.h")
+    if(NOT OSX_SYSCALL_H OR NOT EXISTS ${OSX_SYSCALL_H})
+        message(FATAL_ERROR "syscall.h not found!")
+    endif()
+    FILE(GLOB_RECURSE syscalls64_table_files ${OSX_SYSCALL_H})
 endif()
 
 # Create syscall generted file directory
