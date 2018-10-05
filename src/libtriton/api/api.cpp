@@ -138,9 +138,9 @@ To be able to compile Triton, you must install these libraries before:
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | 71313
 
 <hr>
-\subsection unix_install_sec Linux and OSX Installation
+\subsection linux_install_sec Linux Installation
 
-Once libraries installed, you can use `cmake` and `make` to build the `libTriton`.
+Once the libraries are installed, you can use `cmake` and `make` to build the `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
 $ git clone https://github.com/JonathanSalwan/Triton.git
@@ -148,7 +148,23 @@ $ cd Triton
 $ mkdir build
 $ cd build
 $ cmake ..
-$ sudo make -j2 install
+$ sudo make -j install
+~~~~~~~~~~~~~
+
+<hr>
+\subsection osx_install_sec OSX Installation
+
+On OSX cmake might have some difficulties finding the correct python include/library paths.
+You can run the following to build indenpendent of your python version:
+
+~~~~~~~~~~~~~{.sh}
+$ brew install boost capstone z3
+$ git clone https://github.com/JonathanSalwan/Triton.git
+$ cd Triton
+$ mkdir build
+$ cd build
+$ cmake $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | python) ..
+$ sudo make -j install
 ~~~~~~~~~~~~~
 
 <hr>
