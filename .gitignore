@@ -10,3 +10,5 @@ peda-session*
 pin.log
 pintool.log
 private/*
+CMakeLists.txt.user
+.DS_Store
