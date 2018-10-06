@@ -7,6 +7,7 @@
 
 #include <iosfwd>                         // for ostream
 #include <string>                         // for string
+#include <sstream>                        // for sstream
 #include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/astContext.hpp>          // for AstContext
 #include <triton/exceptions.hpp>          // for SymbolicExpression
@@ -111,6 +112,31 @@ namespace triton {
       }
 
 
+      std::string SymbolicExpression::getFormattedExpression(void) const {
+        std::ostringstream stream;
+
+        if (this->ast == nullptr)
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): No AST defined.");
+
+        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION) {
+          stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
+          if (!this->getComment().empty())
+            stream << " " << this->getFormattedComment();
+          return stream.str();
+        }
+
+        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION) {
+          stream << this->getFormattedId() << " = " << this->getAst();
+          if (!this->getComment().empty())
+            stream << " " << this->getFormattedComment();
+          return stream.str();
+        }
+
+        else
+          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): Invalid AST representation mode.");
+      }
+
+
       symkind_e SymbolicExpression::getKind(void) const {
         return this->kind;
       }
@@ -173,9 +199,7 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr) {
-        stream << symExpr.getFormattedId() << " = " << symExpr.getAst();
-        if (!symExpr.getComment().empty())
-          stream << " " << symExpr.getFormattedComment();
+        stream << symExpr.getFormattedExpression();
         return stream;
       }
 

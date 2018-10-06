@@ -109,6 +109,9 @@ namespace triton {
           //! Returns the comment as string of the symbolic expression according the mode of the AST representation.
           TRITON_EXPORT std::string getFormattedComment(void) const;
 
+          //! Returns the symbolic expression representation as string according the mode of the AST representation.
+          TRITON_EXPORT std::string getFormattedExpression(void) const;
+
           //! Returns the origin memory access if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
           TRITON_EXPORT const triton::arch::MemoryAccess& getOriginMemory(void) const;
 
