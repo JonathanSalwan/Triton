@@ -638,8 +638,8 @@ namespace triton {
     //! AST C++ API - Duplicates the AST
     TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node);
 
-    //! Custom pow function for hash routine.
-    triton::uint512 pow(triton::uint512 hash, triton::uint32 n);
+    //! Custom hash2n function for hash routine.
+    triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
 
     //! Custom rotate left function for hash routine.
     triton::uint512 rotl(triton::uint512 value, triton::uint32 shift);
