@@ -1193,6 +1193,9 @@ namespace triton {
           //! The SYSCALL semantics.
           void syscall_s(triton::arch::Instruction& inst);
 
+          //! The SYSENTER semantics.
+          void sysenter_s(triton::arch::Instruction& inst);
+
           //! The TEST semantics.
           void test_s(triton::arch::Instruction& inst);
 

@@ -298,6 +298,7 @@ STOSQ                        |            | Store quadword at address
 STOSW                        |            | Store word at address
 SUB                          |            | Subtract
 SYSCALL                      |            | Fast System Call
+SYSENTER                     |            | Fast System Call
 TEST                         |            | Logical Compare
 TZCNT                        | bmi1       | Count the Number of Trailing Zero Bits
 UNPCKHPD                     | sse2       | Unpack and Interleave High Packed Double- Precision Floating-Point Values
@@ -616,6 +617,7 @@ namespace triton {
           case ID_INS_STOSW:          this->stosw_s(inst);        break;
           case ID_INS_SUB:            this->sub_s(inst);          break;
           case ID_INS_SYSCALL:        this->syscall_s(inst);      break;
+          case ID_INS_SYSENTER:       this->sysenter_s(inst);     break;
           case ID_INS_TEST:           this->test_s(inst);         break;
           case ID_INS_TZCNT:          this->tzcnt_s(inst);        break;
           case ID_INS_UNPCKHPD:       this->unpckhpd_s(inst);     break;
@@ -11930,6 +11932,12 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src1);
         expr2->isTainted = this->taintEngine->taintAssignment(dst2, src2);
 
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::sysenter_s(triton::arch::Instruction& inst) {
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
