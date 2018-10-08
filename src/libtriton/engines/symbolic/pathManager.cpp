@@ -132,4 +132,3 @@ namespace triton {
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
-

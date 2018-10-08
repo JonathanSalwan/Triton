@@ -40,7 +40,7 @@ triton::ast::SharedAbstractNode xor_simplification(triton::API& ctx, const trito
 
   if (node->getKind() == triton::ast::BVXOR_NODE) {
     if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
-      return triton::ast::bv(0, node->getBitvectorSize());
+      return ctx.getAstContext().bv(0, node->getBitvectorSize());
   }
 
   return node;
@@ -202,4 +202,3 @@ namespace triton {
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
-
