@@ -8,6 +8,8 @@
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicExpression.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 

@@ -18,8 +18,8 @@
 #include <vector>
 
 #include <triton/astEnums.hpp>
+#include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/symbolicVariable.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -36,6 +36,9 @@ namespace triton {
     namespace symbolic {
       class SymbolicExpression;
       using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
+
+      class SymbolicVariable;
+      using SharedSymbolicVariable = std::shared_ptr<triton::engines::symbolic::SymbolicVariable>;
     };
   };
 

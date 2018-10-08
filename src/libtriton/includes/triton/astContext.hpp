@@ -8,13 +8,13 @@
 #ifndef TRITON_AST_CONTEXT_H
 #define TRITON_AST_CONTEXT_H
 
-#include <triton/ast.hpp>
-#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
-#include <triton/dllexport.hpp>
-#include <triton/exceptions.hpp>
-
 #include <map>
 #include <vector>
+
+#include <triton/ast.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/dllexport.hpp>
+#include <triton/exceptions.hpp>
 
 
 
@@ -25,9 +25,14 @@ namespace triton {
  *  @{
  */
 
+  /* Forward declarations */
   namespace engines {
     namespace symbolic {
       class SymbolicExpression;
+      using SharedSymbolicExpression = std::shared_ptr<triton::engines::symbolic::SymbolicExpression>;
+
+      class SymbolicVariable;
+      using SharedSymbolicVariable = std::shared_ptr<triton::engines::symbolic::SymbolicVariable>;
     };
   };
 

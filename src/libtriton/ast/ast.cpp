@@ -12,7 +12,8 @@
 #include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/tritonToZ3Ast.hpp>
+#include <triton/symbolicExpression.hpp>
+#include <triton/symbolicVariable.hpp>
 
 
 
