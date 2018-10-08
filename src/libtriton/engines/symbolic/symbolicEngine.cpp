@@ -72,7 +72,7 @@ namespace triton {
     namespace symbolic {
 
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
-                                     const triton::modes::Modes& modes,
+                                     triton::modes::Modes& modes,
                                      triton::ast::AstContext& astCtxt,
                                      triton::callbacks::Callbacks* callbacks)
         : triton::engines::symbolic::SymbolicSimplification(callbacks),
@@ -94,11 +94,12 @@ namespace triton {
       }
 
 
-      void SymbolicEngine::copy(const SymbolicEngine& other) {
-        /*
-         * The backup flag cannot be spread. once a class is tagged as
-         * backup, it always be a backup class.
-         */
+      SymbolicEngine::SymbolicEngine(const SymbolicEngine& other)
+        : triton::engines::symbolic::SymbolicSimplification(other),
+          triton::engines::symbolic::PathManager(other),
+          astCtxt(other.astCtxt),
+          modes(other.modes) {
+
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->architecture                = other.architecture;
         this->callbacks                   = other.callbacks;
@@ -113,22 +114,23 @@ namespace triton {
       }
 
 
-      SymbolicEngine::SymbolicEngine(const SymbolicEngine& other)
-        : triton::engines::symbolic::SymbolicSimplification(other),
-          triton::engines::symbolic::PathManager(other),
-          astCtxt(other.astCtxt),
-          modes(other.modes) {
-        this->copy(other);
-      }
-
-
       SymbolicEngine& SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
-        // We assume astCtxt didn't change
-        // We assume modes didn't change
-        this->copy(other);
+        this->alignedMemoryReference      = other.alignedMemoryReference;
+        this->architecture                = other.architecture;
+        this->astCtxt                     = other.astCtxt;
+        this->callbacks                   = other.callbacks;
+        this->enableFlag                  = other.enableFlag;
+        this->memoryReference             = other.memoryReference;
+        this->modes                       = other.modes;
+        this->numberOfRegisters           = other.numberOfRegisters;
+        this->symbolicExpressions         = other.symbolicExpressions;
+        this->symbolicReg                 = other.symbolicReg;
+        this->symbolicVariables           = other.symbolicVariables;
+        this->uniqueSymExprId             = other.uniqueSymExprId;
+        this->uniqueSymVarId              = other.uniqueSymVarId;
 
         return *this;
       }

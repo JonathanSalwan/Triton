@@ -53,18 +53,13 @@ namespace triton {
       class TaintEngine {
         private:
           //! Modes API
-          const triton::modes::Modes& modes;
+          triton::modes::Modes& modes;
 
           //! Symbolic Engine API
           triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
-          //! Cpu use for this taint
-          //
-          // note: Not really use for now but will be usefull to have a bits
-          // precision on registers tainting
-          //
-          // FIXME: We should make sure it is the same as the one in symbolicEngine
-          const triton::arch::CpuInterface& cpu;
+          //! Cpu API
+          triton::arch::CpuInterface& cpu;
 
         protected:
           //! Defines if the taint engine is enabled or disabled.
@@ -78,7 +73,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT TaintEngine(const triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu);
+          TRITON_EXPORT TaintEngine(triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu);
 
           //! Constructor by copy.
           TRITON_EXPORT TaintEngine(const TaintEngine& other);
@@ -180,9 +175,6 @@ namespace triton {
           TRITON_EXPORT bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
 
         private:
-          //! Copies a TaintEngine.
-          void copy(const TaintEngine& other);
-
           //! Spreads MemoryImmediate with union.
           bool unionMemoryImmediate(const triton::arch::MemoryAccess& memDst);
 

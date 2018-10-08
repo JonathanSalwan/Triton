@@ -60,9 +60,6 @@ namespace triton {
           public triton::engines::symbolic::PathManager {
 
         protected:
-          //! Reference to the context managing ast nodes.
-          triton::ast::AstContext& astCtxt;
-
           //! Defines if the engine is enable or disable.
           bool enableFlag;
 
@@ -111,6 +108,9 @@ namespace triton {
           std::vector<SharedSymbolicExpression> symbolicReg;
 
         private:
+          //! Reference to the context managing ast nodes.
+          triton::ast::AstContext& astCtxt;
+
           //! Architecture API
           triton::arch::Architecture* architecture;
 
@@ -118,18 +118,15 @@ namespace triton {
           triton::callbacks::Callbacks* callbacks;
 
           //! Modes API.
-          const triton::modes::Modes& modes;
+          triton::modes::Modes& modes;
 
           //! Slices all expressions from a given node.
           void sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs);
 
-          //! Copies and initializes a SymbolicEngine.
-          void copy(const SymbolicEngine& other);
-
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
-                                       const triton::modes::Modes& modes,
+                                       triton::modes::Modes& modes,
                                        triton::ast::AstContext& astCtxt,
                                        triton::callbacks::Callbacks* callbacks=nullptr);
 

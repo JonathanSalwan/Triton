@@ -112,7 +112,7 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintEngine::TaintEngine(const triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, const triton::arch::CpuInterface& cpu)
+      TaintEngine::TaintEngine(triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu)
         : modes(modes),
           symbolicEngine(symbolicEngine),
           cpu(cpu),
@@ -123,7 +123,9 @@ namespace triton {
       }
 
 
-      void TaintEngine::copy(const TaintEngine& other) {
+      TaintEngine::TaintEngine(const TaintEngine& other)
+        : modes(other.modes),
+          cpu(other.cpu) {
         this->enableFlag       = other.enableFlag;
         this->symbolicEngine   = other.symbolicEngine;
         this->taintedMemory    = other.taintedMemory;
@@ -131,16 +133,13 @@ namespace triton {
       }
 
 
-      TaintEngine::TaintEngine(const TaintEngine& other)
-        : modes(other.modes),
-          cpu(other.cpu) {
-        this->copy(other);
-      }
-
-
       TaintEngine& TaintEngine::operator=(const TaintEngine& other) {
-        // We assume the cpu and modes didn't change
-        this->copy(other);
+        this->cpu              = other.cpu;
+        this->enableFlag       = other.enableFlag;
+        this->modes            = other.modes;
+        this->symbolicEngine   = other.symbolicEngine;
+        this->taintedMemory    = other.taintedMemory;
+        this->taintedRegisters = other.taintedRegisters;
         return *this;
       }
 

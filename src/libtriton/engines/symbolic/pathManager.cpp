@@ -16,7 +16,7 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      PathManager::PathManager(const triton::modes::Modes& modes, triton::ast::AstContext& astCtxt)
+      PathManager::PathManager(triton::modes::Modes& modes, triton::ast::AstContext& astCtxt)
         : modes(modes),
           astCtxt(astCtxt) {
       }
@@ -25,12 +25,15 @@ namespace triton {
       PathManager::PathManager(const PathManager& other)
         : modes(other.modes),
           astCtxt(other.astCtxt) {
-        this->copy(other);
+        this->pathConstraints = other.pathConstraints;
       }
 
 
-      void PathManager::copy(const PathManager& other) {
+      PathManager& PathManager::operator=(const PathManager& other) {
+        this->astCtxt         = other.astCtxt;
+        this->modes           = other.modes;
         this->pathConstraints = other.pathConstraints;
+        return *this;
       }
 
 
@@ -124,14 +127,6 @@ namespace triton {
 
       void PathManager::clearPathConstraints(void) {
         this->pathConstraints.clear();
-      }
-
-
-      PathManager& PathManager::operator=(const PathManager& other) {
-        // We assume astContext didn't change
-        // We assume modes didn't change
-        this->copy(other);
-        return *this;
       }
 
     }; /* symbolic namespace */

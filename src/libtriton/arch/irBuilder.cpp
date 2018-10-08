@@ -21,7 +21,7 @@ namespace triton {
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
-                         const triton::modes::Modes& modes,
+                         triton::modes::Modes& modes,
                          triton::ast::AstContext& astCtxt,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine)
