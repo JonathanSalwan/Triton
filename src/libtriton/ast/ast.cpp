@@ -2307,7 +2307,7 @@ namespace triton {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
+        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
     }
 
@@ -2341,7 +2341,7 @@ namespace triton {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
+        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
     }
 
@@ -2376,7 +2376,7 @@ namespace triton {
       triton::uint512 h = this->kind, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::pow(this->children[index]->hash(deep+1), index+1);
+        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
     }
 
