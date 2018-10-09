@@ -683,8 +683,8 @@ namespace triton {
           if (!address)
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Memory operand lea AST is not present.");
           auto addrSize = this->architecture->gprBitSize();
-          if (address->getBitvectorSize() != addrSize)
-            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Memory operand size is not consistent.");
+          if (address->getBitvectorSize() < addrSize)
+            address = this->astCtxt.zx(addrSize - address->getBitvectorSize(), address);
           triton::uint32 size                     = mem.getSize();
           auto h = std::make_pair(address->hash(1), size);
           if (this->symbolicMemoryReference.count(h))
@@ -781,9 +781,7 @@ namespace triton {
 
       /* Returns the AST corresponding to the memory [reg + offset] */
       triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::ast::SharedAbstractNode& reg, triton::uint64 offset, triton::uint32 size) {
-        auto addrSize = this->architecture->gprBitSize();
-        if (reg->getBitvectorSize() != addrSize)
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getMemoryAst(): Invalid register size.");
+        auto addrSize = reg->getBitvectorSize();
 
         triton::arch::MemoryAccess mem(offset, size);
         if (!offset) {
@@ -852,8 +850,8 @@ namespace triton {
           if (!address)
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand lea AST is not present.");
           auto addrSize = this->architecture->gprBitSize();
-          if (address->getBitvectorSize() != addrSize)
-            throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicMemoryExpression(): Memory operand size is not consistent.");
+          if (address->getBitvectorSize() < addrSize)
+            address = this->astCtxt.zx(addrSize - address->getBitvectorSize(), address);
           if (!this->symbolicMem) {
             tmp = this->astCtxt.array(this->architecture->gprBitSize());
             this->symbolicMem = this->newSymbolicExpression(tmp, triton::engines::symbolic::MEM, "Initial memory Array reference");

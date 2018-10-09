@@ -117,3 +117,61 @@ class TestSymbolizedPointers(unittest.TestCase):
         ctx.processing(insn)
         rsp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
         self.assertFalse(ctx.isSat(rsp_new != rsp_old + 8))
+
+    def test_32bit_addressing_store(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.SYMBOLIZED_POINTERS, True)
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RBX))
+        eax = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EAX))
+        ebx = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EBX))
+        insn = Instruction()
+        insn.setOpcode("\x67\x89\x18")  # mov [eax], ebx
+        ctx.processing(insn)
+        mem = ctx.getMemoryAst(eax, 0, 4)
+        self.assertFalse(ctx.isSat(mem != ebx))
+
+    def test_32bit_addressing_load(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.SYMBOLIZED_POINTERS, True)
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RBX))
+        ebx = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EBX))
+        mem = ctx.getMemoryAst(ebx, 0, 4)
+        insn = Instruction()
+        insn.setOpcode("\x67\x8b\x03")  # mov eax, [ebx]
+        ctx.processing(insn)
+        eax = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EAX))
+        self.assertFalse(ctx.isSat(eax != mem))
+
+    @unittest.expectedFailure
+    def test_32bit_addressing_store_big(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.SYMBOLIZED_POINTERS, True)
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RBX))
+        eax = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EAX))
+        rbx = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RBX))
+        insn = Instruction()
+        insn.setOpcode("\x67\x48\x89\x18")  # mov [eax], rbx
+        ctx.processing(insn)
+        mem = ctx.getMemoryAst(eax, 0, 8)
+        self.assertFalse(ctx.isSat(mem != rbx))
+
+    @unittest.expectedFailure
+    def test_32bit_addressing_load_big(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        ctx.enableMode(MODE.SYMBOLIZED_POINTERS, True)
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RAX))
+        ctx.convertRegisterToSymbolicVariable(ctx.getRegister(REG.X86_64.RBX))
+        ebx = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.EBX))
+        mem = ctx.getMemoryAst(ebx, 0, 8)
+        insn = Instruction()
+        insn.setOpcode("\x67\x48\x8b\x03")  # mov rax, [ebx]
+        ctx.processing(insn)
+        rax = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RAX))
+        self.assertFalse(ctx.isSat(rax != mem))
