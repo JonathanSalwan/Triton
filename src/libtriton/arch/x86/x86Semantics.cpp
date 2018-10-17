@@ -7593,7 +7593,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPEQB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7628,7 +7628,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPEQD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7663,7 +7663,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPEQW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7698,7 +7698,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPGTB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7733,7 +7733,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPGTD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7768,7 +7768,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PCMPGTW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
