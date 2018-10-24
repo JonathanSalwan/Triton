@@ -33,11 +33,9 @@
 \section Tracer_description Description
 <hr>
 
-The new design of the Triton library (since the `v0.3`), allows you to plug any kind of tracers. E.g: Pin,
-Valgrind and even a database.
+<p align="center"><img src="https://triton.quarkslab.com/files/triton_v06_architecture_overview2.png"/></p>
 
-<p align="center"><img src="https://triton.quarkslab.com/files/triton_v03_architecture.png"/></p>
-
+The Triton library allows you to plug any kind of tracers. E.g: Pin, Valgrind and even a database.
 To use the `libTriton`, your tracer must provide two kinds of information at each program point:
 
 - The current opcode executed.
