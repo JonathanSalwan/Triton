@@ -221,7 +221,7 @@ def exitHandler(ctx):
         flag += chr(v.getValue())
     print 'Flag: %s' %(flag)
 
-    sys.exit(ret)
+    sys.exit(not (flag == 'CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}'))
 
 
 def libcMainHandler(ctx):
