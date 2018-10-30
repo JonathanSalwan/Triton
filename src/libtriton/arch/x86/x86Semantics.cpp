@@ -8607,6 +8607,17 @@ namespace triton {
           }
         }
 
+        /*
+         * Create the semantics - side effect
+         *
+         * Don't increment SP if the destination register is SP.
+         */
+        else if (dst.getType() == triton::arch::OP_REG) {
+          if (this->architecture->getParentRegister(dst.getRegister()) == stack) {
+            stackRelative = true;
+          }
+        }
+
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation");
 

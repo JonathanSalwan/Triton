@@ -60,6 +60,16 @@ void check(void)
   asm("push ax");
   asm("pop rbx");
 
+  asm("push rsp");
+  asm("pop rax");
+  asm("push rsp");
+  asm("pop rbx");
+  asm("cmp rax, rsp");
+  asm("cmp rbx, rsp");
+  asm("push rbx");
+  asm("pop rsp");
+  asm("cmp rbx, rsp");
+
   asm("push 0");
   asm("push 0x11");
   asm("push 0x1122");
