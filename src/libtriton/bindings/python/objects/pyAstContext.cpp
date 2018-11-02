@@ -421,7 +421,7 @@ e.g: `(not expr)`.
 Creates a logical `OR` on several nodes.
 e.g: `(or expr1 expr2 expr3 expr4)`.
 
-- <b>\ref py_AstNode_page reference(integer expr)</b><br>
+- <b>\ref py_AstNode_page reference(\ref py_SymbolicExpression_page expr)</b><br>
 Creates a reference node (SSA-based).<br>
 e.g: `ref!123`.
 
