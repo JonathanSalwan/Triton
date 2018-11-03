@@ -3,13 +3,15 @@
 ##
 ##  Jonathan Salwan - 2018-11-02
 ##
-##  Output: This code solve the angry-reverser from the HackCon 2016 CTF.
+##  This code solve the angry-reverser from the HackCon 2016 CTF.
 ##  The particularity of this sample is that we use an external solver to solve
 ##  queries instead of using the internal Triton's solver (even if in both cases
 ##  it uses z3). The point here is to show that Triton can provide generic smt2
 ##  outputs and theses outputs can be send to external solvers and get back
 ##  model which then are sent to Triton (see the myExternalSolver function of
 ##  this example).
+##
+##  Output:
 ##
 ##  $ time python solve.py
 ##  [+] Loading 0x400040 - 0x400200
