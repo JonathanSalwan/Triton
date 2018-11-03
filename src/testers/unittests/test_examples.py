@@ -4,6 +4,7 @@
 import glob
 import itertools
 import os
+import platform
 import subprocess
 import sys
 import unittest
@@ -30,8 +31,8 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
         if len(args) == 1:
             args = args[0]
 
-        if example_name.find('hackcon-2016-angry-reverser') >= 0:
-            # FIXME: Doesn't work on Travis and Appveyor...
+        if platform.system() != 'Darwin' and example_name.find('hackcon-2016-angry-reverser') >= 0:
+            # FIXME: Doesn't work on Travis and Appveyor... Only able to make it work on Travis osx.
             return
 
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
