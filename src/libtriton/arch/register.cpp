@@ -14,7 +14,7 @@ namespace triton {
   namespace arch {
 
     Register::Register()
-      : Register(triton::arch::ID_REG_X86_INVALID, "unknown", triton::arch::ID_REG_X86_INVALID, 0, 0) {
+      : Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) {
     }
 
 
@@ -28,8 +28,8 @@ namespace triton {
 
     Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId)
       : Register(
-          (regId == triton::arch::ID_REG_X86_INVALID) ?
-          triton::arch::Register(triton::arch::ID_REG_X86_INVALID, "unknown", triton::arch::ID_REG_X86_INVALID, 0, 0) : cpu.getRegister(regId)
+          (regId == triton::arch::ID_REG_INVALID) ?
+          triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)
         ) {
     }
 

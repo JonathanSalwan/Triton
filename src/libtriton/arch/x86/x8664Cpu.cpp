@@ -284,7 +284,7 @@ namespace triton {
 
 
       triton::uint32 x8664Cpu::numberOfRegisters(void) const {
-        return triton::arch::ID_REG_X86_LAST_ITEM;
+        return triton::arch::ID_REG_LAST_ITEM;
       }
 
 

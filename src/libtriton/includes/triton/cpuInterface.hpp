@@ -16,8 +16,8 @@
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
+#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
-#include <triton/registers_e.hpp>
 #include <triton/tritonTypes.hpp>
 
 

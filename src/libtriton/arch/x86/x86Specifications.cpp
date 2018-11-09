@@ -55,7 +55,7 @@ namespace triton {
 
 
       triton::arch::registers_e x86Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
-        triton::arch::registers_e tritonId = triton::arch::ID_REG_X86_INVALID;
+        triton::arch::registers_e tritonId = triton::arch::ID_REG_INVALID;
 
         switch (id) {
           // Convert registers from capstone value to triton value
@@ -68,7 +68,7 @@ namespace triton {
           #include "triton/x86.spec"
 
           default:
-            tritonId = triton::arch::ID_REG_X86_INVALID;
+            tritonId = triton::arch::ID_REG_INVALID;
             break;
 
         }

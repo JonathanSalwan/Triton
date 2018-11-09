@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_REGISTERS_E_H
-#define TRITON_REGISTERS_E_H
+#ifndef TRITON_REGENUMS_H
+#define TRITON_REGENUMS_H
 
 
 
@@ -26,15 +26,20 @@ namespace triton {
    */
       //! The list of registers.
       enum registers_e {
-        ID_REG_X86_INVALID = 0, //!< invalid = 0
+        ID_REG_INVALID = 0, //!< invalid = 0
 
         #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
         ID_REG_X86_##UPPER_NAME,
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT) \
+        ID_REG_AARCH64_##UPPER_NAME,
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/aarch64.spec"
+
         /* Must be the last item */
-        ID_REG_X86_LAST_ITEM //!< must be the last item
+        ID_REG_LAST_ITEM //!< must be the last item
       };
 
   /*! @} End of arch namespace */
@@ -49,4 +54,4 @@ namespace std {
   };
 };
 
-#endif /* TRITON_REGISTERS_E_H */
+#endif /* TRITON_REGENUMS_H */

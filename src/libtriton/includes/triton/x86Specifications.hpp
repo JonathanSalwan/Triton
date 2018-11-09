@@ -10,10 +10,10 @@
 
 #include <unordered_map>
 
-#include <triton/dllexport.hpp>
-#include <triton/register.hpp>
-#include <triton/registers_e.hpp>
 #include <triton/architecture.hpp>
+#include <triton/dllexport.hpp>
+#include <triton/regEnums.hpp>
+#include <triton/register.hpp>
 
 
 

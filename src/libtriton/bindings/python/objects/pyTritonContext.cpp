@@ -1437,7 +1437,7 @@ namespace triton {
 
 
       static PyObject* TritonContext_getRegister(PyObject* self, PyObject* regIn) {
-        triton::arch::registers_e rid = triton::arch::ID_REG_X86_INVALID;
+        triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
 
         if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
           return PyErr_Format(PyExc_TypeError, "getRegister(): Expects an id as argument.");

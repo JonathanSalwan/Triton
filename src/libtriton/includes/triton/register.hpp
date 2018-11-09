@@ -15,7 +15,7 @@
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
-#include <triton/registers_e.hpp>
+#include <triton/regEnums.hpp>
 #include <triton/tritonTypes.hpp>
 
 

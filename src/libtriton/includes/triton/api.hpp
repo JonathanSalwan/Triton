@@ -20,8 +20,8 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/modes.hpp>
 #include <triton/operandWrapper.hpp>
+#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
-#include <triton/registers_e.hpp>
 #include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>

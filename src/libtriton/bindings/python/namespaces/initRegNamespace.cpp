@@ -92,6 +92,17 @@ namespace triton {
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
+
+        PyObject* aarch64RegistersDict      = xPyDict_New();
+        PyObject* aarch64RegistersDictClass = xPyClass_New(nullptr, aarch64RegistersDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(registersDict, "AARCH64", aarch64RegistersDictClass);
+
+        // Init AArch64 REG namespace
+        #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT)  \
+          xPyDict_SetItemString(aarch64RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_AARCH64_##UPPER_NAME));
+        // Use REG not available in capstone as normal register
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/aarch64.spec"
       }
 
     }; /* python namespace */
