@@ -121,8 +121,8 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initSymExprNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
-        bindings/python/namespaces/initX86OpcodesNamespace.cpp
-        bindings/python/namespaces/initX86PrefixesNamespace.cpp
+        bindings/python/namespaces/initOpcodesNamespace.cpp
+        bindings/python/namespaces/initPrefixesNamespace.cpp
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
         bindings/python/objects/pyBitsVector.cpp

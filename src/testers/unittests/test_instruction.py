@@ -60,7 +60,7 @@ class TestInstruction(unittest.TestCase):
     def test_opcode(self):
         """Check opcode informations."""
         self.assertEqual(self.inst.getOpcode(), "\x48\x01\xd8")
-        self.assertEqual(self.inst.getType(), OPCODE.ADD)
+        self.assertEqual(self.inst.getType(), OPCODE.X86.ADD)
 
     def test_thread(self):
         """Check threads information."""

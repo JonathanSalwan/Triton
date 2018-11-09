@@ -28,15 +28,15 @@ def sbefore(instruction):
 def cafter(instruction):
 
     ofIgnored = [
-        OPCODE.RCL,
-        OPCODE.RCR,
-        OPCODE.ROL,
-        OPCODE.ROR,
-        OPCODE.SAR,
-        OPCODE.SHL,
-        OPCODE.SHLD,
-        OPCODE.SHR,
-        OPCODE.SHRD,
+        OPCODE.X86.RCL,
+        OPCODE.X86.RCR,
+        OPCODE.X86.ROL,
+        OPCODE.X86.ROR,
+        OPCODE.X86.SAR,
+        OPCODE.X86.SHL,
+        OPCODE.X86.SHLD,
+        OPCODE.X86.SHR,
+        OPCODE.X86.SHRD,
     ]
 
     bad  = list()

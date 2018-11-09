@@ -60,15 +60,15 @@ def sbefore(instruction):
 def cafter(instruction):
 
     ofIgnored = [
-        OPCODE.RCL,
-        OPCODE.RCR,
-        OPCODE.ROL,
-        OPCODE.ROR,
-        OPCODE.SAR,
-        OPCODE.SHL,
-        OPCODE.SHLD,
-        OPCODE.SHR,
-        OPCODE.SHRD,
+        OPCODE.X86.RCL,
+        OPCODE.X86.RCR,
+        OPCODE.X86.ROL,
+        OPCODE.X86.ROR,
+        OPCODE.X86.SAR,
+        OPCODE.X86.SHL,
+        OPCODE.X86.SHLD,
+        OPCODE.X86.SHR,
+        OPCODE.X86.SHRD,
     ]
 
     good = True
@@ -99,7 +99,7 @@ def cafter(instruction):
             # when source operand is zero while in the case of BSF instruction,
             # if source operand is zero, the content of destination operand are
             # undefined.
-            if instruction.getType() == OPCODE.TZCNT and Travis == True:
+            if instruction.getType() == OPCODE.X86.TZCNT and Travis == True:
                 continue
 
             good = False

@@ -68,7 +68,7 @@ namespace triton {
         /* Create the OPCODE namespace =============================================================== */
 
         PyObject* opcodesDict = xPyDict_New();
-        initX86OpcodesNamespace(opcodesDict);
+        initOpcodesNamespace(opcodesDict);
         PyObject* idOpcodesClass = xPyClass_New(nullptr, opcodesDict, xPyString_FromString("OPCODE"));
 
         /* Create the OPERAND namespace ============================================================== */
@@ -86,7 +86,7 @@ namespace triton {
         /* Create the PREFIX namespace =============================================================== */
 
         PyObject* prefixesDict = xPyDict_New();
-        initX86PrefixesNamespace(prefixesDict);
+        initPrefixesNamespace(prefixesDict);
         PyObject* idPrefixesClass = xPyClass_New(nullptr, prefixesDict, xPyString_FromString("PREFIX"));
 
         /* Create the REG namespace ================================================================== */

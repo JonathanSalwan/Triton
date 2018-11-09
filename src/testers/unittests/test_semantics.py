@@ -174,7 +174,7 @@ class TestIRQemu(unittest.TestCase):
             # Process
             ret = self.Triton.processing(instruction)
 
-            if instruction.getType() == OPCODE.HLT:
+            if instruction.getType() == OPCODE.X86.HLT:
                 break
 
             self.assertTrue(ret)

@@ -62,10 +62,10 @@ namespace triton {
       void initCpuSizeNamespace(PyObject* cpuSizeDict);
 
       //! Initializes the OPCODE python namespace.
-      void initX86OpcodesNamespace(PyObject* opcodeDict);
+      void initOpcodesNamespace(PyObject* opcodeDict);
 
       //! Initializes the PREFIX python namespace.
-      void initX86PrefixesNamespace(PyObject* prefixDict);
+      void initPrefixesNamespace(PyObject* prefixDict);
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);
