@@ -3055,7 +3055,7 @@ namespace triton {
 
         PyObject* Aarch64OpcodesDict      = xPyDict_New();
         PyObject* Aarch64OpcodesDictClass = xPyClass_New(nullptr, Aarch64OpcodesDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(Aarch64OpcodesDict, "AARCH64", Aarch64OpcodesDictClass);
+        xPyDict_SetItemString(opcodesDict, "AARCH64", Aarch64OpcodesDictClass);
 
         xPyDict_SetItemString(Aarch64OpcodesDict, "ABS", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ABS));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ADC", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ADC));
