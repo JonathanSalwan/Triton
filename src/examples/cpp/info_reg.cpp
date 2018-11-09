@@ -26,13 +26,13 @@ int main(int ac, const char **av) {
   /* Set the arch */
   api.setArchitecture(ARCH_X86_64);
 
-  std::cout << "Name        : " << api.getRegister(ID_REG_AH).getName() << std::endl;
-  std::cout << "Size byte   : " << api.getRegister(ID_REG_AH).getSize() << std::endl;
-  std::cout << "Size bit    : " << api.getRegister(ID_REG_AH).getBitSize() << std::endl;
-  std::cout << "Higher bit  : " << api.getRegister(ID_REG_AH).getHigh() << std::endl;
-  std::cout << "Lower  bit  : " << api.getRegister(ID_REG_AH).getLow() << std::endl;
-  std::cout << "Parent      : " << api.getParentRegister(ID_REG_AH).getName() << std::endl;
-  std::cout << "operator<<  : " << api.getRegister(ID_REG_AH) << std::endl;
+  std::cout << "Name        : " << api.getRegister(ID_REG_X86_AH).getName() << std::endl;
+  std::cout << "Size byte   : " << api.getRegister(ID_REG_X86_AH).getSize() << std::endl;
+  std::cout << "Size bit    : " << api.getRegister(ID_REG_X86_AH).getBitSize() << std::endl;
+  std::cout << "Higher bit  : " << api.getRegister(ID_REG_X86_AH).getHigh() << std::endl;
+  std::cout << "Lower  bit  : " << api.getRegister(ID_REG_X86_AH).getLow() << std::endl;
+  std::cout << "Parent      : " << api.getParentRegister(ID_REG_X86_AH).getName() << std::endl;
+  std::cout << "operator<<  : " << api.getRegister(ID_REG_X86_AH) << std::endl;
 
   std::cout << "----------------------------" << std::endl;
 

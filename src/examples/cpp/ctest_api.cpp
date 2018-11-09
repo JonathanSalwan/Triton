@@ -21,13 +21,13 @@ int test_1(void) {
   triton::API                   api;
 
   api.setArchitecture(triton::arch::ARCH_X86_64);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX), 12345);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX), 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345) {
     std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -42,13 +42,13 @@ int test_2(void) {
   triton::API                 api;
 
   api.setArchitecture(triton::arch::ARCH_X86);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX), 12345);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX), 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x86Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345) {
     std::cerr << "test_2: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -227,24 +227,24 @@ int test_6(void) {
     return 1;
   }
 
-  if (!inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+  if (!inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RBX)))) {
     std::cerr << "test_6: KO (!isReadFrom(rbx))" << std::endl;
     return 1;
   }
 
-  inst3.removeReadRegister(ctx.getRegister(triton::arch::ID_REG_RBX));
-  if (inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+  inst3.removeReadRegister(ctx.getRegister(triton::arch::ID_REG_X86_RBX));
+  if (inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RBX)))) {
     std::cerr << "test_6: KO (isReadFrom(rbx))" << std::endl;
     return 1;
   }
 
-  if (!inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+  if (!inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RAX)))) {
     std::cerr << "test_6: KO (!isWriteTo(rax))" << std::endl;
     return 1;
   }
 
-  inst3.removeWrittenRegister(ctx.getRegister(triton::arch::ID_REG_RAX));
-  if (inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+  inst3.removeWrittenRegister(ctx.getRegister(triton::arch::ID_REG_X86_RAX));
+  if (inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RAX)))) {
     std::cerr << "test_6: KO (isReadFrom(rax))" << std::endl;
     return 1;
   }

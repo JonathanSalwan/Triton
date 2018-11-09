@@ -29,14 +29,15 @@ namespace triton {
       ARCH_INVALID = 0, /*!< Invalid architecture.   */
       ARCH_X86,         /*!< X86 architecture.       */
       ARCH_X86_64,      /*!< X86_64 architecture.    */
+      ARCH_AArch64,     /*!< AArch64 architecture.   */
       ARCH_LAST_ITEM    /*!< Must be the last item.  */
     };
 
     /*! Endianness */
     enum endianness_e {
       INVALID_ENDIANNESS = 0,   /*!< Invalid endianness */
-      LE,                       /*!< Little endian CPU. */
-      BE,                       /*!< Big endian CPU.    */
+      LE,                       /*!< Little endian.     */
+      BE,                       /*!< Big endian.        */
     };
 
   /*! @} End of arch namespace */
