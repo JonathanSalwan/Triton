@@ -46,7 +46,7 @@ class TestInstruction(unittest.TestCase):
     def test_prefix(self):
         """Check prefix data."""
         self.assertFalse(self.inst.isPrefixed())
-        self.assertEqual(self.inst.getPrefix(), PREFIX.INVALID)
+        self.assertEqual(self.inst.getPrefix(), PREFIX.X86.INVALID)
 
     def test_control_flow(self):
         """Check control flow flags."""
