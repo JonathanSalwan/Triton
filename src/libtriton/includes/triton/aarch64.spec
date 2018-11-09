@@ -71,24 +71,10 @@ REG_SPEC(W29, w29, DWORD_SIZE_BIT-1, 0, X29) // w29
 REG_SPEC(W30, w30, DWORD_SIZE_BIT-1, 0, X30) // w30
 
 // Stack pointer registers
-REG_SPEC(SP_EL0, sp_el0, QWORD_SIZE_BIT-1, 0, SP_EL0) // SP_EL0
-REG_SPEC(SP_EL1, sp_el1, QWORD_SIZE_BIT-1, 0, SP_EL1) // SP_EL1
-REG_SPEC(SP_EL2, sp_el2, QWORD_SIZE_BIT-1, 0, SP_EL2) // SP_EL2
-REG_SPEC(SP_EL3, sp_el3, QWORD_SIZE_BIT-1, 0, SP_EL3) // SP_EL3
-REG_SPEC(SP,     sp,     QWORD_SIZE_BIT-1, 0, SP)     // SP
-
-// Exception link registers
-REG_SPEC(ELR_EL1, elr_el1, QWORD_SIZE_BIT-1, 0, ELR_EL1) // ELR_EL1
-REG_SPEC(ELR_EL2, elr_el2, QWORD_SIZE_BIT-1, 0, ELR_EL2) // ELR_EL2
-REG_SPEC(ELR_EL3, elr_el3, QWORD_SIZE_BIT-1, 0, ELR_EL3) // ELR_EL3
-
-// Saved program status registers
-REG_SPEC(SPSR_EL1, spsr_el1, dWORD_SIZE_BIT-1, 0, SPSR_EL1) // SPSR_EL1
-REG_SPEC(SPSR_EL2, spsr_el2, dWORD_SIZE_BIT-1, 0, SPSR_EL2) // SPSR_EL2
-REG_SPEC(SPSR_EL3, spsr_el3, dWORD_SIZE_BIT-1, 0, SPSR_EL3) // SPSR_EL3
+REG_SPEC(SP, sp, QWORD_SIZE_BIT-1, 0, SP) // SP
 
 // Program counter register
-REG_SPEC(PC, pc, QWORD_SIZE_BIT-1, 0, PC) // PC
+REG_SPEC_NO_CAPSTONE(PC, pc, QWORD_SIZE_BIT-1, 0, PC) // PC
 
 // Zero registers
 REG_SPEC(WZR, wzr, DWORD_SIZE_BIT-1, 0, WZR) // WZR

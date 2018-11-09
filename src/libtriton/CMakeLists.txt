@@ -75,6 +75,7 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Cpu.cpp
     arch/x86/x86Semantics.cpp
     arch/x86/x86Specifications.cpp
+    arch/aarch64/aarch64Specifications.cpp
     ast/ast.cpp
     ast/astContext.cpp
     ast/representations/astPythonRepresentation.cpp

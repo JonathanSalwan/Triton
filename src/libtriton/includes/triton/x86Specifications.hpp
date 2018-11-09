@@ -80,7 +80,7 @@ namespace triton {
 
       //! The list of opcodes.
       enum instructions_e {
-        ID_INST_INVALID = 0, //!< invalid
+        ID_INS_INVALID = 0, //!< invalid
 
         ID_INS_AAA, //!< AAA
         ID_INS_AAD, //!< AAD
@@ -1378,7 +1378,7 @@ namespace triton {
         ID_INS_XTEST, //!< XTEST
 
         /* Must be the last item */
-        ID_INST_LAST_ITEM //!< must be the last item
+        ID_INS_LAST_ITEM //!< must be the last item
       };
 
     /*! @} End of x86 namespace */

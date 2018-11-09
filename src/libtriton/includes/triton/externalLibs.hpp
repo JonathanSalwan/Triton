@@ -30,6 +30,7 @@ namespace triton {
      *  @{
      */
       #if defined(__unix__) || defined(__APPLE__)
+        #include <capstone/arm64.h>
         #include <capstone/capstone.h>
         #include <capstone/x86.h>
       #elif _WIN32
