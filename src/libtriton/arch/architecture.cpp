@@ -28,6 +28,13 @@ namespace triton {
     }
 
 
+    triton::arch::endianness_e Architecture::getEndianness(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getEndianness(): You must define an architecture.");
+      return this->cpu->getEndianness();
+    }
+
+
     triton::arch::CpuInterface* Architecture::getCpuInstance(void) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getCpuInstance(): CPU undefined.");

@@ -155,6 +155,11 @@ namespace triton {
       }
 
 
+      triton::arch::endianness_e x86Cpu::getEndianness(void) const {
+        return triton::arch::LE;
+      }
+
+
       bool x86Cpu::isFlag(triton::arch::registers_e regId) const {
         return ((regId >= triton::arch::ID_REG_AC && regId <= triton::arch::ID_REG_FZ) ? true : false);
       }

@@ -81,6 +81,9 @@ namespace triton {
         //! [**architecture api**] - Returns the architecture as triton::arch::architectures_e.
         TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
 
+        //! [**architecture api**] - Returns the endianness as triton::arch::endianness_e.
+        TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
+
         //! [**architecture api**] - Raises an exception if the architecture is not initialized.
         TRITON_EXPORT void checkArchitecture(void) const;
 

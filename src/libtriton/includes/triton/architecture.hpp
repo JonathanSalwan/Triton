@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 
+#include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
@@ -36,14 +37,6 @@ namespace triton {
    *  \addtogroup arch
    *  @{
    */
-
-    /*! The architectures */
-    enum architectures_e {
-      ARCH_INVALID = 0, /*!< invalid architecture. */
-      ARCH_X86,         /*!< x86 architecture. */
-      ARCH_X86_64,      /*!< x86_64 architecture. */
-      ARCH_LAST_ITEM    /*!< must be the last item.  */
-    };
 
     /*! \class Architecture
      *  \brief The abstract architecture class. */
@@ -86,6 +79,9 @@ namespace triton {
 
         //! Returns the kind of architecture as triton::arch::architecture_e.
         TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
+
+        //! Returns the kind of endianness as triton::arch::endianness_e.
+        TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
 
         //! Returns the instance of the current CPU used.
         TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);

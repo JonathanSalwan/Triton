@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
@@ -45,6 +46,9 @@ namespace triton {
 
         //! Clears the architecture states (registers and memory).
         TRITON_EXPORT virtual void clear(void) = 0;
+
+        //! Returns the kind of endianness as triton::arch::endianness_e.
+        TRITON_EXPORT virtual triton::arch::endianness_e getEndianness(void) const = 0;
 
         //! Returns true if the register ID is a flag.
         TRITON_EXPORT virtual bool isFlag(triton::arch::registers_e regId) const = 0;

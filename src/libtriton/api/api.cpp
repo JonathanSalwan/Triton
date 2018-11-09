@@ -252,6 +252,11 @@ namespace triton {
   }
 
 
+  triton::arch::endianness_e API::getEndianness(void) const {
+    return this->arch.getEndianness();
+  }
+
+
   triton::arch::CpuInterface* API::getCpuInstance(void) {
     if (!this->isArchitectureValid())
       throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
