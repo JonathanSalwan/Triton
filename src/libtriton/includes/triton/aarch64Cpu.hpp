@@ -134,6 +134,8 @@ namespace triton {
           triton::uint8 sp[QWORD_SIZE];
           //! Concrete value of pc
           triton::uint8 pc[QWORD_SIZE];
+          //! Concrete value of spsr
+          triton::uint8 spsr[DWORD_SIZE];
 
         public:
           //! Constructor.

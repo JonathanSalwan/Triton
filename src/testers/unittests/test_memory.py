@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MemoryAccess, OPERAND, TritonContext
+from triton import ARCH, MemoryAccess, OPERAND, TritonContext, SHIFT
 
 
 class TestMemory(unittest.TestCase):
@@ -34,6 +34,10 @@ class TestMemory(unittest.TestCase):
     def test_type(self):
         """Check type of a memory access."""
         self.assertEqual(self.mem.getType(), OPERAND.MEM)
+
+    def test_shift_type(self):
+        """Check shift type of a memory access."""
+        self.assertEqual(self.mem.getShiftType(), SHIFT.AARCH64.INVALID)
 
     def test_base_register(self):
         """Check base register modification."""
