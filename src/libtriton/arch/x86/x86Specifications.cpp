@@ -5270,8 +5270,8 @@ namespace triton {
       }
 
 
-      triton::uint32 x86Specifications::capstonePrefixToTritonPrefix(triton::uint32 id) const {
-        triton::uint32 tritonId = triton::arch::x86::ID_PREFIX_INVALID;
+      triton::arch::x86::prefixes_e x86Specifications::capstonePrefixToTritonPrefix(triton::uint32 id) const {
+        triton::arch::x86::prefixes_e tritonId = triton::arch::x86::ID_PREFIX_INVALID;
 
         switch (id) {
 

@@ -40,6 +40,23 @@ namespace triton {
      *  @{
      */
 
+      /*! \brief The list of prefixes.
+       *
+       *  \details
+       *  Note that `REP` and `REPE` have the some opcode. The `REP`
+       *  prefix becomes a `REPE` if the instruction modifies `ZF`.
+       */
+      enum prefixes_e {
+        ID_PREFIX_INVALID = 0,  //!< invalid
+        ID_PREFIX_LOCK,         //!< LOCK
+        ID_PREFIX_REP,          //!< REP
+        ID_PREFIX_REPE,         //!< REPE
+        ID_PREFIX_REPNE,        //!< REPNE
+
+        /* Must be the last item */
+        ID_PREFIX_LAST_ITEM     //!< must be the last item
+      };
+
       //! \class x86Specifications
       /*! \brief The x86Specifications class defines specifications about the x86 and x86_64 CPU */
       class x86Specifications {
@@ -58,24 +75,7 @@ namespace triton {
           TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
 
           //! Converts a capstone's prefix id to a triton's prefix id.
-          TRITON_EXPORT triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) const;
-      };
-
-      /*! \brief The list of prefixes.
-       *
-       *  \details
-       *  Note that `REP` and `REPE` have the some opcode. The `REP`
-       *  prefix becomes a `REPE` if the instruction modifies `ZF`.
-       */
-      enum prefix_e {
-        ID_PREFIX_INVALID = 0,  //!< invalid
-        ID_PREFIX_LOCK,         //!< LOCK
-        ID_PREFIX_REP,          //!< REP
-        ID_PREFIX_REPE,         //!< REPE
-        ID_PREFIX_REPNE,        //!< REPNE
-
-        /* Must be the last item */
-        ID_PREFIX_LAST_ITEM     //!< must be the last item
+          TRITON_EXPORT triton::arch::x86::prefixes_e capstonePrefixToTritonPrefix(triton::uint32 id) const;
       };
 
       //! The list of opcodes.

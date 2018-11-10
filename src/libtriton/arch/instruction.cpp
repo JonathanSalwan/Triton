@@ -436,6 +436,7 @@ namespace triton {
     void Instruction::clear(void) {
       this->address         = 0;
       this->branch          = false;
+      this->codeCondition   = 0;
       this->conditionTaken  = false;
       this->controlFlow     = false;
       this->prefix          = 0;
