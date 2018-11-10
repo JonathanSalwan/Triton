@@ -16,6 +16,7 @@
 #include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/regEnums.hpp>
+#include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -41,7 +42,7 @@ namespace triton {
     /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class Register : public BitsVector, public OperandInterface {
+    class Register : public BitsVector, public ShiftOperandMode, public OperandInterface {
       protected:
         //! The name of the register.
         std::string name;

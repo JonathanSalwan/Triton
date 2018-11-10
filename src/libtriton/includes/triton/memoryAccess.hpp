@@ -15,6 +15,7 @@
 #include <triton/immediate.hpp>
 #include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
+#include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -37,7 +38,7 @@ namespace triton {
     /*! \class MemoryAccess
      *  \brief This class is used to represent a memory access.
      */
-    class MemoryAccess : public BitsVector, public OperandInterface {
+    class MemoryAccess : public BitsVector, public ShiftOperandMode, public OperandInterface {
       protected:
         //! The memory' address.
         triton::uint64 address;

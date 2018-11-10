@@ -260,9 +260,16 @@ namespace triton {
               triton::extlibs::capstone::cs_arm64_op* op = &(detail->arm64.operands[n]);
               switch(op->type) {
 
-                case triton::extlibs::capstone::ARM64_OP_IMM:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, size ? size : QWORD_SIZE)));
+                case triton::extlibs::capstone::ARM64_OP_IMM: {
+                  triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
+
+                  /* Set Shift type and value */
+                  imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  imm.setShiftValue(op->shift.value);
+
+                  inst.operands.push_back(triton::arch::OperandWrapper(imm));
                   break;
+                }
 
                 case triton::extlibs::capstone::ARM64_OP_MEM: {
                   triton::arch::MemoryAccess mem;
@@ -292,15 +299,26 @@ namespace triton {
                   mem.setIndexRegister(index);
                   mem.setDisplacement(disp);
 
+                  /* Set Shift type and value */
+                  mem.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  mem.setShiftValue(op->shift.value);
+
                   inst.operands.push_back(triton::arch::OperandWrapper(mem));
                   break;
                 }
 
                 case triton::extlibs::capstone::X86_OP_REG: {
-                  const triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
-                  inst.operands.push_back(triton::arch::OperandWrapper(reg));
+                  triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
+
+                  /* Set Shift type and value */
+                  reg.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  reg.setShiftValue(op->shift.value);
+
+                  /* Define a base address for next operand */
                   if (!size)
                     size = reg.getSize();
+
+                  inst.operands.push_back(triton::arch::OperandWrapper(reg));
                   break;
                 }
 

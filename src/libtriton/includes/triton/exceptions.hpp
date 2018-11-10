@@ -216,6 +216,18 @@ namespace triton {
     };
 
 
+    /*! \class ShiftOperandMode
+     *  \brief The exception class used by shift mode. */
+    class ShiftOperandMode : public triton::exceptions::Architecture {
+      public:
+        //! Constructor.
+        TRITON_EXPORT ShiftOperandMode(const char* message) : triton::exceptions::Architecture(message) {};
+
+        //! Constructor.
+        TRITON_EXPORT ShiftOperandMode(const std::string& message) : triton::exceptions::Architecture(message) {};
+    };
+
+
     /*! \class Immediate
      *  \brief The exception class used by immediates. */
     class Immediate : public triton::exceptions::Architecture {

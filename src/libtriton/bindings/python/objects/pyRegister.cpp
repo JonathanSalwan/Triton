@@ -94,6 +94,14 @@ e.g: `REG.X86_64.RBX`
 Returns the name of the register.<br>
 e.g: `rbx`
 
+- <b>integer getShiftType(void)</b><br>
+Returns the shift type of the instruction. Mainly used for AArch64.<br>
+e.g: `LSL`
+
+- <b>integer getShiftValue(void)</b><br>
+Returns the shift value of the instruction. Mainly used for AArch64.<br>
+e.g: `2`
+
 - <b>integer getSize(void)</b><br>
 Returns the size (in bytes) of the register.<br>
 e.g: `8`
@@ -153,6 +161,26 @@ namespace triton {
       static PyObject* Register_getName(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("s", PyRegister_AsRegister(self)->getName().c_str());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getShiftType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyRegister_AsRegister(self)->getShiftType());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getShiftValue(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyRegister_AsRegister(self)->getShiftValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -267,6 +295,8 @@ namespace triton {
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
         {"getId",             Register_getId,            METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},
+        {"getShiftType",      Register_getShiftType,     METH_NOARGS,    ""},
+        {"getShiftValue",     Register_getShiftValue,    METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
         {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},

@@ -11,6 +11,7 @@
 #include <triton/bitsVector.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
+#include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -33,7 +34,7 @@ namespace triton {
     /*! \class Immediate
      *  \brief This class is used to represent an immediate.
      */
-    class Immediate : public BitsVector, public OperandInterface {
+    class Immediate : public BitsVector, public ShiftOperandMode, public OperandInterface {
       protected:
         //! The value of the operand.
         triton::uint64 value;

@@ -24,7 +24,8 @@ namespace triton {
     }
 
 
-    Immediate::Immediate(const Immediate& other) : BitsVector(other) {
+    Immediate::Immediate(const Immediate& other)
+      : BitsVector(other), ShiftOperandMode(other) {
       this->copy(other);
     }
 
@@ -96,6 +97,7 @@ namespace triton {
 
     Immediate& Immediate::operator=(const Immediate& other) {
       BitsVector::operator=(other);
+      ShiftOperandMode::operator=(other);
       this->copy(other);
       return *this;
     }

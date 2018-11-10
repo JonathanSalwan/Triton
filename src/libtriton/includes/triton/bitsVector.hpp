@@ -51,20 +51,20 @@ namespace triton {
         //! Constructor by copy.
         TRITON_EXPORT BitsVector(const triton::arch::BitsVector& other);
 
+        //! Copy a BitsVector.
+        TRITON_EXPORT BitsVector& operator=(const BitsVector& other);
+
         //! Returns the highest bit
         TRITON_EXPORT triton::uint32 getHigh(void) const;
 
         //! Returns the lower bit
         TRITON_EXPORT triton::uint32 getLow(void) const;
 
-        //! Returns the size of the vector
+        //! Returns the size in bits of the vector
         TRITON_EXPORT triton::uint32 getVectorSize(void) const;
 
         //! Returns the max possible value of the bitvector.
         TRITON_EXPORT triton::uint512 getMaxValue(void) const;
-
-        //! Copy a BitsVector.
-        TRITON_EXPORT BitsVector& operator=(const BitsVector& other);
 
         //! Sets the highest bit position
         TRITON_EXPORT void setHigh(triton::uint32 v);
