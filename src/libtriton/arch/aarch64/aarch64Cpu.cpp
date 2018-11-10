@@ -212,6 +212,7 @@ namespace triton {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;
         triton::usize                        count = 0;
+        triton::usize                        size = 0;
 
         /* Check if the opcode and opcode' size are defined */
         if (inst.getOpcode() == nullptr || inst.getSize() == 0)
@@ -260,16 +261,14 @@ namespace triton {
               switch(op->type) {
 
                 case triton::extlibs::capstone::ARM64_OP_IMM:
-                  // FIXME : Voir les tailles
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, QWORD_SIZE)));
+                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, size ? size : QWORD_SIZE)));
                   break;
 
                 case triton::extlibs::capstone::ARM64_OP_MEM: {
                   triton::arch::MemoryAccess mem;
 
                   /* Set the size of the memory access */
-                  // FIXME : Voir les tailles
-                  mem.setPair(std::make_pair(63, 0));
+                  mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
 
                   /* LEA if exists */
                   const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
@@ -297,13 +296,16 @@ namespace triton {
                   break;
                 }
 
-                case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Register(*this, this->capstoneRegisterToTritonRegister(op->reg))));
+                case triton::extlibs::capstone::X86_OP_REG: {
+                  const triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
+                  inst.operands.push_back(triton::arch::OperandWrapper(reg));
+                  if (!size)
+                    size = reg.getSize();
                   break;
+                }
 
                 default:
-                  /* FIXME: Il faut gerer les autres opérandes */
-                  /* FIXME: Et tous les details de cs_arm64_op */
+                  /* FIXME: Il faut gerer les autres opérandes FP, C-IMM ? */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
               }
             }
