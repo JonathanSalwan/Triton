@@ -58,6 +58,9 @@ namespace triton {
       //! Initializes the CALLBACK python namespace.
       void initCallbackNamespace(PyObject* callbackDict);
 
+      //! Initializes the CONDITION python namespace.
+      void initConditionsNamespace(PyObject* conditionsDict);
+
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(PyObject* cpuSizeDict);
 
@@ -69,6 +72,9 @@ namespace triton {
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);
+
+      //! Initializes the SHIFT python namespace.
+      void initShiftsNamespace(PyObject* shiftsDict);
 
       //! Initializes the REG python namespace.
       void initRegNamespace(PyObject* regDict);

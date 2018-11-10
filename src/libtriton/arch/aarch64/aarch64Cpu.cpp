@@ -323,7 +323,7 @@ namespace triton {
                 }
 
                 default:
-                  /* FIXME: Il faut gerer les autres opérandes FP, C-IMM ? */
+                  /* FIXME: What about FP, C-IMM ? */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
               }
             }

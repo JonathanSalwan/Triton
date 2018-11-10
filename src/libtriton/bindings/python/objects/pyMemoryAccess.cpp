@@ -120,9 +120,9 @@ Returns the scale (if exists) of the  memory access.
 Returns the segment register (if exists) of the memory access. Note that to be user-friendly, the
 segment register is used as base register and not as a selector into the GDT.<br>
 
-- <b>integer getShiftType(void)</b><br>
+- <b>\ref py_SHIFT_page  getShiftType(void)</b><br>
 Returns the shift type of the instruction. Mainly used for AArch64.<br>
-e.g: `LSL`
+e.g: `SHIFT.AARCH64.LSL`
 
 - <b>integer getShiftValue(void)</b><br>
 Returns the shift value of the instruction. Mainly used for AArch64.<br>

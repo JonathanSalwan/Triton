@@ -116,12 +116,14 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initAstNodeNamespace.cpp
         bindings/python/namespaces/initAstRepresentationNamespace.cpp
         bindings/python/namespaces/initCallbackNamespace.cpp
+        bindings/python/namespaces/initConditionsNamespace.cpp
         bindings/python/namespaces/initCpuSizeNamespace.cpp
         bindings/python/namespaces/initModeNamespace.cpp
         bindings/python/namespaces/initOpcodesNamespace.cpp
         bindings/python/namespaces/initOperandNamespace.cpp
         bindings/python/namespaces/initPrefixesNamespace.cpp
         bindings/python/namespaces/initRegNamespace.cpp
+        bindings/python/namespaces/initShiftsNamespace.cpp
         bindings/python/namespaces/initSymExprNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp

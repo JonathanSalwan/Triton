@@ -80,9 +80,9 @@ e.g: `64`
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector.
 
-- <b>integer getShiftType(void)</b><br>
+- <b>\ref py_SHIFT_page getShiftType(void)</b><br>
 Returns the shift type of the instruction. Mainly used for AArch64.<br>
-e.g: `LSL`
+e.g: `SHIFT.AARCH64.LSL`
 
 - <b>integer getShiftValue(void)</b><br>
 Returns the shift value of the instruction. Mainly used for AArch64.<br>
