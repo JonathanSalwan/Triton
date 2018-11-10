@@ -19,6 +19,7 @@ namespace triton {
     Instruction::Instruction() {
       this->address         = 0;
       this->branch          = false;
+      this->codeCondition   = 0;
       this->conditionTaken  = false;
       this->controlFlow     = false;
       this->prefix          = 0;
@@ -50,6 +51,7 @@ namespace triton {
     void Instruction::copy(const Instruction& other) {
       this->address             = other.address;
       this->branch              = other.branch;
+      this->codeCondition       = other.codeCondition;
       this->conditionTaken      = other.conditionTaken;
       this->controlFlow         = other.controlFlow;
       this->loadAccess          = other.loadAccess;
@@ -127,6 +129,11 @@ namespace triton {
 
     triton::uint32 Instruction::getPrefix(void) const {
       return this->prefix;
+    }
+
+
+    triton::uint32 Instruction::getCodeCondition(void) const {
+      return this->codeCondition;
     }
 
 
@@ -252,6 +259,11 @@ namespace triton {
 
     void Instruction::setPrefix(triton::uint32 prefix) {
       this->prefix = prefix;
+    }
+
+
+    void Instruction::setCodeCondition(triton::uint32 codeCondition) {
+      this->codeCondition = codeCondition;
     }
 
 

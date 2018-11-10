@@ -54,6 +54,7 @@ to wrap more generic concepts.
 - \ref py_MODE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
+- \ref py_PREFIX_page
 - \ref py_REG_page
 - \ref py_SYMEXPR_page
 - \ref py_SYSCALL_page

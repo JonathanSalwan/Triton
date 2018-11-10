@@ -59,6 +59,10 @@ zmm1:512 bv[511..0]
 
 \htmlinclude x8664_reg
 
+\subsection REG_AArch64_py_api AArch64 registers
+
+\htmlinclude aarch64_reg
+
 */
 
 

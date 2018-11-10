@@ -63,8 +63,11 @@ namespace triton {
         //! The type of the instruction. This field is set at the disassembly level.
         triton::uint32 type;
 
-        //! The prefix of the instruction. This field is set at the disassembly level.
+        //! The prefix of the instruction. This field is set at the disassembly level. Mainly used for X86.
         triton::uint32 prefix;
+
+        //! The code condition of the instruction. This field is set at the disassembly level. Mainly used for AArch64.
+        triton::uint32 codeCondition;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> loadAccess;
@@ -140,8 +143,11 @@ namespace triton {
         //! Returns the type of the instruction.
         TRITON_EXPORT triton::uint32 getType(void) const;
 
-        //! Returns the prefix of the instruction.
+        //! Returns the prefix of the instruction (mainly for X86).
         TRITON_EXPORT triton::uint32 getPrefix(void) const;
+
+        //! Returns the code codition of the instruction (mainly for AArch64).
+        TRITON_EXPORT triton::uint32 getCodeCondition(void) const;
 
         //! Returns the list of all implicit and explicit load access
         TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getLoadAccess(void);
@@ -200,8 +206,11 @@ namespace triton {
         //! Sets the type of the instruction.
         TRITON_EXPORT void setType(triton::uint32 type);
 
-        //! Sets the prefix of the instruction.
+        //! Sets the prefix of the instruction (mainly for X86).
         TRITON_EXPORT void setPrefix(triton::uint32 prefix);
+
+        //! Sets the code condition of the instruction (mainly for AArch64).
+        TRITON_EXPORT void setCodeCondition(triton::uint32 codeCondition);
 
         //! Sets the disassembly of the instruction.
         TRITON_EXPORT void setDisassembly(const std::string& str);
@@ -242,7 +251,7 @@ namespace triton {
         //! Returns whether the instruction reads the specified operand.
         TRITON_EXPORT bool isReadFrom(const triton::arch::OperandWrapper& target) const;
 
-        //! Returns true if the instruction has a prefix.
+        //! Returns true if the instruction has a prefix (mainly for X86).
         TRITON_EXPORT bool isPrefixed(void) const;
 
         //! Sets flag to define this instruction as branch or not.
