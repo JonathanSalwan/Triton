@@ -40,6 +40,35 @@ namespace triton {
      *  @{
      */
 
+      //! The list of shift
+      enum shifts_e {
+        ID_SHIFT_INVALID = 0, //!< invalid
+        ID_SHIFT_ASR, //!< Arithmetic Shift Right
+        ID_SHIFT_LSL, //!< Logical Shift Left
+        ID_SHIFT_LSR, //!< Logical Shift Right
+        ID_SHIFT_ROR, //!< Rotate Right
+      };
+
+      //! The list of condition
+      enum conditions_e {
+        ID_CONDITION_INVALID = 0, //!< invalid
+        ID_CONDITION_AL, //!< Always. Any flags. This suffix is normally omitted.
+        ID_CONDITION_EQ, //!< Equal. Z set.
+        ID_CONDITION_GE, //!< Signed >=. N and V the same.
+        ID_CONDITION_GT, //!< Signed >. Z clear, N and V the same.
+        ID_CONDITION_HI, //!< Higher (unsigned >). C set and Z clear.
+        ID_CONDITION_HS, //!< Higher or same (unsigned >=). C set.
+        ID_CONDITION_LE, //!< Signed <=. Z set, N and V differ.
+        ID_CONDITION_LO, //!< Lower (unsigned <). C clear.
+        ID_CONDITION_LS, //!< Lower or same (unsigned <=). C clear or Z set.
+        ID_CONDITION_LT, //!< Signed <. N and V differ.
+        ID_CONDITION_MI, //!< Negative. N set.
+        ID_CONDITION_NE, //!< Not equal. Z clear.
+        ID_CONDITION_PL, //!< Positive or zero. N clear.
+        ID_CONDITION_VC, //!< No overflow. V clear.
+        ID_CONDITION_VS, //!< Overflow. V set.
+      };
+
       //! \class AArch64Specifications
       /*! \brief The AArch64Specifications class defines specifications about the AArch64 CPU */
       class AArch64Specifications {
@@ -53,6 +82,12 @@ namespace triton {
 
           //! Converts a capstone's register id to a triton's register id.
           TRITON_EXPORT triton::arch::registers_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
+
+          //! Converts a capstone's shift id to a triton's shift id.
+          TRITON_EXPORT triton::arch::aarch64::shifts_e capstoneShiftToTritonShift(triton::uint32 id) const;
+
+          //! Converts a capstone's condition id to a triton's condition id.
+          TRITON_EXPORT triton::arch::aarch64::conditions_e capstoneConditionToTritonCondition(triton::uint32 id) const;
 
           //! Converts a capstone's instruction id to a triton's instruction id.
           TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;

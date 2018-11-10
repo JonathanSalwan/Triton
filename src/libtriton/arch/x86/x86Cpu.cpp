@@ -926,4 +926,3 @@ namespace triton {
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */
-

@@ -7,6 +7,7 @@
 ##  ...
 ##
 
+from triton import *
 from pintool import *
 
 MAIN_ADDR       = None

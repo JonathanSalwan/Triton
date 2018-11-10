@@ -71,14 +71,21 @@ REG_SPEC(W29, w29, DWORD_SIZE_BIT-1, 0, X29) // w29
 REG_SPEC(W30, w30, DWORD_SIZE_BIT-1, 0, X30) // w30
 
 // Stack pointer registers
-REG_SPEC(SP, sp, QWORD_SIZE_BIT-1, 0, SP) // SP
+REG_SPEC(SP, sp, QWORD_SIZE_BIT-1, 0, SP)   // SP
+REG_SPEC(WSP, wsp, DWORD_SIZE_BIT-1, 0, SP) // WSP
 
 // Program counter register
 REG_SPEC_NO_CAPSTONE(PC, pc, QWORD_SIZE_BIT-1, 0, PC) // PC
 
 // Zero registers
-REG_SPEC(WZR, wzr, DWORD_SIZE_BIT-1, 0, WZR) // WZR
 REG_SPEC(XZR, xzr, QWORD_SIZE_BIT-1, 0, XZR) // XZR
+REG_SPEC(WZR, wzr, DWORD_SIZE_BIT-1, 0, XZR) // WZR
+
+// Flag registers
+REG_SPEC_NO_CAPSTONE(C, c, 0, 0, C) // C (Carry)
+REG_SPEC_NO_CAPSTONE(N, n, 0, 0, N) // N (Negative)
+REG_SPEC_NO_CAPSTONE(V, v, 0, 0, V) // V (Overflow)
+REG_SPEC_NO_CAPSTONE(Z, z, 0, 0, Z) // Z (Zero)
 
 #undef REG_SPEC
 #undef REG_SPEC_NO_CAPSTONE

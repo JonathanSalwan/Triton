@@ -52,8 +52,118 @@ namespace triton {
           default:
             tritonId = triton::arch::ID_REG_INVALID;
             break;
-
         }
+
+        return tritonId;
+      }
+
+
+      triton::arch::aarch64::shifts_e AArch64Specifications::capstoneShiftToTritonShift(triton::uint32 id) const {
+        triton::arch::aarch64::shifts_e tritonId = triton::arch::aarch64::ID_SHIFT_INVALID;
+
+        switch (id) {
+          case triton::extlibs::capstone::ARM64_SFT_INVALID:
+            tritonId = triton::arch::aarch64::ID_SHIFT_INVALID;
+            break;
+
+          case triton::extlibs::capstone::ARM64_SFT_ASR:
+            tritonId = triton::arch::aarch64::ID_SHIFT_ASR;
+            break;
+
+          case triton::extlibs::capstone::ARM64_SFT_LSL:
+            tritonId = triton::arch::aarch64::ID_SHIFT_LSL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_SFT_LSR:
+            tritonId = triton::arch::aarch64::ID_SHIFT_LSR;
+            break;
+
+          case triton::extlibs::capstone::ARM64_SFT_ROR:
+            tritonId = triton::arch::aarch64::ID_SHIFT_ROR;
+            break;
+
+          default:
+            tritonId = triton::arch::aarch64::ID_SHIFT_INVALID;
+            break;
+        }
+
+        return tritonId;
+      }
+
+
+      triton::arch::aarch64::conditions_e AArch64Specifications::capstoneConditionToTritonCondition(triton::uint32 id) const {
+        triton::arch::aarch64::conditions_e tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
+
+        switch (id) {
+          case triton::extlibs::capstone::ARM64_CC_INVALID:
+            tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_AL:
+            tritonId = triton::arch::aarch64::ID_CONDITION_AL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_EQ:
+            tritonId = triton::arch::aarch64::ID_CONDITION_EQ;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_GE:
+            tritonId = triton::arch::aarch64::ID_CONDITION_GE;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_GT:
+            tritonId = triton::arch::aarch64::ID_CONDITION_GT;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_HI:
+            tritonId = triton::arch::aarch64::ID_CONDITION_HI;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_HS:
+            tritonId = triton::arch::aarch64::ID_CONDITION_HS;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_LE:
+            tritonId = triton::arch::aarch64::ID_CONDITION_LE;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_LO:
+            tritonId = triton::arch::aarch64::ID_CONDITION_LO;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_LS:
+            tritonId = triton::arch::aarch64::ID_CONDITION_LS;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_LT:
+            tritonId = triton::arch::aarch64::ID_CONDITION_LT;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_MI:
+            tritonId = triton::arch::aarch64::ID_CONDITION_MI;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_NE:
+            tritonId = triton::arch::aarch64::ID_CONDITION_NE;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_PL:
+            tritonId = triton::arch::aarch64::ID_CONDITION_PL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_VC:
+            tritonId = triton::arch::aarch64::ID_CONDITION_VC;
+            break;
+
+          case triton::extlibs::capstone::ARM64_CC_VS:
+            tritonId = triton::arch::aarch64::ID_CONDITION_VS;
+            break;
+
+          default:
+            tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
+            break;
+        }
+
         return tritonId;
       }
 
@@ -62,7 +172,6 @@ namespace triton {
         triton::uint32 tritonId = triton::arch::aarch64::ID_INS_INVALID;
 
         switch (id) {
-
           case triton::extlibs::capstone::ARM64_INS_INVALID:
             tritonId = triton::arch::aarch64::ID_INS_INVALID;
             break;
@@ -1734,8 +1843,8 @@ namespace triton {
           default:
             tritonId = triton::arch::aarch64::ID_INS_INVALID;
             break;
-
         }
+
         return tritonId;
       }
 

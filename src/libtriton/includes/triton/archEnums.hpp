@@ -27,9 +27,9 @@ namespace triton {
     /*! The architectures */
     enum architectures_e {
       ARCH_INVALID = 0, /*!< Invalid architecture.   */
+      ARCH_AARCH64,     /*!< AArch64 architecture.   */
       ARCH_X86,         /*!< X86 architecture.       */
       ARCH_X86_64,      /*!< X86_64 architecture.    */
-      ARCH_AARCH64,     /*!< AArch64 architecture.   */
       ARCH_LAST_ITEM    /*!< Must be the last item.  */
     };
 
