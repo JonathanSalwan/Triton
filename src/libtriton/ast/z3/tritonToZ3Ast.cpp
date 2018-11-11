@@ -161,7 +161,7 @@ namespace triton {
         }
 
         case DECIMAL_NODE: {
-          std::string value(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue());
+          std::string value(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue().convert_to<std::string>());
           return this->context.int_val(value.c_str());
         }
 
@@ -277,7 +277,7 @@ namespace triton {
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
-            std::string strValue(value);
+            std::string strValue(value.convert_to<std::string>());
             return this->context.bv_val(strValue.c_str(), symVar->getSize());
           }
 
