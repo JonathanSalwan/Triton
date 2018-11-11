@@ -337,17 +337,25 @@ namespace triton {
                 default:
                   /* FIXME: What about FP, C-IMM ? */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
-              }
-            }
+              } // switch
+            } // for operand
 
-          }
+            /* Set control flow */
+            if (insn[j].id == triton::extlibs::capstone::ARM64_INS_RET)
+              inst.setControlFlow(true);
+
+          } // for instruction
+
           /* Set branch */
           if (detail->groups_count > 0) {
             for (triton::uint32 n = 0; n < detail->groups_count; n++) {
-              if (detail->groups[n] == triton::extlibs::capstone::ARM64_GRP_JUMP)
+              if (detail->groups[n] == triton::extlibs::capstone::ARM64_GRP_JUMP) {
                 inst.setBranch(true);
+                inst.setControlFlow(true);
+              }
             }
           }
+
           /* Free capstone stuffs */
           triton::extlibs::capstone::cs_free(insn, count);
         }
