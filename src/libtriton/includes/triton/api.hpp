@@ -20,7 +20,6 @@
 #include <triton/memoryAccess.hpp>
 #include <triton/modes.hpp>
 #include <triton/operandWrapper.hpp>
-#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
 #include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
@@ -293,10 +292,10 @@ namespace triton {
         TRITON_EXPORT void checkModes(void) const;
 
         //! [**modes api**] - Enables or disables a specific mode.
-        TRITON_EXPORT void enableMode(enum triton::modes::mode_e mode, bool flag);
+        TRITON_EXPORT void enableMode(triton::modes::mode_e mode, bool flag);
 
         //! [**modes api**] - Returns true if the mode is enabled.
-        TRITON_EXPORT bool isModeEnabled(enum triton::modes::mode_e mode) const;
+        TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
 
 
 

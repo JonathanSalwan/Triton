@@ -11,6 +11,7 @@
 #include <list>
 
 #include <triton/ast.hpp>
+#include <triton/callbacksEnums.hpp>
 #include <triton/comparableFunctor.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
@@ -35,15 +36,6 @@ namespace triton {
    *  \addtogroup callbacks
    *  @{
    */
-
-    /*! Enumerates all kinds callbacks. */
-    enum callback_e {
-      GET_CONCRETE_MEMORY_VALUE,    /*!< LOAD concrete memory value callback */
-      GET_CONCRETE_REGISTER_VALUE,  /*!< GET concrete register value callback */
-      SET_CONCRETE_MEMORY_VALUE,    /*!< STORE concrete memory value callback */
-      SET_CONCRETE_REGISTER_VALUE,  /*!< PUT concrete register value callback */
-      SYMBOLIC_SIMPLIFICATION,      /*!< Symbolic simplification callback */
-    };
 
     /*! \brief The prototype of a GET_CONCRETE_MEMORY_VALUE callback.
      *

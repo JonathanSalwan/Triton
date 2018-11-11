@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_ASTENUMS_H
-#define TRITON_ASTENUMS_H
+#ifndef TRITON_ASTENUMS_HPP
+#define TRITON_ASTENUMS_HPP
 
 
 
@@ -78,10 +78,26 @@ namespace triton {
       ZX_NODE = 239,                  /*!< ((_ zero_extend x) y) */
     };
 
+    //! The Representations namespace
+    namespace representations {
+    /*!
+     *  \ingroup ast
+     *  \addtogroup representations
+     *  @{
+     */
+
+      //! All kinds of representation mode.
+      enum mode_e {
+        SMT_REPRESENTATION,     /*!< SMT representation */
+        PYTHON_REPRESENTATION,  /*!< Python representation */
+        LAST_REPRESENTATION
+      };
+
+    /*! @} End of representations namespace */
+    };
   /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
 };
 
-
-#endif /* TRITON_ASTENUMS_H */
+#endif /* TRITON_ASTENUMS_HPP */

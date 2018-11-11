@@ -1104,7 +1104,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "enableMode(): Expects an boolean flag as second argument.");
 
         try {
-          PyTritonContext_AsTritonContext(self)->enableMode(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
+          PyTritonContext_AsTritonContext(self)->enableMode(static_cast<triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1907,7 +1907,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "isModeEnabled(): Expects a MODE as argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->isModeEnabled(static_cast<enum triton::modes::mode_e>(PyLong_AsUint32(mode))) == true)
+          if (PyTritonContext_AsTritonContext(self)->isModeEnabled(static_cast<triton::modes::mode_e>(PyLong_AsUint32(mode))) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2079,7 +2079,7 @@ namespace triton {
 
         try {
           /* Set the architecture */
-          PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<enum triton::arch::architectures_e>(PyLong_AsUint32(arg)));
+          PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<triton::arch::architectures_e>(PyLong_AsUint32(arg)));
           TritonContext_fillRegistersAttribute(self);
         }
         catch (const triton::exceptions::Exception& e) {

@@ -12,6 +12,7 @@
 #include <set>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>

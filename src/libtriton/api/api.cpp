@@ -599,12 +599,12 @@ namespace triton {
 
   /* Modes API======================================================================================= */
 
-  void API::enableMode(enum triton::modes::mode_e mode, bool flag) {
+  void API::enableMode(triton::modes::mode_e mode, bool flag) {
     this->modes.enableMode(mode, flag);
   }
 
 
-  bool API::isModeEnabled(enum triton::modes::mode_e mode) const {
+  bool API::isModeEnabled(triton::modes::mode_e mode) const {
     return this->modes.isModeEnabled(mode);
   }
 

@@ -15,6 +15,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/symbolicEngine.hpp>
@@ -45,16 +46,6 @@ namespace triton {
      *  \addtogroup solver
      *  @{
      */
-
-      /*! The different kind of solvers */
-      enum solvers_e {
-        SOLVER_INVALID = 0, /*!< invalid solver. */
-        SOLVER_CUSTOM,      /*!< custom solver. */
-        #ifdef Z3_INTERFACE
-        SOLVER_Z3,          /*!< z3 solver. */
-        #endif
-        SOLVER_LAST_ITEM    /*!< must be the last item.  */
-      };
 
       /*! \interface SolverEngine
           \brief This class is used to interface with solvers */

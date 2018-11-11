@@ -8,13 +8,13 @@
 #include <iosfwd>                         // for ostream
 #include <string>                         // for string
 #include <sstream>                        // for sstream
-#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
+#include <triton/ast.hpp>                 // for AbstractNode, newInstance
 #include <triton/astContext.hpp>          // for AstContext
+#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/exceptions.hpp>          // for SymbolicExpression
+#include <triton/symbolicEnums.hpp>       // for symkind_e, symkind_e::MEM
 #include <triton/symbolicExpression.hpp>  // for SymbolicExpression
-#include "triton/ast.hpp"                 // for AbstractNode, newInstance
-#include "triton/symbolicEnums.hpp"       // for symkind_e, symkind_e::MEM
-#include "triton/tritonTypes.hpp"         // for usize
+#include <triton/tritonTypes.hpp>         // for usize
 
 
 namespace triton {

@@ -63,7 +63,7 @@ namespace triton {
     class AbstractNode : public std::enable_shared_from_this<AbstractNode> {
       protected:
         //! The kind of the node.
-        enum kind_e kind;
+        triton::ast::kind_e kind;
 
         //! The children of the node.
         std::vector<SharedAbstractNode> children;
@@ -89,7 +89,7 @@ namespace triton {
 
       public:
         //! Constructor.
-        TRITON_EXPORT AbstractNode(enum kind_e kind, AstContext& ctxt);
+        TRITON_EXPORT AbstractNode(triton::ast::kind_e kind, AstContext& ctxt);
 
         //! Constructor by copy.
         TRITON_EXPORT AbstractNode(const AbstractNode& other, AstContext& ctxt);
@@ -101,7 +101,7 @@ namespace triton {
         TRITON_EXPORT AstContext& getContext(void) const;
 
         //! Returns the kind of the node.
-        TRITON_EXPORT enum kind_e getKind(void) const;
+        TRITON_EXPORT triton::ast::kind_e getKind(void) const;
 
         //! Returns the size of the node.
         TRITON_EXPORT triton::uint32 getBitvectorSize(void) const;

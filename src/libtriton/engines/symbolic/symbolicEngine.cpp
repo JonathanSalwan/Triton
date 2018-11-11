@@ -502,7 +502,7 @@ namespace triton {
 
         for (triton::uint32 it = 0; it < this->numberOfRegisters; it++) {
           if (this->symbolicReg[it] != nullptr) {
-            ret[arch::registers_e(it)] = this->symbolicReg[it];
+            ret[triton::arch::registers_e(it)] = this->symbolicReg[it];
           }
         }
 

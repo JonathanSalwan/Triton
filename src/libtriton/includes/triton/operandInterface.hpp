@@ -8,6 +8,7 @@
 #ifndef TRITON_OPERANDINTERFACE_H
 #define TRITON_OPERANDINTERFACE_H
 
+#include <triton/archEnums.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -27,14 +28,6 @@ namespace triton {
    *  \addtogroup arch
    *  @{
    */
-
-    //! Type Operand
-    enum operandType_e {
-      OP_INVALID = 0, //!< invalid operand
-      OP_IMM,         //!< immediate operand
-      OP_MEM,         //!< memory operand
-      OP_REG          //!< register operand
-    };
 
     /*! \interface OperandInterface
      *  \brief This interface is used for instruction operands.

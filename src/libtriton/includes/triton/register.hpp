@@ -11,11 +11,11 @@
 #include <string>
 #include <ostream>
 
+#include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
-#include <triton/regEnums.hpp>
 #include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 

@@ -5,10 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_SYMBOLICENUMS_H
-#define TRITON_SYMBOLICENUMS_H
-
-#include <triton/tritonTypes.hpp>
+#ifndef TRITON_SYMBOLICENUMS_HPP
+#define TRITON_SYMBOLICENUMS_HPP
 
 /*! Defines the name of a symbolic variable. */
 #define TRITON_SYMVAR_NAME "SymVar_"
@@ -56,4 +54,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_SYMBOLICENUMS_H */
+#endif /* TRITON_SYMBOLICENUMS_HPP */

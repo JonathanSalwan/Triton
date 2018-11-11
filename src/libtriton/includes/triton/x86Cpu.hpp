@@ -12,12 +12,12 @@
 #include <set>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
-#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 #include <triton/x86Specifications.hpp>

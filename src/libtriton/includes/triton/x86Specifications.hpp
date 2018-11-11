@@ -10,9 +10,9 @@
 
 #include <unordered_map>
 
+#include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
 
 
@@ -40,29 +40,12 @@ namespace triton {
      *  @{
      */
 
-      /*! \brief The list of prefixes.
-       *
-       *  \details
-       *  Note that `REP` and `REPE` have the some opcode. The `REP`
-       *  prefix becomes a `REPE` if the instruction modifies `ZF`.
-       */
-      enum prefixes_e {
-        ID_PREFIX_INVALID = 0,  //!< invalid
-        ID_PREFIX_LOCK,         //!< LOCK
-        ID_PREFIX_REP,          //!< REP
-        ID_PREFIX_REPE,         //!< REPE
-        ID_PREFIX_REPNE,        //!< REPNE
-
-        /* Must be the last item */
-        ID_PREFIX_LAST_ITEM     //!< must be the last item
-      };
-
       //! \class x86Specifications
       /*! \brief The x86Specifications class defines specifications about the x86 and x86_64 CPU */
       class x86Specifications {
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<registers_e, const triton::arch::Register> registers_;
+          std::unordered_map<triton::arch::registers_e, const triton::arch::Register> registers_;
 
         public:
           //! Constructor.

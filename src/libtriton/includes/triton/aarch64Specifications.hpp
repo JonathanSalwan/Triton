@@ -10,9 +10,9 @@
 
 #include <unordered_map>
 
+#include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/regEnums.hpp>
 #include <triton/register.hpp>
 
 
@@ -40,43 +40,12 @@ namespace triton {
      *  @{
      */
 
-      //! The list of shift
-      enum shifts_e {
-        ID_SHIFT_INVALID = 0, //!< invalid
-        ID_SHIFT_ASR,         //!< Arithmetic Shift Right
-        ID_SHIFT_LSL,         //!< Logical Shift Left
-        ID_SHIFT_LSR,         //!< Logical Shift Right
-        ID_SHIFT_ROR,         //!< Rotate Right
-        ID_SHIFT_LAST_ITEM,   //!< Must be the last item
-      };
-
-      //! The list of condition
-      enum conditions_e {
-        ID_CONDITION_INVALID = 0, //!< invalid
-        ID_CONDITION_AL,          //!< Always. Any flags. This suffix is normally omitted.
-        ID_CONDITION_EQ,          //!< Equal. Z set.
-        ID_CONDITION_GE,          //!< Signed >=. N and V the same.
-        ID_CONDITION_GT,          //!< Signed >. Z clear, N and V the same.
-        ID_CONDITION_HI,          //!< Higher (unsigned >). C set and Z clear.
-        ID_CONDITION_HS,          //!< Higher or same (unsigned >=). C set.
-        ID_CONDITION_LE,          //!< Signed <=. Z set, N and V differ.
-        ID_CONDITION_LO,          //!< Lower (unsigned <). C clear.
-        ID_CONDITION_LS,          //!< Lower or same (unsigned <=). C clear or Z set.
-        ID_CONDITION_LT,          //!< Signed <. N and V differ.
-        ID_CONDITION_MI,          //!< Negative. N set.
-        ID_CONDITION_NE,          //!< Not equal. Z clear.
-        ID_CONDITION_PL,          //!< Positive or zero. N clear.
-        ID_CONDITION_VC,          //!< No overflow. V clear.
-        ID_CONDITION_VS,          //!< Overflow. V set.
-        ID_CONDITION_LAST_ITEM,   //!< must be the last item.
-      };
-
       //! \class AArch64Specifications
       /*! \brief The AArch64Specifications class defines specifications about the AArch64 CPU */
       class AArch64Specifications {
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<registers_e, const triton::arch::Register> registers_;
+          std::unordered_map<triton::arch::registers_e, const triton::arch::Register> registers_;
 
         public:
           //! Constructor.

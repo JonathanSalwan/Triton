@@ -27,14 +27,14 @@ namespace triton {
     }
 
 
-    bool Modes::isModeEnabled(enum mode_e mode) const {
+    bool Modes::isModeEnabled(triton::modes::mode_e mode) const {
       if (this->enabledModes.find(mode) != this->enabledModes.end())
         return true;
       return false;
     }
 
 
-    void Modes::enableMode(enum mode_e mode, bool flag) {
+    void Modes::enableMode(triton::modes::mode_e mode, bool flag) {
       if (flag == true)
         this->enabledModes.insert(mode);
       else

@@ -22,7 +22,7 @@ namespace triton {
 
     /* ====== Abstract node */
 
-    AbstractNode::AbstractNode(enum kind_e kind, AstContext& ctxt): ctxt(ctxt) {
+    AbstractNode::AbstractNode(triton::ast::kind_e kind, AstContext& ctxt): ctxt(ctxt) {
       this->eval        = 0;
       this->kind        = kind;
       this->size        = 0;
@@ -52,7 +52,7 @@ namespace triton {
     }
 
 
-    enum kind_e AbstractNode::getKind(void) const {
+    triton::ast::kind_e AbstractNode::getKind(void) const {
       return this->kind;
     }
 
