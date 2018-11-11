@@ -162,6 +162,20 @@ namespace triton {
     }
 
 
+    const triton::arch::Register& Architecture::getProgramCounter(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getProgramCounter(): You must define an architecture.");
+      return this->cpu->getProgramCounter();
+    }
+
+
+    const triton::arch::Register& Architecture::getStackPointer(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getStackPointer(): You must define an architecture.");
+      return this->cpu->getStackPointer();
+    }
+
+
     const triton::arch::Register& Architecture::getRegister(triton::arch::registers_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");

@@ -64,6 +64,7 @@ include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 set(LIBTRITON_SOURCE_FILES
     api/api.cpp
     arch/aarch64/aarch64Cpu.cpp
+    arch/aarch64/aarch64Semantics.cpp
     arch/aarch64/aarch64Specifications.cpp
     arch/architecture.cpp
     arch/bitsVector.cpp

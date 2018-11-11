@@ -16,18 +16,14 @@
 /*! \page SMT_Semantics_Supported_page SMT Semantics Supported
     \brief [**internal**] All information about the supported semantics.
 
-\tableofcontents
+- \ref SMT_aarch64_Semantics_Supported_page
+- \ref SMT_x86_Semantics_Supported_page
 
-\section SMT_Semantics_Supported_description Description
-<hr>
+*/
 
-Here is the instructions' list of what **Triton** can convert into \ref py_AstNode_page. Please note that our main
-objective is not to support all semantics right now, we are currently focusing on the design of **Triton**'s
-engines. When engines will be reliable, we will write the last semantics :-). However, feel free to add your
-own semantics into the [appropriate file](x86Semantics_8cpp_source.html). Thanks to `wisk` and his
-[Medusa project](https://github.com/wisk/medusa/blob/dev/arch/x86.yaml) which has been really useful.
 
-\subsection SMT_Semantics_Supported_x86 x86 and x86-64 SMT semantics supported
+/*! \page SMT_x86_Semantics_Supported_page x86 and x86-64 SMT semantics supported
+    \brief [**internal**] List of the supported semantics for the x86 and x86-64 architectures.
 
 
 Mnemonic                     | Extensions | Description
@@ -647,7 +643,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignAddStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_SP));
+        auto dst = triton::arch::OperandWrapper(this->architecture->getStackPointer());
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
@@ -668,7 +664,7 @@ namespace triton {
 
 
       triton::uint64 x86Semantics::alignSubStack_s(triton::arch::Instruction& inst, triton::uint32 delta) {
-        auto dst = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_SP));
+        auto dst = triton::arch::OperandWrapper(this->architecture->getStackPointer());
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
@@ -713,7 +709,7 @@ namespace triton {
 
 
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
-        auto pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto counter = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
         auto zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
 
@@ -816,10 +812,10 @@ namespace triton {
             auto node = this->astCtxt.bv(inst.getNextAddress(), pc.getBitSize());
 
             /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, this->architecture->getParentRegister(ID_REG_X86_IP), "Program Counter");
+            auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, this->architecture->getProgramCounter(), "Program Counter");
 
             /* Spread taint */
-            expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getParentRegister(ID_REG_X86_IP), triton::engines::taint::UNTAINTED);
+            expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getProgramCounter(), triton::engines::taint::UNTAINTED);
             break;
           }
         }
@@ -3337,11 +3333,11 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
-        auto stack = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack = this->architecture->getStackPointer();
 
         /* Create the semantics - side effect */
         auto  stackValue = alignSubStack_s(inst, stack.getSize());
-        auto  pc         = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc         = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
         auto& src        = inst.operands[0];
 
@@ -5097,7 +5093,7 @@ namespace triton {
 
 
       void x86Semantics::ja_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
@@ -5136,7 +5132,7 @@ namespace triton {
 
 
       void x86Semantics::jae_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5165,7 +5161,7 @@ namespace triton {
 
 
       void x86Semantics::jb_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5194,7 +5190,7 @@ namespace triton {
 
 
       void x86Semantics::jbe_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
@@ -5227,7 +5223,7 @@ namespace triton {
 
 
       void x86Semantics::je_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5256,7 +5252,7 @@ namespace triton {
 
 
       void x86Semantics::jg_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
@@ -5291,7 +5287,7 @@ namespace triton {
 
 
       void x86Semantics::jge_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
@@ -5323,7 +5319,7 @@ namespace triton {
 
 
       void x86Semantics::jl_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
@@ -5355,7 +5351,7 @@ namespace triton {
 
 
       void x86Semantics::jle_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
@@ -5390,7 +5386,7 @@ namespace triton {
 
 
       void x86Semantics::jmp_s(triton::arch::Instruction& inst) {
-        auto  pc  = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc  = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto& src = inst.operands[0];
 
         /* Create symbolic operands */
@@ -5414,7 +5410,7 @@ namespace triton {
 
 
       void x86Semantics::jne_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  zf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5443,7 +5439,7 @@ namespace triton {
 
 
       void x86Semantics::jno_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5472,7 +5468,7 @@ namespace triton {
 
 
       void x86Semantics::jnp_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  pf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5501,7 +5497,7 @@ namespace triton {
 
 
       void x86Semantics::jns_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5530,7 +5526,7 @@ namespace triton {
 
 
       void x86Semantics::jo_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5559,7 +5555,7 @@ namespace triton {
 
 
       void x86Semantics::jp_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  pf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5588,7 +5584,7 @@ namespace triton {
 
 
       void x86Semantics::js_s(triton::arch::Instruction& inst) {
-        auto  pc      = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto  sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
         auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
         auto& srcImm2 = inst.operands[0];
@@ -5727,7 +5723,7 @@ namespace triton {
           op3 = this->astCtxt.bv(0, leaSize);
 
         /* Base with PC */
-        if (this->architecture->isRegisterValid(srcBase) && (this->architecture->getParentRegister(srcBase) == this->architecture->getParentRegister(ID_REG_X86_IP)))
+        if (this->architecture->isRegisterValid(srcBase) && (this->architecture->getParentRegister(srcBase) == this->architecture->getProgramCounter()))
           op3 = this->astCtxt.bvadd(op3, this->astCtxt.bv(inst.getSize(), leaSize));
 
         /* Index */
@@ -5764,7 +5760,7 @@ namespace triton {
 
 
       void x86Semantics::leave_s(triton::arch::Instruction& inst) {
-        auto stack     = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack     = this->architecture->getStackPointer();
         auto base      = this->architecture->getParentRegister(ID_REG_X86_BP);
         auto baseValue = this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>();
         auto bp1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(baseValue, base.getSize()));
@@ -8577,7 +8573,7 @@ namespace triton {
 
       void x86Semantics::pop_s(triton::arch::Instruction& inst) {
         bool  stackRelative = false;
-        auto  stack         = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto  stack         = this->architecture->getStackPointer();
         auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto& dst           = inst.operands[0];
         auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
@@ -8634,7 +8630,7 @@ namespace triton {
 
 
       void x86Semantics::popal_s(triton::arch::Instruction& inst) {
-        auto stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack      = this->architecture->getStackPointer();
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDI));
         auto dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ESI));
@@ -8688,7 +8684,7 @@ namespace triton {
 
 
       void x86Semantics::popf_s(triton::arch::Instruction& inst) {
-        auto  stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto  stack      = this->architecture->getStackPointer();
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
@@ -8751,7 +8747,7 @@ namespace triton {
 
 
       void x86Semantics::popfd_s(triton::arch::Instruction& inst) {
-        auto  stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto  stack      = this->architecture->getStackPointer();
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
@@ -8829,7 +8825,7 @@ namespace triton {
 
 
       void x86Semantics::popfq_s(triton::arch::Instruction& inst) {
-        auto  stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto  stack      = this->architecture->getStackPointer();
         auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
@@ -9886,7 +9882,7 @@ namespace triton {
 
       void x86Semantics::push_s(triton::arch::Instruction& inst) {
         auto& src           = inst.operands[0];
-        auto stack          = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack          = this->architecture->getStackPointer();
         triton::uint32 size = stack.getSize();
 
         /* If it's an immediate source, the memory access is always based on the arch size */
@@ -9915,7 +9911,7 @@ namespace triton {
 
 
       void x86Semantics::pushal_s(triton::arch::Instruction& inst) {
-        auto stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack      = this->architecture->getStackPointer();
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
         auto dst1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
         auto dst2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
@@ -9981,7 +9977,7 @@ namespace triton {
 
 
       void x86Semantics::pushfd_s(triton::arch::Instruction& inst) {
-        auto stack = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack = this->architecture->getStackPointer();
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
@@ -10072,7 +10068,7 @@ namespace triton {
 
 
       void x86Semantics::pushfq_s(triton::arch::Instruction& inst) {
-        auto stack = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack = this->architecture->getStackPointer();
 
         /* Create the semantics - side effect */
         auto stackValue = alignSubStack_s(inst, stack.getSize());
@@ -10347,9 +10343,9 @@ namespace triton {
 
 
       void x86Semantics::ret_s(triton::arch::Instruction& inst) {
-        auto stack      = this->architecture->getParentRegister(ID_REG_X86_SP);
+        auto stack      = this->architecture->getStackPointer();
         auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-        auto pc         = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_IP));
+        auto pc         = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
         /* Create symbolic operands */

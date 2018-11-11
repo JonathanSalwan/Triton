@@ -83,6 +83,12 @@ namespace triton {
         //! Returns register from id
         TRITON_EXPORT virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
 
+        //! Returns the program counter register
+        TRITON_EXPORT virtual const triton::arch::Register& getProgramCounter(void) const = 0;
+
+        //! Returns the stack pointer register
+        TRITON_EXPORT virtual const triton::arch::Register& getStackPointer(void) const = 0;
+
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) const = 0;
 

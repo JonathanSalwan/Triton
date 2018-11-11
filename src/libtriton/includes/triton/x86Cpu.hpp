@@ -51,7 +51,8 @@ namespace triton {
       /*! \brief This class is used to describe the x86 (32-bits) spec. */
       class x86Cpu : public CpuInterface, public x86Specifications {
 
-        static const registers_e pcId = ID_REG_X86_EIP;
+        static const registers_e pcId = triton::arch::ID_REG_X86_EIP;
+        static const registers_e spId = triton::arch::ID_REG_X86_ESP;
 
         private:
           //! Callbacks API
@@ -207,7 +208,9 @@ namespace triton {
           TRITON_EXPORT const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
           TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
           TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
+          TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
           TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
+          TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
           TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
           TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
           TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;

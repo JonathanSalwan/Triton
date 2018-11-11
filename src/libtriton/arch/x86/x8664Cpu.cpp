@@ -362,6 +362,16 @@ namespace triton {
       }
 
 
+      const triton::arch::Register& x8664Cpu::getProgramCounter(void) const {
+        return this->getRegister(this->pcId);
+      }
+
+
+      const triton::arch::Register& x8664Cpu::getStackPointer(void) const {
+        return this->getRegister(this->spId);
+      }
+
+
       void x8664Cpu::disassembly(triton::arch::Instruction& inst) const {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;

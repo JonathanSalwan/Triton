@@ -68,6 +68,9 @@ namespace triton {
         void collectUnsymbolizedNodes(std::vector<triton::arch::OperandWrapper>& operands) const;
 
       protected:
+        //! AArch64 ISA builder.
+        triton::arch::SemanticsInterface* aarch64Isa;
+
         //! x86 ISA builder.
         triton::arch::SemanticsInterface* x86Isa;
 

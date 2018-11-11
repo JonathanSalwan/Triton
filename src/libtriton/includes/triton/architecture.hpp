@@ -116,6 +116,12 @@ namespace triton {
         //! Returns parent register from register
         TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
 
+        //! Returns the program counter register
+        TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
+
+        //! Returns the stack pointer register
+        TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
+
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
