@@ -17,12 +17,12 @@
 
 \tableofcontents
 
-\section SYMEXPR_py_description Description
+\section SYMBOLIC_py_description Description
 <hr>
 
 The SYMBOLIC namespace contains all types of symbolic expressions and variables.
 
-\section SYMEXPR_py_api Python API - Items of the SYMBOLIC namespace
+\section SYMBOLIC_py_api Python API - Items of the SYMBOLIC namespace
 <hr>
 
 - **SYMBOLIC.MEMORY_EXPRESSION**
