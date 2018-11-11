@@ -49,8 +49,8 @@ namespace triton {
           \brief The symbolic variable class. */
       class SymbolicVariable {
         protected:
-          //! The symbolic variable kind. \sa triton::engines::symbolic::symkind_e
-          symkind_e kind;
+          //! The symbolic variable type assignment.
+          triton::engines::symbolic::variable_e type;
 
           //! The comment of the symbolic variable.
           std::string comment;
@@ -61,21 +61,21 @@ namespace triton {
           //! The id of the symbolic variable. This id is unique.
           triton::usize id;
 
-          /*! \brief The kind value of the symbolic variable.
+          /*! \brief The origin of the symbolic variable.
            *
            * \details If the symbolic varialbe is a triton::engines::symbolic::REG, this value contains the register ID.
            * Otherwise, if the symbolic varialbe is a triton::engines::symbolic::MEM, this value contains the address of the
            * memory access.
            */
-          triton::uint64 kindValue;
+          triton::uint64 origin;
 
           //! The size (in bits) of the symbolic variable.
           triton::uint32 size;
 
         public:
           //! Constructor.
-          TRITON_EXPORT SymbolicVariable(symkind_e kind,
-                                         triton::uint64 kindValue,
+          TRITON_EXPORT SymbolicVariable(triton::engines::symbolic::variable_e type,
+                                         triton::uint64 origin,
                                          triton::usize id,
                                          triton::uint32 size,
                                          const std::string& comment);
@@ -86,8 +86,8 @@ namespace triton {
           //! Operator.
           TRITON_EXPORT SymbolicVariable& operator=(const SymbolicVariable& other);
 
-          //! Returns the symbolic variable kind. \sa triton::engines::symbolic::symkind_e.
-          TRITON_EXPORT symkind_e getKind(void) const;
+          //! Returns the symbolic variable type assignment.
+          TRITON_EXPORT triton::engines::symbolic::variable_e getType(void) const;
 
           //! Returns the comment of the symbolic variable.
           TRITON_EXPORT const std::string& getComment(void) const;
@@ -98,8 +98,8 @@ namespace triton {
           //! Returns the id of the symbolic variable. This id is unique.
           TRITON_EXPORT triton::usize getId(void) const;
 
-          //! Returns the kind value of the symbolic variable.
-          TRITON_EXPORT triton::uint64 getKindValue(void) const;
+          //! Returns the source value of the symbolic variable.
+          TRITON_EXPORT triton::uint64 getOrigin(void) const;
 
           //! Returns the size (in bits) of the symbolic variable.
           TRITON_EXPORT triton::uint32 getSize(void) const;

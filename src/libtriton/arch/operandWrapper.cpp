@@ -39,7 +39,7 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getType(void) const {
+    triton::arch::operand_e OperandWrapper::getType(void) const {
       return this->type;
     }
 

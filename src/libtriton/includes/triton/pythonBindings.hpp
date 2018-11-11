@@ -82,8 +82,8 @@ namespace triton {
       //! Initializes the MODE python namespace.
       void initModeNamespace(PyObject* modeDict);
 
-      //! Initializes the SYMEXPR python namespace.
-      void initSymExprNamespace(PyObject* symExprDict);
+      //! Initializes the SYMBOLIC python namespace.
+      void initSymbolicNamespace(PyObject* symbolicDict);
 
       #if defined(__unix__) || defined(__APPLE__)
       //! Initializes the SYSCALL32 python namespace.

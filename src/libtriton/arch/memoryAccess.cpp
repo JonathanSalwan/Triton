@@ -83,7 +83,7 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getType(void) const {
+    triton::arch::operand_e MemoryAccess::getType(void) const {
       return triton::arch::OP_MEM;
     }
 

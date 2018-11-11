@@ -77,8 +77,8 @@ namespace triton {
         //! [**Architecture api**] - Returns true if the architecture is valid.
         TRITON_EXPORT bool isArchitectureValid(void) const;
 
-        //! [**architecture api**] - Returns the architecture as triton::arch::architectures_e.
-        TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
+        //! [**architecture api**] - Returns the architecture as triton::arch::architecture_e.
+        TRITON_EXPORT triton::arch::architecture_e getArchitecture(void) const;
 
         //! [**architecture api**] - Returns the endianness as triton::arch::endianness_e.
         TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
@@ -89,35 +89,35 @@ namespace triton {
         //! [**architecture api**] - Returns the instance of the current CPU used.
         TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
 
-        //! [**architecture api**] - Initializes an architecture. \sa triton::arch::architectures_e.
-        TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
+        //! [**architecture api**] - Initializes an architecture. \sa triton::arch::architecture_e.
+        TRITON_EXPORT void setArchitecture(triton::arch::architecture_e arch);
 
         //! [**architecture api**] - Clears the architecture states (registers and memory).
         TRITON_EXPORT void clearArchitecture(void);
 
-        //! [**architecture api**] - Returns true if the register id is a flag. \sa triton::arch::x86::registers_e.
-        TRITON_EXPORT bool isFlag(triton::arch::registers_e regId) const;
+        //! [**architecture api**] - Returns true if the register id is a flag. \sa triton::arch::x86::register_e.
+        TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
 
         //! [**architecture api**] - Returns true if the register id is a flag.
         TRITON_EXPORT bool isFlag(const triton::arch::Register& reg) const;
 
-        //! [**architecture api**] - Returns true if the regId is a register. \sa triton::arch::x86::registers_e.
-        TRITON_EXPORT bool isRegister(triton::arch::registers_e regId) const;
+        //! [**architecture api**] - Returns true if the regId is a register. \sa triton::arch::x86::register_e.
+        TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
 
         //! [**architecture api**] - Returns true if the regId is a register.
         TRITON_EXPORT bool isRegister(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns Register from regId.
-        TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
+        TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
 
         //! [**architecture api**] - Returns parent Register from a register.
         TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns parent Register from regId.
-        TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
+        TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
 
-        //! [**architecture api**] - Returns true if the regId is a register or a flag. \sa triton::arch::x86::registers_e.
-        TRITON_EXPORT bool isRegisterValid(triton::arch::registers_e regId) const;
+        //! [**architecture api**] - Returns true if the regId is a register or a flag. \sa triton::arch::x86::register_e.
+        TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
 
         //! [**architecture api**] - Returns true if the regId is a register or a flag.
         TRITON_EXPORT bool isRegisterValid(const triton::arch::Register& reg) const;
@@ -131,10 +131,10 @@ namespace triton {
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT triton::uint32 getNumberOfRegisters(void) const;
 
-        //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::registers_e.
-        TRITON_EXPORT const std::unordered_map<triton::arch::registers_e, const triton::arch::Register>& getAllRegisters(void) const;
+        //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::register_e.
+        TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
 
-        //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::registers_e.
+        //! [**architecture api**] - Returns all parent registers. \sa triton::arch::x86::register_e.
         TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
 
         //! [**architecture api**] - Returns the concrete value of a memory cell.
@@ -308,7 +308,7 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
-        TRITON_EXPORT std::map<triton::arch::registers_e, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicRegisters(void) const;
+        TRITON_EXPORT std::map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
         //! [**symbolic api**] - Returns the map (<Addr : SymExpr>) of symbolic memory defined.
         TRITON_EXPORT std::map<triton::uint64, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicMemory(void) const;
@@ -500,14 +500,14 @@ namespace triton {
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
 
-        //! Returns the kind of solver as triton::engines::solver::solvers_e.
-        TRITON_EXPORT triton::engines::solver::solvers_e getSolver(void) const;
+        //! Returns the kind of solver as triton::engines::solver::solver_e.
+        TRITON_EXPORT triton::engines::solver::solver_e getSolver(void) const;
 
         //! Returns the instance of the initialized solver
         TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
 
         //! Initializes a predefined solver.
-        TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);
+        TRITON_EXPORT void setSolver(triton::engines::solver::solver_e kind);
 
         //! Initializes a custom solver.
         TRITON_EXPORT void setCustomSolver(triton::engines::solver::SolverInterface* customSolver);

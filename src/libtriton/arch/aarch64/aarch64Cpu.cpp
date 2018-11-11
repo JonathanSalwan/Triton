@@ -127,26 +127,26 @@ namespace triton {
 
 
       triton::arch::endianness_e AArch64Cpu::getEndianness(void) const {
-        return triton::arch::LE;
+        return triton::arch::LE_ENDIANNESS;
       }
 
 
-      bool AArch64Cpu::isFlag(triton::arch::registers_e regId) const {
+      bool AArch64Cpu::isFlag(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_AARCH64_C && regId <= triton::arch::ID_REG_AARCH64_Z) ? true : false);
       }
 
 
-      bool AArch64Cpu::isRegister(triton::arch::registers_e regId) const {
+      bool AArch64Cpu::isRegister(triton::arch::register_e regId) const {
         return this->isGPR(regId);
       }
 
 
-      bool AArch64Cpu::isRegisterValid(triton::arch::registers_e regId) const {
+      bool AArch64Cpu::isRegisterValid(triton::arch::register_e regId) const {
         return (this->isFlag(regId) || this->isRegister(regId));
       }
 
 
-      bool AArch64Cpu::isGPR(triton::arch::registers_e regId) const {
+      bool AArch64Cpu::isGPR(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_AARCH64_X0 && regId <= triton::arch::ID_REG_AARCH64_WZR) ? true : false);
       }
 
@@ -166,7 +166,7 @@ namespace triton {
       }
 
 
-      const std::unordered_map<registers_e, const triton::arch::Register>& AArch64Cpu::getAllRegisters(void) const {
+      const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& AArch64Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
@@ -191,7 +191,7 @@ namespace triton {
       }
 
 
-      const triton::arch::Register& AArch64Cpu::getRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& AArch64Cpu::getRegister(triton::arch::register_e id) const {
         try {
           return this->registers_.at(id);
         } catch (const std::out_of_range&) {
@@ -205,7 +205,7 @@ namespace triton {
       }
 
 
-      const triton::arch::Register& AArch64Cpu::getParentRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& AArch64Cpu::getParentRegister(triton::arch::register_e id) const {
         return this->getParentRegister(this->getRegister(id));
       }
 

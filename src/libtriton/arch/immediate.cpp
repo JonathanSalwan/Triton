@@ -90,7 +90,7 @@ namespace triton {
     }
 
 
-    triton::uint32 Immediate::getType(void) const {
+    triton::arch::operand_e Immediate::getType(void) const {
       return triton::arch::OP_IMM;
     }
 

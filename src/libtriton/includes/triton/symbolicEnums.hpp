@@ -39,12 +39,18 @@ namespace triton {
      *  @{
      */
 
-      //! Enumerates all kinds of symbolic variable.
-      enum symkind_e {
-        UNDEF = 0, //!< Undefined
-        IMM,       //!< Assigned to an immediate.
-        MEM,       //!< Assigned to a memory.
-        REG        //!< Assigned to a register.
+      //! Type of symbolic expressions.
+      enum expression_e {
+        MEMORY_EXPRESSION,     //!< Assigned to a memory expression.
+        REGISTER_EXPRESSION,   //!< Assigned to a register expression.
+        VOLATILE_EXPRESSION,   //!< Assigned to a volatile expression.
+      };
+
+      //! Type of symbolic variable.
+      enum variable_e {
+        MEMORY_VARIABLE,       //!< Variable assigned to a memory.
+        REGISTER_VARIABLE,     //!< Variable assigned to a register.
+        UNDEFINED_VARIABLE,    //!< Undefined assignment.
       };
 
     /*! @} End of symbolic namespace */

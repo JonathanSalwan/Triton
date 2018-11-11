@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
@@ -64,10 +65,10 @@ namespace triton {
         triton::uint32 type;
 
         //! The prefix of the instruction. This field is set at the disassembly level. Mainly used for X86.
-        triton::uint32 prefix;
+        triton::arch::x86::prefix_e prefix;
 
         //! The code condition of the instruction. This field is set at the disassembly level. Mainly used for AArch64.
-        triton::uint32 codeCondition;
+        triton::arch::aarch64::condition_e codeCondition;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> loadAccess;
@@ -144,10 +145,10 @@ namespace triton {
         TRITON_EXPORT triton::uint32 getType(void) const;
 
         //! Returns the prefix of the instruction (mainly for X86).
-        TRITON_EXPORT triton::uint32 getPrefix(void) const;
+        TRITON_EXPORT triton::arch::x86::prefix_e getPrefix(void) const;
 
         //! Returns the code codition of the instruction (mainly for AArch64).
-        TRITON_EXPORT triton::uint32 getCodeCondition(void) const;
+        TRITON_EXPORT triton::arch::aarch64::condition_e getCodeCondition(void) const;
 
         //! Returns the list of all implicit and explicit load access
         TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getLoadAccess(void);
@@ -207,10 +208,10 @@ namespace triton {
         TRITON_EXPORT void setType(triton::uint32 type);
 
         //! Sets the prefix of the instruction (mainly for X86).
-        TRITON_EXPORT void setPrefix(triton::uint32 prefix);
+        TRITON_EXPORT void setPrefix(triton::arch::x86::prefix_e prefix);
 
         //! Sets the code condition of the instruction (mainly for AArch64).
-        TRITON_EXPORT void setCodeCondition(triton::uint32 codeCondition);
+        TRITON_EXPORT void setCodeCondition(triton::arch::aarch64::condition_e codeCondition);
 
         //! Sets the disassembly of the instruction.
         TRITON_EXPORT void setDisassembly(const std::string& str);

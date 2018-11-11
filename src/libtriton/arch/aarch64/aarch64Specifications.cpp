@@ -17,7 +17,7 @@ namespace triton {
   namespace arch {
     namespace aarch64 {
 
-      AArch64Specifications::AArch64Specifications(triton::arch::architectures_e arch) {
+      AArch64Specifications::AArch64Specifications(triton::arch::architecture_e arch) {
         if (arch != triton::arch::ARCH_AARCH64)
             throw triton::exceptions::Architecture("AArch64Specifications::AArch64Specifications(): Invalid architecture.");
 
@@ -36,8 +36,8 @@ namespace triton {
       }
 
 
-      triton::arch::registers_e AArch64Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
-        triton::arch::registers_e tritonId = triton::arch::ID_REG_INVALID;
+      triton::arch::register_e AArch64Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
+        triton::arch::register_e tritonId = triton::arch::ID_REG_INVALID;
 
         switch (id) {
           // Convert registers from capstone value to triton value
@@ -58,8 +58,8 @@ namespace triton {
       }
 
 
-      triton::arch::aarch64::shifts_e AArch64Specifications::capstoneShiftToTritonShift(triton::uint32 id) const {
-        triton::arch::aarch64::shifts_e tritonId = triton::arch::aarch64::ID_SHIFT_INVALID;
+      triton::arch::aarch64::shift_e AArch64Specifications::capstoneShiftToTritonShift(triton::uint32 id) const {
+        triton::arch::aarch64::shift_e tritonId = triton::arch::aarch64::ID_SHIFT_INVALID;
 
         switch (id) {
           case triton::extlibs::capstone::ARM64_SFT_INVALID:
@@ -91,8 +91,8 @@ namespace triton {
       }
 
 
-      triton::arch::aarch64::conditions_e AArch64Specifications::capstoneConditionToTritonCondition(triton::uint32 id) const {
-        triton::arch::aarch64::conditions_e tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
+      triton::arch::aarch64::condition_e AArch64Specifications::capstoneConditionToTritonCondition(triton::uint32 id) const {
+        triton::arch::aarch64::condition_e tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
 
         switch (id) {
           case triton::extlibs::capstone::ARM64_CC_INVALID:

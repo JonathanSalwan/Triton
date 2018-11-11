@@ -73,12 +73,12 @@ Returns the list of child nodes.
 - <b>integer getHash(void)</b><br>
 Returns the hash (signature) of the AST .
 
-- <b>\ref py_AST_NODE_page getKind(void)</b><br>
-Returns the kind of the node.<br>
-e.g: `AST_NODE.BVADD`
-
 - <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
 Returns the parents list nodes. The list is empty if there is still no parent defined.
+
+- <b>\ref py_AST_NODE_page getType(void)</b><br>
+Returns the kind of the node.<br>
+e.g: `AST_NODE.BVADD`
 
 - <b>integer/string getValue(void)</b><br>
 Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
@@ -212,16 +212,6 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_getKind(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getKind());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
@@ -238,20 +228,30 @@ namespace triton {
       }
 
 
+      static PyObject* AstNode_getType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getType());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstNode_getValue(PyObject* self, PyObject* noarg) {
         try {
           triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
 
-          if (node->getKind() == triton::ast::DECIMAL_NODE)
+          if (node->getType() == triton::ast::DECIMAL_NODE)
             return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue());
 
-          else if (node->getKind() == triton::ast::REFERENCE_NODE)
+          else if (node->getType() == triton::ast::REFERENCE_NODE)
             return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getId());
 
-          else if (node->getKind() == triton::ast::STRING_NODE)
+          else if (node->getType() == triton::ast::STRING_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getValue().c_str());
 
-          else if (node->getKind() == triton::ast::VARIABLE_NODE)
+          else if (node->getType() == triton::ast::VARIABLE_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar()->getName().c_str());
 
           return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
@@ -571,8 +571,8 @@ namespace triton {
         {"getBitvectorSize",  AstNode_getBitvectorSize,  METH_NOARGS,     ""},
         {"getChildren",       AstNode_getChildren,       METH_NOARGS,     ""},
         {"getHash",           AstNode_getHash,           METH_NOARGS,     ""},
-        {"getKind",           AstNode_getKind,           METH_NOARGS,     ""},
         {"getParents",        AstNode_getParents,        METH_NOARGS,     ""},
+        {"getType",           AstNode_getType,           METH_NOARGS,     ""},
         {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
         {"isLogical",         AstNode_isLogical,         METH_NOARGS,     ""},
         {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},

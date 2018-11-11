@@ -17,7 +17,7 @@ namespace triton {
   namespace arch {
     namespace x86 {
 
-      x86Specifications::x86Specifications(triton::arch::architectures_e arch) {
+      x86Specifications::x86Specifications(triton::arch::architecture_e arch) {
         if (arch != triton::arch::ARCH_X86 && arch != triton::arch::ARCH_X86_64)
             throw triton::exceptions::Architecture("x86Specifications::x86Specifications(): Invalid architecture.");
 
@@ -54,8 +54,8 @@ namespace triton {
       }
 
 
-      triton::arch::registers_e x86Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
-        triton::arch::registers_e tritonId = triton::arch::ID_REG_INVALID;
+      triton::arch::register_e x86Specifications::capstoneRegisterToTritonRegister(triton::uint32 id) const {
+        triton::arch::register_e tritonId = triton::arch::ID_REG_INVALID;
 
         switch (id) {
           // Convert registers from capstone value to triton value
@@ -5270,8 +5270,8 @@ namespace triton {
       }
 
 
-      triton::arch::x86::prefixes_e x86Specifications::capstonePrefixToTritonPrefix(triton::uint32 id) const {
-        triton::arch::x86::prefixes_e tritonId = triton::arch::x86::ID_PREFIX_INVALID;
+      triton::arch::x86::prefix_e x86Specifications::capstonePrefixToTritonPrefix(triton::uint32 id) const {
+        triton::arch::x86::prefix_e tritonId = triton::arch::x86::ID_PREFIX_INVALID;
 
         switch (id) {
 

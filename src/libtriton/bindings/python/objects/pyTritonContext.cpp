@@ -1437,13 +1437,13 @@ namespace triton {
 
 
       static PyObject* TritonContext_getRegister(PyObject* self, PyObject* regIn) {
-        triton::arch::registers_e rid = triton::arch::ID_REG_INVALID;
+        triton::arch::register_e rid = triton::arch::ID_REG_INVALID;
 
         if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
           return PyErr_Format(PyExc_TypeError, "getRegister(): Expects an id as argument.");
 
         try {
-          rid = static_cast<triton::arch::registers_e>(PyLong_AsUint32(regIn));
+          rid = static_cast<triton::arch::register_e>(PyLong_AsUint32(regIn));
           triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
           return PyRegister(regOut);
         }
@@ -2079,7 +2079,7 @@ namespace triton {
 
         try {
           /* Set the architecture */
-          PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<triton::arch::architectures_e>(PyLong_AsUint32(arg)));
+          PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<triton::arch::architecture_e>(PyLong_AsUint32(arg)));
           TritonContext_fillRegistersAttribute(self);
         }
         catch (const triton::exceptions::Exception& e) {

@@ -25,9 +25,9 @@ namespace triton {
    *  @{
    */
 
-    /*! Enumerates all kinds of node. Must be prime numbers. */
-    enum kind_e {
-      UNDEFINED_NODE = 0,             /*!< Unknown node */
+    /*! Enumerates all types of node. Must be prime numbers. */
+    enum ast_e {
+      INVALID_NODE = 0,               /*!< Invalid node */
       ASSERT_NODE = 3,                /*!< (assert x) */
       BVADD_NODE = 5,                 /*!< (bvadd x y) */
       BVAND_NODE = 7,                 /*!< (bvand x y) */
@@ -86,11 +86,11 @@ namespace triton {
      *  @{
      */
 
-      //! All kinds of representation mode.
+      //! All types of representation mode.
       enum mode_e {
         SMT_REPRESENTATION,     /*!< SMT representation */
         PYTHON_REPRESENTATION,  /*!< Python representation */
-        LAST_REPRESENTATION
+        LAST_REPRESENTATION     /*!< Must be the last item */
       };
 
     /*! @} End of representations namespace */

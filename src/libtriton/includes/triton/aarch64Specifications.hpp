@@ -45,27 +45,27 @@ namespace triton {
       class AArch64Specifications {
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<triton::arch::registers_e, const triton::arch::Register> registers_;
+          std::unordered_map<triton::arch::register_e, const triton::arch::Register> registers_;
 
         public:
           //! Constructor.
-          TRITON_EXPORT AArch64Specifications(triton::arch::architectures_e);
+          TRITON_EXPORT AArch64Specifications(triton::arch::architecture_e);
 
           //! Converts a capstone's register id to a triton's register id.
-          TRITON_EXPORT triton::arch::registers_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
+          TRITON_EXPORT triton::arch::register_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
 
           //! Converts a capstone's shift id to a triton's shift id.
-          TRITON_EXPORT triton::arch::aarch64::shifts_e capstoneShiftToTritonShift(triton::uint32 id) const;
+          TRITON_EXPORT triton::arch::aarch64::shift_e capstoneShiftToTritonShift(triton::uint32 id) const;
 
           //! Converts a capstone's condition id to a triton's condition id.
-          TRITON_EXPORT triton::arch::aarch64::conditions_e capstoneConditionToTritonCondition(triton::uint32 id) const;
+          TRITON_EXPORT triton::arch::aarch64::condition_e capstoneConditionToTritonCondition(triton::uint32 id) const;
 
           //! Converts a capstone's instruction id to a triton's instruction id.
           TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
       };
 
       //! The list of opcodes.
-      enum instructions_e {
+      enum instruction_e {
         ID_INS_INVALID = 0, //!< invalid
         ID_INS_ABS, //!< abs
         ID_INS_ADC, //!< adc

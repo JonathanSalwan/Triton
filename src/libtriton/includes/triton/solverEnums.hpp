@@ -34,13 +34,12 @@ namespace triton {
      */
 
       /*! The different kind of solvers */
-      enum solvers_e {
+      enum solver_e {
         SOLVER_INVALID = 0, /*!< invalid solver. */
         SOLVER_CUSTOM,      /*!< custom solver. */
         #ifdef Z3_INTERFACE
         SOLVER_Z3,          /*!< z3 solver. */
         #endif
-        SOLVER_LAST_ITEM    /*!< must be the last item.  */
       };
 
     /*! @} End of solver namespace */

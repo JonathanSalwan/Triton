@@ -51,8 +51,8 @@ namespace triton {
       /*! \brief This class is used to describe the ARM (64-bits) spec. */
       class AArch64Cpu : public CpuInterface, public AArch64Specifications {
 
-        static const registers_e pcId = triton::arch::ID_REG_AARCH64_PC;
-        static const registers_e spId = triton::arch::ID_REG_AARCH64_SP;
+        static const triton::arch::register_e pcId = triton::arch::ID_REG_AARCH64_PC;
+        static const triton::arch::register_e spId = triton::arch::ID_REG_AARCH64_SP;
 
         private:
           //! Callbacks API
@@ -153,18 +153,18 @@ namespace triton {
           TRITON_EXPORT AArch64Cpu& operator=(const AArch64Cpu& other);
 
           //! Returns true if regId is a GRP.
-          TRITON_EXPORT bool isGPR(triton::arch::registers_e regId) const;
+          TRITON_EXPORT bool isGPR(triton::arch::register_e regId) const;
 
           /* Virtual pure inheritance ================================================= */
-          TRITON_EXPORT bool isFlag(triton::arch::registers_e regId) const;
+          TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
           TRITON_EXPORT bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
-          TRITON_EXPORT bool isRegister(triton::arch::registers_e regId) const;
-          TRITON_EXPORT bool isRegisterValid(triton::arch::registers_e regId) const;
-          TRITON_EXPORT const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
+          TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
+          TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
+          TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
           TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
-          TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
+          TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
           TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
-          TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
+          TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
           TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
           TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
           TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;

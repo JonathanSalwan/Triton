@@ -107,11 +107,11 @@ namespace triton {
         initShiftsNamespace(shiftsDict);
         PyObject* idShiftsClass = xPyClass_New(nullptr, shiftsDict, xPyString_FromString("SHIFT"));
 
-        /* Create the SYMEXPR namespace ============================================================== */
+        /* Create the SYMBOLIC namespace ============================================================== */
 
-        PyObject* symExprDict = xPyDict_New();
-        initSymExprNamespace(symExprDict);
-        PyObject* idSymExprClass = xPyClass_New(nullptr, symExprDict, xPyString_FromString("SYMEXPR"));
+        PyObject* symbolicDict = xPyDict_New();
+        initSymbolicNamespace(symbolicDict);
+        PyObject* idSymbolicClass = xPyClass_New(nullptr, symbolicDict, xPyString_FromString("SYMBOLIC"));
 
         /* Create the SYSCALL namespace ============================================================== */
         #if defined(__unix__) || defined(__APPLE__)
@@ -148,7 +148,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SHIFT",               idShiftsClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
         #if defined(__unix__) || defined(__APPLE__)
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);
         #endif

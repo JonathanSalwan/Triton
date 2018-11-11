@@ -247,7 +247,7 @@ namespace triton {
   }
 
 
-  triton::arch::architectures_e API::getArchitecture(void) const {
+  triton::arch::architecture_e API::getArchitecture(void) const {
     return this->arch.getArchitecture();
   }
 
@@ -264,7 +264,7 @@ namespace triton {
   }
 
 
-  void API::setArchitecture(triton::arch::architectures_e arch) {
+  void API::setArchitecture(triton::arch::architecture_e arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
 
@@ -280,7 +280,7 @@ namespace triton {
   }
 
 
-  bool API::isFlag(triton::arch::registers_e regId) const {
+  bool API::isFlag(triton::arch::register_e regId) const {
     return this->arch.isFlag(regId);
   }
 
@@ -290,7 +290,7 @@ namespace triton {
   }
 
 
-  bool API::isRegister(triton::arch::registers_e regId) const {
+  bool API::isRegister(triton::arch::register_e regId) const {
     return this->arch.isRegister(regId);
   }
 
@@ -300,7 +300,7 @@ namespace triton {
   }
 
 
-  const triton::arch::Register& API::getRegister(triton::arch::registers_e id) const {
+  const triton::arch::Register& API::getRegister(triton::arch::register_e id) const {
     return this->arch.getRegister(id);
   }
 
@@ -310,12 +310,12 @@ namespace triton {
   }
 
 
-  const triton::arch::Register& API::getParentRegister(triton::arch::registers_e id) const {
+  const triton::arch::Register& API::getParentRegister(triton::arch::register_e id) const {
     return this->arch.getParentRegister(id);
   }
 
 
-  bool API::isRegisterValid(triton::arch::registers_e regId) const {
+  bool API::isRegisterValid(triton::arch::register_e regId) const {
     return this->arch.isRegisterValid(regId);
   }
 
@@ -340,7 +340,7 @@ namespace triton {
   }
 
 
-  const std::unordered_map<triton::arch::registers_e, const triton::arch::Register>& API::getAllRegisters(void) const {
+  const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& API::getAllRegisters(void) const {
     this->checkArchitecture();
     return this->arch.getAllRegisters();
   }
@@ -692,13 +692,13 @@ namespace triton {
 
   triton::engines::symbolic::SharedSymbolicExpression API::newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment) {
     this->checkSymbolic();
-    return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
+    return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::VOLATILE_EXPRESSION, comment);
   }
 
 
   const triton::engines::symbolic::SharedSymbolicVariable& API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
     this->checkSymbolic();
-    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
+    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, varSize, comment);
   }
 
 
@@ -756,7 +756,7 @@ namespace triton {
   }
 
 
-  std::map<triton::arch::registers_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
+  std::map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisters();
   }
@@ -967,7 +967,7 @@ namespace triton {
   }
 
 
-  triton::engines::solver::solvers_e API::getSolver(void) const {
+  triton::engines::solver::solver_e API::getSolver(void) const {
     this->checkSolver();
     return this->solver->getSolver();
   }
@@ -979,7 +979,7 @@ namespace triton {
   }
 
 
-  void API::setSolver(triton::engines::solver::solvers_e kind) {
+  void API::setSolver(triton::engines::solver::solver_e kind) {
     this->checkSolver();
     this->solver->setSolver(kind);
   }

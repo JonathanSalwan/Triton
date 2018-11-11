@@ -3,7 +3,7 @@
 """Test Symbolic Expression."""
 
 import unittest
-from triton import TritonContext, Instruction, ARCH, SYMEXPR, REG
+from triton import *
 
 
 class TestSymbolicExpression(unittest.TestCase):
@@ -43,10 +43,10 @@ class TestSymbolicExpression(unittest.TestCase):
         """Test getId"""
         self.assertEqual(self.expr1.getId(), 0)
 
-    def test_getKind(self):
-        """Test getKind"""
-        self.assertEqual(self.expr1.getKind(), SYMEXPR.REG)
-        self.assertEqual(self.expr2.getKind(), SYMEXPR.MEM)
+    def test_getType(self):
+        """Test getType"""
+        self.assertEqual(self.expr1.getType(), SYMBOLIC.REGISTER_EXPRESSION)
+        self.assertEqual(self.expr2.getType(), SYMBOLIC.MEMORY_EXPRESSION)
 
     def test_getNewAst(self):
         """Test getNewAst"""

@@ -18,7 +18,7 @@ namespace triton {
     }
 
 
-    Register::Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low)
+    Register::Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low)
       : BitsVector(high, low),
         name(name),
         id(regId),
@@ -26,7 +26,7 @@ namespace triton {
     }
 
 
-    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId)
+    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::register_e regId)
       : Register(
           (regId == triton::arch::ID_REG_INVALID) ?
           triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)
@@ -48,12 +48,12 @@ namespace triton {
     }
 
 
-    triton::arch::registers_e Register::getId(void) const {
+    triton::arch::register_e Register::getId(void) const {
       return this->id;
     }
 
 
-    triton::arch::registers_e Register::getParent(void) const {
+    triton::arch::register_e Register::getParent(void) const {
       return this->parent;
     }
 
@@ -83,7 +83,7 @@ namespace triton {
     }
 
 
-    triton::uint32 Register::getType(void) const {
+    triton::arch::operand_e Register::getType(void) const {
       return triton::arch::OP_REG;
     }
 

@@ -19,10 +19,10 @@ namespace triton {
     Instruction::Instruction() {
       this->address         = 0;
       this->branch          = false;
-      this->codeCondition   = 0;
-      this->conditionTaken  = false;
+      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->conditionTaken  = 0;
       this->controlFlow     = false;
-      this->prefix          = 0;
+      this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
       this->size            = 0;
       this->tainted         = false;
       this->tid             = 0;
@@ -127,12 +127,12 @@ namespace triton {
     }
 
 
-    triton::uint32 Instruction::getPrefix(void) const {
+    triton::arch::x86::prefix_e Instruction::getPrefix(void) const {
       return this->prefix;
     }
 
 
-    triton::uint32 Instruction::getCodeCondition(void) const {
+    triton::arch::aarch64::condition_e Instruction::getCodeCondition(void) const {
       return this->codeCondition;
     }
 
@@ -257,12 +257,12 @@ namespace triton {
     }
 
 
-    void Instruction::setPrefix(triton::uint32 prefix) {
+    void Instruction::setPrefix(triton::arch::x86::prefix_e prefix) {
       this->prefix = prefix;
     }
 
 
-    void Instruction::setCodeCondition(triton::uint32 codeCondition) {
+    void Instruction::setCodeCondition(triton::arch::aarch64::condition_e codeCondition) {
       this->codeCondition = codeCondition;
     }
 
@@ -436,10 +436,10 @@ namespace triton {
     void Instruction::clear(void) {
       this->address         = 0;
       this->branch          = false;
-      this->codeCondition   = 0;
-      this->conditionTaken  = false;
+      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->conditionTaken  = 0;
       this->controlFlow     = false;
-      this->prefix          = 0;
+      this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
       this->size            = 0;
       this->tainted         = false;
       this->tid             = 0;

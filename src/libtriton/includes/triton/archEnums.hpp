@@ -28,32 +28,30 @@ namespace triton {
    *  @{
    */
 
-    /*! The architectures */
-    enum architectures_e {
+    /*! Types of architecture */
+    enum architecture_e {
       ARCH_INVALID = 0, /*!< Invalid architecture.   */
       ARCH_AARCH64,     /*!< AArch64 architecture.   */
       ARCH_X86,         /*!< X86 architecture.       */
       ARCH_X86_64,      /*!< X86_64 architecture.    */
-      ARCH_LAST_ITEM    /*!< Must be the last item.  */
     };
 
-    /*! Endianness */
+    /*! Types of endianness */
     enum endianness_e {
-      INVALID_ENDIANNESS = 0,   /*!< Invalid endianness */
-      LE,                       /*!< Little endian.     */
-      BE,                       /*!< Big endian.        */
+      LE_ENDIANNESS, /*!< Little endian.     */
+      BE_ENDIANNESS, /*!< Big endian.        */
     };
 
-    /*! Type of operand */
-    enum operandType_e {
+    /*! Types of operand */
+    enum operand_e {
       OP_INVALID = 0, //!< invalid operand
       OP_IMM,         //!< immediate operand
       OP_MEM,         //!< memory operand
       OP_REG          //!< register operand
     };
 
-    //! The list of registers.
-    enum registers_e {
+    //! Types of register.
+    enum register_e {
       ID_REG_INVALID = 0, //!< invalid = 0
 
       #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
@@ -78,13 +76,13 @@ namespace triton {
      *  @{
      */
 
-      /*! \brief The list of prefixes.
+      /*! \brief Types of prefix.
        *
        *  \details
        *  Note that `REP` and `REPE` have the some opcode. The `REP`
        *  prefix becomes a `REPE` if the instruction modifies `ZF`.
        */
-      enum prefixes_e {
+      enum prefix_e {
         ID_PREFIX_INVALID = 0,  //!< invalid
         ID_PREFIX_LOCK,         //!< LOCK
         ID_PREFIX_REP,          //!< REP
@@ -106,8 +104,8 @@ namespace triton {
      *  @{
      */
 
-      //! The list of shift
-      enum shifts_e {
+      //! Types of shift
+      enum shift_e {
         ID_SHIFT_INVALID = 0, //!< invalid
         ID_SHIFT_ASR,         //!< Arithmetic Shift Right
         ID_SHIFT_LSL,         //!< Logical Shift Left
@@ -116,8 +114,8 @@ namespace triton {
         ID_SHIFT_LAST_ITEM,   //!< Must be the last item
       };
 
-      //! The list of condition
-      enum conditions_e {
+      //! Types of condition
+      enum condition_e {
         ID_CONDITION_INVALID = 0, //!< invalid
         ID_CONDITION_AL,          //!< Always. Any flags. This suffix is normally omitted.
         ID_CONDITION_EQ,          //!< Equal. Z set.
@@ -145,9 +143,9 @@ namespace triton {
 };
 
 namespace std {
-  // Define the hash function for registers_e to be use in stl containers like unordered_map
+  // Define the hash function for register_e to be use in stl containers like unordered_map
   template <>
-  struct hash<triton::arch::registers_e> : public hash<uint64_t> {
+  struct hash<triton::arch::register_e> : public hash<uint64_t> {
   };
 };
 

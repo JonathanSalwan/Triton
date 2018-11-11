@@ -48,8 +48,8 @@ namespace triton {
       class SymbolicExpression {
 
         protected:
-          //! The kind of the symbolic expression.
-          symkind_e kind;
+          //! The type of the symbolic expression assignment.
+          triton::engines::symbolic::expression_e type;
 
           //! The root node (AST) of the symbolic expression.
           triton::ast::SharedAbstractNode ast;
@@ -71,7 +71,10 @@ namespace triton {
           bool isTainted;
 
           //! Constructor.
-          TRITON_EXPORT SymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::usize id, symkind_e kind, const std::string& comment="");
+          TRITON_EXPORT SymbolicExpression(const triton::ast::SharedAbstractNode& node,
+                                           triton::usize id,
+                                           triton::engines::symbolic::expression_e type,
+                                           const std::string& comment="");
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicExpression(const SymbolicExpression& other);
@@ -82,17 +85,17 @@ namespace triton {
           //! Returns the symbolic expression id.
           TRITON_EXPORT triton::usize getId(void) const;
 
-          //! Returns true if the symbolic expression is assigned to a memory. \sa triton::engines::symbolic::symkind_e
+          //! Returns true if the symbolic expression is assigned to a memory.
           TRITON_EXPORT bool isMemory(void) const;
 
-          //! Returns true if the symbolic expression is assigned to a register. \sa triton::engines::symbolic::symkind_e
+          //! Returns true if the symbolic expression is assigned to a register.
           TRITON_EXPORT bool isRegister(void) const;
 
           //! Returns true if the expression contains a symbolic variable.
           TRITON_EXPORT bool isSymbolized(void) const;
 
-          //! Returns the kind of the symbolic expression.
-          TRITON_EXPORT symkind_e getKind(void) const;
+          //! Returns the type of the symbolic expression assignment.
+          TRITON_EXPORT triton::engines::symbolic::expression_e getType(void) const;
 
           //! Returns the SMT AST root node of the symbolic expression. This is the semantics.
           TRITON_EXPORT const triton::ast::SharedAbstractNode& getAst(void) const;
@@ -125,7 +128,7 @@ namespace triton {
           TRITON_EXPORT void setComment(const std::string& comment);
 
           //! Sets the kind of the symbolic expression.
-          TRITON_EXPORT void setKind(symkind_e k);
+          TRITON_EXPORT void setType(triton::engines::symbolic::expression_e type);
 
           //! Sets the origin memory acccess.
           TRITON_EXPORT void setOriginMemory(const triton::arch::MemoryAccess& mem);

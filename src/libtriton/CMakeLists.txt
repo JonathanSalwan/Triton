@@ -125,7 +125,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initPrefixesNamespace.cpp
         bindings/python/namespaces/initRegNamespace.cpp
         bindings/python/namespaces/initShiftsNamespace.cpp
-        bindings/python/namespaces/initSymExprNamespace.cpp
+        bindings/python/namespaces/initSymbolicNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
         bindings/python/objects/pyAstContext.cpp

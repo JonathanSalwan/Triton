@@ -8,6 +8,7 @@
 #ifndef TRITON_IMMEDIATE_H
 #define TRITON_IMMEDIATE_H
 
+#include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/operandInterface.hpp>
@@ -68,8 +69,8 @@ namespace triton {
         //! Returns the lower bit of the immediate vector.
         TRITON_EXPORT triton::uint32 getLow(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_IMM).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_IMMEDIATE).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! Sets the value of the operand.
         TRITON_EXPORT void setValue(triton::uint64 v, triton::uint32 size /* bytes*/);

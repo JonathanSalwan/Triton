@@ -49,8 +49,8 @@ namespace triton {
         //! Returns the lower bit of the operand vector.
         TRITON_EXPORT virtual triton::uint32 getLow(void) const = 0;
 
-        //! Returns the type of the operand (`Imm`, `Mem`, `Reg`).
-        TRITON_EXPORT virtual triton::uint32 getType(void) const = 0;
+        //! Returns the type of the operand (`IMMEDIATE`, `MEMORY`, `REGISTER`).
+        TRITON_EXPORT virtual triton::arch::operand_e getType(void) const = 0;
     };
 
   /*! @} End of arch namespace */

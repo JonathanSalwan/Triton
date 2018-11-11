@@ -8,6 +8,7 @@
 #ifndef TRITON_SHIFTOPERANDMODE_H
 #define TRITON_SHIFTOPERANDMODE_H
 
+#include <triton/archEnums.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -33,33 +34,33 @@ namespace triton {
      */
     class ShiftOperandMode {
       protected:
-        //! The shift type. \sa triton::arch::aarch64::shifts_e
-        triton::uint32 type;
+        //! The shift type.
+        triton::arch::aarch64::shift_e type;
 
         //! The shift value.
-        triton::uint64 value;
+        triton::uint32 value;
 
       public:
         //! Constructor.
         TRITON_EXPORT ShiftOperandMode();
 
         //! Constructor.
-        TRITON_EXPORT ShiftOperandMode(triton::uint32 type, triton::uint64 value);
+        TRITON_EXPORT ShiftOperandMode(triton::arch::aarch64::shift_e type, triton::uint32 value);
 
         //! Constructor by copy.
         TRITON_EXPORT ShiftOperandMode(const ShiftOperandMode& other);
 
+        //! Returns the type of the shift.
+        TRITON_EXPORT triton::arch::aarch64::shift_e getShiftType(void) const;
+
         //! Returns the value of the shift.
-        TRITON_EXPORT triton::uint64 getShiftValue(void) const;
-
-        //! Returns the type of the shift (triton::arch::aarch64::shifts_s).
-        TRITON_EXPORT triton::uint32 getShiftType(void) const;
-
-        //! Sets the value of the shift.
-        TRITON_EXPORT void setShiftValue(triton::uint64 value);
+        TRITON_EXPORT triton::uint32 getShiftValue(void) const;
 
         //! Sets the type of the shift.
-        TRITON_EXPORT void setShiftType(triton::uint32 type);
+        TRITON_EXPORT void setShiftType(triton::arch::aarch64::shift_e type);
+
+        //! Sets the value of the shift.
+        TRITON_EXPORT void setShiftValue(triton::uint32 value);
 
         //! Copy an ShiftOperandMode.
         TRITON_EXPORT ShiftOperandMode& operator=(const ShiftOperandMode& other);

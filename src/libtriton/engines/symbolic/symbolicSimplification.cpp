@@ -38,7 +38,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
 triton::ast::SharedAbstractNode xor_simplification(triton::API& ctx, const triton::ast::SharedAbstractNode& node) {
 
-  if (node->getKind() == triton::ast::BVXOR_NODE) {
+  if (node->getType() == triton::ast::BVXOR_NODE) {
     if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
       return ctx.getAstContext().bv(0, node->getBitvectorSize());
   }
@@ -63,25 +63,25 @@ def xor_bitwise(ctx, node):
     def getNot(node):
         a = node.getChildren()[0]
         b = node.getChildren()[1]
-        if a.getKind() == AST_NODE.BVNOT and b.getKind() != AST_NODE.BVNOT:
+        if a.getType() == AST_NODE.BVNOT and b.getType() != AST_NODE.BVNOT:
             return a
-        if b.getKind() == AST_NODE.BVNOT and a.getKind() != AST_NODE.BVNOT:
+        if b.getType() == AST_NODE.BVNOT and a.getType() != AST_NODE.BVNOT:
             return b
         return None
 
     def getNonNot(node):
         a = node.getChildren()[0]
         b = node.getChildren()[1]
-        if a.getKind() != AST_NODE.BVNOT and b.getKind() == AST_NODE.BVNOT:
+        if a.getType() != AST_NODE.BVNOT and b.getType() == AST_NODE.BVNOT:
             return a
-        if b.getKind() != AST_NODE.BVNOT and a.getKind() == AST_NODE.BVNOT:
+        if b.getType() != AST_NODE.BVNOT and a.getType() == AST_NODE.BVNOT:
             return b
         return None
 
-    if node.getKind() == AST_NODE.BVOR:
+    if node.getType() == AST_NODE.BVOR:
         c1 = node.getChildren()[0]
         c2 = node.getChildren()[1]
-        if c1.getKind() == AST_NODE.BVAND and c2.getKind() == AST_NODE.BVAND:
+        if c1.getType() == AST_NODE.BVAND and c2.getType() == AST_NODE.BVAND:
             c1_not    = getNot(c1)
             c2_not    = getNot(c2)
             c1_nonNot = getNonNot(c1)

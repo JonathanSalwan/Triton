@@ -3,7 +3,7 @@
 """Test Path Constraint."""
 
 import unittest
-from triton import TritonContext, Instruction, ARCH, SYMEXPR
+from triton import *
 
 
 class TestPathConstraint(unittest.TestCase):

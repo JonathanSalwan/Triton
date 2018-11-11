@@ -137,7 +137,7 @@ namespace triton {
           TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);
 
           //! Creates a new shared symbolic expression.
-          TRITON_EXPORT SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, symkind_e kind, const std::string& comment="");
+          TRITON_EXPORT SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment="");
 
           //! Removes the symbolic expression corresponding to the id.
           TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
@@ -155,7 +155,7 @@ namespace triton {
           TRITON_EXPORT void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds a symbolic variable.
-          TRITON_EXPORT const SharedSymbolicVariable& newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");
+          TRITON_EXPORT const SharedSymbolicVariable& newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
           TRITON_EXPORT const SharedSymbolicVariable& convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
@@ -185,7 +185,7 @@ namespace triton {
           TRITON_EXPORT const SharedSymbolicExpression& getSymbolicRegister(const triton::arch::Register& reg) const;
 
           //! Returns the map of symbolic registers defined.
-          TRITON_EXPORT std::map<triton::arch::registers_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
+          TRITON_EXPORT std::map<triton::arch::register_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
           //! Returns the symbolic memory value.
           TRITON_EXPORT triton::uint8 getSymbolicMemoryValue(triton::uint64 address);

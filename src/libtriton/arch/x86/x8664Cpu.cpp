@@ -221,16 +221,16 @@ namespace triton {
 
 
       triton::arch::endianness_e x8664Cpu::getEndianness(void) const {
-        return triton::arch::LE;
+        return triton::arch::LE_ENDIANNESS;
       }
 
 
-      bool x8664Cpu::isFlag(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isFlag(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_AC && regId <= triton::arch::ID_REG_X86_FZ) ? true : false);
       }
 
 
-      bool x8664Cpu::isRegister(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isRegister(triton::arch::register_e regId) const {
         return (
           this->isGPR(regId)      ||
           this->isMMX(regId)      ||
@@ -243,42 +243,42 @@ namespace triton {
       }
 
 
-      bool x8664Cpu::isRegisterValid(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isRegisterValid(triton::arch::register_e regId) const {
         return (this->isFlag(regId) || this->isRegister(regId));
       }
 
 
-      bool x8664Cpu::isGPR(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isGPR(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_RAX && regId <= triton::arch::ID_REG_X86_EFLAGS) ? true : false);
       }
 
 
-      bool x8664Cpu::isMMX(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isMMX(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_MM0 && regId <= triton::arch::ID_REG_X86_MM7) ? true : false);
       }
 
 
-      bool x8664Cpu::isSSE(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isSSE(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM15) ? true : false);
       }
 
 
-      bool x8664Cpu::isAVX256(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isAVX256(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_YMM0 && regId <= triton::arch::ID_REG_X86_YMM15) ? true : false);
       }
 
 
-      bool x8664Cpu::isAVX512(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isAVX512(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_ZMM0 && regId <= triton::arch::ID_REG_X86_ZMM31) ? true : false);
       }
 
 
-      bool x8664Cpu::isControl(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isControl(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_CR0 && regId <= triton::arch::ID_REG_X86_CR15) ? true : false);
       }
 
 
-      bool x8664Cpu::isSegment(triton::arch::registers_e regId) const {
+      bool x8664Cpu::isSegment(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_CS && regId <= triton::arch::ID_REG_X86_SS) ? true : false);
       }
 
@@ -298,7 +298,7 @@ namespace triton {
       }
 
 
-      const std::unordered_map<registers_e, const triton::arch::Register>& x8664Cpu::getAllRegisters(void) const {
+      const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& x8664Cpu::getAllRegisters(void) const {
         return this->registers_;
       }
 
@@ -343,7 +343,7 @@ namespace triton {
       }
 
 
-      const triton::arch::Register& x8664Cpu::getRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& x8664Cpu::getRegister(triton::arch::register_e id) const {
         try {
           return this->registers_.at(id);
         } catch (const std::out_of_range&) {
@@ -357,7 +357,7 @@ namespace triton {
       }
 
 
-      const triton::arch::Register& x8664Cpu::getParentRegister(triton::arch::registers_e id) const {
+      const triton::arch::Register& x8664Cpu::getParentRegister(triton::arch::register_e id) const {
         return this->getParentRegister(this->getRegister(id));
       }
 

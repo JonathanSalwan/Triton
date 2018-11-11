@@ -12,7 +12,7 @@
 #include <triton/astContext.hpp>          // for AstContext
 #include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
 #include <triton/exceptions.hpp>          // for SymbolicExpression
-#include <triton/symbolicEnums.hpp>       // for symkind_e, symkind_e::MEM
+#include <triton/symbolicEnums.hpp>       // for expression_e, variable_e
 #include <triton/symbolicExpression.hpp>  // for SymbolicExpression
 #include <triton/tritonTypes.hpp>         // for usize
 
@@ -21,14 +21,14 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicExpression::SymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::usize id, symkind_e kind, const std::string& comment)
+      SymbolicExpression::SymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::usize id, triton::engines::symbolic::expression_e type, const std::string& comment)
         : originMemory(),
           originRegister() {
-        this->comment       = comment;
         this->ast           = node;
+        this->comment       = comment;
         this->id            = id;
         this->isTainted     = false;
-        this->kind          = kind;
+        this->type          = type;
       }
 
 
@@ -37,9 +37,9 @@ namespace triton {
         this->comment        = other.comment;
         this->id             = other.id;
         this->isTainted      = other.isTainted;
-        this->kind           = other.kind;
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
+        this->type           = other.type;
       }
 
 
@@ -48,9 +48,9 @@ namespace triton {
         this->comment        = other.comment;
         this->id             = other.id;
         this->isTainted      = other.isTainted;
-        this->kind           = other.kind;
         this->originMemory   = other.originMemory;
         this->originRegister = other.originRegister;
+        this->type           = other.type;
         return *this;
       }
 
@@ -137,8 +137,8 @@ namespace triton {
       }
 
 
-      symkind_e SymbolicExpression::getKind(void) const {
-        return this->kind;
+      triton::engines::symbolic::expression_e SymbolicExpression::getType(void) const {
+        return this->type;
       }
 
 
@@ -166,8 +166,8 @@ namespace triton {
       }
 
 
-      void SymbolicExpression::setKind(symkind_e k) {
-        this->kind = k;
+      void SymbolicExpression::setType(triton::engines::symbolic::expression_e type) {
+        this->type = type;
       }
 
 
@@ -182,12 +182,12 @@ namespace triton {
 
 
       bool SymbolicExpression::isRegister(void) const {
-        return (this->kind == triton::engines::symbolic::REG);
+        return (this->type == triton::engines::symbolic::REGISTER_EXPRESSION);
       }
 
 
       bool SymbolicExpression::isMemory(void) const {
-        return (this->kind == triton::engines::symbolic::MEM);
+        return (this->type == triton::engines::symbolic::MEMORY_EXPRESSION);
       }
 
 

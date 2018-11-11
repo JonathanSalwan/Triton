@@ -48,10 +48,10 @@ namespace triton {
         std::string name;
 
         //! The id of the register.
-        triton::arch::registers_e id;
+        triton::arch::register_e id;
 
         //! The parent id of the register.
-        triton::arch::registers_e parent;
+        triton::arch::register_e parent;
 
       private:
         //! Copy a Register.
@@ -62,16 +62,16 @@ namespace triton {
         TRITON_EXPORT Register();
 
         //! Constructor.
-        TRITON_EXPORT Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
+        TRITON_EXPORT Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low);
 
         //! Constructor.
-        TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+        TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::register_e regId);
 
         //! Constructor.
         TRITON_EXPORT Register(const Register& other);
 
         //! Returns the parent id of the register.
-        TRITON_EXPORT registers_e getParent(void) const;
+        TRITON_EXPORT triton::arch::register_e getParent(void) const;
 
         //! Returns true if `other` and `self` overlap.
         TRITON_EXPORT bool isOverlapWith(const Register& other) const;
@@ -80,7 +80,7 @@ namespace triton {
         TRITON_EXPORT std::string getName(void) const;
 
         //! Returns the id of the register.
-        TRITON_EXPORT triton::arch::registers_e getId(void) const;
+        TRITON_EXPORT triton::arch::register_e getId(void) const;
 
         //! Returns the size (in bits) of the register.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
@@ -94,8 +94,8 @@ namespace triton {
         //! Returns the lower bit of the register vector.
         TRITON_EXPORT triton::uint32 getLow(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_REG).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_REGISTER).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! Compare two registers specifications
         TRITON_EXPORT bool operator==(const Register& other) const;

@@ -8,6 +8,7 @@
 #ifndef TRITON_MEMORYACCESS
 #define TRITON_MEMORYACCESS
 
+#include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
@@ -99,8 +100,8 @@ namespace triton {
         //! Returns the lower bit of the memory vector.
         TRITON_EXPORT triton::uint32 getLow(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_MEM).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_MEMORY).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! LEA - Returns the segment register operand.
         TRITON_EXPORT triton::arch::Register& getSegmentRegister(void);
