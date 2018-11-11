@@ -224,7 +224,7 @@ namespace triton {
         triton::extlibs::capstone::csh       handle;
         triton::extlibs::capstone::cs_insn*  insn;
         triton::usize                        count = 0;
-        triton::usize                        size = 0;
+        triton::uint32                       size = 0;
 
         /* Check if the opcode and opcode' size are defined */
         if (inst.getOpcode() == nullptr || inst.getSize() == 0)
@@ -614,22 +614,22 @@ namespace triton {
           case triton::arch::ID_REG_AARCH64_PC:   (*((triton::uint64*)(this->pc)))   = value.convert_to<triton::uint64>(); break;
           case triton::arch::ID_REG_AARCH64_SPSR: (*((triton::uint32*)(this->spsr))) = value.convert_to<triton::uint32>(); break;
           case triton::arch::ID_REG_AARCH64_N: {
-            triton::uint64 b = (*((triton::uint32*)(this->spsr)));
+            triton::uint32 b = (*((triton::uint32*)(this->spsr)));
             (*((triton::uint32*)(this->spsr))) = !value.is_zero() ? b | (1 << 31) : b & ~(1 << 31);
             break;
           }
           case triton::arch::ID_REG_AARCH64_Z: {
-            triton::uint64 b = (*((triton::uint32*)(this->spsr)));
+            triton::uint32 b = (*((triton::uint32*)(this->spsr)));
             (*((triton::uint32*)(this->spsr))) = !value.is_zero() ? b | (1 << 30) : b & ~(1 << 30);
             break;
           }
           case triton::arch::ID_REG_AARCH64_C: {
-            triton::uint64 b = (*((triton::uint32*)(this->spsr)));
+            triton::uint32 b = (*((triton::uint32*)(this->spsr)));
             (*((triton::uint32*)(this->spsr))) = !value.is_zero() ? b | (1 << 29) : b & ~(1 << 29);
             break;
           }
           case triton::arch::ID_REG_AARCH64_V: {
-            triton::uint64 b = (*((triton::uint32*)(this->spsr)));
+            triton::uint32 b = (*((triton::uint32*)(this->spsr)));
             (*((triton::uint32*)(this->spsr))) = !value.is_zero() ? b | (1 << 28) : b & ~(1 << 28);
             break;
           }

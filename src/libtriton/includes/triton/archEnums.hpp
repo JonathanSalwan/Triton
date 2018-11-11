@@ -8,6 +8,9 @@
 #ifndef TRITON_ARCHENUMS_HPP
 #define TRITON_ARCHENUMS_HPP
 
+#include <cstdint>
+#include <functional>
+
 
 
 //! The Triton namespace
