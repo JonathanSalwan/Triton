@@ -632,6 +632,7 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the operand. */
+      // FIXME: Add shift operation for AArch64
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
           case triton::arch::OP_IMM: return this->getImmediateAst(op.getConstImmediate());
@@ -801,11 +802,17 @@ namespace triton {
          * memory must be assigned to an unique reference.
          */
         while (writeSize) {
+          triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
+          triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
           /* Extract each byte of the memory */
-          tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          tmp = this->astCtxt.extract(high, low, node);
+          /* Assign each byte to a new symbolic expression */
           se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
+          /* Set the origin of the symbolic expression */
           se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
+          /* ret is the for the final expression */
           ret.push_back(tmp);
+          /* add the symbolic expression to the instruction */
           inst.addSymbolicExpression(se);
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, se);
@@ -852,6 +859,8 @@ namespace triton {
           origReg = this->getRegisterAst(parentReg);
 
         switch (regSize) {
+          // FIXME: A bit ugly since AArch64 is in the game
+          /* ======================== Mainly for X86 ========================*/
           case BYTE_SIZE:
             if (reg.getLow() == 0) {
               finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
@@ -863,10 +872,10 @@ namespace triton {
                           );
             }
             break;
-
           case WORD_SIZE:
             finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg), node);
             break;
+          /* ======================== Mainly for X86 ========================*/
 
           case DWORD_SIZE:
           case QWORD_SIZE:
@@ -953,13 +962,15 @@ namespace triton {
         while (writeSize) {
           triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
           triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
-
           /* Extract each byte of the memory */
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(high, low, node);
+          /* For each byte create a new symbolic expression */
           const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
+          /* Set the origin of the symbolic expression */
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, byteRef);
+          /* continue */
           writeSize--;
         }
       }

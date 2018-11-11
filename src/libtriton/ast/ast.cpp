@@ -136,7 +136,6 @@ namespace triton {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
 
-      // FIXME: Could be done in a background thread
       for (auto& kv: parents) {
         if (auto sp = kv.second.second.lock())
           res.push_back(sp);
