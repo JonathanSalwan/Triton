@@ -560,8 +560,11 @@ namespace triton {
 
         /*  Split expression in bytes */
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
+          triton::uint32 high = ((BYTE_SIZE_BIT * (index + 1)) - 1);
+          triton::uint32 low  = ((BYTE_SIZE_BIT * (index + 1)) - BYTE_SIZE_BIT);
+
           /* Isolate the good part of the symbolic variable */
-          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(((BYTE_SIZE_BIT * (index+1)) - 1), ((BYTE_SIZE_BIT * (index+1)) - BYTE_SIZE_BIT), symVarNode);
+          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(high, low, symVarNode);
 
           /* Check if the memory address is already defined */
           SharedSymbolicExpression se = this->getSymbolicMemory(memAddr+index);
@@ -571,9 +574,6 @@ namespace triton {
             this->addMemoryReference(memAddr+index, se);
           }
           else {
-            // FIXME: Here we update the ast but the memory Reference may
-            // be use in another ast which then become invalid. Should we
-            // create a new SE everytime?
             se->setAst(tmp);
           }
           /* Defines the origin of the expression */
@@ -857,7 +857,8 @@ namespace triton {
               finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
             }
             else {
-              finalExpr = this->astCtxt.concat(this->astCtxt.extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg),
+              finalExpr = this->astCtxt.concat(
+                            this->astCtxt.extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg),
                             this->astCtxt.concat(node, this->astCtxt.extract((BYTE_SIZE_BIT - 1), 0, origReg))
                           );
             }
@@ -950,8 +951,11 @@ namespace triton {
          * memory must be assigned to an unique reference.
          */
         while (writeSize) {
+          triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
+          triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
+
           /* Extract each byte of the memory */
-          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(((writeSize * BYTE_SIZE_BIT) - 1), ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT), node);
+          const triton::ast::SharedAbstractNode& tmp = this->astCtxt.extract(high, low, node);
           const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
           /* Assign memory with little endian */

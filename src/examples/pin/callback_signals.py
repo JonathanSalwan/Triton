@@ -1,5 +1,5 @@
 
-from triton  *
+from triton import *
 from pintool import *
 
 # Output
