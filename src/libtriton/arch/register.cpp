@@ -53,16 +53,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Register::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 Register::getAbstractHigh(void) const {
-      return this->getHigh();
-    }
-
-
     triton::arch::registers_e Register::getParent(void) const {
       return this->parent;
     }
@@ -75,6 +65,16 @@ namespace triton {
 
     triton::uint32 Register::getSize(void) const {
       return this->getVectorSize() / BYTE_SIZE_BIT;
+    }
+
+
+    triton::uint32 Register::getHigh(void) const {
+      return BitsVector::getHigh();
+    }
+
+
+    triton::uint32 Register::getLow(void) const {
+      return BitsVector::getLow();
     }
 
 

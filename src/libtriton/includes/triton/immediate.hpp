@@ -56,17 +56,17 @@ namespace triton {
         //! Returns the value of the operand.
         TRITON_EXPORT triton::uint64 getValue(void) const;
 
-        //! Returns the highest bit. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
-
         //! Returns the size (in bits) of the immediate vector.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
         //! Returns the size (in bytes) of the immediate vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
+
+        //! Returns the highest bit of the immediate vector.
+        TRITON_EXPORT triton::uint32 getHigh(void) const;
+
+        //! Returns the lower bit of the immediate vector.
+        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the type of the operand (triton::arch::OP_IMM).
         TRITON_EXPORT triton::uint32 getType(void) const;

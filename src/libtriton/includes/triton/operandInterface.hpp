@@ -51,12 +51,10 @@ namespace triton {
         TRITON_EXPORT virtual triton::uint32 getSize(void) const = 0;
 
         //! Returns the highest bit of the operand vector.
-        /*! \sa BitsVector::getHigh() */
-        TRITON_EXPORT virtual triton::uint32 getAbstractHigh(void) const = 0;
+        TRITON_EXPORT virtual triton::uint32 getHigh(void) const = 0;
 
         //! Returns the lower bit of the operand vector.
-        /*! \sa BitsVector::getLow() */
-        TRITON_EXPORT virtual triton::uint32 getAbstractLow(void) const = 0;
+        TRITON_EXPORT virtual triton::uint32 getLow(void) const = 0;
 
         //! Returns the type of the operand (`Imm`, `Mem`, `Reg`).
         TRITON_EXPORT virtual triton::uint32 getType(void) const = 0;

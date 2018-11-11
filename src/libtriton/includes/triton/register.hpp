@@ -79,20 +79,20 @@ namespace triton {
         //! Returns the name of the register.
         TRITON_EXPORT std::string getName(void) const;
 
-        //! Returns the highest bit of the register vector. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit of the register vector. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
+        //! Returns the id of the register.
+        TRITON_EXPORT triton::arch::registers_e getId(void) const;
 
         //! Returns the size (in bits) of the register.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
-        //! Returns the id of the register.
-        TRITON_EXPORT triton::arch::registers_e getId(void) const;
-
         //! Returns the size (in bytes) of the register.
         TRITON_EXPORT triton::uint32 getSize(void) const;
+
+        //! Returns the highest bit of the register vector.
+        TRITON_EXPORT triton::uint32 getHigh(void) const;
+
+        //! Returns the lower bit of the register vector.
+        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the type of the operand (triton::arch::OP_REG).
         TRITON_EXPORT triton::uint32 getType(void) const;

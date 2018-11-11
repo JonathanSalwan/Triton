@@ -48,16 +48,6 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 MemoryAccess::getAbstractHigh(void) const {
-      return this->getHigh();
-    }
-
-
     triton::uint64 MemoryAccess::getAddress(void) const {
       return this->address;
     }
@@ -68,18 +58,28 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getBitSize(void) const {
-      return this->getVectorSize();
-    }
-
-
     triton::uint64 MemoryAccess::getPcRelative(void) const {
       return this->pcRelative;
     }
 
 
+    triton::uint32 MemoryAccess::getBitSize(void) const {
+      return this->getVectorSize();
+    }
+
+
     triton::uint32 MemoryAccess::getSize(void) const {
       return this->getVectorSize() / BYTE_SIZE_BIT;
+    }
+
+
+    triton::uint32 MemoryAccess::getHigh(void) const {
+      return BitsVector::getHigh();
+    }
+
+
+    triton::uint32 MemoryAccess::getLow(void) const {
+      return BitsVector::getLow();
     }
 
 

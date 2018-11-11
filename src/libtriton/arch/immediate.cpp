@@ -70,16 +70,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Immediate::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 Immediate::getAbstractHigh(void) const {
-      return this->getHigh();
-    }
-
-
     triton::uint32 Immediate::getSize(void) const {
       return this->getVectorSize() / BYTE_SIZE_BIT;
     }
@@ -87,6 +77,16 @@ namespace triton {
 
     triton::uint32 Immediate::getBitSize(void) const {
       return this->getVectorSize();
+    }
+
+
+    triton::uint32 Immediate::getHigh(void) const {
+      return BitsVector::getHigh();
+    }
+
+
+    triton::uint32 Immediate::getLow(void) const {
+      return BitsVector::getLow();
     }
 
 

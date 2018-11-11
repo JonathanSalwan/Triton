@@ -84,20 +84,20 @@ namespace triton {
         //! Returns the address of the memory.
         TRITON_EXPORT triton::uint64 getAddress(void) const;
 
-        //! Returns the highest bit of the memory vector. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit of the memory vector. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
+        //! LEA - Gets pc relative.
+        TRITON_EXPORT triton::uint64 getPcRelative(void) const;
 
         //! Returns the size (in bits) of the memory vector.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
-        //! LEA - Gets pc relative.
-        TRITON_EXPORT triton::uint64 getPcRelative(void) const;
-
         //! Returns the size (in bytes) of the memory vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
+
+        //! Returns the highest bit of the memory vector.
+        TRITON_EXPORT triton::uint32 getHigh(void) const;
+
+        //! Returns the lower bit of the memory vector.
+        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the type of the operand (triton::arch::OP_MEM).
         TRITON_EXPORT triton::uint32 getType(void) const;

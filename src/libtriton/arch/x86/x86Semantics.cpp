@@ -834,8 +834,8 @@ namespace triton {
                               bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -904,8 +904,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -975,8 +975,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1171,8 +1171,8 @@ namespace triton {
                                    bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1251,7 +1251,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
+        auto low    = vol ? 0 : dst.getLow();
         auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
 
         auto node = this->astCtxt.ite(
@@ -1275,7 +1275,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
         auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
 
         auto node = this->astCtxt.ite(
@@ -1477,8 +1477,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1510,8 +1510,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1593,8 +1593,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1622,7 +1622,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
         auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto of     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
 
@@ -1650,7 +1650,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = op2->getBitvectorSize();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
         auto of     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
 
         auto node = this->astCtxt.ite(
@@ -1890,8 +1890,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -1917,7 +1917,7 @@ namespace triton {
                               triton::arch::OperandWrapper& dst,
                               bool vol) {
 
-        auto low    = vol ? 0 : dst.getAbstractLow();
+        auto low    = vol ? 0 : dst.getLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
 
         /*
@@ -1954,7 +1954,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
+        auto low    = vol ? 0 : dst.getLow();
         auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
         auto pf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
 
@@ -1995,7 +1995,7 @@ namespace triton {
                               bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -2018,7 +2018,7 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
         auto sf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
 
         /*
@@ -2115,8 +2115,8 @@ namespace triton {
                               bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
 
         /*
          * Create the semantic.
@@ -2170,8 +2170,8 @@ namespace triton {
                                  bool vol) {
 
         auto bvSize = dst.getBitSize();
-        auto low    = vol ? 0 : dst.getAbstractLow();
-        auto high   = vol ? bvSize-1 : dst.getAbstractHigh();
+        auto low    = vol ? 0 : dst.getLow();
+        auto high   = vol ? bvSize-1 : dst.getHigh();
         auto zf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ZF));
 
         /*
@@ -5750,7 +5750,7 @@ namespace triton {
           node = this->astCtxt.zx(dst.getBitSize() - leaSize, node);
 
         if (dst.getBitSize() < leaSize)
-          node = this->astCtxt.extract(dst.getAbstractHigh(), dst.getAbstractLow(), node);
+          node = this->astCtxt.extract(dst.getHigh(), dst.getLow(), node);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, dst, "LEA operation");
