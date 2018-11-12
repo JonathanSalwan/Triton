@@ -68,16 +68,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Register::getHigh(void) const {
-      return BitsVector::getHigh();
-    }
-
-
-    triton::uint32 Register::getLow(void) const {
-      return BitsVector::getLow();
-    }
-
-
     std::string Register::getName(void) const {
       return this->name;
     }

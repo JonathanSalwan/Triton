@@ -80,16 +80,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Immediate::getHigh(void) const {
-      return BitsVector::getHigh();
-    }
-
-
-    triton::uint32 Immediate::getLow(void) const {
-      return BitsVector::getLow();
-    }
-
-
     triton::arch::operand_e Immediate::getType(void) const {
       return triton::arch::OP_IMM;
     }

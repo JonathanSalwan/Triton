@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_MEMORYACCESS
-#define TRITON_MEMORYACCESS
+#ifndef TRITON_MEMORYACCESS_HPP
+#define TRITON_MEMORYACCESS_HPP
 
 #include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
@@ -14,7 +14,6 @@
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
 #include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
@@ -39,7 +38,7 @@ namespace triton {
     /*! \class MemoryAccess
      *  \brief This class is used to represent a memory access.
      */
-    class MemoryAccess : public BitsVector, public ShiftOperandMode, public OperandInterface {
+    class MemoryAccess : public BitsVector, public ShiftOperandMode {
       protected:
         //! The memory' address.
         triton::uint64 address;
@@ -93,12 +92,6 @@ namespace triton {
 
         //! Returns the size (in bytes) of the memory vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
-
-        //! Returns the highest bit of the memory vector.
-        TRITON_EXPORT triton::uint32 getHigh(void) const;
-
-        //! Returns the lower bit of the memory vector.
-        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the type of the operand (triton::arch::OPERAND_MEMORY).
         TRITON_EXPORT triton::arch::operand_e getType(void) const;
@@ -187,4 +180,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_MEMORYACCESS */
+#endif /* TRITON_MEMORYACCESS_HPP */

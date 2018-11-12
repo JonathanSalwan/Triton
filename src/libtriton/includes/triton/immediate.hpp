@@ -5,13 +5,12 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_IMMEDIATE_H
-#define TRITON_IMMEDIATE_H
+#ifndef TRITON_IMMEDIATE_HPP
+#define TRITON_IMMEDIATE_HPP
 
 #include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -35,7 +34,7 @@ namespace triton {
     /*! \class Immediate
      *  \brief This class is used to represent an immediate.
      */
-    class Immediate : public BitsVector, public ShiftOperandMode, public OperandInterface {
+    class Immediate : public BitsVector, public ShiftOperandMode {
       protected:
         //! The value of the operand.
         triton::uint64 value;
@@ -62,12 +61,6 @@ namespace triton {
 
         //! Returns the size (in bytes) of the immediate vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
-
-        //! Returns the highest bit of the immediate vector.
-        TRITON_EXPORT triton::uint32 getHigh(void) const;
-
-        //! Returns the lower bit of the immediate vector.
-        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Returns the type of the operand (triton::arch::OPERAND_IMMEDIATE).
         TRITON_EXPORT triton::arch::operand_e getType(void) const;
@@ -99,4 +92,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_IMMEDIATE_H */
+#endif /* TRITON_IMMEDIATE_HPP */

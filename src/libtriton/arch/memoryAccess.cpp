@@ -73,16 +73,6 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getHigh(void) const {
-      return BitsVector::getHigh();
-    }
-
-
-    triton::uint32 MemoryAccess::getLow(void) const {
-      return BitsVector::getLow();
-    }
-
-
     triton::arch::operand_e MemoryAccess::getType(void) const {
       return triton::arch::OP_MEM;
     }

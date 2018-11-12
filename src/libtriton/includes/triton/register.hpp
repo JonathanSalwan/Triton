@@ -5,8 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_REGISTEROPERAND_H
-#define TRITON_REGISTEROPERAND_H
+#ifndef TRITON_REGISTEROPERAND_HPP
+#define TRITON_REGISTEROPERAND_HPP
 
 #include <string>
 #include <ostream>
@@ -15,7 +15,6 @@
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -42,7 +41,7 @@ namespace triton {
     /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class Register : public BitsVector, public ShiftOperandMode, public OperandInterface {
+    class Register : public BitsVector, public ShiftOperandMode {
       protected:
         //! The name of the register.
         std::string name;
@@ -88,12 +87,6 @@ namespace triton {
         //! Returns the size (in bytes) of the register.
         TRITON_EXPORT triton::uint32 getSize(void) const;
 
-        //! Returns the highest bit of the register vector.
-        TRITON_EXPORT triton::uint32 getHigh(void) const;
-
-        //! Returns the lower bit of the register vector.
-        TRITON_EXPORT triton::uint32 getLow(void) const;
-
         //! Returns the type of the operand (triton::arch::OPERAND_REGISTER).
         TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
@@ -121,4 +114,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_REGISTEROPERAND_H */
+#endif /* TRITON_REGISTEROPERAND_HPP */
