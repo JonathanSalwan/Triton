@@ -656,9 +656,34 @@ namespace triton {
       }
 
 
+      triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node) {
+        switch (type) {
+          case triton::arch::aarch64::ID_SHIFT_ASR:
+            return this->astCtxt.bvashr(node, this->astCtxt.bv(value, node->getBitvectorSize()));
+
+          case triton::arch::aarch64::ID_SHIFT_LSL:
+            return this->astCtxt.bvshl(node, this->astCtxt.bv(value, node->getBitvectorSize()));
+
+          case triton::arch::aarch64::ID_SHIFT_LSR:
+            return this->astCtxt.bvlshr(node, this->astCtxt.bv(value, node->getBitvectorSize()));
+
+          case triton::arch::aarch64::ID_SHIFT_ROR:
+            return this->astCtxt.bvror(value, node);
+
+          default:
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
+        }
+      }
+
+
       /* Returns the AST corresponding to the immediate */
       triton::ast::SharedAbstractNode SymbolicEngine::getImmediateAst(const triton::arch::Immediate& imm) {
         triton::ast::SharedAbstractNode node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
+
+        /* Shift AST if it's a shift operand */
+        if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+          return this->getShiftAst(imm.getShiftType(), imm.getShiftValue(), node);
+
         return node;
       }
 
@@ -687,8 +712,15 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size))
-          return this->getAlignedMemory(address, size)->getAst();
+        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
+          triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
+
+          /* Shift AST if it's a shift operand */
+          if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+            return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), anode);
+
+          return anode;
+        }
 
         /* Iterate on every memory cells to use their symbolic or concrete values */
         while (size) {
@@ -721,6 +753,10 @@ namespace triton {
             break;
         }
 
+        /* Shift AST if it's a shift operand */
+        if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+          return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), tmp);
+
         return tmp;
       }
 
@@ -746,21 +782,25 @@ namespace triton {
 
       /* Returns the AST corresponding to the register */
       triton::ast::SharedAbstractNode SymbolicEngine::getRegisterAst(const triton::arch::Register& reg) {
-        triton::ast::SharedAbstractNode op = nullptr;
-        triton::uint32 bvSize              = reg.getBitSize();
-        triton::uint32 high                = reg.getHigh();
-        triton::uint32 low                 = reg.getLow();
+        triton::ast::SharedAbstractNode node = nullptr;
+        triton::uint32 bvSize                = reg.getBitSize();
+        triton::uint32 high                  = reg.getHigh();
+        triton::uint32 low                   = reg.getLow();
 
         /* Check if the register is already symbolic */
         if (const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg)) {
-          op = this->astCtxt.extract(high, low, this->astCtxt.reference(symReg));
+          node = this->astCtxt.extract(high, low, this->astCtxt.reference(symReg));
         }
         /* Otherwise, use the concerte value */
         else {
-          op = this->astCtxt.bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
+          node = this->astCtxt.bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
         }
 
-        return op;
+        /* Shift AST if it's a shift operand */
+        if (reg.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+          return this->getShiftAst(reg.getShiftType(), reg.getShiftValue(), node);
+
+        return node;
       }
 
 
