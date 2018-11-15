@@ -12,7 +12,6 @@
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 
