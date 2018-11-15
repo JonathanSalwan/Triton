@@ -36,7 +36,7 @@ namespace triton {
 
     Register::Register(const Register& other)
       : BitsVector(other),
-        ShiftOperandMode(other) {
+        AArch64OperandProperties(other) {
       this->copy(other);
     }
 
@@ -98,8 +98,8 @@ namespace triton {
 
 
     Register& Register::operator=(const Register& other) {
+      AArch64OperandProperties::operator=(other);
       BitsVector::operator=(other);
-      ShiftOperandMode::operator=(other);
       this->copy(other);
       return *this;
     }

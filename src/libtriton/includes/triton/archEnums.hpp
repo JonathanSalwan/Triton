@@ -114,6 +114,20 @@ namespace triton {
         ID_SHIFT_LAST_ITEM,   //!< Must be the last item
       };
 
+      //! Types of extend
+      enum extend_e {
+        ID_EXTEND_INVALID = 0,   //!< invalid
+        ID_EXTEND_UXTB,          //!< Extracts a byte (8-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_UXTH,          //!< Extracts a halfword (16-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_UXTW,          //!< Extracts a word (32-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_UXTX,          //!< Use the whole 64-bit register
+        ID_EXTEND_SXTB,          //!< Extracts a byte (8-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_SXTH,          //!< Extracts a halfword (16-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_SXTW,          //!< Extracts a word (32-bit) value from a register and zero extends it to the size of the register
+        ID_EXTEND_SXTX,          //!< Use the whole 64-bit register
+        ID_EXTEND_LAST_ITEM,     //!< Must be the last item
+      };
+
       //! Types of condition
       enum condition_e {
         ID_CONDITION_INVALID = 0, //!< invalid

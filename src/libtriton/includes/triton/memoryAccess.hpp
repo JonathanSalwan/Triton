@@ -8,6 +8,7 @@
 #ifndef TRITON_MEMORYACCESS_HPP
 #define TRITON_MEMORYACCESS_HPP
 
+#include <triton/aarch64OperandProperties.hpp>
 #include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
@@ -15,7 +16,6 @@
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
 #include <triton/register.hpp>
-#include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -38,7 +38,7 @@ namespace triton {
     /*! \class MemoryAccess
      *  \brief This class is used to represent a memory access.
      */
-    class MemoryAccess : public BitsVector, public ShiftOperandMode {
+    class MemoryAccess : public BitsVector, public AArch64OperandProperties {
       protected:
         //! The memory' address.
         triton::uint64 address;

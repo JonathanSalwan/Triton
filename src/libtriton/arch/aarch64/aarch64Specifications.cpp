@@ -91,6 +91,55 @@ namespace triton {
       }
 
 
+      triton::arch::aarch64::extend_e AArch64Specifications::capstoneExtendToTritonExtend(triton::uint32 id) const {
+        triton::arch::aarch64::extend_e tritonId = triton::arch::aarch64::ID_EXTEND_INVALID;
+
+        switch (id) {
+          case triton::extlibs::capstone::ARM64_EXT_INVALID:
+            tritonId = triton::arch::aarch64::ID_EXTEND_INVALID;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_UXTB:
+            tritonId = triton::arch::aarch64::ID_EXTEND_UXTB;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_UXTH:
+            tritonId = triton::arch::aarch64::ID_EXTEND_UXTH;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_UXTW:
+            tritonId = triton::arch::aarch64::ID_EXTEND_UXTW;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_UXTX:
+            tritonId = triton::arch::aarch64::ID_EXTEND_UXTX;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_SXTB:
+            tritonId = triton::arch::aarch64::ID_EXTEND_SXTB;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_SXTH:
+            tritonId = triton::arch::aarch64::ID_EXTEND_SXTH;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_SXTW:
+            tritonId = triton::arch::aarch64::ID_EXTEND_SXTW;
+            break;
+
+          case triton::extlibs::capstone::ARM64_EXT_SXTX:
+            tritonId = triton::arch::aarch64::ID_EXTEND_SXTX;
+            break;
+
+          default:
+            tritonId = triton::arch::aarch64::ID_EXTEND_INVALID;
+            break;
+        }
+
+        return tritonId;
+      }
+
+
       triton::arch::aarch64::condition_e AArch64Specifications::capstoneConditionToTritonCondition(triton::uint32 id) const {
         triton::arch::aarch64::condition_e tritonId = triton::arch::aarch64::ID_CONDITION_INVALID;
 

@@ -86,6 +86,10 @@ e.g: `64`
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector of the register.
 
+- <b>\ref py_EXTEND_page getExtendType(void)</b><br>
+Returns the extend type of the instruction. Mainly used for AArch64.<br>
+e.g: `EXTEND.AARCH64.UXTW`
+
 - <b>\ref py_REG_page getId(void)</b><br>
 Returns the enum of the register.<br>
 e.g: `REG.X86_64.RBX`
@@ -94,7 +98,7 @@ e.g: `REG.X86_64.RBX`
 Returns the name of the register.<br>
 e.g: `rbx`
 
-- <b>\ref py_SHIFT_page  getShiftType(void)</b><br>
+- <b>\ref py_SHIFT_page getShiftType(void)</b><br>
 Returns the shift type of the instruction. Mainly used for AArch64.<br>
 e.g: `SHIFT.AARCH64.LSL`
 
@@ -141,6 +145,16 @@ namespace triton {
       static PyObject* Register_getBitvector(PyObject* self, PyObject* noarg) {
         try {
           return PyBitsVector(*PyRegister_AsRegister(self));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getExtendType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyRegister_AsRegister(self)->getExtendType());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -293,6 +307,7 @@ namespace triton {
       PyMethodDef Register_callbacks[] = {
         {"getBitSize",        Register_getBitSize,       METH_NOARGS,    ""},
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
+        {"getExtendType",     Register_getExtendType,    METH_NOARGS,    ""},
         {"getId",             Register_getId,            METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},
         {"getShiftType",      Register_getShiftType,     METH_NOARGS,    ""},

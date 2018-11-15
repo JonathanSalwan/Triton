@@ -8,10 +8,10 @@
 #ifndef TRITON_IMMEDIATE_HPP
 #define TRITON_IMMEDIATE_HPP
 
+#include <triton/aarch64OperandProperties.hpp>
 #include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/shiftOperandMode.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -34,7 +34,7 @@ namespace triton {
     /*! \class Immediate
      *  \brief This class is used to represent an immediate.
      */
-    class Immediate : public BitsVector, public ShiftOperandMode {
+    class Immediate : public BitsVector, public AArch64OperandProperties {
       protected:
         //! The value of the operand.
         triton::uint64 value;

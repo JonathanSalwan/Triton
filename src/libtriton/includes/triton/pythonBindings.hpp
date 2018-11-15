@@ -74,7 +74,10 @@ namespace triton {
       void initOperandNamespace(PyObject* operandDict);
 
       //! Initializes the SHIFT python namespace.
-      void initShiftsNamespace(PyObject* shiftsDict);
+      void initShiftsNamespace(PyObject* shiftDict);
+
+      //! Initializes the EXTEND python namespace.
+      void initExtendNamespace(PyObject* extendDict);
 
       //! Initializes the REG python namespace.
       void initRegNamespace(PyObject* regDict);

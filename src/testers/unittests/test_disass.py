@@ -71,3 +71,27 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op1.getShiftType(), SHIFT.AARCH64.INVALID)
         self.assertEqual(op2.getShiftType(), SHIFT.AARCH64.LSL)
         self.assertEqual(op2.getShiftValue(), 2)
+
+    def test_inst4(self):
+        inst = Instruction("\x20\xc0\x22\x8b") # add x0, x1, w2, sxtw
+
+        self.ctx.disassembly(inst)
+        self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxtw")
+
+        self.assertEqual(len(inst.getOperands()), 3)
+
+        op0 = inst.getOperands()[0]
+        op1 = inst.getOperands()[1]
+        op2 = inst.getOperands()[2]
+
+        self.assertEqual(op0.getName(), "x0")
+        self.assertEqual(op0.getSize(), CPUSIZE.QWORD)
+        self.assertEqual(op1.getName(), "x1")
+        self.assertEqual(op1.getSize(), CPUSIZE.QWORD)
+        self.assertEqual(op2.getName(), "w2")
+        self.assertEqual(op2.getSize(), CPUSIZE.DWORD)
+
+        self.assertEqual(op0.getShiftType(), SHIFT.AARCH64.INVALID)
+        self.assertEqual(op1.getShiftType(), SHIFT.AARCH64.INVALID)
+        self.assertEqual(op2.getShiftType(), SHIFT.AARCH64.INVALID)
+        self.assertEqual(op2.getExtendType(), EXTEND.AARCH64.SXTW)

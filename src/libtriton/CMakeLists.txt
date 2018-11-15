@@ -64,6 +64,7 @@ include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 set(LIBTRITON_SOURCE_FILES
     api/api.cpp
     arch/aarch64/aarch64Cpu.cpp
+    arch/aarch64/aarch64OperandProperties.cpp
     arch/aarch64/aarch64Semantics.cpp
     arch/aarch64/aarch64Specifications.cpp
     arch/architecture.cpp
@@ -74,7 +75,6 @@ set(LIBTRITON_SOURCE_FILES
     arch/memoryAccess.cpp
     arch/operandWrapper.cpp
     arch/register.cpp
-    arch/shiftOperandMode.cpp
     arch/x86/x8664Cpu.cpp
     arch/x86/x86Cpu.cpp
     arch/x86/x86Semantics.cpp
@@ -119,6 +119,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initCallbackNamespace.cpp
         bindings/python/namespaces/initConditionsNamespace.cpp
         bindings/python/namespaces/initCpuSizeNamespace.cpp
+        bindings/python/namespaces/initExtendNamespace.cpp
         bindings/python/namespaces/initModeNamespace.cpp
         bindings/python/namespaces/initOpcodesNamespace.cpp
         bindings/python/namespaces/initOperandNamespace.cpp

@@ -326,6 +326,9 @@ namespace triton {
                   reg.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
                   reg.setShiftValue(op->shift.value);
 
+                  /* Set extend type */
+                  reg.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
+
                   /* Define a base address for next operand */
                   if (!size)
                     size = reg.getSize();

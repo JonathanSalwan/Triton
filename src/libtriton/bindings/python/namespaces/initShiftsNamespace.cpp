@@ -8,7 +8,7 @@
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
-#include <triton/aarch64Specifications.hpp>
+#include <triton/archEnums.hpp>
 
 
 

@@ -57,6 +57,9 @@ namespace triton {
           //! Converts a capstone's shift id to a triton's shift id.
           TRITON_EXPORT triton::arch::aarch64::shift_e capstoneShiftToTritonShift(triton::uint32 id) const;
 
+          //! Converts a capstone's extend id to a triton's extend id.
+          TRITON_EXPORT triton::arch::aarch64::extend_e capstoneExtendToTritonExtend(triton::uint32 id) const;
+
           //! Converts a capstone's condition id to a triton's condition id.
           TRITON_EXPORT triton::arch::aarch64::condition_e capstoneConditionToTritonCondition(triton::uint32 id) const;
 

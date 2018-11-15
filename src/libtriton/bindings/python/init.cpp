@@ -39,37 +39,43 @@ namespace triton {
 
         PyObject* archDict = xPyDict_New();
         initArchNamespace(archDict);
-        PyObject* idArchDictClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
+        PyObject* idArchClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
 
         /* Create the AST_NODE namespace ============================================================= */
 
         PyObject* astNodeDict = xPyDict_New();
         initAstNodeNamespace(astNodeDict);
-        PyObject* idAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
+        PyObject* idAstNodeClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
 
         /* Create the AST_REPRESENTATION namespace =================================================== */
 
         PyObject* astRepresentationDict = xPyDict_New();
         initAstRepresentationNamespace(astRepresentationDict);
-        PyObject* idAstRepresentationDictClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
+        PyObject* idAstRepresentationClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
 
         /* Create the CALLBACK namespace ============================================================= */
 
         PyObject* callbackDict = xPyDict_New();
         initCallbackNamespace(callbackDict);
-        PyObject* idCallbackDictClass = xPyClass_New(nullptr, callbackDict, xPyString_FromString("CALLBACK"));
+        PyObject* idCallbackClass = xPyClass_New(nullptr, callbackDict, xPyString_FromString("CALLBACK"));
 
         /* Create the CONDITION namespace ============================================================ */
 
         PyObject* conditionsDict = xPyDict_New();
         initConditionsNamespace(conditionsDict);
-        PyObject* idConditionsDictClass = xPyClass_New(nullptr, conditionsDict, xPyString_FromString("CONDITION"));
+        PyObject* idConditionsClass = xPyClass_New(nullptr, conditionsDict, xPyString_FromString("CONDITION"));
 
         /* Create the CPUSIZE namespace ============================================================== */
 
         PyObject* cpuSizeDict = xPyDict_New();
         initCpuSizeNamespace(cpuSizeDict);
         PyObject* idCpuSizeClass = xPyClass_New(nullptr, cpuSizeDict, xPyString_FromString("CPUSIZE"));
+
+        /* Create the EXTEND namespace ================================================================ */
+
+        PyObject* extendDict = xPyDict_New();
+        initExtendNamespace(extendDict);
+        PyObject* idExtendClass = xPyClass_New(nullptr, extendDict, xPyString_FromString("EXTEND"));
 
         /* Create the OPCODE namespace =============================================================== */
 
@@ -136,12 +142,13 @@ namespace triton {
         /* Init triton module ======================================================================== */
 
         /* Add every modules and namespace into the triton module */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "CONDITION",           idConditionsDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CONDITION",           idConditionsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "EXTEND",              idExtendClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "MODE",                idModeClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
