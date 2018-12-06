@@ -95,3 +95,37 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op1.getShiftType(), SHIFT.AARCH64.INVALID)
         self.assertEqual(op2.getShiftType(), SHIFT.AARCH64.INVALID)
         self.assertEqual(op2.getExtendType(), EXTEND.AARCH64.SXTW)
+        self.assertEqual(op2.getExtendSize(), 32)
+
+    def test_inst5(self):
+        inst = Instruction("\x20\x80\x22\x8b") # add x0, x1, w2, sxtb
+
+        self.ctx.disassembly(inst)
+        self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxtb")
+
+        op2 = inst.getOperands()[2]
+
+        self.assertEqual(op2.getExtendType(), EXTEND.AARCH64.SXTB)
+        self.assertEqual(op2.getExtendSize(), 56)
+
+    def test_inst6(self):
+        inst = Instruction("\x20\xa0\x22\x8b") # add x0, x1, w2, sxth
+
+        self.ctx.disassembly(inst)
+        self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxth")
+
+        op2 = inst.getOperands()[2]
+
+        self.assertEqual(op2.getExtendType(), EXTEND.AARCH64.SXTH)
+        self.assertEqual(op2.getExtendSize(), 48)
+
+    def test_inst7(self):
+        inst = Instruction("\x20\xe0\x22\x8b") # add x0, x1, x2, sxtx
+
+        self.ctx.disassembly(inst)
+        self.assertEqual(inst.getDisassembly(), "add x0, x1, x2, sxtx")
+
+        op2 = inst.getOperands()[2]
+
+        self.assertEqual(op2.getExtendType(), EXTEND.AARCH64.SXTX)
+        self.assertEqual(op2.getExtendSize(), 0)
