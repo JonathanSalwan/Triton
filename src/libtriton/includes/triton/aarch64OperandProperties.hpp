@@ -37,6 +37,9 @@ namespace triton {
         //! The extend type.
         triton::arch::aarch64::extend_e extendType;
 
+        //! The extend size (in bits).
+        triton::uint32 extendSize;
+
         //! The shift type.
         triton::arch::aarch64::shift_e shiftType;
 
@@ -48,7 +51,7 @@ namespace triton {
         TRITON_EXPORT AArch64OperandProperties();
 
         //! Constructor.
-        TRITON_EXPORT AArch64OperandProperties(triton::arch::aarch64::extend_e extendType, triton::arch::aarch64::shift_e shiftType, triton::uint32 shiftValue);
+        TRITON_EXPORT AArch64OperandProperties(triton::arch::aarch64::extend_e extendType, triton::uint32 extendSize, triton::arch::aarch64::shift_e shiftType, triton::uint32 shiftValue);
 
         //! Constructor by copy.
         TRITON_EXPORT AArch64OperandProperties(const AArch64OperandProperties& other);
@@ -56,20 +59,26 @@ namespace triton {
         //! Returns the type of the shift.
         TRITON_EXPORT triton::arch::aarch64::shift_e getShiftType(void) const;
 
+        //! Returns the value of the shift.
+        TRITON_EXPORT triton::uint32 getShiftValue(void) const;
+
         //! Returns the type of the extend.
         TRITON_EXPORT triton::arch::aarch64::extend_e getExtendType(void) const;
 
-        //! Returns the value of the shift.
-        TRITON_EXPORT triton::uint32 getShiftValue(void) const;
+        //! Returns the size (in bits) of the extend.
+        TRITON_EXPORT triton::uint32 getExtendSize(void) const;
 
         //! Sets the type of the shift.
         TRITON_EXPORT void setShiftType(triton::arch::aarch64::shift_e type);
 
+        //! Sets the value of the shift.
+        TRITON_EXPORT void setShiftValue(triton::uint32 value);
+
         //! Sets the type of the extend.
         TRITON_EXPORT void setExtendType(triton::arch::aarch64::extend_e type);
 
-        //! Sets the value of the shift.
-        TRITON_EXPORT void setShiftValue(triton::uint32 value);
+        //! Sets the extended size (in bits) after extension.
+        TRITON_EXPORT void setExtendedSize(triton::uint32 size);
 
         //! Copy an AArch64OperandProperties.
         TRITON_EXPORT AArch64OperandProperties& operator=(const AArch64OperandProperties& other);

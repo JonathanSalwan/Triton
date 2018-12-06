@@ -66,7 +66,7 @@ A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us o
 
 ### Cite Triton
 
-    @inproceedings{SSTIC2015-Saudel-Salwan,
+    @proceedings{SSTIC2015-Saudel-Salwan,
       author    = {Florent Saudel and Jonathan Salwan},
       title     = {Triton: A Dynamic Symbolic Execution Framework},
       booktitle = {Symposium sur la s{\'{e}}curit{\'{e}} des technologies de l'information

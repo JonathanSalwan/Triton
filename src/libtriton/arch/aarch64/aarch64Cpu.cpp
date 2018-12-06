@@ -326,8 +326,10 @@ namespace triton {
                   reg.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
                   reg.setShiftValue(op->shift.value);
 
-                  /* Set extend type */
+                  /* Set extend type and size */
                   reg.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
+                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
+                    reg.setExtendedSize(size * BYTE_SIZE_BIT);
 
                   /* Define a base address for next operand */
                   if (!size)

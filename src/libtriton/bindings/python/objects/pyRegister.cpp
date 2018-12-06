@@ -86,8 +86,12 @@ e.g: `64`
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector of the register.
 
+- <b>\ref py_EXTEND_page getExtendSize(void)</b><br>
+Returns the size (in bits) of the extend. Mainly used for AArch64.<br>
+e.g: `16`
+
 - <b>\ref py_EXTEND_page getExtendType(void)</b><br>
-Returns the extend type of the instruction. Mainly used for AArch64.<br>
+Returns the extend type of the operand. Mainly used for AArch64.<br>
 e.g: `EXTEND.AARCH64.UXTW`
 
 - <b>\ref py_REG_page getId(void)</b><br>
@@ -99,11 +103,11 @@ Returns the name of the register.<br>
 e.g: `rbx`
 
 - <b>\ref py_SHIFT_page getShiftType(void)</b><br>
-Returns the shift type of the instruction. Mainly used for AArch64.<br>
+Returns the shift type of the operand. Mainly used for AArch64.<br>
 e.g: `SHIFT.AARCH64.LSL`
 
 - <b>integer getShiftValue(void)</b><br>
-Returns the shift value of the instruction. Mainly used for AArch64.<br>
+Returns the shift value of the operand. Mainly used for AArch64.<br>
 e.g: `2`
 
 - <b>integer getSize(void)</b><br>
@@ -145,6 +149,16 @@ namespace triton {
       static PyObject* Register_getBitvector(PyObject* self, PyObject* noarg) {
         try {
           return PyBitsVector(*PyRegister_AsRegister(self));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getExtendSize(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyRegister_AsRegister(self)->getExtendSize());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -307,6 +321,7 @@ namespace triton {
       PyMethodDef Register_callbacks[] = {
         {"getBitSize",        Register_getBitSize,       METH_NOARGS,    ""},
         {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
+        {"getExtendSize",     Register_getExtendSize,    METH_NOARGS,    ""},
         {"getExtendType",     Register_getExtendType,    METH_NOARGS,    ""},
         {"getId",             Register_getId,            METH_NOARGS,    ""},
         {"getName",           Register_getName,          METH_NOARGS,    ""},

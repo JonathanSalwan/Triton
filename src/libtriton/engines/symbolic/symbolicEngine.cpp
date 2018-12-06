@@ -676,6 +676,38 @@ namespace triton {
       }
 
 
+      triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node) {
+        switch (type) {
+          case triton::arch::aarch64::ID_EXTEND_UXTB:
+            return this->astCtxt.zx(size, this->astCtxt.extract(7, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_UXTH:
+            return this->astCtxt.zx(size, this->astCtxt.extract(15, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_UXTW:
+            return this->astCtxt.zx(size, this->astCtxt.extract(31, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_UXTX:
+            return this->astCtxt.zx(size, this->astCtxt.extract(63, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_SXTB:
+            return this->astCtxt.sx(size, this->astCtxt.extract(7, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_SXTH:
+            return this->astCtxt.sx(size, this->astCtxt.extract(15, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_SXTW:
+            return this->astCtxt.sx(size, this->astCtxt.extract(31, 0, node));
+
+          case triton::arch::aarch64::ID_EXTEND_SXTX:
+            return this->astCtxt.sx(size, this->astCtxt.extract(63, 0, node));
+
+          default:
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getExtendAst(): Invalid extend operand.");
+        }
+      }
+
+
       /* Returns the AST corresponding to the immediate */
       triton::ast::SharedAbstractNode SymbolicEngine::getImmediateAst(const triton::arch::Immediate& imm) {
         triton::ast::SharedAbstractNode node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
@@ -797,7 +829,11 @@ namespace triton {
           node = this->astCtxt.bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
         }
 
-        /* Shift AST if it's a shift operand */
+        /* extend AST if it's a extend operand (mainly used for AArch64) */
+        if (reg.getExtendType() != triton::arch::aarch64::ID_EXTEND_INVALID)
+          return this->getExtendAst(reg.getExtendType(), reg.getExtendSize(), node);
+
+        /* Shift AST if it's a shift operand (mainly used for AArch64) */
         if (reg.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
           return this->getShiftAst(reg.getShiftType(), reg.getShiftValue(), node);
 

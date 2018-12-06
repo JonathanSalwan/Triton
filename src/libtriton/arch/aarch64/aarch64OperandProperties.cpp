@@ -15,13 +15,15 @@ namespace triton {
   namespace arch {
 
     AArch64OperandProperties::AArch64OperandProperties() {
+      this->extendSize = 0;
       this->extendType = triton::arch::aarch64::ID_EXTEND_INVALID;
       this->shiftType  = triton::arch::aarch64::ID_SHIFT_INVALID;
       this->shiftValue = 0;
     }
 
 
-    AArch64OperandProperties::AArch64OperandProperties(triton::arch::aarch64::extend_e extendType, triton::arch::aarch64::shift_e shiftType, triton::uint32 shiftValue) {
+    AArch64OperandProperties::AArch64OperandProperties(triton::arch::aarch64::extend_e extendType, triton::uint32 extendSize, triton::arch::aarch64::shift_e shiftType, triton::uint32 shiftValue) {
+      this->extendSize = extendSize;
       this->extendType = extendType;
       this->shiftType  = shiftType;
       this->shiftValue = shiftValue;
@@ -29,6 +31,7 @@ namespace triton {
 
 
     AArch64OperandProperties::AArch64OperandProperties(const AArch64OperandProperties& other) {
+      this->extendSize = other.extendSize;
       this->extendType = other.extendType;
       this->shiftType  = other.shiftType;
       this->shiftValue = other.shiftValue;
@@ -36,6 +39,7 @@ namespace triton {
 
 
     AArch64OperandProperties& AArch64OperandProperties::operator=(const AArch64OperandProperties& other) {
+      this->extendSize = other.extendSize;
       this->extendType = other.extendType;
       this->shiftType  = other.shiftType;
       this->shiftValue = other.shiftValue;
@@ -58,6 +62,11 @@ namespace triton {
     }
 
 
+    triton::uint32 AArch64OperandProperties::getExtendSize(void) const {
+      return this->extendSize;
+    }
+
+
     void AArch64OperandProperties::setShiftValue(triton::uint32 value) {
       this->shiftValue = value;
     }
@@ -74,6 +83,40 @@ namespace triton {
       if (type >= triton::arch::aarch64::ID_EXTEND_LAST_ITEM)
         throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendType(): invalid type of extend.");
       this->extendType = type;
+    }
+
+
+    void AArch64OperandProperties::setExtendedSize(triton::uint32 size) {
+      switch (this->extendType) {
+        case triton::arch::aarch64::ID_EXTEND_SXTB:
+        case triton::arch::aarch64::ID_EXTEND_UXTB:
+          this->extendSize = size - 8;
+          break;
+
+        case triton::arch::aarch64::ID_EXTEND_SXTH:
+        case triton::arch::aarch64::ID_EXTEND_UXTH:
+          this->extendSize = size - 16;
+          break;
+
+        case triton::arch::aarch64::ID_EXTEND_SXTW:
+        case triton::arch::aarch64::ID_EXTEND_UXTW:
+          this->extendSize = size - 32;
+          break;
+
+        case triton::arch::aarch64::ID_EXTEND_SXTX:
+        case triton::arch::aarch64::ID_EXTEND_UXTX:
+          this->extendSize = size - 64;
+          break;
+
+        default:
+          throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendedSize(): invalid type of extend");
+      }
+
+      if (this->extendSize > 64)
+        throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendedSize(): invalid size of extension (integer overflow).");
+
+      if (size != 8 && size != 16 && size != 32 && size != 64)
+        throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendedSize(): size must be 8, 16, 32 or 64.");
     }
 
   }; /* arch namespace */

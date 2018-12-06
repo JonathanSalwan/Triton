@@ -23,7 +23,43 @@ CODE  = [
     ("\x21\x64\xa8\xd2", "movz x1, #0x4321, lsl #16"),
     ("\x21\x64\xc8\xd2", "movz x1, #0x4321, lsl #32"),
     ("\x21\x64\xe8\xd2", "movz x1, #0x4321, lsl #48"),
+    ("\x21\x64\xe8\xd2", "movz x1, #0x4321, lsl #48"),
+    ("\x21\x64\xc8\xd2", "movz x1, #0x4321, lsl #32"),
+    ("\x21\x64\xa8\xd2", "movz x1, #0x4321, lsl #16"),
+    ("\x60\x00\x02\x8b", "add x0, x3, x2"),
+    ("\x20\x00\x02\x8b", "add x0, x1, x2"),
+    ("\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
+    ("\x00\x00\x00\x8b", "add x0, x0, x0"),
+    ("\x60\xc0\x22\x8b", "add x0, x3, w2, sxtw"),
+    ("\x82\x46\x82\xd2", "movz x2, #0x1234"),
+    ("\x01\xcf\x8a\xd2", "movz x1, #0x5678"),
+    ("\x20\x80\x22\x8b", "add x0, x1, w2, sxtb"),
+    ("\x20\xa0\x22\x8b", "add x0, x1, w2, sxth"),
     ("\x20\xc0\x22\x8b", "add x0, x1, w2, sxtw"),
+    ("\x20\xe0\x22\x8b", "add x0, x1, x2, sxtx"),
+    ("\x20\x00\x02\x8b", "add x0, x1, x2, lsl #0"),
+    ("\x20\x04\x02\x8b", "add x0, x1, x2, lsl #1"),
+    ("\x20\x20\x02\x8b", "add x0, x1, x2, lsl #8"),
+    ("\x20\x40\x02\x8b", "add x0, x1, x2, lsl #16"),
+    ("\x20\x80\x02\x8b", "add x0, x1, x2, lsl #32"),
+    ("\x20\x84\x02\x8b", "add x0, x1, x2, lsl #33"),
+    ("\x20\x88\x02\x8b", "add x0, x1, x2, lsl #34"),
+    ("\x20\x00\x42\x8b", "add x0, x1, x2, lsr #0"),
+    ("\x20\x04\x42\x8b", "add x0, x1, x2, lsr #1"),
+    ("\x20\x20\x42\x8b", "add x0, x1, x2, lsr #8"),
+    ("\x20\x40\x42\x8b", "add x0, x1, x2, lsr #16"),
+    ("\x20\x80\x42\x8b", "add x0, x1, x2, lsr #32"),
+    ("\x20\x84\x42\x8b", "add x0, x1, x2, lsr #33"),
+    ("\x20\x88\x42\x8b", "add x0, x1, x2, lsr #34"),
+    ("\x20\x20\x82\x8b", "add x0, x1, x2, asr #8"),
+    ("\x20\x40\x82\x8b", "add x0, x1, x2, asr #16"),
+    ("\x20\x80\x82\x8b", "add x0, x1, x2, asr #32"),
+    ("\x20\x84\x82\x8b", "add x0, x1, x2, asr #33"),
+    ("\x20\x88\x82\x8b", "add x0, x1, x2, asr #34"),
+    ("\x20\x88\x82\x8b", "add x0, x1, x2, asr #34"),
+    ("\x20\x88\x19\x91", "add x0, x1, #1634"),
+    ("\x20\x58\x21\x91", "add x0, x1, #2134"),
+    ("\x20\x58\x61\x91", "add x0, x1, #2134, lsl #12"),
 ]
 
 def emu_with_unicorn(opcode, istate=None):
@@ -70,7 +106,10 @@ def emu_with_unicorn(opcode, istate=None):
         mu.reg_write(UC_ARM64_REG_X30,  istate['x30'])
         mu.reg_write(UC_ARM64_REG_PC,   istate['pc'])
         mu.reg_write(UC_ARM64_REG_SP,   istate['sp'])
-        mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 3 | istate['z'] << 2 | istate['c'] << 1 | istate['v'])
+        mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28)
+    else:
+        ## Why it's set at the first inst? Dunno...
+        mu.reg_write(UC_ARM64_REG_NZCV, 0)
 
     # emulate code in infinite time & unlimited instructions
     mu.emu_start(ADDR, ADDR + len(opcode))
@@ -110,10 +149,10 @@ def emu_with_unicorn(opcode, istate=None):
         "x30": mu.reg_read(UC_ARM64_REG_X30),
         "pc":  mu.reg_read(UC_ARM64_REG_PC),
         "sp":  mu.reg_read(UC_ARM64_REG_SP),
-        "n": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 3) & 1),
-        "z": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 2) & 1),
-        "c": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 3) & 1),
-        "v": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 0) & 1),
+        "n": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 31) & 1),
+        "z": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 30) & 1),
+        "c": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 29) & 1),
+        "v": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 28) & 1),
     }
     return ostate
 
@@ -217,8 +256,13 @@ if __name__ == '__main__':
     state = None
 
     for opcode, disassembly in CODE:
-        uc_state = emu_with_unicorn(opcode, state)
-        tt_state = emu_with_triton(opcode, state)
+        try:
+            uc_state = emu_with_unicorn(opcode, state)
+            tt_state = emu_with_triton(opcode, state)
+        except Exception, e:
+            print '[KO] %s' %(disassembly)
+            print '\t%s' %(e)
+            sys.exit(-1)
 
         if uc_state != tt_state:
             print '[KO] %s' %(disassembly)

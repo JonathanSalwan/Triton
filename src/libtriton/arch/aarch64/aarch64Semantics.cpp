@@ -19,6 +19,9 @@
 
 Mnemonic                     | Description
 -----------------------------|------------
+ADD (extended register)      | Add (extended register)
+ADD (immediate)              | Add (immediate)
+ADD (shifted register)       | Add (shifted register)
 MOVZ                         | Move shifted 16-bit immediate to register
 
 */
@@ -50,6 +53,7 @@ namespace triton {
 
       bool AArch64Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
+          case ID_INS_ADD:       this->add_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           default:
             return false;
@@ -69,6 +73,29 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getParentRegister(ID_REG_AARCH64_PC), triton::engines::taint::UNTAINTED);
+      }
+
+
+      void AArch64Semantics::add_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvadd(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADD operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
