@@ -169,11 +169,11 @@ file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/os/unix/)
 set(EXTRACT_SYSCALL_SCRIPT ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py)
 
 macro(gen_syscall bits)
-    LIST(GET syscalls${bits}_table_files 0 syscalls${bits}_table_file)
     # If the unistd_64.h or syscall.h is not found, we exit
-    if(NOT EXISTS ${syscalls${bits}_table_file})
+    if(NOT syscalls${bits}_table_files)
         message(FATAL_ERROR "unistd_${bits}.h or syscall.h is missing")
     endif()
+    LIST(GET syscalls${bits}_table_files 0 syscalls${bits}_table_file)
 
     set(OUT_SYSCALL${bits} ${CMAKE_CURRENT_BINARY_DIR}/os/unix/syscalls${bits}.cpp)
 
