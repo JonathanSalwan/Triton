@@ -86,26 +86,26 @@ namespace triton {
     }
 
 
-    void AArch64OperandProperties::setExtendedSize(triton::uint32 size) {
+    void AArch64OperandProperties::setExtendedSize(triton::uint32 dstSize) {
       switch (this->extendType) {
         case triton::arch::aarch64::ID_EXTEND_SXTB:
         case triton::arch::aarch64::ID_EXTEND_UXTB:
-          this->extendSize = size - 8;
+          this->extendSize = dstSize - 8;
           break;
 
         case triton::arch::aarch64::ID_EXTEND_SXTH:
         case triton::arch::aarch64::ID_EXTEND_UXTH:
-          this->extendSize = size - 16;
+          this->extendSize = dstSize - 16;
           break;
 
         case triton::arch::aarch64::ID_EXTEND_SXTW:
         case triton::arch::aarch64::ID_EXTEND_UXTW:
-          this->extendSize = size - 32;
+          this->extendSize = dstSize - 32;
           break;
 
         case triton::arch::aarch64::ID_EXTEND_SXTX:
         case triton::arch::aarch64::ID_EXTEND_UXTX:
-          this->extendSize = size - 64;
+          this->extendSize = dstSize - 64;
           break;
 
         default:
@@ -115,7 +115,7 @@ namespace triton {
       if (this->extendSize > 64)
         throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendedSize(): invalid size of extension (integer overflow).");
 
-      if (size != 8 && size != 16 && size != 32 && size != 64)
+      if (dstSize != 8 && dstSize != 16 && dstSize != 32 && dstSize != 64)
         throw triton::exceptions::AArch64OperandProperties("AArch64OperandProperties::setExtendedSize(): size must be 8, 16, 32 or 64.");
     }
 

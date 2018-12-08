@@ -78,7 +78,7 @@ namespace triton {
         TRITON_EXPORT void setExtendType(triton::arch::aarch64::extend_e type);
 
         //! Sets the extended size (in bits) after extension.
-        TRITON_EXPORT void setExtendedSize(triton::uint32 size);
+        TRITON_EXPORT void setExtendedSize(triton::uint32 dstSize);
 
         //! Copy an AArch64OperandProperties.
         TRITON_EXPORT AArch64OperandProperties& operator=(const AArch64OperandProperties& other);
