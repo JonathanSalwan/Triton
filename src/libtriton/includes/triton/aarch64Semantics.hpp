@@ -84,6 +84,9 @@ namespace triton {
           //! The AND semantics.
           void and_s(triton::arch::Instruction& inst);
 
+          //! The ASR semantics.
+          void asr_s(triton::arch::Instruction& inst);
+
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
       };
