@@ -62,6 +62,10 @@ CODE  = [
     ("\x20\x58\x61\x91", "add x0, x1, #2134, lsl #12"),
     ("\x20\x00\x02\x9a", "adc x0, x1, x2"),
     ("\x20\x00\x02\x1a", "adc w0, w1, w2"),
+    ("\x20\x1a\x09\x30", "adr x0, #0x12345"),
+    ("\xe1\xff\x7f\x70", "adr x1, #0xfffff"),
+    ("\xc1\x7c\x00\xd0", "adrp x1, #0xf9a000"),
+    ("\x41\x0c\x00\xf0", "adrp x1, #0x18b000"),
 ]
 
 def emu_with_unicorn(opcode, istate=None):

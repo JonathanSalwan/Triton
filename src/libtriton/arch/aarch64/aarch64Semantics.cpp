@@ -23,6 +23,8 @@ ADC                          | Add with Carry
 ADD (extended register)      | Add (extended register)
 ADD (immediate)              | Add (immediate)
 ADD (shifted register)       | Add (shifted register)
+ADR                          | Form PC-relative address
+ADRP                         | Form PC-relative address to 4KB page
 MOVZ                         | Move shifted 16-bit immediate to register
 
 */
@@ -56,6 +58,8 @@ namespace triton {
         switch (inst.getType()) {
           case ID_INS_ADC:       this->adc_s(inst);           break;
           case ID_INS_ADD:       this->add_s(inst);           break;
+          case ID_INS_ADR:       this->adr_s(inst);           break;
+          case ID_INS_ADRP:      this->adrp_s(inst);          break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           default:
             return false;
@@ -120,6 +124,52 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::adr_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+        auto  pc  = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_AARCH64_PC));
+
+        /*
+         * Note: Capstone already encodes the result into the source operand. We don't have
+         * to compute the add operation but do we lose the symbolic?
+         */
+        /* Create symbolic semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(pc));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::adrp_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+        auto  pc  = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_AARCH64_PC));
+
+        /*
+         * Note: Capstone already encodes the result into the source operand. We don't have
+         * to compute the add operation but do we lose the symbolic?
+         */
+        /* Create symbolic semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADRP operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(pc));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
