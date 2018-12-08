@@ -270,14 +270,14 @@ Creates a `bvand` node.<br>
 e.g: `(bvand expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvashr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvashr` node.<br>
+Creates a `bvashr` node (arithmetic shift right).<br>
 e.g: `(bvashr expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvfalse(void)</b><br>
 This is an alias on the `(_ bv0 1)` ast expression.
 
 - <b>\ref py_AstNode_page bvlshr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvlshr` node.<br>
+Creates a `bvlshr` node (logical shift right).<br>
 e.g: `(lshr expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvmul(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -305,11 +305,11 @@ Creates a `bvor` node.<br>
 e.g: `(bvor expr1 expr2)`.
 
 - <b>\ref py_AstNode_page bvror(integer displacement, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvror` node.<br>
+Creates a `bvror` node (rotate right).<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
 - <b>\ref py_AstNode_page bvrol(integer displacement, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvrol` node.<br>
+Creates a `bvrol` node (rotate left).<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
 - <b>\ref py_AstNode_page bvsdiv(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -325,7 +325,7 @@ Creates a `bvsgt` node.<br>
 e.g: `(bvsgt expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvshl(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a Bvshl node.<br>
+Creates a Bvshl node (shift left).<br>
 e.g: `(bvshl expr1 expr2)`.
 
 - <b>\ref py_AstNode_page bvsle(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -337,11 +337,11 @@ Creates a `bvslt` node.<br>
 e.g: `(bvslt expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvsmod(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvsmod` node.<br>
+Creates a `bvsmod` node (2's complement signed remainder, sign follows divisor).<br>
 e.g: `(bvsmod expr1 expr2)`.
 
 - <b>\ref py_AstNode_page bvsrem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvsrem` node.<br>
+Creates a `bvsrem` node (2's complement signed remainder, sign follows dividend).<br>
 e.g: `(bvsrem expr1 expr2)`.
 
 - <b>\ref py_AstNode_page bvsub(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -372,7 +372,7 @@ Creates a `bvult` node.<br>
 e.g: `(bvult expr1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvurem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
-Creates a `bvurem` node.<br>
+Creates a `bvurem` node (unsigned remainder).<br>
 e.g: `(bvurem expr1 expr2)`.
 
 - <b>\ref py_AstNode_page bvxnor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -402,7 +402,7 @@ Creates an `extract` node. The `high` and `low` fields represent the bits positi
 e.g: `((_ extract high low) expr1)`.
 
 - <b>\ref py_AstNode_page ite(\ref py_AstNode_page ifExpr, \ref py_AstNode_page thenExpr, \ref py_AstNode_page elseExpr)</b><br>
-Creates an `ite` node.<br>
+Creates an `ite` node (if-then-else node).<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
 - <b>\ref py_AstNode_page land([\ref py_AstNode_page expr ...])</b><br>
