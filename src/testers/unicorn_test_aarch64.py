@@ -60,6 +60,8 @@ CODE  = [
     ("\x20\x88\x19\x91", "add x0, x1, #1634"),
     ("\x20\x58\x21\x91", "add x0, x1, #2134"),
     ("\x20\x58\x61\x91", "add x0, x1, #2134, lsl #12"),
+    ("\x20\x00\x02\x9a", "adc x0, x1, x2"),
+    ("\x20\x00\x02\x1a", "adc w0, w1, w2"),
 ]
 
 def emu_with_unicorn(opcode, istate=None):

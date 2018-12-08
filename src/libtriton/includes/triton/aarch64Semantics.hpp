@@ -69,6 +69,9 @@ namespace triton {
           //! Control flow semantics. Used to represent PC.
           void controlFlow_s(triton::arch::Instruction& inst);
 
+          //! The ADC semantics.
+          void adc_s(triton::arch::Instruction& inst);
+
           //! The ADD semantics.
           void add_s(triton::arch::Instruction& inst);
 

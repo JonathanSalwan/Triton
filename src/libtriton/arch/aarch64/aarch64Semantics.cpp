@@ -19,6 +19,7 @@
 
 Mnemonic                     | Description
 -----------------------------|------------
+ADC                          | Add with Carry
 ADD (extended register)      | Add (extended register)
 ADD (immediate)              | Add (immediate)
 ADD (shifted register)       | Add (shifted register)
@@ -53,6 +54,7 @@ namespace triton {
 
       bool AArch64Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
+          case ID_INS_ADC:       this->adc_s(inst);           break;
           case ID_INS_ADD:       this->add_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           default:
@@ -73,6 +75,31 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getParentRegister(ID_REG_AARCH64_PC), triton::engines::taint::UNTAINTED);
+      }
+
+
+      void AArch64Semantics::adc_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C));
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, cf);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvadd(this->astCtxt.bvadd(op1, op2), this->astCtxt.zx(dst.getBitSize()-1, op3));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ADC operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
