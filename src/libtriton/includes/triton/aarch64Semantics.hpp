@@ -89,6 +89,9 @@ namespace triton {
 
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
+
+          //! The SUB semantics.
+          void sub_s(triton::arch::Instruction& inst);
       };
 
     /*! @} End of aarch64 namespace */
