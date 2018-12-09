@@ -26,15 +26,16 @@ ADD (shifted register)       | Add (shifted register)
 ADR                          | Form PC-relative address
 ADRP                         | Form PC-relative address to 4KB page
 AND (immediate)              | Bitwise AND (immediate).
-AND (shifted register)       | Bitwise AND (shifted register).
+AND (shifted register)       | Bitwise AND (shifted register)
 ASR (immediate)              | Arithmetic Shift Right (immediate): an alias of SBFM
 ASR (register)               | Arithmetic Shift Right (register): an alias of ASRV
-EOR (immediate)              | Bitwise Exclusive OR (immediate).
-EOR (shifted register)       | Bitwise Exclusive OR (shifted register).
+EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
+EOR (immediate)              | Bitwise Exclusive OR (immediate)
+EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
 MOVZ                         | Move shifted 16-bit immediate to register
-SUB (extended register)      | Subtract (extended register).
-SUB (immediate)              | Subtract (immediate).
-SUB (shifted register)       | Subtract (shifted register).
+SUB (extended register)      | Subtract (extended register)
+SUB (immediate)              | Subtract (immediate)
+SUB (shifted register)       | Subtract (shifted register)
 
 */
 
@@ -71,6 +72,7 @@ namespace triton {
           case ID_INS_ADRP:      this->adrp_s(inst);          break;
           case ID_INS_AND:       this->and_s(inst);           break;
           case ID_INS_ASR:       this->asr_s(inst);           break;
+          case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -226,6 +228,29 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ASR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::eon_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvxnor(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "EON operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
