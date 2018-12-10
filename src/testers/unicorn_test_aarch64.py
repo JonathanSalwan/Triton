@@ -159,6 +159,10 @@ CODE  = [
     ("\x20\x84\xa2\xca", "eon x0, x1, x2, asr #33"),
     ("\x20\x88\xa2\xca", "eon x0, x1, x2, asr #34"),
     ("\x20\x88\xa2\xca", "eon x0, x1, x2, asr #34"),
+    ("\x20\x00\x22\xaa", "orn x0, x1, x2"),
+    ("\x40\x00\x21\xaa", "orn x0, x2, x1"),
+    ("\x41\x00\x20\xaa", "orn x1, x2, x0"),
+    ("\x01\x00\x22\xaa", "orn x1, x0, x2"),
 ]
 
 def emu_with_unicorn(opcode, istate=None):

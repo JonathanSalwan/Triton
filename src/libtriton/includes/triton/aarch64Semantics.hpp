@@ -96,6 +96,9 @@ namespace triton {
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
 
+          //! The ORN semantics.
+          void orn_s(triton::arch::Instruction& inst);
+
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
       };

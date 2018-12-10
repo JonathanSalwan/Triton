@@ -33,6 +33,7 @@ EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)              | Bitwise Exclusive OR (immediate)
 EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
 MOVZ                         | Move shifted 16-bit immediate to register
+ORN                          | Bitwise OR NOT (shifted register)
 SUB (extended register)      | Subtract (extended register)
 SUB (immediate)              | Subtract (immediate)
 SUB (shifted register)       | Subtract (shifted register)
@@ -75,6 +76,7 @@ namespace triton {
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
+          case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
           default:
             return false;
@@ -295,6 +297,29 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::orn_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvor(op1, this->astCtxt.bvnot(op2));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ORN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
