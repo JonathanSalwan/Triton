@@ -42,7 +42,8 @@ namespace triton {
 
 
     MemoryAccess::MemoryAccess(const MemoryAccess& other)
-      : BitsVector(other) {
+      : BitsVector(other),
+        AArch64OperandProperties(other) {
       this->copy(other);
     }
 
@@ -175,6 +176,7 @@ namespace triton {
 
 
     MemoryAccess& MemoryAccess::operator=(const MemoryAccess& other) {
+      AArch64OperandProperties::operator=(other);
       BitsVector::operator=(other);
       this->copy(other);
       return *this;

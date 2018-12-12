@@ -25,7 +25,7 @@ namespace triton {
 
 
     Immediate::Immediate(const Immediate& other)
-      : BitsVector(other) {
+      : BitsVector(other), AArch64OperandProperties(other) {
       this->copy(other);
     }
 
@@ -86,6 +86,7 @@ namespace triton {
 
 
     Immediate& Immediate::operator=(const Immediate& other) {
+      AArch64OperandProperties::operator=(other);
       BitsVector::operator=(other);
       this->copy(other);
       return *this;

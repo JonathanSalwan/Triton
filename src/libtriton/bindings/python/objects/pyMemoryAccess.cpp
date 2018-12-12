@@ -120,6 +120,14 @@ Returns the scale (if exists) of the  memory access.
 Returns the segment register (if exists) of the memory access. Note that to be user-friendly, the
 segment register is used as base register and not as a selector into the GDT.<br>
 
+- <b>\ref py_SHIFT_page  getShiftType(void)</b><br>
+Returns the shift type of the operand. Mainly used for AArch64.<br>
+e.g: `SHIFT.AARCH64.LSL`
+
+- <b>integer getShiftValue(void)</b><br>
+Returns the shift value of the operand. Mainly used for AArch64.<br>
+e.g: `2`
+
 - <b>integer getSize(void)</b><br>
 Returns the size (in bytes) of the  memory access.<br>
 e.g: `8`
@@ -250,6 +258,26 @@ namespace triton {
         try {
           triton::arch::Register reg(PyMemoryAccess_AsMemoryAccess(self)->getSegmentRegister());
           return PyRegister(reg);
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* MemoryAccess_getShiftType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyMemoryAccess_AsMemoryAccess(self)->getShiftType());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* MemoryAccess_getShiftValue(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyMemoryAccess_AsMemoryAccess(self)->getShiftValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -414,6 +442,8 @@ namespace triton {
         {"getLeaAst",           MemoryAccess_getLeaAst,          METH_NOARGS,      ""},
         {"getScale",            MemoryAccess_getScale,           METH_NOARGS,      ""},
         {"getSegmentRegister",  MemoryAccess_getSegmentRegister, METH_NOARGS,      ""},
+        {"getShiftType",        MemoryAccess_getShiftType,       METH_NOARGS,      ""},
+        {"getShiftValue",       MemoryAccess_getShiftValue,      METH_NOARGS,      ""},
         {"getSize",             MemoryAccess_getSize,            METH_NOARGS,      ""},
         {"getType",             MemoryAccess_getType,            METH_NOARGS,      ""},
         {"isOverlapWith",       MemoryAccess_isOverlapWith,      METH_O,           ""},

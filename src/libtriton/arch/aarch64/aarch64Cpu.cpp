@@ -274,6 +274,11 @@ namespace triton {
 
                 case triton::extlibs::capstone::ARM64_OP_IMM: {
                   triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
+
+                  /* Set Shift type and value */
+                  imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  imm.setShiftValue(op->shift.value);
+
                   inst.operands.push_back(triton::arch::OperandWrapper(imm));
                   break;
                 }
@@ -309,6 +314,10 @@ namespace triton {
                   /* If there is an index register available, set scale to 1 to perform this following computation (base) + (index * scale) */
                   if (this->isRegisterValid(index.getId()))
                     mem.setScale(triton::arch::Immediate(1, index.getSize()));
+
+                  /* Set Shift type and value */
+                  mem.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  mem.setShiftValue(op->shift.value);
 
                   inst.operands.push_back(triton::arch::OperandWrapper(mem));
                   break;

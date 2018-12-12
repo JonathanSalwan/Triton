@@ -711,6 +711,12 @@ namespace triton {
       /* Returns the AST corresponding to the immediate */
       triton::ast::SharedAbstractNode SymbolicEngine::getImmediateAst(const triton::arch::Immediate& imm) {
         triton::ast::SharedAbstractNode node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
+
+        /* Shift AST if it's a shift operand */
+        /* FIXME: What about if there exist also a EXTEND operand? What order should do this? */
+        if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+          return this->getShiftAst(imm.getShiftType(), imm.getShiftValue(), node);
+
         return node;
       }
 
@@ -741,6 +747,11 @@ namespace triton {
          */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
           triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
+
+          /* Shift AST if it's a shift operand */
+          if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+            return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), anode);
+
           return anode;
         }
 
@@ -774,6 +785,10 @@ namespace triton {
             tmp = opVec.front();
             break;
         }
+
+        /* Shift AST if it's a shift operand */
+        if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+          return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), tmp);
 
         return tmp;
       }
