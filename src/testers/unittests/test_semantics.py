@@ -306,3 +306,76 @@ class TestCustomIR(unittest.TestCase):
         rsp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
         self.assertTrue(ctx.isSat(rsp_new == rsp_old + 8))
 
+    def test_ldr1_aarch64(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.AARCH64)
+
+        inst = Instruction("\x27\x44\x40\xf8") # ldr x7, [x1], #4
+        ctx.processing(inst)
+
+        found = False
+        for r, _ in inst.getReadRegisters():
+            if r.getName() == 'x1':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'x1':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'x7':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'pc':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for m, _ in inst.getLoadAccess():
+            if m.getBaseRegister().getName() == 'x1':
+                found = True
+        self.assertTrue(found)
+
+    def test_ldr2_aarch64(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.AARCH64)
+
+        inst = Instruction("\x27\x00\x40\xf9") # ldr x7, [x1]
+        ctx.processing(inst)
+
+        found = False
+        for r, _ in inst.getReadRegisters():
+            if r.getName() == 'x1':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'x1':
+                found = True
+        self.assertTrue(found == False)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'x7':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for r, _ in inst.getWrittenRegisters():
+            if r.getName() == 'pc':
+                found = True
+        self.assertTrue(found)
+
+        found = False
+        for m, _ in inst.getLoadAccess():
+            if m.getBaseRegister().getName() == 'x1':
+                found = True
+        self.assertTrue(found)

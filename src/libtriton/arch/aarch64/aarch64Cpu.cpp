@@ -311,6 +311,10 @@ namespace triton {
                   mem.setIndexRegister(index);
                   mem.setDisplacement(disp);
 
+                  /* If there is an index register available, set scale to 1 to perform this following computation (base) + (index * scale) */
+                  if (this->isRegisterValid(index.getId()))
+                    mem.setScale(triton::arch::Immediate(1, index.getSize()));
+
                   /* Set Shift type and value */
                   mem.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
                   mem.setShiftValue(op->shift.value);
