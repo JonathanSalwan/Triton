@@ -34,7 +34,7 @@ namespace triton {
     /*! \class Immediate
      *  \brief This class is used to represent an immediate.
      */
-    class Immediate : public BitsVector, public AArch64OperandProperties {
+    class Immediate : public BitsVector {
       protected:
         //! The value of the operand.
         triton::uint64 value;

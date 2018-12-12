@@ -80,14 +80,6 @@ e.g: `64`
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
 Returns the bitvector.
 
-- <b>\ref py_SHIFT_page getShiftType(void)</b><br>
-Returns the shift type of the operand. Mainly used for AArch64.<br>
-e.g: `SHIFT.AARCH64.LSL`
-
-- <b>integer getShiftValue(void)</b><br>
-Returns the shift value of the operand. Mainly used for AArch64.<br>
-e.g: `2`
-
 - <b>integer getSize(void)</b><br>
 Returns the size (in bytes) of the immediate.<br>
 e.g: `8`
@@ -130,26 +122,6 @@ namespace triton {
       static PyObject* Immediate_getBitSize(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyImmediate_AsImmediate(self)->getBitSize());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Immediate_getShiftType(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PyImmediate_AsImmediate(self)->getShiftType());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* Immediate_getShiftValue(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint64(PyImmediate_AsImmediate(self)->getShiftValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -233,8 +205,6 @@ namespace triton {
       PyMethodDef Immediate_callbacks[] = {
         {"getBitSize",    Immediate_getBitSize,     METH_NOARGS,     ""},
         {"getBitvector",  Immediate_getBitvector,   METH_NOARGS,     ""},
-        {"getShiftType",  Immediate_getShiftType,   METH_NOARGS,     ""},
-        {"getShiftValue", Immediate_getShiftValue,  METH_NOARGS,     ""},
         {"getSize",       Immediate_getSize,        METH_NOARGS,     ""},
         {"getType",       Immediate_getType,        METH_NOARGS,     ""},
         {"getValue",      Immediate_getValue,       METH_NOARGS,     ""},
