@@ -1,8 +1,5 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
-##
-## TODO : Check memory
-##
 
 import sys
 import pprint
@@ -13,7 +10,8 @@ from unicorn.arm64_const import *
 
 ADDR  = 0x100000
 STACK = 0x200000
-SIZE  = 3 * 1024 * 1024
+HEAP  = 0x300000
+SIZE  = 5 * 1024 * 1024
 CODE  = [
     ("\x80\x46\x82\xd2", "movz x0, #0x1234"),
     ("\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
@@ -173,7 +171,7 @@ CODE  = [
     ("\x20\x0c\xe2\xaa", "orn x0, x1, x2, ror #3"),
 ]
 
-def emu_with_unicorn(opcode, istate=None):
+def emu_with_unicorn(opcode, istate):
     # Initialize emulator in X86-32bit mode
     mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
 
@@ -183,188 +181,235 @@ def emu_with_unicorn(opcode, istate=None):
     # write machine code to be emulated to memory
     mu.mem_write(ADDR, opcode)
 
-    if istate:
-        mu.reg_write(UC_ARM64_REG_X0,   istate['x0'])
-        mu.reg_write(UC_ARM64_REG_X1,   istate['x1'])
-        mu.reg_write(UC_ARM64_REG_X2,   istate['x2'])
-        mu.reg_write(UC_ARM64_REG_X3,   istate['x3'])
-        mu.reg_write(UC_ARM64_REG_X4,   istate['x4'])
-        mu.reg_write(UC_ARM64_REG_X5,   istate['x5'])
-        mu.reg_write(UC_ARM64_REG_X6,   istate['x6'])
-        mu.reg_write(UC_ARM64_REG_X7,   istate['x7'])
-        mu.reg_write(UC_ARM64_REG_X8,   istate['x8'])
-        mu.reg_write(UC_ARM64_REG_X9,   istate['x9'])
-        mu.reg_write(UC_ARM64_REG_X10,  istate['x10'])
-        mu.reg_write(UC_ARM64_REG_X11,  istate['x11'])
-        mu.reg_write(UC_ARM64_REG_X12,  istate['x12'])
-        mu.reg_write(UC_ARM64_REG_X13,  istate['x13'])
-        mu.reg_write(UC_ARM64_REG_X14,  istate['x14'])
-        mu.reg_write(UC_ARM64_REG_X15,  istate['x15'])
-        mu.reg_write(UC_ARM64_REG_X16,  istate['x16'])
-        mu.reg_write(UC_ARM64_REG_X17,  istate['x17'])
-        mu.reg_write(UC_ARM64_REG_X18,  istate['x18'])
-        mu.reg_write(UC_ARM64_REG_X19,  istate['x19'])
-        mu.reg_write(UC_ARM64_REG_X20,  istate['x20'])
-        mu.reg_write(UC_ARM64_REG_X21,  istate['x21'])
-        mu.reg_write(UC_ARM64_REG_X22,  istate['x22'])
-        mu.reg_write(UC_ARM64_REG_X23,  istate['x23'])
-        mu.reg_write(UC_ARM64_REG_X24,  istate['x24'])
-        mu.reg_write(UC_ARM64_REG_X25,  istate['x25'])
-        mu.reg_write(UC_ARM64_REG_X26,  istate['x26'])
-        mu.reg_write(UC_ARM64_REG_X27,  istate['x27'])
-        mu.reg_write(UC_ARM64_REG_X28,  istate['x28'])
-        mu.reg_write(UC_ARM64_REG_X29,  istate['x29'])
-        mu.reg_write(UC_ARM64_REG_X30,  istate['x30'])
-        mu.reg_write(UC_ARM64_REG_PC,   istate['pc'])
-        mu.reg_write(UC_ARM64_REG_SP,   istate['sp'])
-        mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28)
-    else:
-        ## Why it's set at the first inst? Dunno...
-        mu.reg_write(UC_ARM64_REG_NZCV, 0)
+    mu.mem_write(STACK,             bytes(istate['stack']))
+    mu.mem_write(HEAP,              bytes(istate['heap']))
+    mu.reg_write(UC_ARM64_REG_X0,   istate['x0'])
+    mu.reg_write(UC_ARM64_REG_X1,   istate['x1'])
+    mu.reg_write(UC_ARM64_REG_X2,   istate['x2'])
+    mu.reg_write(UC_ARM64_REG_X3,   istate['x3'])
+    mu.reg_write(UC_ARM64_REG_X4,   istate['x4'])
+    mu.reg_write(UC_ARM64_REG_X5,   istate['x5'])
+    mu.reg_write(UC_ARM64_REG_X6,   istate['x6'])
+    mu.reg_write(UC_ARM64_REG_X7,   istate['x7'])
+    mu.reg_write(UC_ARM64_REG_X8,   istate['x8'])
+    mu.reg_write(UC_ARM64_REG_X9,   istate['x9'])
+    mu.reg_write(UC_ARM64_REG_X10,  istate['x10'])
+    mu.reg_write(UC_ARM64_REG_X11,  istate['x11'])
+    mu.reg_write(UC_ARM64_REG_X12,  istate['x12'])
+    mu.reg_write(UC_ARM64_REG_X13,  istate['x13'])
+    mu.reg_write(UC_ARM64_REG_X14,  istate['x14'])
+    mu.reg_write(UC_ARM64_REG_X15,  istate['x15'])
+    mu.reg_write(UC_ARM64_REG_X16,  istate['x16'])
+    mu.reg_write(UC_ARM64_REG_X17,  istate['x17'])
+    mu.reg_write(UC_ARM64_REG_X18,  istate['x18'])
+    mu.reg_write(UC_ARM64_REG_X19,  istate['x19'])
+    mu.reg_write(UC_ARM64_REG_X20,  istate['x20'])
+    mu.reg_write(UC_ARM64_REG_X21,  istate['x21'])
+    mu.reg_write(UC_ARM64_REG_X22,  istate['x22'])
+    mu.reg_write(UC_ARM64_REG_X23,  istate['x23'])
+    mu.reg_write(UC_ARM64_REG_X24,  istate['x24'])
+    mu.reg_write(UC_ARM64_REG_X25,  istate['x25'])
+    mu.reg_write(UC_ARM64_REG_X26,  istate['x26'])
+    mu.reg_write(UC_ARM64_REG_X27,  istate['x27'])
+    mu.reg_write(UC_ARM64_REG_X28,  istate['x28'])
+    mu.reg_write(UC_ARM64_REG_X29,  istate['x29'])
+    mu.reg_write(UC_ARM64_REG_X30,  istate['x30'])
+    mu.reg_write(UC_ARM64_REG_PC,   istate['pc'])
+    mu.reg_write(UC_ARM64_REG_SP,   istate['sp'])
+    mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28)
 
     # emulate code in infinite time & unlimited instructions
     mu.emu_start(ADDR, ADDR + len(opcode))
 
     ostate = {
-        "x0":  mu.reg_read(UC_ARM64_REG_X0),
-        "x1":  mu.reg_read(UC_ARM64_REG_X1),
-        "x2":  mu.reg_read(UC_ARM64_REG_X2),
-        "x3":  mu.reg_read(UC_ARM64_REG_X3),
-        "x4":  mu.reg_read(UC_ARM64_REG_X4),
-        "x5":  mu.reg_read(UC_ARM64_REG_X5),
-        "x6":  mu.reg_read(UC_ARM64_REG_X6),
-        "x7":  mu.reg_read(UC_ARM64_REG_X7),
-        "x8":  mu.reg_read(UC_ARM64_REG_X8),
-        "x9":  mu.reg_read(UC_ARM64_REG_X9),
-        "x10": mu.reg_read(UC_ARM64_REG_X10),
-        "x11": mu.reg_read(UC_ARM64_REG_X11),
-        "x12": mu.reg_read(UC_ARM64_REG_X12),
-        "x13": mu.reg_read(UC_ARM64_REG_X13),
-        "x14": mu.reg_read(UC_ARM64_REG_X14),
-        "x15": mu.reg_read(UC_ARM64_REG_X15),
-        "x16": mu.reg_read(UC_ARM64_REG_X16),
-        "x17": mu.reg_read(UC_ARM64_REG_X17),
-        "x18": mu.reg_read(UC_ARM64_REG_X18),
-        "x19": mu.reg_read(UC_ARM64_REG_X19),
-        "x20": mu.reg_read(UC_ARM64_REG_X20),
-        "x21": mu.reg_read(UC_ARM64_REG_X21),
-        "x22": mu.reg_read(UC_ARM64_REG_X22),
-        "x23": mu.reg_read(UC_ARM64_REG_X23),
-        "x24": mu.reg_read(UC_ARM64_REG_X24),
-        "x25": mu.reg_read(UC_ARM64_REG_X25),
-        "x26": mu.reg_read(UC_ARM64_REG_X26),
-        "x27": mu.reg_read(UC_ARM64_REG_X27),
-        "x28": mu.reg_read(UC_ARM64_REG_X28),
-        "x29": mu.reg_read(UC_ARM64_REG_X29),
-        "x30": mu.reg_read(UC_ARM64_REG_X30),
-        "x30": mu.reg_read(UC_ARM64_REG_X30),
-        "pc":  mu.reg_read(UC_ARM64_REG_PC),
-        "sp":  mu.reg_read(UC_ARM64_REG_SP),
-        "n": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 31) & 1),
-        "z": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 30) & 1),
-        "c": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 29) & 1),
-        "v": ((mu.reg_read(UC_ARM64_REG_NZCV) >> 28) & 1),
+        "stack": mu.mem_read(STACK, 0x100),
+        "heap":  mu.mem_read(HEAP, 0x100),
+        "x0":    mu.reg_read(UC_ARM64_REG_X0),
+        "x1":    mu.reg_read(UC_ARM64_REG_X1),
+        "x2":    mu.reg_read(UC_ARM64_REG_X2),
+        "x3":    mu.reg_read(UC_ARM64_REG_X3),
+        "x4":    mu.reg_read(UC_ARM64_REG_X4),
+        "x5":    mu.reg_read(UC_ARM64_REG_X5),
+        "x6":    mu.reg_read(UC_ARM64_REG_X6),
+        "x7":    mu.reg_read(UC_ARM64_REG_X7),
+        "x8":    mu.reg_read(UC_ARM64_REG_X8),
+        "x9":    mu.reg_read(UC_ARM64_REG_X9),
+        "x10":   mu.reg_read(UC_ARM64_REG_X10),
+        "x11":   mu.reg_read(UC_ARM64_REG_X11),
+        "x12":   mu.reg_read(UC_ARM64_REG_X12),
+        "x13":   mu.reg_read(UC_ARM64_REG_X13),
+        "x14":   mu.reg_read(UC_ARM64_REG_X14),
+        "x15":   mu.reg_read(UC_ARM64_REG_X15),
+        "x16":   mu.reg_read(UC_ARM64_REG_X16),
+        "x17":   mu.reg_read(UC_ARM64_REG_X17),
+        "x18":   mu.reg_read(UC_ARM64_REG_X18),
+        "x19":   mu.reg_read(UC_ARM64_REG_X19),
+        "x20":   mu.reg_read(UC_ARM64_REG_X20),
+        "x21":   mu.reg_read(UC_ARM64_REG_X21),
+        "x22":   mu.reg_read(UC_ARM64_REG_X22),
+        "x23":   mu.reg_read(UC_ARM64_REG_X23),
+        "x24":   mu.reg_read(UC_ARM64_REG_X24),
+        "x25":   mu.reg_read(UC_ARM64_REG_X25),
+        "x26":   mu.reg_read(UC_ARM64_REG_X26),
+        "x27":   mu.reg_read(UC_ARM64_REG_X27),
+        "x28":   mu.reg_read(UC_ARM64_REG_X28),
+        "x29":   mu.reg_read(UC_ARM64_REG_X29),
+        "x30":   mu.reg_read(UC_ARM64_REG_X30),
+        "x30":   mu.reg_read(UC_ARM64_REG_X30),
+        "pc":    mu.reg_read(UC_ARM64_REG_PC),
+        "sp":    mu.reg_read(UC_ARM64_REG_SP),
+        "n":   ((mu.reg_read(UC_ARM64_REG_NZCV) >> 31) & 1),
+        "z":   ((mu.reg_read(UC_ARM64_REG_NZCV) >> 30) & 1),
+        "c":   ((mu.reg_read(UC_ARM64_REG_NZCV) >> 29) & 1),
+        "v":   ((mu.reg_read(UC_ARM64_REG_NZCV) >> 28) & 1),
     }
     return ostate
 
-def emu_with_triton(opcode, istate=None):
+def emu_with_triton(opcode, istate):
     ctx = TritonContext()
     ctx.setArchitecture(ARCH.AARCH64)
 
     inst = Instruction(opcode)
     inst.setAddress(ADDR)
 
-    if istate:
-        ctx.setConcreteRegisterValue(ctx.registers.x0,  istate['x0'])
-        ctx.setConcreteRegisterValue(ctx.registers.x1,  istate['x1'])
-        ctx.setConcreteRegisterValue(ctx.registers.x2,  istate['x2'])
-        ctx.setConcreteRegisterValue(ctx.registers.x3,  istate['x3'])
-        ctx.setConcreteRegisterValue(ctx.registers.x4,  istate['x4'])
-        ctx.setConcreteRegisterValue(ctx.registers.x5,  istate['x5'])
-        ctx.setConcreteRegisterValue(ctx.registers.x6,  istate['x6'])
-        ctx.setConcreteRegisterValue(ctx.registers.x7,  istate['x7'])
-        ctx.setConcreteRegisterValue(ctx.registers.x8,  istate['x8'])
-        ctx.setConcreteRegisterValue(ctx.registers.x9,  istate['x9'])
-        ctx.setConcreteRegisterValue(ctx.registers.x10, istate['x10'])
-        ctx.setConcreteRegisterValue(ctx.registers.x11, istate['x11'])
-        ctx.setConcreteRegisterValue(ctx.registers.x12, istate['x12'])
-        ctx.setConcreteRegisterValue(ctx.registers.x13, istate['x13'])
-        ctx.setConcreteRegisterValue(ctx.registers.x14, istate['x14'])
-        ctx.setConcreteRegisterValue(ctx.registers.x15, istate['x15'])
-        ctx.setConcreteRegisterValue(ctx.registers.x16, istate['x16'])
-        ctx.setConcreteRegisterValue(ctx.registers.x17, istate['x17'])
-        ctx.setConcreteRegisterValue(ctx.registers.x18, istate['x18'])
-        ctx.setConcreteRegisterValue(ctx.registers.x19, istate['x19'])
-        ctx.setConcreteRegisterValue(ctx.registers.x20, istate['x20'])
-        ctx.setConcreteRegisterValue(ctx.registers.x21, istate['x21'])
-        ctx.setConcreteRegisterValue(ctx.registers.x22, istate['x22'])
-        ctx.setConcreteRegisterValue(ctx.registers.x23, istate['x23'])
-        ctx.setConcreteRegisterValue(ctx.registers.x24, istate['x24'])
-        ctx.setConcreteRegisterValue(ctx.registers.x25, istate['x25'])
-        ctx.setConcreteRegisterValue(ctx.registers.x26, istate['x26'])
-        ctx.setConcreteRegisterValue(ctx.registers.x27, istate['x27'])
-        ctx.setConcreteRegisterValue(ctx.registers.x28, istate['x28'])
-        ctx.setConcreteRegisterValue(ctx.registers.x29, istate['x29'])
-        ctx.setConcreteRegisterValue(ctx.registers.x30, istate['x30'])
-        ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
-        ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
-        ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
-        ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
-        ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
-        ctx.setConcreteRegisterValue(ctx.registers.v,   istate['v'])
+    ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
+    ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
+    ctx.setConcreteRegisterValue(ctx.registers.x0,  istate['x0'])
+    ctx.setConcreteRegisterValue(ctx.registers.x1,  istate['x1'])
+    ctx.setConcreteRegisterValue(ctx.registers.x2,  istate['x2'])
+    ctx.setConcreteRegisterValue(ctx.registers.x3,  istate['x3'])
+    ctx.setConcreteRegisterValue(ctx.registers.x4,  istate['x4'])
+    ctx.setConcreteRegisterValue(ctx.registers.x5,  istate['x5'])
+    ctx.setConcreteRegisterValue(ctx.registers.x6,  istate['x6'])
+    ctx.setConcreteRegisterValue(ctx.registers.x7,  istate['x7'])
+    ctx.setConcreteRegisterValue(ctx.registers.x8,  istate['x8'])
+    ctx.setConcreteRegisterValue(ctx.registers.x9,  istate['x9'])
+    ctx.setConcreteRegisterValue(ctx.registers.x10, istate['x10'])
+    ctx.setConcreteRegisterValue(ctx.registers.x11, istate['x11'])
+    ctx.setConcreteRegisterValue(ctx.registers.x12, istate['x12'])
+    ctx.setConcreteRegisterValue(ctx.registers.x13, istate['x13'])
+    ctx.setConcreteRegisterValue(ctx.registers.x14, istate['x14'])
+    ctx.setConcreteRegisterValue(ctx.registers.x15, istate['x15'])
+    ctx.setConcreteRegisterValue(ctx.registers.x16, istate['x16'])
+    ctx.setConcreteRegisterValue(ctx.registers.x17, istate['x17'])
+    ctx.setConcreteRegisterValue(ctx.registers.x18, istate['x18'])
+    ctx.setConcreteRegisterValue(ctx.registers.x19, istate['x19'])
+    ctx.setConcreteRegisterValue(ctx.registers.x20, istate['x20'])
+    ctx.setConcreteRegisterValue(ctx.registers.x21, istate['x21'])
+    ctx.setConcreteRegisterValue(ctx.registers.x22, istate['x22'])
+    ctx.setConcreteRegisterValue(ctx.registers.x23, istate['x23'])
+    ctx.setConcreteRegisterValue(ctx.registers.x24, istate['x24'])
+    ctx.setConcreteRegisterValue(ctx.registers.x25, istate['x25'])
+    ctx.setConcreteRegisterValue(ctx.registers.x26, istate['x26'])
+    ctx.setConcreteRegisterValue(ctx.registers.x27, istate['x27'])
+    ctx.setConcreteRegisterValue(ctx.registers.x28, istate['x28'])
+    ctx.setConcreteRegisterValue(ctx.registers.x29, istate['x29'])
+    ctx.setConcreteRegisterValue(ctx.registers.x30, istate['x30'])
+    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
+    ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
+    ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
+    ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
+    ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
+    ctx.setConcreteRegisterValue(ctx.registers.v,   istate['v'])
 
     ctx.processing(inst)
 
     ostate = {
-        "x0":  ctx.getSymbolicRegisterValue(ctx.registers.x0),
-        "x1":  ctx.getSymbolicRegisterValue(ctx.registers.x1),
-        "x2":  ctx.getSymbolicRegisterValue(ctx.registers.x2),
-        "x3":  ctx.getSymbolicRegisterValue(ctx.registers.x3),
-        "x4":  ctx.getSymbolicRegisterValue(ctx.registers.x4),
-        "x5":  ctx.getSymbolicRegisterValue(ctx.registers.x5),
-        "x6":  ctx.getSymbolicRegisterValue(ctx.registers.x6),
-        "x7":  ctx.getSymbolicRegisterValue(ctx.registers.x7),
-        "x8":  ctx.getSymbolicRegisterValue(ctx.registers.x8),
-        "x9":  ctx.getSymbolicRegisterValue(ctx.registers.x9),
-        "x10": ctx.getSymbolicRegisterValue(ctx.registers.x10),
-        "x11": ctx.getSymbolicRegisterValue(ctx.registers.x11),
-        "x12": ctx.getSymbolicRegisterValue(ctx.registers.x12),
-        "x13": ctx.getSymbolicRegisterValue(ctx.registers.x13),
-        "x14": ctx.getSymbolicRegisterValue(ctx.registers.x14),
-        "x15": ctx.getSymbolicRegisterValue(ctx.registers.x15),
-        "x16": ctx.getSymbolicRegisterValue(ctx.registers.x16),
-        "x17": ctx.getSymbolicRegisterValue(ctx.registers.x17),
-        "x18": ctx.getSymbolicRegisterValue(ctx.registers.x18),
-        "x19": ctx.getSymbolicRegisterValue(ctx.registers.x19),
-        "x20": ctx.getSymbolicRegisterValue(ctx.registers.x20),
-        "x21": ctx.getSymbolicRegisterValue(ctx.registers.x21),
-        "x22": ctx.getSymbolicRegisterValue(ctx.registers.x22),
-        "x23": ctx.getSymbolicRegisterValue(ctx.registers.x23),
-        "x24": ctx.getSymbolicRegisterValue(ctx.registers.x24),
-        "x25": ctx.getSymbolicRegisterValue(ctx.registers.x25),
-        "x26": ctx.getSymbolicRegisterValue(ctx.registers.x26),
-        "x27": ctx.getSymbolicRegisterValue(ctx.registers.x27),
-        "x28": ctx.getSymbolicRegisterValue(ctx.registers.x28),
-        "x29": ctx.getSymbolicRegisterValue(ctx.registers.x29),
-        "x30": ctx.getSymbolicRegisterValue(ctx.registers.x30),
-        "x30": ctx.getSymbolicRegisterValue(ctx.registers.x30),
-        "pc":  ctx.getSymbolicRegisterValue(ctx.registers.pc),
-        "sp":  ctx.getSymbolicRegisterValue(ctx.registers.sp),
-        "n":   ctx.getSymbolicRegisterValue(ctx.registers.n),
-        "z":   ctx.getSymbolicRegisterValue(ctx.registers.z),
-        "c":   ctx.getSymbolicRegisterValue(ctx.registers.c),
-        "v":   ctx.getSymbolicRegisterValue(ctx.registers.v),
+        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
+        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "x0":    ctx.getSymbolicRegisterValue(ctx.registers.x0),
+        "x1":    ctx.getSymbolicRegisterValue(ctx.registers.x1),
+        "x2":    ctx.getSymbolicRegisterValue(ctx.registers.x2),
+        "x3":    ctx.getSymbolicRegisterValue(ctx.registers.x3),
+        "x4":    ctx.getSymbolicRegisterValue(ctx.registers.x4),
+        "x5":    ctx.getSymbolicRegisterValue(ctx.registers.x5),
+        "x6":    ctx.getSymbolicRegisterValue(ctx.registers.x6),
+        "x7":    ctx.getSymbolicRegisterValue(ctx.registers.x7),
+        "x8":    ctx.getSymbolicRegisterValue(ctx.registers.x8),
+        "x9":    ctx.getSymbolicRegisterValue(ctx.registers.x9),
+        "x10":   ctx.getSymbolicRegisterValue(ctx.registers.x10),
+        "x11":   ctx.getSymbolicRegisterValue(ctx.registers.x11),
+        "x12":   ctx.getSymbolicRegisterValue(ctx.registers.x12),
+        "x13":   ctx.getSymbolicRegisterValue(ctx.registers.x13),
+        "x14":   ctx.getSymbolicRegisterValue(ctx.registers.x14),
+        "x15":   ctx.getSymbolicRegisterValue(ctx.registers.x15),
+        "x16":   ctx.getSymbolicRegisterValue(ctx.registers.x16),
+        "x17":   ctx.getSymbolicRegisterValue(ctx.registers.x17),
+        "x18":   ctx.getSymbolicRegisterValue(ctx.registers.x18),
+        "x19":   ctx.getSymbolicRegisterValue(ctx.registers.x19),
+        "x20":   ctx.getSymbolicRegisterValue(ctx.registers.x20),
+        "x21":   ctx.getSymbolicRegisterValue(ctx.registers.x21),
+        "x22":   ctx.getSymbolicRegisterValue(ctx.registers.x22),
+        "x23":   ctx.getSymbolicRegisterValue(ctx.registers.x23),
+        "x24":   ctx.getSymbolicRegisterValue(ctx.registers.x24),
+        "x25":   ctx.getSymbolicRegisterValue(ctx.registers.x25),
+        "x26":   ctx.getSymbolicRegisterValue(ctx.registers.x26),
+        "x27":   ctx.getSymbolicRegisterValue(ctx.registers.x27),
+        "x28":   ctx.getSymbolicRegisterValue(ctx.registers.x28),
+        "x29":   ctx.getSymbolicRegisterValue(ctx.registers.x29),
+        "x30":   ctx.getSymbolicRegisterValue(ctx.registers.x30),
+        "x30":   ctx.getSymbolicRegisterValue(ctx.registers.x30),
+        "pc":    ctx.getSymbolicRegisterValue(ctx.registers.pc),
+        "sp":    ctx.getSymbolicRegisterValue(ctx.registers.sp),
+        "n":     ctx.getSymbolicRegisterValue(ctx.registers.n),
+        "z":     ctx.getSymbolicRegisterValue(ctx.registers.z),
+        "c":     ctx.getSymbolicRegisterValue(ctx.registers.c),
+        "v":     ctx.getSymbolicRegisterValue(ctx.registers.v),
     }
     return ostate
 
 def diff_state(state1, state2):
     for k, v in state1.items():
-        if v != state2[k]:
+        if (k == 'heap' or k == 'stack') and v != state2[k]:
+            print '\t%s: (UC) != (TT)' %(k)
+        elif not (k == 'heap' or k == 'stack') and v != state2[k]:
             print '\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k])
     return
 
 if __name__ == '__main__':
-    state = None
+    # initial state
+    state = {
+        "stack": [bytes(255 - i) for i in range(256)],
+        "heap":  [bytes(i) for i in range(256)],
+        "x0":    0,
+        "x1":    0,
+        "x2":    0,
+        "x3":    0,
+        "x4":    0,
+        "x5":    0,
+        "x6":    0,
+        "x7":    0,
+        "x8":    0,
+        "x9":    0,
+        "x10":   0,
+        "x11":   0,
+        "x12":   0,
+        "x13":   0,
+        "x14":   0,
+        "x15":   0,
+        "x16":   0,
+        "x17":   0,
+        "x18":   0,
+        "x19":   0,
+        "x20":   0,
+        "x21":   0,
+        "x22":   0,
+        "x23":   0,
+        "x24":   0,
+        "x25":   0,
+        "x26":   0,
+        "x27":   0,
+        "x28":   0,
+        "x29":   0,
+        "x30":   0,
+        "x30":   0,
+        "pc":    0,
+        "sp":    0,
+        "n":     0,
+        "z":     0,
+        "c":     0,
+        "v":     0,
+    }
 
     for opcode, disassembly in CODE:
         try:
