@@ -632,7 +632,6 @@ namespace triton {
 
 
       /* Returns the AST corresponding to the operand. */
-      // FIXME: Add shift operation for AArch64
       triton::ast::SharedAbstractNode SymbolicEngine::getOperandAst(const triton::arch::OperandWrapper& op) {
         switch (op.getType()) {
           case triton::arch::OP_IMM: return this->getImmediateAst(op.getConstImmediate());
@@ -713,7 +712,6 @@ namespace triton {
         triton::ast::SharedAbstractNode node = this->astCtxt.bv(imm.getValue(), imm.getBitSize());
 
         /* Shift AST if it's a shift operand */
-        /* FIXME: What about if there exist also a EXTEND operand? What order should do this? */
         if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
           return this->getShiftAst(imm.getShiftType(), imm.getShiftValue(), node);
 
@@ -749,6 +747,7 @@ namespace triton {
           triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
 
           /* Shift AST if it's a shift operand */
+          /* FIXME: Is valid for aarch64 ? */
           if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
             return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), anode);
 
@@ -787,6 +786,7 @@ namespace triton {
         }
 
         /* Shift AST if it's a shift operand */
+        /* FIXME: Is valid for aarch64 ? */
         if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
           return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), tmp);
 

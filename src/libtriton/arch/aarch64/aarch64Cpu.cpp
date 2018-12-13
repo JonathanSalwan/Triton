@@ -302,7 +302,7 @@ namespace triton {
                   triton::arch::Immediate disp(op->mem.disp, immsize);
 
                   /* Specify that LEA contains a PC relative */
-                  /* FIXME: Valid in ARM64 ?*/
+                  /* FIXME: Valid in ARM64 ? */
                   if (base.getId() == this->pcId)
                     mem.setPcRelative(inst.getNextAddress());
 
@@ -316,6 +316,7 @@ namespace triton {
                     mem.setScale(triton::arch::Immediate(1, index.getSize()));
 
                   /* Set Shift type and value */
+                  /* FIXME: Valid in ARM64 ? */
                   mem.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
                   mem.setShiftValue(op->shift.value);
 
