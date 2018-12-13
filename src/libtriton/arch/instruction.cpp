@@ -27,6 +27,7 @@ namespace triton {
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->writeBack       = false;
 
       std::memset(this->opcode, 0x00, sizeof(this->opcode));
     }
@@ -65,6 +66,7 @@ namespace triton {
       this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
+      this->writeBack           = other.writeBack;
       this->writtenRegisters    = other.writtenRegisters;
 
       std::memcpy(this->opcode, other.opcode, sizeof(this->opcode));
@@ -262,6 +264,11 @@ namespace triton {
     }
 
 
+    void Instruction::setWriteBack(bool state) {
+      this->writeBack = writeBack;
+    }
+
+
     void Instruction::setCodeCondition(triton::arch::aarch64::condition_e codeCondition) {
       this->codeCondition = codeCondition;
     }
@@ -412,9 +419,14 @@ namespace triton {
 
 
     bool Instruction::isPrefixed(void) const {
-      if (this->prefix)
-        return true;
-      return false;
+      if (this->prefix == triton::arch::x86::ID_PREFIX_INVALID)
+        return false;
+      return true;
+    }
+
+
+    bool Instruction::isWriteBack(void) const {
+      return this->writeBack;
     }
 
 
@@ -444,6 +456,7 @@ namespace triton {
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->writeBack       = false;
 
       this->disassembly.clear();
       this->loadAccess.clear();
@@ -471,4 +484,3 @@ namespace triton {
 
   };
 };
-

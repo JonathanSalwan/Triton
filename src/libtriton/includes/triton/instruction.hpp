@@ -97,6 +97,9 @@ namespace triton {
         //! True if this instruction is tainted. This field is set at the semantics level.
         bool tainted;
 
+        //! True if this instruction performs a write back. Mainly used for AArch64 instruction like LDR.
+        bool writeBack;
+
     private:
         //! Copies an Instruction
         void copy(const Instruction& other);
@@ -222,6 +225,9 @@ namespace triton {
         //! Sets the taint of the instruction based on its expressions.
         TRITON_EXPORT void setTaint(void);
 
+        //! Sets the writeBack flag of the instruction.
+        TRITON_EXPORT void setWriteBack(bool state);
+
         //! Adds a symbolic expression
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
@@ -254,6 +260,9 @@ namespace triton {
 
         //! Returns true if the instruction has a prefix (mainly for X86).
         TRITON_EXPORT bool isPrefixed(void) const;
+
+        //! Returns true if the instruction performs a write back. Mainly used for AArch64 instructions like LDR.
+        TRITON_EXPORT bool isWriteBack(void) const;
 
         //! Sets flag to define this instruction as branch or not.
         TRITON_EXPORT void setBranch(bool flag);
