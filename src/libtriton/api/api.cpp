@@ -23,8 +23,8 @@
 
 <b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
 like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
-of the <b>x86</b> and the <b>x86-64</b> instructions set semantics, <b>SMT simplification</b> passes,
-an <b>SMT Solver</b> Interface and, the last but not least, <b>Python bindings</b>.
+of the <b>x86</b>, <b>x86-64</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
+an <b>SMT Solver</b> interface and, the last but not least, <b>Python bindings</b>.
 
 
 <br>
@@ -132,10 +132,10 @@ To be able to compile Triton, you must install these libraries before:
  lib name                                                                      | version
 -------------------------------------------------------------------------------|---------
  [libboost](http://www.boost.org/)                                             | >= 1.55
- [libpython](https://www.python.org/)                                          | 2.7.x
+ [libpython](https://www.python.org/)                                          | == 2.7.x
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
- [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0
- [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | 71313
+ [libcapstone](http://www.capstone-engine.org/)                                | == 3.0.5
+ [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
 <hr>
 \subsection linux_install_sec Linux Installation
@@ -183,8 +183,8 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of the
   -DPYTHON_LIBRARIES="C:/Python27/libs/python27.lib" \
   -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/include" \
   -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/bin/libz3.lib" \
-  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/include" \
-  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/capstone.lib" ..
+  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/include" \
+  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/capstone.lib" ..
 ~~~~~~~~~~~~~
 
 However, if you prefer to directly download precompiled libraries, check out our [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
