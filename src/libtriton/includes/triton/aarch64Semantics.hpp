@@ -105,6 +105,15 @@ namespace triton {
           //! The LDURH semantics.
           void ldurh_s(triton::arch::Instruction& inst);
 
+          //! The LDURSB semantics.
+          void ldursb_s(triton::arch::Instruction& inst);
+
+          //! The LDURSH semantics.
+          void ldursh_s(triton::arch::Instruction& inst);
+
+          //! The LDURSW semantics.
+          void ldursw_s(triton::arch::Instruction& inst);
+
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
 

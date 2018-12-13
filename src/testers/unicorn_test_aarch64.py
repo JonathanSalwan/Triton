@@ -230,6 +230,33 @@ CODE  = [
     ("\x20\xd0\x5f\x78", "ldurh w0, [x1, #0xfffffffffffffffd]"),
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\xc0\x5f\x78", "ldurh w0, [x1, #0xfffffffffffffffc]"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x38", "ldursb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x38", "ldursb x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x38", "ldursb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x78", "ldursh w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x78", "ldursh x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\xb8", "ldursw x0, [x1]"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x38", "ldursb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x38", "ldursb x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x38", "ldursb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x78", "ldursh w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x78", "ldursh x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\xb8", "ldursw x0, [x1]"),
 ]
 
 def emu_with_unicorn(opcode, istate):
@@ -430,8 +457,8 @@ def diff_state(state1, state2):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": [bytes(255 - i) for i in range(256)],
-        "heap":  [bytes(i) for i in range(256)],
+        "stack": "".join([chr(255 - i) for i in range(256)]),
+        "heap":  "".join([chr(i) for i in range(256)]),
         "x0":    0,
         "x1":    0,
         "x2":    0,
