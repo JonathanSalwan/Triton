@@ -35,6 +35,7 @@ EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
 LDR (immediate)              | Load Register (immediate)
 LDR (literal)                | Load Register (literal)
 LDR (register)               | Load Register (register)
+LDUR                         | Load Register (unscaled)
 MOVZ                         | Move shifted 16-bit immediate to register
 ORN                          | Bitwise OR NOT (shifted register)
 SUB (extended register)      | Subtract (extended register)
@@ -79,6 +80,7 @@ namespace triton {
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
+          case ID_INS_LDUR:      this->ldur_s(inst);          break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -335,6 +337,24 @@ namespace triton {
           /* Spread taint */
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldur_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst  = inst.operands[0];
+        triton::arch::OperandWrapper& src  = inst.operands[1];
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDUR operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

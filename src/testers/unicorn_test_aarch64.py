@@ -180,7 +180,19 @@ CODE  = [
     ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
     ("\x29\x24\x5e\xf8", "ldr x9, [x1], #-30"),
     ("\x2a\x8c\x40\xf8", "ldr x10, [x1, #8]!"),
-    #("\x20\x40\x40\xf8", "ldur x0, [x1, #4]"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xeb\x03\x40\xf9", "ldr x11, [sp]"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x10\x40\xf8", "ldur x0, [x1, #1]"),
+    ("\x20\x20\x40\xf8", "ldur x0, [x1, #2]"),
+    ("\x20\x30\x40\xf8", "ldur x0, [x1, #3]"),
+    ("\x20\x40\x40\xf8", "ldur x0, [x1, #4]"),
+    ("\x20\xf0\x5f\xf8", "ldur x0, [x1, #-1]"),
+    ("\x20\xe0\x5f\xf8", "ldur x0, [x1, #-2]"),
+    ("\x20\xd0\x5f\xf8", "ldur x0, [x1, #-3]"),
+    ("\x20\xc0\x5f\xf8", "ldur x0, [x1, #-4]"),
 ]
 
 def emu_with_unicorn(opcode, istate):
@@ -415,8 +427,8 @@ if __name__ == '__main__':
         "x29":   0,
         "x30":   0,
         "x30":   0,
-        "pc":    0,
-        "sp":    0,
+        "pc":    ADDR,
+        "sp":    STACK,
         "n":     0,
         "z":     0,
         "c":     0,
