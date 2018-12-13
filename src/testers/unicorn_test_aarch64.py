@@ -24,6 +24,7 @@ CODE  = [
     ("\x21\x64\xe8\xd2", "movz x1, #0x4321, lsl #48"),
     ("\x21\x64\xc8\xd2", "movz x1, #0x4321, lsl #32"),
     ("\x21\x64\xa8\xd2", "movz x1, #0x4321, lsl #16"),
+
     ("\x60\x00\x02\x8b", "add x0, x3, x2"),
     ("\x20\x00\x02\x8b", "add x0, x1, x2"),
     ("\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
@@ -59,12 +60,16 @@ CODE  = [
     ("\x20\x58\x21\x91", "add x0, x1, #2134"),
     ("\x20\x58\x61\x91", "add x0, x1, #2134, lsl #12"),
     ("\x3f\x60\x22\x8b", "add sp, x1, x2"),
+
     ("\x20\x00\x02\x9a", "adc x0, x1, x2"),
     ("\x20\x00\x02\x1a", "adc w0, w1, w2"),
+
     ("\x20\x1a\x09\x30", "adr x0, #0x12345"),
     ("\xe1\xff\x7f\x70", "adr x1, #0xfffff"),
+
     ("\xc1\x7c\x00\xd0", "adrp x1, #0xf9a000"),
     ("\x41\x0c\x00\xf0", "adrp x1, #0x18b000"),
+
     ("\xe1\xff\x9f\xd2", "movz x1, #0xffff"),
     ("\x22\x00\x80\xd2", "movz x2, #0x1"),
     ("\x20\x1c\x40\x92", "and x0, x1, #0xff"),
@@ -75,6 +80,7 @@ CODE  = [
     ("\x20\x08\x02\x8a", "and x0, x1, x2, lsl #2"),
     ("\x20\x0c\x02\x8a", "and x0, x1, x2, lsl #3"),
     ("\x20\x10\x02\x8a", "and x0, x1, x2, lsl #4"),
+
     ("\x20\xfc\x41\x93", "asr x0, x1, #1"),
     ("\x20\xfc\x42\x93", "asr x0, x1, #2"),
     ("\x20\xfc\x43\x93", "asr x0, x1, #3"),
@@ -86,6 +92,7 @@ CODE  = [
     ("\x20\x28\xc2\x9a", "asr x0, x1, x2"),
     ("\x42\x00\x80\xd2", "movz x2, #0x2"),
     ("\x20\x28\xc2\x9a", "asr x0, x1, x2"),
+
     ("\x82\x46\x82\xd2", "movz x2, #0x1234"),
     ("\x01\xcf\x8a\xd2", "movz x1, #0x5678"),
     ("\x20\x80\x22\xcb", "sub x0, x1, w2, sxtb"),
@@ -115,6 +122,7 @@ CODE  = [
     ("\x20\x88\x19\xd1", "sub x0, x1, #1634"),
     ("\x20\x58\x21\xd1", "sub x0, x1, #2134"),
     ("\x20\x58\x61\xd1", "sub x0, x1, #2134, lsl #12"),
+
     ("\x20\x00\x02\xca", "eor x0, x1, x2, lsl #0"),
     ("\x20\x04\x02\xca", "eor x0, x1, x2, lsl #1"),
     ("\x20\x20\x02\xca", "eor x0, x1, x2, lsl #8"),
@@ -138,6 +146,7 @@ CODE  = [
     ("\x20\x1c\x40\xd2", "eor x0, x1, #255"),
     ("\x20\x18\x40\xd2", "eor x0, x1, #0x7f"),
     ("\x20\x00\x40\xd2", "eor x0, x1, #1"),
+
     ("\x20\x00\x22\xca", "eon x0, x1, x2, lsl #0"),
     ("\x20\x04\x22\xca", "eon x0, x1, x2, lsl #1"),
     ("\x20\x20\x22\xca", "eon x0, x1, x2, lsl #8"),
@@ -158,10 +167,12 @@ CODE  = [
     ("\x20\x84\xa2\xca", "eon x0, x1, x2, asr #33"),
     ("\x20\x88\xa2\xca", "eon x0, x1, x2, asr #34"),
     ("\x20\x88\xa2\xca", "eon x0, x1, x2, asr #34"),
+
     ("\x20\x00\x22\xaa", "orn x0, x1, x2"),
     ("\x40\x00\x21\xaa", "orn x0, x2, x1"),
     ("\x41\x00\x20\xaa", "orn x1, x2, x0"),
     ("\x01\x00\x22\xaa", "orn x1, x0, x2"),
+
     ("\x82\x46\x82\xd2", "movz x2, #0x1234"),
     ("\x01\xcf\x8a\xd2", "movz x1, #0x5678"),
     ("\x20\x04\x22\xaa", "orn x0, x1, x2, lsl #1"),
@@ -170,6 +181,7 @@ CODE  = [
     ("\x20\x04\xe2\xaa", "orn x0, x1, x2, ror #1"),
     ("\x20\x08\xe2\xaa", "orn x0, x1, x2, ror #2"),
     ("\x20\x0c\xe2\xaa", "orn x0, x1, x2, ror #3"),
+
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\x02\x02\x80\xd2", "movz x2, #16"),
     ("\x25\x00\x40\xf9", "ldr x5, [x1]"),
@@ -183,6 +195,7 @@ CODE  = [
     ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     ("\x3f\x10\x00\x91", "add sp, x1, #4"),
     ("\xeb\x03\x40\xf9", "ldr x11, [sp]"),
+
     ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     ("\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
@@ -230,6 +243,7 @@ CODE  = [
     ("\x20\xd0\x5f\x78", "ldurh w0, [x1, #0xfffffffffffffffd]"),
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\xc0\x5f\x78", "ldurh w0, [x1, #0xfffffffffffffffc]"),
+
     ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     ("\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
@@ -244,6 +258,7 @@ CODE  = [
     ("\x20\x00\x80\x78", "ldursh x0, [x1]"),
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\x00\x80\xb8", "ldursw x0, [x1]"),
+
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\x00\xc0\x38", "ldursb w0, [x1]"),
@@ -257,6 +272,23 @@ CODE  = [
     ("\x20\x00\x80\x78", "ldursh x0, [x1]"),
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\x00\x80\xb8", "ldursw x0, [x1]"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x06\xa0\xd2", "movz x2, #0x30, lsl #16"), # HEAP address
+    ("\x42\x78\x00\x91", "add x2, x2, #30"),
+    ("\x23\x00\x40\xf8", "ldur x3, [x1]"),
+    ("\x44\x00\x40\xf8", "ldur x4, [x2]"),
+    ("\x60\x00\xc4\x93", "extr x0, x3, x4, #0"),
+    ("\x60\x04\xc4\x93", "extr x0, x3, x4, #1"),
+    ("\x60\x08\xc4\x93", "extr x0, x3, x4, #2"),
+    ("\x60\x0c\xc4\x93", "extr x0, x3, x4, #2"),
+    ("\x60\x78\xc4\x93", "extr x0, x3, x4, #30"),
+    ("\x60\xfc\xc4\x93", "extr x0, x3, x4, #63"),
+    ("\x60\x00\x84\x13", "extr w0, w3, w4, #0"),
+    ("\x60\x04\x84\x13", "extr w0, w3, w4, #1"),
+    ("\x60\x08\x84\x13", "extr w0, w3, w4, #2"),
+    ("\x60\x0c\x84\x13", "extr w0, w3, w4, #3"),
+    ("\x60\x7c\x84\x13", "extr w0, w3, w4, #31"),
 ]
 
 def emu_with_unicorn(opcode, istate):

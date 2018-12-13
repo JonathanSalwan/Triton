@@ -32,6 +32,7 @@ ASR (register)               | Arithmetic Shift Right (register): an alias of AS
 EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)              | Bitwise Exclusive OR (immediate)
 EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
+EXTR                         | EXTR: Extract register
 LDR (immediate)              | Load Register (immediate)
 LDR (literal)                | Load Register (literal)
 LDR (register)               | Load Register (register)
@@ -84,6 +85,7 @@ namespace triton {
           case ID_INS_ASR:       this->asr_s(inst);           break;
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
+          case ID_INS_EXTR:      this->extr_s(inst);          break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
           case ID_INS_LDUR:      this->ldur_s(inst);          break;
           case ID_INS_LDURB:     this->ldurb_s(inst);         break;
@@ -295,6 +297,31 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::extr_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+        auto  lsb  = src3.getImmediate().getValue();
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.extract(lsb + dst.getBitSize() - 1, lsb, this->astCtxt.concat(op1, op2));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "EXTR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
