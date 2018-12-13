@@ -178,7 +178,8 @@ CODE  = [
     ("\x28\x68\x62\xf8", "ldr x8, [x1, x2]"),
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
-    ("\x29\x24\x5e\xf8", "ldr x9, [x1], #-30")
+    ("\x29\x24\x5e\xf8", "ldr x9, [x1], #-30"),
+    ("\x2a\x8c\x40\xf8", "ldr x10, [x1, #8]!"),
     #("\x20\x40\x40\xf8", "ldur x0, [x1, #4]"),
 ]
 

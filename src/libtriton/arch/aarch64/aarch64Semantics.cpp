@@ -322,6 +322,20 @@ namespace triton {
           expr2->isTainted = this->taintEngine->isTainted(base);
         }
 
+        /* LDR <Xt>, [<Xn|SP>, #<simm>]! */
+        else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = mem.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = mem.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDR operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }

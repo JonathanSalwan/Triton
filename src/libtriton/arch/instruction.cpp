@@ -265,7 +265,7 @@ namespace triton {
 
 
     void Instruction::setWriteBack(bool state) {
-      this->writeBack = writeBack;
+      this->writeBack = state;
     }
 
 
