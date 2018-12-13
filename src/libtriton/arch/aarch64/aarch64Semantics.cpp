@@ -36,6 +36,8 @@ LDR (immediate)              | Load Register (immediate)
 LDR (literal)                | Load Register (literal)
 LDR (register)               | Load Register (register)
 LDUR                         | Load Register (unscaled)
+LDURB                        | Load Register Byte (unscaled)
+LDURH                        | Load Register Halfword (unscaled)
 MOVZ                         | Move shifted 16-bit immediate to register
 ORN                          | Bitwise OR NOT (shifted register)
 SUB (extended register)      | Subtract (extended register)
@@ -81,6 +83,8 @@ namespace triton {
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
           case ID_INS_LDUR:      this->ldur_s(inst);          break;
+          case ID_INS_LDURB:     this->ldurb_s(inst);         break;
+          case ID_INS_LDURH:     this->ldurh_s(inst);         break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -351,7 +355,49 @@ namespace triton {
         auto node = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDUR operation - LOAD access");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDUR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldurb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst  = inst.operands[0];
+        triton::arch::OperandWrapper& src  = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldurh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst  = inst.operands[0];
+        triton::arch::OperandWrapper& src  = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURH operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
