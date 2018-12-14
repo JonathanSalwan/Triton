@@ -146,6 +146,9 @@ namespace triton {
           //! The ORN semantics.
           void orn_s(triton::arch::Instruction& inst);
 
+          //! The RET semantics.
+          void ret_s(triton::arch::Instruction& inst);
+
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
       };

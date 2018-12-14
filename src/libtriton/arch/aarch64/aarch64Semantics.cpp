@@ -51,6 +51,7 @@ MOV (register)               | Move (register): an alias of ORR (shifted registe
 MOV (to/from SP)             | Move between register and stack pointer: an alias of ADD (immediate)
 MOVZ                         | Move shifted 16-bit immediate to register
 ORN                          | Bitwise OR NOT (shifted register)
+RET                          | Return from subroutine
 SUB (extended register)      | Subtract (extended register)
 SUB (immediate)              | Subtract (immediate)
 SUB (shifted register)       | Subtract (shifted register)
@@ -107,6 +108,7 @@ namespace triton {
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
+          case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
           default:
             return false;
@@ -893,6 +895,21 @@ namespace triton {
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ret_s(triton::arch::Instruction& inst) {
+        auto dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto src = ((inst.operands.size() == 1) ? inst.operands[0] : triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30)));
+
+        /* Create the semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "RET operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
       }
 
 
