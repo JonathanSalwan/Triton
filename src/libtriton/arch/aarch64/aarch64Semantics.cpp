@@ -43,6 +43,9 @@ LDURH                        | Load Register Halfword (unscaled)
 LDURSB                       | Load Register Signed Byte (unscaled)
 LDURSH                       | Load Register Signed Halfword (unscaled)
 LDURSW                       | Load Register Signed Word (unscaled)
+MOV (bitmask immediate)      | Move (bitmask immediate): an alias of ORR (immediate)
+MOV (register)               | Move (register): an alias of ORR (shifted register)
+MOV (to/from SP)             | Move between register and stack pointer: an alias of ADD (immediate)
 MOVZ                         | Move shifted 16-bit immediate to register
 ORN                          | Bitwise OR NOT (shifted register)
 SUB (extended register)      | Subtract (extended register)
@@ -95,6 +98,7 @@ namespace triton {
           case ID_INS_LDURSB:    this->ldursb_s(inst);        break;
           case ID_INS_LDURSH:    this->ldursh_s(inst);        break;
           case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
+          case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -511,6 +515,24 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURSW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::mov_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create the semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);

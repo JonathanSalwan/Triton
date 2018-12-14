@@ -120,6 +120,9 @@ namespace triton {
           //! The LDURSW semantics.
           void ldursw_s(triton::arch::Instruction& inst);
 
+          //! The MOV semantics.
+          void mov_s(triton::arch::Instruction& inst);
+
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
 
