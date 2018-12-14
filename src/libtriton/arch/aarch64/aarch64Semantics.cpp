@@ -29,6 +29,7 @@ AND (immediate)              | Bitwise AND (immediate).
 AND (shifted register)       | Bitwise AND (shifted register)
 ASR (immediate)              | Arithmetic Shift Right (immediate): an alias of SBFM
 ASR (register)               | Arithmetic Shift Right (register): an alias of ASRV
+B                            | Branch
 EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)              | Bitwise Exclusive OR (immediate)
 EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
@@ -83,6 +84,7 @@ namespace triton {
           case ID_INS_ADRP:      this->adrp_s(inst);          break;
           case ID_INS_AND:       this->and_s(inst);           break;
           case ID_INS_ASR:       this->asr_s(inst);           break;
+          case ID_INS_B:         this->b_s(inst);             break;
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
@@ -254,6 +256,21 @@ namespace triton {
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::b_s(triton::arch::Instruction& inst) {
+        auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src = inst.operands[0];
+
+        /* Create the semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "B operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
       }
 
 

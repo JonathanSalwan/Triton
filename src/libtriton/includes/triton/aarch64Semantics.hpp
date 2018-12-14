@@ -87,6 +87,9 @@ namespace triton {
           //! The ASR semantics.
           void asr_s(triton::arch::Instruction& inst);
 
+          //! The B semantics.
+          void b_s(triton::arch::Instruction& inst);
+
           //! The EON semantics.
           void eon_s(triton::arch::Instruction& inst);
 

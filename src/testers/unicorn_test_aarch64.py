@@ -289,17 +289,26 @@ CODE  = [
     ("\x60\x08\x84\x13", "extr w0, w3, w4, #2"),
     ("\x60\x0c\x84\x13", "extr w0, w3, w4, #3"),
     ("\x60\x7c\x84\x13", "extr w0, w3, w4, #31"),
+
+    ("\x01\x00\x00\x14", "b #4"),
+    #("\x02\x00\x00\x14", "b #8"),          # FIXME cannot handle this with
+    #("\x03\x00\x00\x14", "b #12"),         # unicorn emulating only one
+    #("\x00\xd0\x48\x14", "b #0x1234000"),  # instruction...
+    #("\x74\xbb\xff\x17", "b #-0x11230"),   #
 ]
 
 def emu_with_unicorn(opcode, istate):
-    # Initialize emulator in X86-32bit mode
+    # Initialize emulator in aarch64 mode
     mu = Uc(UC_ARCH_ARM64, UC_MODE_ARM)
 
-    # map 2MB memory for this emulation
+    # map memory for this emulation
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
-    mu.mem_write(ADDR, opcode)
+    index = 0
+    for op, _ in CODE:
+        mu.mem_write(ADDR+index, op)
+        index += len(op)
 
     mu.mem_write(STACK,             bytes(istate['stack']))
     mu.mem_write(HEAP,              bytes(istate['heap']))
@@ -339,7 +348,7 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM64_REG_NZCV, istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28)
 
     # emulate code in infinite time & unlimited instructions
-    mu.emu_start(ADDR, ADDR + len(opcode))
+    mu.emu_start(istate['pc'], istate['pc'] + len(opcode))
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -390,7 +399,7 @@ def emu_with_triton(opcode, istate):
     ctx.setArchitecture(ARCH.AARCH64)
 
     inst = Instruction(opcode)
-    inst.setAddress(ADDR)
+    inst.setAddress(istate['pc'])
 
     ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
