@@ -69,6 +69,14 @@ namespace triton {
           //! Control flow semantics. Used to represent PC.
           void controlFlow_s(triton::arch::Instruction& inst);
 
+          //! Creates a conditional node.
+          triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst,
+                                                              triton::ast::SharedAbstractNode& thenNode,
+                                                              triton::ast::SharedAbstractNode& elseNode);
+
+          //! Gets the taint state (based on flags) of a conditional instruction
+          bool getCodeConditionTainteSate(const triton::arch::Instruction& inst);
+
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
 

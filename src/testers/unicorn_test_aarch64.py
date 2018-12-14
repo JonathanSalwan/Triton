@@ -295,6 +295,8 @@ CODE  = [
     #("\x03\x00\x00\x14", "b #12"),         # unicorn emulating only one
     #("\x00\xd0\x48\x14", "b #0x1234000"),  # instruction...
     #("\x74\xbb\xff\x17", "b #-0x11230"),   #
+    ("\x20\x00\x00\x54" ,"b.eq #4"),
+    ("\x40\x00\x00\x54" ,"b.eq #8"),
 
     ("\x01\x00\x80\xd2", "movz x1, #0"),
     ("\x02\x06\xa0\xd2", "movz x2, #0x20, lsl #16"), # STACK address

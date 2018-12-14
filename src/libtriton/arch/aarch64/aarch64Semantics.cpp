@@ -123,6 +123,256 @@ namespace triton {
       }
 
 
+      triton::ast::SharedAbstractNode AArch64Semantics::getCodeConditionAst(triton::arch::Instruction& inst,
+                                                                            triton::ast::SharedAbstractNode& thenNode,
+                                                                            triton::ast::SharedAbstractNode& elseNode) {
+
+        switch (inst.getCodeCondition()) {
+          // Always. Any flags. This suffix is normally omitted.
+          case triton::arch::aarch64::ID_CONDITION_AL: {
+            return thenNode;
+          }
+
+          // Equal. Z set.
+          case triton::arch::aarch64::ID_CONDITION_EQ: {
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(z, this->astCtxt.bvtrue()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Signed >=. N and V the same.
+          case triton::arch::aarch64::ID_CONDITION_GE: {
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(n, v),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Signed >. Z clear, N and V the same.
+          case triton::arch::aarch64::ID_CONDITION_GT: {
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.land(
+                          this->astCtxt.equal(z, this->astCtxt.bvfalse()),
+                          this->astCtxt.equal(n, v)
+                        ),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Higher (unsigned >). C set and Z clear.
+          case triton::arch::aarch64::ID_CONDITION_HI: {
+            auto c = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C)));
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.land(
+                          this->astCtxt.equal(c, this->astCtxt.bvtrue()),
+                          this->astCtxt.equal(z, this->astCtxt.bvfalse())
+                        ),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Higher or same (unsigned >=). C set.
+          case triton::arch::aarch64::ID_CONDITION_HS: {
+            auto c = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(c, this->astCtxt.bvtrue()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Signed <=. Z set, N and V differ.
+          case triton::arch::aarch64::ID_CONDITION_LE: {
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.land(
+                          this->astCtxt.equal(z, this->astCtxt.bvtrue()),
+                          this->astCtxt.lnot(this->astCtxt.equal(n, v))
+                        ),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Lower (unsigned <). C clear.
+          case triton::arch::aarch64::ID_CONDITION_LO: {
+            auto c = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(c, this->astCtxt.bvfalse()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Lower or same (unsigned <=). C clear or Z set.
+          case triton::arch::aarch64::ID_CONDITION_LS: {
+            auto c = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C)));
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.lor(
+                          this->astCtxt.equal(c, this->astCtxt.bvfalse()),
+                          this->astCtxt.equal(z, this->astCtxt.bvtrue())
+                        ),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Signed <. N and V differ.
+          case triton::arch::aarch64::ID_CONDITION_LT: {
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.lnot(this->astCtxt.equal(n, v)),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Negative. N set.
+          case triton::arch::aarch64::ID_CONDITION_MI: {
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(n, this->astCtxt.bvtrue()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Not equal. Z clear.
+          case triton::arch::aarch64::ID_CONDITION_NE: {
+            auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(z, this->astCtxt.bvfalse()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Positive or zero. N clear.
+          case triton::arch::aarch64::ID_CONDITION_PL: {
+            auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(n, this->astCtxt.bvfalse()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // No overflow. V clear.
+          case triton::arch::aarch64::ID_CONDITION_VC: {
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(v, this->astCtxt.bvfalse()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          // Overflow. V set.
+          case triton::arch::aarch64::ID_CONDITION_VS: {
+            auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
+            auto node = this->astCtxt.ite(
+                        this->astCtxt.equal(v, this->astCtxt.bvtrue()),
+                        thenNode,
+                        elseNode);
+            return node;
+          }
+
+          default:
+            /* The instruction don't use condition, so just return the 'then' node */
+            return thenNode;
+        }
+      }
+
+
+      bool AArch64Semantics::getCodeConditionTainteSate(const triton::arch::Instruction& inst) {
+        switch (inst.getCodeCondition()) {
+          // Always. Any flags. This suffix is normally omitted.
+          case triton::arch::aarch64::ID_CONDITION_AL: {
+            return false;
+          }
+
+          // Equal. Z set.
+          // Not equal. Z clear.
+          case triton::arch::aarch64::ID_CONDITION_EQ:
+          case triton::arch::aarch64::ID_CONDITION_NE: {
+            auto z = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z));
+            return this->taintEngine->isTainted(z);
+          }
+
+          // Signed >=. N and V the same.
+          // Signed <. N and V differ.
+          case triton::arch::aarch64::ID_CONDITION_GE:
+          case triton::arch::aarch64::ID_CONDITION_LT: {
+            auto n = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N));
+            auto v = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V));
+            return this->taintEngine->isTainted(n) | this->taintEngine->isTainted(v);
+          }
+
+          // Signed >. Z clear, N and V the same.
+          // Signed <=. Z set, N and V differ.
+          case triton::arch::aarch64::ID_CONDITION_GT:
+          case triton::arch::aarch64::ID_CONDITION_LE: {
+            auto z = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z));
+            auto n = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N));
+            auto v = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V));
+            return this->taintEngine->isTainted(z) | this->taintEngine->isTainted(n) | this->taintEngine->isTainted(v);
+          }
+
+          // Higher (unsigned >). C set and Z clear.
+          // Lower or same (unsigned <=). C clear or Z set.
+          case triton::arch::aarch64::ID_CONDITION_HI:
+          case triton::arch::aarch64::ID_CONDITION_LS: {
+            auto c = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C));
+            auto z = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z));
+            return this->taintEngine->isTainted(c) | this->taintEngine->isTainted(z);
+          }
+
+          // Higher or same (unsigned >=). C set.
+          // Lower (unsigned <). C clear.
+          case triton::arch::aarch64::ID_CONDITION_HS:
+          case triton::arch::aarch64::ID_CONDITION_LO: {
+            auto c = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_C));
+            return this->taintEngine->isTainted(c);
+          }
+
+          // Negative. N set.
+          // Positive or zero. N clear.
+          case triton::arch::aarch64::ID_CONDITION_MI:
+          case triton::arch::aarch64::ID_CONDITION_PL: {
+            auto n = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N));
+            return this->taintEngine->isTainted(n);
+          }
+
+          // No overflow. V clear.
+          // Overflow. V set.
+          case triton::arch::aarch64::ID_CONDITION_VC:
+          case triton::arch::aarch64::ID_CONDITION_VS: {
+            auto v = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V));
+            return this->taintEngine->isTainted(v);
+          }
+
+          default:
+            return false;
+        }
+      }
+
+
       void AArch64Semantics::adc_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
@@ -267,14 +517,18 @@ namespace triton {
         auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
         auto& src = inst.operands[0];
 
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op2 = this->astCtxt.bv(inst.getNextAddress(), dst.getBitSize());
+
         /* Create the semantics */
-        auto node = this->symbolicEngine->getOperandAst(inst, src);
+        auto node = this->getCodeConditionAst(inst, op1, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "B operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
       }
 
 
@@ -350,8 +604,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldr_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& mem  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& mem = inst.operands[1];
 
         /* Create the semantics of the LOAD */
         auto node1 = this->symbolicEngine->getOperandAst(inst, mem);
@@ -402,8 +656,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldur_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create the semantics of the LOAD */
         auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -420,8 +674,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldurb_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -441,8 +695,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldurh_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -462,8 +716,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldursb_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -483,8 +737,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldursh_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -504,8 +758,8 @@ namespace triton {
 
 
       void AArch64Semantics::ldursw_s(triton::arch::Instruction& inst) {
-        triton::arch::OperandWrapper& dst  = inst.operands[0];
-        triton::arch::OperandWrapper& src  = inst.operands[1];
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
