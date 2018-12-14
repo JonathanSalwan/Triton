@@ -30,6 +30,9 @@ AND (shifted register)       | Bitwise AND (shifted register)
 ASR (immediate)              | Arithmetic Shift Right (immediate): an alias of SBFM
 ASR (register)               | Arithmetic Shift Right (register): an alias of ASRV
 B                            | Branch
+BL                           | Branch with Link
+BLR                          | Branch with Link to Register
+BR                           | Branch to Register
 EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)              | Bitwise Exclusive OR (immediate)
 EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
@@ -88,6 +91,9 @@ namespace triton {
           case ID_INS_AND:       this->and_s(inst);           break;
           case ID_INS_ASR:       this->asr_s(inst);           break;
           case ID_INS_B:         this->b_s(inst);             break;
+          case ID_INS_BL:        this->bl_s(inst);            break;
+          case ID_INS_BLR:       this->blr_s(inst);           break;
+          case ID_INS_BR:        this->br_s(inst);            break;
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
@@ -525,10 +531,63 @@ namespace triton {
         auto node = this->getCodeConditionAst(inst, op1, op2);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "B operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "B operation - Program Counter");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
+      }
+
+
+      void AArch64Semantics::bl_s(triton::arch::Instruction& inst) {
+        auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+        auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src  = inst.operands[0];
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt.bv(inst.getNextAddress(), dst1.getBitSize());
+        auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BL operation - Link Register");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BL operation - Program Counter");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+      }
+
+
+      void AArch64Semantics::blr_s(triton::arch::Instruction& inst) {
+        auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_X30));
+        auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src  = inst.operands[0];
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt.bv(inst.getNextAddress(), dst1.getBitSize());
+        auto node2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLR operation - Link Register");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLR operation - Program Counter");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+      }
+
+
+      void AArch64Semantics::br_s(triton::arch::Instruction& inst) {
+        auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src = inst.operands[0];
+
+        /* Create the semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BR operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
       }
 
 
