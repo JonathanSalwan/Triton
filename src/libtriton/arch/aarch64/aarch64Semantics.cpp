@@ -33,6 +33,8 @@ B                            | Branch
 BL                           | Branch with Link
 BLR                          | Branch with Link to Register
 BR                           | Branch to Register
+CBNZ                         | Compare and Branch on Nonzero
+CBZ                          | Compare and Branch on Zero
 EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)              | Bitwise Exclusive OR (immediate)
 EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
@@ -95,6 +97,8 @@ namespace triton {
           case ID_INS_BL:        this->bl_s(inst);            break;
           case ID_INS_BLR:       this->blr_s(inst);           break;
           case ID_INS_BR:        this->br_s(inst);            break;
+          case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
+          case ID_INS_CBZ:       this->cbz_s(inst);           break;
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
@@ -590,6 +594,54 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+      }
+
+
+      void AArch64Semantics::cbnz_s(triton::arch::Instruction& inst) {
+        auto  dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.lnot(this->astCtxt.equal(op1, this->astCtxt.bv(0, src1.getBitSize()))),
+                      op2,
+                      this->astCtxt.bv(inst.getNextAddress(), dst.getBitSize())
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CBNZ operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::cbz_s(triton::arch::Instruction& inst) {
+        auto  dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.equal(op1, this->astCtxt.bv(0, src1.getBitSize())),
+                      op2,
+                      this->astCtxt.bv(inst.getNextAddress(), dst.getBitSize())
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CBZ operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
       }
 
 

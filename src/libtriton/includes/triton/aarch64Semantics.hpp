@@ -107,6 +107,12 @@ namespace triton {
           //! The BR semantics.
           void br_s(triton::arch::Instruction& inst);
 
+          //! The CBNZ semantics
+          void cbnz_s(triton::arch::Instruction& inst);
+
+          //! The CBZ semantics
+          void cbz_s(triton::arch::Instruction& inst);
+
           //! The EON semantics.
           void eon_s(triton::arch::Instruction& inst);
 
