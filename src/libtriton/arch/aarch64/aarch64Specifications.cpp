@@ -1889,6 +1889,148 @@ namespace triton {
             tritonId = triton::arch::aarch64::ID_INS_ZIP2;
             break;
 
+          /* From here there are alias but considered as instruction */
+
+          case triton::extlibs::capstone::ARM64_INS_MNEG:
+            tritonId = triton::arch::aarch64::ID_INS_MNEG;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UMNEGL:
+            tritonId = triton::arch::aarch64::ID_INS_UMNEGL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SMNEGL:
+            tritonId = triton::arch::aarch64::ID_INS_SMNEGL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_NOP:
+            tritonId = triton::arch::aarch64::ID_INS_NOP;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_YIELD:
+            tritonId = triton::arch::aarch64::ID_INS_YIELD;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_WFE:
+            tritonId = triton::arch::aarch64::ID_INS_WFE;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_WFI:
+            tritonId = triton::arch::aarch64::ID_INS_WFI;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SEV:
+            tritonId = triton::arch::aarch64::ID_INS_SEV;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SEVL:
+            tritonId = triton::arch::aarch64::ID_INS_SEVL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_NGC:
+            tritonId = triton::arch::aarch64::ID_INS_NGC;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SBFIZ:
+            tritonId = triton::arch::aarch64::ID_INS_SBFIZ;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UBFIZ:
+            tritonId = triton::arch::aarch64::ID_INS_UBFIZ;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SBFX:
+            tritonId = triton::arch::aarch64::ID_INS_SBFX;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UBFX:
+            tritonId = triton::arch::aarch64::ID_INS_UBFX;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_BFI:
+            tritonId = triton::arch::aarch64::ID_INS_BFI;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_BFXIL:
+            tritonId = triton::arch::aarch64::ID_INS_BFXIL;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CMN:
+            tritonId = triton::arch::aarch64::ID_INS_CMN;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_MVN:
+            tritonId = triton::arch::aarch64::ID_INS_MVN;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_TST:
+            tritonId = triton::arch::aarch64::ID_INS_TST;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CSET:
+            tritonId = triton::arch::aarch64::ID_INS_CSET;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CINC:
+            tritonId = triton::arch::aarch64::ID_INS_CINC;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CSETM:
+            tritonId = triton::arch::aarch64::ID_INS_CSETM;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CINV:
+            tritonId = triton::arch::aarch64::ID_INS_CINV;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CNEG:
+            tritonId = triton::arch::aarch64::ID_INS_CNEG;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SXTB:
+            tritonId = triton::arch::aarch64::ID_INS_SXTB;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SXTH:
+            tritonId = triton::arch::aarch64::ID_INS_SXTH;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_SXTW:
+            tritonId = triton::arch::aarch64::ID_INS_SXTW;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_CMP:
+            tritonId = triton::arch::aarch64::ID_INS_CMP;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UXTB:
+            tritonId = triton::arch::aarch64::ID_INS_UXTB;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UXTH:
+            tritonId = triton::arch::aarch64::ID_INS_UXTH;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_UXTW:
+            tritonId = triton::arch::aarch64::ID_INS_UXTW;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_IC:
+            tritonId = triton::arch::aarch64::ID_INS_IC;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_DC:
+            tritonId = triton::arch::aarch64::ID_INS_DC;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_AT:
+            tritonId = triton::arch::aarch64::ID_INS_AT;
+            break;
+
+          case triton::extlibs::capstone::ARM64_INS_TLBI:
+            tritonId = triton::arch::aarch64::ID_INS_TLBI;
+            break;
+
           default:
             tritonId = triton::arch::aarch64::ID_INS_INVALID;
             break;
