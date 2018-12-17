@@ -35,10 +35,6 @@ class TestMemory(unittest.TestCase):
         """Check type of a memory access."""
         self.assertEqual(self.mem.getType(), OPERAND.MEM)
 
-    def test_shift_type(self):
-        """Check shift type of a memory access."""
-        self.assertEqual(self.mem.getShiftType(), SHIFT.AARCH64.INVALID)
-
     def test_base_register(self):
         """Check base register modification."""
         self.assertFalse(self.Triton.isRegisterValid(self.mem.getBaseRegister()))
