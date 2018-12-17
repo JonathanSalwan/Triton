@@ -52,6 +52,7 @@ MOV (bitmask immediate)      | Move (bitmask immediate): an alias of ORR (immedi
 MOV (register)               | Move (register): an alias of ORR (shifted register)
 MOV (to/from SP)             | Move between register and stack pointer: an alias of ADD (immediate)
 MOVZ                         | Move shifted 16-bit immediate to register
+NOP                          | No Operation
 ORN                          | Bitwise OR NOT (shifted register)
 RET                          | Return from subroutine
 SUB (extended register)      | Subtract (extended register)
@@ -111,6 +112,7 @@ namespace triton {
           case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
+          case ID_INS_NOP:       this->nop_s(inst);           break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -922,6 +924,12 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::nop_s(triton::arch::Instruction& inst) {
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
