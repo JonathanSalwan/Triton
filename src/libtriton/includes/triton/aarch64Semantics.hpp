@@ -152,6 +152,9 @@ namespace triton {
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
 
+          //! The MSUB semantics.
+          void msub_s(triton::arch::Instruction& inst);
+
           //! The MVN semantics.
           void mvn_s(triton::arch::Instruction& inst);
 
