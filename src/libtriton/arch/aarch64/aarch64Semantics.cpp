@@ -53,6 +53,7 @@ MOV (register)               | Move (register): an alias of ORR (shifted registe
 MOV (to/from SP)             | Move between register and stack pointer: an alias of ADD (immediate)
 MOVZ                         | Move shifted 16-bit immediate to register
 MVN                          | Bitwise NOT: an alias of ORN (shifted register)
+NEG (shifted register)       | Negate (shifted register): an alias of SUB (shifted register)
 NOP                          | No Operation
 ORN                          | Bitwise OR NOT (shifted register)
 RET                          | Return from subroutine
@@ -114,6 +115,7 @@ namespace triton {
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_MVN:       this->mvn_s(inst);           break;
+          case ID_INS_NEG:       this->neg_s(inst);           break;
           case ID_INS_NOP:       this->nop_s(inst);           break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
@@ -943,6 +945,27 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MVN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::neg_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvneg(op);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MEG operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);

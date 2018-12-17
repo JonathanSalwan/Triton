@@ -152,6 +152,9 @@ namespace triton {
           //! The MVN semantics.
           void mvn_s(triton::arch::Instruction& inst);
 
+          //! The NEG semantics.
+          void neg_s(triton::arch::Instruction& inst);
+
           //! The NOP semantics.
           void nop_s(triton::arch::Instruction& inst);
 

@@ -306,6 +306,7 @@ CODE  = [
 
     ("\x41\x9a\x80\xd2", "movz x1, #1234"),
     ("\xe0\x03\x21\xaa", "mvn x0, x1"),
+    ("\xe0\x03\x01\xcb", "neg x0, x1"),
 ]
 
 def emu_with_unicorn(opcode, istate):
