@@ -307,6 +307,11 @@ CODE  = [
     ("\x41\x9a\x80\xd2", "movz x1, #1234"),
     ("\xe0\x03\x21\xaa", "mvn x0, x1"),
     ("\xe0\x03\x01\xcb", "neg x0, x1"),
+
+    ("\x41\x9a\x80\xd2", "movz x1, #1234"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x63\xa0\x84\xd2", "movz x3, #9475"),
+    ("\x20\x0c\x02\x9b", "madd x0, x1, x2, x3"),
 ]
 
 def emu_with_unicorn(opcode, istate):
