@@ -38,7 +38,7 @@ namespace triton {
     /*! \class MemoryAccess
      *  \brief This class is used to represent a memory access.
      */
-    class MemoryAccess : public BitsVector, public /* FIXME: aarch64? */AArch64OperandProperties {
+    class MemoryAccess : public BitsVector {
       protected:
         //! The memory' address.
         triton::uint64 address;

@@ -745,12 +745,6 @@ namespace triton {
          */
         if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
           triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
-
-          /* Shift AST if it's a shift operand */
-          /* FIXME: Is valid for aarch64 ? */
-          if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
-            return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), anode);
-
           return anode;
         }
 
@@ -784,11 +778,6 @@ namespace triton {
             tmp = opVec.front();
             break;
         }
-
-        /* Shift AST if it's a shift operand */
-        /* FIXME: Is valid for aarch64 ? */
-        if (mem.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
-          return this->getShiftAst(mem.getShiftType(), mem.getShiftValue(), tmp);
 
         return tmp;
       }

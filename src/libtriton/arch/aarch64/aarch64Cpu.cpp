@@ -318,11 +318,6 @@ namespace triton {
                   if (this->isRegisterValid(index.getId()))
                     mem.setScale(triton::arch::Immediate(1, index.getSize()));
 
-                  /* Set Shift type and value */
-                  /* FIXME: Valid in ARM64 ? */
-                  mem.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
-                  mem.setShiftValue(op->shift.value);
-
                   inst.operands.push_back(triton::arch::OperandWrapper(mem));
                   break;
                 }
