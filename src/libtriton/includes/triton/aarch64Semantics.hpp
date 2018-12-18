@@ -173,6 +173,15 @@ namespace triton {
           //! The STR semantics.
           void str_s(triton::arch::Instruction& inst);
 
+          //! The STUR semantics.
+          void stur_s(triton::arch::Instruction& inst);
+
+          //! The STURB semantics.
+          void sturb_s(triton::arch::Instruction& inst);
+
+          //! The STURH semantics.
+          void sturh_s(triton::arch::Instruction& inst);
+
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
       };

@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <utility>
 #include <triton/aarch64Semantics.hpp>
 #include <triton/aarch64Specifications.hpp>
 #include <triton/astContext.hpp>
@@ -61,6 +62,9 @@ ORN                          | Bitwise OR NOT (shifted register)
 RET                          | Return from subroutine
 STR (immediate)              | Store Register (immediate)
 STR (register)               | Store Register (register)
+STUR                         | Store Register (unscaled)
+STURB                        | Store Register Byte (unscaled)
+STURH                        | Store Register Halfword (unscaled)
 SUB (extended register)      | Subtract (extended register)
 SUB (immediate)              | Subtract (immediate)
 SUB (shifted register)       | Subtract (shifted register)
@@ -126,6 +130,9 @@ namespace triton {
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
+          case ID_INS_STUR:      this->stur_s(inst);          break;
+          case ID_INS_STURB:     this->sturb_s(inst);         break;
+          case ID_INS_STURH:     this->sturh_s(inst);         break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
           default:
             return false;
@@ -803,11 +810,14 @@ namespace triton {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
 
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt.zx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+        auto node = this->astCtxt.zx(dst.getBitSize() - 8, op);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURB operation");
@@ -824,11 +834,14 @@ namespace triton {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
 
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt.zx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+        auto node = this->astCtxt.zx(dst.getBitSize() - 16, op);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURH operation");
@@ -845,11 +858,14 @@ namespace triton {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
 
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt.sx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+        auto node = this->astCtxt.sx(dst.getBitSize() - 8, op);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURSB operation");
@@ -866,11 +882,14 @@ namespace triton {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
 
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt.sx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+        auto node = this->astCtxt.sx(dst.getBitSize() - 16, op);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURSH operation");
@@ -887,11 +906,14 @@ namespace triton {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
 
+        /* Special behavior: Define that the size of the memory access is 32 bits */
+        src.getMemory().setPair(std::make_pair(31, 0));
+
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt.sx(dst.getBitSize() - 32, this->astCtxt.extract(31, 0, op));
+        auto node = this->astCtxt.sx(dst.getBitSize() - 32, op);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURSW operation");
@@ -1122,6 +1144,74 @@ namespace triton {
           /* Spread taint */
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::stur_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create the semantics of the STORE */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STUR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::sturb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        //auto node = this->astCtxt.zx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+        auto node = this->astCtxt.extract(7, 0, op);
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        dst.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::sturh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        //auto node = this->astCtxt.zx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+        auto node = this->astCtxt.extract(15, 0, op);
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        dst.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURH operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

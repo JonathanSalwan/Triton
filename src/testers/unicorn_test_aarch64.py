@@ -374,6 +374,9 @@ CODE  = [
     ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     ("\x3f\x10\x00\x91", "add sp, x1, #4"),
     ("\xeb\x03\x00\xf9", "str x11, [sp]"),
+    ("\x25\x00\x00\xf8", "stur x5, [x1]"),
+    ("\x26\x00\x00\x38", "sturb w6, [x1]"),
+    ("\x27\x00\x00\x78", "sturh w7, [x1]"),
 ]
 
 def emu_with_unicorn(opcode, istate):
