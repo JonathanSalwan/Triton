@@ -351,6 +351,29 @@ CODE  = [
     ("\x00\x8c\x02\x9b", "msub x0, x0, x2, x3"),
     ("\x00\x8c\x02\x9b", "msub x0, x0, x2, x3"),
     ("\x00\x8c\x02\x9b", "msub x0, x0, x2, x3"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x63\xa0\x84\xd2", "movz x3, #9475"),
+    ("\x64\xa0\x84\xd2", "movz x4, #9475"),
+    ("\xe5\x24\x81\xd2", "movz x5, #2343"),
+    ("\xa6\xaf\x81\xd2", "movz x6, #3453"),
+    ("\x87\x3a\x82\xd2", "movz x7, #4564"),
+    ("\xe8\x16\x84\xd2", "movz x8, #8375"),
+    ("\xe9\xc1\x84\xd2", "movz x9, #9743"),
+    ("\xea\xaa\x82\xd2", "movz x10, #5463"),
+    ("\x2b\xf8\x80\xd2", "movz x11, #1985"),
+    ("\x25\x00\x00\xf9", "str x5, [x1]"),
+    ("\x26\x04\x00\xf8", "str x6, [x1], #0"),
+    ("\x27\x44\x00\xf8", "str x7, [x1], #4"),
+    ("\x28\x68\x22\xf8", "str x8, [x1, x2]"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x29\x24\x1e\xf8", "str x9, [x1], #-30"),
+    ("\x2a\x8c\x00\xf8", "str x10, [x1, #8]!"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xeb\x03\x00\xf9", "str x11, [sp]"),
 ]
 
 def emu_with_unicorn(opcode, istate):

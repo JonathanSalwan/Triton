@@ -170,6 +170,9 @@ namespace triton {
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
+          //! The STR semantics.
+          void str_s(triton::arch::Instruction& inst);
+
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
       };
