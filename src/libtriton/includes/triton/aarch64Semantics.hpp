@@ -184,6 +184,21 @@ namespace triton {
 
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
+
+          //! The SXTB semantics.
+          void sxtb_s(triton::arch::Instruction& inst);
+
+          //! The SXTH semantics.
+          void sxth_s(triton::arch::Instruction& inst);
+
+          //! The SXTW semantics.
+          void sxtw_s(triton::arch::Instruction& inst);
+
+          //! The UXTB semantics.
+          void uxtb_s(triton::arch::Instruction& inst);
+
+          //! The UXTH semantics.
+          void uxth_s(triton::arch::Instruction& inst);
       };
 
     /*! @} End of aarch64 namespace */

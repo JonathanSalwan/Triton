@@ -377,6 +377,13 @@ CODE  = [
     ("\x25\x00\x00\xf8", "stur x5, [x1]"),
     ("\x26\x00\x00\x38", "sturb w6, [x1]"),
     ("\x27\x00\x00\x78", "sturh w7, [x1]"),
+
+    ("\xc1\xbd\x9b\xd2", "movz x1, #0xddee"),
+    ("\x20\x1c\x40\x93", "sxtb x0, x1"),
+    ("\x20\x3c\x40\x93", "sxth x0, x1"),
+    ("\x20\x7c\x40\x93", "sxtw x0, x1"),
+    ("\x20\x1c\x00\x53", "uxtb w0, w1"),
+    ("\x20\x3c\x00\x53", "uxth w0, w1"),
 ]
 
 def emu_with_unicorn(opcode, istate):

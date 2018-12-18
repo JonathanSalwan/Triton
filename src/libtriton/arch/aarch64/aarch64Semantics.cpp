@@ -18,56 +18,61 @@
     \brief [**internal**] List of the supported semantics for the AArch64 architecture.
 
 
-Mnemonic                     | Description
------------------------------|------------
-ADC                          | Add with Carry
-ADD (extended register)      | Add (extended register)
-ADD (immediate)              | Add (immediate)
-ADD (shifted register)       | Add (shifted register)
-ADR                          | Form PC-relative address
-ADRP                         | Form PC-relative address to 4KB page
-AND (immediate)              | Bitwise AND (immediate).
-AND (shifted register)       | Bitwise AND (shifted register)
-ASR (immediate)              | Arithmetic Shift Right (immediate): an alias of SBFM
-ASR (register)               | Arithmetic Shift Right (register): an alias of ASRV
-B                            | Branch
-BL                           | Branch with Link
-BLR                          | Branch with Link to Register
-BR                           | Branch to Register
-CBNZ                         | Compare and Branch on Nonzero
-CBZ                          | Compare and Branch on Zero
-EON (shifted register)       | Bitwise Exclusive OR NOT (shifted register)
-EOR (immediate)              | Bitwise Exclusive OR (immediate)
-EOR (shifted register)       | Bitwise Exclusive OR (shifted register)
-EXTR                         | EXTR: Extract register
-LDR (immediate)              | Load Register (immediate)
-LDR (literal)                | Load Register (literal)
-LDR (register)               | Load Register (register)
-LDUR                         | Load Register (unscaled)
-LDURB                        | Load Register Byte (unscaled)
-LDURH                        | Load Register Halfword (unscaled)
-LDURSB                       | Load Register Signed Byte (unscaled)
-LDURSH                       | Load Register Signed Halfword (unscaled)
-LDURSW                       | Load Register Signed Word (unscaled)
-MADD                         | Multiply-Add
-MOV (bitmask immediate)      | Move (bitmask immediate): an alias of ORR (immediate)
-MOV (register)               | Move (register): an alias of ORR (shifted register)
-MOV (to/from SP)             | Move between register and stack pointer: an alias of ADD (immediate)
-MOVZ                         | Move shifted 16-bit immediate to register
-MSUB                         | Multiply-Subtract
-MVN                          | Bitwise NOT: an alias of ORN (shifted register)
-NEG (shifted register)       | Negate (shifted register): an alias of SUB (shifted register)
-NOP                          | No Operation
-ORN                          | Bitwise OR NOT (shifted register)
-RET                          | Return from subroutine
-STR (immediate)              | Store Register (immediate)
-STR (register)               | Store Register (register)
-STUR                         | Store Register (unscaled)
-STURB                        | Store Register Byte (unscaled)
-STURH                        | Store Register Halfword (unscaled)
-SUB (extended register)      | Subtract (extended register)
-SUB (immediate)              | Subtract (immediate)
-SUB (shifted register)       | Subtract (shifted register)
+Mnemonic                      | Description
+------------------------------|------------
+ADC                           | Add with Carry
+ADD (extended register)       | Add (extended register)
+ADD (immediate)               | Add (immediate)
+ADD (shifted register)        | Add (shifted register)
+ADR                           | Form PC-relative address
+ADRP                          | Form PC-relative address to 4KB page
+AND (immediate)               | Bitwise AND (immediate).
+AND (shifted register)        | Bitwise AND (shifted register)
+ASR (immediate)               | Arithmetic Shift Right (immediate): an alias of SBFM
+ASR (register)                | Arithmetic Shift Right (register): an alias of ASRV
+B                             | Branch
+BL                            | Branch with Link
+BLR                           | Branch with Link to Register
+BR                            | Branch to Register
+CBNZ                          | Compare and Branch on Nonzero
+CBZ                           | Compare and Branch on Zero
+EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
+EOR (immediate)               | Bitwise Exclusive OR (immediate)
+EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
+EXTR                          | EXTR: Extract register
+LDR (immediate)               | Load Register (immediate)
+LDR (literal)                 | Load Register (literal)
+LDR (register)                | Load Register (register)
+LDUR                          | Load Register (unscaled)
+LDURB                         | Load Register Byte (unscaled)
+LDURH                         | Load Register Halfword (unscaled)
+LDURSB                        | Load Register Signed Byte (unscaled)
+LDURSH                        | Load Register Signed Halfword (unscaled)
+LDURSW                        | Load Register Signed Word (unscaled)
+MADD                          | Multiply-Add
+MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immediate)
+MOV (register)                | Move (register): an alias of ORR (shifted register)
+MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
+MOVZ                          | Move shifted 16-bit immediate to register
+MSUB                          | Multiply-Subtract
+MVN                           | Bitwise NOT: an alias of ORN (shifted register)
+NEG (shifted register)        | Negate (shifted register): an alias of SUB (shifted register)
+NOP                           | No Operation
+ORN                           | Bitwise OR NOT (shifted register)
+RET                           | Return from subroutine
+STR (immediate)               | Store Register (immediate)
+STR (register)                | Store Register (register)
+STUR                          | Store Register (unscaled)
+STURB                         | Store Register Byte (unscaled)
+STURH                         | Store Register Halfword (unscaled)
+SUB (extended register)       | Subtract (extended register)
+SUB (immediate)               | Subtract (immediate)
+SUB (shifted register)        | Subtract (shifted register)
+SXTB                          | Signed Extend Byte: an alias of SBFM
+SXTH                          | Sign Extend Halfword: an alias of SBFM
+SXTW                          | Sign Extend Word: an alias of SBFM
+UXTB                          | Unsigned Extend Byte: an alias of UBFM
+UXTH                          | Unsigned Extend Halfword: an alias of UBFM
 
 */
 
@@ -134,6 +139,11 @@ namespace triton {
           case ID_INS_STURB:     this->sturb_s(inst);         break;
           case ID_INS_STURH:     this->sturh_s(inst);         break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
+          case ID_INS_SXTB:      this->sxtb_s(inst);          break;
+          case ID_INS_SXTH:      this->sxth_s(inst);          break;
+          case ID_INS_SXTW:      this->sxtw_s(inst);          break;
+          case ID_INS_UXTB:      this->uxtb_s(inst);          break;
+          case ID_INS_UXTH:      this->uxth_s(inst);          break;
           default:
             return false;
         }
@@ -1235,6 +1245,111 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::sxtb_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.sx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SXTB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::sxth_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.sx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SXTH operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::sxtw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.sx(dst.getBitSize() - 32, this->astCtxt.extract(31, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SXTW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::uxtb_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UXTB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::uxth_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UXTH operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
