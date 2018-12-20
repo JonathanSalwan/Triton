@@ -62,6 +62,8 @@ MVN                           | Bitwise NOT: an alias of ORN (shifted register)
 NEG (shifted register)        | Negate (shifted register): an alias of SUB (shifted register)
 NOP                           | No Operation
 ORN                           | Bitwise OR NOT (shifted register)
+ORR (immediate)               | Bitwise OR (immediate)
+ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
@@ -139,6 +141,7 @@ namespace triton {
           case ID_INS_NEG:       this->neg_s(inst);           break;
           case ID_INS_NOP:       this->nop_s(inst);           break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
+          case ID_INS_ORR:       this->orr_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
           case ID_INS_STUR:      this->stur_s(inst);          break;
@@ -1162,6 +1165,29 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ORN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::orr_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvor(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ORR operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
