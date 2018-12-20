@@ -52,6 +52,10 @@ LDURH                         | Load Register Halfword (unscaled)
 LDURSB                        | Load Register Signed Byte (unscaled)
 LDURSH                        | Load Register Signed Halfword (unscaled)
 LDURSW                        | Load Register Signed Word (unscaled)
+LSL (immediate)               | Logical Shift Left (immediate): an alias of UBFM
+LSL (register)                | Logical Shift Left (register): an alias of LSLV
+LSR (immediate)               | Logical Shift Right (immediate): an alias of UBFM
+LSR (register)                | Logical Shift Right (register): an alias of LSRV
 MADD                          | Multiply-Add
 MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immediate)
 MOV (register)                | Move (register): an alias of ORR (shifted register)
@@ -133,6 +137,8 @@ namespace triton {
           case ID_INS_LDURSB:    this->ldursb_s(inst);        break;
           case ID_INS_LDURSH:    this->ldursh_s(inst);        break;
           case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
+          case ID_INS_LSL:       this->lsl_s(inst);           break;
+          case ID_INS_LSR:       this->lsr_s(inst);           break;
           case ID_INS_MADD:      this->madd_s(inst);          break;
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
@@ -1011,6 +1017,60 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::lsl_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto  size = src2.getBitSize();
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.bvand(
+                     this->symbolicEngine->getOperandAst(inst, src2),
+                     this->astCtxt.bv(size - 1,  size)
+                   );
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvshl(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LSL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::lsr_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto  size = src2.getBitSize();
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.bvand(
+                     this->symbolicEngine->getOperandAst(inst, src2),
+                     this->astCtxt.bv(size - 1,  size)
+                   );
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvlshr(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LSR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
