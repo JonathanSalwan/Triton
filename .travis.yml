@@ -135,7 +135,7 @@ before_install:
   - export CXX="$CXX_COMPILER"
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export PREFIX="/usr/local"; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew update; fi
-  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3 capstone; fi
+  - if [ "$TRAVIS_OS_NAME" == "osx" ]; then brew install z3; fi
   - if [ "$TRAVIS_OS_NAME" == "osx" ]; then export DYLD_LIBRARY_PATH=/usr/local/opt/capstone/lib/:$DYLD_LIBRARY_PATH; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
@@ -146,13 +146,13 @@ install:
   - if [ "$GCOV" == "ON" ]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
-  # Install capstone
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget https://github.com/aquynh/capstone/archive/3.0.5.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf ./3.0.5.tar.gz; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ./capstone-3.0.5; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then bash ./make.sh; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo make install; fi
-  - if [ "$TRAVIS_OS_NAME" == "linux" ]; then cd ../; fi
+  # Install capstone. Same command lines for OSX and Linux
+  - wget https://github.com/aquynh/capstone/archive/3.0.5.tar.gz
+  - tar -xf ./3.0.5.tar.gz
+  - cd ./capstone-3.0.5
+  - bash ./make.sh
+  - sudo make install
+  - cd ../
   # Download pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
