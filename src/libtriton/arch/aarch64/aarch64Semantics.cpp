@@ -36,6 +36,9 @@ BLR                           | Branch with Link to Register
 BR                            | Branch to Register
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
+CSEL                          | Conditional Select
+CSINC                         | Conditional Select Increment
+CSNEG                         | Conditional Select Negation
 EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)               | Bitwise Exclusive OR (immediate)
 EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
@@ -115,6 +118,9 @@ namespace triton {
           case ID_INS_BR:        this->br_s(inst);            break;
           case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
           case ID_INS_CBZ:       this->cbz_s(inst);           break;
+          case ID_INS_CSEL:      this->csel_s(inst);          break;
+          case ID_INS_CSINC:     this->csinc_s(inst);         break;
+          case ID_INS_CSNEG:     this->csneg_s(inst);         break;
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
@@ -672,6 +678,78 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::csel_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->getCodeConditionAst(inst, op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSEL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::csinc_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.bvadd(
+                     this->symbolicEngine->getOperandAst(inst, src2),
+                     this->astCtxt.bv(1, src2.getBitSize())
+                   );
+
+        /* Create the semantics */
+        auto node = this->getCodeConditionAst(inst, op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSINC operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::csneg_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.bvneg(this->symbolicEngine->getOperandAst(inst, src2));
+
+        /* Create the semantics */
+        auto node = this->getCodeConditionAst(inst, op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSNEG operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 

@@ -113,6 +113,15 @@ namespace triton {
           //! The CBZ semantics
           void cbz_s(triton::arch::Instruction& inst);
 
+          //! The CSEL semantics
+          void csel_s(triton::arch::Instruction& inst);
+
+          //! The CSINC semantics
+          void csinc_s(triton::arch::Instruction& inst);
+
+          //! The CSNEG semantics
+          void csneg_s(triton::arch::Instruction& inst);
+
           //! The EON semantics.
           void eon_s(triton::arch::Instruction& inst);
 
