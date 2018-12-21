@@ -90,7 +90,7 @@ Returns the type of the immediate. In this case this function returns `OPERAND.I
 - <b>integer getValue(void)</b><br>
 Returns the immediate value.
 
-- <b>setValue(integer value, integer size)</b><br>
+- <b>void setValue(integer value, integer size)</b><br>
 Sets the immediate value.
 
 */
