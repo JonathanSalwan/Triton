@@ -77,15 +77,30 @@ namespace triton {
           //! Gets the taint state (based on flags) of a conditional instruction
           bool getCodeConditionTainteSate(const triton::arch::Instruction& inst);
 
+          /* Generic flags computation ------------------------------------- */
+
+          //! Clears a flag.
+          void clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment="");
+
+          //! Sets a flag.
+          void setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment="");
+
+          //! The NF semantics.
+          void nf_s(triton::arch::Instruction& inst,
+                    const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                    triton::arch::OperandWrapper& dst);
+
+          //! The ZF semantics.
+          void zf_s(triton::arch::Instruction& inst,
+                    const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                    triton::arch::OperandWrapper& dst);
+
+          /* Specific flags computation ------------------------------------ */
+
           //! The CF semantics.
           void cfAdd_s(triton::arch::Instruction& inst,
                        triton::ast::SharedAbstractNode& op1,
                        triton::ast::SharedAbstractNode& op2,
-                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
-
-          //! The NF semantics.
-          void nfAdd_s(triton::arch::Instruction& inst,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
                        triton::arch::OperandWrapper& dst);
 
@@ -96,10 +111,7 @@ namespace triton {
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
                        triton::arch::OperandWrapper& dst);
 
-          //! The ZF semantics.
-          void zfAdd_s(triton::arch::Instruction& inst,
-                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
+          /* Instruction semantics ----------------------------------------- */
 
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);

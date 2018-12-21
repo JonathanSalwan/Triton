@@ -433,6 +433,81 @@ namespace triton {
       }
 
 
+      void AArch64Semantics::clearFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+        /* Create the semantics */
+        auto node = this->astCtxt.bv(0, 1);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
+      }
+
+
+      void AArch64Semantics::setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment) {
+        /* Create the semantics */
+        auto node = this->astCtxt.bv(1, 1);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
+      }
+
+
+      void AArch64Semantics::nf_s(triton::arch::Instruction& inst,
+                                  const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                  triton::arch::OperandWrapper& dst) {
+
+        auto nf   = this->architecture->getRegister(ID_REG_AARCH64_N);
+        auto high = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * nf = MSB(result)
+         */
+        auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, nf, "Negative flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(nf, parent->isTainted);
+      }
+
+
+      void AArch64Semantics::zf_s(triton::arch::Instruction& inst,
+                                  const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                  triton::arch::OperandWrapper& dst) {
+
+        auto zf     = this->architecture->getRegister(ID_REG_AARCH64_Z);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * zf = 0 == result
+         */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.equal(
+                        this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
+                        this->astCtxt.bv(0, bvSize)
+                      ),
+                      this->astCtxt.bv(1, 1),
+                      this->astCtxt.bv(0, 1)
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, zf, "Zero flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
+      }
+
+
       void AArch64Semantics::cfAdd_s(triton::arch::Instruction& inst,
                                      triton::ast::SharedAbstractNode& op1,
                                      triton::ast::SharedAbstractNode& op2,
@@ -468,27 +543,6 @@ namespace triton {
       }
 
 
-      void AArch64Semantics::nfAdd_s(triton::arch::Instruction& inst,
-                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
-
-        auto nf   = this->architecture->getRegister(ID_REG_AARCH64_N);
-        auto high = dst.getHigh();
-
-        /*
-         * Create the semantic.
-         * nf = dst[high:high]
-         */
-        auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
-
-        /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, nf, "Negative flag");
-
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(nf, parent->isTainted);
-      }
-
-
       void AArch64Semantics::vfAdd_s(triton::arch::Instruction& inst,
                                      triton::ast::SharedAbstractNode& op1,
                                      triton::ast::SharedAbstractNode& op2,
@@ -516,36 +570,6 @@ namespace triton {
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
-      }
-
-
-      void AArch64Semantics::zfAdd_s(triton::arch::Instruction& inst,
-                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
-
-        auto zf     = this->architecture->getRegister(ID_REG_AARCH64_Z);
-        auto bvSize = dst.getBitSize();
-        auto low    = dst.getLow();
-        auto high   = dst.getHigh();
-
-        /*
-         * Create the semantic.
-         * zf = 0 == regDst
-         */
-        auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(
-                        this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
-                        this->astCtxt.bv(0, bvSize)
-                      ),
-                      this->astCtxt.bv(1, 1),
-                      this->astCtxt.bv(0, 1)
-                    );
-
-        /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, zf, "Zero flag");
-
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
       }
 
 
@@ -595,9 +619,9 @@ namespace triton {
         /* Upate symbolic flags */
         if (inst.isUpdateFlag() == true) {
           this->cfAdd_s(inst, op1, op2, expr, dst);
-          this->nfAdd_s(inst, expr, dst);
+          this->nf_s(inst, expr, dst);
           this->vfAdd_s(inst, op1, op2, expr, dst);
-          this->zfAdd_s(inst, expr, dst);
+          this->zf_s(inst, expr, dst);
         }
 
         /* Upate the symbolic control flow */
