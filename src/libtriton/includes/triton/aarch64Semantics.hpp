@@ -97,15 +97,29 @@ namespace triton {
 
           /* Specific flags computation ------------------------------------ */
 
-          //! The CF semantics.
+          //! The CF semantics for the ADDS operation.
           void cfAdd_s(triton::arch::Instruction& inst,
                        triton::ast::SharedAbstractNode& op1,
                        triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
                        triton::arch::OperandWrapper& dst);
 
-          //! The VF semantics.
+          //! The CF semantics for the SUBS operation.
+          void cfSub_s(triton::arch::Instruction& inst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
+          //! The VF semantics for the ADDS operation.
           void vfAdd_s(triton::arch::Instruction& inst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
+          //! The VF semantics for the SUBS operation.
+          void vfSub_s(triton::arch::Instruction& inst,
                        triton::ast::SharedAbstractNode& op1,
                        triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,

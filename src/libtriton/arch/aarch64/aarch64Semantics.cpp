@@ -80,6 +80,9 @@ STURH                         | Store Register Halfword (unscaled)
 SUB (extended register)       | Subtract (extended register)
 SUB (immediate)               | Subtract (immediate)
 SUB (shifted register)        | Subtract (shifted register)
+SUBS (extended register)      | Subtract (extended register), setting flags
+SUBS (immediate)              | Subtract (immediate), setting flags
+SUBS (shifted register)       | Subtract (shifted register), setting flags
 SXTB                          | Signed Extend Byte: an alias of SBFM
 SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
@@ -521,7 +524,7 @@ namespace triton {
 
         /*
          * Create the semantic.
-         * cf = MSB((op1 & op2) ^ ((op1 ^ op2 ^ parent) & (op1 ^ op2)));
+         * cf = MSB((op1 & op2) ^ ((op1 ^ op2 ^ result) & (op1 ^ op2)));
          */
         auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
                       this->astCtxt.bvxor(
@@ -533,6 +536,42 @@ namespace triton {
                           ),
                         this->astCtxt.bvxor(op1, op2))
                       )
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, cf, "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(cf, parent->isTainted);
+      }
+
+
+      void AArch64Semantics::cfSub_s(triton::arch::Instruction& inst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     triton::arch::OperandWrapper& dst) {
+
+        auto cf     = this->architecture->getRegister(ID_REG_AARCH64_C);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * cf = (MSB(((op1 ^ op2 ^ result) ^ ((op1 ^ result) & (op1 ^ op2))))) ^ 1
+         */
+        auto node = this->astCtxt.bvxor(
+                      this->astCtxt.extract(bvSize-1, bvSize-1,
+                        this->astCtxt.bvxor(
+                          this->astCtxt.bvxor(op1, this->astCtxt.bvxor(op2, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))),
+                          this->astCtxt.bvand(
+                            this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent))),
+                            this->astCtxt.bvxor(op1, op2)
+                          )
+                        )
+                      ),
+                      this->astCtxt.bvtrue()
                     );
 
         /* Create the symbolic expression */
@@ -556,11 +595,41 @@ namespace triton {
 
         /*
          * Create the semantic.
-         * vf = MSB((op1 ^ ~op2) & (op1 ^ regDst))
+         * vf = MSB((op1 ^ ~op2) & (op1 ^ result))
          */
         auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
                       this->astCtxt.bvand(
                         this->astCtxt.bvxor(op1, this->astCtxt.bvnot(op2)),
+                        this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))
+                      )
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, vf, "Overflow flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
+      }
+
+
+      void AArch64Semantics::vfSub_s(triton::arch::Instruction& inst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     triton::arch::OperandWrapper& dst) {
+
+        auto vf     = this->architecture->getRegister(ID_REG_AARCH64_V);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * vf = MSB((op1 ^ op2) & (op1 ^ result))
+         */
+        auto node = this->astCtxt.extract(bvSize-1, bvSize-1,
+                      this->astCtxt.bvand(
+                        this->astCtxt.bvxor(op1, op2),
                         this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))
                       )
                     );
@@ -1556,10 +1625,18 @@ namespace triton {
         auto node = this->astCtxt.bvsub(op1, op2);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SUB operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SUB(S) operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate symbolic flags */
+        if (inst.isUpdateFlag() == true) {
+          this->cfSub_s(inst, op1, op2, expr, dst);
+          this->nf_s(inst, expr, dst);
+          this->vfSub_s(inst, op1, op2, expr, dst);
+          this->zf_s(inst, expr, dst);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
