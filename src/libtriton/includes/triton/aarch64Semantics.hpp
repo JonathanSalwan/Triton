@@ -77,6 +77,30 @@ namespace triton {
           //! Gets the taint state (based on flags) of a conditional instruction
           bool getCodeConditionTainteSate(const triton::arch::Instruction& inst);
 
+          //! The CF semantics.
+          void cfAdd_s(triton::arch::Instruction& inst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
+          //! The NF semantics.
+          void nfAdd_s(triton::arch::Instruction& inst,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
+          //! The VF semantics.
+          void vfAdd_s(triton::arch::Instruction& inst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
+          //! The ZF semantics.
+          void zfAdd_s(triton::arch::Instruction& inst,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                       triton::arch::OperandWrapper& dst);
+
           //! The ADC semantics.
           void adc_s(triton::arch::Instruction& inst);
 

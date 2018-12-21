@@ -27,6 +27,7 @@ namespace triton {
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->updateFlag      = false;
       this->writeBack       = false;
 
       std::memset(this->opcode, 0x00, sizeof(this->opcode));
@@ -66,6 +67,7 @@ namespace triton {
       this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
+      this->updateFlag          = other.updateFlag;
       this->writeBack           = other.writeBack;
       this->writtenRegisters    = other.writtenRegisters;
 
@@ -269,6 +271,11 @@ namespace triton {
     }
 
 
+    void Instruction::setUpdateFlag(bool state) {
+      this->updateFlag = state;
+    }
+
+
     void Instruction::setCodeCondition(triton::arch::aarch64::condition_e codeCondition) {
       this->codeCondition = codeCondition;
     }
@@ -430,6 +437,11 @@ namespace triton {
     }
 
 
+    bool Instruction::isUpdateFlag(void) const {
+      return this->updateFlag;
+    }
+
+
     void Instruction::setBranch(bool flag) {
       this->branch = flag;
     }
@@ -456,6 +468,7 @@ namespace triton {
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->updateFlag      = false;
       this->writeBack       = false;
 
       this->disassembly.clear();

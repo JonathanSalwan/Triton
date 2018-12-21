@@ -100,6 +100,9 @@ namespace triton {
         //! True if this instruction performs a write back. Mainly used for AArch64 instruction like LDR.
         bool writeBack;
 
+        //! True if this instruction updartes flags. Mainly used for AArch64 instruction like ADDS.
+        bool updateFlag;
+
     private:
         //! Copies an Instruction
         void copy(const Instruction& other);
@@ -228,6 +231,9 @@ namespace triton {
         //! Sets the writeBack flag of the instruction.
         TRITON_EXPORT void setWriteBack(bool state);
 
+        //! Sets the updateFlag of the instruction.
+        TRITON_EXPORT void setUpdateFlag(bool state);
+
         //! Adds a symbolic expression
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
@@ -263,6 +269,9 @@ namespace triton {
 
         //! Returns true if the instruction performs a write back. Mainly used for AArch64 instructions like LDR.
         TRITON_EXPORT bool isWriteBack(void) const;
+
+        //! Returns true if the instruction updates flags. Mainly used for AArch64 instructions like ADDS.
+        TRITON_EXPORT bool isUpdateFlag(void) const;
 
         //! Sets flag to define this instruction as branch or not.
         TRITON_EXPORT void setBranch(bool flag);

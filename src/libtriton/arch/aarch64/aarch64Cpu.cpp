@@ -270,6 +270,9 @@ namespace triton {
             /* Init the instruction's write back flag */
             inst.setWriteBack(detail->arm64.writeback);
 
+            /* Set True if the instruction udpate flags */
+            inst.setUpdateFlag(detail->arm64.update_flags);
+
             /* Init operands */
             for (triton::uint32 n = 0; n < detail->arm64.op_count; n++) {
               triton::extlibs::capstone::cs_arm64_op* op = &(detail->arm64.operands[n]);
