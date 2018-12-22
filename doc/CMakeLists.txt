@@ -22,8 +22,11 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
 	  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "${CMAKE_CURRENT_BINARY_DIR}"
 	  DEPENDS gen_doc_from_spec
 	)
-
-	execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+	
+	# replace backlsash with forwardslash to not generate an error on windows
+	execute_process (COMMAND ${PYTHON_EXECUTABLE} -c [[from distutils.sysconfig import get_python_lib; lib = get_python_lib(); print lib.replace("\\", "/")]]
+		OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+		
 	install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete DESTINATION ${PYTHON_SITE_PACKAGES})
 endif()
 
