@@ -17,6 +17,16 @@ add_custom_target(doc
   DEPENDS gen_doc_from_spec
 )
 
+if(PYTHON_BINDINGS_AUTOCOMPLETE)
+	add_custom_target(python_autocomplete
+	  COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "${CMAKE_CURRENT_BINARY_DIR}"
+	  DEPENDS gen_doc_from_spec
+	)
+
+	execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from distutils.sysconfig import get_python_lib; print get_python_lib()" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
+	install (DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete DESTINATION ${PYTHON_SITE_PACKAGES})
+endif()
+
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Doxyfile.in
     ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile

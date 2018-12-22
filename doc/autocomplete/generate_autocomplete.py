@@ -1,4 +1,7 @@
-from typing import Optional, List, Dict, Tuple
+try:
+    from typing import Optional, List, Dict, Tuple
+except ImportError:
+    pass
 
 import re
 import os
@@ -37,7 +40,9 @@ def sub_types(s):
     replacements = [
         ('integer', 'int'),
         ('string', 'str'),
-        ('void', 'None')
+        ('void', 'None'),
+        ('function', 'Callable'),
+        ('tuple', 'Tuple'),
     ]
     for to_repl, repl in replacements:
         s = re.sub(to_repl, repl, s)
@@ -53,13 +58,18 @@ def sub_types(s):
 
 def gen_function(sig, desc):
     # type: (str, str) -> Optional[Function]
-    dbg = False and 'getPathConstraints' in sig
+    dbg = False and 'land' in sig
     sig = sub_types(sig)
     sig_match = sig_re.search(sig)
     if not sig_match:
         print("error: could not match signature for\n '{}'".format(sig))
         print("pattern: {}".format(sig_re.pattern))
         return None
+    
+    # naming a function string... noice
+    func_name = sig_match.group('name')
+    if func_name == 'str':
+        func_name = 'string'
     
     if dbg:
         for i, g in enumerate(sig_match.groups()):
@@ -81,7 +91,7 @@ def gen_function(sig, desc):
                     arg_name = ''
                 # or it is a variable arg, which means we generate a generic str
                 else:
-                    arg_name = '*args'
+                    arg_name = 'args'
             else:
                 arg_name = arg_words[1]
             
@@ -90,7 +100,7 @@ def gen_function(sig, desc):
                 return None
             args[arg_name] = arg_type
     
-    return Function(sig_match.group('name'), args, sig_match.group('return'), desc)
+    return Function(func_name, args, sig_match.group('return'), desc)
 
 def gen_module_for_object(classname, input_str):
     # type: (str, str) -> str
@@ -114,9 +124,13 @@ def gen_module_for_object(classname, input_str):
     
     # generate 
     autogen_str = '''
-from typing import List, Union, overload
+from typing import List, Union, Callable, Tuple
+import triton
 
 class {classname}:
+    def __init__(self, *args, **kargs):
+        self.org = triton.{classname}(*args, **kargs)
+
 
     {functions}
     '''.format(classname=classname, functions='\n'.join([str(f) for f in funcs]))
@@ -134,8 +148,9 @@ def gen_module_for_namespace(classname, input_str):
     if not matches:
         return ""
 
-    for i, match in enumerate(matches):
-        member = '    {} = {}'.format(match.group('member'), i)
+    for match in matches:
+        member = '    {member} = triton.{namespace}.{member}'.format(
+            member = match.group('member'), namespace=classname)
         members.append(member)
     
     if not members:
@@ -144,6 +159,7 @@ def gen_module_for_namespace(classname, input_str):
     
     # generate 
     autogen_str = '''
+import triton
 class {classname}:
 
 {members}
@@ -164,7 +180,7 @@ def gen_imports(objects, names):
 
 def gen_init_file(objects, imports):
     # type: (List[Tuple[str, str]], List[str]) -> str
-    return '\n'.join(imports)
+    return '\n'.join(imports) + '\nraise ImportError\n'
 
 
 def main():
@@ -173,10 +189,9 @@ def main():
     namespace_dir = os.path.join(src_dir, 'libtriton/bindings/python/namespaces')
     object_dir = os.path.join(src_dir, 'libtriton/bindings/python/objects')
 
-    out_dir = os.path.join(this_dir, 'triton_autocomplete')
+    out_dir = os.path.join(this_dir if len(os.sys.argv) < 2 else os.sys.argv[1], 'triton_autocomplete')
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
-    
     
     # get names/paths for objects
     obj_paths = glob(object_dir + '/*.cpp')
@@ -195,6 +210,10 @@ def main():
     name_paths = glob(namespace_dir + '/*.cpp')
     names = [] # type: List[Tuple[str, str]]
     for name_path in name_paths:
+
+        if 'initSyscallNamespace' in name_path:
+            print("info: skipping {}".format(name_path))
+            continue
         # find name of namespace from doxygen page command
         with open(name_path, 'r') as f:
             data = f.read()
@@ -219,8 +238,8 @@ def main():
 
         # write output
         with open(os.path.join(out_dir, '{}_{}.py'.format(OBJECT_PREFIX, obj_name)), 'w') as f:
-            f.write('\n'.join((imp for imp in imports if obj_name not in imp)) + '\n')
             f.write(mod_str)
+            f.write('\n' + '\n'.join((imp for imp in imports if obj_name not in imp)) + '\n')
 
     # generate modules for namespaces
     for name_path, name_name in names:
