@@ -163,6 +163,9 @@ namespace triton {
           //! The CBZ semantics
           void cbz_s(triton::arch::Instruction& inst);
 
+          //! The CMN semantics
+          void cmn_s(triton::arch::Instruction& inst);
+
           //! The CMP semantics
           void cmp_s(triton::arch::Instruction& inst);
 

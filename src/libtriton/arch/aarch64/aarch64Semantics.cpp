@@ -41,6 +41,9 @@ BLR                           | Branch with Link to Register
 BR                            | Branch to Register
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
+CMN (extended register)       | Compare Negative (extended register): an alias of ADDS (extended register)
+CMN (immediate)               | Compare Negative (immediate): an alias of ADDS (immediate)
+CMN (shifted register)        | Compare Negative (shifted register): an alias of ADDS (shifted register)
 CMP (extended register)       | Compare (extended register): an alias of SUBS (extended register)
 CMP (immediate)               | Compare (immediate): an alias of SUBS (immediate)
 CMP (shifted register)        | Compare (shifted register): an alias of SUBS (shifted register)
@@ -135,6 +138,7 @@ namespace triton {
           case ID_INS_BR:        this->br_s(inst);            break;
           case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
           case ID_INS_CBZ:       this->cbz_s(inst);           break;
+          case ID_INS_CMN:       this->cmn_s(inst);           break;
           case ID_INS_CMP:       this->cmp_s(inst);           break;
           case ID_INS_CSEL:      this->csel_s(inst);          break;
           case ID_INS_CSINC:     this->csinc_s(inst);         break;
@@ -921,6 +925,34 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::cmn_s(triton::arch::Instruction& inst) {
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvadd(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CMN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+
+        /* Upate symbolic flags */
+        this->cfAdd_s(inst, expr, src1, op1, op2);
+        this->nf_s(inst, expr, src1);
+        this->vfAdd_s(inst, expr, src1, op1, op2);
+        this->zf_s(inst, expr, src1);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
