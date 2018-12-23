@@ -50,6 +50,10 @@ class TestRAXRegister(unittest.TestCase):
         """Check register detect."""
         self.assertTrue(self.ctx.isRegister(self.reg))
 
+    def test_is_mutable(self):
+        """Check register is mutable."""
+        self.assertTrue(self.reg.isMutable())
+
 
 class TestAHRegister(unittest.TestCase):
 
@@ -156,7 +160,8 @@ class TestAArch64Registers(unittest.TestCase):
     def test_set_concrete_value(self):
         """Check register value modification."""
         for reg in self.ctx.getParentRegisters():
-            if reg.getName() == 'xzr':
+            if reg.isMutable() == False:
+                # XZR
                 continue
             i = random.randrange(0, 0xffffffffffffffff) & reg.getBitvector().getMaxValue()
             self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)

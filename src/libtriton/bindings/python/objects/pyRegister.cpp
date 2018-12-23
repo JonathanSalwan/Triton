@@ -117,6 +117,9 @@ e.g: `8`
 - <b>\ref py_OPERAND_page getType(void)</b><br>
 Returns type of the register. In this case this function returns `OPERAND.REG`.
 
+- <b>bool isMutable(void)</b><br>
+Returns true if this register is mutable. Mainly used in AArch64 to define that some registers like XZR are immutable.
+
 - <b>bool isOverlapWith(\ref py_Register_page other)</b><br>
 Returns true if `other` and `self` overlap.
 
@@ -236,6 +239,18 @@ namespace triton {
       }
 
 
+      static PyObject* Register_isMutable(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyRegister_AsRegister(self)->isMutable())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Register_isOverlapWith(PyObject* self, PyObject* reg2) {
         try {
           triton::arch::Register* reg1;
@@ -329,6 +344,7 @@ namespace triton {
         {"getShiftValue",     Register_getShiftValue,    METH_NOARGS,    ""},
         {"getSize",           Register_getSize,          METH_NOARGS,    ""},
         {"getType",           Register_getType,          METH_NOARGS,    ""},
+        {"isMutable",         Register_isMutable,        METH_NOARGS,    ""},
         {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
         {nullptr,             nullptr,                   0,              nullptr}
       };

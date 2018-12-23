@@ -624,6 +624,8 @@ namespace triton {
           case triton::arch::ID_REG_AARCH64_WSP:  (*((triton::uint32*)(this->sp)))   = value.convert_to<triton::uint32>(); break;
           case triton::arch::ID_REG_AARCH64_PC:   (*((triton::uint64*)(this->pc)))   = value.convert_to<triton::uint64>(); break;
           case triton::arch::ID_REG_AARCH64_SPSR: (*((triton::uint32*)(this->spsr))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_AARCH64_XZR:  break;  // Just do nothing
+          case triton::arch::ID_REG_AARCH64_WZR:  break;  // Just do nothing
           case triton::arch::ID_REG_AARCH64_N: {
             triton::uint32 b = (*((triton::uint32*)(this->spsr)));
             (*((triton::uint32*)(this->spsr))) = !value.is_zero() ? b | (1 << 31) : b & ~(1 << 31);

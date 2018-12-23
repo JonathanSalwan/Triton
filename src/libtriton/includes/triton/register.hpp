@@ -52,6 +52,9 @@ namespace triton {
         //! The parent id of the register.
         triton::arch::register_e parent;
 
+        //! True if the register is mutable. For example XZR in AArch64 is immutable.
+        bool vmutable;
+
       private:
         //! Copy a Register.
         void copy(const Register& other);
@@ -61,7 +64,7 @@ namespace triton {
         TRITON_EXPORT Register();
 
         //! Constructor.
-        TRITON_EXPORT Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low);
+        TRITON_EXPORT Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low, bool vmutable);
 
         //! Constructor.
         TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::register_e regId);
@@ -74,6 +77,9 @@ namespace triton {
 
         //! Returns true if `other` and `self` overlap.
         TRITON_EXPORT bool isOverlapWith(const Register& other) const;
+
+        //! Returns true if this register is mutable. Mainly used in AArch64 to define that some registers like XZR are immutable.
+        TRITON_EXPORT bool isMutable(void) const;
 
         //! Returns the name of the register.
         TRITON_EXPORT std::string getName(void) const;

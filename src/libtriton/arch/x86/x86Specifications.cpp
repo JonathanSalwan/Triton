@@ -24,12 +24,13 @@ namespace triton {
         if (arch == triton::arch::ARCH_X86_64) {
           // Fill registers_ with those available in X86_64 from spec
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                                                     \
-                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                                                \
-                                                      #LOWER_NAME,                                                                          \
-                                                      triton::arch::ID_REG_X86_##X86_64_PARENT,                                             \
-                                                      X86_64_UPPER,                                                                         \
-                                                      X86_64_LOWER)                                                                         \
+            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                       \
+                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                  \
+                                                      #LOWER_NAME,                                            \
+                                                      triton::arch::ID_REG_X86_##X86_64_PARENT,               \
+                                                      X86_64_UPPER,                                           \
+                                                      X86_64_LOWER,                                           \
+                                                      true)                                                   \
                               );
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -38,14 +39,15 @@ namespace triton {
         else {
           assert(arch == triton::arch::ARCH_X86);
           // Fill registers_ with those available in X86 from spec
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)   \
-          if (X86_AVAIL)                                                                                      \
-            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                       \
-                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                  \
-                                                      #LOWER_NAME,                                            \
-                                                      triton::arch::ID_REG_X86_##X86_PARENT,                  \
-                                                      X86_UPPER,                                              \
-                                                      X86_LOWER)                                              \
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
+          if (X86_AVAIL)                                                                                    \
+            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                     \
+                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                \
+                                                      #LOWER_NAME,                                          \
+                                                      triton::arch::ID_REG_X86_##X86_PARENT,                \
+                                                      X86_UPPER,                                            \
+                                                      X86_LOWER,                                            \
+                                                      true)                                                 \
                               );
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -59,12 +61,12 @@ namespace triton {
 
         switch (id) {
           // Convert registers from capstone value to triton value
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-          case triton::extlibs::capstone::X86_REG_##UPPER_NAME:                                                                             \
-            tritonId = triton::arch::ID_REG_X86_##UPPER_NAME;                                                                               \
+          #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, _8) \
+          case triton::extlibs::capstone::X86_REG_##UPPER_NAME:        \
+            tritonId = triton::arch::ID_REG_X86_##UPPER_NAME;          \
             break;
           // Ignore registers not available in capstone
-          #define REG_SPEC_NO_CAPSTONE(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)
+          #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6, _7, _8, _9)
           #include "triton/x86.spec"
 
           default:

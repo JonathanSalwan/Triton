@@ -14,22 +14,23 @@ namespace triton {
   namespace arch {
 
     Register::Register()
-      : Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) {
+      : Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0, true) {
     }
 
 
-    Register::Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low)
+    Register::Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low, bool vmutable)
       : BitsVector(high, low),
         name(name),
         id(regId),
-        parent(parent) {
+        parent(parent),
+        vmutable(vmutable) {
     }
 
 
     Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::register_e regId)
       : Register(
           (regId == triton::arch::ID_REG_INVALID) ?
-          triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)
+          triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0, true) : cpu.getRegister(regId)
         ) {
     }
 
@@ -42,9 +43,10 @@ namespace triton {
 
 
     void Register::copy(const Register& other) {
-      this->name   = other.name;
-      this->id     = other.id;
-      this->parent = other.parent;
+      this->id       = other.id;
+      this->name     = other.name;
+      this->parent   = other.parent;
+      this->vmutable = other.vmutable;
     }
 
 
@@ -84,6 +86,11 @@ namespace triton {
         if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
       }
       return false;
+    }
+
+
+    bool Register::isMutable(void) const {
+      return this->vmutable;
     }
 
 

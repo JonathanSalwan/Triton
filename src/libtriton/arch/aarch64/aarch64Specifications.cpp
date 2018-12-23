@@ -22,13 +22,14 @@ namespace triton {
             throw triton::exceptions::Architecture("AArch64Specifications::AArch64Specifications(): Invalid architecture.");
 
           // Fill registers_ with those available in AArch64 from spec
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT)     \
-            registers_.emplace(ID_REG_AARCH64_##UPPER_NAME,                                          \
-                               triton::arch::Register(triton::arch::ID_REG_AARCH64_##UPPER_NAME,     \
-                                                      #LOWER_NAME,                                   \
-                                                      triton::arch::ID_REG_AARCH64_##AARCH64_PARENT, \
-                                                      AARCH64_UPPER,                                 \
-                                                      AARCH64_LOWER)                                 \
+          #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT, MUTABLE) \
+            registers_.emplace(ID_REG_AARCH64_##UPPER_NAME,                                               \
+                               triton::arch::Register(triton::arch::ID_REG_AARCH64_##UPPER_NAME,          \
+                                                      #LOWER_NAME,                                        \
+                                                      triton::arch::ID_REG_AARCH64_##AARCH64_PARENT,      \
+                                                      AARCH64_UPPER,                                      \
+                                                      AARCH64_LOWER,                                      \
+                                                      MUTABLE)                                            \
                               );
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
@@ -41,12 +42,12 @@ namespace triton {
 
         switch (id) {
           // Convert registers from capstone value to triton value
-          #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT)     \
-          case triton::extlibs::capstone::ARM64_REG_##UPPER_NAME:                                    \
-            tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME;                                    \
+          #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5)        \
+          case triton::extlibs::capstone::ARM64_REG_##UPPER_NAME: \
+            tritonId = triton::arch::ID_REG_AARCH64_##UPPER_NAME; \
             break;
           // Ignore registers not available in capstone
-          #define REG_SPEC_NO_CAPSTONE(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT)
+          #define REG_SPEC_NO_CAPSTONE(_1, _2, _3, _4, _5, _6)
           #include "triton/aarch64.spec"
 
           default:

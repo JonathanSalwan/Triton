@@ -54,12 +54,12 @@ namespace triton {
     enum register_e {
       ID_REG_INVALID = 0, //!< invalid = 0
 
-      #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
+      #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, _8) \
       ID_REG_X86_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
       #include "triton/x86.spec"
 
-      #define REG_SPEC(UPPER_NAME, LOWER_NAME, AARCH64_UPPER, AARCH64_LOWER, AARCH64_PARENT) \
+      #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
       ID_REG_AARCH64_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
       #include "triton/aarch64.spec"

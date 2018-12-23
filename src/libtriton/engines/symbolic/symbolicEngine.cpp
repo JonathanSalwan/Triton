@@ -592,6 +592,9 @@ namespace triton {
         if (!this->architecture->isRegisterValid(parent.getId()))
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
 
+        if (reg.isMutable() == false)
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): This register is immutable");
+
         /* Get the symbolic expression */
         const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);
 
@@ -990,8 +993,9 @@ namespace triton {
         triton::uint32 id                           = reg.getParent();
 
         /* We can assign an expression only on parent registers */
-        if (reg.getId() != id)
+        if (reg.getId() != id) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToRegister(): We can assign an expression only on parent registers.");
+        }
 
         /* Check if the size of the symbolic expression is equal to the target register */
         if (node->getBitvectorSize() != reg.getBitSize()) {
@@ -1000,10 +1004,13 @@ namespace triton {
 
         se->setType(REGISTER_EXPRESSION);
         se->setOriginRegister(reg);
-        this->symbolicReg[id] = se;
 
-        /* Synchronize the concrete state */
-        this->architecture->setConcreteRegisterValue(reg, node->evaluate());
+        if (reg.isMutable()) {
+          /* Assign if this register is mutable */
+          this->symbolicReg[id] = se;
+          /* Synchronize the concrete state */
+          this->architecture->setConcreteRegisterValue(reg, node->evaluate());
+        }
       }
 
 
