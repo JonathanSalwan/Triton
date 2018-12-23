@@ -383,7 +383,7 @@ e.g: `(bvxnor expr1 expr2)`.
 Creates a `bvxor` node.<br>
 e.g: `(bvxor expr1 epxr2)`.
 
-- <b>\ref py_AstNode_page concat([\ref py_AstNode_page expr ...])</b><br>
+- <b>\ref py_AstNode_page concat([\ref py_AstNode_page, ...])</b><br>
 Concatenates several nodes.
 
 - <b>\ref py_AstNode_page distinct(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
@@ -405,7 +405,7 @@ e.g: `((_ extract high low) expr1)`.
 Creates an `ite` node.<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
 
-- <b>\ref py_AstNode_page land([\ref py_AstNode_page expr ...])</b><br>
+- <b>\ref py_AstNode_page land([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `AND` on several nodes.
 e.g: `(and expr1 expr2 expr3 expr4)`.
 
@@ -417,7 +417,7 @@ e.g: `(let ((alias expr2)) expr3)`.
 Creates a `lnot` node (logical NOT).<br>
 e.g: `(not expr)`.
 
-- <b>\ref py_AstNode_page lor([\ref py_AstNode_page expr ...])</b><br>
+- <b>\ref py_AstNode_page lor([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `OR` on several nodes.
 e.g: `(or expr1 expr2 expr3 expr4)`.
 

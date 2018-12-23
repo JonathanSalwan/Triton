@@ -25,9 +25,9 @@ The VERSION namespace contains all version numbers.
 \section VERSION_py_api Python API - Items of the VERSION namespace
 <hr>
 
-- **SYMEXPR.MAJOR**
-- **SYMEXPR.MINOR**
-- **SYMEXPR.BUILD**
+- **VERSION.MAJOR**
+- **VERSION.MINOR**
+- **VERSION.BUILD**
 
 */
 
