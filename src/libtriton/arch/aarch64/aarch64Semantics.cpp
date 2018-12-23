@@ -31,6 +31,8 @@ ADR                           | Form PC-relative address
 ADRP                          | Form PC-relative address to 4KB page
 AND (immediate)               | Bitwise AND (immediate).
 AND (shifted register)        | Bitwise AND (shifted register)
+ANDS (immediate)              | Bitwise AND (immediate), setting flags
+ANDS (shifted register)       | Bitwise AND (shifted register), setting flags
 ASR (immediate)               | Arithmetic Shift Right (immediate): an alias of SBFM
 ASR (register)                | Arithmetic Shift Right (register): an alias of ASRV
 B                             | Branch
@@ -757,10 +759,18 @@ namespace triton {
         auto node = this->astCtxt.bvand(op1, op2);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AND operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "AND(S) operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate symbolic flags */
+        if (inst.isUpdateFlag() == true) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_C), "Clears carry flag");
+          this->nf_s(inst, expr, dst);
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_V), "Clears overflow flag");
+          this->zf_s(inst, expr, dst);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
