@@ -1644,7 +1644,6 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        //auto node = this->astCtxt.zx(dst.getBitSize() - 8, this->astCtxt.extract(7, 0, op));
         auto node = this->astCtxt.extract(7, 0, op);
 
         /* Special behavior: Define that the size of the memory access is 8 bits */
@@ -1669,7 +1668,6 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        //auto node = this->astCtxt.zx(dst.getBitSize() - 16, this->astCtxt.extract(15, 0, op));
         auto node = this->astCtxt.extract(15, 0, op);
 
         /* Special behavior: Define that the size of the memory access is 16 bits */
