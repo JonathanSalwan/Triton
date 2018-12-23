@@ -124,9 +124,6 @@ def gen_module_for_object(classname, input_str):
     
     # generate 
     autogen_str = '''
-from typing import List, Union, Callable, Tuple
-import triton
-
 class {classname}:
     def __init__(self, *args, **kargs):
         self.org = triton.{classname}(*args, **kargs)
@@ -159,7 +156,6 @@ def gen_module_for_namespace(classname, input_str):
     
     # generate 
     autogen_str = '''
-import triton
 class {classname}:
 
 {members}
@@ -167,33 +163,40 @@ class {classname}:
 
     return autogen_str
 
-def gen_imports(objects, names):
-    # type: (List[Tuple[str, str]], List[Tuple[str, str]]) -> List[str]
-    import_strs = [] # type: List[str]
-    for _, obj_name in objects:
-        import_str = 'from {prefix}_{name} import {name}'.format(name=obj_name, prefix=OBJECT_PREFIX)
-        import_strs.append(import_str)
-    for _, name_name in names:
-        import_str = 'from {prefix}_{name} import {name}'.format(name=name_name, prefix=NAMESPACE_PREFIX)
-        import_strs.append(import_str)
-    return import_strs
-
-def gen_init_file(objects, imports):
-    # type: (List[Tuple[str, str]], List[str]) -> str
-    return '\n'.join(imports) + '\nraise ImportError\n'
-
-
-def main():
-    this_dir = os.path.dirname(__file__)
-    src_dir = os.path.join(this_dir, '../../src')
-    namespace_dir = os.path.join(src_dir, 'libtriton/bindings/python/namespaces')
-    object_dir = os.path.join(src_dir, 'libtriton/bindings/python/objects')
-
-    out_dir = os.path.join(this_dir if len(os.sys.argv) < 2 else os.sys.argv[1], 'triton_autocomplete')
-    if not os.path.exists(out_dir):
-        os.mkdir(out_dir)
+def gen_reg_module_str(src_dir):
+    # type: (str) -> str
+    spec_path = os.path.join(src_dir, 'libtriton/includes/triton/x86.spec')
+    with open(spec_path, 'r') as f:
+        reg_data = f.read()
     
-    # get names/paths for objects
+    regs = []
+    reg_spec_pattern = r'REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?(?P<x86>false|true)\)'
+    for match in re.finditer(reg_spec_pattern, reg_data):
+        regs.append((match.group('name'), match.group('x86') == 'true'))
+    
+    class_str = '''
+class {classname}:
+
+{members}
+'''
+    x86_regs = []
+    x86_64_regs = []
+    for i, reg in enumerate(regs):
+        reg_name, is_x86 = reg
+        member_str = '    {} = {}'.format(reg_name, i)
+        if is_x86:
+            x86_regs.append(member_str)
+        x86_64_regs.append(member_str)
+
+    mod_str = '{x86_class}\n\n{x86_64_class}\n\n{reg_class}'.format(
+        reg_class=reg_module_str,
+        x86_class=class_str.format(classname='X86_class', members='\n'.join(x86_regs)),
+        x86_64_class=class_str.format(classname='X86_64_class', members='\n'.join(x86_64_regs)))
+
+    return mod_str
+
+def get_objects(object_dir):
+    # type: (str) -> List[Tuple[str, str]]
     obj_paths = glob(object_dir + '/*.cpp')
     objs = [] # type: List[Tuple[str, str]]
     for obj_path in obj_paths:
@@ -205,8 +208,11 @@ def main():
             continue
         obj_name = name_match.group(1)
         objs.append((obj_path, obj_name))
-    
-    # get names/paths for namespaces
+    return objs
+
+
+def get_namespaces(namespace_dir):
+    # type: (str) -> List[Tuple[str, str]]
     name_paths = glob(namespace_dir + '/*.cpp')
     names = [] # type: List[Tuple[str, str]]
     for name_path in name_paths:
@@ -224,9 +230,41 @@ def main():
             continue
         name_name = name_match.group(1)
         names.append((name_path, name_name))
-    
-    imports = gen_imports(objs, names)
+    return names
 
+
+def gen_init_file(modules):
+    # type: (List[str]) -> str
+    mod_str = """
+from typing import List, Union, Callable, Tuple
+import triton
+
+{modules}
+
+raise ImportError
+    """.format(modules='\n\n'.join(modules))
+    return mod_str
+
+
+def main():
+    this_dir = os.path.dirname(__file__)
+    src_dir = os.path.join(this_dir, '../../src')
+    namespace_dir = os.path.join(src_dir, 'libtriton/bindings/python/namespaces')
+    object_dir = os.path.join(src_dir, 'libtriton/bindings/python/objects')
+
+    out_dir = os.path.join(this_dir if len(os.sys.argv) < 2 else os.sys.argv[1], 'triton_autocomplete')
+    if not os.path.exists(out_dir):
+        os.mkdir(out_dir)
+    
+    # collect code for modules here
+    modules = [] # type: List[str]
+    
+    # get names/paths for objects
+    objs = get_objects(object_dir)
+
+    # get names/paths for namespaces
+    names = get_namespaces(namespace_dir)
+    
     # generate modules for objects
     for obj_path, obj_name in objs:
         # read input file
@@ -235,63 +273,23 @@ def main():
 
         # generate module str
         mod_str = gen_module_for_object(obj_name, input_str)
-
-        # write output
-        with open(os.path.join(out_dir, '{}_{}.py'.format(OBJECT_PREFIX, obj_name)), 'w') as f:
-            f.write(mod_str)
-            f.write('\n' + '\n'.join((imp for imp in imports if obj_name not in imp)) + '\n')
+        modules.append(mod_str)
 
     # generate modules for namespaces
     for name_path, name_name in names:
         # read input file
         with open(name_path, 'r') as f:
             input_str = f.read()
-        
-        def gen_reg_module_str():
-            spec_path = os.path.join(src_dir, 'libtriton/includes/triton/x86.spec')
-            with open(spec_path, 'r') as f:
-                reg_data = f.read()
             
-            regs = []
-            reg_spec_pattern = r'REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?(?P<x86>false|true)\)'
-            for match in re.finditer(reg_spec_pattern, reg_data):
-                regs.append((match.group('name'), match.group('x86') == 'true'))
-            
-            class_str = '''
-class {classname}:
-
-{members}
-'''
-            x86_regs = []
-            x86_64_regs = []
-            for i, reg in enumerate(regs):
-                reg_name, is_x86 = reg
-                member_str = '    {} = {}'.format(reg_name, i)
-                if is_x86:
-                    x86_regs.append(member_str)
-                x86_64_regs.append(member_str)
-
-            
-            mod_str = '{x86_class}\n\n{x86_64_class}\n\n{reg_class}'.format(
-                reg_class=reg_module_str,
-                x86_class=class_str.format(classname='X86_class', members='\n'.join(x86_regs)),
-                x86_64_class=class_str.format(classname='X86_64_class', members='\n'.join(x86_64_regs)))
-
-            return mod_str
-
         # generate module str
         if name_name == 'REG':
-            mod_str = gen_reg_module_str()
+            mod_str = gen_reg_module_str(src_dir)
         else:
             mod_str = gen_module_for_namespace(name_name, input_str)
-
-        # write output
-        with open(os.path.join(out_dir, '{}_{}.py'.format(NAMESPACE_PREFIX, name_name)), 'w') as f:
-            # f.write('\n'.join((imp for imp in imports if name_name not in imp)) + '\n')
-            f.write(mod_str)
-
+        modules.append(mod_str)
     
-    init_str = gen_init_file(objs, imports)
+    # generate and create final __init__ file
+    init_str = gen_init_file(modules)
     with open(os.path.join(out_dir, '__init__.py'), 'w') as f:
         f.write(init_str)
     

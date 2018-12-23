@@ -8,7 +8,7 @@ from collections import OrderedDict
 class Function():
     generate_code = True
     INDENT_STR = ' ' * 4
-    DEBUG = True
+    DEBUG = False
 
     def __init__(self, name, args, ret_type, doc_str=''):
         # type: (str, Dict[str, str], str, str) -> None
