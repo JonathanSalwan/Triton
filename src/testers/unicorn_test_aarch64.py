@@ -506,6 +506,23 @@ CODE  = [
     ("\xc2\x88\x83\xd2", "movz x2, #7238"),
     ("\x20\x20\xc2\x9a", "lsl x0, x1, x2"),
     ("\x20\x24\xc2\x9a", "lsr x0, x1, x2"),
+
+    ("\x41\x9a\x80\xd2", "movz x1, #1234"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x3f\x00\x02\xeb", "cmp x1, x2"),
+    ("\x5f\x00\x01\xeb", "cmp x2, x1"),
+    ("\x01\x00\x80\xd2", "movz x1, #0"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x3f\x00\x02\xeb", "cmp x1, x2"),
+    ("\x5f\x00\x01\xeb", "cmp x2, x1"),
+    ("\x01\x00\x80\xd2", "movz x1, #0"),
+    ("\x02\x00\x80\xd2", "movz x2, #0"),
+    ("\x3f\x00\x02\xeb", "cmp x1, x2"),
+    ("\x5f\x00\x01\xeb", "cmp x2, x1"),
+    ("\xc1\x88\x83\xd2", "movz x1, #7238"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x3f\x00\x02\xeb", "cmp x1, x2"),
+    ("\x5f\x00\x01\xeb", "cmp x2, x1"),
 ]
 
 def emu_with_unicorn(opcode, istate):

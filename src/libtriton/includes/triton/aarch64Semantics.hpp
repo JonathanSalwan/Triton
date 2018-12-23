@@ -99,31 +99,31 @@ namespace triton {
 
           //! The CF semantics for the ADDS operation.
           void cfAdd_s(triton::arch::Instruction& inst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2);
 
           //! The CF semantics for the SUBS operation.
           void cfSub_s(triton::arch::Instruction& inst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2);
 
           //! The VF semantics for the ADDS operation.
           void vfAdd_s(triton::arch::Instruction& inst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2);
 
           //! The VF semantics for the SUBS operation.
           void vfSub_s(triton::arch::Instruction& inst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst);
+                       triton::arch::OperandWrapper& dst,
+                       triton::ast::SharedAbstractNode& op1,
+                       triton::ast::SharedAbstractNode& op2);
 
           /* Instruction semantics ----------------------------------------- */
 
@@ -162,6 +162,9 @@ namespace triton {
 
           //! The CBZ semantics
           void cbz_s(triton::arch::Instruction& inst);
+
+          //! The CMP semantics
+          void cmp_s(triton::arch::Instruction& inst);
 
           //! The CSEL semantics
           void csel_s(triton::arch::Instruction& inst);

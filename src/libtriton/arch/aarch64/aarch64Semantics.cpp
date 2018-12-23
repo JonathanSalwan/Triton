@@ -41,6 +41,9 @@ BLR                           | Branch with Link to Register
 BR                            | Branch to Register
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
+CMP (extended register)       | Compare (extended register): an alias of SUBS (extended register)
+CMP (immediate)               | Compare (immediate): an alias of SUBS (immediate)
+CMP (shifted register)        | Compare (shifted register): an alias of SUBS (shifted register)
 CSEL                          | Conditional Select
 CSINC                         | Conditional Select Increment
 CSNEG                         | Conditional Select Negation
@@ -132,6 +135,7 @@ namespace triton {
           case ID_INS_BR:        this->br_s(inst);            break;
           case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
           case ID_INS_CBZ:       this->cbz_s(inst);           break;
+          case ID_INS_CMP:       this->cmp_s(inst);           break;
           case ID_INS_CSEL:      this->csel_s(inst);          break;
           case ID_INS_CSINC:     this->csinc_s(inst);         break;
           case ID_INS_CSNEG:     this->csneg_s(inst);         break;
@@ -514,10 +518,10 @@ namespace triton {
 
 
       void AArch64Semantics::cfAdd_s(triton::arch::Instruction& inst,
-                                     triton::ast::SharedAbstractNode& op1,
-                                     triton::ast::SharedAbstractNode& op2,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
 
         auto cf     = this->architecture->getRegister(ID_REG_AARCH64_C);
         auto bvSize = dst.getBitSize();
@@ -549,10 +553,10 @@ namespace triton {
 
 
       void AArch64Semantics::cfSub_s(triton::arch::Instruction& inst,
-                                     triton::ast::SharedAbstractNode& op1,
-                                     triton::ast::SharedAbstractNode& op2,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
 
         auto cf     = this->architecture->getRegister(ID_REG_AARCH64_C);
         auto bvSize = dst.getBitSize();
@@ -585,10 +589,10 @@ namespace triton {
 
 
       void AArch64Semantics::vfAdd_s(triton::arch::Instruction& inst,
-                                     triton::ast::SharedAbstractNode& op1,
-                                     triton::ast::SharedAbstractNode& op2,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
 
         auto vf     = this->architecture->getRegister(ID_REG_AARCH64_V);
         auto bvSize = dst.getBitSize();
@@ -615,10 +619,10 @@ namespace triton {
 
 
       void AArch64Semantics::vfSub_s(triton::arch::Instruction& inst,
-                                     triton::ast::SharedAbstractNode& op1,
-                                     triton::ast::SharedAbstractNode& op2,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                                     triton::arch::OperandWrapper& dst) {
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
 
         auto vf     = this->architecture->getRegister(ID_REG_AARCH64_V);
         auto bvSize = dst.getBitSize();
@@ -689,9 +693,9 @@ namespace triton {
 
         /* Upate symbolic flags */
         if (inst.isUpdateFlag() == true) {
-          this->cfAdd_s(inst, op1, op2, expr, dst);
+          this->cfAdd_s(inst, expr, dst, op1, op2);
           this->nf_s(inst, expr, dst);
-          this->vfAdd_s(inst, op1, op2, expr, dst);
+          this->vfAdd_s(inst, expr, dst, op1, op2);
           this->zf_s(inst, expr, dst);
         }
 
@@ -917,6 +921,34 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::cmp_s(triton::arch::Instruction& inst) {
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvsub(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CMP operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+
+        /* Upate symbolic flags */
+        this->cfSub_s(inst, expr, src1, op1, op2);
+        this->nf_s(inst, expr, src1);
+        this->vfSub_s(inst, expr, src1, op1, op2);
+        this->zf_s(inst, expr, src1);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
@@ -1642,9 +1674,9 @@ namespace triton {
 
         /* Upate symbolic flags */
         if (inst.isUpdateFlag() == true) {
-          this->cfSub_s(inst, op1, op2, expr, dst);
+          this->cfSub_s(inst, expr, dst, op1, op2);
           this->nf_s(inst, expr, dst);
-          this->vfSub_s(inst, op1, op2, expr, dst);
+          this->vfSub_s(inst, expr, dst, op1, op2);
           this->zf_s(inst, expr, dst);
         }
 
