@@ -96,6 +96,8 @@ SUBS (shifted register)       | Subtract (shifted register), setting flags
 SXTB                          | Signed Extend Byte: an alias of SBFM
 SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
+UMADDL                        | Unsigned Multiply-Add Long
+UMSUBL                        | Unsigned Multiply-Subtract Long
 UXTB                          | Unsigned Extend Byte: an alias of UBFM
 UXTH                          | Unsigned Extend Halfword: an alias of UBFM
 
@@ -177,6 +179,8 @@ namespace triton {
           case ID_INS_SXTB:      this->sxtb_s(inst);          break;
           case ID_INS_SXTH:      this->sxth_s(inst);          break;
           case ID_INS_SXTW:      this->sxtw_s(inst);          break;
+          case ID_INS_UMADDL:    this->umaddl_s(inst);        break;
+          case ID_INS_UMSUBL:    this->umsubl_s(inst);        break;
           case ID_INS_UXTB:      this->uxtb_s(inst);          break;
           case ID_INS_UXTH:      this->uxth_s(inst);          break;
           default:
@@ -1855,6 +1859,68 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::umaddl_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvadd(
+                      op3,
+                      this->astCtxt.bvmul(
+                        this->astCtxt.zx(DWORD_SIZE_BIT, op1),
+                        this->astCtxt.zx(DWORD_SIZE_BIT, op2)
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UMADDL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::umsubl_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvsub(
+                      op3,
+                      this->astCtxt.bvmul(
+                        this->astCtxt.zx(DWORD_SIZE_BIT, op1),
+                        this->astCtxt.zx(DWORD_SIZE_BIT, op2)
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UMSUBL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

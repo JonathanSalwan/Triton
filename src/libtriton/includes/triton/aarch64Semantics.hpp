@@ -274,6 +274,12 @@ namespace triton {
           //! The SXTW semantics.
           void sxtw_s(triton::arch::Instruction& inst);
 
+          //! The UMADDL semantics.
+          void umaddl_s(triton::arch::Instruction& inst);
+
+          //! The UMSUBL semantics.
+          void umsubl_s(triton::arch::Instruction& inst);
+
           //! The UXTB semantics.
           void uxtb_s(triton::arch::Instruction& inst);
 
