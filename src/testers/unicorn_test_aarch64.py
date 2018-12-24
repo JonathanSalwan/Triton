@@ -25,6 +25,11 @@ CODE  = [
     ("\x21\x64\xc8\xd2", "movz x1, #0x4321, lsl #32"),
     ("\x21\x64\xa8\xd2", "movz x1, #0x4321, lsl #16"),
 
+    ("\x21\x64\x88\xf2", "movk x1, #0x4321"),
+    ("\x81\x46\xa2\xf2", "movk x1, #0x1234, lsl #16"),
+    ("\x81\x04\xcf\xf2", "movk x1, #0x7824, lsl #32"),
+    ("\x61\x8a\xf2\xf2", "movk x1, #0x9453, lsl #48"),
+
     ("\x60\x00\x02\x8b", "add x0, x3, x2"),
     ("\x20\x00\x02\x8b", "add x0, x1, x2"),
     ("\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
@@ -707,6 +712,12 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.v,   istate['v'])
 
     ctx.processing(inst)
+
+    #print
+    #print inst
+    #for x in inst.getSymbolicExpressions():
+    #    print x
+    #print
 
     ostate = {
         "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),

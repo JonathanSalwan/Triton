@@ -71,6 +71,7 @@ MADD                          | Multiply-Add
 MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immediate)
 MOV (register)                | Move (register): an alias of ORR (shifted register)
 MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
+MOVK                          | Move wide with keep
 MOVZ                          | Move shifted 16-bit immediate to register
 MSUB                          | Multiply-Subtract
 MUL                           | Multiply: an alias of MADD
@@ -158,6 +159,7 @@ namespace triton {
           case ID_INS_LSR:       this->lsr_s(inst);           break;
           case ID_INS_MADD:      this->madd_s(inst);          break;
           case ID_INS_MOV:       this->mov_s(inst);           break;
+          case ID_INS_MOVK:      this->movk_s(inst);          break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_MSUB:      this->msub_s(inst);          break;
           case ID_INS_MUL:       this->mul_s(inst);           break;
@@ -1410,6 +1412,62 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::movk_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+        auto  pos = src.getImmediate().getShiftValue(); // 0 by default.
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> bits;
+
+        switch (pos) {
+          case 0:
+            // [------------------------------------------------xxxxxxxxxxxxxxxx]
+            bits.push_back(this->astCtxt.extract(dst.getHigh(), 16, op1));
+            bits.push_back(this->astCtxt.extract(15, 0, op2));
+            break;
+
+          case 16:
+            // [--------------------------------xxxxxxxxxxxxxxxx----------------]
+            bits.push_back(this->astCtxt.extract(dst.getHigh(), 32, op1));
+            bits.push_back(this->astCtxt.extract(31, 16, op2));
+            bits.push_back(this->astCtxt.extract(15, 0, op1));
+            break;
+
+          case 32:
+            // [----------------xxxxxxxxxxxxxxxx--------------------------------]
+            bits.push_back(this->astCtxt.extract(dst.getHigh(), 48, op1));
+            bits.push_back(this->astCtxt.extract(47, 32, op2));
+            bits.push_back(this->astCtxt.extract(31, 0, op1));
+            break;
+
+          case 48:
+            // [xxxxxxxxxxxxxxxx------------------------------------------------]
+            bits.push_back(this->astCtxt.extract(63, 48, op2));
+            bits.push_back(this->astCtxt.extract(47, 0, op1));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("AArch64Semantics::movk_s(): Invalid pos (hw field) encoding.");
+        }
+
+        auto node = this->astCtxt.concat(bits);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVK operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

@@ -220,6 +220,9 @@ namespace triton {
           //! The MOV semantics.
           void mov_s(triton::arch::Instruction& inst);
 
+          //! The MOVK semantics.
+          void movk_s(triton::arch::Instruction& inst);
+
           //! The MOVZ semantics.
           void movz_s(triton::arch::Instruction& inst);
 
