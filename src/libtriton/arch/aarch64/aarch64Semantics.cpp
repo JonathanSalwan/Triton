@@ -84,6 +84,7 @@ ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
 SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
+STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
 STUR                          | Store Register (unscaled)
@@ -175,6 +176,7 @@ namespace triton {
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
+          case ID_INS_STP:       this->stp_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
           case ID_INS_STUR:      this->stur_s(inst);          break;
           case ID_INS_STURB:     this->sturb_s(inst);         break;
@@ -1713,6 +1715,66 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::stp_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src1 = inst.operands[0];
+        triton::arch::OperandWrapper& src2 = inst.operands[1];
+        triton::arch::OperandWrapper& dst  = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.concat(op2, op1);
+
+        /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
+        dst.getMemory().setPair(std::make_pair(node->getBitvectorSize()-1, 0));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STP operation - STORE access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Optional behavior. Post computation of the base register */
+        /* STP <Xt1>, <Xt2>, [<Xn|SP>], #<imm> */
+        if (inst.operands.size() == 4) {
+          triton::arch::Immediate& imm = inst.operands[3].getImmediate();
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STP operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* STP <Xt1>, <Xt2>, [<Xn|SP>, #<imm>]! */
+        else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = dst.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STP operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
