@@ -1,3 +1,4 @@
+# Pintool
 if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     enable_testing()
 
@@ -24,4 +25,10 @@ if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
     add_test(PinToolSymOnlyOnTainted            sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/sym_only_on_tainted.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor a | tee /tmp/tester_triton_xxx && grep -nr fail /tmp/tester_triton_xxx") # FAIL
     add_test(PinToolReadFromFile                sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/symbolize_input_file.py ${CMAKE_SOURCE_DIR}/src/samples/others/read_from_file | tee /tmp/tester_triton_xxx && grep -nr Model /tmp/tester_triton_xxx") # WIN
     add_test(PinToolTraceInst                   sh -c "${TRITON_SCRIPT} ${CMAKE_SOURCE_DIR}/src/examples/pin/trace_inst.py ${CMAKE_SOURCE_DIR}/src/samples/crackmes/crackme_xor a | tee /tmp/tester_triton_xxx && grep -nr syscall /tmp/tester_triton_xxx") # WIN OR FAIL, DUNNO
+endif()
+
+# Misc
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+    enable_testing()
+    add_test(UnicornAArch64Semantics sh -c "python ${CMAKE_CURRENT_SOURCE_DIR}/unicorn_test_aarch64.py")
 endif()

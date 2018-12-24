@@ -153,6 +153,15 @@ install:
   - bash ./make.sh
   - sudo make install
   - cd ../
+  # Install unicorn. Same command lines for OSX and Linux
+  - wget https://github.com/unicorn-engine/unicorn/archive/1.0.1.tar.gz
+  - tar -xf ./1.0.1.tar.gz
+  - cd ./unicorn-1.0.1
+  - UNICORN_ARCHS="aarch64" ./make.sh # we use unicorn to only test our aarch64 semantics
+  - sudo make install
+  - cd bindings/python
+  - sudo make install
+  - cd ../../../
   # Download pin
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
