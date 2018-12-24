@@ -73,6 +73,7 @@ MOV (register)                | Move (register): an alias of ORR (shifted regist
 MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
 MOVZ                          | Move shifted 16-bit immediate to register
 MSUB                          | Multiply-Subtract
+MUL                           | Multiply: an alias of MADD
 MVN                           | Bitwise NOT: an alias of ORN (shifted register)
 NEG (shifted register)        | Negate (shifted register): an alias of SUB (shifted register)
 NOP                           | No Operation
@@ -159,6 +160,7 @@ namespace triton {
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_MSUB:      this->msub_s(inst);          break;
+          case ID_INS_MUL:       this->mul_s(inst);           break;
           case ID_INS_MVN:       this->mvn_s(inst);           break;
           case ID_INS_NEG:       this->neg_s(inst);           break;
           case ID_INS_NOP:       this->nop_s(inst);           break;
@@ -1451,6 +1453,29 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::mul_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvmul(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MUL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
