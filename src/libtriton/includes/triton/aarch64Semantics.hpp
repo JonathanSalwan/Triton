@@ -187,6 +187,9 @@ namespace triton {
           //! The EXTR semantics.
           void extr_s(triton::arch::Instruction& inst);
 
+          //! The LDP semantics.
+          void ldp_s(triton::arch::Instruction& inst);
+
           //! The LDR semantics.
           void ldr_s(triton::arch::Instruction& inst);
 

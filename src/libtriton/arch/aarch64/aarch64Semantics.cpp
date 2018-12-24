@@ -54,6 +54,7 @@ EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
 EOR (immediate)               | Bitwise Exclusive OR (immediate)
 EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
 EXTR                          | EXTR: Extract register
+LDP                           | Load Pair of Registers
 LDR (immediate)               | Load Register (immediate)
 LDR (literal)                 | Load Register (literal)
 LDR (register)                | Load Register (register)
@@ -153,6 +154,7 @@ namespace triton {
           case ID_INS_EON:       this->eon_s(inst);           break;
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
+          case ID_INS_LDP:       this->ldp_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
           case ID_INS_LDUR:      this->ldur_s(inst);          break;
           case ID_INS_LDURB:     this->ldurb_s(inst);         break;
@@ -1135,6 +1137,68 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldp_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst1 = inst.operands[0];
+        triton::arch::OperandWrapper& dst2 = inst.operands[1];
+        triton::arch::OperandWrapper& src  = inst.operands[2];
+
+        /* Special behavior: Define that the size of the memory access is dst1.size + dst2.size */
+        src.getMemory().setPair(std::make_pair((dst1.getBitSize() + dst2.getBitSize()) - 1, 0));
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics of the LOAD */
+        auto node1 = this->astCtxt.extract((dst1.getBitSize() - 1), 0, op);
+        auto node2 = this->astCtxt.extract((dst1.getBitSize() + dst2.getBitSize()) - 1, dst1.getBitSize(), op);
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDP operation - LOAD access");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDP operation - LOAD access");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
+        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+        /* Optional behavior. Post computation of the base register */
+        /* LDP <Xt1>, <Xt2>, [<Xn|SP>], #<imm> */
+        if (inst.operands.size() == 4) {
+          triton::arch::Immediate& imm = inst.operands[3].getImmediate();
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDP operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* LDP <Xt1>, <Xt2>, [<Xn|SP>, #<imm>]! */
+        else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = src.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDP operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

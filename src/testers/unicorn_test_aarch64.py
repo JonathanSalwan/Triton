@@ -291,6 +291,32 @@ CODE  = [
     ("\x3f\x10\x00\x91", "add sp, x1, #4"),
     ("\xeb\x03\x40\xf9", "ldr x11, [sp]"),
 
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x24\x14\x40\xa9", "ldp x4, x5, [x1]"),
+    ("\x25\x18\xc0\xa8", "ldp x5, x6, [x1], #0"),
+    ("\x26\x9c\xc0\xa8", "ldp x6, x7, [x1], #8"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x28\x24\xfe\xa8", "ldp x8, x9, [x1], #-32"),
+    ("\x29\x28\xc1\xa9", "ldp x9, x10, [x1, #16]!"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xea\x2f\x40\xa9", "ldp x10, x11, [sp]"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x24\x14\x40\x29", "ldp w4, w5, [x1]"),
+    ("\x25\x18\xc0\x28", "ldp w5, w6, [x1], #0"),
+    ("\x26\x1c\xc1\x28", "ldp w6, w7, [x1], #8"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x28\x24\xfc\x28", "ldp w8, w9, [x1], #-32"),
+    ("\x29\x28\xc2\x29", "ldp w9, w10, [x1, #16]!"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xea\x2f\x40\x29", "ldp w10, w11, [sp]"),
+
     ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     ("\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
