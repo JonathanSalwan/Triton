@@ -82,6 +82,8 @@ ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
 ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
+SMADDL                        | Signed Multiply-Add Long
+SMSUBL                        | Signed Multiply-Subtract Long
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
 STUR                          | Store Register (unscaled)
@@ -171,6 +173,8 @@ namespace triton {
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_ORR:       this->orr_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
+          case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
+          case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
           case ID_INS_STR:       this->str_s(inst);           break;
           case ID_INS_STUR:      this->stur_s(inst);          break;
           case ID_INS_STURB:     this->sturb_s(inst);         break;
@@ -1650,6 +1654,68 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+      }
+
+
+      void AArch64Semantics::smaddl_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvadd(
+                      op3,
+                      this->astCtxt.bvmul(
+                        this->astCtxt.sx(DWORD_SIZE_BIT, op1),
+                        this->astCtxt.sx(DWORD_SIZE_BIT, op2)
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SMADDL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::smsubl_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvsub(
+                      op3,
+                      this->astCtxt.bvmul(
+                        this->astCtxt.sx(DWORD_SIZE_BIT, op1),
+                        this->astCtxt.sx(DWORD_SIZE_BIT, op2)
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SMSUBL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 

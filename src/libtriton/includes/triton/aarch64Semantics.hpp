@@ -250,6 +250,12 @@ namespace triton {
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
+          //! The SMADDL semantics.
+          void smaddl_s(triton::arch::Instruction& inst);
+
+          //! The SMSUBL semantics.
+          void smsubl_s(triton::arch::Instruction& inst);
+
           //! The STR semantics.
           void str_s(triton::arch::Instruction& inst);
 
