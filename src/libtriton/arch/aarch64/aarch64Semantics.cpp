@@ -1819,7 +1819,14 @@ namespace triton {
 
           case 16:
             // [--------------------------------xxxxxxxxxxxxxxxx----------------]
-            bits.push_back(this->astCtxt.extract(dst.getHigh(), 32, op1));
+            if (dst.getBitSize() == 64) {
+              /*
+               * The case where the instruction is: MOVK <Xd>, #<imm>{, LSL #<shift>}.
+               * Otherwise if the instruction is: MOVK <Wd>, #<imm>{, LSL #<shift>}, just
+               * skip this extract.
+               */
+              bits.push_back(this->astCtxt.extract(dst.getHigh(), 32, op1));
+            }
             bits.push_back(this->astCtxt.extract(31, 16, op2));
             bits.push_back(this->astCtxt.extract(15, 0, op1));
             break;
