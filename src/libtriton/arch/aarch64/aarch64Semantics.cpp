@@ -58,6 +58,10 @@ LDP                           | Load Pair of Registers
 LDR (immediate)               | Load Register (immediate)
 LDR (literal)                 | Load Register (literal)
 LDR (register)                | Load Register (register)
+LDRB (immediate)              | Load Register Byte (immediate)
+LDRB (register)               | Load Register Byte (register)
+LDRH (immediate)              | Load Register Halfword (immediate)
+LDRH (register)               | Load Register Halfword (register)
 LDUR                          | Load Register (unscaled)
 LDURB                         | Load Register Byte (unscaled)
 LDURH                         | Load Register Halfword (unscaled)
@@ -156,6 +160,8 @@ namespace triton {
           case ID_INS_EXTR:      this->extr_s(inst);          break;
           case ID_INS_LDP:       this->ldp_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
+          case ID_INS_LDRB:      this->ldrb_s(inst);          break;
+          case ID_INS_LDRH:      this->ldrh_s(inst);          break;
           case ID_INS_LDUR:      this->ldur_s(inst);          break;
           case ID_INS_LDURB:     this->ldurb_s(inst);         break;
           case ID_INS_LDURH:     this->ldurh_s(inst);         break;
@@ -1247,6 +1253,116 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDR operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldrb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node1 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRB operation - LOAD access");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Optional behavior. Post computation of the base register */
+        /* LDRB <Xt>, [<Xn|SP>], #<simm> */
+        if (inst.operands.size() == 3) {
+          triton::arch::Immediate& imm = inst.operands[2].getImmediate();
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* LDRB <Xt>, [<Xn|SP>, #<simm>]! */
+        else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = src.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRB operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldrh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node1 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRH operation - LOAD access");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Optional behavior. Post computation of the base register */
+        /* LDRH <Xt>, [<Xn|SP>], #<simm> */
+        if (inst.operands.size() == 3) {
+          triton::arch::Immediate& imm = inst.operands[2].getImmediate();
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRH operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* LDRH <Xt>, [<Xn|SP>, #<simm>]! */
+        else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = src.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = src.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRH operation - Base register computation");
 
           /* Spread taint */
           expr3->isTainted = this->taintEngine->isTainted(base);

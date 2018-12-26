@@ -293,6 +293,34 @@ CODE  = [
 
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x25\x00\x40\x39", "ldrb w5, [x1]"),
+    ("\x26\x04\x40\x38", "ldrb w6, [x1], #0"),
+    ("\x27\x44\x40\x38", "ldrb w7, [x1], #4"),
+    ("\x28\x68\x62\x38", "ldrb w8, [x1, x2]"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x29\x24\x5e\x38", "ldrb w9, [x1], #-30"),
+    ("\x2a\x8c\x40\x38", "ldrb w10, [x1, #8]!"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xeb\x03\x40\x39", "ldrb w11, [sp]"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x25\x00\x40\x79", "ldrh w5, [x1]"),
+    ("\x26\x04\x40\x78", "ldrh w6, [x1], #0"),
+    ("\x27\x44\x40\x78", "ldrh w7, [x1], #4"),
+    ("\x28\x68\x62\x78", "ldrh w8, [x1, x2]"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x29\x24\x5e\x78", "ldrh w9, [x1], #-30"),
+    ("\x2a\x8c\x40\x78", "ldrh w10, [x1, #8]!"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xeb\x03\x40\x79", "ldrh w11, [sp]"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
     ("\x24\x14\x40\xa9", "ldp x4, x5, [x1]"),
     ("\x25\x18\xc0\xa8", "ldp x5, x6, [x1], #0"),
     ("\x26\x9c\xc0\xa8", "ldp x6, x7, [x1], #8"),
