@@ -213,6 +213,8 @@ namespace triton {
           case ID_INS_SXTB:      this->sxtb_s(inst);          break;
           case ID_INS_SXTH:      this->sxth_s(inst);          break;
           case ID_INS_SXTW:      this->sxtw_s(inst);          break;
+          case ID_INS_TBNZ:      this->tbnz_s(inst);          break;
+          case ID_INS_TBZ:       this->tbz_s(inst);           break;
           case ID_INS_TST:       this->tst_s(inst);           break;
           case ID_INS_UMADDL:    this->umaddl_s(inst);        break;
           case ID_INS_UMSUBL:    this->umsubl_s(inst);        break;
@@ -2514,6 +2516,64 @@ namespace triton {
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::tbnz_s(triton::arch::Instruction& inst) {
+        auto  dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+        auto& src3 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.equal(
+                        this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, op2)),
+                        this->astCtxt.bvtrue()
+                      ),
+                      op3,
+                      this->astCtxt.bv(inst.getNextAddress(), dst.getBitSize())
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "TBNZ operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::tbz_s(triton::arch::Instruction& inst) {
+        auto  dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_PC));
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+        auto& src3 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.equal(
+                        this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, op2)),
+                        this->astCtxt.bvfalse()
+                      ),
+                      op3,
+                      this->astCtxt.bv(inst.getNextAddress(), dst.getBitSize())
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "TBZ operation - Program Counter");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
       }
 
 

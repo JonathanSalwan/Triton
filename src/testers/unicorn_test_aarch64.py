@@ -488,6 +488,9 @@ CODE  = [
     #("\x40\x00\x00\x54" ,"b.eq #8"),
     ("\x01\x00\x00\x94" ,"bl #4"),
 
+    ("\x80\x0c\x90\xb7", "tbnz x0, #0x32, #0x190"),
+    ("\x20\x00\x90\xb6", "tbz x0, #0x32, #4"),
+
     ("\x01\x00\x80\xd2", "movz x1, #0"),
     ("\x02\x06\xa0\xd2", "movz x2, #0x20, lsl #16"), # STACK address
     ("\xe1\x03\x02\xaa", "mov x1, x2"),
