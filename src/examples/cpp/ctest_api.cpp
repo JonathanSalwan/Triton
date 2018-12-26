@@ -14,6 +14,8 @@
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
+#include <triton/aarch64Cpu.hpp>
+#include <triton/aarch64Specifications.hpp>
 
 
 int test_1(void) {
@@ -417,6 +419,27 @@ int test_7(void) {
 }
 
 
+int test_8(void) {
+  triton::arch::aarch64::AArch64Cpu cpy;
+  triton::API api;
+
+  api.setArchitecture(triton::arch::ARCH_AARCH64);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0), 12345);
+
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345)
+    return 1;
+
+  cpy = *reinterpret_cast<triton::arch::aarch64::AArch64Cpu*>(api.getCpuInstance());
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345) {
+    std::cerr << "test_8: KO (cpy context != api context)" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_8: OK" << std::endl;
+  return 0;
+}
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -437,6 +460,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_7())
+    return 1;
+
+  if (test_8())
     return 1;
 
   return 0;

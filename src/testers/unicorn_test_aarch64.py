@@ -33,6 +33,10 @@ CODE  = [
     ("\xe0\xcc\x8c\x52", "movz w0, #0x6667"),
     ("\xc0\xcc\xac\x72", "movk w0, #0x6666, lsl #16"),
 
+    ("\x1f\x20\x03\xd5", "nop"),
+    ("\x1f\x20\x03\xd5", "nop"),
+    ("\x1f\x20\x03\xd5", "nop"),
+
     ("\x60\x00\x02\x8b", "add x0, x3, x2"),
     ("\x20\x00\x02\x8b", "add x0, x1, x2"),
     ("\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),

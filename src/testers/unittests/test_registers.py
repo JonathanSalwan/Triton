@@ -169,3 +169,24 @@ class TestAArch64Registers(unittest.TestCase):
             self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
             self.ctx.setConcreteRegisterValue(reg, 0)
             self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+
+        regs = [
+            self.ctx.registers.w0, self.ctx.registers.w1, self.ctx.registers.w2,
+            self.ctx.registers.w3, self.ctx.registers.w4, self.ctx.registers.w5,
+            self.ctx.registers.w6, self.ctx.registers.w7, self.ctx.registers.w8,
+            self.ctx.registers.w9, self.ctx.registers.w10, self.ctx.registers.w11,
+            self.ctx.registers.w12, self.ctx.registers.w13, self.ctx.registers.w14,
+            self.ctx.registers.w15, self.ctx.registers.w16, self.ctx.registers.w17,
+            self.ctx.registers.w18, self.ctx.registers.w19, self.ctx.registers.w20,
+            self.ctx.registers.w21, self.ctx.registers.w22, self.ctx.registers.w23,
+            self.ctx.registers.w24, self.ctx.registers.w25, self.ctx.registers.w26,
+            self.ctx.registers.w27, self.ctx.registers.w28, self.ctx.registers.w29,
+            self.ctx.registers.w30, self.ctx.registers.wsp, self.ctx.registers.spsr,
+        ]
+
+        for reg in regs:
+            i = random.randrange(0, 0xffffffff) & reg.getBitvector().getMaxValue()
+            self.ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
+            self.ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
