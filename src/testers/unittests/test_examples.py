@@ -22,7 +22,8 @@ class TestExample(unittest.TestCase):
 
 for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")),
                                             glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*.py")),
-                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*.py")))):
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*.py")),
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*", "*.py")))):
 
     def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
