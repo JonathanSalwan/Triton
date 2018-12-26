@@ -274,6 +274,9 @@ namespace triton {
           //! The SMSUBL semantics.
           void smsubl_s(triton::arch::Instruction& inst);
 
+          //! The SMULL semantics.
+          void smull_s(triton::arch::Instruction& inst);
+
           //! The STP semantics.
           void stp_s(triton::arch::Instruction& inst);
 

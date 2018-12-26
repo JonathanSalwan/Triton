@@ -96,6 +96,7 @@ ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
 SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
+SMULL                         | Signed Multiply Long: an alias of SMADDL
 STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
@@ -198,6 +199,7 @@ namespace triton {
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
+          case ID_INS_SMULL:     this->smull_s(inst);         break;
           case ID_INS_STP:       this->stp_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
           case ID_INS_STRB:      this->strb_s(inst);          break;
@@ -2092,6 +2094,32 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::smull_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvmul(
+                      this->astCtxt.sx(DWORD_SIZE_BIT, op1),
+                      this->astCtxt.sx(DWORD_SIZE_BIT, op2)
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SMULL operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

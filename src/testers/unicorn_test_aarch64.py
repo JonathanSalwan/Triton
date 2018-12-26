@@ -757,6 +757,27 @@ CODE  = [
     ("\x00\x8c\x22\x9b", "smsubl x0, w0, w2, x3"),
     ("\x00\x8c\x22\x9b", "smsubl x0, w0, w2, x3"),
     ("\x00\x8c\x22\x9b", "smsubl x0, w0, w2, x3"),
+
+    ("\xc1\xfd\xbf\xd2", "movz x1, #0xffee, lsl #16"),
+    ("\x42\xd5\xbd\xd2", "movz x2, #0xeeaa, lsl #16"),
+    ("\x20\x7c\x22\x9b", "smull x0, w1, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
+    ("\x00\x7c\x22\x9b", "smull x0, w0, w2"),
 ]
 
 def emu_with_unicorn(opcode, istate):
