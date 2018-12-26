@@ -99,6 +99,10 @@ SMSUBL                        | Signed Multiply-Subtract Long
 STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
+STRB (immediate)              | Store Register Byte (immediate).
+STRB (register)               | Store Register Byte (register).
+STRH (immediate)              | Store Register Halfword (immediate).
+STRH (register)               | Store Register Halfword (register).
 STUR                          | Store Register (unscaled)
 STURB                         | Store Register Byte (unscaled)
 STURH                         | Store Register Halfword (unscaled)
@@ -196,6 +200,8 @@ namespace triton {
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
           case ID_INS_STP:       this->stp_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
+          case ID_INS_STRB:      this->strb_s(inst);          break;
+          case ID_INS_STRH:      this->strh_s(inst);          break;
           case ID_INS_STUR:      this->stur_s(inst);          break;
           case ID_INS_STURB:     this->sturb_s(inst);         break;
           case ID_INS_STURH:     this->sturh_s(inst);         break;
@@ -1170,7 +1176,7 @@ namespace triton {
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
-        /* Create the semantics of the LOAD */
+        /* Create the semantics */
         auto node1 = this->astCtxt.extract((dst1.getBitSize() - 1), 0, op);
         auto node2 = this->astCtxt.extract((dst1.getBitSize() + dst2.getBitSize()) - 1, dst1.getBitSize(), op);
 
@@ -1394,7 +1400,7 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics of the LOAD */
-        auto node1 = this->astCtxt.sx(dst.getBitSize() - BYTE_SIZE_BIT, op);
+        auto node1 = this->astCtxt.sx(dst.getBitSize() - 8, op);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSB operation - LOAD access");
@@ -1452,7 +1458,7 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics of the LOAD */
-        auto node1 = this->astCtxt.sx(dst.getBitSize() - WORD_SIZE_BIT, op);
+        auto node1 = this->astCtxt.sx(dst.getBitSize() - 16, op);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSH operation - LOAD access");
@@ -1510,7 +1516,7 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics of the LOAD */
-        auto node1 = this->astCtxt.sx(dst.getBitSize() - DWORD_SIZE_BIT, op);
+        auto node1 = this->astCtxt.sx(dst.getBitSize() - 32, op);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDRSW operation - LOAD access");
@@ -2187,6 +2193,122 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STR operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::strb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt.extract(7, 0, op);
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        dst.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRB operation - STORE access");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Optional behavior. Post computation of the base register */
+        /* STRB <Wt>, [<Xn|SP>], #<simm> */
+        if (inst.operands.size() == 3) {
+          triton::arch::Immediate& imm = inst.operands[2].getImmediate();
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRB operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* STRB <Wt>, [<Xn|SP>, #<simm>]! */
+        else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = dst.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STRB operation - Base register computation");
+
+          /* Spread taint */
+          expr3->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::strh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt.extract(15, 0, op);
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        dst.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRH operation - STORE access");
+
+        /* Spread taint */
+        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Optional behavior. Post computation of the base register */
+        /* STRH <Wt>, [<Xn|SP>], #<simm> */
+        if (inst.operands.size() == 3) {
+          triton::arch::Immediate& imm = inst.operands[2].getImmediate();
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create symbolic operands of the post computation */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+          auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+          /* Create the semantics of the base register */
+          auto node2 = this->astCtxt.bvadd(baseNode, this->astCtxt.sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRH operation - Base register computation");
+
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->isTainted(base);
+        }
+
+        /* STRH <Wt>, [<Xn|SP>, #<simm>]! */
+        else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
+          triton::arch::Register& base = dst.getMemory().getBaseRegister();
+
+          /* Create the semantics of the base register */
+          auto node3 = dst.getMemory().getLeaAst();
+
+          /* Create symbolic expression */
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STRH operation - Base register computation");
 
           /* Spread taint */
           expr3->isTainted = this->taintEngine->isTainted(base);

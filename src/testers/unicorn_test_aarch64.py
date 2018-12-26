@@ -575,6 +575,9 @@ CODE  = [
     ("\x25\x00\x00\xf8", "stur x5, [x1]"),
     ("\x26\x00\x00\x38", "sturb w6, [x1]"),
     ("\x27\x00\x00\x78", "sturh w7, [x1]"),
+    ("\x29\x00\x00\xf9", "str x9, [x1]"),
+    ("\x2a\x00\x00\x39", "strb w10, [x1]"),
+    ("\x2b\x00\x00\x79", "strh w11, [x1]"),
 
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\xe5\x24\x81\xd2", "movz x5, #2343"),
