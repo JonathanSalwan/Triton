@@ -50,9 +50,6 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT AArch64OperandProperties();
 
-        //! Constructor.
-        TRITON_EXPORT AArch64OperandProperties(triton::arch::aarch64::extend_e extendType, triton::uint32 extendSize, triton::arch::aarch64::shift_e shiftType, triton::uint32 shiftValue);
-
         //! Constructor by copy.
         TRITON_EXPORT AArch64OperandProperties(const AArch64OperandProperties& other);
 
