@@ -310,6 +310,9 @@ namespace triton {
           //! The SXTW semantics.
           void sxtw_s(triton::arch::Instruction& inst);
 
+          //! The TST semantics.
+          void tst_s(triton::arch::Instruction& inst);
+
           //! The UMADDL semantics.
           void umaddl_s(triton::arch::Instruction& inst);
 

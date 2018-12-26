@@ -116,6 +116,8 @@ SUBS (shifted register)       | Subtract (shifted register), setting flags
 SXTB                          | Signed Extend Byte: an alias of SBFM
 SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
+TST (immediate)               | Test bits (immediate): an alias of ANDS (immediate)
+TST (shifted register)        | Test (shifted register): an alias of ANDS (shifted register)
 UMADDL                        | Unsigned Multiply-Add Long
 UMSUBL                        | Unsigned Multiply-Subtract Long
 UXTB                          | Unsigned Extend Byte: an alias of UBFM
@@ -211,6 +213,7 @@ namespace triton {
           case ID_INS_SXTB:      this->sxtb_s(inst);          break;
           case ID_INS_SXTH:      this->sxth_s(inst);          break;
           case ID_INS_SXTW:      this->sxtw_s(inst);          break;
+          case ID_INS_TST:       this->tst_s(inst);           break;
           case ID_INS_UMADDL:    this->umaddl_s(inst);        break;
           case ID_INS_UMSUBL:    this->umsubl_s(inst);        break;
           case ID_INS_UXTB:      this->uxtb_s(inst);          break;
@@ -2508,6 +2511,36 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::tst_s(triton::arch::Instruction& inst) {
+        auto& src1 = inst.operands[0];
+        auto& src2 = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvand(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "TST operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+
+        /* Upate symbolic flags */
+        if (inst.isUpdateFlag() == true) {
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_C), "Clears carry flag");
+          this->nf_s(inst, expr, src1);
+          this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_V), "Clears overflow flag");
+          this->zf_s(inst, expr, src1);
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
