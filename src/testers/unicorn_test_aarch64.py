@@ -422,6 +422,35 @@ CODE  = [
     ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
     ("\x20\x00\x80\xb8", "ldursw x0, [x1]"),
 
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x39", "ldrsb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x39", "ldrsb x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x39", "ldrsb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x79", "ldrsh w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x79", "ldrsh x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\xb9", "ldrsw x0, [x1]"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x39", "ldrsb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x39", "ldrsb x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x39", "ldrsb w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\xc0\x79", "ldrsh w0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\x79", "ldrsh x0, [x1]"),
+    ("\x20\x00\x40\xf8", "ldur x0, [x1]"),
+    ("\x20\x00\x80\xb9", "ldrsw x0, [x1]"),
+
     ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     ("\x02\x06\xa0\xd2", "movz x2, #0x30, lsl #16"), # HEAP address
     ("\x42\x78\x00\x91", "add x2, x2, #30"),
