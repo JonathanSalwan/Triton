@@ -84,6 +84,7 @@ MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immed
 MOV (register)                | Move (register): an alias of ORR (shifted register)
 MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
 MOVK                          | Move wide with keep
+MOVN                          | Move wide with NOT
 MOVZ                          | Move shifted 16-bit immediate to register
 MSUB                          | Multiply-Subtract
 MUL                           | Multiply: an alias of MADD
@@ -190,6 +191,7 @@ namespace triton {
           case ID_INS_MADD:      this->madd_s(inst);          break;
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVK:      this->movk_s(inst);          break;
+          case ID_INS_MOVN:      this->movn_s(inst);          break;
           case ID_INS_MOVZ:      this->movz_s(inst);          break;
           case ID_INS_MSUB:      this->msub_s(inst);          break;
           case ID_INS_MUL:       this->mul_s(inst);           break;
@@ -1862,6 +1864,27 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::movn_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvnot(op);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVN operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
