@@ -186,8 +186,10 @@ namespace triton {
           for (triton::uint32 index = 0; index < snode->getChildren().size(); index++)
             snode->setChild(index, this->processSimplification(snode->getChildren()[index]));
 
-          if (snode->getBitvectorSize())
+          if (snode->getBitvectorSize()) {
+            /* Don't apply simplification on nodes like String, Decimale, etc... */
             snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, snode);
+          }
         }
 
         return snode;

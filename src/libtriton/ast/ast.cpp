@@ -175,7 +175,7 @@ namespace triton {
       auto it = this->parents.find(p);
 
       if(it == parents.end())
-        throw triton::exceptions::Ast("AbstractNode::removeParent(): Can't remove a parent that is not our.");
+        return;
 
       it->second.first--;
       if(it->second.first == 0)
@@ -201,11 +201,11 @@ namespace triton {
       if (child == nullptr)
         throw triton::exceptions::Ast("AbstractNode::setChild(): child cannot be null.");
 
-      /* Setup the parent of the child */
-      child->setParent(this);
-
       /* Remove the parent of the old child */
       this->children[index]->removeParent(this);
+
+      /* Setup the parent of the child */
+      child->setParent(this);
 
       /* Setup the child of the parent */
       this->children[index] = child;
