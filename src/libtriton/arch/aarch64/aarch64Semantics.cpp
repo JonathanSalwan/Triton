@@ -48,6 +48,7 @@ CMP (extended register)       | Compare (extended register): an alias of SUBS (e
 CMP (immediate)               | Compare (immediate): an alias of SUBS (immediate)
 CMP (shifted register)        | Compare (shifted register): an alias of SUBS (shifted register)
 CSEL                          | Conditional Select
+CSET                          | Conditional Set: an alias of CSINC
 CSINC                         | Conditional Select Increment
 CSNEG                         | Conditional Select Negation
 EON (shifted register)        | Bitwise Exclusive OR NOT (shifted register)
@@ -170,6 +171,7 @@ namespace triton {
           case ID_INS_CMN:       this->cmn_s(inst);           break;
           case ID_INS_CMP:       this->cmp_s(inst);           break;
           case ID_INS_CSEL:      this->csel_s(inst);          break;
+          case ID_INS_CSET:      this->cset_s(inst);          break;
           case ID_INS_CSINC:     this->csinc_s(inst);         break;
           case ID_INS_CSNEG:     this->csneg_s(inst);         break;
           case ID_INS_EON:       this->eon_s(inst);           break;
@@ -317,13 +319,13 @@ namespace triton {
             return node;
           }
 
-          // Signed <=. Z set, N and V differ.
+          // Signed <=. Z set or N and V differ.
           case triton::arch::aarch64::ID_CONDITION_LE: {
             auto z = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_Z)));
             auto n = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_N)));
             auto v = this->symbolicEngine->getOperandAst(inst, triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_AARCH64_V)));
             auto node = this->astCtxt.ite(
-                        this->astCtxt.land(
+                        this->astCtxt.lor(
                           this->astCtxt.equal(z, this->astCtxt.bvtrue()),
                           this->astCtxt.lnot(this->astCtxt.equal(n, v))
                         ),
@@ -1052,6 +1054,27 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::cset_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->astCtxt.bv(1, dst.getBitSize());
+        auto op2 = this->astCtxt.bv(0, dst.getBitSize());
+
+        /* Create the semantics */
+        auto node = this->getCodeConditionAst(inst, op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CSET operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
