@@ -805,6 +805,23 @@ CODE  = [
     ("\xe9\xc1\x84\x92", "movn x9, #9743"),
     ("\xea\xaa\x82\x92", "movn x10, #5463"),
     ("\x2b\xf8\x80\x92", "movn x11, #1985"),
+
+    ("\xc1\xfd\xff\xd2", "movz x1, #0xffee, lsl #48"),
+    ("\x81\xb9\xdb\xf2", "movk x1, #0xddcc, lsl #32"),
+    ("\x41\x75\xb7\xf2", "movk x1, #0xbbaa, lsl #16"),
+    ("\x01\x31\x93\xf2", "movk x1, #0x9988"),
+    ("\x20\x00\x40\xd3", "ubfx x0, x1, #0, #1"),
+    ("\x20\x08\x40\xd3", "ubfx x0, x1, #0, #3"),
+    ("\x20\x0c\x40\xd3", "ubfx x0, x1, #0, #4"),
+    ("\x20\x10\x40\xd3", "ubfx x0, x1, #0, #5"),
+    ("\x20\x78\x40\xd3", "ubfx x0, x1, #0, #31"),
+    ("\x20\xf8\x40\xd3", "ubfx x0, x1, #0, #63"),
+    ("\x20\xfc\x40\xd3", "ubfx x0, x1, #0, #64"),
+    ("\x20\xfc\x41\xd3", "ubfx x0, x1, #1, #63"),
+    ("\x20\xfc\x42\xd3", "ubfx x0, x1, #2, #62"),
+    ("\x20\xfc\x43\xd3", "ubfx x0, x1, #3, #61"),
+    ("\x20\xfc\x60\xd3", "ubfx x0, x1, #32, #32"),
+    ("\x20\x4c\x4a\xd3", "ubfx x0, x1, #10, #10"),
 ]
 
 def emu_with_unicorn(opcode, istate):

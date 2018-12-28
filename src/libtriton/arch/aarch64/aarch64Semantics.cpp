@@ -119,6 +119,7 @@ SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
 TST (immediate)               | Test bits (immediate): an alias of ANDS (immediate)
 TST (shifted register)        | Test (shifted register): an alias of ANDS (shifted register)
+UBFX                          | Unsigned Bitfield Extract: an alias of UBFM
 UMADDL                        | Unsigned Multiply-Add Long
 UMSUBL                        | Unsigned Multiply-Subtract Long
 UXTB                          | Unsigned Extend Byte: an alias of UBFM
@@ -218,6 +219,7 @@ namespace triton {
           case ID_INS_TBNZ:      this->tbnz_s(inst);          break;
           case ID_INS_TBZ:       this->tbz_s(inst);           break;
           case ID_INS_TST:       this->tst_s(inst);           break;
+          case ID_INS_UBFX:      this->ubfx_s(inst);          break;
           case ID_INS_UMADDL:    this->umaddl_s(inst);        break;
           case ID_INS_UMSUBL:    this->umsubl_s(inst);        break;
           case ID_INS_UXTB:      this->uxtb_s(inst);          break;
@@ -2624,6 +2626,34 @@ namespace triton {
           this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_V), "Clears overflow flag");
           this->zf_s(inst, expr, src1);
         }
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ubfx_s(triton::arch::Instruction& inst) {
+        auto& dst   = inst.operands[0];
+        auto& src1  = inst.operands[1];
+        auto& src2  = inst.operands[2];
+        auto& src3  = inst.operands[3];
+        auto  lsb   = src2.getImmediate().getValue();
+        auto  width = src3.getImmediate().getValue();
+
+        if (lsb + width > dst.getBitSize())
+          throw triton::exceptions::Semantics("AArch64Semantics::ubfx_s(): Invalild lsb and width.");
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src1);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - (lsb+width), this->astCtxt.extract(lsb+width-1, lsb, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UBFX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
