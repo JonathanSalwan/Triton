@@ -194,6 +194,9 @@ namespace triton {
           //! The CCMP semantics
           void ccmp_s(triton::arch::Instruction& inst);
 
+          //! The CINC semantics
+          void cinc_s(triton::arch::Instruction& inst);
+
           //! The CMN semantics
           void cmn_s(triton::arch::Instruction& inst);
 

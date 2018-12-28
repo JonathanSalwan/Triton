@@ -43,6 +43,7 @@ CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
 CCMP (immediate)              | Conditional Compare (immediate)
 CCMP (register)               | Conditional Compare (register)
+CINC                          | Conditional Increment: an alias of CSINC
 CMN (extended register)       | Compare Negative (extended register): an alias of ADDS (extended register)
 CMN (immediate)               | Compare Negative (immediate): an alias of ADDS (immediate)
 CMN (shifted register)        | Compare Negative (shifted register): an alias of ADDS (shifted register)
@@ -171,6 +172,7 @@ namespace triton {
           case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
           case ID_INS_CBZ:       this->cbz_s(inst);           break;
           case ID_INS_CCMP:      this->ccmp_s(inst);          break;
+          case ID_INS_CINC:      this->cinc_s(inst);          break;
           case ID_INS_CMN:       this->cmn_s(inst);           break;
           case ID_INS_CMP:       this->cmp_s(inst);           break;
           case ID_INS_CSEL:      this->csel_s(inst);          break;
@@ -1143,6 +1145,28 @@ namespace triton {
         this->nfCcmp_s(inst, expr, src1, op3);
         this->vfCcmp_s(inst, expr, src1, op1, op2, op3);
         this->zfCcmp_s(inst, expr, src1, op3);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::cinc_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op2 = this->astCtxt.bvadd(op1, this->astCtxt.bv(1, src.getBitSize()));
+
+        /* Create the semantics */
+        auto node = this->getCodeConditionAst(inst, op2, op1);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CINC operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

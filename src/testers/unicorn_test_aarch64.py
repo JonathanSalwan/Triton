@@ -1401,6 +1401,10 @@ CODE  = [
     ("\xe0\x67\x9f\x9a", "cset x0, vc"),
     ("\xe0\x77\x9f\x9a", "cset x0, vs"),
 
+    ("\x41\x9a\x80\xd2", "movz x1, #1234"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x41\x14\x82\x9a", "cinc x1, x2, eq"),
+    ("\x41\x04\x82\x9a", "cinc x1, x2, ne"),
 ]
 
 def emu_with_unicorn(opcode, istate):
