@@ -41,6 +41,8 @@ BLR                           | Branch with Link to Register
 BR                            | Branch to Register
 CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
+CCMP (immediate)              | Conditional Compare (immediate)
+CCMP (register)               | Conditional Compare (register)
 CMN (extended register)       | Compare Negative (extended register): an alias of ADDS (extended register)
 CMN (immediate)               | Compare Negative (immediate): an alias of ADDS (immediate)
 CMN (shifted register)        | Compare Negative (shifted register): an alias of ADDS (shifted register)
@@ -168,6 +170,7 @@ namespace triton {
           case ID_INS_BR:        this->br_s(inst);            break;
           case ID_INS_CBNZ:      this->cbnz_s(inst);          break;
           case ID_INS_CBZ:       this->cbz_s(inst);           break;
+          case ID_INS_CCMP:      this->ccmp_s(inst);          break;
           case ID_INS_CMN:       this->cmn_s(inst);           break;
           case ID_INS_CMP:       this->cmp_s(inst);           break;
           case ID_INS_CSEL:      this->csel_s(inst);          break;
@@ -544,6 +547,30 @@ namespace triton {
       }
 
 
+      void AArch64Semantics::nfCcmp_s(triton::arch::Instruction& inst,
+                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                      triton::arch::OperandWrapper& dst,
+                                      triton::ast::SharedAbstractNode& nzcv) {
+
+        auto nf   = this->architecture->getRegister(ID_REG_AARCH64_N);
+        auto high = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * nf = MSB(result) if cond == true else NF(nzcv)
+         */
+        auto node1 = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
+        auto node2 = this->astCtxt.extract(3, 3, nzcv);
+        auto node3 = this->getCodeConditionAst(inst, node1, node2);
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, nf, "Negative flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(nf, parent->isTainted);
+      }
+
+
       void AArch64Semantics::zf_s(triton::arch::Instruction& inst,
                                   const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                   triton::arch::OperandWrapper& dst) {
@@ -568,6 +595,39 @@ namespace triton {
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, zf, "Zero flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
+      }
+
+
+      void AArch64Semantics::zfCcmp_s(triton::arch::Instruction& inst,
+                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                      triton::arch::OperandWrapper& dst,
+                                      triton::ast::SharedAbstractNode& nzcv) {
+
+        auto zf     = this->architecture->getRegister(ID_REG_AARCH64_Z);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * zf = 0 == result if cond == true else ZF(nzcv)
+         */
+        auto node1 = this->astCtxt.ite(
+                       this->astCtxt.equal(
+                         this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
+                         this->astCtxt.bv(0, bvSize)
+                       ),
+                       this->astCtxt.bv(1, 1),
+                       this->astCtxt.bv(0, 1)
+                     );
+        auto node2 = this->astCtxt.extract(2, 2, nzcv);
+        auto node3 = this->getCodeConditionAst(inst, node1, node2);
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, zf, "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
@@ -645,6 +705,48 @@ namespace triton {
       }
 
 
+      void AArch64Semantics::cfCcmp_s(triton::arch::Instruction& inst,
+                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                      triton::arch::OperandWrapper& dst,
+                                      triton::ast::SharedAbstractNode& op1,
+                                      triton::ast::SharedAbstractNode& op2,
+                                      triton::ast::SharedAbstractNode& nzcv) {
+
+        auto cf     = this->architecture->getRegister(ID_REG_AARCH64_C);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * if cond == true:
+         *   cf = (MSB(((op1 ^ op2 ^ result) ^ ((op1 ^ result) & (op1 ^ op2))))) ^ 1
+         * else
+         *   cf = CF(nzcv)
+         */
+        auto node1 = this->astCtxt.bvxor(
+                       this->astCtxt.extract(bvSize-1, bvSize-1,
+                         this->astCtxt.bvxor(
+                           this->astCtxt.bvxor(op1, this->astCtxt.bvxor(op2, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))),
+                           this->astCtxt.bvand(
+                             this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent))),
+                             this->astCtxt.bvxor(op1, op2)
+                           )
+                         )
+                       ),
+                       this->astCtxt.bvtrue()
+                     );
+        auto node2 = this->astCtxt.extract(1, 1, nzcv);
+        auto node3 = this->getCodeConditionAst(inst, node1, node2);
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, cf, "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(cf, parent->isTainted);
+      }
+
+
       void AArch64Semantics::vfAdd_s(triton::arch::Instruction& inst,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                      triton::arch::OperandWrapper& dst,
@@ -699,6 +801,42 @@ namespace triton {
 
         /* Create the symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, vf, "Overflow flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
+      }
+
+
+      void AArch64Semantics::vfCcmp_s(triton::arch::Instruction& inst,
+                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                      triton::arch::OperandWrapper& dst,
+                                      triton::ast::SharedAbstractNode& op1,
+                                      triton::ast::SharedAbstractNode& op2,
+                                      triton::ast::SharedAbstractNode& nzcv) {
+
+        auto vf     = this->architecture->getRegister(ID_REG_AARCH64_V);
+        auto bvSize = dst.getBitSize();
+        auto low    = dst.getLow();
+        auto high   = dst.getHigh();
+
+        /*
+         * Create the semantic.
+         * if cond == true:
+         *   vf = MSB((op1 ^ op2) & (op1 ^ result))
+         * else:
+         *   vf = VF(nzcv)
+         */
+        auto node1 = this->astCtxt.extract(bvSize-1, bvSize-1,
+                       this->astCtxt.bvand(
+                         this->astCtxt.bvxor(op1, op2),
+                         this->astCtxt.bvxor(op1, this->astCtxt.extract(high, low, this->astCtxt.reference(parent)))
+                       )
+                     );
+        auto node2 = this->astCtxt.extract(0, 0, nzcv);
+        auto node3 = this->getCodeConditionAst(inst, node1, node2);
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, vf, "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
@@ -978,6 +1116,36 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+      }
+
+
+      void AArch64Semantics::ccmp_s(triton::arch::Instruction& inst) {
+        auto& src1  = inst.operands[0];
+        auto& src2  = inst.operands[1];
+        auto& src3  = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvsub(op1, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node, "CCMP temporary operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+
+        /* Upate symbolic flags */
+        this->cfCcmp_s(inst, expr, src1, op1, op2, op3);
+        this->nfCcmp_s(inst, expr, src1, op3);
+        this->vfCcmp_s(inst, expr, src1, op1, op2, op3);
+        this->zfCcmp_s(inst, expr, src1, op3);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 

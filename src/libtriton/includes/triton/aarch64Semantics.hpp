@@ -90,10 +90,22 @@ namespace triton {
                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
                     triton::arch::OperandWrapper& dst);
 
+          //! The NF semantics for the CCMP operation.
+          void nfCcmp_s(triton::arch::Instruction& inst,
+                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::SharedAbstractNode& nzcv);
+
           //! The ZF semantics.
           void zf_s(triton::arch::Instruction& inst,
                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
                     triton::arch::OperandWrapper& dst);
+
+          //! The ZF semantics for the CCMP operation.
+          void zfCcmp_s(triton::arch::Instruction& inst,
+                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::SharedAbstractNode& nzcv);
 
           /* Specific flags computation ------------------------------------ */
 
@@ -111,6 +123,14 @@ namespace triton {
                        triton::ast::SharedAbstractNode& op1,
                        triton::ast::SharedAbstractNode& op2);
 
+          //! The CF semantics for the CCMP operation.
+          void cfCcmp_s(triton::arch::Instruction& inst,
+                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::SharedAbstractNode& op1,
+                        triton::ast::SharedAbstractNode& op2,
+                        triton::ast::SharedAbstractNode& nzcv);
+
           //! The VF semantics for the ADDS operation.
           void vfAdd_s(triton::arch::Instruction& inst,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
@@ -124,6 +144,14 @@ namespace triton {
                        triton::arch::OperandWrapper& dst,
                        triton::ast::SharedAbstractNode& op1,
                        triton::ast::SharedAbstractNode& op2);
+
+          //! The VF semantics for the CCMP operation.
+          void vfCcmp_s(triton::arch::Instruction& inst,
+                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                        triton::arch::OperandWrapper& dst,
+                        triton::ast::SharedAbstractNode& op1,
+                        triton::ast::SharedAbstractNode& op2,
+                        triton::ast::SharedAbstractNode& nzcv);
 
           /* Instruction semantics ----------------------------------------- */
 
@@ -162,6 +190,9 @@ namespace triton {
 
           //! The CBZ semantics
           void cbz_s(triton::arch::Instruction& inst);
+
+          //! The CCMP semantics
+          void ccmp_s(triton::arch::Instruction& inst);
 
           //! The CMN semantics
           void cmn_s(triton::arch::Instruction& inst);
