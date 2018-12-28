@@ -80,6 +80,7 @@ LSL (register)                | Logical Shift Left (register): an alias of LSLV
 LSR (immediate)               | Logical Shift Right (immediate): an alias of UBFM
 LSR (register)                | Logical Shift Right (register): an alias of LSRV
 MADD                          | Multiply-Add
+MNEG                          | Multiply-Negate: an alias of MSUB
 MOV (bitmask immediate)       | Move (bitmask immediate): an alias of ORR (immediate)
 MOV (register)                | Move (register): an alias of ORR (shifted register)
 MOV (to/from SP)              | Move between register and stack pointer: an alias of ADD (immediate)
@@ -190,6 +191,7 @@ namespace triton {
           case ID_INS_LSL:       this->lsl_s(inst);           break;
           case ID_INS_LSR:       this->lsr_s(inst);           break;
           case ID_INS_MADD:      this->madd_s(inst);          break;
+          case ID_INS_MNEG:      this->mneg_s(inst);          break;
           case ID_INS_MOV:       this->mov_s(inst);           break;
           case ID_INS_MOVK:      this->movk_s(inst);          break;
           case ID_INS_MOVN:      this->movn_s(inst);          break;
@@ -1785,6 +1787,29 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::mneg_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.bvneg(this->astCtxt.bvmul(op1, op2));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MNEG operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

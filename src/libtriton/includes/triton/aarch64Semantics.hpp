@@ -235,6 +235,9 @@ namespace triton {
           //! The MADD semantics.
           void madd_s(triton::arch::Instruction& inst);
 
+          //! The MNEG semantics.
+          void mneg_s(triton::arch::Instruction& inst);
+
           //! The MOV semantics.
           void mov_s(triton::arch::Instruction& inst);
 
