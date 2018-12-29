@@ -1405,6 +1405,70 @@ CODE  = [
     ("\xc2\x88\x83\xd2", "movz x2, #7238"),
     ("\x41\x14\x82\x9a", "cinc x1, x2, eq"),
     ("\x41\x04\x82\x9a", "cinc x1, x2, ne"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\xc1\xfd\xff\xd2", "movz x1, #0xffee, lsl #48"),
+    ("\x81\xb9\xdb\xf2", "movk x1, #0xddcc, lsl #32"),
+    ("\x41\x75\xb7\xf2", "movk x1, #0xbbaa, lsl #16"),
+    ("\x01\x31\x93\xf2", "movk x1, #0x9988"),
+    ("\x20\xfc\x40\xd3", "ubfiz x0, x1, #0, #64"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xf8\x7f\xd3", "ubfiz x0, x1, #1, #63"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xf4\x7e\xd3", "ubfiz x0, x1, #2, #62"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xf0\x7d\xd3", "ubfiz x0, x1, #3, #61"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xec\x7c\xd3", "ubfiz x0, x1, #4, #60"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xe8\x7b\xd3", "ubfiz x0, x1, #5, #59"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xe4\x7a\xd3", "ubfiz x0, x1, #6, #58"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xe0\x79\xd3", "ubfiz x0, x1, #7, #57"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\xdc\x78\xd3", "ubfiz x0, x1, #8, #56"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x7c\x7a\xd3", "ubfiz x0, x1, #6, #32"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x00\x78\xd3", "ubfiz x0, x1, #8, #1"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x00\x41\xd3", "ubfiz x0, x1, #63, #1"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x00\x18\x53", "ubfiz w0, w1, #8, #1"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x00\x01\x53", "ubfiz w0, w1, #31, #1"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x00\x04\x00\xd1", "sub x0, x0, #1"),
+    ("\x20\x7c\x00\x53", "ubfiz w0, w1, #0, #32"),
 ]
 
 def emu_with_unicorn(opcode, istate):

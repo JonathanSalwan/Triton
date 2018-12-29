@@ -362,6 +362,9 @@ namespace triton {
           //! The TST semantics.
           void tst_s(triton::arch::Instruction& inst);
 
+          //! The UBFIZ semantics.
+          void ubfiz_s(triton::arch::Instruction& inst);
+
           //! The UBFX semantics.
           void ubfx_s(triton::arch::Instruction& inst);
 
