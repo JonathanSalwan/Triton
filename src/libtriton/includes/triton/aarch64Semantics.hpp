@@ -368,11 +368,23 @@ namespace triton {
           //! The UBFX semantics.
           void ubfx_s(triton::arch::Instruction& inst);
 
+          //! The UDIV semantics.
+          void udiv_s(triton::arch::Instruction& inst);
+
           //! The UMADDL semantics.
           void umaddl_s(triton::arch::Instruction& inst);
 
+          //! The UMNEGL semantics.
+          void umnegl_s(triton::arch::Instruction& inst);
+
           //! The UMSUBL semantics.
           void umsubl_s(triton::arch::Instruction& inst);
+
+          //! The UMULH semantics.
+          void umulh_s(triton::arch::Instruction& inst);
+
+          //! The UMULL semantics.
+          void umull_s(triton::arch::Instruction& inst);
 
           //! The UXTB semantics.
           void uxtb_s(triton::arch::Instruction& inst);
