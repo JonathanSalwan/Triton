@@ -311,6 +311,9 @@ namespace triton {
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
+          //! The ROR semantics.
+          void ror_s(triton::arch::Instruction& inst);
+
           //! The SDIV semantics.
           void sdiv_s(triton::arch::Instruction& inst);
 
