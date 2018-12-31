@@ -311,6 +311,9 @@ namespace triton {
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
+          //! The SDIV semantics.
+          void sdiv_s(triton::arch::Instruction& inst);
+
           //! The SMADDL semantics.
           void smaddl_s(triton::arch::Instruction& inst);
 

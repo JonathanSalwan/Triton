@@ -100,6 +100,7 @@ ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
 ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
+SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
 SMULL                         | Signed Multiply Long: an alias of SMADDL
@@ -216,6 +217,7 @@ namespace triton {
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_ORR:       this->orr_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
+          case ID_INS_SDIV:      this->sdiv_s(inst);          break;
           case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
           case ID_INS_SMULL:     this->smull_s(inst);         break;
@@ -2315,6 +2317,33 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+      }
+
+
+      void AArch64Semantics::sdiv_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.ite(
+                      this->astCtxt.equal(op2, this->astCtxt.bv(0, op2->getBitvectorSize())),
+                      this->astCtxt.bv(0, dst.getBitSize()),
+                      this->astCtxt.bvsdiv(op1, op2)
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SDIV operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 

@@ -1482,6 +1482,16 @@ CODE  = [
 
     ("\x41\x9a\x80\xd2", "movz x1, #1234"),
     ("\xc2\x88\x83\xd2", "movz x2, #7238"),
+    ("\x20\x0c\xc2\x9a", "sdiv x0, x1, x2"),
+    ("\x40\x0c\xc1\x9a", "sdiv x0, x2, x1"),
+
+    ("\x41\x9a\x80\xd2", "movz x1, #1234"),
+    ("\x02\x00\x80\xd2", "movz x2, #0"),
+    ("\x20\x0c\xc2\x9a", "sdiv x0, x1, x2"),
+    ("\x40\x0c\xc1\x9a", "sdiv x0, x2, x1"),
+
+    ("\x41\x9a\x80\xd2", "movz x1, #1234"),
+    ("\xc2\x88\x83\xd2", "movz x2, #7238"),
     ("\x20\x7c\xa2\x9b", "umull x0, w1, w2"),
     ("\x00\x7c\xa2\x9b", "umull x0, w0, w2"),
     ("\x00\x7c\xa2\x9b", "umull x0, w0, w2"),
