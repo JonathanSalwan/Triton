@@ -22,20 +22,20 @@ namespace triton {
 
     /* ====== Abstract node */
 
-    AbstractNode::AbstractNode(enum kind_e kind, AstContext& ctxt): ctxt(ctxt) {
+    AbstractNode::AbstractNode(triton::ast::ast_e type, AstContext& ctxt): ctxt(ctxt) {
       this->eval        = 0;
-      this->kind        = kind;
       this->size        = 0;
       this->symbolized  = false;
+      this->type        = type;
     }
 
 
     AbstractNode::AbstractNode(const AbstractNode& other, AstContext& ctxt): ctxt(ctxt) {
       this->eval        = other.eval;
-      this->kind        = other.kind;
       this->parents     = other.parents;
       this->size        = other.size;
       this->symbolized  = other.symbolized;
+      this->type        = other.type;
 
       for (triton::uint32 index = 0; index < other.children.size(); index++)
         this->children.push_back(triton::ast::newInstance(other.children[index].get()));
@@ -52,8 +52,8 @@ namespace triton {
     }
 
 
-    enum kind_e AbstractNode::getKind(void) const {
-      return this->kind;
+    triton::ast::ast_e AbstractNode::getType(void) const {
+      return this->type;
     }
 
 
@@ -82,7 +82,7 @@ namespace triton {
 
 
     bool AbstractNode::isLogical(void) const {
-      switch (this->kind) {
+      switch (this->type) {
         case BVSGE_NODE:
         case BVSGT_NODE:
         case BVSLE_NODE:
@@ -136,7 +136,6 @@ namespace triton {
       std::vector<SharedAbstractNode> res;
       std::vector<AbstractNode*> toRemove;
 
-      // FIXME: Could be done in a background thread
       for (auto& kv: parents) {
         if (auto sp = kv.second.second.lock())
           res.push_back(sp);
@@ -176,7 +175,7 @@ namespace triton {
       auto it = this->parents.find(p);
 
       if(it == parents.end())
-        throw triton::exceptions::Ast("AbstractNode::removeParent(): Can't remove a parent that is not our.");
+        return;
 
       it->second.first--;
       if(it->second.first == 0)
@@ -202,11 +201,11 @@ namespace triton {
       if (child == nullptr)
         throw triton::exceptions::Ast("AbstractNode::setChild(): child cannot be null.");
 
-      /* Setup the parent of the child */
-      child->setParent(this);
-
       /* Remove the parent of the old child */
       this->children[index]->removeParent(this);
+
+      /* Setup the parent of the child */
+      child->setParent(this);
 
       /* Setup the child of the parent */
       this->children[index] = child;
@@ -258,7 +257,7 @@ namespace triton {
 
 
     triton::uint512 AssertNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -298,7 +297,7 @@ namespace triton {
 
 
     triton::uint512 BvaddNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -338,7 +337,7 @@ namespace triton {
 
 
     triton::uint512 BvandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -411,7 +410,7 @@ namespace triton {
 
 
     triton::uint512 BvashrNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -451,7 +450,7 @@ namespace triton {
 
 
     triton::uint512 BvlshrNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -491,7 +490,7 @@ namespace triton {
 
 
     triton::uint512 BvmulNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -531,7 +530,7 @@ namespace triton {
 
 
     triton::uint512 BvnandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -567,7 +566,7 @@ namespace triton {
 
 
     triton::uint512 BvnegNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -607,7 +606,7 @@ namespace triton {
 
 
     triton::uint512 BvnorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -643,7 +642,7 @@ namespace triton {
 
 
     triton::uint512 BvnotNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -683,7 +682,7 @@ namespace triton {
 
 
     triton::uint512 BvorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -711,7 +710,7 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrolNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
       rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
@@ -734,7 +733,7 @@ namespace triton {
 
 
     triton::uint512 BvrolNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -762,7 +761,7 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrorNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
       rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
@@ -785,7 +784,7 @@ namespace triton {
 
 
     triton::uint512 BvrorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -838,7 +837,7 @@ namespace triton {
 
 
     triton::uint512 BvsdivNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -885,7 +884,7 @@ namespace triton {
 
 
     triton::uint512 BvsgeNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -932,7 +931,7 @@ namespace triton {
 
 
     triton::uint512 BvsgtNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -972,7 +971,7 @@ namespace triton {
 
 
     triton::uint512 BvshlNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1018,7 +1017,7 @@ namespace triton {
 
 
     triton::uint512 BvsleNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1065,7 +1064,7 @@ namespace triton {
 
 
     triton::uint512 BvsltNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1116,7 +1115,7 @@ namespace triton {
 
 
     triton::uint512 BvsmodNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1167,7 +1166,7 @@ namespace triton {
 
 
     triton::uint512 BvsremNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1207,7 +1206,7 @@ namespace triton {
 
 
     triton::uint512 BvsubNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1251,7 +1250,7 @@ namespace triton {
 
 
     triton::uint512 BvudivNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1291,7 +1290,7 @@ namespace triton {
 
 
     triton::uint512 BvugeNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1331,7 +1330,7 @@ namespace triton {
 
 
     triton::uint512 BvugtNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1371,7 +1370,7 @@ namespace triton {
 
 
     triton::uint512 BvuleNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1411,7 +1410,7 @@ namespace triton {
 
 
     triton::uint512 BvultNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1455,7 +1454,7 @@ namespace triton {
 
 
     triton::uint512 BvuremNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1495,7 +1494,7 @@ namespace triton {
 
 
     triton::uint512 BvxnorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -1535,7 +1534,7 @@ namespace triton {
 
 
     triton::uint512 BvxorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -1559,7 +1558,7 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE || this->children[1]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE || this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvNode::init(): Size and value must be a DECIMAL_NODE.");
 
       value = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue();
@@ -1587,7 +1586,7 @@ namespace triton {
 
 
     triton::uint512 BvNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1618,7 +1617,7 @@ namespace triton {
 
 
     triton::uint512 CompoundNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1664,7 +1663,7 @@ namespace triton {
 
 
     triton::uint512 ConcatNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1697,7 +1696,7 @@ namespace triton {
 
 
     triton::uint512 DecimalNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->kind ^ this->value;
+      triton::uint512 hash = this->type ^ this->value;
       return hash;
     }
 
@@ -1714,7 +1713,7 @@ namespace triton {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("DeclareNode::init(): Must take at least one child.");
 
-      if (this->children[0]->getKind() != VARIABLE_NODE)
+      if (this->children[0]->getType() != VARIABLE_NODE)
         throw triton::exceptions::Ast("DeclareNode::init(): The child node must be a VARIABLE_NODE.");
 
       /* Init attributes */
@@ -1733,7 +1732,7 @@ namespace triton {
 
 
     triton::uint512 DeclareNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1773,7 +1772,7 @@ namespace triton {
 
 
     triton::uint512 DistinctNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -1813,7 +1812,7 @@ namespace triton {
 
 
     triton::uint512 EqualNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -1838,7 +1837,7 @@ namespace triton {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("ExtractNode::init(): Must take at least three children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE || this->children[1]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE || this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("ExtractNode::init(): The highest and lower bit must be a DECIMAL_NODE.");
 
       high = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
@@ -1866,7 +1865,7 @@ namespace triton {
 
 
     triton::uint512 ExtractNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1910,7 +1909,7 @@ namespace triton {
 
 
     triton::uint512 IteNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -1951,7 +1950,7 @@ namespace triton {
 
 
     triton::uint512 LandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -1973,7 +1972,7 @@ namespace triton {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("LetNode::init(): Must take at least three children.");
 
-      if (this->children[0]->getKind() != STRING_NODE)
+      if (this->children[0]->getType() != STRING_NODE)
         throw triton::exceptions::Ast("LetNode::init(): The alias node must be a STRING_NODE.");
 
       /* Init attributes */
@@ -1992,7 +1991,7 @@ namespace triton {
 
 
     triton::uint512 LetNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -2032,7 +2031,7 @@ namespace triton {
 
 
     triton::uint512 LnotNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -2073,7 +2072,7 @@ namespace triton {
 
 
     triton::uint512 LorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
@@ -2105,7 +2104,7 @@ namespace triton {
 
 
     triton::uint512 ReferenceNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->kind ^ this->expr->getId();
+      triton::uint512 hash = this->type ^ this->expr->getId();
       return hash;
     }
 
@@ -2140,7 +2139,7 @@ namespace triton {
 
 
     triton::uint512 StringNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind;
+      triton::uint512 h = this->type;
       triton::uint32 index = 1;
       for (std::string::const_iterator it=this->value.cbegin(); it != this->value.cend(); it++)
         h = h ^ triton::ast::hash2n(*it, index++);
@@ -2163,7 +2162,7 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("SxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("SxNode::init(): The sizeExt must be a DECIMAL_NODE.");
 
       sizeExt = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
@@ -2187,7 +2186,7 @@ namespace triton {
 
 
     triton::uint512 SxNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -2221,7 +2220,7 @@ namespace triton {
 
 
     triton::uint512 VariableNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind;
+      triton::uint512 h = this->type;
       triton::uint32 index = 1;
 
       for (char c : this->symVar->getName())
@@ -2246,7 +2245,7 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("ZxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getKind() != DECIMAL_NODE)
+      if (this->children[0]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("ZxNode::init(): The sizeExt must be a DECIMAL_NODE.");
 
       sizeExt = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
@@ -2270,7 +2269,7 @@ namespace triton {
 
 
     triton::uint512 ZxNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->kind, s = this->children.size();
+      triton::uint512 h = this->type, s = this->children.size();
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
@@ -2366,7 +2365,7 @@ namespace triton {
       if (node == nullptr)
         return nullptr;
 
-      switch (node->getKind()) {
+      switch (node->getType()) {
         case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node)); break;
         case BVADD_NODE:                newNode = std::make_shared<BvaddNode>(*reinterpret_cast<BvaddNode*>(node)); break;
         case BVAND_NODE:                newNode = std::make_shared<BvandNode>(*reinterpret_cast<BvandNode*>(node)); break;
@@ -2416,7 +2415,7 @@ namespace triton {
         case VARIABLE_NODE:             newNode = std::make_shared<VariableNode>(*reinterpret_cast<VariableNode*>(node)); break;
         case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node)); break;
         default:
-          throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid kind node.");
+          throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid type node.");
       }
 
       if (newNode == nullptr)

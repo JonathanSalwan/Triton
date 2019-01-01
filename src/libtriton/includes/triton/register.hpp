@@ -5,17 +5,17 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_REGISTEROPERAND_H
-#define TRITON_REGISTEROPERAND_H
+#ifndef TRITON_REGISTEROPERAND_HPP
+#define TRITON_REGISTEROPERAND_HPP
 
 #include <string>
 #include <ostream>
 
+#include <triton/aarch64OperandProperties.hpp>
+#include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/operandInterface.hpp>
-#include <triton/registers_e.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -41,16 +41,19 @@ namespace triton {
     /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class Register : public BitsVector, public OperandInterface {
+    class Register : public BitsVector, public AArch64OperandProperties {
       protected:
         //! The name of the register.
         std::string name;
 
         //! The id of the register.
-        triton::arch::registers_e id;
+        triton::arch::register_e id;
 
         //! The parent id of the register.
-        triton::arch::registers_e parent;
+        triton::arch::register_e parent;
+
+        //! True if the register is mutable. For example XZR in AArch64 is immutable.
+        bool vmutable;
 
       private:
         //! Copy a Register.
@@ -61,40 +64,37 @@ namespace triton {
         TRITON_EXPORT Register();
 
         //! Constructor.
-        TRITON_EXPORT Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low);
+        TRITON_EXPORT Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low, bool vmutable);
 
         //! Constructor.
-        TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::registers_e regId);
+        TRITON_EXPORT Register(const triton::arch::CpuInterface&, triton::arch::register_e regId);
 
         //! Constructor.
         TRITON_EXPORT Register(const Register& other);
 
         //! Returns the parent id of the register.
-        TRITON_EXPORT registers_e getParent(void) const;
+        TRITON_EXPORT triton::arch::register_e getParent(void) const;
 
         //! Returns true if `other` and `self` overlap.
         TRITON_EXPORT bool isOverlapWith(const Register& other) const;
 
+        //! Returns true if this register is mutable. Mainly used in AArch64 to define that some registers like XZR are immutable.
+        TRITON_EXPORT bool isMutable(void) const;
+
         //! Returns the name of the register.
         TRITON_EXPORT std::string getName(void) const;
 
-        //! Returns the highest bit of the register vector. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit of the register vector. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
+        //! Returns the id of the register.
+        TRITON_EXPORT triton::arch::register_e getId(void) const;
 
         //! Returns the size (in bits) of the register.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
-        //! Returns the id of the register.
-        TRITON_EXPORT triton::arch::registers_e getId(void) const;
-
         //! Returns the size (in bytes) of the register.
         TRITON_EXPORT triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_REG).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_REGISTER).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! Compare two registers specifications
         TRITON_EXPORT bool operator==(const Register& other) const;
@@ -120,4 +120,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_REGISTEROPERAND_H */
+#endif /* TRITON_REGISTEROPERAND_HPP */

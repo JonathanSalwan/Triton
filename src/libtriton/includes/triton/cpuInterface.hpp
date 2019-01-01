@@ -12,11 +12,11 @@
 #include <unordered_map>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
-#include <triton/registers_e.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -46,14 +46,17 @@ namespace triton {
         //! Clears the architecture states (registers and memory).
         TRITON_EXPORT virtual void clear(void) = 0;
 
+        //! Returns the kind of endianness as triton::arch::endianness_e.
+        TRITON_EXPORT virtual triton::arch::endianness_e getEndianness(void) const = 0;
+
         //! Returns true if the register ID is a flag.
-        TRITON_EXPORT virtual bool isFlag(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isFlag(triton::arch::register_e regId) const = 0;
 
         //! Returns true if the register ID is a register.
-        TRITON_EXPORT virtual bool isRegister(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isRegister(triton::arch::register_e regId) const = 0;
 
         //! Returns true if the register ID is valid.
-        TRITON_EXPORT virtual bool isRegisterValid(triton::arch::registers_e regId) const = 0;
+        TRITON_EXPORT virtual bool isRegisterValid(triton::arch::register_e regId) const = 0;
 
         //! Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT virtual triton::uint32 gprSize(void) const = 0;
@@ -68,16 +71,22 @@ namespace triton {
         TRITON_EXPORT virtual std::set<const triton::arch::Register*> getParentRegisters(void) const = 0;
 
         //! Returns all registers.
-        TRITON_EXPORT virtual const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
+        TRITON_EXPORT virtual const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const = 0;
 
         //! Returns parent register from a given one.
         TRITON_EXPORT virtual const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const = 0;
 
         //! Returns parent register from a given one.
-        TRITON_EXPORT virtual const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const = 0;
+        TRITON_EXPORT virtual const triton::arch::Register& getParentRegister(triton::arch::register_e id) const = 0;
 
         //! Returns register from id
-        TRITON_EXPORT virtual const triton::arch::Register& getRegister(triton::arch::registers_e id) const = 0;
+        TRITON_EXPORT virtual const triton::arch::Register& getRegister(triton::arch::register_e id) const = 0;
+
+        //! Returns the program counter register
+        TRITON_EXPORT virtual const triton::arch::Register& getProgramCounter(void) const = 0;
+
+        //! Returns the stack pointer register
+        TRITON_EXPORT virtual const triton::arch::Register& getStackPointer(void) const = 0;
 
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) const = 0;

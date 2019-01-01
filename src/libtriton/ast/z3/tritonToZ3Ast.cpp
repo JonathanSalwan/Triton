@@ -46,7 +46,7 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::AstTranslations("TritonToZ3Ast::convert(): node cannot be null.");
 
-      switch (node->getKind()) {
+      switch (node->getType()) {
         case BVADD_NODE:
           return to_expr(this->context, Z3_mk_bvadd(this->context, this->convert(node->getChildren()[0]), this->convert(node->getChildren()[1])));
 

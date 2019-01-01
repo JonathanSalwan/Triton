@@ -22,7 +22,8 @@ class TestExample(unittest.TestCase):
 
 for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR, "*.py")),
                                             glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*.py")),
-                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*.py")))):
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*.py")),
+                                            glob.iglob(os.path.join(EXAMPLE_DIR, "*", "*", "*", "*.py")))):
 
     def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
@@ -31,8 +32,8 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
         if len(args) == 1:
             args = args[0]
 
-        if platform.system() != 'Darwin' and example_name.find('hackcon-2016-angry-reverser') >= 0:
-            # FIXME: Doesn't work on Travis and Appveyor... Only able to make it work on Travis osx.
+        if ('TRAVIS' in os.environ or 'APPVEYOR' in os.environ) and example_name.find('hackcon-2016-angry-reverser') >= 0:
+            # FIXME: Doesn't work on Travis and Appveyor...
             return
 
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)

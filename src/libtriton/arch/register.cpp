@@ -14,55 +14,48 @@ namespace triton {
   namespace arch {
 
     Register::Register()
-      : Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) {
+      : Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0, true) {
     }
 
 
-    Register::Register(triton::arch::registers_e regId, std::string name, triton::arch::registers_e parent, triton::uint32 high, triton::uint32 low)
+    Register::Register(triton::arch::register_e regId, std::string name, triton::arch::register_e parent, triton::uint32 high, triton::uint32 low, bool vmutable)
       : BitsVector(high, low),
         name(name),
         id(regId),
-        parent(parent) {
+        parent(parent),
+        vmutable(vmutable) {
     }
 
 
-    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::registers_e regId)
+    Register::Register(const triton::arch::CpuInterface& cpu, triton::arch::register_e regId)
       : Register(
           (regId == triton::arch::ID_REG_INVALID) ?
-          triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0) : cpu.getRegister(regId)
+          triton::arch::Register(triton::arch::ID_REG_INVALID, "unknown", triton::arch::ID_REG_INVALID, 0, 0, true) : cpu.getRegister(regId)
         ) {
     }
 
 
     Register::Register(const Register& other)
-      : BitsVector(other) {
+      : BitsVector(other),
+        AArch64OperandProperties(other) {
       this->copy(other);
     }
 
 
     void Register::copy(const Register& other) {
-      this->name   = other.name;
-      this->id     = other.id;
-      this->parent = other.parent;
+      this->id       = other.id;
+      this->name     = other.name;
+      this->parent   = other.parent;
+      this->vmutable = other.vmutable;
     }
 
 
-    triton::arch::registers_e Register::getId(void) const {
+    triton::arch::register_e Register::getId(void) const {
       return this->id;
     }
 
 
-    triton::uint32 Register::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 Register::getAbstractHigh(void) const {
-      return this->getHigh();
-    }
-
-
-    triton::arch::registers_e Register::getParent(void) const {
+    triton::arch::register_e Register::getParent(void) const {
       return this->parent;
     }
 
@@ -82,7 +75,7 @@ namespace triton {
     }
 
 
-    triton::uint32 Register::getType(void) const {
+    triton::arch::operand_e Register::getType(void) const {
       return triton::arch::OP_REG;
     }
 
@@ -93,6 +86,11 @@ namespace triton {
         if (other.getLow() <= this->getLow() && this->getLow() <= other.getHigh()) return true;
       }
       return false;
+    }
+
+
+    bool Register::isMutable(void) const {
+      return this->vmutable;
     }
 
 
@@ -107,6 +105,7 @@ namespace triton {
 
 
     Register& Register::operator=(const Register& other) {
+      AArch64OperandProperties::operator=(other);
       BitsVector::operator=(other);
       this->copy(other);
       return *this;

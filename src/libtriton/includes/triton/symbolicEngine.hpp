@@ -120,6 +120,33 @@ namespace triton {
           //! Modes API.
           triton::modes::Modes& modes;
 
+          //! Returns an unique symbolic expression id.
+          triton::usize getUniqueSymExprId(void);
+
+          //! Returns an unique symbolic variable id.
+          triton::usize getUniqueSymVarId(void);
+
+          //! Gets an aligned entry.
+          const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);
+
+          //! Adds an aligned entry.
+          void addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr);
+
+          //! Checks if the aligned memory is recored.
+          bool isAlignedMemory(triton::uint64 address, triton::uint32 size);
+
+          //! Removes an aligned entry.
+          void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
+
+          //! Adds a symbolic memory reference.
+          void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
+
+          //! Returns the AST corresponding to the shift operation. Mainly used for AArch64 operands.
+          triton::ast::SharedAbstractNode getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node);
+
+          //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
+          triton::ast::SharedAbstractNode getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node);
+
           //! Slices all expressions from a given node.
           void sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs);
 
@@ -137,25 +164,13 @@ namespace triton {
           TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);
 
           //! Creates a new shared symbolic expression.
-          TRITON_EXPORT SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, symkind_e kind, const std::string& comment="");
+          TRITON_EXPORT SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment="");
 
           //! Removes the symbolic expression corresponding to the id.
           TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
 
-          //! Adds an aligned entry.
-          TRITON_EXPORT void addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr);
-
-          //! Gets an aligned entry.
-          TRITON_EXPORT const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);
-
-          //! Checks if the aligned memory is recored.
-          TRITON_EXPORT bool isAlignedMemory(triton::uint64 address, triton::uint32 size);
-
-          //! Removes an aligned entry.
-          TRITON_EXPORT void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
-
           //! Adds a symbolic variable.
-          TRITON_EXPORT const SharedSymbolicVariable& newSymbolicVariable(symkind_e kind, triton::uint64 kindValue, triton::uint32 size, const std::string& comment="");
+          TRITON_EXPORT const SharedSymbolicVariable& newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
           TRITON_EXPORT const SharedSymbolicVariable& convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
@@ -185,7 +200,7 @@ namespace triton {
           TRITON_EXPORT const SharedSymbolicExpression& getSymbolicRegister(const triton::arch::Register& reg) const;
 
           //! Returns the map of symbolic registers defined.
-          TRITON_EXPORT std::map<triton::arch::registers_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
+          TRITON_EXPORT std::map<triton::arch::register_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
           //! Returns the symbolic memory value.
           TRITON_EXPORT triton::uint8 getSymbolicMemoryValue(triton::uint64 address);
@@ -238,12 +253,6 @@ namespace triton {
           //! Returns the new shared symbolic volatile expression expression and links this expression to the instruction.
           TRITON_EXPORT const SharedSymbolicExpression& createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
-          //! Returns an unique symbolic expression id.
-          TRITON_EXPORT triton::usize getUniqueSymExprId(void);
-
-          //! Returns an unique symbolic variable id.
-          TRITON_EXPORT triton::usize getUniqueSymVarId(void);
-
           //! Assigns a symbolic expression to a register.
           TRITON_EXPORT void assignSymbolicExpressionToRegister(const SharedSymbolicExpression& se, const triton::arch::Register& reg);
 
@@ -264,9 +273,6 @@ namespace triton {
 
           //! Returns all symbolic variables.
           TRITON_EXPORT const std::unordered_map<triton::usize, SharedSymbolicVariable>& getSymbolicVariables(void) const;
-
-          //! Adds a symbolic memory reference.
-          TRITON_EXPORT void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
           //! Concretizes all symbolic memory references.
           TRITON_EXPORT void concretizeAllMemory(void);

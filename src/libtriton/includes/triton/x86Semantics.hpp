@@ -1267,5 +1267,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-
 #endif /* TRITON_X86SEMANTICS_H */

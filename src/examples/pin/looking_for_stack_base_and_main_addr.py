@@ -7,8 +7,8 @@
 ##  ...
 ##
 
+from triton import *
 from pintool import *
-from triton  import ARCH, OPCODE
 
 MAIN_ADDR       = None
 STACK_BASE      = None
@@ -17,7 +17,7 @@ STACK_BASE      = None
 # This function is looking for the main() function address.
 def looking_for_main_addr(instruction):
     global MAIN_ADDR
-    if MAIN_ADDR is None and instruction.getType() == OPCODE.CALL:
+    if MAIN_ADDR is None and instruction.getType() == OPCODE.X86.CALL:
         # This is the first call into the ___libc_start_main function.
         # Get the main() function address located into RDI.
         MAIN_ADDR = getCurrentRegisterValue(getTritonContext().registers.rdi)

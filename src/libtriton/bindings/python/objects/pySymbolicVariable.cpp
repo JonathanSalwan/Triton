@@ -51,19 +51,19 @@ Returns the comment (if exists) of the symbolic variable.
 Returns the id of the symbolic variable. This id is always unique.<br>
 e.g: `18`
 
-- <b>\ref py_SYMEXPR_page getKind(void)</b><br>
-Returns the kind of the symbolic variable.<br>
-e.g: `SYMEXPR.REG`
-
-- <b>integer getKindValue(void)</b><br>
-Returns the kind value according to the \ref py_SYMEXPR_page.<br>
-If `getKind()` returns triton::engines::symbolic::REG, so `getKindValue()` returns the id of the register.<br>
-Otherwise, if `getKind()` returns triton::engines::symbolic::MEM, so `getKindValue()` returns the address of the memory access.<br>
-Then, if `getKind()` returns triton::engines::symbolic::UNDEF, so `getKindValue()` returns `0`.
-
 - <b>string getName(void)</b><br>
 Returns name of the the symbolic variable.<br>
 e.g: `SymVar_18`
+
+- <b>integer getOrigin(void)</b><br>
+Returns the origin according to the \ref py_SYMBOLIC_page.<br>
+If `getType()` returns triton::engines::symbolic::REGISTER_VARIABLE, so `getOrigin()` returns the id of the register.<br>
+Otherwise, if `getType()` returns triton::engines::symbolic::MEMORY_VARIABLE, so `getOrigin()` returns the address of the memory access.<br>
+Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, so `getOrigin()` returns `0`.
+
+- <b>\ref py_SYMBOLIC_page getType(void)</b><br>
+Returns the type of the symbolic variable.<br>
+e.g: `SYMBOLIC.REGISTER_VARIABLE`
 
 - <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
@@ -81,16 +81,6 @@ namespace triton {
         std::cout << std::flush;
         PySymbolicVariable_AsSymbolicVariable(self) = nullptr; // decref the shared_ptr
         Py_TYPE(self)->tp_free((PyObject*)self);
-      }
-
-
-      static PyObject* SymbolicVariable_getKind(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getKind());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -114,9 +104,19 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicVariable_getKindValue(PyObject* self, PyObject* noarg) {
+      static PyObject* SymbolicVariable_getType(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getKindValue());
+          return PyLong_FromUint32(PySymbolicVariable_AsSymbolicVariable(self)->getType());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicVariable_getOrigin(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PySymbolicVariable_AsSymbolicVariable(self)->getOrigin());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -191,9 +191,9 @@ namespace triton {
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},
         {"getId",             SymbolicVariable_getId,             METH_NOARGS,    ""},
-        {"getKind",           SymbolicVariable_getKind,           METH_NOARGS,    ""},
-        {"getKindValue",      SymbolicVariable_getKindValue,      METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
+        {"getOrigin",         SymbolicVariable_getOrigin,         METH_NOARGS,    ""},
+        {"getType",           SymbolicVariable_getType,           METH_NOARGS,    ""},
         {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };

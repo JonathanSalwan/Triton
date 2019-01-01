@@ -162,7 +162,7 @@ def getNewInput():
                         # Get the symbolic variable assigned to the model
                         symVar = Triton.getSymbolicVariableFromId(k)
                         # Save the new input as seed.
-                        seed.update({symVar.getKindValue(): v.getValue()})
+                        seed.update({symVar.getOrigin(): v.getValue()})
                     if seed:
                         inputs.append(seed)
 

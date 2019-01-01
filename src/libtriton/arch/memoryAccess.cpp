@@ -41,18 +41,9 @@ namespace triton {
     }
 
 
-    MemoryAccess::MemoryAccess(const MemoryAccess& other) : BitsVector(other) {
+    MemoryAccess::MemoryAccess(const MemoryAccess& other)
+      : BitsVector(other) {
       this->copy(other);
-    }
-
-
-    triton::uint32 MemoryAccess::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 MemoryAccess::getAbstractHigh(void) const {
-      return this->getHigh();
     }
 
 
@@ -66,13 +57,13 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getBitSize(void) const {
-      return this->getVectorSize();
+    triton::uint64 MemoryAccess::getPcRelative(void) const {
+      return this->pcRelative;
     }
 
 
-    triton::uint64 MemoryAccess::getPcRelative(void) const {
-      return this->pcRelative;
+    triton::uint32 MemoryAccess::getBitSize(void) const {
+      return this->getVectorSize();
     }
 
 
@@ -81,7 +72,7 @@ namespace triton {
     }
 
 
-    triton::uint32 MemoryAccess::getType(void) const {
+    triton::arch::operand_e MemoryAccess::getType(void) const {
       return triton::arch::OP_MEM;
     }
 

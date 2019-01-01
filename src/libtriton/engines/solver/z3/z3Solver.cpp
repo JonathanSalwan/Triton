@@ -137,7 +137,7 @@ namespace triton {
             throw triton::exceptions::SolverEngine("Z3Solver::getModels(): node cannot be null.");
 
           /* Z3 does not need an assert() as root node */
-          if (node->getKind() == triton::ast::ASSERT_NODE)
+          if (node->getType() == triton::ast::ASSERT_NODE)
             onode = node->getChildren()[0];
 
           if (onode->isLogical() == false)

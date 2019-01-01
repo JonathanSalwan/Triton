@@ -45,13 +45,13 @@ int main(int ac, const char **av) {
   inst.setOpcode(trace[0].inst, trace[0].size);
 
   /* Define RAX as symbolic variable */
-  api.convertRegisterToSymbolicVariable(triton::arch::Register(api.getRegister(ID_REG_RAX)));
+  api.convertRegisterToSymbolicVariable(triton::arch::Register(api.getRegister(ID_REG_X86_RAX)));
 
   /* Process everything */
   api.processing(inst);
 
   /* Get the RAX symbolic ID */
-  auto raxSym = api.getSymbolicRegister(api.getRegister(ID_REG_RAX));
+  auto raxSym = api.getSymbolicRegister(api.getRegister(ID_REG_X86_RAX));
 
   /* Get the RAX full AST */
   auto raxFullAst = api.unrollAst(raxSym->getAst());

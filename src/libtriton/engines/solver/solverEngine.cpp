@@ -25,7 +25,7 @@ namespace triton {
       }
 
 
-      triton::engines::solver::solvers_e SolverEngine::getSolver(void) const {
+      triton::engines::solver::solver_e SolverEngine::getSolver(void) const {
         return this->kind;
       }
 
@@ -37,7 +37,7 @@ namespace triton {
       }
 
 
-      void SolverEngine::setSolver(triton::engines::solver::solvers_e kind) {
+      void SolverEngine::setSolver(triton::engines::solver::solver_e kind) {
         /* Allocate and init the good solver */
         switch (kind) {
           #ifdef Z3_INTERFACE

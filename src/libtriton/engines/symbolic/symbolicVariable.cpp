@@ -15,17 +15,17 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicVariable::SymbolicVariable(symkind_e kind,
-                                         triton::uint64 kindValue,
+      SymbolicVariable::SymbolicVariable(triton::engines::symbolic::variable_e type,
+                                         triton::uint64 origin,
                                          triton::usize id,
                                          triton::uint32 size,
                                          const std::string& comment) {
         this->comment         = comment;
         this->id              = id;
-        this->kind            = kind;
-        this->kindValue       = kindValue;
         this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
+        this->origin          = origin;
         this->size            = size;
+        this->type            = type;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
@@ -35,26 +35,26 @@ namespace triton {
       SymbolicVariable::SymbolicVariable(const SymbolicVariable& other) {
         this->comment         = other.comment;
         this->id              = other.id;
-        this->kind            = other.kind;
-        this->kindValue       = other.kindValue;
         this->name            = other.name;
+        this->origin          = other.origin;
         this->size            = other.size;
+        this->type            = other.type;
       }
 
 
       SymbolicVariable& SymbolicVariable::operator=(const SymbolicVariable& other) {
         this->comment         = other.comment;
         this->id              = other.id;
-        this->kind            = other.kind;
-        this->kindValue       = other.kindValue;
         this->name            = other.name;
+        this->origin          = other.origin;
         this->size            = other.size;
+        this->type            = other.type;
         return *this;
       }
 
 
-      symkind_e SymbolicVariable::getKind(void) const {
-        return this->kind;
+      triton::engines::symbolic::variable_e SymbolicVariable::getType(void) const {
+        return this->type;
       }
 
 
@@ -68,8 +68,8 @@ namespace triton {
       }
 
 
-      triton::uint64 SymbolicVariable::getKindValue(void) const {
-        return this->kindValue;
+      triton::uint64 SymbolicVariable::getOrigin(void) const {
+        return this->origin;
       }
 
 

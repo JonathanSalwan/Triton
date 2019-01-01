@@ -15,6 +15,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/symbolicEngine.hpp>
@@ -46,16 +47,6 @@ namespace triton {
      *  @{
      */
 
-      /*! The different kind of solvers */
-      enum solvers_e {
-        SOLVER_INVALID = 0, /*!< invalid solver. */
-        SOLVER_CUSTOM,      /*!< custom solver. */
-        #ifdef Z3_INTERFACE
-        SOLVER_Z3,          /*!< z3 solver. */
-        #endif
-        SOLVER_LAST_ITEM    /*!< must be the last item.  */
-      };
-
       /*! \interface SolverEngine
           \brief This class is used to interface with solvers */
       class SolverEngine {
@@ -64,7 +55,7 @@ namespace triton {
 
         protected:
           //! The kind of the current solver used.
-          triton::engines::solver::solvers_e kind;
+          triton::engines::solver::solver_e kind;
 
           //! Instance to the real solver class.
           std::unique_ptr<triton::engines::solver::SolverInterface> solver;
@@ -73,14 +64,14 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
 
-          //! Returns the kind of solver as triton::engines::solver::solvers_e.
-          TRITON_EXPORT triton::engines::solver::solvers_e getSolver(void) const;
+          //! Returns the kind of solver as triton::engines::solver::solver_e.
+          TRITON_EXPORT triton::engines::solver::solver_e getSolver(void) const;
 
           //! Returns the instance of the initialized solver
           TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
 
           //! Initializes a predefined solver.
-          TRITON_EXPORT void setSolver(triton::engines::solver::solvers_e kind);
+          TRITON_EXPORT void setSolver(triton::engines::solver::solver_e kind);
 
           //! Initializes a custom solver.
           TRITON_EXPORT void setCustomSolver(triton::engines::solver::SolverInterface* customSolver);

@@ -10,10 +10,10 @@
 
 #include <unordered_map>
 
+#include <triton/archEnums.hpp>
+#include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/register.hpp>
-#include <triton/registers_e.hpp>
-#include <triton/architecture.hpp>
 
 
 
@@ -45,42 +45,25 @@ namespace triton {
       class x86Specifications {
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<registers_e, const triton::arch::Register> registers_;
+          std::unordered_map<triton::arch::register_e, const triton::arch::Register> registers_;
 
         public:
           //! Constructor.
-          TRITON_EXPORT x86Specifications(triton::arch::architectures_e);
+          TRITON_EXPORT x86Specifications(triton::arch::architecture_e);
 
           //! Converts a capstone's register id to a triton's register id.
-          TRITON_EXPORT triton::arch::registers_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
+          TRITON_EXPORT triton::arch::register_e capstoneRegisterToTritonRegister(triton::uint32 id) const;
 
           //! Converts a capstone's instruction id to a triton's instruction id.
           TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
 
           //! Converts a capstone's prefix id to a triton's prefix id.
-          TRITON_EXPORT triton::uint32 capstonePrefixToTritonPrefix(triton::uint32 id) const;
-      };
-
-      /*! \brief The list of prefixes.
-       *
-       *  \details
-       *  Note that `REP` and `REPE` have the some opcode. The `REP`
-       *  prefix becomes a `REPE` if the instruction modifies `ZF`.
-       */
-      enum prefix_e {
-        ID_PREFIX_INVALID = 0,  //!< invalid
-        ID_PREFIX_LOCK,         //!< LOCK
-        ID_PREFIX_REP,          //!< REP
-        ID_PREFIX_REPE,         //!< REPE
-        ID_PREFIX_REPNE,        //!< REPNE
-
-        /* Must be the last item */
-        ID_PREFIX_LAST_ITEM     //!< must be the last item
+          TRITON_EXPORT triton::arch::x86::prefix_e capstonePrefixToTritonPrefix(triton::uint32 id) const;
       };
 
       //! The list of opcodes.
-      enum instructions_e {
-        ID_INST_INVALID = 0, //!< invalid
+      enum instruction_e {
+        ID_INS_INVALID = 0, //!< invalid
 
         ID_INS_AAA, //!< AAA
         ID_INS_AAD, //!< AAD
@@ -1378,7 +1361,7 @@ namespace triton {
         ID_INS_XTEST, //!< XTEST
 
         /* Must be the last item */
-        ID_INST_LAST_ITEM //!< must be the last item
+        ID_INS_LAST_ITEM //!< must be the last item
       };
 
     /*! @} End of x86 namespace */

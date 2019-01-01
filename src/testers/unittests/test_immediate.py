@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, CPUSIZE, Immediate, OPERAND, TritonContext
+from triton import ARCH, CPUSIZE, Immediate, OPERAND, TritonContext, SHIFT
 
 
 class TestImmediate8(unittest.TestCase):
@@ -32,6 +32,10 @@ class TestImmediate8(unittest.TestCase):
     def test_type(self):
         """Check immadiate type."""
         self.assertEqual(self.imm.getType(), OPERAND.IMM)
+
+    def test_shift(self):
+        """Check immadiate shift type."""
+        self.assertEqual(self.imm.getShiftType(), SHIFT.AARCH64.INVALID)
 
 
 class TestImmediate16(unittest.TestCase):

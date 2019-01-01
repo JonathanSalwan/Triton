@@ -39,25 +39,31 @@ namespace triton {
 
         PyObject* archDict = xPyDict_New();
         initArchNamespace(archDict);
-        PyObject* idArchDictClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
+        PyObject* idArchClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
 
         /* Create the AST_NODE namespace ============================================================= */
 
         PyObject* astNodeDict = xPyDict_New();
         initAstNodeNamespace(astNodeDict);
-        PyObject* idAstNodeDictClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
+        PyObject* idAstNodeClass = xPyClass_New(nullptr, astNodeDict, xPyString_FromString("AST_NODE"));
 
         /* Create the AST_REPRESENTATION namespace =================================================== */
 
         PyObject* astRepresentationDict = xPyDict_New();
         initAstRepresentationNamespace(astRepresentationDict);
-        PyObject* idAstRepresentationDictClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
+        PyObject* idAstRepresentationClass = xPyClass_New(nullptr, astRepresentationDict, xPyString_FromString("AST_REPRESENTATION"));
 
         /* Create the CALLBACK namespace ============================================================= */
 
         PyObject* callbackDict = xPyDict_New();
         initCallbackNamespace(callbackDict);
-        PyObject* idCallbackDictClass = xPyClass_New(nullptr, callbackDict, xPyString_FromString("CALLBACK"));
+        PyObject* idCallbackClass = xPyClass_New(nullptr, callbackDict, xPyString_FromString("CALLBACK"));
+
+        /* Create the CONDITION namespace ============================================================ */
+
+        PyObject* conditionsDict = xPyDict_New();
+        initConditionsNamespace(conditionsDict);
+        PyObject* idConditionsClass = xPyClass_New(nullptr, conditionsDict, xPyString_FromString("CONDITION"));
 
         /* Create the CPUSIZE namespace ============================================================== */
 
@@ -65,10 +71,16 @@ namespace triton {
         initCpuSizeNamespace(cpuSizeDict);
         PyObject* idCpuSizeClass = xPyClass_New(nullptr, cpuSizeDict, xPyString_FromString("CPUSIZE"));
 
+        /* Create the EXTEND namespace ================================================================ */
+
+        PyObject* extendDict = xPyDict_New();
+        initExtendNamespace(extendDict);
+        PyObject* idExtendClass = xPyClass_New(nullptr, extendDict, xPyString_FromString("EXTEND"));
+
         /* Create the OPCODE namespace =============================================================== */
 
         PyObject* opcodesDict = xPyDict_New();
-        initX86OpcodesNamespace(opcodesDict);
+        initOpcodesNamespace(opcodesDict);
         PyObject* idOpcodesClass = xPyClass_New(nullptr, opcodesDict, xPyString_FromString("OPCODE"));
 
         /* Create the OPERAND namespace ============================================================== */
@@ -86,7 +98,7 @@ namespace triton {
         /* Create the PREFIX namespace =============================================================== */
 
         PyObject* prefixesDict = xPyDict_New();
-        initX86PrefixesNamespace(prefixesDict);
+        initPrefixesNamespace(prefixesDict);
         PyObject* idPrefixesClass = xPyClass_New(nullptr, prefixesDict, xPyString_FromString("PREFIX"));
 
         /* Create the REG namespace ================================================================== */
@@ -95,11 +107,17 @@ namespace triton {
         initRegNamespace(registersDict);
         PyObject* idRegClass = xPyClass_New(nullptr, registersDict, xPyString_FromString("REG"));
 
-        /* Create the SYMEXPR namespace ============================================================== */
+        /* Create the SHIFT namespace ================================================================ */
 
-        PyObject* symExprDict = xPyDict_New();
-        initSymExprNamespace(symExprDict);
-        PyObject* idSymExprClass = xPyClass_New(nullptr, symExprDict, xPyString_FromString("SYMEXPR"));
+        PyObject* shiftsDict = xPyDict_New();
+        initShiftsNamespace(shiftsDict);
+        PyObject* idShiftsClass = xPyClass_New(nullptr, shiftsDict, xPyString_FromString("SHIFT"));
+
+        /* Create the SYMBOLIC namespace ============================================================== */
+
+        PyObject* symbolicDict = xPyDict_New();
+        initSymbolicNamespace(symbolicDict);
+        PyObject* idSymbolicClass = xPyClass_New(nullptr, symbolicDict, xPyString_FromString("SYMBOLIC"));
 
         /* Create the SYSCALL namespace ============================================================== */
         #if defined(__unix__) || defined(__APPLE__)
@@ -124,17 +142,20 @@ namespace triton {
         /* Init triton module ======================================================================== */
 
         /* Add every modules and namespace into the triton module */
-        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationDictClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackDictClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "ARCH",                idArchClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_NODE",            idAstNodeClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "AST_REPRESENTATION",  idAstRepresentationClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "CONDITION",           idConditionsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "EXTEND",              idExtendClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "MODE",                idModeClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPERAND",             idOperandClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "PREFIX",              idPrefixesClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMEXPR",             idSymExprClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SHIFT",               idShiftsClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
         #if defined(__unix__) || defined(__APPLE__)
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);
         #endif

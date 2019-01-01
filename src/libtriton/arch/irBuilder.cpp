@@ -7,13 +7,14 @@
 
 #include <new>
 
+#include <triton/aarch64Semantics.hpp>
+#include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/irBuilder.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
 #include <triton/x86Semantics.hpp>
-#include <triton/astContext.hpp>
 
 
 
@@ -40,15 +41,17 @@ namespace triton {
       this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, astCtxt, nullptr);
       this->symbolicEngine            = symbolicEngine;
       this->taintEngine               = taintEngine;
+      this->aarch64Isa                = new(std::nothrow) triton::arch::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
       this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
 
-      if (this->x86Isa == nullptr || this->backupSymbolicEngine == nullptr)
+      if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->backupSymbolicEngine == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): Not enough memory.");
     }
 
 
     IrBuilder::~IrBuilder() {
       delete this->backupSymbolicEngine;
+      delete this->aarch64Isa;
       delete this->x86Isa;
     }
 
@@ -71,6 +74,10 @@ namespace triton {
 
       /* Processing */
       switch (this->architecture->getArchitecture()) {
+        case triton::arch::ARCH_AARCH64:
+          ret = this->aarch64Isa->buildSemantics(inst);
+          break;
+
         case triton::arch::ARCH_X86:
         case triton::arch::ARCH_X86_64:
           ret = this->x86Isa->buildSemantics(inst);
@@ -101,7 +108,7 @@ namespace triton {
 
       /* Update instruction address if undefined */
       if (!inst.getAddress())
-        inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getParentRegister(ID_REG_IP)).convert_to<triton::uint64>());
+        inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter()).convert_to<triton::uint64>());
 
       /* Backup the symbolic engine in the case where only the taint is available. */
       if (!this->symbolicEngine->isEnabled()) {

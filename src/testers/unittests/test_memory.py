@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MemoryAccess, OPERAND, TritonContext
+from triton import ARCH, MemoryAccess, OPERAND, TritonContext, SHIFT
 
 
 class TestMemory(unittest.TestCase):

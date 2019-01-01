@@ -69,7 +69,7 @@ namespace triton {
           std::set<triton::uint64> taintedMemory;
 
           //! The set of tainted registers. Currently it is an over approximation of the taint.
-          std::set<triton::arch::registers_e> taintedRegisters;
+          std::set<triton::arch::register_e> taintedRegisters;
 
         public:
           //! Constructor.

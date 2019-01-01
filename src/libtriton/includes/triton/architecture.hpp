@@ -12,6 +12,7 @@
 #include <vector>
 #include <memory>
 
+#include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
@@ -37,14 +38,6 @@ namespace triton {
    *  @{
    */
 
-    /*! The architectures */
-    enum architectures_e {
-      ARCH_INVALID = 0, /*!< invalid architecture. */
-      ARCH_X86,         /*!< x86 architecture. */
-      ARCH_X86_64,      /*!< x86_64 architecture. */
-      ARCH_LAST_ITEM    /*!< must be the last item.  */
-    };
-
     /*! \class Architecture
      *  \brief The abstract architecture class. */
     class Architecture {
@@ -54,7 +47,7 @@ namespace triton {
 
       protected:
         //! The kind of architecture used.
-        triton::arch::architectures_e arch;
+        triton::arch::architecture_e arch;
 
         //! Instance to the real CPU class.
         std::unique_ptr<triton::arch::CpuInterface> cpu;
@@ -64,19 +57,19 @@ namespace triton {
         TRITON_EXPORT Architecture(triton::callbacks::Callbacks* callbacks=nullptr);
 
         //! Returns true if the register ID is a flag.
-        TRITON_EXPORT bool isFlag(triton::arch::registers_e regId) const;
+        TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
 
         //! Returns true if the register is a flag.
         TRITON_EXPORT bool isFlag(const triton::arch::Register& reg) const;
 
         //! Returns true if the register ID is a register.
-        TRITON_EXPORT bool isRegister(triton::arch::registers_e regId) const;
+        TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
 
         //! Returns true if the register is a register.
         TRITON_EXPORT bool isRegister(const triton::arch::Register& reg) const;
 
         //! Returns true if the register ID is a register or a flag.
-        TRITON_EXPORT bool isRegisterValid(triton::arch::registers_e regId) const;
+        TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
 
         //! Returns true if the register is a register or a flag.
         TRITON_EXPORT bool isRegisterValid(const triton::arch::Register& reg) const;
@@ -85,7 +78,10 @@ namespace triton {
         TRITON_EXPORT bool isValid(void) const;
 
         //! Returns the kind of architecture as triton::arch::architecture_e.
-        TRITON_EXPORT triton::arch::architectures_e getArchitecture(void) const;
+        TRITON_EXPORT triton::arch::architecture_e getArchitecture(void) const;
+
+        //! Returns the kind of endianness as triton::arch::endianness_e.
+        TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
 
         //! Returns the instance of the current CPU used.
         TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
@@ -100,25 +96,31 @@ namespace triton {
         TRITON_EXPORT triton::uint32 gprSize(void) const;
 
         //! Initializes an architecture.
-        TRITON_EXPORT void setArchitecture(triton::arch::architectures_e arch);
+        TRITON_EXPORT void setArchitecture(triton::arch::architecture_e arch);
 
         //! Clears the architecture states (registers and memory).
         TRITON_EXPORT void clearArchitecture(void);
 
         //! Returns all registers.
-        TRITON_EXPORT const std::unordered_map<registers_e, const triton::arch::Register>& getAllRegisters(void) const;
+        TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
 
         //! Returns all parent registers.
         TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
 
         //! Returns register from id.
-        TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::registers_e id) const;
+        TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
 
         //! Returns parent register from id.
-        TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::registers_e id) const;
+        TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
 
         //! Returns parent register from register
         TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
+
+        //! Returns the program counter register
+        TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
+
+        //! Returns the stack pointer register
+        TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
 
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
