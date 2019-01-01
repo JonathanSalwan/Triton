@@ -29,7 +29,7 @@ ADDS (immediate)              | Add (immediate), setting flags
 ADDS (shifted register)       | Add (shifted register), setting flags
 ADR                           | Form PC-relative address
 ADRP                          | Form PC-relative address to 4KB page
-AND (immediate)               | Bitwise AND (immediate).
+AND (immediate)               | Bitwise AND (immediate)
 AND (shifted register)        | Bitwise AND (shifted register)
 ANDS (immediate)              | Bitwise AND (immediate), setting flags
 ANDS (shifted register)       | Bitwise AND (shifted register), setting flags
@@ -68,11 +68,11 @@ LDRH (immediate)              | Load Register Halfword (immediate)
 LDRH (register)               | Load Register Halfword (register)
 LDRSB (immediate)             | Load Register Signed Byte (immediate)
 LDRSB (register)              | Load Register Signed Byte (register)
-LDRSH (immediate)             | Load Register Signed Halfword (immediate).
-LDRSH (register)              | Load Register Signed Halfword (register).
-LDRSW (immediate)             | Load Register Signed Word (immediate).
-LDRSW (literal)               | Load Register Signed Word (literal).
-LDRSW (register)              | Load Register Signed Word (register).
+LDRSH (immediate)             | Load Register Signed Halfword (immediate)
+LDRSH (register)              | Load Register Signed Halfword (register)
+LDRSW (immediate)             | Load Register Signed Word (immediate)
+LDRSW (literal)               | Load Register Signed Word (literal)
+LDRSW (register)              | Load Register Signed Word (register)
 LDUR                          | Load Register (unscaled)
 LDURB                         | Load Register Byte (unscaled)
 LDURH                         | Load Register Halfword (unscaled)
@@ -102,7 +102,7 @@ ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
 ROR (immediate)               | Rotate right (immediate): an alias of EXTR
 ROR (register)                | Rotate Right (register): an alias of RORV
-RORV                          | Rotate Right Variable.
+RORV                          | Rotate Right Variable
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
@@ -110,10 +110,10 @@ SMULL                         | Signed Multiply Long: an alias of SMADDL
 STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
-STRB (immediate)              | Store Register Byte (immediate).
-STRB (register)               | Store Register Byte (register).
-STRH (immediate)              | Store Register Halfword (immediate).
-STRH (register)               | Store Register Halfword (register).
+STRB (immediate)              | Store Register Byte (immediate)
+STRB (register)               | Store Register Byte (register)
+STRH (immediate)              | Store Register Halfword (immediate)
+STRH (register)               | Store Register Halfword (register)
 STUR                          | Store Register (unscaled)
 STURB                         | Store Register Byte (unscaled)
 STURH                         | Store Register Halfword (unscaled)
