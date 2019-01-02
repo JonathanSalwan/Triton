@@ -85,7 +85,7 @@ current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY
 Returns the syscall number of the system call which is executed in the current context. It is a user's responsibility to make sure that the
 current instruction is a syscall. This function must be used in a `SYSCALL_ENTRY` \ref py_INSERT_POINT_page.
 
-- <b>intger getSyscallReturn(\ref py_STANDARD_page std)</b><br>
+- <b>integer getSyscallReturn(\ref py_STANDARD_page std)</b><br>
 Returns the result of the syscall. It is a user's responsibility to make sure that the current context represents
 the state of a system call after its execution. This function must be used in a `SYSCALL_EXIT` \ref py_INSERT_POINT_page.
 
