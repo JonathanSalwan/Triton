@@ -6,7 +6,7 @@ a **dynamic taint** engine, **AST representations** of the **x86**, **x86-64** a
 you are able to build program analysis tools, automate reverse engineering and perform software verification.
 
 <p align="center">
-    <img src="http://triton.quarkslab.com/files/triton_v06_architecture.svg" width="80%" height="80%"/></br>
+    <img src="http://triton.quarkslab.com/files/triton_v06_architecture.svg" width="80%"/></br>
     <img src="http://triton.quarkslab.com/files/triton_multi_os.png"/>
 </p>
 
