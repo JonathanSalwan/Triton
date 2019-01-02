@@ -19,13 +19,16 @@ namespace triton {
     Instruction::Instruction() {
       this->address         = 0;
       this->branch          = false;
-      this->conditionTaken  = false;
+      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->conditionTaken  = 0;
       this->controlFlow     = false;
-      this->prefix          = 0;
+      this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
       this->size            = 0;
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->updateFlag      = false;
+      this->writeBack       = false;
 
       std::memset(this->opcode, 0x00, sizeof(this->opcode));
     }
@@ -50,6 +53,7 @@ namespace triton {
     void Instruction::copy(const Instruction& other) {
       this->address             = other.address;
       this->branch              = other.branch;
+      this->codeCondition       = other.codeCondition;
       this->conditionTaken      = other.conditionTaken;
       this->controlFlow         = other.controlFlow;
       this->loadAccess          = other.loadAccess;
@@ -63,6 +67,8 @@ namespace triton {
       this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
+      this->updateFlag          = other.updateFlag;
+      this->writeBack           = other.writeBack;
       this->writtenRegisters    = other.writtenRegisters;
 
       std::memcpy(this->opcode, other.opcode, sizeof(this->opcode));
@@ -125,8 +131,13 @@ namespace triton {
     }
 
 
-    triton::uint32 Instruction::getPrefix(void) const {
+    triton::arch::x86::prefix_e Instruction::getPrefix(void) const {
       return this->prefix;
+    }
+
+
+    triton::arch::aarch64::condition_e Instruction::getCodeCondition(void) const {
+      return this->codeCondition;
     }
 
 
@@ -250,8 +261,23 @@ namespace triton {
     }
 
 
-    void Instruction::setPrefix(triton::uint32 prefix) {
+    void Instruction::setPrefix(triton::arch::x86::prefix_e prefix) {
       this->prefix = prefix;
+    }
+
+
+    void Instruction::setWriteBack(bool state) {
+      this->writeBack = state;
+    }
+
+
+    void Instruction::setUpdateFlag(bool state) {
+      this->updateFlag = state;
+    }
+
+
+    void Instruction::setCodeCondition(triton::arch::aarch64::condition_e codeCondition) {
+      this->codeCondition = codeCondition;
     }
 
 
@@ -400,9 +426,19 @@ namespace triton {
 
 
     bool Instruction::isPrefixed(void) const {
-      if (this->prefix)
-        return true;
-      return false;
+      if (this->prefix == triton::arch::x86::ID_PREFIX_INVALID)
+        return false;
+      return true;
+    }
+
+
+    bool Instruction::isWriteBack(void) const {
+      return this->writeBack;
+    }
+
+
+    bool Instruction::isUpdateFlag(void) const {
+      return this->updateFlag;
     }
 
 
@@ -424,13 +460,16 @@ namespace triton {
     void Instruction::clear(void) {
       this->address         = 0;
       this->branch          = false;
-      this->conditionTaken  = false;
+      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->conditionTaken  = 0;
       this->controlFlow     = false;
-      this->prefix          = 0;
+      this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
       this->size            = 0;
       this->tainted         = false;
       this->tid             = 0;
       this->type            = 0;
+      this->updateFlag      = false;
+      this->writeBack       = false;
 
       this->disassembly.clear();
       this->loadAccess.clear();
@@ -458,4 +497,3 @@ namespace triton {
 
   };
 };
-

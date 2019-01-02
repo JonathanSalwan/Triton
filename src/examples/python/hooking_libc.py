@@ -212,7 +212,7 @@ def emulate(pc):
         Triton.processing(instruction)
         print instruction
 
-        if instruction.getType() == OPCODE.HLT:
+        if instruction.getType() == OPCODE.X86.HLT:
             break
 
         # Simulate routines

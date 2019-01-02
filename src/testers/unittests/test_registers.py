@@ -3,6 +3,7 @@
 """Test register."""
 
 import unittest
+import random
 
 from triton import (ARCH, REG, OPERAND, TritonContext)
 
@@ -13,9 +14,9 @@ class TestRAXRegister(unittest.TestCase):
 
     def setUp(self):
         """Define arch and register to check."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = self.Triton.registers.rax
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.reg = self.ctx.registers.rax
 
     def test_name(self):
         """Check register name."""
@@ -31,7 +32,7 @@ class TestRAXRegister(unittest.TestCase):
 
     def test_parent(self):
         """Check parent register."""
-        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
+        self.assertEqual(self.ctx.getParentRegister(self.reg).getName(), "rax")
 
     def test_type(self):
         """Check operand type."""
@@ -39,15 +40,19 @@ class TestRAXRegister(unittest.TestCase):
 
     def test_is_valid(self):
         """Check register validity."""
-        self.assertTrue(self.Triton.isRegisterValid(self.reg))
+        self.assertTrue(self.ctx.isRegisterValid(self.reg))
 
     def test_is_flag(self):
         """Check register flag."""
-        self.assertFalse(self.Triton.isFlag(self.reg))
+        self.assertFalse(self.ctx.isFlag(self.reg))
 
     def test_is_register(self):
         """Check register detect."""
-        self.assertTrue(self.Triton.isRegister(self.reg))
+        self.assertTrue(self.ctx.isRegister(self.reg))
+
+    def test_is_mutable(self):
+        """Check register is mutable."""
+        self.assertTrue(self.reg.isMutable())
 
 
 class TestAHRegister(unittest.TestCase):
@@ -56,9 +61,9 @@ class TestAHRegister(unittest.TestCase):
 
     def setUp(self):
         """Define arch and register to check."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.reg = self.Triton.registers.ah
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.reg = self.ctx.registers.ah
 
     def test_size(self):
         """Check register size."""
@@ -72,12 +77,12 @@ class TestAHRegister(unittest.TestCase):
 
     def test_parent(self):
         """Check parent register on multiple arch."""
-        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "rax")
+        self.assertEqual(self.ctx.getParentRegister(self.reg).getName(), "rax")
 
-        self.Triton.setArchitecture(ARCH.X86)
-        self.reg = self.Triton.registers.ah
-        self.assertEqual(self.Triton.getParentRegister(self.reg).getName(), "eax")
-        self.assertEqual(self.Triton.getParentRegister(self.reg).getBitSize(), 32)
+        self.ctx.setArchitecture(ARCH.X86)
+        self.reg = self.ctx.registers.ah
+        self.assertEqual(self.ctx.getParentRegister(self.reg).getName(), "eax")
+        self.assertEqual(self.ctx.getParentRegister(self.reg).getBitSize(), 32)
 
 
 class TestXmmRegister(unittest.TestCase):
@@ -86,23 +91,23 @@ class TestXmmRegister(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
     def test_xmm_on_x86(self):
         """Check xmm on 32 bits arch."""
-        self.Triton.setArchitecture(ARCH.X86)
-        xmm = self.Triton.registers.xmm1
+        self.ctx.setArchitecture(ARCH.X86)
+        xmm = self.ctx.registers.xmm1
         self.assertEqual(xmm.getBitSize(), 128)
 
     def test_ymm(self):
         """Check ymm on 64 bits arch."""
-        ymm = self.Triton.registers.ymm1
+        ymm = self.ctx.registers.ymm1
         self.assertEqual(ymm.getBitSize(), 256)
 
     def test_zmm(self):
         """Check zmm on 64 bits arch."""
-        zmm = self.Triton.registers.zmm2
+        zmm = self.ctx.registers.zmm2
         self.assertEqual(zmm.getBitSize(), 512)
 
 
@@ -112,34 +117,76 @@ class TestRegisterValues(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
     def test_set_concrete_value(self):
         """Check register value modification."""
         for reg in (REG.X86_64.AH, REG.X86_64.AL):
             # OK
-            reg = self.Triton.getRegister(reg)
-            self.Triton.setConcreteRegisterValue(reg, 0xff)
+            reg = self.ctx.getRegister(reg)
+            self.ctx.setConcreteRegisterValue(reg, 0xff)
             # Not OK
             # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
-                self.Triton.setConcreteRegisterValue(reg, 0xff+1)
+                self.ctx.setConcreteRegisterValue(reg, 0xff+1)
 
-        reg = self.Triton.registers.zf
-        self.Triton.setConcreteRegisterValue(reg, 1)
+        reg = self.ctx.registers.zf
+        self.ctx.setConcreteRegisterValue(reg, 1)
         with self.assertRaises(Exception):
-            self.Triton.setConcreteRegisterValue(reg, 2)
+            self.ctx.setConcreteRegisterValue(reg, 2)
 
     def test_overlap(self):
         """Check register overlapping."""
-        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.eax), "overlap with upper")
-        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.rax), "overlap with parent")
-        self.assertTrue(self.Triton.registers.rax.isOverlapWith(self.Triton.registers.ax), "overlap with lower")
-        self.assertFalse(self.Triton.registers.ah.isOverlapWith(self.Triton.registers.al))
-        self.assertTrue(self.Triton.registers.ah.isOverlapWith(self.Triton.registers.eax))
-        self.assertTrue(self.Triton.registers.eax.isOverlapWith(self.Triton.registers.ah))
-        self.assertTrue(self.Triton.registers.ax.isOverlapWith(self.Triton.registers.al))
-        self.assertTrue(self.Triton.registers.al.isOverlapWith(self.Triton.registers.ax))
-        self.assertFalse(self.Triton.registers.eax.isOverlapWith(self.Triton.registers.edx))
+        self.assertTrue(self.ctx.registers.ax.isOverlapWith(self.ctx.registers.eax), "overlap with upper")
+        self.assertTrue(self.ctx.registers.ax.isOverlapWith(self.ctx.registers.rax), "overlap with parent")
+        self.assertTrue(self.ctx.registers.rax.isOverlapWith(self.ctx.registers.ax), "overlap with lower")
+        self.assertFalse(self.ctx.registers.ah.isOverlapWith(self.ctx.registers.al))
+        self.assertTrue(self.ctx.registers.ah.isOverlapWith(self.ctx.registers.eax))
+        self.assertTrue(self.ctx.registers.eax.isOverlapWith(self.ctx.registers.ah))
+        self.assertTrue(self.ctx.registers.ax.isOverlapWith(self.ctx.registers.al))
+        self.assertTrue(self.ctx.registers.al.isOverlapWith(self.ctx.registers.ax))
+        self.assertFalse(self.ctx.registers.eax.isOverlapWith(self.ctx.registers.edx))
 
+
+class TestAArch64Registers(unittest.TestCase):
+    """Test AArch64 registers"""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.AARCH64)
+
+    def test_set_concrete_value(self):
+        """Check register value modification."""
+        for reg in self.ctx.getParentRegisters():
+            if reg.isMutable() == False:
+                # XZR
+                continue
+            i = random.randrange(0, 0xffffffffffffffff) & reg.getBitvector().getMaxValue()
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+            self.ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
+            self.ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+
+        regs = [
+            self.ctx.registers.w0, self.ctx.registers.w1, self.ctx.registers.w2,
+            self.ctx.registers.w3, self.ctx.registers.w4, self.ctx.registers.w5,
+            self.ctx.registers.w6, self.ctx.registers.w7, self.ctx.registers.w8,
+            self.ctx.registers.w9, self.ctx.registers.w10, self.ctx.registers.w11,
+            self.ctx.registers.w12, self.ctx.registers.w13, self.ctx.registers.w14,
+            self.ctx.registers.w15, self.ctx.registers.w16, self.ctx.registers.w17,
+            self.ctx.registers.w18, self.ctx.registers.w19, self.ctx.registers.w20,
+            self.ctx.registers.w21, self.ctx.registers.w22, self.ctx.registers.w23,
+            self.ctx.registers.w24, self.ctx.registers.w25, self.ctx.registers.w26,
+            self.ctx.registers.w27, self.ctx.registers.w28, self.ctx.registers.w29,
+            self.ctx.registers.w30, self.ctx.registers.wsp, self.ctx.registers.spsr,
+        ]
+
+        for reg in regs:
+            i = random.randrange(0, 0xffffffff) & reg.getBitvector().getMaxValue()
+            self.ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
+            self.ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)

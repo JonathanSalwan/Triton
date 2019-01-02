@@ -5,12 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_IMMEDIATE_H
-#define TRITON_IMMEDIATE_H
+#ifndef TRITON_IMMEDIATE_HPP
+#define TRITON_IMMEDIATE_HPP
 
+#include <triton/aarch64OperandProperties.hpp>
+#include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -33,7 +34,7 @@ namespace triton {
     /*! \class Immediate
      *  \brief This class is used to represent an immediate.
      */
-    class Immediate : public BitsVector, public OperandInterface {
+    class Immediate : public BitsVector, public AArch64OperandProperties {
       protected:
         //! The value of the operand.
         triton::uint64 value;
@@ -55,20 +56,14 @@ namespace triton {
         //! Returns the value of the operand.
         TRITON_EXPORT triton::uint64 getValue(void) const;
 
-        //! Returns the highest bit. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
-
         //! Returns the size (in bits) of the immediate vector.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
         //! Returns the size (in bytes) of the immediate vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_IMM).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_IMMEDIATE).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! Sets the value of the operand.
         TRITON_EXPORT void setValue(triton::uint64 v, triton::uint32 size /* bytes*/);
@@ -97,4 +92,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_IMMEDIATE_H */
+#endif /* TRITON_IMMEDIATE_HPP */

@@ -22,7 +22,7 @@ namespace triton {
 
       /* Representation dispatcher from an abstract node */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
-        switch (node->getKind()) {
+        switch (node->getType()) {
           case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
           case BVAND_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvandNode*>(node)); break;

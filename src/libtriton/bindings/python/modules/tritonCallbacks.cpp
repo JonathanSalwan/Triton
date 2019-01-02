@@ -50,12 +50,16 @@ to wrap more generic concepts.
 - \ref py_AST_NODE_page
 - \ref py_AST_REPRESENTATION_page
 - \ref py_CALLBACK_page
+- \ref py_CONDITION_page
 - \ref py_CPUSIZE_page
+- \ref py_EXTEND_page
 - \ref py_MODE_page
 - \ref py_OPCODE_page
 - \ref py_OPERAND_page
+- \ref py_PREFIX_page
 - \ref py_REG_page
-- \ref py_SYMEXPR_page
+- \ref py_SHIFT_page
+- \ref py_SYMBOLIC_page
 - \ref py_SYSCALL_page
 - \ref py_VERSION_page
 

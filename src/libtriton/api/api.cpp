@@ -23,8 +23,8 @@
 
 <b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
 like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
-of the <b>x86</b> and the <b>x86-64</b> instructions set semantics, <b>SMT simplification</b> passes,
-an <b>SMT Solver</b> Interface and, the last but not least, <b>Python bindings</b>.
+of the <b>x86</b>, <b>x86-64</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
+an <b>SMT Solver</b> interface and, the last but not least, <b>Python bindings</b>.
 
 
 <br>
@@ -132,10 +132,10 @@ To be able to compile Triton, you must install these libraries before:
  lib name                                                                      | version
 -------------------------------------------------------------------------------|---------
  [libboost](http://www.boost.org/)                                             | >= 1.55
- [libpython](https://www.python.org/)                                          | 2.7.x
+ [libpython](https://www.python.org/)                                          | == 2.7.x
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
- [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0
- [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | 71313
+ [libcapstone](http://www.capstone-engine.org/)                                | == 3.0.5
+ [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
 <hr>
 \subsection linux_install_sec Linux Installation
@@ -183,8 +183,8 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of the
   -DPYTHON_LIBRARIES="C:/Python27/libs/python27.lib" \
   -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/include" \
   -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/bin/libz3.lib" \
-  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/include" \
-  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.4-win64/capstone.lib" ..
+  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/include" \
+  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/capstone.lib" ..
 ~~~~~~~~~~~~~
 
 However, if you prefer to directly download precompiled libraries, check out our [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
@@ -247,8 +247,13 @@ namespace triton {
   }
 
 
-  triton::arch::architectures_e API::getArchitecture(void) const {
+  triton::arch::architecture_e API::getArchitecture(void) const {
     return this->arch.getArchitecture();
+  }
+
+
+  triton::arch::endianness_e API::getEndianness(void) const {
+    return this->arch.getEndianness();
   }
 
 
@@ -259,7 +264,7 @@ namespace triton {
   }
 
 
-  void API::setArchitecture(triton::arch::architectures_e arch) {
+  void API::setArchitecture(triton::arch::architecture_e arch) {
     /* Setup and init the targeted architecture */
     this->arch.setArchitecture(arch);
 
@@ -275,7 +280,7 @@ namespace triton {
   }
 
 
-  bool API::isFlag(triton::arch::registers_e regId) const {
+  bool API::isFlag(triton::arch::register_e regId) const {
     return this->arch.isFlag(regId);
   }
 
@@ -285,7 +290,7 @@ namespace triton {
   }
 
 
-  bool API::isRegister(triton::arch::registers_e regId) const {
+  bool API::isRegister(triton::arch::register_e regId) const {
     return this->arch.isRegister(regId);
   }
 
@@ -295,7 +300,7 @@ namespace triton {
   }
 
 
-  const triton::arch::Register& API::getRegister(triton::arch::registers_e id) const {
+  const triton::arch::Register& API::getRegister(triton::arch::register_e id) const {
     return this->arch.getRegister(id);
   }
 
@@ -305,12 +310,12 @@ namespace triton {
   }
 
 
-  const triton::arch::Register& API::getParentRegister(triton::arch::registers_e id) const {
+  const triton::arch::Register& API::getParentRegister(triton::arch::register_e id) const {
     return this->arch.getParentRegister(id);
   }
 
 
-  bool API::isRegisterValid(triton::arch::registers_e regId) const {
+  bool API::isRegisterValid(triton::arch::register_e regId) const {
     return this->arch.isRegisterValid(regId);
   }
 
@@ -335,7 +340,7 @@ namespace triton {
   }
 
 
-  const std::unordered_map<triton::arch::registers_e, const triton::arch::Register>& API::getAllRegisters(void) const {
+  const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& API::getAllRegisters(void) const {
     this->checkArchitecture();
     return this->arch.getAllRegisters();
   }
@@ -594,12 +599,12 @@ namespace triton {
 
   /* Modes API======================================================================================= */
 
-  void API::enableMode(enum triton::modes::mode_e mode, bool flag) {
+  void API::enableMode(triton::modes::mode_e mode, bool flag) {
     this->modes.enableMode(mode, flag);
   }
 
 
-  bool API::isModeEnabled(enum triton::modes::mode_e mode) const {
+  bool API::isModeEnabled(triton::modes::mode_e mode) const {
     return this->modes.isModeEnabled(mode);
   }
 
@@ -687,13 +692,13 @@ namespace triton {
 
   triton::engines::symbolic::SharedSymbolicExpression API::newSymbolicExpression(const triton::ast::SharedAbstractNode& node, const std::string& comment) {
     this->checkSymbolic();
-    return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::UNDEF, comment);
+    return this->symbolic->newSymbolicExpression(node, triton::engines::symbolic::VOLATILE_EXPRESSION, comment);
   }
 
 
   const triton::engines::symbolic::SharedSymbolicVariable& API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
     this->checkSymbolic();
-    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEF, 0, varSize, comment);
+    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, varSize, comment);
   }
 
 
@@ -751,7 +756,7 @@ namespace triton {
   }
 
 
-  std::map<triton::arch::registers_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
+  std::map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisters();
   }
@@ -962,7 +967,7 @@ namespace triton {
   }
 
 
-  triton::engines::solver::solvers_e API::getSolver(void) const {
+  triton::engines::solver::solver_e API::getSolver(void) const {
     this->checkSolver();
     return this->solver->getSolver();
   }
@@ -974,7 +979,7 @@ namespace triton {
   }
 
 
-  void API::setSolver(triton::engines::solver::solvers_e kind) {
+  void API::setSolver(triton::engines::solver::solver_e kind) {
     this->checkSolver();
     this->solver->setSolver(kind);
   }

@@ -5,10 +5,10 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/pathManager.hpp>
 #include <triton/symbolicEnums.hpp>
-#include <triton/astContext.hpp>
 
 
 
@@ -96,11 +96,11 @@ namespace triton {
         if (size == 0)
           throw triton::exceptions::PathManager("PathManager::addPathConstraint(): The PC node size cannot be zero.");
 
-        if (pc->getKind() == triton::ast::ZX_NODE)
+        if (pc->getType() == triton::ast::ZX_NODE)
           pc = pc->getChildren()[1];
 
         /* Multiple branches */
-        if (pc->getKind() == triton::ast::ITE_NODE) {
+        if (pc->getType() == triton::ast::ITE_NODE) {
           triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
           triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
 

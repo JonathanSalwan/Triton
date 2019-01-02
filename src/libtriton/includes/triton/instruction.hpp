@@ -15,6 +15,7 @@
 #include <utility>
 #include <vector>
 
+#include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
@@ -63,8 +64,11 @@ namespace triton {
         //! The type of the instruction. This field is set at the disassembly level.
         triton::uint32 type;
 
-        //! The prefix of the instruction. This field is set at the disassembly level.
-        triton::uint32 prefix;
+        //! The prefix of the instruction. This field is set at the disassembly level. Mainly used for X86.
+        triton::arch::x86::prefix_e prefix;
+
+        //! The code condition of the instruction. This field is set at the disassembly level. Mainly used for AArch64.
+        triton::arch::aarch64::condition_e codeCondition;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> loadAccess;
@@ -92,6 +96,12 @@ namespace triton {
 
         //! True if this instruction is tainted. This field is set at the semantics level.
         bool tainted;
+
+        //! True if this instruction performs a write back. Mainly used for AArch64 instruction like LDR.
+        bool writeBack;
+
+        //! True if this instruction updartes flags. Mainly used for AArch64 instruction like ADDS.
+        bool updateFlag;
 
     private:
         //! Copies an Instruction
@@ -140,8 +150,11 @@ namespace triton {
         //! Returns the type of the instruction.
         TRITON_EXPORT triton::uint32 getType(void) const;
 
-        //! Returns the prefix of the instruction.
-        TRITON_EXPORT triton::uint32 getPrefix(void) const;
+        //! Returns the prefix of the instruction (mainly for X86).
+        TRITON_EXPORT triton::arch::x86::prefix_e getPrefix(void) const;
+
+        //! Returns the code codition of the instruction (mainly for AArch64).
+        TRITON_EXPORT triton::arch::aarch64::condition_e getCodeCondition(void) const;
 
         //! Returns the list of all implicit and explicit load access
         TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getLoadAccess(void);
@@ -200,8 +213,11 @@ namespace triton {
         //! Sets the type of the instruction.
         TRITON_EXPORT void setType(triton::uint32 type);
 
-        //! Sets the prefix of the instruction.
-        TRITON_EXPORT void setPrefix(triton::uint32 prefix);
+        //! Sets the prefix of the instruction (mainly for X86).
+        TRITON_EXPORT void setPrefix(triton::arch::x86::prefix_e prefix);
+
+        //! Sets the code condition of the instruction (mainly for AArch64).
+        TRITON_EXPORT void setCodeCondition(triton::arch::aarch64::condition_e codeCondition);
 
         //! Sets the disassembly of the instruction.
         TRITON_EXPORT void setDisassembly(const std::string& str);
@@ -211,6 +227,12 @@ namespace triton {
 
         //! Sets the taint of the instruction based on its expressions.
         TRITON_EXPORT void setTaint(void);
+
+        //! Sets the writeBack flag of the instruction.
+        TRITON_EXPORT void setWriteBack(bool state);
+
+        //! Sets the updateFlag of the instruction.
+        TRITON_EXPORT void setUpdateFlag(bool state);
 
         //! Adds a symbolic expression
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
@@ -242,8 +264,14 @@ namespace triton {
         //! Returns whether the instruction reads the specified operand.
         TRITON_EXPORT bool isReadFrom(const triton::arch::OperandWrapper& target) const;
 
-        //! Returns true if the instruction has a prefix.
+        //! Returns true if the instruction has a prefix (mainly for X86).
         TRITON_EXPORT bool isPrefixed(void) const;
+
+        //! Returns true if the instruction performs a write back. Mainly used for AArch64 instructions like LDR.
+        TRITON_EXPORT bool isWriteBack(void) const;
+
+        //! Returns true if the instruction updates flags. Mainly used for AArch64 instructions like ADDS.
+        TRITON_EXPORT bool isUpdateFlag(void) const;
 
         //! Sets flag to define this instruction as branch or not.
         TRITON_EXPORT void setBranch(bool flag);

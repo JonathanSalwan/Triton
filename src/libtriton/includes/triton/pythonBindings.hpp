@@ -58,17 +58,26 @@ namespace triton {
       //! Initializes the CALLBACK python namespace.
       void initCallbackNamespace(PyObject* callbackDict);
 
+      //! Initializes the CONDITION python namespace.
+      void initConditionsNamespace(PyObject* conditionsDict);
+
       //! Initializes the CPUSIZE python namespace.
       void initCpuSizeNamespace(PyObject* cpuSizeDict);
 
       //! Initializes the OPCODE python namespace.
-      void initX86OpcodesNamespace(PyObject* opcodeDict);
+      void initOpcodesNamespace(PyObject* opcodeDict);
 
       //! Initializes the PREFIX python namespace.
-      void initX86PrefixesNamespace(PyObject* prefixDict);
+      void initPrefixesNamespace(PyObject* prefixDict);
 
       //! Initializes the OPERAND python namespace.
       void initOperandNamespace(PyObject* operandDict);
+
+      //! Initializes the SHIFT python namespace.
+      void initShiftsNamespace(PyObject* shiftDict);
+
+      //! Initializes the EXTEND python namespace.
+      void initExtendNamespace(PyObject* extendDict);
 
       //! Initializes the REG python namespace.
       void initRegNamespace(PyObject* regDict);
@@ -76,8 +85,8 @@ namespace triton {
       //! Initializes the MODE python namespace.
       void initModeNamespace(PyObject* modeDict);
 
-      //! Initializes the SYMEXPR python namespace.
-      void initSymExprNamespace(PyObject* symExprDict);
+      //! Initializes the SYMBOLIC python namespace.
+      void initSymbolicNamespace(PyObject* symbolicDict);
 
       #if defined(__unix__) || defined(__APPLE__)
       //! Initializes the SYSCALL32 python namespace.

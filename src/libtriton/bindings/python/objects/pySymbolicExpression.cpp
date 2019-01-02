@@ -93,10 +93,6 @@ Returns the comment (if exists) of the symbolic expression.
 Returns the if of the symbolic expression. This id is always unique.<br>
 e.g: `2387`
 
-- <b>\ref py_SYMEXPR_page getKind(void)</b><br>
-Returns the kind of the symbolic expression.<br>
-e.g: `SYMEXPR.REG`
-
 - <b>\ref py_AstNode_page getNewAst(void)</b><br>
 Returns a new AST root node of the symbolic expression. This new instance is a duplicate of the original node and may be changed without changing the original semantics.
 
@@ -104,6 +100,10 @@ Returns a new AST root node of the symbolic expression. This new instance is a d
 Returns the origin of the symbolic expression. For example, if the symbolic expression is assigned to a memory cell, this function returns
 a \ref py_MemoryAccess_page, else if it is assigned to a register, this function returns a \ref py_Register_page otherwise it returns None. Note that
 for a \ref py_MemoryAccess_page all information about LEA are lost at this level.
+
+- <b>\ref py_SYMBOLIC_page getType(void)</b><br>
+Returns the type of the symbolic expression.<br>
+e.g: `SYMBOLIC.REGISTER_EXPRESSION`
 
 - <b>bool isMemory(void)</b><br>
 Returns true if the expression is assigned to a memory.
@@ -169,16 +169,6 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_getKind(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PySymbolicExpression_AsSymbolicExpression(self)->getKind());
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* SymbolicExpression_getNewAst(PyObject* self, PyObject* noarg) {
         try {
           return PyAstNode(PySymbolicExpression_AsSymbolicExpression(self)->getNewAst());
@@ -199,6 +189,16 @@ namespace triton {
 
           Py_INCREF(Py_None);
           return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* SymbolicExpression_getType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PySymbolicExpression_AsSymbolicExpression(self)->getType());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -315,9 +315,9 @@ namespace triton {
         {"getAst",            SymbolicExpression_getAst,            METH_NOARGS,    ""},
         {"getComment",        SymbolicExpression_getComment,        METH_NOARGS,    ""},
         {"getId",             SymbolicExpression_getId,             METH_NOARGS,    ""},
-        {"getKind",           SymbolicExpression_getKind,           METH_NOARGS,    ""},
         {"getNewAst",         SymbolicExpression_getNewAst,         METH_NOARGS,    ""},
         {"getOrigin",         SymbolicExpression_getOrigin,         METH_NOARGS,    ""},
+        {"getType",           SymbolicExpression_getType,           METH_NOARGS,    ""},
         {"isMemory",          SymbolicExpression_isMemory,          METH_NOARGS,    ""},
         {"isRegister",        SymbolicExpression_isRegister,        METH_NOARGS,    ""},
         {"isSymbolized",      SymbolicExpression_isSymbolized,      METH_NOARGS,    ""},

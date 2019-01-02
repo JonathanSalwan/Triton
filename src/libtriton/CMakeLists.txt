@@ -63,13 +63,17 @@ include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
     api/api.cpp
+    arch/aarch64/aarch64Cpu.cpp
+    arch/aarch64/aarch64OperandProperties.cpp
+    arch/aarch64/aarch64Semantics.cpp
+    arch/aarch64/aarch64Specifications.cpp
     arch/architecture.cpp
-    arch/immediate.cpp
-    arch/irBuilder.cpp
-    arch/operandWrapper.cpp
     arch/bitsVector.cpp
+    arch/immediate.cpp
     arch/instruction.cpp
+    arch/irBuilder.cpp
     arch/memoryAccess.cpp
+    arch/operandWrapper.cpp
     arch/register.cpp
     arch/x86/x8664Cpu.cpp
     arch/x86/x86Cpu.cpp
@@ -113,15 +117,18 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initAstNodeNamespace.cpp
         bindings/python/namespaces/initAstRepresentationNamespace.cpp
         bindings/python/namespaces/initCallbackNamespace.cpp
+        bindings/python/namespaces/initConditionsNamespace.cpp
         bindings/python/namespaces/initCpuSizeNamespace.cpp
+        bindings/python/namespaces/initExtendNamespace.cpp
         bindings/python/namespaces/initModeNamespace.cpp
+        bindings/python/namespaces/initOpcodesNamespace.cpp
         bindings/python/namespaces/initOperandNamespace.cpp
+        bindings/python/namespaces/initPrefixesNamespace.cpp
         bindings/python/namespaces/initRegNamespace.cpp
-        bindings/python/namespaces/initSymExprNamespace.cpp
+        bindings/python/namespaces/initShiftsNamespace.cpp
+        bindings/python/namespaces/initSymbolicNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
-        bindings/python/namespaces/initX86OpcodesNamespace.cpp
-        bindings/python/namespaces/initX86PrefixesNamespace.cpp
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
         bindings/python/objects/pyBitsVector.cpp

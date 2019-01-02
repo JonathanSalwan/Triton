@@ -13,13 +13,13 @@ configuration:
 clone_folder: c:\projects\triton
 
 environment:
-  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.4\include
+  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-3.0.5\include
 
   matrix:
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
       BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 12 2013
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v120
@@ -31,7 +31,7 @@ environment:
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v140
@@ -43,7 +43,7 @@ environment:
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       BOOST_ROOT: c:\Libraries\boost_1_65_1
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v141
@@ -55,7 +55,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
       BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 12 2013 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v120
@@ -67,7 +67,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
       BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v140
@@ -79,7 +79,7 @@ environment:
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
       BOOST_ROOT: c:\Libraries\boost_1_65_1
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.4\msvc\x64\%configuration%\capstone.lib
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-3.0.5\msvc\x64\%configuration%\capstone.lib
       CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
       PLATFORM_TOOLSET: v141
@@ -100,8 +100,8 @@ install:
   - set PATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin;%PATH%
   - set PYTHONPATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin\python;%PYTHONPATH%
   - cmd: echo Downloading capstone...
-  - cmd: appveyor DownloadFile https://github.com/aquynh/capstone/archive/3.0.4.zip
-  - cmd: 7z x 3.0.4.zip
+  - cmd: appveyor DownloadFile https://github.com/aquynh/capstone/archive/3.0.5.zip
+  - cmd: 7z x 3.0.5.zip
   - cmd: echo Building capstone...
 # This is required because capstone's slns/vcxprojs file have been made with an old version of MSVC which is not a problem in itself,
 # the issue will show up when trying to link capstone.lib (generated with an old toolset) into triton that is generated with the new toolset.
@@ -109,7 +109,7 @@ install:
 # but I would rather build everything I can with the same toolset:
 #   http://stackoverflow.com/questions/32418766/c-unresolved-external-symbol-sprintf-and-sscanf-in-visual-studio-2015
 # The switch /p:PlatformToolset allows you to override the toolset version specified in the solution/project files :-)
-  - cmd: msbuild capstone-3.0.4\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
+  - cmd: msbuild capstone-3.0.5\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
   - cmd: echo Running cmake...
   - cmd: cmake .. -G "%CMAKE_TEMPLATE%"
     # Install LIEF

@@ -1,5 +1,5 @@
 
-from triton  import ARCH, SYMEXPR
+from triton import *
 from pintool import *
 
 # Output

@@ -252,7 +252,7 @@ def emulate(pc):
                 sys.stdout.write(chr(Triton.getConcreteMemoryValue(mem)))
         # End of solution
 
-        if instruction.getType() == OPCODE.HLT:
+        if instruction.getType() == OPCODE.X86.HLT:
             break
 
         # Simulate routines

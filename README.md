@@ -25,7 +25,7 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
-    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/dev-v0.6/graph/badge.svg" alt="Codecov" />
+    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/dev-v0.7/graph/badge.svg" alt="Codecov" />
   </a>
 </p>
 
@@ -66,7 +66,7 @@ A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us o
 
 ### Cite Triton
 
-    @inproceedings{SSTIC2015-Saudel-Salwan,
+    @proceedings{SSTIC2015-Saudel-Salwan,
       author    = {Florent Saudel and Jonathan Salwan},
       title     = {Triton: A Dynamic Symbolic Execution Framework},
       booktitle = {Symposium sur la s{\'{e}}curit{\'{e}} des technologies de l'information

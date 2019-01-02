@@ -5,15 +5,16 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_MEMORYACCESS
-#define TRITON_MEMORYACCESS
+#ifndef TRITON_MEMORYACCESS_HPP
+#define TRITON_MEMORYACCESS_HPP
 
+#include <triton/aarch64OperandProperties.hpp>
+#include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -37,7 +38,7 @@ namespace triton {
     /*! \class MemoryAccess
      *  \brief This class is used to represent a memory access.
      */
-    class MemoryAccess : public BitsVector, public OperandInterface {
+    class MemoryAccess : public BitsVector {
       protected:
         //! The memory' address.
         triton::uint64 address;
@@ -83,23 +84,17 @@ namespace triton {
         //! Returns the address of the memory.
         TRITON_EXPORT triton::uint64 getAddress(void) const;
 
-        //! Returns the highest bit of the memory vector. \sa BitsVector::getHigh()
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
-
-        //! Returns the lower bit of the memory vector. \sa BitsVector::getLow()
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
+        //! LEA - Gets pc relative.
+        TRITON_EXPORT triton::uint64 getPcRelative(void) const;
 
         //! Returns the size (in bits) of the memory vector.
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
-        //! LEA - Gets pc relative.
-        TRITON_EXPORT triton::uint64 getPcRelative(void) const;
-
         //! Returns the size (in bytes) of the memory vector.
         TRITON_EXPORT triton::uint32 getSize(void) const;
 
-        //! Returns the type of the operand (triton::arch::OP_MEM).
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        //! Returns the type of the operand (triton::arch::OPERAND_MEMORY).
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! LEA - Returns the segment register operand.
         TRITON_EXPORT triton::arch::Register& getSegmentRegister(void);
@@ -185,4 +180,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_MEMORYACCESS */
+#endif /* TRITON_MEMORYACCESS_HPP */

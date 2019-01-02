@@ -39,7 +39,7 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getType(void) const {
+    triton::arch::operand_e OperandWrapper::getType(void) const {
       return this->type;
     }
 
@@ -113,11 +113,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getAbstractHigh(void) const {
+    triton::uint32 OperandWrapper::getHigh(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getConstImmediate().getAbstractHigh();
-        case triton::arch::OP_MEM: return this->getConstMemory().getAbstractHigh();
-        case triton::arch::OP_REG: return this->getConstRegister().getAbstractHigh();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getHigh();
+        case triton::arch::OP_MEM: return this->getConstMemory().getHigh();
+        case triton::arch::OP_REG: return this->getConstRegister().getHigh();
         default:
           throw triton::exceptions::OperandWrapper("OperandWrapper::getHigh(): Invalid type operand.");
       }
@@ -125,11 +125,11 @@ namespace triton {
     }
 
 
-    triton::uint32 OperandWrapper::getAbstractLow(void) const {
+    triton::uint32 OperandWrapper::getLow(void) const {
       switch (this->getType()) {
-        case triton::arch::OP_IMM: return this->getConstImmediate().getAbstractLow();
-        case triton::arch::OP_MEM: return this->getConstMemory().getAbstractLow();
-        case triton::arch::OP_REG: return this->getConstRegister().getAbstractLow();
+        case triton::arch::OP_IMM: return this->getConstImmediate().getLow();
+        case triton::arch::OP_MEM: return this->getConstMemory().getLow();
+        case triton::arch::OP_REG: return this->getConstRegister().getLow();
         default:
           throw triton::exceptions::OperandWrapper("OperandWrapper::getLow(): Invalid type operand.");
       }

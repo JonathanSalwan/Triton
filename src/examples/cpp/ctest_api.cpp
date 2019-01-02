@@ -14,6 +14,8 @@
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
+#include <triton/aarch64Cpu.hpp>
+#include <triton/aarch64Specifications.hpp>
 
 
 int test_1(void) {
@@ -21,13 +23,13 @@ int test_1(void) {
   triton::API                   api;
 
   api.setArchitecture(triton::arch::ARCH_X86_64);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX), 12345);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX), 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_RAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345) {
     std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -42,13 +44,13 @@ int test_2(void) {
   triton::API                 api;
 
   api.setArchitecture(triton::arch::ARCH_X86);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX), 12345);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX), 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x86Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_EAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345) {
     std::cerr << "test_2: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -96,13 +98,13 @@ int test_4(void) {
     return 1;
   }
 
-  if (imm.getAbstractLow() != 0) {
-    std::cerr << "test_4: KO (" << std::hex << imm.getAbstractLow() << std::dec << " != 0)" << std::endl;
+  if (imm.getLow() != 0) {
+    std::cerr << "test_4: KO (" << std::hex << imm.getLow() << std::dec << " != 0)" << std::endl;
     return 1;
   }
 
-  if (imm.getAbstractHigh() != 15) {
-    std::cerr << "test_4: KO (" << std::hex << imm.getAbstractHigh() << std::dec << " != 15)" << std::endl;
+  if (imm.getHigh() != 15) {
+    std::cerr << "test_4: KO (" << std::hex << imm.getHigh() << std::dec << " != 15)" << std::endl;
     return 1;
   }
 
@@ -150,13 +152,13 @@ int test_5(void) {
     return 1;
   }
 
-  if (op1.getAbstractHigh() != imm1.getAbstractHigh()) {
-    std::cerr << "test_5: KO (" << op1.getAbstractHigh() << " != " << imm1.getAbstractHigh() << ")" << std::endl;
+  if (op1.getHigh() != imm1.getHigh()) {
+    std::cerr << "test_5: KO (" << op1.getHigh() << " != " << imm1.getHigh() << ")" << std::endl;
     return 1;
   }
 
-  if (op1.getAbstractLow() != imm1.getAbstractLow()) {
-    std::cerr << "test_5: KO (" << op1.getAbstractLow() << " != " << imm1.getAbstractLow() << ")" << std::endl;
+  if (op1.getLow() != imm1.getLow()) {
+    std::cerr << "test_5: KO (" << op1.getLow() << " != " << imm1.getLow() << ")" << std::endl;
     return 1;
   }
 
@@ -227,24 +229,24 @@ int test_6(void) {
     return 1;
   }
 
-  if (!inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+  if (!inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RBX)))) {
     std::cerr << "test_6: KO (!isReadFrom(rbx))" << std::endl;
     return 1;
   }
 
-  inst3.removeReadRegister(ctx.getRegister(triton::arch::ID_REG_RBX));
-  if (inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RBX)))) {
+  inst3.removeReadRegister(ctx.getRegister(triton::arch::ID_REG_X86_RBX));
+  if (inst3.isReadFrom(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RBX)))) {
     std::cerr << "test_6: KO (isReadFrom(rbx))" << std::endl;
     return 1;
   }
 
-  if (!inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+  if (!inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RAX)))) {
     std::cerr << "test_6: KO (!isWriteTo(rax))" << std::endl;
     return 1;
   }
 
-  inst3.removeWrittenRegister(ctx.getRegister(triton::arch::ID_REG_RAX));
-  if (inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_RAX)))) {
+  inst3.removeWrittenRegister(ctx.getRegister(triton::arch::ID_REG_X86_RAX));
+  if (inst3.isWriteTo(triton::arch::OperandWrapper(ctx.getRegister(triton::arch::ID_REG_X86_RAX)))) {
     std::cerr << "test_6: KO (isReadFrom(rax))" << std::endl;
     return 1;
   }
@@ -417,6 +419,27 @@ int test_7(void) {
 }
 
 
+int test_8(void) {
+  triton::arch::aarch64::AArch64Cpu cpy;
+  triton::API api;
+
+  api.setArchitecture(triton::arch::ARCH_AARCH64);
+  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0), 12345);
+
+  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345)
+    return 1;
+
+  cpy = *reinterpret_cast<triton::arch::aarch64::AArch64Cpu*>(api.getCpuInstance());
+  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345) {
+    std::cerr << "test_8: KO (cpy context != api context)" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_8: OK" << std::endl;
+  return 0;
+}
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -437,6 +460,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_7())
+    return 1;
+
+  if (test_8())
     return 1;
 
   return 0;

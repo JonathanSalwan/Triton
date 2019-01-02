@@ -5,13 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
-#ifndef TRITON_OPERANDWRAPPER_H
-#define TRITON_OPERANDWRAPPER_H
+#ifndef TRITON_OPERANDWRAPPER_HPP
+#define TRITON_OPERANDWRAPPER_HPP
 
+#include <triton/archEnums.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
-#include <triton/operandInterface.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -47,7 +47,7 @@ namespace triton {
         triton::arch::Register reg;
 
         //! The type of the operand.
-        triton::uint32 type;
+        triton::arch::operand_e type;
 
       public:
         //! Immediate constructor.
@@ -63,7 +63,7 @@ namespace triton {
         TRITON_EXPORT OperandWrapper(const OperandWrapper& other);
 
         //! Returns the abstract type of the operand.
-        TRITON_EXPORT triton::uint32 getType(void) const;
+        TRITON_EXPORT triton::arch::operand_e getType(void) const;
 
         //! Returns the immediate operand.
         TRITON_EXPORT triton::arch::Immediate& getImmediate(void);
@@ -99,10 +99,10 @@ namespace triton {
         TRITON_EXPORT triton::uint32 getBitSize(void) const;
 
         //! Returns the highest bit position of the abstract operand.
-        TRITON_EXPORT triton::uint32 getAbstractHigh(void) const;
+        TRITON_EXPORT triton::uint32 getHigh(void) const;
 
         //! Returns the lower bit position of the abstract operand.
-        TRITON_EXPORT triton::uint32 getAbstractLow(void) const;
+        TRITON_EXPORT triton::uint32 getLow(void) const;
 
         //! Copies a OperandWrapper.
         TRITON_EXPORT OperandWrapper& operator=(const OperandWrapper& other);
@@ -128,4 +128,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_OPERANDWRAPPER_H */
+#endif /* TRITON_OPERANDWRAPPER_HPP */

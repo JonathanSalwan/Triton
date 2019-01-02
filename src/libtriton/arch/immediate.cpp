@@ -24,7 +24,8 @@ namespace triton {
     }
 
 
-    Immediate::Immediate(const Immediate& other) : BitsVector(other) {
+    Immediate::Immediate(const Immediate& other)
+      : BitsVector(other), AArch64OperandProperties(other) {
       this->copy(other);
     }
 
@@ -69,16 +70,6 @@ namespace triton {
     }
 
 
-    triton::uint32 Immediate::getAbstractLow(void) const {
-      return this->getLow();
-    }
-
-
-    triton::uint32 Immediate::getAbstractHigh(void) const {
-      return this->getHigh();
-    }
-
-
     triton::uint32 Immediate::getSize(void) const {
       return this->getVectorSize() / BYTE_SIZE_BIT;
     }
@@ -89,12 +80,13 @@ namespace triton {
     }
 
 
-    triton::uint32 Immediate::getType(void) const {
+    triton::arch::operand_e Immediate::getType(void) const {
       return triton::arch::OP_IMM;
     }
 
 
     Immediate& Immediate::operator=(const Immediate& other) {
+      AArch64OperandProperties::operator=(other);
       BitsVector::operator=(other);
       this->copy(other);
       return *this;

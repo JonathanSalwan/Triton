@@ -10,6 +10,7 @@
 
 #include <set>
 #include <triton/dllexport.hpp>
+#include <triton/modesEnums.hpp>
 
 
 
@@ -28,16 +29,6 @@ namespace triton {
    *  @{
    */
 
-    //! Enumerates all kinds of mode.
-    enum mode_e {
-      ALIGNED_MEMORY,         //!< [symbolic mode] Keep a map of aligned memory.
-      ONLY_ON_SYMBOLIZED,     //!< [symbolic mode] Perform symbolic execution only on symbolized expressions.
-      ONLY_ON_TAINTED,        //!< [symbolic mode] Perform symbolic execution only on tainted instructions.
-      PC_TRACKING_SYMBOLIC,   //!< [symbolic mode] Track path constraints only if they are symbolized.
-      TAINT_THROUGH_POINTERS, //!< [taint mode] Spread the taint if an index pointer is already tainted (see #725).
-    };
-
-
     //! \class Modes
     /*! \brief The modes class */
     class Modes {
@@ -47,7 +38,7 @@ namespace triton {
 
       protected:
         //! The set of enabled modes
-        std::set<enum mode_e> enabledModes;
+        std::set<triton::modes::mode_e> enabledModes;
 
       public:
         //! Constructor.
@@ -57,10 +48,10 @@ namespace triton {
         TRITON_EXPORT Modes(const Modes& other);
 
         //! Returns true if the mode is enabled.
-        TRITON_EXPORT bool isModeEnabled(enum mode_e mode) const;
+        TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
 
         //! Enables or disables a specific mode.
-        TRITON_EXPORT void enableMode(enum mode_e mode, bool flag);
+        TRITON_EXPORT void enableMode(triton::modes::mode_e mode, bool flag);
 
         //! Copies a Modes.
         TRITON_EXPORT Modes& operator=(const Modes& other);

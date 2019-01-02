@@ -7,6 +7,7 @@
 
 #include <new>
 
+#include <triton/aarch64Cpu.hpp>
 #include <triton/architecture.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/x8664Cpu.hpp>
@@ -23,8 +24,15 @@ namespace triton {
     }
 
 
-    triton::arch::architectures_e Architecture::getArchitecture(void) const {
+    triton::arch::architecture_e Architecture::getArchitecture(void) const {
       return this->arch;
+    }
+
+
+    triton::arch::endianness_e Architecture::getEndianness(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getEndianness(): You must define an architecture.");
+      return this->cpu->getEndianness();
     }
 
 
@@ -35,7 +43,7 @@ namespace triton {
     }
 
 
-    void Architecture::setArchitecture(triton::arch::architectures_e arch) {
+    void Architecture::setArchitecture(triton::arch::architecture_e arch) {
       /* Allocate and init the good arch */
       switch (arch) {
         case triton::arch::ARCH_X86_64:
@@ -48,6 +56,13 @@ namespace triton {
         case triton::arch::ARCH_X86:
           /* init the new instance */
           this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));
+          if (this->cpu == nullptr)
+            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
+          break;
+
+        case triton::arch::ARCH_AARCH64:
+          /* init the new instance */
+          this->cpu.reset(new(std::nothrow) triton::arch::aarch64::AArch64Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           break;
@@ -76,7 +91,7 @@ namespace triton {
     }
 
 
-    bool Architecture::isFlag(triton::arch::registers_e regId) const {
+    bool Architecture::isFlag(triton::arch::register_e regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isFlag(regId);
@@ -88,7 +103,7 @@ namespace triton {
     }
 
 
-    bool Architecture::isRegister(triton::arch::registers_e regId) const {
+    bool Architecture::isRegister(triton::arch::register_e regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isRegister(regId);
@@ -100,7 +115,7 @@ namespace triton {
     }
 
 
-    bool Architecture::isRegisterValid(triton::arch::registers_e regId) const {
+    bool Architecture::isRegisterValid(triton::arch::register_e regId) const {
       if (!this->cpu)
         return false;
       return this->cpu->isRegisterValid(regId);
@@ -133,7 +148,7 @@ namespace triton {
     }
 
 
-    const std::unordered_map<registers_e, const triton::arch::Register>& Architecture::getAllRegisters(void) const {
+    const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& Architecture::getAllRegisters(void) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getAllRegisters(): You must define an architecture.");
       return this->cpu->getAllRegisters();
@@ -147,7 +162,21 @@ namespace triton {
     }
 
 
-    const triton::arch::Register& Architecture::getRegister(triton::arch::registers_e id) const {
+    const triton::arch::Register& Architecture::getProgramCounter(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getProgramCounter(): You must define an architecture.");
+      return this->cpu->getProgramCounter();
+    }
+
+
+    const triton::arch::Register& Architecture::getStackPointer(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getStackPointer(): You must define an architecture.");
+      return this->cpu->getStackPointer();
+    }
+
+
+    const triton::arch::Register& Architecture::getRegister(triton::arch::register_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");
       return this->cpu->getRegister(id);
@@ -161,7 +190,7 @@ namespace triton {
     }
 
 
-    const triton::arch::Register& Architecture::getParentRegister(triton::arch::registers_e id) const {
+    const triton::arch::Register& Architecture::getParentRegister(triton::arch::register_e id) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegister(): You must define an architecture.");
       return this->cpu->getParentRegister(id);

@@ -3,7 +3,7 @@
 """Test Symbolic Variable."""
 
 import unittest
-from triton import TritonContext, ARCH, SYMEXPR
+from triton import *
 
 
 class TestSymbolicVariable(unittest.TestCase):
@@ -26,9 +26,9 @@ class TestSymbolicVariable(unittest.TestCase):
 
     def test_kind(self):
         """Test kind"""
-        self.assertEqual(self.v0.getKind(), SYMEXPR.UNDEF)
-        self.assertEqual(self.v1.getKind(), SYMEXPR.UNDEF)
-        self.assertEqual(self.v2.getKind(), SYMEXPR.UNDEF)
+        self.assertEqual(self.v0.getType(), SYMBOLIC.UNDEFINED_VARIABLE)
+        self.assertEqual(self.v1.getType(), SYMBOLIC.UNDEFINED_VARIABLE)
+        self.assertEqual(self.v2.getType(), SYMBOLIC.UNDEFINED_VARIABLE)
 
     def test_name(self):
         """Test name"""
