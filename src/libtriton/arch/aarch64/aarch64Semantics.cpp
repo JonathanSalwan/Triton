@@ -60,6 +60,8 @@ EOR (immediate)               | Bitwise Exclusive OR (immediate)
 EOR (shifted register)        | Bitwise Exclusive OR (shifted register)
 EXTR                          | EXTR: Extract register
 LDAR                          | Load-Acquire Register
+LDARB                         | Load-Acquire Register Byte
+LDARH                         | Load-Acquire Register Halfword
 LDP                           | Load Pair of Registers
 LDR (immediate)               | Load Register (immediate)
 LDR (literal)                 | Load Register (literal)
@@ -195,6 +197,8 @@ namespace triton {
           case ID_INS_EOR:       this->eor_s(inst);           break;
           case ID_INS_EXTR:      this->extr_s(inst);          break;
           case ID_INS_LDAR:      this->ldar_s(inst);          break;
+          case ID_INS_LDARB:     this->ldarb_s(inst);         break;
+          case ID_INS_LDARH:     this->ldarh_s(inst);         break;
           case ID_INS_LDP:       this->ldp_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
           case ID_INS_LDRB:      this->ldrb_s(inst);          break;
@@ -1548,19 +1552,57 @@ namespace triton {
       void AArch64Semantics::ldar_s(triton::arch::Instruction& inst) {
         triton::arch::OperandWrapper& dst = inst.operands[0];
         triton::arch::OperandWrapper& src = inst.operands[1];
-        triton::arch::Register& base      = src.getMemory().getBaseRegister();
 
         /* Create the semantics of the LOAD */
-        auto node1 = this->symbolicEngine->getOperandAst(inst, src);
-        auto node2 = src.getMemory().getLeaAst();
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDAR operation - LOAD access");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDAR operation - Base register computation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAR operation - LOAD access");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->isTainted(base);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldarb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDARB operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldarh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDARH operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

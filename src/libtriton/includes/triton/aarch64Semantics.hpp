@@ -230,6 +230,12 @@ namespace triton {
           //! The LDAR semantics.
           void ldar_s(triton::arch::Instruction& inst);
 
+          //! The LDARB semantics.
+          void ldarb_s(triton::arch::Instruction& inst);
+
+          //! The LDARH semantics.
+          void ldarh_s(triton::arch::Instruction& inst);
+
           //! The LDP semantics.
           void ldp_s(triton::arch::Instruction& inst);
 
