@@ -1628,6 +1628,18 @@ CODE  = [
     ("\x21\x00\x80\xd2", "mov x1, #1 << 64"),
     ("\x20\x10\xc0\xda", "clz x0, x1"),
     ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x02\x02\x80\xd2", "movz x2, #16"),
+    ("\x25\xfc\xdf\xc8", "ldar x5, [x1]"),
+    ("\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    ("\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
+    ("\x29\xfc\xdf\xc8", "ldar x9, [x1]"),
+    ("\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
+    ("\x3f\x10\x00\x91", "add sp, x1, #4"),
+    ("\xeb\xff\xdf\xc8", "ldar x11, [sp]"),
+    ("\xff\xff\xdf\xc8", "ldar xzr, [sp]"),
+    ("\xe7\xff\xdf\x88", "ldar w7, [sp]"),
 ]
 
 def emu_with_unicorn(opcode, istate):
