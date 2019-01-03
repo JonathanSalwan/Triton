@@ -197,6 +197,9 @@ namespace triton {
           //! The CINC semantics
           void cinc_s(triton::arch::Instruction& inst);
 
+          //! The CLZ semantics
+          void clz_s(triton::arch::Instruction& inst);
+
           //! The CMN semantics
           void cmn_s(triton::arch::Instruction& inst);
 

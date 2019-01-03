@@ -1573,6 +1573,61 @@ CODE  = [
     ("\x40\x10\xc2\x93", "ror x0, x2, #4"),
     ("\x40\xf8\xc2\x93", "ror x0, x2, #62"),
     ("\x40\xfc\xc2\x93", "ror x0, x2, #63"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\x80\xd2", "mov x1, #0"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x41\x00\x80\xd2", "mov x1, #1 << 1"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x81\x00\x80\xd2", "mov x1, #1 << 2"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\x82\xd2", "mov x1, #1 << 12"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\x82\xd2", "mov x1, #1 << 12"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\xb0\xd2", "mov x1, #1 << 31"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x21\x00\xc0\xd2", "mov x1, #1 << 32"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x41\x00\xc0\xd2", "mov x1, #1 << 33"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\xe8\xd2", "mov x1, #1 << 62"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x01\x00\xf0\xd2", "mov x1, #1 << 63"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
+
+    ("\x00\x00\x80\x92", "movn x0, #0"),
+    ("\x21\x00\x80\xd2", "mov x1, #1 << 64"),
+    ("\x20\x10\xc0\xda", "clz x0, x1"),
+    ("\x20\x10\xc0\x5a", "clz w0, w1"),
 ]
 
 def emu_with_unicorn(opcode, istate):
