@@ -62,6 +62,9 @@ EXTR                          | EXTR: Extract register
 LDAR                          | Load-Acquire Register
 LDARB                         | Load-Acquire Register Byte
 LDARH                         | Load-Acquire Register Halfword
+LDAXR                         | Load-Acquire Exclusive Register
+LDAXRB                        | Load-Acquire Exclusive Register Byte
+LDAXRH                        | Load-Acquire Exclusive Register Halfword
 LDP                           | Load Pair of Registers
 LDR (immediate)               | Load Register (immediate)
 LDR (literal)                 | Load Register (literal)
@@ -200,6 +203,9 @@ namespace triton {
           case ID_INS_LDAR:      this->ldar_s(inst);          break;
           case ID_INS_LDARB:     this->ldarb_s(inst);         break;
           case ID_INS_LDARH:     this->ldarh_s(inst);         break;
+          case ID_INS_LDAXR:     this->ldaxr_s(inst);         break;
+          case ID_INS_LDAXRB:    this->ldaxrb_s(inst);        break;
+          case ID_INS_LDAXRH:    this->ldaxrh_s(inst);        break;
           case ID_INS_LDP:       this->ldp_s(inst);           break;
           case ID_INS_LDR:       this->ldr_s(inst);           break;
           case ID_INS_LDRB:      this->ldrb_s(inst);          break;
@@ -1602,6 +1608,66 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDARH operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldaxr_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAXR operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldaxrb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAXRB operation - LOAD access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldaxrh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDAXRH operation - LOAD access");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
