@@ -115,6 +115,9 @@ SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
 SMULH                         | Signed Multiply High
 SMULL                         | Signed Multiply Long: an alias of SMADDL
+STLR                          | Store-Release Register
+STLRB                         | Store-Release Register Byte
+STLRH                         | Store-Release Register Halfword
 STP                           | Store Pair of Registers
 STR (immediate)               | Store Register (immediate)
 STR (register)                | Store Register (register)
@@ -142,7 +145,7 @@ UDIV                          | Unsigned Divide
 UMADDL                        | Unsigned Multiply-Add Long
 UMNEGL                        | Unsigned Multiply-Negate Long: an alias of UMSUBL
 UMSUBL                        | Unsigned Multiply-Subtract Long
-UMULH                         | Unsigned Multiply High.
+UMULH                         | Unsigned Multiply High
 UMULL                         | Unsigned Multiply Long: an alias of UMADDL
 UXTB                          | Unsigned Extend Byte: an alias of UBFM
 UXTH                          | Unsigned Extend Halfword: an alias of UBFM
@@ -241,6 +244,9 @@ namespace triton {
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
           case ID_INS_SMULH:     this->smulh_s(inst);         break;
           case ID_INS_SMULL:     this->smull_s(inst);         break;
+          case ID_INS_STLR:      this->stlr_s(inst);          break;
+          case ID_INS_STLRB:     this->stlrb_s(inst);         break;
+          case ID_INS_STLRH:     this->stlrh_s(inst);         break;
           case ID_INS_STP:       this->stp_s(inst);           break;
           case ID_INS_STR:       this->str_s(inst);           break;
           case ID_INS_STRB:      this->strb_s(inst);          break;
@@ -2754,6 +2760,66 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::stlr_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create the semantics of the STORE */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLR operation - STORE access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::stlrb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create the semantics of the STORE */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        dst.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRB operation - STORE access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::stlrh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& src = inst.operands[0];
+        triton::arch::OperandWrapper& dst = inst.operands[1];
+
+        /* Create the semantics of the STORE */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        dst.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRH operation - STORE access");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
