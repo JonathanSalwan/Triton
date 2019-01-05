@@ -86,6 +86,9 @@ LDURH                         | Load Register Halfword (unscaled)
 LDURSB                        | Load Register Signed Byte (unscaled)
 LDURSH                        | Load Register Signed Halfword (unscaled)
 LDURSW                        | Load Register Signed Word (unscaled)
+LDXR                          | Load Exclusive Register
+LDXRB                         | Load Exclusive Register Byte
+LDXRH                         | Load Exclusive Register Halfword
 LSL (immediate)               | Logical Shift Left (immediate): an alias of UBFM
 LSL (register)                | Logical Shift Left (register): an alias of LSLV
 LSR (immediate)               | Logical Shift Right (immediate): an alias of UBFM
@@ -222,6 +225,9 @@ namespace triton {
           case ID_INS_LDURSB:    this->ldursb_s(inst);        break;
           case ID_INS_LDURSH:    this->ldursh_s(inst);        break;
           case ID_INS_LDURSW:    this->ldursw_s(inst);        break;
+          case ID_INS_LDXR:      this->ldxr_s(inst);          break;
+          case ID_INS_LDXRB:     this->ldxrb_s(inst);         break;
+          case ID_INS_LDXRH:     this->ldxrh_s(inst);         break;
           case ID_INS_LSL:       this->lsl_s(inst);           break;
           case ID_INS_LSR:       this->lsr_s(inst);           break;
           case ID_INS_MADD:      this->madd_s(inst);          break;
@@ -2210,6 +2216,72 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDURSW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldxr_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Create the semantics of the LOAD */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDXR operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldxrb_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 8 bits */
+        src.getMemory().setPair(std::make_pair(7, 0));
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 8, op);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDXRB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::ldxrh_s(triton::arch::Instruction& inst) {
+        triton::arch::OperandWrapper& dst = inst.operands[0];
+        triton::arch::OperandWrapper& src = inst.operands[1];
+
+        /* Special behavior: Define that the size of the memory access is 16 bits */
+        src.getMemory().setPair(std::make_pair(15, 0));
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.zx(dst.getBitSize() - 16, op);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDXRH operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
