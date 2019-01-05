@@ -795,11 +795,11 @@ namespace triton {
 
         /* Set implicit read of the base register (LEA) */
         if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
-          this->getRegisterAst(inst, mem.getConstBaseRegister());
+          (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
 
         /* Set implicit read of the index register (LEA) */
         if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
-          this->getRegisterAst(inst, mem.getConstIndexRegister());
+          (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
 
         return node;
       }
@@ -908,8 +908,17 @@ namespace triton {
         se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Temporary concatenation reference - " + comment);
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize()));
 
-        /* Define the memory store */
+        /* Set explicit write of the memory access */
         inst.setStoreAccess(mem, node);
+
+        /* Set implicit read of the base register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
+          (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
+
+        /* Set implicit read of the index register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
+          (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
+
         return inst.addSymbolicExpression(se);
       }
 
