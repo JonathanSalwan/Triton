@@ -1767,6 +1767,14 @@ CODE  = [
 
     ("\x00\x00\x80\xd2", "movz x0, #0"),
     ("\x20\x08\xc0\xda", "rev32 x0, x1"),
+
+    ("\x00\x00\x80\xd2", "movz x0, #0"),
+    ("\x20\x00\xc0\xda", "rbit x0, x1"),
+    ("\x20\x00\xc0\x5a", "rbit w0, w1"),
+
+    ("\x20\x00\x80\xd2", "movz x0, #1"),
+    ("\x20\x00\xc0\xda", "rbit x0, x1"),
+    ("\x20\x00\xc0\x5a", "rbit w0, w1"),
 ]
 
 def emu_with_unicorn(opcode, istate):

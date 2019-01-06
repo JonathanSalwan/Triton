@@ -109,6 +109,7 @@ NOP                           | No Operation
 ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
 ORR (shifted register)        | Bitwise OR (shifted register)
+RBIT                          | Reverse Bits
 RET                           | Return from subroutine
 REV                           | Reverse Bytes
 REV16                         | Reverse bytes in 16-bit halfwords
@@ -247,6 +248,7 @@ namespace triton {
           case ID_INS_NOP:       this->nop_s(inst);           break;
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_ORR:       this->orr_s(inst);           break;
+          case ID_INS_RBIT:      this->rbit_s(inst);          break;
           case ID_INS_RET:       this->ret_s(inst);           break;
           case ID_INS_REV16:     this->rev16_s(inst);         break;
           case ID_INS_REV32:     this->rev32_s(inst);         break;
@@ -2657,6 +2659,33 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::rbit_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> bits;
+
+        for (triton::uint32 index = 0; index < src.getBitSize(); index++) {
+          bits.push_back(this->astCtxt.extract(index, index, op));
+        }
+
+        auto node = this->astCtxt.concat(bits);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "RBIT operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);

@@ -338,6 +338,9 @@ namespace triton {
           //! The ORR semantics.
           void orr_s(triton::arch::Instruction& inst);
 
+          //! The RBIT semantics.
+          void rbit_s(triton::arch::Instruction& inst);
+
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
