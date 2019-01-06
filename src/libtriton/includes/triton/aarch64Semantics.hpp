@@ -341,6 +341,15 @@ namespace triton {
           //! The RET semantics.
           void ret_s(triton::arch::Instruction& inst);
 
+          //! The REV semantics.
+          void rev_s(triton::arch::Instruction& inst);
+
+          //! The REV16 semantics.
+          void rev16_s(triton::arch::Instruction& inst);
+
+          //! The REV32 semantics.
+          void rev32_s(triton::arch::Instruction& inst);
+
           //! The ROR semantics.
           void ror_s(triton::arch::Instruction& inst);
 

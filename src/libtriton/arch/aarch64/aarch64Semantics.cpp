@@ -110,6 +110,10 @@ ORN                           | Bitwise OR NOT (shifted register)
 ORR (immediate)               | Bitwise OR (immediate)
 ORR (shifted register)        | Bitwise OR (shifted register)
 RET                           | Return from subroutine
+REV                           | Reverse Bytes
+REV16                         | Reverse bytes in 16-bit halfwords
+REV32                         | Reverse bytes in 32-bit words
+REV64                         | Reverse Bytes: an alias of REV
 ROR (immediate)               | Rotate right (immediate): an alias of EXTR
 ROR (register)                | Rotate Right (register): an alias of RORV
 RORV                          | Rotate Right Variable
@@ -244,6 +248,10 @@ namespace triton {
           case ID_INS_ORN:       this->orn_s(inst);           break;
           case ID_INS_ORR:       this->orr_s(inst);           break;
           case ID_INS_RET:       this->ret_s(inst);           break;
+          case ID_INS_REV16:     this->rev16_s(inst);         break;
+          case ID_INS_REV32:     this->rev32_s(inst);         break;
+          case ID_INS_REV64:     this->rev_s(inst);           break;
+          case ID_INS_REV:       this->rev_s(inst);           break;
           case ID_INS_ROR:       this->ror_s(inst);           break;
           case ID_INS_SDIV:      this->sdiv_s(inst);          break;
           case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
@@ -2670,6 +2678,118 @@ namespace triton {
       }
 
 
+      void AArch64Semantics::rev_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> bits;
+
+        switch(src.getSize()) {
+          case QWORD_SIZE:
+              bits.push_front(this->astCtxt.extract(63, 56, op));
+              bits.push_front(this->astCtxt.extract(55, 48, op));
+              bits.push_front(this->astCtxt.extract(47, 40, op));
+              bits.push_front(this->astCtxt.extract(39, 32, op));
+          case DWORD_SIZE:
+              bits.push_front(this->astCtxt.extract(31, 24, op));
+              bits.push_front(this->astCtxt.extract(23, 16, op));
+              bits.push_front(this->astCtxt.extract(15, 8,  op));
+              bits.push_front(this->astCtxt.extract(7,  0,  op));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("AArch64Semantics::rev_s(): Invalid operand size.");
+        }
+
+        auto node = this->astCtxt.concat(bits);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "REV operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::rev16_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> bits;
+
+        switch(src.getSize()) {
+          case QWORD_SIZE:
+              bits.push_back(this->astCtxt.extract(55, 48, op));
+              bits.push_back(this->astCtxt.extract(63, 56, op));
+              bits.push_back(this->astCtxt.extract(39, 32, op));
+              bits.push_back(this->astCtxt.extract(47, 40, op));
+          case DWORD_SIZE:
+              bits.push_back(this->astCtxt.extract(23, 16, op));
+              bits.push_back(this->astCtxt.extract(31, 24, op));
+              bits.push_back(this->astCtxt.extract(7,  0,  op));
+              bits.push_back(this->astCtxt.extract(15, 8,  op));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("AArch64Semantics::rev16_s(): Invalid operand size.");
+        }
+
+        auto node = this->astCtxt.concat(bits);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "REV16 operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::rev32_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> bits;
+
+        bits.push_back(this->astCtxt.extract(39, 32, op));
+        bits.push_back(this->astCtxt.extract(47, 40, op));
+        bits.push_back(this->astCtxt.extract(55, 48, op));
+        bits.push_back(this->astCtxt.extract(63, 56, op));
+        bits.push_back(this->astCtxt.extract(7,  0,  op));
+        bits.push_back(this->astCtxt.extract(15, 8,  op));
+        bits.push_back(this->astCtxt.extract(23, 16, op));
+        bits.push_back(this->astCtxt.extract(31, 24, op));
+
+        auto node = this->astCtxt.concat(bits);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "REV32 operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void AArch64Semantics::ror_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
@@ -3383,7 +3503,7 @@ namespace triton {
         auto  width = src3.getImmediate().getValue();
 
         if (lsb + width > dst.getBitSize())
-          throw triton::exceptions::Semantics("AArch64Semantics::ubfiz_s(): Invalild lsb and width.");
+          throw triton::exceptions::Semantics("AArch64Semantics::ubfiz_s(): Invalid lsb and width.");
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src1);
@@ -3423,7 +3543,7 @@ namespace triton {
         auto  width = src3.getImmediate().getValue();
 
         if (lsb + width > dst.getBitSize())
-          throw triton::exceptions::Semantics("AArch64Semantics::ubfx_s(): Invalild lsb and width.");
+          throw triton::exceptions::Semantics("AArch64Semantics::ubfx_s(): Invalid lsb and width.");
 
         /* Create symbolic operands */
         auto op = this->symbolicEngine->getOperandAst(inst, src1);
