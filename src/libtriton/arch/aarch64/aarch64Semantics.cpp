@@ -118,6 +118,7 @@ REV64                         | Reverse Bytes: an alias of REV
 ROR (immediate)               | Rotate right (immediate): an alias of EXTR
 ROR (register)                | Rotate Right (register): an alias of RORV
 RORV                          | Rotate Right Variable
+SBFX                          | Signed Bitfield Extract: an alias of SBFM
 SDIV                          | Signed Divide
 SMADDL                        | Signed Multiply-Add Long
 SMSUBL                        | Signed Multiply-Subtract Long
@@ -255,6 +256,7 @@ namespace triton {
           case ID_INS_REV64:     this->rev_s(inst);           break;
           case ID_INS_REV:       this->rev_s(inst);           break;
           case ID_INS_ROR:       this->ror_s(inst);           break;
+          case ID_INS_SBFX:      this->sbfx_s(inst);          break;
           case ID_INS_SDIV:      this->sdiv_s(inst);          break;
           case ID_INS_SMADDL:    this->smaddl_s(inst);        break;
           case ID_INS_SMSUBL:    this->smsubl_s(inst);        break;
@@ -2842,6 +2844,34 @@ namespace triton {
       }
 
 
+      void AArch64Semantics::sbfx_s(triton::arch::Instruction& inst) {
+        auto& dst   = inst.operands[0];
+        auto& src1  = inst.operands[1];
+        auto& src2  = inst.operands[2];
+        auto& src3  = inst.operands[3];
+        auto  lsb   = src2.getImmediate().getValue();
+        auto  width = src3.getImmediate().getValue();
+
+        if (lsb + width > dst.getBitSize())
+          throw triton::exceptions::Semantics("AArch64Semantics::sbfx_s(): Invalid lsb and width.");
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src1);
+
+        /* Create the semantics */
+        auto node = this->astCtxt.sx(dst.getBitSize() - width, this->astCtxt.extract(lsb+width-1, lsb, op));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SBFX operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+
+        /* Upate the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void AArch64Semantics::sdiv_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
@@ -3578,7 +3608,7 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src1);
 
         /* Create the semantics */
-        auto node = this->astCtxt.zx(dst.getBitSize() - (lsb+width), this->astCtxt.extract(lsb+width-1, lsb, op));
+        auto node = this->astCtxt.zx(dst.getBitSize() - width, this->astCtxt.extract(lsb+width-1, lsb, op));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UBFX operation");
