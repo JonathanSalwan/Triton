@@ -27,6 +27,7 @@ namespace triton {
       this->size        = 0;
       this->symbolized  = false;
       this->type        = type;
+      this->undefined   = false;
     }
 
 
@@ -36,6 +37,7 @@ namespace triton {
       this->size        = other.size;
       this->symbolized  = other.symbolized;
       this->type        = other.type;
+      this->undefined   = other.undefined;
 
       for (triton::uint32 index = 0; index < other.children.size(); index++)
         this->children.push_back(triton::ast::newInstance(other.children[index].get()));
@@ -106,6 +108,11 @@ namespace triton {
       }
 
       return false;
+    }
+
+
+    bool AbstractNode::isUndefined(void) const {
+      return this->undefined;
     }
 
 
@@ -214,6 +221,11 @@ namespace triton {
 
     void AbstractNode::setBitvectorSize(triton::uint32 size) {
       this->size = size;
+    }
+
+
+    void AbstractNode::setUndefined(bool state) {
+      this->undefined = state;
     }
 
 

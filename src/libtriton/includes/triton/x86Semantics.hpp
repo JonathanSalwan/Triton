@@ -78,6 +78,9 @@ namespace triton {
           //! Sets a flag.
           void setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment="");
 
+          //! Sets a node as undefined.
+          void setUndefined_s(const triton::arch::Register& reg, std::string comment="");
+
           //! Control flow semantics. Used to represent IP.
           void controlFlow_s(triton::arch::Instruction& inst);
 

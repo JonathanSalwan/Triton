@@ -708,6 +708,19 @@ namespace triton {
       }
 
 
+      void x86Semantics::setUndefined_s(const triton::arch::Register& reg, std::string comment) {
+        auto& expr = this->symbolicEngine->getSymbolicRegister(reg);
+
+        if (expr != nullptr) {
+          expr->getAst()->setUndefined(true);
+          expr->isTainted = this->taintEngine->setTaintRegister(reg, triton::engines::taint::UNTAINTED);
+          if (comment.empty() == false) {
+            expr->setComment(comment);
+          }
+        }
+      }
+
+
       void x86Semantics::controlFlow_s(triton::arch::Instruction& inst) {
         auto pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto counter = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
@@ -2241,6 +2254,10 @@ namespace triton {
         /* Upate symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a AAA operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a AAA operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a AAA operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a AAA operation");
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2279,6 +2296,9 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a AAD operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a AAD operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a AAD operation");
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
@@ -2315,6 +2335,9 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a AAM operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a AAM operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a AAM operation");
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
@@ -2370,6 +2393,10 @@ namespace triton {
         /* Upate symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a AAS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a AAS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a AAS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a AAS operation");
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2485,6 +2512,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a AND operation");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
@@ -2915,6 +2943,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BSF operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a BSF operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BSF operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BSF operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BSF operation");
         this->zfBsf_s(inst, expr, src, op2);
 
         /* Upate the symbolic control flow */
@@ -3098,6 +3131,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BSR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a BSR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BSR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BSR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BSR operation");
         this->zfBsf_s(inst, expr, src, op2); /* same as bsf */
 
         /* Upate the symbolic control flow */
@@ -3170,6 +3208,12 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
         expr->isTainted = this->taintEngine->taintUnion(dst, src2);
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BT operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BT operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BT operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BT operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3232,6 +3276,12 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BTC operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BTC operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BTC operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BTC operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3283,6 +3333,12 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BTR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BTR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BTR operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BTR operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3326,6 +3382,12 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, dst2);
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
+
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a BTS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a BTS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a BTS operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a BTS operation");
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4797,6 +4859,14 @@ namespace triton {
 
         }
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a DIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a DIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a DIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a DIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a DIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a DIV operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -4935,6 +5005,14 @@ namespace triton {
 
         }
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a IDIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a IDIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a IDIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a IDIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a IDIV operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a IDIV operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -5046,6 +5124,12 @@ namespace triton {
           }
 
         }
+
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a IMUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a IMUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a IMUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a IMUL operation");
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -5972,8 +6056,9 @@ namespace triton {
 
 
       void x86Semantics::mov_s(triton::arch::Instruction& inst) {
-        auto& dst = inst.operands[0];
-        auto& src = inst.operands[1];
+        auto& dst   = inst.operands[0];
+        auto& src   = inst.operands[1];
+        bool  undef = false;
 
         /* Create the semantics */
         auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -5992,6 +6077,9 @@ namespace triton {
           if (id >= triton::arch::ID_REG_X86_CS && id <= triton::arch::ID_REG_X86_SS) {
             node = this->astCtxt.extract(dst.getBitSize()-1, 0, node);
           }
+          if (id >= triton::arch::ID_REG_X86_CR0 && id <= triton::arch::ID_REG_X86_CR15) {
+            undef = true;
+          }
         }
 
         /*
@@ -6002,6 +6090,9 @@ namespace triton {
           if (id >= triton::arch::ID_REG_X86_CS && id <= triton::arch::ID_REG_X86_SS) {
             node = this->astCtxt.extract(WORD_SIZE_BIT-1, 0, node);
           }
+          if (id >= triton::arch::ID_REG_X86_CR0 && id <= triton::arch::ID_REG_X86_CR15) {
+            undef = true;
+          }
         }
 
         /* Create symbolic expression */
@@ -6009,6 +6100,16 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Upate symbolic flags */
+        if (undef) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a MOV operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a MOV operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a MOV operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a MOV operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a MOV operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a MOV operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7043,6 +7144,12 @@ namespace triton {
 
         }
 
+        /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a MUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a MUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a MUL operation");
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a MUL operation");
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -7188,6 +7295,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a OR operation");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
@@ -10246,6 +10354,10 @@ namespace triton {
         this->cfRcl_s(inst, expr2, node1, op2bis);
         this->ofRol_s(inst, expr2, dst, op2bis); /* Same as ROL */
 
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a RCL operation");
+        }
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -10315,6 +10427,10 @@ namespace triton {
         /* Upate symbolic flags */
         this->ofRcr_s(inst, expr2, dst, op1, op2); /* OF must be set before CF */
         this->cfRcr_s(inst, expr2, dst, node1, op2);
+
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a RCR operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10434,6 +10550,10 @@ namespace triton {
         this->cfRol_s(inst, expr, dst, op2bis);
         this->ofRol_s(inst, expr, dst, op2bis);
 
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a ROL operation");
+        }
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -10497,6 +10617,10 @@ namespace triton {
         /* Upate symbolic flags */
         this->cfRor_s(inst, expr, dst, op2);
         this->ofRor_s(inst, expr, dst, op2bis);
+
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a ROR operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10607,6 +10731,14 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
+
+        if (op2->evaluate() != 0) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SAR operation");
+        }
+
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SAR operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11442,6 +11574,18 @@ namespace triton {
         this->sfShl_s(inst, expr, dst, op2);
         this->zfShl_s(inst, expr, dst, op2);
 
+        if (op2->evaluate() != 0) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHL operation");
+        }
+
+        if (op2->evaluate() > dst.getBitSize()) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a SHL operation");
+        }
+
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHL operation");
+        }
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -11504,6 +11648,23 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op3); /* Same that shl */
         this->sfShld_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
+
+        if (op3->evaluate() != 0) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHLD operation");
+        }
+
+        if (op3->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHLD operation");
+        }
+
+        if (op3->evaluate() > dst.getBitSize()) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHLD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a SHLD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHLD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a SHLD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a SHLD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a SHLD operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11578,6 +11739,18 @@ namespace triton {
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
 
+        if (op2->evaluate() != 0) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHR operation");
+        }
+
+        if (op2->evaluate() > dst.getBitSize()) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a SHR operation");
+        }
+
+        if (op2->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHR operation");
+        }
+
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -11640,6 +11813,23 @@ namespace triton {
         this->pfShl_s(inst, expr, dst, op3); /* Same that shl */
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
+
+        if (op3->evaluate() != 0) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHRD operation");
+        }
+
+        if (op3->evaluate() > 1) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHRD operation");
+        }
+
+        if (op3->evaluate() > dst.getBitSize()) {
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a SHRD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_CF), "CF has been tagged as undefined from a SHRD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_OF), "OF has been tagged as undefined from a SHRD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_PF), "PF has been tagged as undefined from a SHRD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_SF), "SF has been tagged as undefined from a SHRD operation");
+          this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_ZF), "ZF has been tagged as undefined from a SHRD operation");
+        }
 
         /* Upate the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11968,6 +12158,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a TEST operation");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, src1, true);
@@ -12662,6 +12853,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Upate symbolic flags */
+        this->setUndefined_s(this->architecture->getRegister(ID_REG_X86_AF), "AF has been tagged as undefined from a XOR operation");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
