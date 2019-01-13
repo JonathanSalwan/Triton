@@ -85,13 +85,13 @@ namespace triton {
         bool logical;
 
         /**
-         * True if this root node has been tagged as undefined behavior by a
-         * by an ISA. For example according to the Intel x86 ISA, when the MUL
-         * instructionthe is executed, the flags SF, ZF, AF, and PF are
-         * undefined. So the idea is to tag the AST assigned to those flags as
-         * undefined which will not break the soundness or correctness of the
-         * symbolic reasoning/emulation but provide more information during
-         * obfuscated binaries analysis. See #750.
+         * True if this root node has been tagged as undefined behavior by an
+         * instruction from the ISA spec. For example according to the Intel
+         * x86 ISA, when the MUL instruction is executed, the flags SF, ZF, AF
+         * and PF are undefined. So the idea is to tag the AST assigned to
+         * those flags as undefined which will not break the soundness or
+         * correctness of the symbolic reasoning/emulation but provide more
+         * information during obfuscated binaries analysis. See #750.
          */
         bool undefined;
 
