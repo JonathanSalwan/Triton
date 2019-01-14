@@ -690,7 +690,7 @@ namespace triton {
         auto node = this->astCtxt.bv(0, 1);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, flag, comment);
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
@@ -702,31 +702,17 @@ namespace triton {
         auto node = this->astCtxt.bv(1, 1);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, flag, comment);
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
       }
 
 
-      void x86Semantics::setUndefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg, const std::string& comment) {
-        /* Get the symbolic expression linked to the register */
-        auto& expr = this->symbolicEngine->getSymbolicRegister(reg);
-
-        if (expr != nullptr) {
-          /* If the symbolic expression exists, set the AbstractNode as undefined */
-          expr->getAst()->setUndefined(true);
-          /* Also untaint the expression */
-          expr->isTainted = this->taintEngine->setTaintRegister(reg, triton::engines::taint::UNTAINTED);
-          expr->setComment(comment);
-
-          /* Concretize the node if the CONCRETIZE_UNDEFINED_NODE is enabled */
-          if (this->modes.isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_NODE)) {
-            triton::uint512 eval = expr->getAst()->evaluate();
-            triton::uint32  size = expr->getAst()->getBitvectorSize();
-            expr->setAst(this->astCtxt.bv(eval, size));
-            expr->setComment(comment + " (CONCRETIZE_UNDEFINED_NODE)");
-          }
+      void x86Semantics::undefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
+        /* Concretize the node if the CONCRETIZE_UNDEFINED_NODE is enabled */
+        if (this->modes.isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_NODE)) {
+          this->symbolicEngine->concretizeRegister(reg);
         }
 
         /* Tell that the instruction defines a register as undefined */
@@ -879,7 +865,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_AF), parent->isTainted);
@@ -912,7 +898,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_AF), parent->isTainted);
@@ -949,7 +935,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_AF), "Adjust flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_AF), parent->isTainted);
@@ -982,7 +968,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1017,7 +1003,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1044,7 +1030,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1071,7 +1057,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1098,7 +1084,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1126,7 +1112,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1153,7 +1139,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1180,7 +1166,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1210,7 +1196,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1234,7 +1220,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1259,7 +1245,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1283,7 +1269,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1307,7 +1293,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1343,7 +1329,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1379,7 +1365,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1414,7 +1400,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1449,7 +1435,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1484,7 +1470,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1517,7 +1503,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
@@ -1547,7 +1533,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1574,7 +1560,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1601,7 +1587,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1630,7 +1616,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1658,7 +1644,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1685,7 +1671,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1714,7 +1700,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1752,7 +1738,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1787,7 +1773,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1827,7 +1813,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1857,7 +1843,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1897,7 +1883,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1927,7 +1913,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
@@ -1962,7 +1948,7 @@ namespace triton {
         }
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_PF), "Parity flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_PF), parent->isTainted);
@@ -2004,7 +1990,7 @@ namespace triton {
                      );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, this->architecture->getRegister(ID_REG_X86_PF), "Parity flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, this->architecture->getRegister(ID_REG_X86_PF), "Parity flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_PF), parent->isTainted);
@@ -2026,7 +2012,7 @@ namespace triton {
         auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
@@ -2054,7 +2040,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
@@ -2089,7 +2075,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
@@ -2124,7 +2110,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
@@ -2154,7 +2140,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_ZF), parent->isTainted);
@@ -2178,7 +2164,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_ZF), parent->isTainted);
@@ -2214,7 +2200,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_ZF), parent->isTainted);
@@ -2267,10 +2253,10 @@ namespace triton {
         /* Update symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "AAA operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "AAA operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "AAA operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "AAA operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2309,9 +2295,9 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "AAD operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "AAD operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "AAD operation - OF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
@@ -2348,9 +2334,9 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "AAM operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "AAM operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "AAM operation - OF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
@@ -2406,10 +2392,10 @@ namespace triton {
         /* Update symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "AAS operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "AAS operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "AAS operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "AAS operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2525,7 +2511,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "AND operatin - AF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
@@ -2956,11 +2942,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BSF operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "BSF operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BSF operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BSF operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BSF operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->zfBsf_s(inst, expr, src, op2);
 
         /* Update the symbolic control flow */
@@ -3144,11 +3130,11 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BSR operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "BSR operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BSR operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BSR operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BSR operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->zfBsf_s(inst, expr, src, op2); /* same as bsf */
 
         /* Update the symbolic control flow */
@@ -3215,17 +3201,17 @@ namespace triton {
                     );
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "BT operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "BT operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
         expr->isTainted = this->taintEngine->taintUnion(dst, src2);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BT operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BT operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BT operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BT operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3281,7 +3267,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTC carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTC carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTC complement operation");
 
         /* Spread taint */
@@ -3290,10 +3276,10 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BTC operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BTC operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BTC operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BTC operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3338,7 +3324,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTR carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTR carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTR reset operation");
 
         /* Spread taint */
@@ -3347,10 +3333,10 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BTR operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BTR operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BTR operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BTR operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3388,7 +3374,7 @@ namespace triton {
                      );
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTS carry operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, this->architecture->getRegister(ID_REG_X86_CF), "BTS carry operation");
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BTS set operation");
 
         /* Spread taint */
@@ -3397,10 +3383,10 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "BTS operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "BTS operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "BTS operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "BTS operation - SF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3578,7 +3564,7 @@ namespace triton {
         auto node = this->astCtxt.bvnot(op1);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, dst.getRegister(), "CMC operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst.getRegister(), "CMC operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, dst);
@@ -4873,12 +4859,12 @@ namespace triton {
         }
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "DIV operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "DIV operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "DIV operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "DIV operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "DIV operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "DIV operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -5019,12 +5005,12 @@ namespace triton {
         }
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "IDIV operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "IDIV operation - CF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "IDIV operation - OF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "IDIV operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "IDIV operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "IDIV operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -5139,10 +5125,10 @@ namespace triton {
         }
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "IMUL operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "IMUL operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "IMUL operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "IMUL operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -6116,12 +6102,12 @@ namespace triton {
 
         /* Update symbolic flags */
         if (undef) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "MOV operation - AF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "MOV operation - CF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "MOV operation - OF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "MOV operation - PF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "MOV operation - SF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "MOV operation - ZF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
         }
 
         /* Update the symbolic control flow */
@@ -7158,10 +7144,10 @@ namespace triton {
         }
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "MUL operation - AF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "MUL operation - PF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "MUL operation - SF has been tagged as undefined");
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "MUL operation - ZF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7308,7 +7294,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "OR operation - AF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
@@ -8836,16 +8822,16 @@ namespace triton {
         auto node10 = this->astCtxt.extract(14, 14, op1);
 
         /* Create symbolic expression */
-        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPF CF operation");
-        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPF PF operation");
-        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPF AF operation");
-        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPF ZF operation");
-        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPF SF operation");
-        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPF TF operation");
-        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPF IF operation");
-        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPF DF operation");
-        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPF OF operation");
-        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPF NT operation");
+        auto expr1  = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1.getRegister(),   "POPF CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2.getRegister(),   "POPF PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3.getRegister(),   "POPF AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4.getRegister(),   "POPF ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5.getRegister(),   "POPF SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6.getRegister(),   "POPF TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7.getRegister(),   "POPF IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicExpression(inst, node8, dst8.getRegister(),   "POPF DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicExpression(inst, node9, dst9.getRegister(),   "POPF OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicExpression(inst, node10, dst10.getRegister(), "POPF NT operation");
 
         /* Spread taint */
         expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
@@ -8908,19 +8894,19 @@ namespace triton {
         auto node13 = this->astCtxt.extract(21, 21, op1);
 
         /* Create symbolic expression */
-        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPFD CF operation");
-        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPFD PF operation");
-        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPFD AF operation");
-        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPFD ZF operation");
-        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPFD SF operation");
-        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPFD TF operation");
-        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPFD IF operation");
-        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPFD DF operation");
-        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPFD OF operation");
-        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
-        auto expr11 = this->symbolicEngine->createSymbolicFlagExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
-        auto expr12 = this->symbolicEngine->createSymbolicFlagExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
-        auto expr13 = this->symbolicEngine->createSymbolicFlagExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
+        auto expr1  = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1.getRegister(),   "POPFD CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2.getRegister(),   "POPFD PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3.getRegister(),   "POPFD AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4.getRegister(),   "POPFD ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5.getRegister(),   "POPFD SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6.getRegister(),   "POPFD TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7.getRegister(),   "POPFD IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicExpression(inst, node8, dst8.getRegister(),   "POPFD DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicExpression(inst, node9, dst9.getRegister(),   "POPFD OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
+        auto expr11 = this->symbolicEngine->createSymbolicExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
+        auto expr12 = this->symbolicEngine->createSymbolicExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
+        auto expr13 = this->symbolicEngine->createSymbolicExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
 
         /* Spread taint */
         expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
@@ -8986,19 +8972,19 @@ namespace triton {
         auto node13 = this->astCtxt.extract(21, 21, op1);
 
         /* Create symbolic expression */
-        auto expr1  = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(),   "POPFQ CF operation");
-        auto expr2  = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(),   "POPFQ PF operation");
-        auto expr3  = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(),   "POPFQ AF operation");
-        auto expr4  = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(),   "POPFQ ZF operation");
-        auto expr5  = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(),   "POPFQ SF operation");
-        auto expr6  = this->symbolicEngine->createSymbolicFlagExpression(inst, node6, dst6.getRegister(),   "POPFQ TF operation");
-        auto expr7  = this->symbolicEngine->createSymbolicFlagExpression(inst, node7, dst7.getRegister(),   "POPFQ IF operation");
-        auto expr8  = this->symbolicEngine->createSymbolicFlagExpression(inst, node8, dst8.getRegister(),   "POPFQ DF operation");
-        auto expr9  = this->symbolicEngine->createSymbolicFlagExpression(inst, node9, dst9.getRegister(),   "POPFQ OF operation");
-        auto expr10 = this->symbolicEngine->createSymbolicFlagExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
-        auto expr11 = this->symbolicEngine->createSymbolicFlagExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
-        auto expr12 = this->symbolicEngine->createSymbolicFlagExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
-        auto expr13 = this->symbolicEngine->createSymbolicFlagExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
+        auto expr1  = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1.getRegister(),   "POPFQ CF operation");
+        auto expr2  = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2.getRegister(),   "POPFQ PF operation");
+        auto expr3  = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3.getRegister(),   "POPFQ AF operation");
+        auto expr4  = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4.getRegister(),   "POPFQ ZF operation");
+        auto expr5  = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5.getRegister(),   "POPFQ SF operation");
+        auto expr6  = this->symbolicEngine->createSymbolicExpression(inst, node6, dst6.getRegister(),   "POPFQ TF operation");
+        auto expr7  = this->symbolicEngine->createSymbolicExpression(inst, node7, dst7.getRegister(),   "POPFQ IF operation");
+        auto expr8  = this->symbolicEngine->createSymbolicExpression(inst, node8, dst8.getRegister(),   "POPFQ DF operation");
+        auto expr9  = this->symbolicEngine->createSymbolicExpression(inst, node9, dst9.getRegister(),   "POPFQ OF operation");
+        auto expr10 = this->symbolicEngine->createSymbolicExpression(inst, node10, dst10.getRegister(), "POPFD NT operation");
+        auto expr11 = this->symbolicEngine->createSymbolicExpression(inst, node11, dst11.getRegister(), "POPFD RF operation");
+        auto expr12 = this->symbolicEngine->createSymbolicExpression(inst, node12, dst12.getRegister(), "POPFD AC operation");
+        auto expr13 = this->symbolicEngine->createSymbolicExpression(inst, node13, dst13.getRegister(), "POPFD ID operation");
 
         /* Spread taint */
         expr1->isTainted  = this->taintEngine->taintAssignment(dst1, src);
@@ -10368,7 +10354,7 @@ namespace triton {
         this->ofRol_s(inst, expr2, dst, op2bis); /* Same as ROL */
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "RCL operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -10442,7 +10428,7 @@ namespace triton {
         this->cfRcr_s(inst, expr2, dst, node1, op2);
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "RCR operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -10564,7 +10550,7 @@ namespace triton {
         this->ofRol_s(inst, expr, dst, op2bis);
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "ROL operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -10632,7 +10618,7 @@ namespace triton {
         this->ofRor_s(inst, expr, dst, op2bis);
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "ROR operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -10698,11 +10684,11 @@ namespace triton {
         auto node5 = this->astCtxt.extract(0, 0, op1);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicFlagExpression(inst, node1, dst1.getRegister(), "SAHF SF operation");
-        auto expr2 = this->symbolicEngine->createSymbolicFlagExpression(inst, node2, dst2.getRegister(), "SAHF ZF operation");
-        auto expr3 = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, dst3.getRegister(), "SAHF AF operation");
-        auto expr4 = this->symbolicEngine->createSymbolicFlagExpression(inst, node4, dst4.getRegister(), "SAHF PF operation");
-        auto expr5 = this->symbolicEngine->createSymbolicFlagExpression(inst, node5, dst5.getRegister(), "SAHF CF operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1.getRegister(), "SAHF SF operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2.getRegister(), "SAHF ZF operation");
+        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst3.getRegister(), "SAHF AF operation");
+        auto expr4 = this->symbolicEngine->createSymbolicExpression(inst, node4, dst4.getRegister(), "SAHF PF operation");
+        auto expr5 = this->symbolicEngine->createSymbolicExpression(inst, node5, dst5.getRegister(), "SAHF CF operation");
 
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
@@ -10746,11 +10732,11 @@ namespace triton {
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
 
         if (op2->evaluate() != 0) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SAR operation - AF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SAR operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -11588,15 +11574,15 @@ namespace triton {
         this->zfShl_s(inst, expr, dst, op2);
 
         if (op2->evaluate() != 0) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHL operation - AF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
         if (op2->evaluate() > dst.getBitSize()) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "SHL operation - CF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         }
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHL operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -11663,20 +11649,20 @@ namespace triton {
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
         if (op3->evaluate() != 0) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHLD operation - AF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
         if (op3->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHLD operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         if (op3->evaluate() > dst.getBitSize()) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHLD operation - AF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "SHLD operation - CF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHLD operation - OF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "SHLD operation - PF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "SHLD operation - SF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "SHLD operation - ZF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
         }
 
         /* Update the symbolic control flow */
@@ -11753,15 +11739,15 @@ namespace triton {
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
 
         if (op2->evaluate() != 0) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHR operation - AF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
         if (op2->evaluate() > dst.getBitSize()) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "SHR operation - CF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         }
 
         if (op2->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHR operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         /* Update the symbolic control flow */
@@ -11828,20 +11814,20 @@ namespace triton {
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
         if (op3->evaluate() != 0) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHRD operation - AF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
         if (op3->evaluate() > 1) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHRD operation - OF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
         if (op3->evaluate() > dst.getBitSize()) {
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "SHRD operation - AF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "SHRD operation - CF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "SHRD operation - OF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF), "SHRD operation - PF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF), "SHRD operation - SF has been tagged as undefined");
-          this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF), "SHRD operation - ZF has been tagged as undefined");
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+          this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
         }
 
         /* Update the symbolic control flow */
@@ -12171,7 +12157,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "TEST operation - AF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, src1, true);
@@ -12866,7 +12852,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->setUndefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF), "XOR operation - AF has been tagged as undefined");
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);

@@ -13,7 +13,7 @@ if SPEC.find('x86') >= 0:
         for line in f.readlines():
             if line.startswith("REG_SPEC"):
                 args = line[line.find("(") + 1: line.find(")")].split(", ")
-                x86_regs.append((args[0], args[-1] == "true"))
+                x86_regs.append((args[0], args[-1].find("true") >= 0))
 
     with open(os.path.join(BUILD_DIR, "x86_reg"), "w") as out:
         out.write('<ul>\n')

@@ -93,14 +93,6 @@ According to the size of the expression, returns true if the MSB is 1.
 - <b>bool isSymbolized(void)</b><br>
 Returns true if the tree (and its sub-trees) contains a symbolic variable.
 
-- <b>bool isUndefined(void)</b><br>
-Returns true if this node has been tagged as undefined behavior by an instruction
-from the ISA spec. For example according to the Intel x86 ISA, when the MUL instruction
-is executed, the flags SF, ZF, AF and PF are undefined. So the idea is to tag the AST
-assigned to those flags as undefined which will not break the soundness or correctness
-of the symbolic reasoning/emulation but provide more information during obfuscated binaries
-analysis.
-
 - <b>void setChild(integer index, \ref py_AstNode_page node)</b><br>
 Replaces a child node.
 
@@ -297,18 +289,6 @@ namespace triton {
       static PyObject* AstNode_isSymbolized(PyObject* self, PyObject* noarg) {
         try {
           if (PyAstNode_AsAstNode(self)->isSymbolized())
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* AstNode_isUndefined(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyAstNode_AsAstNode(self)->isUndefined())
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -597,7 +577,6 @@ namespace triton {
         {"isLogical",         AstNode_isLogical,         METH_NOARGS,     ""},
         {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
         {"isSymbolized",      AstNode_isSymbolized,      METH_NOARGS,     ""},
-        {"isUndefined",       AstNode_isUndefined,       METH_NOARGS,     ""},
         {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},
         {nullptr,             nullptr,                   0,               nullptr}
       };

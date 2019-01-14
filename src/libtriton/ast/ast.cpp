@@ -27,7 +27,6 @@ namespace triton {
       this->size        = 0;
       this->symbolized  = false;
       this->type        = type;
-      this->undefined   = false;
     }
 
 
@@ -37,7 +36,6 @@ namespace triton {
       this->size        = other.size;
       this->symbolized  = other.symbolized;
       this->type        = other.type;
-      this->undefined   = other.undefined;
 
       for (triton::uint32 index = 0; index < other.children.size(); index++)
         this->children.push_back(triton::ast::newInstance(other.children[index].get()));
@@ -108,11 +106,6 @@ namespace triton {
       }
 
       return false;
-    }
-
-
-    bool AbstractNode::isUndefined(void) const {
-      return this->undefined;
     }
 
 
@@ -224,11 +217,6 @@ namespace triton {
     }
 
 
-    void AbstractNode::setUndefined(bool state) {
-      this->undefined = state;
-    }
-
-
     std::string AbstractNode::str(void) const {
       std::stringstream s;
       s << this;
@@ -261,7 +249,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -302,7 +289,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -343,7 +329,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -417,7 +402,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -458,7 +442,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -499,7 +482,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -540,7 +522,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -577,7 +558,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -618,7 +598,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -655,7 +634,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -696,7 +674,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -748,7 +725,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -800,7 +776,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -854,7 +829,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -902,7 +876,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -950,7 +923,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -991,7 +963,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1039,7 +1010,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1087,7 +1057,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1139,7 +1108,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1191,7 +1159,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1232,7 +1199,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1277,7 +1243,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1318,7 +1283,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1359,7 +1323,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1400,7 +1363,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1441,7 +1403,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1486,7 +1447,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1527,7 +1487,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1568,7 +1527,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1621,7 +1579,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1653,7 +1610,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1700,7 +1656,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1730,7 +1685,6 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
-      this->undefined   = false;
 
       /* Init parents */
       this->initParents();
@@ -1771,7 +1725,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1812,7 +1765,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1853,7 +1805,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1907,7 +1858,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1952,7 +1902,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -1990,7 +1939,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
         this->eval = this->eval && this->children[index]->evaluate();
 
         if (this->children[index]->isLogical() == false)
@@ -2036,7 +1984,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -2073,7 +2020,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
@@ -2115,7 +2061,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
         this->eval = this->eval || this->children[index]->evaluate();
 
         if (this->children[index]->isLogical() == false)
@@ -2151,7 +2096,6 @@ namespace triton {
       this->logical     = this->expr->getAst()->isLogical();
       this->size        = this->expr->getAst()->getBitvectorSize();
       this->symbolized  = this->expr->getAst()->isSymbolized();
-      this->undefined   = this->expr->getAst()->isUndefined();
 
       this->expr->getAst()->setParent(this);
 
@@ -2184,7 +2128,6 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
-      this->undefined   = false;
 
       /* Init parents */
       this->initParents();
@@ -2236,7 +2179,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */
@@ -2267,7 +2209,6 @@ namespace triton {
       this->size        = this->symVar->getSize();
       this->eval        = ctxt.getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
-      this->undefined   = false;
 
       /* Init parents */
       this->initParents();
@@ -2321,7 +2262,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->undefined  |= this->children[index]->isUndefined();
       }
 
       /* Init parents */

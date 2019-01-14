@@ -844,8 +844,16 @@ namespace triton {
       /* Returns the new symbolic abstract expression and links this expression to the instruction. */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
         switch (dst.getType()) {
-          case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
-          case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
+          case triton::arch::OP_MEM:
+            return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
+
+          case triton::arch::OP_REG: {
+            if (this->architecture->isFlag(dst.getConstRegister()))
+              return this->createSymbolicFlagExpression(inst, node, dst.getConstRegister(), comment);
+            else
+              return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
+          }
+
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicExpression(): Invalid operand.");
         }

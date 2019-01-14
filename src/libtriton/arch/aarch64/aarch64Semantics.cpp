@@ -566,7 +566,7 @@ namespace triton {
         auto node = this->astCtxt.bv(0, 1);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, flag, comment);
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
@@ -578,7 +578,7 @@ namespace triton {
         auto node = this->astCtxt.bv(1, 1);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, flag, comment);
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, flag, comment);
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaintRegister(flag, triton::engines::taint::UNTAINTED);
@@ -599,7 +599,7 @@ namespace triton {
         auto node = this->astCtxt.extract(high, high, this->astCtxt.reference(parent));
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, nf, "Negative flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, nf, "Negative flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(nf, parent->isTainted);
@@ -623,7 +623,7 @@ namespace triton {
         auto node3 = this->getCodeConditionAst(inst, node1, node2);
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, nf, "Negative flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, nf, "Negative flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(nf, parent->isTainted);
@@ -653,7 +653,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, zf, "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, zf, "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
@@ -686,7 +686,7 @@ namespace triton {
         auto node3 = this->getCodeConditionAst(inst, node1, node2);
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, zf, "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, zf, "Zero flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(zf, parent->isTainted);
@@ -721,7 +721,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, cf, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf, "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(cf, parent->isTainted);
@@ -757,7 +757,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, cf, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf, "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(cf, parent->isTainted);
@@ -799,7 +799,7 @@ namespace triton {
         auto node3 = this->getCodeConditionAst(inst, node1, node2);
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, cf, "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, cf, "Carry flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(cf, parent->isTainted);
@@ -829,7 +829,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, vf, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, vf, "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
@@ -859,7 +859,7 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node, vf, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, vf, "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);
@@ -895,7 +895,7 @@ namespace triton {
         auto node3 = this->getCodeConditionAst(inst, node1, node2);
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicFlagExpression(inst, node3, vf, "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, vf, "Overflow flag");
 
         /* Spread the taint from the parent to the child */
         expr->isTainted = this->taintEngine->setTaintRegister(vf, parent->isTainted);

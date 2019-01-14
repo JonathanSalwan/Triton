@@ -84,17 +84,6 @@ namespace triton {
         //! True if it's a logical node.
         bool logical;
 
-        /**
-         * True if this root node has been tagged as undefined behavior by an
-         * instruction from the ISA spec. For example according to the Intel
-         * x86 ISA, when the MUL instruction is executed, the flags SF, ZF, AF
-         * and PF are undefined. So the idea is to tag the AST assigned to
-         * those flags as undefined which will not break the soundness or
-         * correctness of the symbolic reasoning/emulation but provide more
-         * information during obfuscated binaries analysis. See #750.
-         */
-        bool undefined;
-
         //! Contect use to create this node
         AstContext& ctxt;
 
@@ -129,9 +118,6 @@ namespace triton {
         //! Returns true if it's a logical node.
         TRITON_EXPORT bool isLogical(void) const;
 
-        //! Returns true if the node has been tagged as undefined.
-        TRITON_EXPORT bool isUndefined(void) const;
-
         //! Returns true if the current tree is equal to the second one.
         TRITON_EXPORT bool equalTo(const SharedAbstractNode&) const;
 
@@ -158,9 +144,6 @@ namespace triton {
 
         //! Sets the size of the node.
         TRITON_EXPORT void setBitvectorSize(triton::uint32 size);
-
-        //! Sets the node as undefined.
-        TRITON_EXPORT void setUndefined(bool state);
 
         //! Adds a child.
         TRITON_EXPORT void addChild(const SharedAbstractNode& child);
