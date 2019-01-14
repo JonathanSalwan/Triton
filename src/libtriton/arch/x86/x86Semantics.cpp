@@ -2252,6 +2252,8 @@ namespace triton {
         /* Update symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
+
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
@@ -2294,12 +2296,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2333,12 +2337,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->pf_s(inst, expr, dsttmp);
         this->sf_s(inst, expr, dsttmp);
         this->zf_s(inst, expr, dsttmp);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2391,6 +2397,8 @@ namespace triton {
         /* Update symbolic flags */
         this->afAaa_s(inst, expr, dsttmp, op1, op3);
         this->cfAaa_s(inst, expr, dsttmp, op1, op3);
+
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
@@ -2510,12 +2518,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -2941,12 +2951,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update symbolic flags */
+        this->zfBsf_s(inst, expr, src, op2);
+
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
-        this->zfBsf_s(inst, expr, src, op2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3129,12 +3141,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update symbolic flags */
+        this->zfBsf_s(inst, expr, src, op2); /* same as bsf */
+
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
-        this->zfBsf_s(inst, expr, src, op2); /* same as bsf */
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3206,7 +3220,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
         expr->isTainted = this->taintEngine->taintUnion(dst, src2);
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
@@ -3274,7 +3288,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
@@ -3331,7 +3345,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
@@ -3381,7 +3395,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
         expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
@@ -4857,7 +4871,7 @@ namespace triton {
 
         }
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
@@ -5003,7 +5017,7 @@ namespace triton {
 
         }
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
@@ -5123,7 +5137,7 @@ namespace triton {
 
         }
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
@@ -6099,7 +6113,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         if (undef) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
@@ -7142,7 +7156,7 @@ namespace triton {
 
         }
 
-        /* Update symbolic flags */
+        /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
@@ -7293,12 +7307,14 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
-        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_CF), "Clears carry flag");
         this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_X86_OF), "Clears overflow flag");
         this->pf_s(inst, expr, dst);
         this->sf_s(inst, expr, dst);
         this->zf_s(inst, expr, dst);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10352,6 +10368,7 @@ namespace triton {
         this->cfRcl_s(inst, expr2, node1, op2bis);
         this->ofRol_s(inst, expr2, dst, op2bis); /* Same as ROL */
 
+        /* Tag undefined flags */
         if (op2->evaluate() > 1) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
@@ -10426,6 +10443,7 @@ namespace triton {
         this->ofRcr_s(inst, expr2, dst, op1, op2); /* OF must be set before CF */
         this->cfRcr_s(inst, expr2, dst, node1, op2);
 
+        /* Tag undefined flags */
         if (op2->evaluate() > 1) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
@@ -10548,6 +10566,7 @@ namespace triton {
         this->cfRol_s(inst, expr, dst, op2bis);
         this->ofRol_s(inst, expr, dst, op2bis);
 
+        /* Tag undefined flags */
         if (op2->evaluate() > 1) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
@@ -10616,6 +10635,7 @@ namespace triton {
         this->cfRor_s(inst, expr, dst, op2);
         this->ofRor_s(inst, expr, dst, op2bis);
 
+        /* Tag undefined flags */
         if (op2->evaluate() > 1) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
@@ -10730,6 +10750,7 @@ namespace triton {
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
 
+        /* Tag undefined flags */
         if (op2->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -11548,8 +11569,9 @@ namespace triton {
         auto& src   = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
+        auto op1    = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2    = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
+        auto op2bis = op2;
 
         if (dst.getBitSize() == QWORD_SIZE_BIT)
           op2 = this->astCtxt.bvand(op2, this->astCtxt.bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
@@ -11572,11 +11594,13 @@ namespace triton {
         this->sfShl_s(inst, expr, dst, op2);
         this->zfShl_s(inst, expr, dst, op2);
 
+        /* Tag undefined flags */
         if (op2->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
-        if (op2->evaluate() > dst.getBitSize()) {
+        if (op2bis->evaluate() > dst.getBitSize()) {
+          std::cout << 1 << std::endl;
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         }
 
@@ -11595,9 +11619,10 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1    = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2    = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3    = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3bis = op3;
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11647,6 +11672,7 @@ namespace triton {
         this->sfShld_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
+        /* Tag undefined flags */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -11655,7 +11681,7 @@ namespace triton {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
-        if (op3->evaluate() > dst.getBitSize()) {
+        if (op3bis->evaluate() > dst.getBitSize()) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
@@ -11713,8 +11739,9 @@ namespace triton {
         auto& src   = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-        auto op2 = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
+        auto op1    = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2    = this->astCtxt.zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
+        auto op2bis = op2;
 
         if (dst.getBitSize() == QWORD_SIZE_BIT)
           op2 = this->astCtxt.bvand(op2, this->astCtxt.bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
@@ -11737,11 +11764,12 @@ namespace triton {
         this->sfShl_s(inst, expr, dst, op2); /* Same that shl */
         this->zfShl_s(inst, expr, dst, op2); /* Same that shl */
 
+        /* Tag undefined flags */
         if (op2->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
 
-        if (op2->evaluate() > dst.getBitSize()) {
+        if (op2bis->evaluate() > dst.getBitSize()) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         }
 
@@ -11760,9 +11788,10 @@ namespace triton {
         auto& src2 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1    = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2    = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3    = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3bis = op3;
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
@@ -11812,6 +11841,7 @@ namespace triton {
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
+        /* Tag undefined flags */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -11820,7 +11850,7 @@ namespace triton {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
         }
 
-        if (op3->evaluate() > dst.getBitSize()) {
+        if (op3bis->evaluate() > dst.getBitSize()) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
