@@ -169,8 +169,7 @@ namespace triton {
       AArch64Semantics::AArch64Semantics(triton::arch::Architecture* architecture,
                                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                          triton::engines::taint::TaintEngine* taintEngine,
-                                         triton::modes::Modes& modes,
-                                         triton::ast::AstContext& astCtxt) : modes(modes), astCtxt(astCtxt) {
+                                         triton::ast::AstContext& astCtxt) : astCtxt(astCtxt) {
 
         this->architecture    = architecture;
         this->symbolicEngine  = symbolicEngine;

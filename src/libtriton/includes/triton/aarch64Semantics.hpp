@@ -11,7 +11,6 @@
 #include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
-#include <triton/modes.hpp>
 #include <triton/semanticsInterface.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
@@ -54,9 +53,6 @@ namespace triton {
           //! Taint Engine API
           triton::engines::taint::TaintEngine* taintEngine;
 
-          //! The Modes API
-          triton::modes::Modes& modes;
-
           //! The AST Context API
           triton::ast::AstContext& astCtxt;
 
@@ -65,7 +61,6 @@ namespace triton {
           TRITON_EXPORT AArch64Semantics(triton::arch::Architecture* architecture,
                                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                          triton::engines::taint::TaintEngine* taintEngine,
-                                         triton::modes::Modes& modes,
                                          triton::ast::AstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.

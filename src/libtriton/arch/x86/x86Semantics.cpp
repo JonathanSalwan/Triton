@@ -11600,7 +11600,6 @@ namespace triton {
         }
 
         if (op2bis->evaluate() > dst.getBitSize()) {
-          std::cout << 1 << std::endl;
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_CF));
         }
 
