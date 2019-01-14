@@ -1214,15 +1214,20 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(high, high, result)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1239,15 +1244,20 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(high, high, result) /* yes it's should be LSB, but here it's a trick :-) */
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1263,15 +1273,20 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(low, low, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1287,15 +1302,20 @@ namespace triton {
 
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(high, high, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1319,7 +1339,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.ite(
                         this->astCtxt.bvugt(op2, this->astCtxt.bv(bvSize, bvSize)),
                         this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(1, bvSize)))),
@@ -1328,10 +1348,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1351,7 +1376,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(0, 0,
                         this->astCtxt.bvlshr(
                           op1,
@@ -1364,10 +1389,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1388,7 +1418,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(
                         dst.getBitSize(), dst.getBitSize(),
                         this->astCtxt.bvrol(
@@ -1399,10 +1429,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1422,7 +1457,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(0, 0,
                         this->astCtxt.bvlshr(
                           op1,
@@ -1434,10 +1469,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1458,7 +1498,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, cf),
+                      this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(
                         (dst.getBitSize() * 2)-1, (dst.getBitSize()*2)-1,
                         this->astCtxt.bvror(
@@ -1469,10 +1509,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, cf.getConstRegister(), "Carry flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(cf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(cf.getConstRegister());
+        }
       }
 
 
@@ -1639,14 +1684,20 @@ namespace triton {
                         this->astCtxt.extract(high, high, this->astCtxt.reference(parent)),
                         this->symbolicEngine->getOperandAst(inst, cf)
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeReadRegister(cf.getConstRegister());
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1666,14 +1717,19 @@ namespace triton {
                         this->astCtxt.extract(high, high, this->astCtxt.reference(parent)),
                         this->astCtxt.extract(high-1, high-1, this->astCtxt.reference(parent))
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1695,14 +1751,20 @@ namespace triton {
                         this->astCtxt.extract(high, high, op1),
                         this->symbolicEngine->getOperandAst(inst, cf)
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeReadRegister(cf.getConstRegister());
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1733,14 +1795,19 @@ namespace triton {
                         )
                       ),
                       this->astCtxt.bv(0, 1),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1768,14 +1835,19 @@ namespace triton {
                           this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(2, bvSize)))
                         )
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1808,14 +1880,19 @@ namespace triton {
                         ),
                         this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1838,14 +1915,19 @@ namespace triton {
                         op2,
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.extract(0, 0, this->astCtxt.bvlshr(op1, this->astCtxt.bvsub(this->astCtxt.bv(bvSize, bvSize), this->astCtxt.bv(1, bvSize)))),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1878,14 +1960,19 @@ namespace triton {
                         ),
                         this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
                       ),
-                      this->symbolicEngine->getOperandAst(inst, of)
+                      this->symbolicEngine->getOperandAst(of)
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_OF), "Overflow flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, of.getConstRegister(), "Overflow flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_OF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(of.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(of.getConstRegister());
+        }
       }
 
 
@@ -1984,15 +2071,20 @@ namespace triton {
 
         auto node2 = this->astCtxt.ite(
                        this->astCtxt.equal(this->astCtxt.zx(bvSize - op2->getBitvectorSize(), op2), this->astCtxt.bv(0, bvSize)),
-                       this->symbolicEngine->getOperandAst(inst, pf),
+                       this->symbolicEngine->getOperandAst(pf),
                        node1
                      );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, this->architecture->getRegister(ID_REG_X86_PF), "Parity flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, pf.getConstRegister(), "Parity flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_PF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(pf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(pf.getConstRegister());
+        }
       }
 
 
@@ -2034,15 +2126,20 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op2, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, sf),
+                      this->symbolicEngine->getOperandAst(sf),
                       this->astCtxt.extract(high, high, this->astCtxt.reference(parent))
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, sf.getConstRegister(), "Sign flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(sf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(sf.getConstRegister());
+        }
       }
 
 
@@ -2063,7 +2160,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, sf),
+                      this->symbolicEngine->getOperandAst(sf),
                       this->astCtxt.extract(
                         dst.getBitSize()-1, dst.getBitSize()-1,
                         this->astCtxt.bvrol(
@@ -2074,10 +2171,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, sf.getConstRegister(), "Sign flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(sf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(sf.getConstRegister());
+        }
       }
 
 
@@ -2098,7 +2200,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, sf),
+                      this->symbolicEngine->getOperandAst(sf),
                       this->astCtxt.extract(
                         dst.getBitSize()-1, dst.getBitSize()-1,
                         this->astCtxt.bvror(
@@ -2109,10 +2211,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_SF), "Sign flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, sf.getConstRegister(), "Sign flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_SF), parent->isTainted);
+        if (op3->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(sf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(sf.getConstRegister());
+        }
       }
 
 
@@ -2187,7 +2294,7 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(this->astCtxt.zx(bvSize - op2->getBitvectorSize(), op2), this->astCtxt.bv(0, bvSize)),
-                      this->symbolicEngine->getOperandAst(inst, zf),
+                      this->symbolicEngine->getOperandAst(zf),
                       this->astCtxt.ite(
                         this->astCtxt.equal(
                           this->astCtxt.extract(high, low, this->astCtxt.reference(parent)),
@@ -2199,10 +2306,15 @@ namespace triton {
                     );
 
         /* Create the symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_ZF), "Zero flag");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, zf.getConstRegister(), "Zero flag");
 
-        /* Spread the taint from the parent to the child */
-        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_ZF), parent->isTainted);
+        if (op2->evaluate()) {
+          /* Spread the taint from the parent to the child */
+          expr->isTainted = this->taintEngine->setTaintRegister(zf.getConstRegister(), parent->isTainted);
+        }
+        else {
+          inst.removeWrittenRegister(zf.getConstRegister());
+        }
       }
 
 
