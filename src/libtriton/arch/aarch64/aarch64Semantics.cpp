@@ -169,7 +169,8 @@ namespace triton {
       AArch64Semantics::AArch64Semantics(triton::arch::Architecture* architecture,
                                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                          triton::engines::taint::TaintEngine* taintEngine,
-                                         triton::ast::AstContext& astCtxt) : astCtxt(astCtxt) {
+                                         triton::modes::Modes& modes,
+                                         triton::ast::AstContext& astCtxt) : modes(modes), astCtxt(astCtxt) {
 
         this->architecture    = architecture;
         this->symbolicEngine  = symbolicEngine;
@@ -921,7 +922,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -944,7 +945,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         if (inst.isUpdateFlag() == true) {
           this->cfAdd_s(inst, expr, dst, op1, op2);
           this->nf_s(inst, expr, dst);
@@ -952,7 +953,7 @@ namespace triton {
           this->zf_s(inst, expr, dst);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -975,7 +976,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(pc));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -998,7 +999,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(pc));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1021,7 +1022,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         if (inst.isUpdateFlag() == true) {
           this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_C), "Clears carry flag");
           this->nf_s(inst, expr, dst);
@@ -1029,7 +1030,7 @@ namespace triton {
           this->zf_s(inst, expr, dst);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1052,7 +1053,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1196,13 +1197,13 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         this->cfCcmp_s(inst, expr, src1, op1, op2, op3);
         this->nfCcmp_s(inst, expr, src1, op3);
         this->vfCcmp_s(inst, expr, src1, op1, op2, op3);
         this->zfCcmp_s(inst, expr, src1, op3);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1224,7 +1225,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1356,7 +1357,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1378,13 +1379,13 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         this->cfAdd_s(inst, expr, src1, op1, op2);
         this->nf_s(inst, expr, src1);
         this->vfAdd_s(inst, expr, src1, op1, op2);
         this->zf_s(inst, expr, src1);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1406,13 +1407,13 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         this->cfSub_s(inst, expr, src1, op1, op2);
         this->nf_s(inst, expr, src1);
         this->vfSub_s(inst, expr, src1, op1, op2);
         this->zf_s(inst, expr, src1);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1435,7 +1436,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1456,7 +1457,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1482,7 +1483,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1505,7 +1506,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1528,7 +1529,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1551,7 +1552,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1576,7 +1577,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1594,7 +1595,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1615,7 +1616,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1636,7 +1637,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1654,7 +1655,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1675,7 +1676,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1696,7 +1697,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1758,7 +1759,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1810,7 +1811,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1865,7 +1866,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1920,7 +1921,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -1978,7 +1979,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2036,7 +2037,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2094,7 +2095,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2112,7 +2113,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2136,7 +2137,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2160,7 +2161,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2184,7 +2185,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2208,7 +2209,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2232,7 +2233,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2250,7 +2251,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2274,7 +2275,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2298,7 +2299,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2325,7 +2326,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2352,7 +2353,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2377,7 +2378,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2400,7 +2401,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2418,7 +2419,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2481,7 +2482,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2502,7 +2503,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2520,7 +2521,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2545,7 +2546,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2568,7 +2569,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2589,7 +2590,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2610,13 +2611,13 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
 
       void AArch64Semantics::nop_s(triton::arch::Instruction& inst) {
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2639,7 +2640,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2662,7 +2663,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2689,7 +2690,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2744,7 +2745,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2784,7 +2785,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2816,7 +2817,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2839,7 +2840,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2867,7 +2868,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2894,7 +2895,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2925,7 +2926,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2956,7 +2957,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -2986,7 +2987,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3012,7 +3013,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3030,7 +3031,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3051,7 +3052,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3072,7 +3073,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3132,7 +3133,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3184,7 +3185,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3242,7 +3243,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3300,7 +3301,7 @@ namespace triton {
           expr3->isTainted = this->taintEngine->isTainted(base);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3318,7 +3319,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3342,7 +3343,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3366,7 +3367,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3389,7 +3390,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         if (inst.isUpdateFlag() == true) {
           this->cfSub_s(inst, expr, dst, op1, op2);
           this->nf_s(inst, expr, dst);
@@ -3397,7 +3398,7 @@ namespace triton {
           this->zf_s(inst, expr, dst);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3418,7 +3419,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3439,7 +3440,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3460,7 +3461,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3540,7 +3541,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
 
-        /* Upate symbolic flags */
+        /* Update symbolic flags */
         if (inst.isUpdateFlag() == true) {
           this->clearFlag_s(inst, this->architecture->getRegister(ID_REG_AARCH64_C), "Clears carry flag");
           this->nf_s(inst, expr, src1);
@@ -3548,7 +3549,7 @@ namespace triton {
           this->zf_s(inst, expr, src1);
         }
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3588,7 +3589,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3616,7 +3617,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3643,7 +3644,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3674,7 +3675,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3702,7 +3703,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3733,7 +3734,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(src3));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3763,7 +3764,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3789,7 +3790,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3810,7 +3811,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 
@@ -3831,7 +3832,7 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-        /* Upate the symbolic control flow */
+        /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
 

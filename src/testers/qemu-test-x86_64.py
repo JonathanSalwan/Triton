@@ -44,14 +44,12 @@ def cafter(instruction):
 
     for reg in regs:
 
-        cvalue = Pintool.getCurrentRegisterValue(reg)
-        se     = Triton.getSymbolicRegister(reg)
-
+        se = Triton.getSymbolicRegister(reg)
         if se is None:
             continue
 
         svalue = se.getAst().evaluate()
-        #svalue = Triton.evaluateAstViaZ3(expr)
+        cvalue = Pintool.getCurrentRegisterValue(reg)
 
         # Check register
         if cvalue != svalue:
@@ -63,7 +61,7 @@ def cafter(instruction):
                 'reg':    reg.getName(),
                 'svalue': svalue,
                 'cvalue': cvalue,
-                'expr':   expr
+                'expr':   se.getAst()
             })
 
     if bad:

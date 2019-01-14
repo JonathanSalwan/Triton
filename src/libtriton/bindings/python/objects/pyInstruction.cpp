@@ -174,6 +174,9 @@ Returns the thread id of the instruction.
 - <b>\ref py_OPCODE_page getType(void)</b><br>
 Returns the type of the instruction.
 
+- <b>[\ref py_Register_page, ...] getUndefinedRegisters(void)</b><br>
+Returns a list \ref py_Register_page which represents all implicit and explicit undefined registers.
+
 - <b>[tuple, ...] getWrittenRegisters(void)</b><br>
 Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) outputs.
 
@@ -474,6 +477,25 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_getUndefinedRegisters(PyObject* self, PyObject* noarg) {
+        try {
+          PyObject* ret;
+          triton::uint32 index = 0;
+          const auto& undefinedRegisters = PyInstruction_AsInstruction(self)->getUndefinedRegisters();
+
+          ret = xPyList_New(undefinedRegisters.size());
+          for (auto it = undefinedRegisters.cbegin(); it != undefinedRegisters.cend(); it++) {
+            PyList_SetItem(ret, index++, PyRegister(*it));
+          }
+
+          return ret;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_getWrittenRegisters(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret;
@@ -686,6 +708,7 @@ namespace triton {
         {"getSymbolicExpressions",    Instruction_getSymbolicExpressions,   METH_NOARGS,     ""},
         {"getThreadId",               Instruction_getThreadId,              METH_NOARGS,     ""},
         {"getType",                   Instruction_getType,                  METH_NOARGS,     ""},
+        {"getUndefinedRegisters",     Instruction_getUndefinedRegisters,    METH_NOARGS,     ""},
         {"getWrittenRegisters",       Instruction_getWrittenRegisters,      METH_NOARGS,     ""},
         {"isBranch",                  Instruction_isBranch,                 METH_NOARGS,     ""},
         {"isConditionTaken",          Instruction_isConditionTaken,         METH_NOARGS,     ""},

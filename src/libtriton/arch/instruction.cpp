@@ -67,6 +67,7 @@ namespace triton {
       this->tainted             = other.tainted;
       this->tid                 = other.tid;
       this->type                = other.type;
+      this->undefinedRegisters  = other.undefinedRegisters;
       this->updateFlag          = other.updateFlag;
       this->writeBack           = other.writeBack;
       this->writtenRegisters    = other.writtenRegisters;
@@ -166,6 +167,11 @@ namespace triton {
     }
 
 
+    std::set<triton::arch::Register>& Instruction::getUndefinedRegisters(void) {
+      return this->undefinedRegisters;
+    }
+
+
     void Instruction::setLoadAccess(const triton::arch::MemoryAccess& mem, const triton::ast::SharedAbstractNode& node) {
       this->loadAccess.insert(std::make_pair(mem, node));
     }
@@ -248,6 +254,16 @@ namespace triton {
         else
           ++it;
       }
+    }
+
+
+    void Instruction::setUndefinedRegister(const triton::arch::Register& reg) {
+      this->undefinedRegisters.insert(reg);
+    }
+
+
+    void Instruction::removeUndefinedRegister(const triton::arch::Register& reg) {
+      this->undefinedRegisters.erase(reg);
     }
 
 

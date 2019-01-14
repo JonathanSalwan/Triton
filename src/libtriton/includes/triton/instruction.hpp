@@ -85,6 +85,9 @@ namespace triton {
         //! Implicit and explicit immediate inputs (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::Immediate, triton::ast::SharedAbstractNode>> readImmediates;
 
+        //! Implicit and explicit undefined registers. This field is set at the semantics level.
+        std::set<triton::arch::Register> undefinedRegisters;
+
         //! True if this instruction is a branch. This field is set at the disassembly level.
         bool branch;
 
@@ -171,6 +174,9 @@ namespace triton {
         //! Returns the list of all implicit and explicit immediate inputs (read)
         TRITON_EXPORT std::set<std::pair<triton::arch::Immediate, triton::ast::SharedAbstractNode>>& getReadImmediates(void);
 
+        //! Returns the list of all implicit and explicit undefined registers.
+        TRITON_EXPORT std::set<triton::arch::Register>& getUndefinedRegisters(void);
+
         //! Sets the opcode of the instruction.
         TRITON_EXPORT void setOpcode(const triton::uint8* opcode, triton::uint32 size);
 
@@ -206,6 +212,12 @@ namespace triton {
 
         //! Removes a read immediate.
         TRITON_EXPORT void removeReadImmediate(const triton::arch::Immediate& imm);
+
+        //! Sets an undefined register.
+        TRITON_EXPORT void setUndefinedRegister(const triton::arch::Register& reg);
+
+        //! Removes an undefined register.
+        TRITON_EXPORT void removeUndefinedRegister(const triton::arch::Register& reg);
 
         //! Sets the size of the instruction.
         TRITON_EXPORT void setSize(triton::uint32 size);

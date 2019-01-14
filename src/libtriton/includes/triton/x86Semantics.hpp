@@ -11,6 +11,7 @@
 #include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
+#include <triton/modes.hpp>
 #include <triton/semanticsInterface.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
@@ -53,6 +54,10 @@ namespace triton {
           //! Taint Engine API
           triton::engines::taint::TaintEngine* taintEngine;
 
+          //! The Modes API
+          triton::modes::Modes& modes;
+
+          //! The AST Context API
           triton::ast::AstContext& astCtxt;
 
         public:
@@ -60,6 +65,7 @@ namespace triton {
           TRITON_EXPORT x86Semantics(triton::arch::Architecture* architecture,
                                      triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                      triton::engines::taint::TaintEngine* taintEngine,
+                                     triton::modes::Modes& modes,
                                      triton::ast::AstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
@@ -79,7 +85,7 @@ namespace triton {
           void setFlag_s(triton::arch::Instruction& inst, const triton::arch::Register& flag, std::string comment="");
 
           //! Sets a node as undefined.
-          void setUndefined_s(const triton::arch::Register& reg, std::string comment="");
+          void setUndefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg, const std::string& comment);
 
           //! Control flow semantics. Used to represent IP.
           void controlFlow_s(triton::arch::Instruction& inst);
