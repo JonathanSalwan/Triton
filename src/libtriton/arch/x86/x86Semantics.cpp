@@ -710,13 +710,12 @@ namespace triton {
 
 
       void x86Semantics::undefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
-        /* Concretize the node if the CONCRETIZE_UNDEFINED_NODE is enabled */
-        if (this->modes.isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_NODE)) {
+        if (this->modes.isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS)) {
           this->symbolicEngine->concretizeRegister(reg);
         }
-
-        /* Tell that the instruction defines a register as undefined */
+        /* Tell that the instruction defines a register as undefined and untaint */
         inst.setUndefinedRegister(reg);
+        this->taintEngine->setTaintRegister(reg, triton::engines::taint::UNTAINTED);
       }
 
 

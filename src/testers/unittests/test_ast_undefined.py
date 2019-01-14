@@ -17,7 +17,7 @@ class TestASTUndefined(unittest.TestCase):
 
 
     def test_undefined_on(self):
-        self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_NODE, True)
+        self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_REGISTERS, True)
 
         trace = [
             "\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
@@ -42,7 +42,7 @@ class TestASTUndefined(unittest.TestCase):
 
 
     def test_undefined_off(self):
-        self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_NODE, False)
+        self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_REGISTERS, False)
 
         trace = [
             "\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
