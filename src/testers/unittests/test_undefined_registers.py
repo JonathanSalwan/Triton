@@ -1,14 +1,14 @@
 #!/usr/bin/env python2
 # coding: utf-8
-"""Test architectures."""
+"""Test the undefined register behavior."""
 
 import unittest
 from triton import *
 
 
-class TestASTUndefined(unittest.TestCase):
+class TestUndefinedRegisters(unittest.TestCase):
 
-    """Testing the undefined node."""
+    """Testing the undefined register behavior."""
 
     def setUp(self):
         """Define the arch."""
@@ -64,4 +64,3 @@ class TestASTUndefined(unittest.TestCase):
         self.assertEqual(REG.X86_64.ZF in self.ctx.getSymbolicRegisters(), True)
         self.assertEqual(REG.X86_64.AF in self.ctx.getSymbolicRegisters(), True)
         self.assertEqual(REG.X86_64.PF in self.ctx.getSymbolicRegisters(), True)
-

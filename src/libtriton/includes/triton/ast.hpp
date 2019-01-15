@@ -521,6 +521,15 @@ namespace triton {
     };
 
 
+    //! `(iff <expr1> <expr2>)`
+    class IffNode : public AbstractNode {
+      public:
+        TRITON_EXPORT IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
     //! `(ite <ifExpr> <thenExpr> <elseExpr>)`
     class IteNode : public AbstractNode {
       public:

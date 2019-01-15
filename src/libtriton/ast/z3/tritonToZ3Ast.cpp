@@ -186,6 +186,13 @@ namespace triton {
           return to_expr(this->context, Z3_mk_extract(this->context, hv, lv, value));
         }
 
+        case IFF_NODE: {
+          z3::expr op1 = this->convert(node->getChildren()[0]);
+          z3::expr op2 = this->convert(node->getChildren()[1]);
+
+          return to_expr(this->context, Z3_mk_iff(this->context, op1, op2));
+        }
+
         case ITE_NODE: {
           z3::expr op1 = this->convert(node->getChildren()[0]); // condition
           z3::expr op2 = this->convert(node->getChildren()[1]); // if true

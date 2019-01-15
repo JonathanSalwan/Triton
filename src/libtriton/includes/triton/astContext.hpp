@@ -208,6 +208,9 @@ namespace triton {
         //! AST C++ API - extract node builder
         TRITON_EXPORT SharedAbstractNode extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
 
+        //! AST C++ API - iff node builder
+        TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+
         //! AST C++ API - ite node builder
         TRITON_EXPORT SharedAbstractNode ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);
 

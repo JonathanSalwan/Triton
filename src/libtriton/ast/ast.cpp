@@ -93,6 +93,7 @@ namespace triton {
         case BVULT_NODE:
         case DISTINCT_NODE:
         case EQUAL_NODE:
+        case IFF_NODE:
         case LAND_NODE:
         case LNOT_NODE:
         case LOR_NODE:
@@ -1874,6 +1875,52 @@ namespace triton {
     }
 
 
+    /* ====== iff */
+
+
+    IffNode::IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(IFF_NODE, expr1->getContext()) {
+      this->addChild(expr1);
+      this->addChild(expr2);
+    }
+
+
+    void IffNode::init(void) {
+      if (this->children.size() < 2)
+        throw triton::exceptions::Ast("IffNode::init(): Must take at least two children.");
+
+      if (this->children[0]->isLogical() == false)
+        throw triton::exceptions::Ast("IffNode::init(): Must take a logical node as first argument.");
+
+      if (this->children[1]->isLogical() == false)
+        throw triton::exceptions::Ast("IffNode::init(): Must take a logical node as second argument.");
+
+      /* Init attributes */
+      triton::uint512 P = this->children[0]->evaluate();
+      triton::uint512 Q = this->children[1]->evaluate();
+
+      this->size = 1;
+      this->eval = (P && Q) || (!P && !Q);
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 IffNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->type, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
+      return triton::ast::rotl(h, deep);
+    }
+
+
     /* ====== ite */
 
 
@@ -2405,6 +2452,7 @@ namespace triton {
         case DISTINCT_NODE:             newNode = std::make_shared<DistinctNode>(*reinterpret_cast<DistinctNode*>(node)); break;
         case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node)); break;
         case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node)); break;
+        case IFF_NODE:                  newNode = std::make_shared<IffNode>(*reinterpret_cast<IffNode*>(node)); break;
         case ITE_NODE:                  newNode = std::make_shared<IteNode>(*reinterpret_cast<IteNode*>(node)); break;
         case LAND_NODE:                 newNode = std::make_shared<LandNode>(*reinterpret_cast<LandNode*>(node)); break;
         case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node)); break;

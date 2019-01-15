@@ -144,6 +144,7 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.concat,
             self.astCtxt.distinct,
             self.astCtxt.equal,
+            self.astCtxt.iff,
             self.astCtxt.land,
             self.astCtxt.lor,
         ]
@@ -157,7 +158,9 @@ class TestAstConversion(unittest.TestCase):
                 if op == self.astCtxt.concat:
                     n = op([self.v1, self.v2])
                 elif op in (self.astCtxt.land, self.astCtxt.lor):
-                    n = op([self.v1 != 0, self.v2 != 0])
+                    n = op([self.v1 != cv1, self.v2 != cv2])
+                elif op == self.astCtxt.iff:
+                    n = op(self.v1 > cv1, self.v2 < cv2)
                 else:
                     n = op(self.v1, self.v2)
                 self.assertEqual(n.evaluate(),
@@ -272,6 +275,7 @@ class TestAstConversion(unittest.TestCase):
             (self.astCtxt.lnot, 1),
             (self.astCtxt.land, 2),
             (self.astCtxt.lor, 2),
+            (self.astCtxt.iff, 2),
         ]
         self.to_bool = [
             (self.astCtxt.bvsge, 2),

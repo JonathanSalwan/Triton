@@ -72,6 +72,7 @@ class TestAstRepresentation(unittest.TestCase):
             (self.astCtxt.extract(4, 2, self.v1),               "((_ extract 4 2) SymVar_0)",                                   "((SymVar_0 >> 2) & 0x7)"),
             (self.astCtxt.extract(6, 0, self.v1),               "((_ extract 6 0) SymVar_0)",                                   "(SymVar_0 & 0x7F)"),
             (self.astCtxt.extract(7, 0, self.v1),               "SymVar_0",                                                     "SymVar_0"),
+            (self.astCtxt.iff(self.v1 == 1, self.v2 == 2),      "(iff (= SymVar_0 (_ bv1 8)) (= SymVar_1 (_ bv2 8)))",          "((SymVar_0 == 0x1) and (SymVar_1 == 0x2)) or (not (SymVar_0 == 0x1) and not (SymVar_1 == 0x2))"),
             (self.astCtxt.ite(self.v1 == 1, self.v1, self.v2),  "(ite (= SymVar_0 (_ bv1 8)) SymVar_0 SymVar_1)",               "(SymVar_0 if (SymVar_0 == 0x1) else SymVar_1)"),
             (self.astCtxt.land([self.v1 == 1, self.v2 == 2]),   "(and (= SymVar_0 (_ bv1 8)) (= SymVar_1 (_ bv2 8)))",          "((SymVar_0 == 0x1) and (SymVar_1 == 0x2))"),
             (self.astCtxt.let("alias", self.v1, self.v2),       "(let ((alias SymVar_0)) SymVar_1)",                            "SymVar_1"),

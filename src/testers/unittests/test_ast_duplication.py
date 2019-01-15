@@ -61,6 +61,7 @@ class TestAstDuplication(unittest.TestCase):
             self.astCtxt.concat([self.v1, self.v2]),
             self.astCtxt.distinct(self.v1, self.v2),
             self.astCtxt.equal(self.v1, self.v2),
+            self.astCtxt.iff(self.v1 == self.v1, self.v2 == self.v1),
             self.astCtxt.extract(4, 2, self.v1),
             self.astCtxt.extract(7, 0, self.v1),
             self.astCtxt.ite(self.v1 == 2, self.v1, self.v2),

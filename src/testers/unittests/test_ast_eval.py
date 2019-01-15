@@ -802,6 +802,16 @@ class TestAstEval(unittest.TestCase):
         ]
         self.check_ast(tests)
 
+    def test_iff(self):
+        """Check iff operations."""
+        tests = [
+            self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8)), self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8))),
+            self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8)), self.astCtxt.equal(self.astCtxt.bv(2, 8), self.astCtxt.bv(1, 8))),
+            self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(2, 8)), self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8))),
+            self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(2, 8)), self.astCtxt.equal(self.astCtxt.bv(2, 8), self.astCtxt.bv(1, 8))),
+        ]
+        self.check_ast(tests)
+
     def test_reference(self):
         """Check evaluation of reference node after variable update."""
         self.sv1 = self.Triton.newSymbolicVariable(8)

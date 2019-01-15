@@ -401,6 +401,10 @@ e.g: `(= expr1 epxr2)`.
 Creates an `extract` node. The `high` and `low` fields represent the bits position.<br>
 e.g: `((_ extract high low) expr1)`.
 
+- <b>\ref py_AstNode_page iff(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+Creates an `iff` node (if and only if).<br>
+e.g: `(iff expr1 expr2)`.
+
 - <b>\ref py_AstNode_page ite(\ref py_AstNode_page ifExpr, \ref py_AstNode_page thenExpr, \ref py_AstNode_page elseExpr)</b><br>
 Creates an `ite` node (if-then-else node).<br>
 e.g: `(ite ifExpr thenExpr elseExpr)`.
@@ -1268,6 +1272,28 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_iff(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "iff(): expected a AstNode as first argument");
+
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "iff(): expected a AstNode as second argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->iff(PyAstNode_AsAstNode(op1), PyAstNode_AsAstNode(op2)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_ite(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1508,6 +1534,7 @@ namespace triton {
         {"duplicate",     AstContext_duplicate,       METH_O,           ""},
         {"equal",         AstContext_equal,           METH_VARARGS,     ""},
         {"extract",       AstContext_extract,         METH_VARARGS,     ""},
+        {"iff",           AstContext_iff,             METH_VARARGS,     ""},
         {"ite",           AstContext_ite,             METH_VARARGS,     ""},
         {"land",          AstContext_land,            METH_O,           ""},
         {"let",           AstContext_let,             METH_VARARGS,     ""},
