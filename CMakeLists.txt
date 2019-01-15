@@ -16,6 +16,7 @@ option(INCBUILD "Increment the build number" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
+option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable generation of triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
 option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
 
