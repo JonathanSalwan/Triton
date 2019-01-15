@@ -7,6 +7,8 @@
 
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicExpression.hpp>
+#include <triton/symbolicVariable.hpp>
 #include <triton/tritonToZ3Ast.hpp>
 
 
@@ -14,12 +16,8 @@
 namespace triton {
   namespace ast {
 
-    TritonToZ3Ast::TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval)
+    TritonToZ3Ast::TritonToZ3Ast(bool eval)
       : context() {
-      if (symbolicEngine == nullptr)
-        throw triton::exceptions::AstTranslations("TritonToZ3Ast::TritonToZ3Ast(): The symbolicEngine API cannot be null.");
-
-      this->symbolicEngine = symbolicEngine;
       this->isEval = eval;
     }
 

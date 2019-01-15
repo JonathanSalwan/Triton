@@ -7,20 +7,17 @@
 
 #include <list>
 
+#include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/z3ToTritonAst.hpp>
-#include <triton/astContext.hpp>
 
 
 
 namespace triton {
   namespace ast {
 
-    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, AstContext& astCtxt)
-      : symbolicEngine(symbolicEngine),
-        astCtxt(astCtxt) {
-      if (symbolicEngine == nullptr)
-        throw triton::exceptions::AstTranslations("Z3ToTritonAst::Z3ToTritonAst(): The symbolicEngine API cannot be null.");
+    Z3ToTritonAst::Z3ToTritonAst(AstContext& astCtxt)
+      : astCtxt(astCtxt) {
     }
 
 

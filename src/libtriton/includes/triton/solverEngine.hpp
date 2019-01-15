@@ -18,7 +18,6 @@
 #include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
-#include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 #ifdef Z3_INTERFACE
   #include <triton/z3Solver.hpp>
@@ -50,9 +49,6 @@ namespace triton {
       /*! \interface SolverEngine
           \brief This class is used to interface with solvers */
       class SolverEngine {
-        private:
-          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
-
         protected:
           //! The kind of the current solver used.
           triton::engines::solver::solver_e kind;
@@ -62,7 +58,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
+          TRITON_EXPORT SolverEngine();
 
           //! Returns the kind of solver as triton::engines::solver::solver_e.
           TRITON_EXPORT triton::engines::solver::solver_e getSolver(void) const;

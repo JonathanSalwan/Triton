@@ -16,7 +16,6 @@
 #include <triton/dllexport.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
-#include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -45,19 +44,9 @@ namespace triton {
       //! \class Z3Solver
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
-        private:
-          //! Symbolic Engine API
-          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
-
         public:
           //! Constructor.
-          TRITON_EXPORT Z3Solver(triton::engines::symbolic::SymbolicEngine* symbolicEngine);
-
-          //! Constructor by copy.
-          TRITON_EXPORT Z3Solver(const Z3Solver& other);
-
-          //! Operator.
-          TRITON_EXPORT Z3Solver& operator=(const Z3Solver& other);
+          TRITON_EXPORT Z3Solver();
 
           //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model
