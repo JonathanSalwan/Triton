@@ -64,6 +64,7 @@ The AST_NODE namespace contains all kinds of node.
 - **AST_NODE.EQUAL**
 - **AST_NODE.EXTRACT**
 - **AST_NODE.INVALID**
+- **AST_NODE.IFF**
 - **AST_NODE.ITE**
 - **AST_NODE.LAND**
 - **AST_NODE.LET**
@@ -123,6 +124,7 @@ namespace triton {
         xPyDict_SetItemString(astNodeDict, "EQUAL",             PyLong_FromUint32(triton::ast::EQUAL_NODE));
         xPyDict_SetItemString(astNodeDict, "EXTRACT",           PyLong_FromUint32(triton::ast::EXTRACT_NODE));
         xPyDict_SetItemString(astNodeDict, "INVALID",           PyLong_FromUint32(triton::ast::INVALID_NODE));
+        xPyDict_SetItemString(astNodeDict, "IFF",               PyLong_FromUint32(triton::ast::IFF_NODE));
         xPyDict_SetItemString(astNodeDict, "ITE",               PyLong_FromUint32(triton::ast::ITE_NODE));
         xPyDict_SetItemString(astNodeDict, "LAND",              PyLong_FromUint32(triton::ast::LAND_NODE));
         xPyDict_SetItemString(astNodeDict, "LET",               PyLong_FromUint32(triton::ast::LET_NODE));
