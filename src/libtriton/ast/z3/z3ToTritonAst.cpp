@@ -405,7 +405,7 @@ namespace triton {
           std::string name = function.name().str();
 
           node = this->astCtxt.getVariableNode(name);
-          if (nullptr)
+          if (node == nullptr)
             node = this->astCtxt.string(name);
 
           break;
