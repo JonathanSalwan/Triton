@@ -5,6 +5,7 @@ except ImportError:
 
 import re
 import os
+
 from collections import OrderedDict
 from function import Function
 from glob import glob
@@ -12,28 +13,20 @@ from glob import glob
 OBJECT_PREFIX = 'o'
 NAMESPACE_PREFIX = 'n'
 
-reg_module_str = '''
-class REG:
-
-    X86 = X86_class
-    X86_64 = X86_64_class
-
-'''
-
-list_pattern = r'\[(.*?)(?:,(?: ?...)?)?\]'
-type_pattern = r'(?P<type>List\[.*?\]|\w+)'
-
-obj_doc_re = re.compile(r'-\s<b>(?P<sig>.*?)<\/b><br>\r?\n(?P<desc>.*?)\r?\n\r?\n', flags=re.DOTALL)
-name_doc_pattern = r'- \*\*{namespace}\.(?P<member>.*?)\*\*'
-ref_re = re.compile(r'\\ref\spy_(.*?)_page')
-sig_re = re.compile(r'(?P<return>{}) (?P<name>\w+)\s?\((?P<args>.*?)\)'.format(type_pattern))
-list_re = re.compile(list_pattern)
-
-obj_name_re = re.compile(r'py(\w+)\.cpp')
+list_pattern      = r'\[(.*?)(?:,(?: ?...)?)?\]'
+type_pattern      = r'(?P<type>List\[.*?\]|\w+)'
+obj_doc_re        = re.compile(r'-\s<b>(?P<sig>.*?)<\/b><br>\r?\n(?P<desc>.*?)\r?\n\r?\n', flags=re.DOTALL)
+name_doc_pattern  = r'- \*\*{namespace}\.(?P<member>.*?)\*\*'
+ref_re            = re.compile(r'\\ref\spy_(.*?)_page')
+sig_re            = re.compile(r'(?P<return>{}) (?P<name>\w+)\s?\((?P<args>.*?)\)'.format(type_pattern))
+list_re           = re.compile(list_pattern)
+obj_name_re       = re.compile(r'py(\w+)\.cpp')
 namespace_name_re = re.compile(r'\\page py_(.*?)_page')
+
 
 def sub_ref(match):
     return match.group(1)
+
 
 def sub_types(s):
     # type: (str) -> str
@@ -44,9 +37,10 @@ def sub_types(s):
         ('function', 'Callable'),
         ('tuple', 'Tuple'),
     ]
+
     for to_repl, repl in replacements:
         s = re.sub(to_repl, repl, s)
-    
+
     def sub_list(match):
         type_str = match.group(1)
         if ',' in type_str:
@@ -56,24 +50,27 @@ def sub_types(s):
     s = list_re.sub(sub_list, s)
     return s
 
+
 def gen_function(sig, desc):
     # type: (str, str) -> Optional[Function]
-    dbg = False and 'land' in sig
-    sig = sub_types(sig)
+    dbg       = False and 'land' in sig
+    sig       = sub_types(sig)
     sig_match = sig_re.search(sig)
+
     if not sig_match:
         print("error: could not match signature for\n '{}'".format(sig))
         print("pattern: {}".format(sig_re.pattern))
         return None
-    
+
     # naming a function string... noice
     func_name = sig_match.group('name')
     if func_name == 'str':
         func_name = 'string'
-    
+
     if dbg:
         for i, g in enumerate(sig_match.groups()):
             print('group {}: {}'.format(i, g))
+
     args_str = sig_match.group('args')
     args = OrderedDict() # type: dict
     for arg in args_str.split(','):
@@ -94,13 +91,14 @@ def gen_function(sig, desc):
                     arg_name = 'args'
             else:
                 arg_name = arg_words[1]
-            
+
             if arg_name in args:
                 print("error: argument name not unique\n '{}', arg_name '{}'".format(sig, arg_name))
                 return None
             args[arg_name] = arg_type
-    
+
     return Function(func_name, args, sig_match.group('return'), desc)
+
 
 def gen_module_for_object(classname, input_str):
     # type: (str, str) -> str
@@ -121,18 +119,18 @@ def gen_module_for_object(classname, input_str):
             funcs.append(func)
         else:
             print('... in module {}'.format(classname))
-    
-    # generate 
+
+    # generate
     autogen_str = '''
 class {classname}:
     def __init__(self, *args, **kargs):
         self.org = triton.{classname}(*args, **kargs)
 
-
     {functions}
-    '''.format(classname=classname, functions='\n'.join([str(f) for f in funcs]))
+'''.format(classname=classname, functions='\n'.join([str(f) for f in funcs]))
 
     return autogen_str
+
 
 def gen_module_for_namespace(classname, input_str):
     # type: (str, str) -> str
@@ -149,17 +147,17 @@ def gen_module_for_namespace(classname, input_str):
         member = '    {member} = triton.{namespace}.{member}'.format(
             member = match.group('member'), namespace=classname)
         members.append(member)
-    
+
     if not members:
         print("warning: empty namespace {}".format(classname))
         members.append('    pass')
-    
-    # generate 
+
+    # generate
     autogen_str = '''
 class {classname}:
 
 {members}
-    '''.format(classname=classname, members='\n'.join(members))
+'''.format(classname=classname, members='\n'.join(members))
 
     return autogen_str
 
@@ -167,33 +165,62 @@ def gen_reg_module_str(src_dir):
     # type: (str) -> str
     spec_path = os.path.join(src_dir, 'libtriton/includes/triton/x86.spec')
     with open(spec_path, 'r') as f:
-        reg_data = f.read()
-    
-    regs = []
+        x86_reg_data = f.read()
+
+    spec_path = os.path.join(src_dir, 'libtriton/includes/triton/aarch64.spec')
+    with open(spec_path, 'r') as f:
+        aarch64_reg_data = f.read()
+
+    x86_regs = []
     reg_spec_pattern = r'REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?(?P<x86>false|true)\)'
-    for match in re.finditer(reg_spec_pattern, reg_data):
-        regs.append((match.group('name'), match.group('x86') == 'true'))
-    
+    for match in re.finditer(reg_spec_pattern, x86_reg_data):
+        x86_regs.append((match.group('name'), match.group('x86') == 'true'))
+
+    aarch64_regs = []
+    reg_spec_pattern = r'REG_SPEC(_NO_CAPSTONE)?\((?P<name>.*?),.*?\)'
+    for match in re.finditer(reg_spec_pattern, aarch64_reg_data):
+        aarch64_regs.append(match.group('name'))
+
+    if aarch64_regs[0] == 'UPPER_NAME':
+        aarch64_regs = aarch64_regs[1:]
+
     class_str = '''
 class {classname}:
 
-{members}
+{members}'''
+
+    reg_module_str = '''
+class REG:
+
+    AARCH64 = AARCH64_class
+    X86 = X86_class
+    X86_64 = X86_64_class
+
 '''
-    x86_regs = []
-    x86_64_regs = []
-    for i, reg in enumerate(regs):
+
+    enum_x86_regs = []
+    enum_x86_64_regs = []
+    enum_aarch64_regs = []
+
+    for i, reg in enumerate(x86_regs):
         reg_name, is_x86 = reg
         member_str = '    {} = {}'.format(reg_name, i)
         if is_x86:
-            x86_regs.append(member_str)
-        x86_64_regs.append(member_str)
+            enum_x86_regs.append(member_str)
+        enum_x86_64_regs.append(member_str)
 
-    mod_str = '{x86_class}\n\n{x86_64_class}\n\n{reg_class}'.format(
+    for i, reg in enumerate(aarch64_regs):
+        member_str = '    {} = {}'.format(reg, i)
+        enum_aarch64_regs.append(member_str)
+
+    mod_str = '{aarch64_class}\n\n{x86_class}\n\n{x86_64_class}\n\n{reg_class}'.format(
         reg_class=reg_module_str,
-        x86_class=class_str.format(classname='X86_class', members='\n'.join(x86_regs)),
-        x86_64_class=class_str.format(classname='X86_64_class', members='\n'.join(x86_64_regs)))
+        x86_class=class_str.format(classname='X86_class', members='\n'.join(enum_x86_regs)),
+        x86_64_class=class_str.format(classname='X86_64_class', members='\n'.join(enum_x86_64_regs)),
+        aarch64_class=class_str.format(classname='AARCH64_class', members='\n'.join(enum_aarch64_regs)))
 
     return mod_str
+
 
 def get_objects(object_dir):
     # type: (str) -> List[Tuple[str, str]]
@@ -242,7 +269,7 @@ import triton
 {modules}
 
 raise ImportError
-    """.format(modules='\n\n'.join(modules))
+""".format(modules='\n\n'.join(modules))
     return mod_str
 
 
@@ -255,16 +282,16 @@ def main():
     out_dir = os.path.join(this_dir if len(os.sys.argv) < 2 else os.sys.argv[1], 'triton_autocomplete')
     if not os.path.exists(out_dir):
         os.mkdir(out_dir)
-    
+
     # collect code for modules here
     modules = [] # type: List[str]
-    
+
     # get names/paths for objects
     objs = get_objects(object_dir)
 
     # get names/paths for namespaces
     names = get_namespaces(namespace_dir)
-    
+
     # generate modules for objects
     for obj_path, obj_name in objs:
         # read input file
@@ -280,20 +307,20 @@ def main():
         # read input file
         with open(name_path, 'r') as f:
             input_str = f.read()
-            
+
         # generate module str
         if name_name == 'REG':
             mod_str = gen_reg_module_str(src_dir)
         else:
             mod_str = gen_module_for_namespace(name_name, input_str)
         modules.append(mod_str)
-    
+
     # generate and create final __init__ file
     init_str = gen_init_file(modules)
     with open(os.path.join(out_dir, '__init__.py'), 'w') as f:
         f.write(init_str)
-    
-    print('done')
+
+    print('autocomplete generation done')
 
 
 if __name__ == '__main__':
