@@ -400,6 +400,18 @@ namespace triton {
           break;
         }
 
+        /* TRUE */
+        case Z3_OP_TRUE: {
+          node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvtrue());
+          break;
+        }
+
+        /* FALSE */
+        case Z3_OP_FALSE: {
+          node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvfalse());
+          break;
+        }
+
         /* Variable or string */
         case Z3_OP_UNINTERPRETED: {
           std::string name = function.name().str();
