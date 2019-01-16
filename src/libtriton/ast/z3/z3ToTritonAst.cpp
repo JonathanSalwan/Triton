@@ -389,14 +389,14 @@ namespace triton {
         case Z3_OP_ROTATE_LEFT: {
           if (expr.num_args() != 1)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_ROTATE_LEFT must contain one argument.");
-          node = this->astCtxt.bvrol(expr.hi(), this->convert(expr.arg(0)));
+          node = this->astCtxt.bvrol(this->convert(expr.arg(0)), expr.hi());
           break;
         }
 
         case Z3_OP_ROTATE_RIGHT: {
           if (expr.num_args() != 1)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_ROTATE_RIGHT must contain one argument.");
-          node = this->astCtxt.bvror(expr.hi(), this->convert(expr.arg(0)));
+          node = this->astCtxt.bvror(this->convert(expr.arg(0)), expr.hi());
           break;
         }
 

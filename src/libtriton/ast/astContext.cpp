@@ -158,8 +158,8 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bvrol(triton::uint32 rot, const SharedAbstractNode& expr) {
-      SharedAbstractNode node = std::make_shared<BvrolNode>(rot, expr);
+    SharedAbstractNode AstContext::bvrol(const SharedAbstractNode& expr, triton::uint32 rot) {
+      SharedAbstractNode node = std::make_shared<BvrolNode>(expr, rot);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -167,7 +167,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bvrol(const SharedAbstractNode& rot, const SharedAbstractNode& expr) {
+    SharedAbstractNode AstContext::bvrol(const SharedAbstractNode& expr, const SharedAbstractNode& rot) {
       /*
        * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
        * in order to make index rotation symbolic.
@@ -185,7 +185,7 @@ namespace triton {
       }
 
       /* Otherwise, we concretize the index rotation */
-      SharedAbstractNode node = std::make_shared<BvrolNode>(this->decimal(rot->evaluate()), expr);
+      SharedAbstractNode node = std::make_shared<BvrolNode>(expr, this->decimal(rot->evaluate()));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -194,8 +194,8 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bvror(triton::uint32 rot, const SharedAbstractNode& expr) {
-      SharedAbstractNode node = std::make_shared<BvrorNode>(rot, expr);
+    SharedAbstractNode AstContext::bvror(const SharedAbstractNode& expr, triton::uint32 rot) {
+      SharedAbstractNode node = std::make_shared<BvrorNode>(expr, rot);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -203,7 +203,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bvror(const SharedAbstractNode& rot, const SharedAbstractNode& expr) {
+    SharedAbstractNode AstContext::bvror(const SharedAbstractNode& expr, const SharedAbstractNode& rot) {
       /*
        * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
        * in order to make index rotation symbolic.
@@ -221,7 +221,7 @@ namespace triton {
       }
 
       /* Otherwise, we concretize the index rotation */
-      SharedAbstractNode node = std::make_shared<BvrorNode>(this->decimal(rot->evaluate()), expr);
+      SharedAbstractNode node = std::make_shared<BvrorNode>(expr, this->decimal(rot->evaluate()));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();

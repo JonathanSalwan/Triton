@@ -158,14 +158,14 @@ namespace triton {
 
       /* bvrol representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
-        stream << "((_ rotate_left " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+        stream << "((_ rotate_left " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
         return stream;
       }
 
 
       /* bvror representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
-        stream << "((_ rotate_right " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+        stream << "((_ rotate_right " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
         return stream;
       }
 

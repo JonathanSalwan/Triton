@@ -111,16 +111,16 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode bvor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - bvrol node builder
-        TRITON_EXPORT SharedAbstractNode bvrol(triton::uint32 rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& expr, triton::uint32 rot);
 
         //! AST C++ API - bvrol node builder
-        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
 
         //! AST C++ API - bvror node builder
-        TRITON_EXPORT SharedAbstractNode bvror(triton::uint32 rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& expr, triton::uint32 rot);
 
         //! AST C++ API - bvror node builder
-        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
 
         //! AST C++ API - bvsdiv node builder
         TRITON_EXPORT SharedAbstractNode bvsdiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);

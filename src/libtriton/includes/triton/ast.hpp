@@ -264,8 +264,8 @@ namespace triton {
     //! `((_ rotate_left rot) <expr>)` node
     class BvrolNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvrolNode(triton::uint32 rot, const SharedAbstractNode& expr);
-        TRITON_EXPORT BvrolNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot);
+        TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -274,8 +274,8 @@ namespace triton {
     //! `((_ rotate_right rot) <expr>)` node
     class BvrorNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvrorNode(triton::uint32 rot, const SharedAbstractNode& expr);
-        TRITON_EXPORT BvrorNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot);
+        TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };

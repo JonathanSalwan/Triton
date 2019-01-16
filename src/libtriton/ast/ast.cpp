@@ -694,13 +694,13 @@ namespace triton {
     /* ====== bvrol */
 
 
-    BvrolNode::BvrolNode(triton::uint32 rot, const SharedAbstractNode& expr): BvrolNode(expr->getContext().decimal(rot), expr) {
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext().decimal(rot)) {
     }
 
 
-    BvrolNode::BvrolNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROL_NODE, rot->getContext()) {
-      this->addChild(rot);
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot): AbstractNode(BVROL_NODE, expr->getContext()) {
       this->addChild(expr);
+      this->addChild(rot);
     }
 
 
@@ -711,14 +711,14 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrolNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
+      if (this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
-      value = this->children[1]->evaluate();
+      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
+      this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
 
@@ -745,13 +745,13 @@ namespace triton {
     /* ====== bvror */
 
 
-    BvrorNode::BvrorNode(triton::uint32 rot, const SharedAbstractNode& expr): BvrorNode(expr->getContext().decimal(rot), expr) {
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext().decimal(rot)) {
     }
 
 
-    BvrorNode::BvrorNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROR_NODE, expr->getContext()) {
-      this->addChild(rot);
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot): AbstractNode(BVROR_NODE, expr->getContext()) {
       this->addChild(expr);
+      this->addChild(rot);
     }
 
 
@@ -762,14 +762,14 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrorNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
+      if (this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
-      value = this->children[1]->evaluate();
+      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
+      this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
 

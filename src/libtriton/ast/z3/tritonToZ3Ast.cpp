@@ -76,13 +76,13 @@ namespace triton {
           return to_expr(this->context, Z3_mk_bvor(this->context, this->convert(node->getChildren()[0]), this->convert(node->getChildren()[1])));
 
         case BVROL_NODE: {
-          triton::uint32 op1 = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[0].get())->getValue().convert_to<triton::uint32>();
-          return to_expr(this->context, Z3_mk_rotate_left(this->context, op1, this->convert(node->getChildren()[1])));
+          triton::uint32 rot = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[1].get())->getValue().convert_to<triton::uint32>();
+          return to_expr(this->context, Z3_mk_rotate_left(this->context, rot, this->convert(node->getChildren()[0])));
         }
 
         case BVROR_NODE: {
-          triton::uint32 op1 = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[0].get())->getValue().convert_to<triton::uint32>();
-          return to_expr(this->context, Z3_mk_rotate_right(this->context, op1, this->convert(node->getChildren()[1])));
+          triton::uint32 rot = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[1].get())->getValue().convert_to<triton::uint32>();
+          return to_expr(this->context, Z3_mk_rotate_right(this->context, rot, this->convert(node->getChildren()[0])));
         }
 
         case BVSDIV_NODE:

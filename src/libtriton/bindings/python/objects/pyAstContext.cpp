@@ -304,11 +304,11 @@ e.g: `(bvnot expr1)`.
 Creates a `bvor` node.<br>
 e.g: `(bvor expr1 expr2)`.
 
-- <b>\ref py_AstNode_page bvror(integer displacement, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvror(\ref py_AstNode_page expr, integer displacement)</b><br>
 Creates a `bvror` node (rotate right).<br>
 e.g: `((_ rotate_right displacement) expr)`.
 
-- <b>\ref py_AstNode_page bvrol(integer displacement, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvrol(\ref py_AstNode_page expr, integer displacement)</b><br>
 Creates a `bvrol` node (rotate left).<br>
 e.g: `((_ rotate_left displacement) expr)`.
 
@@ -715,14 +715,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
-          return PyErr_Format(PyExc_TypeError, "bvror(): expected an integer as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PyAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as second argument");
+        if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
+          return PyErr_Format(PyExc_TypeError, "bvror(): expected an integer as second argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->bvror(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvror(PyAstNode_AsAstNode(op1), PyLong_AsUint32(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -737,14 +737,14 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
-        if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
-          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a integer as first argument");
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as first argument");
 
-        if (op2 == nullptr || !PyAstNode_Check(op2))
-          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as second argument");
+        if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
+          return PyErr_Format(PyExc_TypeError, "bvrol(): expected a integer as second argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->bvrol(PyLong_AsUint32(op1), PyAstNode_AsAstNode(op2)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->bvrol(PyAstNode_AsAstNode(op1), PyLong_AsUint32(op2)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

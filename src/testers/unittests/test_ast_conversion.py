@@ -192,8 +192,8 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.bvneg,
             self.astCtxt.bvnot,
             self.astCtxt.lnot,
-            lambda x: self.astCtxt.bvrol(3, x),
-            lambda x: self.astCtxt.bvror(2, x),
+            lambda x: self.astCtxt.bvrol(x, 3),
+            lambda x: self.astCtxt.bvror(x, 2),
             lambda x: self.astCtxt.sx(16, x),
             lambda x: self.astCtxt.zx(16, x),
         ]
@@ -291,8 +291,8 @@ class TestAstConversion(unittest.TestCase):
         self.bvop = [
             (self.astCtxt.bvneg, 1),
             (self.astCtxt.bvnot, 1),
-            (lambda x: self.astCtxt.bvrol(3, x), 1),
-            (lambda x: self.astCtxt.bvror(2, x), 1),
+            (lambda x: self.astCtxt.bvrol(x, 3), 1),
+            (lambda x: self.astCtxt.bvror(x, 2), 1),
             (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.sx(16, x)), 1),
             (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.zx(16, x)), 1),
 

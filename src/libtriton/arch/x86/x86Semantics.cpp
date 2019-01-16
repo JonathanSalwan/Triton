@@ -1424,8 +1424,8 @@ namespace triton {
                       this->astCtxt.extract(
                         dst.getBitSize(), dst.getBitSize(),
                         this->astCtxt.bvrol(
-                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                          this->astCtxt.concat(op2, op1)
+                          this->astCtxt.concat(op2, op1),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                         )
                       )
                     );
@@ -1507,8 +1507,8 @@ namespace triton {
                       this->astCtxt.extract(
                         (bvSize * 2) - 1, (bvSize * 2) - 1,
                         this->astCtxt.bvror(
-                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                          this->astCtxt.concat(op2, op1)
+                          this->astCtxt.concat(op2, op1),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                         )
                       )
                     );
@@ -1882,8 +1882,8 @@ namespace triton {
                         this->astCtxt.extract(
                           bvSize-1, bvSize-1,
                           this->astCtxt.bvrol(
-                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                            this->astCtxt.concat(op2, op1)
+                            this->astCtxt.concat(op2, op1),
+                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                           )
                         ),
                         this->astCtxt.extract(bvSize-1, bvSize-1, op1)
@@ -1965,8 +1965,8 @@ namespace triton {
                         this->astCtxt.extract(
                           bvSize - 1, bvSize - 1,
                           this->astCtxt.bvror(
-                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                            this->astCtxt.concat(op2, op1)
+                            this->astCtxt.concat(op2, op1),
+                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                           )
                         ),
                         this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
@@ -2178,8 +2178,8 @@ namespace triton {
                       this->astCtxt.extract(
                         bvSize-1, bvSize-1,
                         this->astCtxt.bvrol(
-                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                          this->astCtxt.concat(op2, op1)
+                          this->astCtxt.concat(op2, op1),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                         )
                       )
                     );
@@ -2221,8 +2221,8 @@ namespace triton {
                       this->astCtxt.extract(
                         bvSize - 1, bvSize - 1,
                         this->astCtxt.bvror(
-                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
-                          this->astCtxt.concat(op2, op1)
+                          this->astCtxt.concat(op2, op1),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3)
                         )
                       )
                     );
@@ -10476,8 +10476,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvrol(
-                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2),
-                       this->astCtxt.concat(op3, op1)
+                       this->astCtxt.concat(op3, op1),
+                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2)
                      );
 
         /* Create symbolic expression */
@@ -10554,8 +10554,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node1 = this->astCtxt.bvror(
-                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2),
-                       this->astCtxt.concat(op3, op1)
+                       this->astCtxt.concat(op3, op1),
+                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2)
                      );
 
         /* Create symbolic expression */
@@ -10690,8 +10690,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt.bvrol(
-                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
-                      op1
+                      op1,
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2)
                     );
 
         /* Create symbolic expression */
@@ -10762,8 +10762,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt.bvror(
-                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
-                      op1
+                      op1,
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2)
                     );
 
         /* Create symbolic expression */
@@ -10812,8 +10812,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt.bvror(
-                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
-                      op1
+                      op1,
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2)
                     );
 
         /* Create symbolic expression */
@@ -11797,8 +11797,9 @@ namespace triton {
         auto node = this->astCtxt.extract(
                       dst.getBitSize()-1, 0,
                       this->astCtxt.bvrol(
-                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3),
-                        this->astCtxt.concat(op2, op1))
+                        this->astCtxt.concat(op2, op1),
+                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3)
+                      )
                     );
 
         /* Create symbolic expression */
@@ -11966,8 +11967,9 @@ namespace triton {
         auto node = this->astCtxt.extract(
                       dst.getBitSize()-1, 0,
                       this->astCtxt.bvror(
-                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3),
-                        this->astCtxt.concat(op2, op1))
+                        this->astCtxt.concat(op2, op1),
+                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3)
+                      )
                     );
 
         /* Create symbolic expression */

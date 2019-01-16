@@ -670,7 +670,7 @@ namespace triton {
             return this->astCtxt.bvlshr(node, this->astCtxt.bv(value, node->getBitvectorSize()));
 
           case triton::arch::aarch64::ID_SHIFT_ROR:
-            return this->astCtxt.bvror(value, node);
+            return this->astCtxt.bvror(node, value);
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
