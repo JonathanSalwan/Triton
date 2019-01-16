@@ -151,7 +151,6 @@ class TestAstSimplification3(unittest.TestCase):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86)
         self.ast = self.ctx.getAstContext()
-        #self.ctx.enableMode(MODE.AST_OPTIMIZATIONS, True)
 
     def proof(self, n):
         if self.ctx.isSat(self.ast.lnot(n)) == True:
