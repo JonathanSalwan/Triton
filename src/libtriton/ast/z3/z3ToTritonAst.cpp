@@ -400,13 +400,13 @@ namespace triton {
           break;
         }
 
-        /* TRUE */
+        /* Always TRUE */
         case Z3_OP_TRUE: {
           node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvtrue());
           break;
         }
 
-        /* FALSE */
+        /* Always FALSE */
         case Z3_OP_FALSE: {
           node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvfalse());
           break;
