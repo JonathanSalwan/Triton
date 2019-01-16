@@ -60,28 +60,73 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvadd(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 + A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return expr2;
+
+        /* Optimization: A + 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvaddNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
 
     SharedAbstractNode AstContext::bvand(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 & A = 0 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A & 0 = 0 */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A & -1 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == expr2->getBitvectorMask())
+          return expr1;
+
+        /* Optimization: -1 & A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == expr1->getBitvectorMask())
+          return expr2;
+
+        /* Optimization: A & A = A */
+        if (!expr1->isSymbolized() && !expr2->isSymbolized() && expr1->equalTo(expr2))
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvandNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
 
     SharedAbstractNode AstContext::bvashr(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 >> A = 0 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A >> 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvashrNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -96,19 +141,45 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvlshr(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 >> A = 0 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A >> 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+
+        /* Optimization: A >> B>=size(A) = 0 */
+        if (!expr2->isSymbolized() && expr2->evaluate() >= expr1->getBitvectorSize())
+          return this->bv(0, expr1->getBitvectorSize());
+      }
+
       SharedAbstractNode node = std::make_shared<BvlshrNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
 
     SharedAbstractNode AstContext::bvmul(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 * A = 0 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A * 0 = 0 */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+      }
+
       SharedAbstractNode node = std::make_shared<BvmulNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -150,10 +221,33 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 | A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return expr2;
+
+        /* Optimization: A | 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+
+        /* Optimization: -1 | A = -1 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == expr1->getBitvectorMask())
+          return this->bv(expr1->getBitvectorMask(), expr1->getBitvectorSize());
+
+        /* Optimization: A | -1 = -1 */
+        if (!expr2->isSymbolized() && expr2->evaluate() == expr2->getBitvectorMask())
+          return this->bv(expr2->getBitvectorMask(), expr2->getBitvectorSize());
+
+        /* Optimization: A | A = A */
+        if (expr1->equalTo(expr2))
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvorNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -173,7 +267,7 @@ namespace triton {
        * in order to make index rotation symbolic. Note that this mode increases the
        * complexity of solving.
        *
-       * bvrol(rot, expr) <=> ((expr << (rot % size)) | (expr >> (size - (rot % size))))
+       * bvrol(rot, expr) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
        **/
       if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size   = expr->getBitvectorSize();
@@ -210,7 +304,7 @@ namespace triton {
        * in order to make index rotation symbolic. Note that this mode increases the
        * complexity of solving.
        *
-       * bvror(rot, expr) <=> ((value >> (rot % size)) | (value << (size - (rot % size))))
+       * bvror(rot, expr) = ((value >> (rot % size)) | (value << (size - (rot % size))))
        **/
       if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size   = expr->getBitvectorSize();
@@ -233,10 +327,17 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvsdiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: A / 1 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 1)
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvsdivNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -260,10 +361,25 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvshl(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: 0 << A = 0 */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: A << 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+
+        /* Optimization: A << B>=size(A) = 0 */
+        if (!expr2->isSymbolized() && expr2->evaluate() >= expr1->getBitvectorSize())
+          return this->bv(0, expr1->getBitvectorSize());
+      }
+
       SharedAbstractNode node = std::make_shared<BvshlNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -305,10 +421,25 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvsub(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: A - 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+
+        /* Optimization: 0 - A = -A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return this->bvneg(expr2);
+
+        /* Optimization: A - A = 0 */
+        if (expr1->equalTo(expr2))
+          return this->bv(0, expr1->getBitvectorSize());
+      }
+
       SharedAbstractNode node = std::make_shared<BvsubNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -323,10 +454,17 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvudiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: A / 1 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 1)
+          return expr1;
+      }
+
       SharedAbstractNode node = std::make_shared<BvudivNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -386,10 +524,25 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: A ^ 0 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 0)
+          return expr1;
+
+        /* Optimization: 0 ^ A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 0)
+          return expr2;
+
+        /* Optimization: A ^ A = 0 */
+        if (expr1->equalTo(expr2))
+          return this->bv(0, expr1->getBitvectorSize());
+      }
+
       SharedAbstractNode node = std::make_shared<BvxorNode>(expr1, expr2);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 

@@ -447,7 +447,7 @@ Creates a `zx` node (zero extend).<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 
-\section AstContext_convert_py_api Python API - Methods of the AstContext class for AST convertion
+\section AstContext_convert_py_api Python API - Methods of the AstContext class for AST conversion
 <hr>
 
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>

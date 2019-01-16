@@ -4,10 +4,10 @@
 
 import unittest
 
-from triton import ARCH, TritonContext, CALLBACK, AST_NODE
+from triton import *
 
 
-class TestAstSimplification(unittest.TestCase):
+class TestAstSimplification1(unittest.TestCase):
 
     """Testing AST simplification."""
 
@@ -96,7 +96,7 @@ class TestAstSimplification(unittest.TestCase):
         return node
 
 
-class TestAstSimplificationIssue1(unittest.TestCase):
+class TestAstSimplification2(unittest.TestCase):
 
     """Testing AST simplification. From #740."""
 
@@ -141,3 +141,387 @@ class TestAstSimplificationIssue1(unittest.TestCase):
                             # return (var + val2)
                             return c000 + c01
         return node
+
+
+class TestAstSimplification3(unittest.TestCase):
+
+    """Testing AST simplification"""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86)
+        self.ast = self.ctx.getAstContext()
+        #self.ctx.enableMode(MODE.AST_OPTIMIZATIONS, True)
+
+    def proof(self, n):
+        if self.ctx.isSat(self.ast.lnot(n)) == True:
+            return False
+        return True
+
+    def test_add1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvadd(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_add2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvadd(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvand(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_and2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvand(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_and3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvand(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and4(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvand(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and5(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvand(a, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_ashr1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvashr(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_ashr2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvashr(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_lshr1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvlshr(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_lshr2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvlshr(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_lshr3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(32, 32)
+        n = self.ast.bvlshr(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_mul1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvmul(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_mul2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvmul(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_or1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvor(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_or2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvor(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_or3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvor(a, b)
+        self.assertTrue(self.proof(n == -1))
+
+    def test_or4(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvor(b, a)
+        self.assertTrue(self.proof(n == -1))
+
+    def test_or5(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvor(a, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_sdiv1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(1, 32)
+        n = self.ast.bvsdiv(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_shl1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvshl(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_shl2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvshl(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_shl3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(33, 32)
+        n = self.ast.bvshl(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_sub1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvsub(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_sub2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvsub(b, a)
+        self.assertTrue(self.proof(n == -a))
+
+    def test_sub3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvsub(a, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_udiv(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(1, 32)
+        n = self.ast.bvudiv(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvxor(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvxor(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvxor(a, a)
+        self.assertTrue(self.proof(n == 0))
+
+
+class TestAstSimplification4(unittest.TestCase):
+
+    """Testing AST simplification"""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86)
+        self.ast = self.ctx.getAstContext()
+        self.ctx.enableMode(MODE.AST_OPTIMIZATIONS, True)
+
+    def proof(self, n):
+        if self.ctx.isSat(self.ast.lnot(n)) == True:
+            return False
+        return True
+
+    def test_add1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvadd(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_add2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvadd(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvand(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_and2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvand(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_and3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvand(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and4(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvand(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_and5(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvand(a, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_ashr1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvashr(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_ashr2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvashr(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_lshr1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvlshr(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_lshr2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvlshr(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_lshr3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(32, 32)
+        n = self.ast.bvlshr(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_mul1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvmul(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_mul2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvmul(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_or1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvor(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_or2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvor(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_or3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvor(a, b)
+        self.assertTrue(self.proof(n == -1))
+
+    def test_or4(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(-1, 32)
+        n = self.ast.bvor(b, a)
+        self.assertTrue(self.proof(n == -1))
+
+    def test_or5(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvor(a, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_sdiv1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(1, 32)
+        n = self.ast.bvsdiv(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_shl1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvshl(b, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_shl2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvshl(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_shl3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(33, 32)
+        n = self.ast.bvshl(a, b)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_sub1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvsub(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_sub2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvsub(b, a)
+        self.assertTrue(self.proof(n == -a))
+
+    def test_sub3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvsub(a, a)
+        self.assertTrue(self.proof(n == 0))
+
+    def test_udiv(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(1, 32)
+        n = self.ast.bvudiv(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor1(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvxor(a, b)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(0, 32)
+        n = self.ast.bvxor(b, a)
+        self.assertTrue(self.proof(n == a))
+
+    def test_xor3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.bvxor(a, a)
+        self.assertTrue(self.proof(n == 0))
