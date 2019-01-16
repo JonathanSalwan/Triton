@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, TritonContext
+from triton import ARCH, TritonContext, MODE
 
 
 class TestAstEval(unittest.TestCase):
@@ -618,6 +618,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
         ]
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.check_ast(tests)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_ror(self):
@@ -654,6 +657,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
         ]
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.check_ast(tests)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_smod(self):
