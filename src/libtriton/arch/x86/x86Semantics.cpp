@@ -1409,20 +1409,22 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = op3->getBitvectorSize();
-        auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
 
         /*
          * Create the semantic.
          * cf = MSB(rol(op3, concat(op2,op1))) if op3 != 0
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
+                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bv3Size)),
                       this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(
                         dst.getBitSize(), dst.getBitSize(),
                         this->astCtxt.bvrol(
-                          this->astCtxt.decimal(op3->evaluate()),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                           this->astCtxt.concat(op2, op1)
                         )
                       )
@@ -1489,20 +1491,23 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = op3->getBitvectorSize();
-        auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
+        auto bvSize  = dst.getBitSize();
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto cf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
 
         /*
          * Create the semantic.
          * cf = MSB(ror(op3, concat(op2,op1))) if op3 != 0
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
+                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bv3Size)),
                       this->symbolicEngine->getOperandAst(cf),
                       this->astCtxt.extract(
-                        (dst.getBitSize() * 2)-1, (dst.getBitSize()*2)-1,
+                        (bvSize * 2) - 1, (bvSize * 2) - 1,
                         this->astCtxt.bvror(
-                          this->astCtxt.decimal(op3->evaluate()),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                           this->astCtxt.concat(op2, op1)
                         )
                       )
@@ -1859,8 +1864,11 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
+        auto bvSize  = dst.getBitSize();
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
 
         /*
          * Create the semantic.
@@ -1868,17 +1876,17 @@ namespace triton {
          */
         auto node = this->astCtxt.ite(
                       this->astCtxt.equal(
-                        this->astCtxt.zx(bvSize - op3->getBitvectorSize(), op3),
+                        this->astCtxt.zx(bvSize - bv3Size, op3),
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(
-                          dst.getBitSize()-1, dst.getBitSize()-1,
+                          bvSize-1, bvSize-1,
                           this->astCtxt.bvrol(
-                            this->astCtxt.decimal(op3->evaluate()),
+                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                             this->astCtxt.concat(op2, op1)
                           )
                         ),
-                        this->astCtxt.extract(dst.getBitSize()-1, dst.getBitSize()-1, op1)
+                        this->astCtxt.extract(bvSize-1, bvSize-1, op1)
                       ),
                       this->symbolicEngine->getOperandAst(of)
                     );
@@ -1939,8 +1947,11 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = dst.getBitSize();
-        auto of     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
+        auto bvSize  = dst.getBitSize();
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto of      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_OF));
 
         /*
          * Create the semantic.
@@ -1952,9 +1963,9 @@ namespace triton {
                         this->astCtxt.bv(1, bvSize)),
                       this->astCtxt.bvxor(
                         this->astCtxt.extract(
-                          dst.getBitSize()-1, dst.getBitSize()-1,
+                          bvSize - 1, bvSize - 1,
                           this->astCtxt.bvror(
-                            this->astCtxt.decimal(op3->evaluate()),
+                            this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                             this->astCtxt.concat(op2, op1)
                           )
                         ),
@@ -2151,20 +2162,23 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = op3->getBitvectorSize();
-        auto sf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
+        auto bvSize  = dst.getBitSize();
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
 
         /*
          * Create the semantic.
          * MSB(rol(op3, concat(op2,op1))) if op3 != 0
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
+                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bv3Size)),
                       this->symbolicEngine->getOperandAst(sf),
                       this->astCtxt.extract(
-                        dst.getBitSize()-1, dst.getBitSize()-1,
+                        bvSize-1, bvSize-1,
                         this->astCtxt.bvrol(
-                          this->astCtxt.decimal(op3->evaluate()),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                           this->astCtxt.concat(op2, op1)
                         )
                       )
@@ -2191,20 +2205,23 @@ namespace triton {
                                   const triton::ast::SharedAbstractNode& op3,
                                   bool vol) {
 
-        auto bvSize = op3->getBitvectorSize();
-        auto sf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
+        auto bvSize  = dst.getBitSize();
+        auto bv1Size = op1->getBitvectorSize();
+        auto bv2Size = op2->getBitvectorSize();
+        auto bv3Size = op3->getBitvectorSize();
+        auto sf      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_SF));
 
         /*
          * Create the semantic.
          * MSB(ror(op3, concat(op2,op1))) if op3 != 0
          */
         auto node = this->astCtxt.ite(
-                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bvSize)),
+                      this->astCtxt.equal(op3, this->astCtxt.bv(0, bv3Size)),
                       this->symbolicEngine->getOperandAst(sf),
                       this->astCtxt.extract(
-                        dst.getBitSize()-1, dst.getBitSize()-1,
+                        bvSize - 1, bvSize - 1,
                         this->astCtxt.bvror(
-                          this->astCtxt.decimal(op3->evaluate()),
+                          this->astCtxt.zx(((bv1Size + bv2Size) - bv3Size), op3),
                           this->astCtxt.concat(op2, op1)
                         )
                       )
@@ -10458,7 +10475,10 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node1 = this->astCtxt.bvrol(this->astCtxt.decimal(op2->evaluate()), this->astCtxt.concat(op3, op1));
+        auto node1 = this->astCtxt.bvrol(
+                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2),
+                       this->astCtxt.concat(op3, op1)
+                     );
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "RCL tempory operation");
@@ -10533,7 +10553,10 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node1 = this->astCtxt.bvror(this->astCtxt.decimal(op2->evaluate()), this->astCtxt.concat(op3, op1));
+        auto node1 = this->astCtxt.bvror(
+                       this->astCtxt.zx(((op1->getBitvectorSize() + op3->getBitvectorSize()) - op2->getBitvectorSize()), op2),
+                       this->astCtxt.concat(op3, op1)
+                     );
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "RCR tempory operation");
@@ -10666,7 +10689,10 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node = this->astCtxt.bvrol(this->astCtxt.decimal(op2->evaluate()), op1);
+        auto node = this->astCtxt.bvrol(
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
+                      op1
+                    );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ROL operation");
@@ -10735,7 +10761,10 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node = this->astCtxt.bvror(this->astCtxt.decimal(op2->evaluate()), op1);
+        auto node = this->astCtxt.bvror(
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
+                      op1
+                    );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ROR operation");
@@ -10782,7 +10811,10 @@ namespace triton {
         }
 
         /* Create the semantics */
-        auto node = this->astCtxt.bvror(this->astCtxt.decimal(op2->evaluate()), op1);
+        auto node = this->astCtxt.bvror(
+                      this->astCtxt.zx(op1->getBitvectorSize() - op2->getBitvectorSize(), op2),
+                      op1
+                    );
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "RORX operation");
@@ -11765,7 +11797,7 @@ namespace triton {
         auto node = this->astCtxt.extract(
                       dst.getBitSize()-1, 0,
                       this->astCtxt.bvrol(
-                        this->astCtxt.decimal(op3->evaluate()),
+                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3),
                         this->astCtxt.concat(op2, op1))
                     );
 
@@ -11934,7 +11966,7 @@ namespace triton {
         auto node = this->astCtxt.extract(
                       dst.getBitSize()-1, 0,
                       this->astCtxt.bvror(
-                        this->astCtxt.decimal(op3->evaluate()),
+                        this->astCtxt.zx(((op1->getBitvectorSize() + op2->getBitvectorSize()) - op3->getBitvectorSize()), op3),
                         this->astCtxt.concat(op2, op1))
                     );
 

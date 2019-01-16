@@ -16,12 +16,14 @@
 namespace triton {
   namespace ast {
 
-    AstContext::AstContext() {
+    AstContext::AstContext(triton::modes::Modes& modes)
+      : modes(modes) {
     }
 
 
     AstContext::AstContext(const AstContext& other)
-      : astRepresentation(other.astRepresentation),
+      : modes(other.modes),
+        astRepresentation(other.astRepresentation),
         valueMapping(other.valueMapping) {
     }
 
@@ -33,6 +35,7 @@ namespace triton {
 
     AstContext& AstContext::operator=(const AstContext& other) {
       this->astRepresentation = other.astRepresentation;
+      this->modes = other.modes;
       this->valueMapping = other.valueMapping;
       return *this;
     }
@@ -165,10 +168,28 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvrol(const SharedAbstractNode& rot, const SharedAbstractNode& expr) {
-      SharedAbstractNode node = std::make_shared<BvrolNode>(rot, expr);
+      /*
+       * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
+       * in order to make index rotation symbolic.
+       *
+       * bvrol(rot, expr) <=> ((expr << (rot % size)) | (expr >> (size - (rot % size))))
+       **/
+      if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
+        auto size   = expr->getBitvectorSize();
+        auto bvsize = this->bv(size, size);
+        auto node   = this->bvor(
+                        this->bvshl(expr, this->bvsmod(rot, bvsize)),
+                        this->bvlshr(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
+                      );
+        return node;
+      }
+
+      /* Otherwise, we concretize the index rotation */
+      SharedAbstractNode node = std::make_shared<BvrolNode>(this->decimal(rot->evaluate()), expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 
@@ -183,10 +204,28 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvror(const SharedAbstractNode& rot, const SharedAbstractNode& expr) {
-      SharedAbstractNode node = std::make_shared<BvrorNode>(rot, expr);
+      /*
+       * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
+       * in order to make index rotation symbolic.
+       *
+       * bvror(rot, expr) <=> ((value >> (rot % size)) | (value << (size - (rot % size))))
+       **/
+      if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
+        auto size   = expr->getBitvectorSize();
+        auto bvsize = this->bv(size, size);
+        auto node   = this->bvor(
+                        this->bvlshr(expr, this->bvsmod(rot, bvsize)),
+                        this->bvshl(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
+                      );
+        return node;
+      }
+
+      /* Otherwise, we concretize the index rotation */
+      SharedAbstractNode node = std::make_shared<BvrorNode>(this->decimal(rot->evaluate()), expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
+
       return node;
     }
 

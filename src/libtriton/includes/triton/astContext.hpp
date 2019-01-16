@@ -15,6 +15,7 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/modes.hpp>
 
 
 
@@ -48,6 +49,9 @@ namespace triton {
     /*! \brief AST Context - Used as AST builder. */
     class AstContext {
       private:
+        //! Modes API
+        triton::modes::Modes& modes;
+
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
@@ -56,7 +60,7 @@ namespace triton {
 
       public:
         //! Constructor
-        TRITON_EXPORT AstContext();
+        TRITON_EXPORT AstContext(triton::modes::Modes& modes);
 
         //! Constructor by copy
         TRITON_EXPORT AstContext(const AstContext& other);

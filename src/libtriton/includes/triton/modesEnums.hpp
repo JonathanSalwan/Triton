@@ -32,6 +32,7 @@ namespace triton {
       ONLY_ON_SYMBOLIZED,             //!< [symbolic mode] Perform symbolic execution only on symbolized expressions.
       ONLY_ON_TAINTED,                //!< [symbolic mode] Perform symbolic execution only on tainted instructions.
       PC_TRACKING_SYMBOLIC,           //!< [symbolic mode] Track path constraints only if they are symbolized.
+      SYMBOLIZE_INDEX_ROTATION,       //!< [symbolic mode] Symbolize index rotation for bvrol and bvror (see #751). This mode increases the complexity of solving.
       TAINT_THROUGH_POINTERS,         //!< [taint mode] Spread the taint if an index pointer is already tainted (see #725).
     };
 
