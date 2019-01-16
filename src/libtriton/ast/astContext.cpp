@@ -170,7 +170,8 @@ namespace triton {
     SharedAbstractNode AstContext::bvrol(const SharedAbstractNode& expr, const SharedAbstractNode& rot) {
       /*
        * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
-       * in order to make index rotation symbolic.
+       * in order to make index rotation symbolic. Note that this mode increases the
+       * complexity of solving.
        *
        * bvrol(rot, expr) <=> ((expr << (rot % size)) | (expr >> (size - (rot % size))))
        **/
@@ -206,7 +207,8 @@ namespace triton {
     SharedAbstractNode AstContext::bvror(const SharedAbstractNode& expr, const SharedAbstractNode& rot) {
       /*
        * If the mode SYMBOLIZE_INDEX_ROTATION we apply a AST transformation
-       * in order to make index rotation symbolic.
+       * in order to make index rotation symbolic. Note that this mode increases the
+       * complexity of solving.
        *
        * bvror(rot, expr) <=> ((value >> (rot % size)) | (value << (size - (rot % size))))
        **/
