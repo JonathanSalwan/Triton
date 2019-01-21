@@ -6929,34 +6929,65 @@ namespace triton {
           return;
         }
 
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, index1);
-        auto op3 = this->symbolicEngine->getOperandAst(inst, index2);
-        auto op4 = this->symbolicEngine->getOperandAst(inst, df);
+        /*
+         * F2 0F 10 /r MOVSD xmm1, xmm2
+         * F2 0F 10 /r MOVSD xmm1, m64
+         * F2 0F 11 /r MOVSD m64, xmm2
+         */
+        if (dst.getBitSize() == DQWORD_SIZE_BIT) {
+          auto op1  = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2  = this->symbolicEngine->getOperandAst(dst);
 
-        /* Create the semantics */
-        auto node1 = op1;
-        auto node2 = this->astCtxt.ite(
-                       this->astCtxt.equal(op4, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op2, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt.bvsub(op2, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize()))
-                     );
-        auto node3 = this->astCtxt.ite(
-                       this->astCtxt.equal(op4, this->astCtxt.bvfalse()),
-                       this->astCtxt.bvadd(op3, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt.bvsub(op3, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize()))
-                     );
+          auto node = this->astCtxt.concat(
+                        this->astCtxt.extract(127, 64, op2),
+                        this->astCtxt.extract(63, 0, op1)
+                      );
 
-        /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MOVSD operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVSD operation");
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        }
 
-        /* Spread taint */
-        expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
-        expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
-        expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        /*
+         * F2 0F 11 /r MOVSD m64, xmm2
+         */
+        else if (dst.getBitSize() == QWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT) {
+          auto op1  = this->symbolicEngine->getOperandAst(inst, src);
+          auto node = this->astCtxt.extract(63, 0, op1);
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVSD operation");
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+        }
+
+        /* A5 MOVSD */
+        else {
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, index1);
+          auto op3 = this->symbolicEngine->getOperandAst(inst, index2);
+          auto op4 = this->symbolicEngine->getOperandAst(inst, df);
+
+          /* Create the semantics */
+          auto node1 = op1;
+          auto node2 = this->astCtxt.ite(
+                         this->astCtxt.equal(op4, this->astCtxt.bvfalse()),
+                         this->astCtxt.bvadd(op2, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize())),
+                         this->astCtxt.bvsub(op2, this->astCtxt.bv(DWORD_SIZE, index1.getBitSize()))
+                       );
+          auto node3 = this->astCtxt.ite(
+                         this->astCtxt.equal(op4, this->astCtxt.bvfalse()),
+                         this->astCtxt.bvadd(op3, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize())),
+                         this->astCtxt.bvsub(op3, this->astCtxt.bv(DWORD_SIZE, index2.getBitSize()))
+                       );
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MOVSD operation");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, index1, "Index (DI) operation");
+          auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, index2, "Index (SI) operation");
+
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(dst, src);
+          expr2->isTainted = this->taintEngine->taintUnion(index1, index1);
+          expr3->isTainted = this->taintEngine->taintUnion(index2, index2);
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
