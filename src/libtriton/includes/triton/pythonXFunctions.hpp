@@ -35,7 +35,7 @@ namespace triton {
      *  @{
      */
 
-      //! Creates a PyClass and raises an exception if it fails.
+      //! Creates a PyClass and raises an exception if it fails. __dict__ is copied in Py3 ! All references are decremented.
       PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n);
 
       //! Creates a PyDict and raises an exception if it fails.

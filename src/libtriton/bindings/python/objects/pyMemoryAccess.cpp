@@ -19,7 +19,7 @@
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> inst = Instruction("\x8A\xA4\x4A\x00\x01\x00\x00")
+>>> inst = Instruction(b"\x8A\xA4\x4A\x00\x01\x00\x00")
 >>> inst.setAddress(0x40000)
 
 */
@@ -395,7 +395,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyMemoryAccess_AsMemoryAccess(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -427,8 +427,7 @@ namespace triton {
 
 
       PyTypeObject MemoryAccess_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "MemoryAccess",                             /* tp_name */
         sizeof(MemoryAccess_Object),                /* tp_basicsize */
         0,                                          /* tp_itemsize */

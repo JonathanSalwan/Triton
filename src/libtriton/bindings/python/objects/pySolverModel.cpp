@@ -130,7 +130,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PySolverModel_AsSolverModel(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -148,8 +148,7 @@ namespace triton {
 
 
       PyTypeObject SolverModel_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "SolverModel",                              /* tp_name */
         sizeof(SolverModel_Object),                 /* tp_basicsize */
         0,                                          /* tp_itemsize */

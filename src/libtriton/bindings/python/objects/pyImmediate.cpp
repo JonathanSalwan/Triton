@@ -21,7 +21,7 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
 >>> inst = Instruction()
->>> inst.setOpcode("\xB8\x14\x00\x00\x00")
+>>> inst.setOpcode(b"\xB8\x14\x00\x00\x00")
 
 */
 
@@ -221,7 +221,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyImmediate_AsImmediate(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -244,8 +244,7 @@ namespace triton {
 
 
       PyTypeObject Immediate_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "Immediate",                                /* tp_name */
         sizeof(Immediate_Object),                   /* tp_basicsize */
         0,                                          /* tp_itemsize */

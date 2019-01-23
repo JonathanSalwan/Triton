@@ -62,16 +62,17 @@
 ##  Compute  AH       : 0x47L
 ##
 
+from __future__ import print_function
+import sys
 
-import  sys
-from    triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
+from triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
 
 
 code = [
-    (0x400000, "\x48\xB8\x48\x47\x46\x45\x44\x43\x42\x41"),     # movabs rax, 0x4142434445464748
-    (0x40000a, "\x48\xC7\xC6\x08\x00\x00\x00"),                 # mov    rsi, 0x8
-    (0x400011, "\x48\xC7\xC7\x00\x00\x01\x00"),                 # mov    rdi, 0x10000
-    (0x400018, "\x48\x89\x84\x77\x34\x12\x00\x00"),             # mov    QWORD PTR [rdi+rsi*2+0x1234], rax
+    (0x400000, b"\x48\xB8\x48\x47\x46\x45\x44\x43\x42\x41"),     # movabs rax, 0x4142434445464748
+    (0x40000a, b"\x48\xC7\xC6\x08\x00\x00\x00"),                 # mov    rsi, 0x8
+    (0x400011, b"\x48\xC7\xC7\x00\x00\x01\x00"),                 # mov    rdi, 0x10000
+    (0x400018, b"\x48\x89\x84\x77\x34\x12\x00\x00"),             # mov    QWORD PTR [rdi+rsi*2+0x1234], rax
 ]
 
 

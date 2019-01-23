@@ -255,7 +255,7 @@ namespace triton {
       static PyObject* Instruction_getDisassembly(PyObject* self, PyObject* noarg) {
         try {
           if (!PyInstruction_AsInstruction(self)->getDisassembly().empty())
-            return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+            return PyStr_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -683,7 +683,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyInstruction_AsInstruction(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -727,8 +727,7 @@ namespace triton {
 
 
       PyTypeObject Instruction_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "Instruction",                              /* tp_name */
         sizeof(Instruction_Object),                 /* tp_basicsize */
         0,                                          /* tp_itemsize */

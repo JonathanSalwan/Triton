@@ -8,8 +8,6 @@
 #include <triton/pythonXFunctions.hpp>
 #include <iostream>
 
-
-
 namespace triton {
   namespace bindings {
     namespace python {
@@ -45,7 +43,7 @@ namespace triton {
 
 
       PyObject* xPyString_FromString(const char *v) {
-        PyObject* s = PyString_FromString(v);
+        PyObject* s = PyStr_FromString(v);
         if (!s)
           notEnoughMemory();
         return s;
@@ -53,7 +51,10 @@ namespace triton {
 
 
       PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n) {
-        PyObject* c = PyClass_New(b, d, n);
+        if (b == NULL)
+          b = PyTuple_New(0);
+
+        PyObject *c = PyObject_CallFunctionObjArgs((PyObject*)&PyType_Type, n, b, d, NULL);
 
         if (!c)
           notEnoughMemory();
@@ -64,6 +65,7 @@ namespace triton {
 
         return c;
       }
+
 
 
       int xPyDict_SetItemString(PyObject* p, const char* key, PyObject* val) {
