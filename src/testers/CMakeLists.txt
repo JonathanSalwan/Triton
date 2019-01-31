@@ -28,7 +28,7 @@ if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
 endif()
 
 # Misc
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
     enable_testing()
     add_test(UnicornAArch64Semantics sh -c "python ${CMAKE_CURRENT_SOURCE_DIR}/unicorn_test_aarch64.py")
 endif()
