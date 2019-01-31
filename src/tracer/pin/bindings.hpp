@@ -17,7 +17,7 @@
 #include <set>
 #include <list>
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* pintool */
 #include "snapshot.hpp"

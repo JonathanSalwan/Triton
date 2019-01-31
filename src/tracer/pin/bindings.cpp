@@ -10,7 +10,7 @@
 #include <triton/pythonObjects.hpp>
 #include <triton/tritonTypes.hpp>
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* pintool */
 #include "api.hpp"
@@ -599,4 +599,3 @@ namespace tracer {
 
   };
 };
-

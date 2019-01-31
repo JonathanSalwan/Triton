@@ -8,7 +8,7 @@
 #ifndef TRITON_PIN_CONTEXT_H
 #define TRITON_PIN_CONTEXT_H
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* libTriton */
 #include <triton/tritonTypes.hpp>

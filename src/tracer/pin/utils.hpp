@@ -9,7 +9,7 @@
 #define TRITON_UTILS_H
 
 #include <string>
-#include <pin.H>
+#include <pin/pin.H>
 #include <triton/tritonTypes.hpp>
 
 

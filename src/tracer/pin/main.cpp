@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* Pintool */
 #include "api.hpp"
@@ -734,4 +734,3 @@ namespace tracer {
 int main(int argc, char *argv[]) {
   return tracer::pintool::main(argc, argv);
 }
-

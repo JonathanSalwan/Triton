@@ -15,7 +15,7 @@
 #include <stdexcept>
 #include <string>
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* pintool */
 #include "bindings.hpp"
@@ -239,4 +239,3 @@ namespace tracer {
     };
   };
 };
-

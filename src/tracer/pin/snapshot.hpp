@@ -11,7 +11,7 @@
 #include <map>
 #include <set>
 
-#include <pin.H>
+#include <pin/pin.H>
 
 /* libTriton */
 #include <triton/ast.hpp>
@@ -112,4 +112,3 @@ namespace tracer {
 };
 
 #endif /* PINTOOL_SNAPSHOT_H */
-
