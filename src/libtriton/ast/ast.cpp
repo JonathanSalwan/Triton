@@ -30,18 +30,6 @@ namespace triton {
     }
 
 
-    AbstractNode::AbstractNode(const AbstractNode& other, AstContext& ctxt): ctxt(ctxt) {
-      this->eval        = other.eval;
-      this->parents     = other.parents;
-      this->size        = other.size;
-      this->symbolized  = other.symbolized;
-      this->type        = other.type;
-
-      for (triton::uint32 index = 0; index < other.children.size(); index++)
-        this->children.push_back(triton::ast::newInstance(other.children[index].get()));
-    }
-
-
     AbstractNode::~AbstractNode() {
       /* virtual */
     }
