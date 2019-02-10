@@ -256,9 +256,6 @@ namespace triton {
           //! Assigns a symbolic expression to a memory.
           TRITON_EXPORT void assignSymbolicExpressionToMemory(const SharedSymbolicExpression& se, const triton::arch::MemoryAccess& mem);
 
-          //! Unrolls the SSA form of a given AST.
-          TRITON_EXPORT triton::ast::SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node);
-
           //! Slices all expressions from a given one.
           TRITON_EXPORT std::map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
 

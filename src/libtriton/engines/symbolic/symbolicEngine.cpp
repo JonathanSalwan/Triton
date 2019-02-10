@@ -424,23 +424,6 @@ namespace triton {
       }
 
 
-      /* Returns the full symbolic expression backtracked. */
-      triton::ast::SharedAbstractNode SymbolicEngine::unrollAst(const triton::ast::SharedAbstractNode& node) {
-        std::vector<triton::ast::SharedAbstractNode>& children = node->getChildren();
-
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          const triton::ast::SharedAbstractNode& ref = expr->getAst();
-          return this->unrollAst(ref);
-        }
-
-        for (triton::uint32 index = 0; index < children.size(); index++)
-          children[index] = this->unrollAst(children[index]);
-
-        return node;
-      }
-
-
       /* Slices all expressions from a given one */
       std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
         /* The returned map */

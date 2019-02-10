@@ -929,8 +929,7 @@ namespace triton {
 
 
   triton::ast::SharedAbstractNode API::unrollAst(const triton::ast::SharedAbstractNode& node) {
-    this->checkSymbolic();
-    return this->symbolic->unrollAst(node);
+    return triton::ast::newInstance(node.get(), true);
   }
 
 

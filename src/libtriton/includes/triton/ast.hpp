@@ -645,7 +645,7 @@ namespace triton {
     TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
 
     //! AST C++ API - Duplicates the AST
-    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node);
+    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
 
     //! Custom hash2n function for hash routine.
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
