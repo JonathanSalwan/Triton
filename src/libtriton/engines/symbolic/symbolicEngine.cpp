@@ -441,34 +441,46 @@ namespace triton {
       }
 
 
-      /* [private method] Slices all expressions from a given node */
-      void SymbolicEngine::sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs) {
-        std::vector<triton::ast::SharedAbstractNode>& children = node->getChildren();
-
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          triton::usize id = expr->getId();
-          if (exprs.find(id) == exprs.end()) {
-            exprs[id] = expr;
-            this->sliceExpressions(expr->getAst(), exprs);
-          }
-        }
-
-        for (triton::uint32 index = 0; index < children.size(); index++) {
-          this->sliceExpressions(children[index], exprs);
-        }
-      }
-
-
       /* Slices all expressions from a given one */
       std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
+        /* The returned map */
         std::map<triton::usize, SharedSymbolicExpression> exprs;
+
+        /* The tmp worklists */
+        std::list<SharedSymbolicExpression>        worklist1;
+        std::list<triton::ast::SharedAbstractNode> worklist2;
 
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
 
-        exprs[expr->getId()] = expr;
-        this->sliceExpressions(expr->getAst(), exprs);
+        /*
+         *  We use a worklist strategy to avoid recursive calls
+         *  and so stack overflow when going through a big AST.
+         */
+        worklist1.push_back(expr);
+        while (worklist1.size()) {
+          auto expr = worklist1.front();
+          auto eid  = expr->getId();
+          worklist1.pop_front();
+
+          if (exprs.find(eid) == exprs.end()) {
+            exprs[eid] = expr;
+
+            worklist2.push_back(expr->getAst());
+            while (worklist2.size()) {
+              auto ast = worklist2.front();
+              worklist2.pop_front();
+
+              if (ast->getType() == triton::ast::REFERENCE_NODE) {
+                worklist1.push_back(reinterpret_cast<triton::ast::ReferenceNode*>(ast.get())->getSymbolicExpression());
+              }
+
+              for (auto&& child : ast->getChildren()) {
+                worklist2.push_back(child);
+              }
+            }
+          }
+        }
 
         return exprs;
       }
