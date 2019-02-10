@@ -91,9 +91,6 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT AbstractNode(triton::ast::ast_e type, AstContext& ctxt);
 
-        //! Constructor by copy.
-        TRITON_EXPORT AbstractNode(const AbstractNode& other, AstContext& ctxt);
-
         //! Destructor.
         TRITON_EXPORT virtual ~AbstractNode();
 
