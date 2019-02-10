@@ -30,18 +30,6 @@ namespace triton {
     }
 
 
-    AbstractNode::AbstractNode(const AbstractNode& other, AstContext& ctxt): ctxt(ctxt) {
-      this->eval        = other.eval;
-      this->parents     = other.parents;
-      this->size        = other.size;
-      this->symbolized  = other.symbolized;
-      this->type        = other.type;
-
-      for (triton::uint32 index = 0; index < other.children.size(); index++)
-        this->children.push_back(triton::ast::newInstance(other.children[index].get()));
-    }
-
-
     AbstractNode::~AbstractNode() {
       /* virtual */
     }
@@ -2470,6 +2458,15 @@ namespace triton {
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
+      // Remove parents as this is a new node which has no any connections with original AST
+      newNode->getParents().clear();
+
+      // Create new instances of children and set them new parents
+      auto &children = newNode->getChildren();
+      for (size_t idx = 0; idx < children.size(); ++idx) {
+        children[idx] = triton::ast::newInstance(children[idx].get());
+        children[idx]->setParent(newNode.get());
+      }
       return newNode;
     }
 
