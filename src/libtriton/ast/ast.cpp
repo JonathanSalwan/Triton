@@ -2517,7 +2517,9 @@ namespace triton {
           }
         }
 
-        sortedlist[lvl].push_back(ast);
+        if (std::find(sortedlist[lvl].begin(), sortedlist[lvl].end(), ast) == sortedlist[lvl].end()) {
+          sortedlist[lvl].push_back(ast);
+        }
       }
 
       /* Sort nodes into the output list */
