@@ -2496,7 +2496,8 @@ namespace triton {
 
         /* Proceed children */
         for (const auto& child : ast->getChildren()) {
-          if (std::find(output->begin(), output->end(), child) == output->end()) {
+          if (std::find(worklist.begin(), worklist.end(), child) == worklist.end() &&
+              std::find(output->begin(), output->end(), child) == output->end()) {
             worklist.push_back(child);
           }
         }
@@ -2508,7 +2509,8 @@ namespace triton {
         /* If unroll is true, we unroll all references */
         if (unroll == true && ast->getType() == REFERENCE_NODE) {
           const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
-          if (std::find(output->begin(), output->end(), ref) == output->end()) {
+          if (std::find(worklist.begin(), worklist.end(), ref) == worklist.end() &&
+              std::find(output->begin(), output->end(), ref) == output->end()) {
             worklist.push_back(ref);
           }
         }
