@@ -9,6 +9,7 @@
 #include <cmath>
 #include <new>
 #include <utility>
+#include <unordered_map>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -2481,7 +2482,7 @@ namespace triton {
 
 
     void nodesExtraction(std::list<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
-      std::map<triton::usize, std::list<SharedAbstractNode>> sortedlist;
+      std::unordered_map<triton::usize, std::list<SharedAbstractNode>> sortedlist;
       std::list<std::pair<SharedAbstractNode,triton::usize>> worklist;
       triton::usize depth = 0;
 
@@ -2503,13 +2504,17 @@ namespace triton {
 
         /* Proceed children */
         for (const auto& child : ast->getChildren()) {
-          worklist.push_back({child, lvl + 1});
+          if (std::find(worklist.begin(), worklist.end(), std::make_pair(child, lvl + 1)) == worklist.end()) {
+            worklist.push_back({child, lvl + 1});
+          }
         }
 
         /* If unroll is true, we unroll all references */
         if (unroll == true && ast->getType() == REFERENCE_NODE) {
           const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
-          worklist.push_back({ref, lvl + 1});
+          if (std::find(worklist.begin(), worklist.end(), std::make_pair(ref, lvl + 1)) == worklist.end()) {
+            worklist.push_back({ref, lvl + 1});
+          }
         }
 
         sortedlist[lvl].push_back(ast);
