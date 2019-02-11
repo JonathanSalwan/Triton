@@ -2502,7 +2502,7 @@ namespace triton {
           }
         }
 
-        /* Front or back ? If revert is true, children are on top of list */
+        /* Front or back? If revert is true, children are on top of list */
         if (std::find(output->begin(), output->end(), ast) == output->end())
           (revert ? output->push_front(ast) : output->push_back(ast));
 

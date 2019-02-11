@@ -9,6 +9,7 @@
 #define TRITON_TRITONTOZ3AST_H
 
 #include <z3++.h>
+#include <unordered_map>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -46,6 +47,9 @@ namespace triton {
 
         //! Returns the integer of the z3 expression as a string.
         std::string getStringValue(const z3::expr& expr);
+
+        //! The convert internal process
+        z3::expr do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, z3::expr>* output);
 
       protected:
         //! The z3's context.
