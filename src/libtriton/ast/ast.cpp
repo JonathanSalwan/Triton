@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <algorithm>
 #include <cmath>
 #include <new>
 
@@ -2390,7 +2391,7 @@ namespace triton {
 
 
 
-/* ====== Node builders */
+/* ====== Node utilities */
 
 namespace triton {
   namespace ast {
@@ -2475,6 +2476,43 @@ namespace triton {
       }
 
       return newNode;
+    }
+
+
+    void nodesExtraction(std::list<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
+      std::list<SharedAbstractNode> worklist;
+
+      if (node == nullptr)
+        throw triton::exceptions::Ast("triton::ast::nodesExtraction(): Node cannot be null.");
+
+      /*
+       *  We use a worklist strategy to avoid recursive calls
+       *  and so stack overflow when going through a big AST.
+       */
+      worklist.push_back(node);
+      while (worklist.empty() == false) {
+        auto ast = worklist.front();
+        worklist.pop_front();
+
+        /* Proceed children */
+        for (const auto& child : ast->getChildren()) {
+          if (std::find(output->begin(), output->end(), child) == output->end()) {
+            worklist.push_back(child);
+          }
+        }
+
+        /* Front or back ? If revert is true, children are on top of list */
+        if (std::find(output->begin(), output->end(), ast) == output->end())
+          (revert ? output->push_front(ast) : output->push_back(ast));
+
+        /* If unroll is true, we unroll all references */
+        if (unroll == true && ast->getType() == REFERENCE_NODE) {
+          const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
+          if (std::find(output->begin(), output->end(), ref) == output->end()) {
+            worklist.push_back(ref);
+          }
+        }
+      }
     }
 
   }; /* ast namespace */

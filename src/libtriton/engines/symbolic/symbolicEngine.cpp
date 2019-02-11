@@ -426,42 +426,20 @@ namespace triton {
 
       /* Slices all expressions from a given one */
       std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
-        /* The returned map */
         std::map<triton::usize, SharedSymbolicExpression> exprs;
-
-        /* The tmp worklists */
-        std::list<SharedSymbolicExpression>        worklist1;
-        std::list<triton::ast::SharedAbstractNode> worklist2;
+        std::list<triton::ast::SharedAbstractNode> worklist;
 
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
 
-        /*
-         *  We use a worklist strategy to avoid recursive calls
-         *  and so stack overflow when going through a big AST.
-         */
-        worklist1.push_back(expr);
-        while (worklist1.size()) {
-          auto expr = worklist1.front();
-          auto eid  = expr->getId();
-          worklist1.pop_front();
+        exprs[expr->getId()] = expr;
+        triton::ast::nodesExtraction(&worklist, expr->getAst(), true /* unroll */, false /* revert */);
 
-          if (exprs.find(eid) == exprs.end()) {
+        for (auto&& n : worklist) {
+          if (n->getType() == triton::ast::REFERENCE_NODE) {
+            auto expr = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
+            auto eid  = expr->getId();
             exprs[eid] = expr;
-
-            worklist2.push_back(expr->getAst());
-            while (worklist2.size()) {
-              auto ast = worklist2.front();
-              worklist2.pop_front();
-
-              if (ast->getType() == triton::ast::REFERENCE_NODE) {
-                worklist1.push_back(reinterpret_cast<triton::ast::ReferenceNode*>(ast.get())->getSymbolicExpression());
-              }
-
-              for (auto&& child : ast->getChildren()) {
-                worklist2.push_back(child);
-              }
-            }
           }
         }
 
