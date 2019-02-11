@@ -8,6 +8,7 @@
 #include <algorithm>
 #include <cmath>
 #include <new>
+#include <utility>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -2480,7 +2481,9 @@ namespace triton {
 
 
     void nodesExtraction(std::list<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
-      std::list<SharedAbstractNode> worklist;
+      std::map<triton::usize, std::list<SharedAbstractNode>> sortedlist;
+      std::list<std::pair<SharedAbstractNode,triton::usize>> worklist;
+      triton::usize depth = 0;
 
       if (node == nullptr)
         throw triton::exceptions::Ast("triton::ast::nodesExtraction(): Node cannot be null.");
@@ -2489,29 +2492,35 @@ namespace triton {
        *  We use a worklist strategy to avoid recursive calls
        *  and so stack overflow when going through a big AST.
        */
-      worklist.push_back(node);
+      worklist.push_back({node, 0});
       while (worklist.empty() == false) {
-        auto ast = worklist.front();
+        auto ast = worklist.front().first;
+        auto lvl = worklist.front().second;
         worklist.pop_front();
+
+        /* Keep up-to-date the depth of the tree */
+        depth = std::max(depth, lvl);
 
         /* Proceed children */
         for (const auto& child : ast->getChildren()) {
-          if (std::find(worklist.begin(), worklist.end(), child) == worklist.end() &&
-              std::find(output->begin(), output->end(), child) == output->end()) {
-            worklist.push_back(child);
-          }
+          worklist.push_back({child, lvl + 1});
         }
-
-        /* Front or back? If revert is true, children are on top of list */
-        if (std::find(output->begin(), output->end(), ast) == output->end())
-          (revert ? output->push_front(ast) : output->push_back(ast));
 
         /* If unroll is true, we unroll all references */
         if (unroll == true && ast->getType() == REFERENCE_NODE) {
           const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
-          if (std::find(worklist.begin(), worklist.end(), ref) == worklist.end() &&
-              std::find(output->begin(), output->end(), ref) == output->end()) {
-            worklist.push_back(ref);
+          worklist.push_back({ref, lvl + 1});
+        }
+
+        sortedlist[lvl].push_back(ast);
+      }
+
+      /* Sort nodes into the output list */
+      for (triton::usize index = 0; index <= depth; index++) {
+        auto& nodes = revert ? sortedlist[depth - index] : sortedlist[index];
+        for (auto&& n : nodes) {
+          if (std::find(output->begin(), output->end(), n) == output->end()) {
+            output->push_back(n);
           }
         }
       }

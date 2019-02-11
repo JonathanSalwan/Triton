@@ -393,3 +393,26 @@ class TestUnrollAst(unittest.TestCase):
         ref4 = self.ctx.getSymbolicExpressionFromId(4)
         self.assertEqual(str(ref4.getAst()), "(bvxor ref!0 ref!2)")
         return
+
+
+class TestAstTraversal(unittest.TestCase):
+
+    """Testing AST traversal."""
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_1(self):
+        a = self.ast.bv(1, 8)
+        b = self.ast.bv(2, 8)
+        c = a ^ b
+        d = c + a
+        e = d + b
+        f = e + e
+        g = f + b
+        ref1 = self.ast.reference(self.ctx.newSymbolicExpression(g))
+        ref2 = self.ast.reference(self.ctx.newSymbolicExpression(a))
+        k = ref1 + ref2
+        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaZ3(k))

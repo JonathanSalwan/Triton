@@ -64,7 +64,6 @@ namespace triton {
       std::vector<z3::expr> children;
       for (auto&& n : node->getChildren()) {
         children.emplace_back(results->at(n));
-        //results->erase(n); // ?
       }
 
       switch (node->getType()) {
