@@ -2481,9 +2481,9 @@ namespace triton {
     }
 
 
-    void nodesExtraction(std::list<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
-      std::unordered_map<triton::usize, std::list<SharedAbstractNode>> sortedlist;
-      std::list<std::pair<SharedAbstractNode,triton::usize>> worklist;
+    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
+      std::unordered_map<triton::usize, std::set<SharedAbstractNode>> sortedlist;
+      std::deque<std::pair<SharedAbstractNode,triton::usize>> worklist;
       triton::usize depth = 0;
 
       if (node == nullptr)
@@ -2517,9 +2517,7 @@ namespace triton {
           }
         }
 
-        if (std::find(sortedlist[lvl].begin(), sortedlist[lvl].end(), ast) == sortedlist[lvl].end()) {
-          sortedlist[lvl].push_back(ast);
-        }
+        sortedlist[lvl].insert(ast);
       }
 
       /* Sort nodes into the output list */

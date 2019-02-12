@@ -44,7 +44,7 @@ namespace triton {
 
     z3::expr TritonToZ3Ast::convert(const triton::ast::SharedAbstractNode& node) {
       std::unordered_map<triton::ast::SharedAbstractNode, z3::expr> results;
-      std::list<triton::ast::SharedAbstractNode> nodes;
+      std::deque<triton::ast::SharedAbstractNode> nodes;
 
       triton::ast::nodesExtraction(&nodes, node, true /* unroll*/, true /* revert */);
 

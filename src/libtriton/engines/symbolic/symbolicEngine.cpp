@@ -427,7 +427,7 @@ namespace triton {
       /* Slices all expressions from a given one */
       std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
         std::map<triton::usize, SharedSymbolicExpression> exprs;
-        std::list<triton::ast::SharedAbstractNode> worklist;
+        std::deque<triton::ast::SharedAbstractNode> worklist;
 
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
