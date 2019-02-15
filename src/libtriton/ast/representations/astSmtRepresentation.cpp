@@ -61,6 +61,7 @@ namespace triton {
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
+          case IFF_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IffNode*>(node)); break;
           case ITE_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IteNode*>(node)); break;
           case LAND_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LandNode*>(node)); break;
           case LET_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LetNode*>(node)); break;
@@ -157,14 +158,14 @@ namespace triton {
 
       /* bvrol representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
-        stream << "((_ rotate_left " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+        stream << "((_ rotate_left " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
         return stream;
       }
 
 
       /* bvror representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
-        stream << "((_ rotate_right " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+        stream << "((_ rotate_right " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
         return stream;
       }
 
@@ -357,6 +358,13 @@ namespace triton {
       /* extract representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
         stream << "((_ extract " << node->getChildren()[0] << " " << node->getChildren()[1] << ") " << node->getChildren()[2] << ")";
+        return stream;
+      }
+
+
+      /* iff representation */
+      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::IffNode* node) {
+        stream << "(iff " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
         return stream;
       }
 

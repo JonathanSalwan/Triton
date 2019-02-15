@@ -109,28 +109,14 @@ namespace triton {
       }
 
 
-      Z3Solver::Z3Solver(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
-        if (symbolicEngine == nullptr)
-          throw triton::exceptions::SolverEngine("Z3Solver::Z3Solver(): The symbolicEngine API cannot be null.");
-        this->symbolicEngine = symbolicEngine;
-      }
-
-
-      Z3Solver::Z3Solver(const Z3Solver& other) {
-        this->symbolicEngine = other.symbolicEngine;
-      }
-
-
-      Z3Solver& Z3Solver::operator=(const Z3Solver& other) {
-        this->symbolicEngine = other.symbolicEngine;
-        return *this;
+      Z3Solver::Z3Solver() {
       }
 
 
       std::list<std::map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
         std::list<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
-        triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+        triton::ast::TritonToZ3Ast z3Ast{false};
 
         try {
           if (onode == nullptr)
@@ -211,7 +197,7 @@ namespace triton {
 
 
       bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node) const {
-        triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
+        triton::ast::TritonToZ3Ast z3Ast{false};
 
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("Z3Solver::isSat(): node cannot be null.");
@@ -253,8 +239,8 @@ namespace triton {
           throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
 
         try {
-          triton::ast::TritonToZ3Ast z3Ast{this->symbolicEngine, false};
-          triton::ast::Z3ToTritonAst tritonAst{this->symbolicEngine, node->getContext()};
+          triton::ast::TritonToZ3Ast z3Ast{false};
+          triton::ast::Z3ToTritonAst tritonAst{node->getContext()};
 
           /* From Triton to Z3 */
           z3::expr expr = z3Ast.convert(node);
@@ -275,7 +261,7 @@ namespace triton {
           throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
 
         try {
-          triton::ast::TritonToZ3Ast z3ast{this->symbolicEngine};
+          triton::ast::TritonToZ3Ast z3ast{true};
 
           /* From Triton to Z3 */
           z3::expr expr = z3ast.convert(node);

@@ -94,6 +94,43 @@ class TestIR(unittest.TestCase):
         self.emulate(0x40065c)
         return
 
+    def test_ir_with_opti1(self):
+        """Load binary, setup environment and emulate the ir test suite."""
+        self.Triton = TritonContext()
+        # Set arch
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+
+        # Load the binary
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
+        self.load_binary(binary_file)
+
+        # Define a fake stack
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+
+        self.emulate(0x40065c)
+        return
+
+    def test_ir_with_opti2(self):
+        """Load binary, setup environment and emulate the ir test suite."""
+        self.Triton = TritonContext()
+        # Set arch
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+
+        # Load the binary
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
+        self.load_binary(binary_file)
+
+        # Define a fake stack
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+
+        self.emulate(0x40065c)
+        return
+
 
 class TestIRQemu(unittest.TestCase):
     """Test IR based on the qemu test suite."""
@@ -242,6 +279,49 @@ class TestIRQemu(unittest.TestCase):
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
         self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+
+        # Load the binary
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
+        binary = self.load_binary(binary_file)
+
+        self.make_relocation(binary)
+
+        # Define a fake stack
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+
+        self.emulate(binary.entrypoint)
+        return
+
+    def test_ir_with_opti1(self):
+        """Load binary, setup environment and emulate the ir test suite."""
+        self.Triton = TritonContext()
+        # Set arch
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+
+        # Load the binary
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
+        binary = self.load_binary(binary_file)
+
+        self.make_relocation(binary)
+
+        # Define a fake stack
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
+        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+
+        self.emulate(binary.entrypoint)
+        return
+
+    def test_ir_with_opti2(self):
+        """Load binary, setup environment and emulate the ir test suite."""
+        self.Triton = TritonContext()
+        # Set arch
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")

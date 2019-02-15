@@ -14,10 +14,8 @@ namespace triton {
   namespace engines {
     namespace solver {
 
-      SolverEngine::SolverEngine(triton::engines::symbolic::SymbolicEngine* symbolicEngine) {
-        this->kind           = triton::engines::solver::SOLVER_INVALID;
-        this->symbolicEngine = symbolicEngine;
-
+      SolverEngine::SolverEngine() {
+        this->kind = triton::engines::solver::SOLVER_INVALID;
         #ifdef Z3_INTERFACE
         /* By default we initialized the z3 solver */
         this->setSolver(triton::engines::solver::SOLVER_Z3);
@@ -43,7 +41,7 @@ namespace triton {
           #ifdef Z3_INTERFACE
           case triton::engines::solver::SOLVER_Z3:
             /* init the new instance */
-            this->solver.reset(new(std::nothrow) triton::engines::solver::Z3Solver(this->symbolicEngine));
+            this->solver.reset(new(std::nothrow) triton::engines::solver::Z3Solver());
             if (this->solver == nullptr)
               throw triton::exceptions::SolverEngine("SolverEngine::setSolver(): Not enough memory.");
             break;

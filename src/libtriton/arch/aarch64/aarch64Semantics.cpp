@@ -2831,7 +2831,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
         /* Create the semantics */
-        auto node = this->astCtxt.bvror(op2->evaluate().convert_to<triton::uint32>(), op1);
+        auto node = this->astCtxt.bvror(op1, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "ROR operation");

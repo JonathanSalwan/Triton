@@ -66,16 +66,17 @@ namespace triton {
       DISTINCT_NODE = 163,            /*!< (distinct x y) */
       EQUAL_NODE = 167,               /*!< (= x y) */
       EXTRACT_NODE = 173,             /*!< ((_ extract x y) z) */
-      ITE_NODE = 181,                 /*!< (ite x y z) */
-      LAND_NODE = 191,                /*!< (and x y) */
-      LET_NODE = 193,                 /*!< (let ((x y)) z) */
-      LNOT_NODE = 197,                /*!< (and x y) */
-      LOR_NODE = 199,                 /*!< (or x y) */
-      REFERENCE_NODE = 223,           /*!< Reference node */
-      STRING_NODE = 227,              /*!< String node */
-      SX_NODE = 229,                  /*!< ((_ sign_extend x) y) */
-      VARIABLE_NODE = 233,            /*!< Variable node */
-      ZX_NODE = 239,                  /*!< ((_ zero_extend x) y) */
+      IFF_NODE = 181,                 /*!< (iff x y) */
+      ITE_NODE = 191,                 /*!< (ite x y z) */
+      LAND_NODE = 193,                /*!< (and x y) */
+      LET_NODE = 197,                 /*!< (let ((x y)) z) */
+      LNOT_NODE = 199,                /*!< (and x y) */
+      LOR_NODE = 223,                 /*!< (or x y) */
+      REFERENCE_NODE = 227,           /*!< Reference node */
+      STRING_NODE = 229,              /*!< String node */
+      SX_NODE = 233,                  /*!< ((_ sign_extend x) y) */
+      VARIABLE_NODE = 239,            /*!< Variable node */
+      ZX_NODE = 241,                  /*!< ((_ zero_extend x) y) */
     };
 
     //! The Representations namespace

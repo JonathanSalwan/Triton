@@ -15,6 +15,7 @@
 #include <triton/astRepresentation.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/modes.hpp>
 
 
 
@@ -48,6 +49,9 @@ namespace triton {
     /*! \brief AST Context - Used as AST builder. */
     class AstContext {
       private:
+        //! Modes API
+        triton::modes::Modes& modes;
+
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
@@ -56,7 +60,7 @@ namespace triton {
 
       public:
         //! Constructor
-        TRITON_EXPORT AstContext();
+        TRITON_EXPORT AstContext(triton::modes::Modes& modes);
 
         //! Constructor by copy
         TRITON_EXPORT AstContext(const AstContext& other);
@@ -107,16 +111,16 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode bvor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - bvrol node builder
-        TRITON_EXPORT SharedAbstractNode bvrol(triton::uint32 rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& expr, triton::uint32 rot);
 
         //! AST C++ API - bvrol node builder
-        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvrol(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
 
         //! AST C++ API - bvror node builder
-        TRITON_EXPORT SharedAbstractNode bvror(triton::uint32 rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& expr, triton::uint32 rot);
 
         //! AST C++ API - bvror node builder
-        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT SharedAbstractNode bvror(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
 
         //! AST C++ API - bvsdiv node builder
         TRITON_EXPORT SharedAbstractNode bvsdiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
@@ -207,6 +211,9 @@ namespace triton {
 
         //! AST C++ API - extract node builder
         TRITON_EXPORT SharedAbstractNode extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
+
+        //! AST C++ API - iff node builder
+        TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - ite node builder
         TRITON_EXPORT SharedAbstractNode ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);

@@ -7,7 +7,7 @@ import random
 import unittest
 import utils
 
-from triton import TritonContext, ARCH
+from triton import *
 
 
 
@@ -144,6 +144,7 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.concat,
             self.astCtxt.distinct,
             self.astCtxt.equal,
+            self.astCtxt.iff,
             self.astCtxt.land,
             self.astCtxt.lor,
         ]
@@ -157,7 +158,9 @@ class TestAstConversion(unittest.TestCase):
                 if op == self.astCtxt.concat:
                     n = op([self.v1, self.v2])
                 elif op in (self.astCtxt.land, self.astCtxt.lor):
-                    n = op([self.v1 != 0, self.v2 != 0])
+                    n = op([self.v1 != cv1, self.v2 != cv2])
+                elif op == self.astCtxt.iff:
+                    n = op(self.v1 > cv1, self.v2 < cv2)
                 else:
                     n = op(self.v1, self.v2)
                 self.assertEqual(n.evaluate(),
@@ -189,8 +192,8 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.bvneg,
             self.astCtxt.bvnot,
             self.astCtxt.lnot,
-            lambda x: self.astCtxt.bvrol(3, x),
-            lambda x: self.astCtxt.bvror(2, x),
+            lambda x: self.astCtxt.bvrol(x, self.astCtxt.bv(2, x.getBitvectorSize())),
+            lambda x: self.astCtxt.bvror(x, self.astCtxt.bv(3, x.getBitvectorSize())),
             lambda x: self.astCtxt.sx(16, x),
             lambda x: self.astCtxt.zx(16, x),
         ]
@@ -272,6 +275,7 @@ class TestAstConversion(unittest.TestCase):
             (self.astCtxt.lnot, 1),
             (self.astCtxt.land, 2),
             (self.astCtxt.lor, 2),
+            (self.astCtxt.iff, 2),
         ]
         self.to_bool = [
             (self.astCtxt.bvsge, 2),
@@ -287,8 +291,8 @@ class TestAstConversion(unittest.TestCase):
         self.bvop = [
             (self.astCtxt.bvneg, 1),
             (self.astCtxt.bvnot, 1),
-            (lambda x: self.astCtxt.bvrol(3, x), 1),
-            (lambda x: self.astCtxt.bvror(2, x), 1),
+            (lambda x: self.astCtxt.bvrol(x, self.astCtxt.bv(3, x.getBitvectorSize())), 1),
+            (lambda x: self.astCtxt.bvror(x, self.astCtxt.bv(2, x.getBitvectorSize())), 1),
             (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.sx(16, x)), 1),
             (lambda x: self.astCtxt.extract(11, 4, self.astCtxt.zx(16, x)), 1),
 
@@ -348,3 +352,67 @@ class TestAstConversion(unittest.TestCase):
             return op
         else:
             return op(*[self.new_node(depth + 1, self.bvop) for _ in xrange(nargs)])
+
+
+class TestUnrollAst(unittest.TestCase):
+
+    """Testing unroll AST."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+
+    def test_1(self):
+        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction("\x48\x89\xc3")) # mov rbx, rax
+        self.ctx.processing(Instruction("\x48\x89\xd9")) # mov rcx, rbx
+        self.ctx.processing(Instruction("\x48\x89\xca")) # mov rdx, rcx
+        rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
+        self.assertEqual(str(rdx), "ref!6")
+        self.assertEqual(str(self.ctx.unrollAst(rdx)), "(_ bv1 64)")
+        return
+
+    def test_2(self):
+        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction("\x48\x31\xc0")) # xor rax, rax
+        rax = self.ctx.getRegisterAst(self.ctx.registers.rax)
+        self.assertEqual(str(rax), "ref!2")
+        self.assertEqual(str(self.ctx.unrollAst(rax)), "(bvxor (_ bv1 64) (_ bv1 64))")
+        return
+
+    def test_3(self):
+        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction("\x48\xc7\xc3\x02\x00\x00\x00")) # mov rbx, 2
+        self.ctx.processing(Instruction("\x48\x31\xd8")) # xor rax, rbx
+        self.ctx.processing(Instruction("\x48\xff\xc0")) # inc rax
+        self.ctx.processing(Instruction("\x48\x89\xc2")) # mov rdx, rax
+        rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
+        self.assertEqual(str(rdx), "ref!18")
+        self.assertEqual(str(self.ctx.unrollAst(rdx)), "(bvadd (bvxor (_ bv1 64) (_ bv2 64)) (_ bv1 64))")
+        ref4 = self.ctx.getSymbolicExpressionFromId(4)
+        self.assertEqual(str(ref4.getAst()), "(bvxor ref!0 ref!2)")
+        return
+
+
+class TestAstTraversal(unittest.TestCase):
+
+    """Testing AST traversal."""
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_1(self):
+        a = self.ast.bv(1, 8)
+        b = self.ast.bv(2, 8)
+        c = a ^ b
+        d = c + a
+        e = d + b
+        f = e + e
+        g = f + b
+        ref1 = self.ast.reference(self.ctx.newSymbolicExpression(g))
+        ref2 = self.ast.reference(self.ctx.newSymbolicExpression(a))
+        k = ref1 + ref2
+        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaZ3(k))

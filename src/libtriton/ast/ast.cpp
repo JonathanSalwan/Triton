@@ -5,8 +5,11 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <algorithm>
 #include <cmath>
 #include <new>
+#include <utility>
+#include <unordered_map>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -27,18 +30,6 @@ namespace triton {
       this->size        = 0;
       this->symbolized  = false;
       this->type        = type;
-    }
-
-
-    AbstractNode::AbstractNode(const AbstractNode& other, AstContext& ctxt): ctxt(ctxt) {
-      this->eval        = other.eval;
-      this->parents     = other.parents;
-      this->size        = other.size;
-      this->symbolized  = other.symbolized;
-      this->type        = other.type;
-
-      for (triton::uint32 index = 0; index < other.children.size(); index++)
-        this->children.push_back(triton::ast::newInstance(other.children[index].get()));
     }
 
 
@@ -93,6 +84,7 @@ namespace triton {
         case BVULT_NODE:
         case DISTINCT_NODE:
         case EQUAL_NODE:
+        case IFF_NODE:
         case LAND_NODE:
         case LNOT_NODE:
         case LOR_NODE:
@@ -693,13 +685,13 @@ namespace triton {
     /* ====== bvrol */
 
 
-    BvrolNode::BvrolNode(triton::uint32 rot, const SharedAbstractNode& expr): BvrolNode(expr->getContext().decimal(rot), expr) {
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext().decimal(rot)) {
     }
 
 
-    BvrolNode::BvrolNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROL_NODE, rot->getContext()) {
-      this->addChild(rot);
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot): AbstractNode(BVROL_NODE, expr->getContext()) {
       this->addChild(expr);
+      this->addChild(rot);
     }
 
 
@@ -710,14 +702,14 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrolNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
+      if (this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrolNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
-      value = this->children[1]->evaluate();
+      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
+      this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
 
@@ -744,13 +736,13 @@ namespace triton {
     /* ====== bvror */
 
 
-    BvrorNode::BvrorNode(triton::uint32 rot, const SharedAbstractNode& expr): BvrorNode(expr->getContext().decimal(rot), expr) {
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext().decimal(rot)) {
     }
 
 
-    BvrorNode::BvrorNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr): AbstractNode(BVROR_NODE, expr->getContext()) {
-      this->addChild(rot);
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot): AbstractNode(BVROR_NODE, expr->getContext()) {
       this->addChild(expr);
+      this->addChild(rot);
     }
 
 
@@ -761,14 +753,14 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrorNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
+      if (this->children[1]->getType() != DECIMAL_NODE)
         throw triton::exceptions::Ast("BvrorNode::init(): rot must be a DECIMAL_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
-      value = this->children[1]->evaluate();
+      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
+      this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
 
@@ -1874,6 +1866,52 @@ namespace triton {
     }
 
 
+    /* ====== iff */
+
+
+    IffNode::IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2): AbstractNode(IFF_NODE, expr1->getContext()) {
+      this->addChild(expr1);
+      this->addChild(expr2);
+    }
+
+
+    void IffNode::init(void) {
+      if (this->children.size() < 2)
+        throw triton::exceptions::Ast("IffNode::init(): Must take at least two children.");
+
+      if (this->children[0]->isLogical() == false)
+        throw triton::exceptions::Ast("IffNode::init(): Must take a logical node as first argument.");
+
+      if (this->children[1]->isLogical() == false)
+        throw triton::exceptions::Ast("IffNode::init(): Must take a logical node as second argument.");
+
+      /* Init attributes */
+      triton::uint512 P = this->children[0]->evaluate();
+      triton::uint512 Q = this->children[1]->evaluate();
+
+      this->size = 1;
+      this->eval = (P && Q) || (!P && !Q);
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 IffNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->type, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
+      return triton::ast::rotl(h, deep);
+    }
+
+
     /* ====== ite */
 
 
@@ -2355,66 +2393,73 @@ namespace triton {
 
 
 
-/* ====== Node builders */
+/* ====== Node utilities */
 
 namespace triton {
   namespace ast {
 
-    SharedAbstractNode newInstance(AbstractNode* node) {
+    SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
         return nullptr;
 
       switch (node->getType()) {
-        case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node)); break;
-        case BVADD_NODE:                newNode = std::make_shared<BvaddNode>(*reinterpret_cast<BvaddNode*>(node)); break;
-        case BVAND_NODE:                newNode = std::make_shared<BvandNode>(*reinterpret_cast<BvandNode*>(node)); break;
-        case BVASHR_NODE:               newNode = std::make_shared<BvashrNode>(*reinterpret_cast<BvashrNode*>(node)); break;
-        case BVLSHR_NODE:               newNode = std::make_shared<BvlshrNode>(*reinterpret_cast<BvlshrNode*>(node)); break;
-        case BVMUL_NODE:                newNode = std::make_shared<BvmulNode>(*reinterpret_cast<BvmulNode*>(node)); break;
-        case BVNAND_NODE:               newNode = std::make_shared<BvnandNode>(*reinterpret_cast<BvnandNode*>(node)); break;
-        case BVNEG_NODE:                newNode = std::make_shared<BvnegNode>(*reinterpret_cast<BvnegNode*>(node)); break;
-        case BVNOR_NODE:                newNode = std::make_shared<BvnorNode>(*reinterpret_cast<BvnorNode*>(node)); break;
-        case BVNOT_NODE:                newNode = std::make_shared<BvnotNode>(*reinterpret_cast<BvnotNode*>(node)); break;
-        case BVOR_NODE:                 newNode = std::make_shared<BvorNode>(*reinterpret_cast<BvorNode*>(node)); break;
-        case BVROL_NODE:                newNode = std::make_shared<BvrolNode>(*reinterpret_cast<BvrolNode*>(node)); break;
-        case BVROR_NODE:                newNode = std::make_shared<BvrorNode>(*reinterpret_cast<BvrorNode*>(node)); break;
-        case BVSDIV_NODE:               newNode = std::make_shared<BvsdivNode>(*reinterpret_cast<BvsdivNode*>(node)); break;
-        case BVSGE_NODE:                newNode = std::make_shared<BvsgeNode>(*reinterpret_cast<BvsgeNode*>(node)); break;
-        case BVSGT_NODE:                newNode = std::make_shared<BvsgtNode>(*reinterpret_cast<BvsgtNode*>(node)); break;
-        case BVSHL_NODE:                newNode = std::make_shared<BvshlNode>(*reinterpret_cast<BvshlNode*>(node)); break;
-        case BVSLE_NODE:                newNode = std::make_shared<BvsleNode>(*reinterpret_cast<BvsleNode*>(node)); break;
-        case BVSLT_NODE:                newNode = std::make_shared<BvsltNode>(*reinterpret_cast<BvsltNode*>(node)); break;
-        case BVSMOD_NODE:               newNode = std::make_shared<BvsmodNode>(*reinterpret_cast<BvsmodNode*>(node)); break;
-        case BVSREM_NODE:               newNode = std::make_shared<BvsremNode>(*reinterpret_cast<BvsremNode*>(node)); break;
-        case BVSUB_NODE:                newNode = std::make_shared<BvsubNode>(*reinterpret_cast<BvsubNode*>(node)); break;
-        case BVUDIV_NODE:               newNode = std::make_shared<BvudivNode>(*reinterpret_cast<BvudivNode*>(node)); break;
-        case BVUGE_NODE:                newNode = std::make_shared<BvugeNode>(*reinterpret_cast<BvugeNode*>(node)); break;
-        case BVUGT_NODE:                newNode = std::make_shared<BvugtNode>(*reinterpret_cast<BvugtNode*>(node)); break;
-        case BVULE_NODE:                newNode = std::make_shared<BvuleNode>(*reinterpret_cast<BvuleNode*>(node)); break;
-        case BVULT_NODE:                newNode = std::make_shared<BvultNode>(*reinterpret_cast<BvultNode*>(node)); break;
-        case BVUREM_NODE:               newNode = std::make_shared<BvuremNode>(*reinterpret_cast<BvuremNode*>(node)); break;
-        case BVXNOR_NODE:               newNode = std::make_shared<BvxnorNode>(*reinterpret_cast<BvxnorNode*>(node)); break;
-        case BVXOR_NODE:                newNode = std::make_shared<BvxorNode>(*reinterpret_cast<BvxorNode*>(node)); break;
-        case BV_NODE:                   newNode = std::make_shared<BvNode>(*reinterpret_cast<BvNode*>(node)); break;
+        case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node));     break;
+        case BVADD_NODE:                newNode = std::make_shared<BvaddNode>(*reinterpret_cast<BvaddNode*>(node));       break;
+        case BVAND_NODE:                newNode = std::make_shared<BvandNode>(*reinterpret_cast<BvandNode*>(node));       break;
+        case BVASHR_NODE:               newNode = std::make_shared<BvashrNode>(*reinterpret_cast<BvashrNode*>(node));     break;
+        case BVLSHR_NODE:               newNode = std::make_shared<BvlshrNode>(*reinterpret_cast<BvlshrNode*>(node));     break;
+        case BVMUL_NODE:                newNode = std::make_shared<BvmulNode>(*reinterpret_cast<BvmulNode*>(node));       break;
+        case BVNAND_NODE:               newNode = std::make_shared<BvnandNode>(*reinterpret_cast<BvnandNode*>(node));     break;
+        case BVNEG_NODE:                newNode = std::make_shared<BvnegNode>(*reinterpret_cast<BvnegNode*>(node));       break;
+        case BVNOR_NODE:                newNode = std::make_shared<BvnorNode>(*reinterpret_cast<BvnorNode*>(node));       break;
+        case BVNOT_NODE:                newNode = std::make_shared<BvnotNode>(*reinterpret_cast<BvnotNode*>(node));       break;
+        case BVOR_NODE:                 newNode = std::make_shared<BvorNode>(*reinterpret_cast<BvorNode*>(node));         break;
+        case BVROL_NODE:                newNode = std::make_shared<BvrolNode>(*reinterpret_cast<BvrolNode*>(node));       break;
+        case BVROR_NODE:                newNode = std::make_shared<BvrorNode>(*reinterpret_cast<BvrorNode*>(node));       break;
+        case BVSDIV_NODE:               newNode = std::make_shared<BvsdivNode>(*reinterpret_cast<BvsdivNode*>(node));     break;
+        case BVSGE_NODE:                newNode = std::make_shared<BvsgeNode>(*reinterpret_cast<BvsgeNode*>(node));       break;
+        case BVSGT_NODE:                newNode = std::make_shared<BvsgtNode>(*reinterpret_cast<BvsgtNode*>(node));       break;
+        case BVSHL_NODE:                newNode = std::make_shared<BvshlNode>(*reinterpret_cast<BvshlNode*>(node));       break;
+        case BVSLE_NODE:                newNode = std::make_shared<BvsleNode>(*reinterpret_cast<BvsleNode*>(node));       break;
+        case BVSLT_NODE:                newNode = std::make_shared<BvsltNode>(*reinterpret_cast<BvsltNode*>(node));       break;
+        case BVSMOD_NODE:               newNode = std::make_shared<BvsmodNode>(*reinterpret_cast<BvsmodNode*>(node));     break;
+        case BVSREM_NODE:               newNode = std::make_shared<BvsremNode>(*reinterpret_cast<BvsremNode*>(node));     break;
+        case BVSUB_NODE:                newNode = std::make_shared<BvsubNode>(*reinterpret_cast<BvsubNode*>(node));       break;
+        case BVUDIV_NODE:               newNode = std::make_shared<BvudivNode>(*reinterpret_cast<BvudivNode*>(node));     break;
+        case BVUGE_NODE:                newNode = std::make_shared<BvugeNode>(*reinterpret_cast<BvugeNode*>(node));       break;
+        case BVUGT_NODE:                newNode = std::make_shared<BvugtNode>(*reinterpret_cast<BvugtNode*>(node));       break;
+        case BVULE_NODE:                newNode = std::make_shared<BvuleNode>(*reinterpret_cast<BvuleNode*>(node));       break;
+        case BVULT_NODE:                newNode = std::make_shared<BvultNode>(*reinterpret_cast<BvultNode*>(node));       break;
+        case BVUREM_NODE:               newNode = std::make_shared<BvuremNode>(*reinterpret_cast<BvuremNode*>(node));     break;
+        case BVXNOR_NODE:               newNode = std::make_shared<BvxnorNode>(*reinterpret_cast<BvxnorNode*>(node));     break;
+        case BVXOR_NODE:                newNode = std::make_shared<BvxorNode>(*reinterpret_cast<BvxorNode*>(node));       break;
+        case BV_NODE:                   newNode = std::make_shared<BvNode>(*reinterpret_cast<BvNode*>(node));             break;
         case COMPOUND_NODE:             newNode = std::make_shared<CompoundNode>(*reinterpret_cast<CompoundNode*>(node)); break;
-        case CONCAT_NODE:               newNode = std::make_shared<ConcatNode>(*reinterpret_cast<ConcatNode*>(node)); break;
-        case DECIMAL_NODE:              newNode = std::make_shared<DecimalNode>(*reinterpret_cast<DecimalNode*>(node)); break;
-        case DECLARE_NODE:              newNode = std::make_shared<DeclareNode>(*reinterpret_cast<DeclareNode*>(node)); break;
+        case CONCAT_NODE:               newNode = std::make_shared<ConcatNode>(*reinterpret_cast<ConcatNode*>(node));     break;
+        case DECIMAL_NODE:              newNode = std::make_shared<DecimalNode>(*reinterpret_cast<DecimalNode*>(node));   break;
+        case DECLARE_NODE:              newNode = std::make_shared<DeclareNode>(*reinterpret_cast<DeclareNode*>(node));   break;
         case DISTINCT_NODE:             newNode = std::make_shared<DistinctNode>(*reinterpret_cast<DistinctNode*>(node)); break;
-        case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node)); break;
-        case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node)); break;
-        case ITE_NODE:                  newNode = std::make_shared<IteNode>(*reinterpret_cast<IteNode*>(node)); break;
-        case LAND_NODE:                 newNode = std::make_shared<LandNode>(*reinterpret_cast<LandNode*>(node)); break;
-        case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node)); break;
-        case LNOT_NODE:                 newNode = std::make_shared<LnotNode>(*reinterpret_cast<LnotNode*>(node)); break;
-        case LOR_NODE:                  newNode = std::make_shared<LorNode>(*reinterpret_cast<LorNode*>(node)); break;
-        case REFERENCE_NODE:            newNode = std::make_shared<ReferenceNode>(*reinterpret_cast<ReferenceNode*>(node)); break;
-        case STRING_NODE:               newNode = std::make_shared<StringNode>(*reinterpret_cast<StringNode*>(node)); break;
-        case SX_NODE:                   newNode = std::make_shared<SxNode>(*reinterpret_cast<SxNode*>(node)); break;
+        case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node));       break;
+        case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node));   break;
+        case IFF_NODE:                  newNode = std::make_shared<IffNode>(*reinterpret_cast<IffNode*>(node));           break;
+        case ITE_NODE:                  newNode = std::make_shared<IteNode>(*reinterpret_cast<IteNode*>(node));           break;
+        case LAND_NODE:                 newNode = std::make_shared<LandNode>(*reinterpret_cast<LandNode*>(node));         break;
+        case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node));           break;
+        case LNOT_NODE:                 newNode = std::make_shared<LnotNode>(*reinterpret_cast<LnotNode*>(node));         break;
+        case LOR_NODE:                  newNode = std::make_shared<LorNode>(*reinterpret_cast<LorNode*>(node));           break;
+        case REFERENCE_NODE: {
+          if (unroll)
+            return triton::ast::newInstance(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);
+          else
+            newNode = std::make_shared<ReferenceNode>(*reinterpret_cast<ReferenceNode*>(node));
+          break;
+        }
+        case STRING_NODE:               newNode = std::make_shared<StringNode>(*reinterpret_cast<StringNode*>(node));     break;
+        case SX_NODE:                   newNode = std::make_shared<SxNode>(*reinterpret_cast<SxNode*>(node));             break;
         case VARIABLE_NODE:             newNode = std::make_shared<VariableNode>(*reinterpret_cast<VariableNode*>(node)); break;
-        case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node)); break;
+        case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node));             break;
         default:
           throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid type node.");
       }
@@ -2422,7 +2467,68 @@ namespace triton {
       if (newNode == nullptr)
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
+      /* Remove parents as this is a new node which has no connections with original AST */
+      newNode->getParents().clear();
+
+      /* Create new instances of children and set their new parents */
+      auto& children = newNode->getChildren();
+      for (triton::usize idx = 0; idx < children.size(); idx++) {
+        children[idx] = triton::ast::newInstance(children[idx].get(), unroll);
+        children[idx]->setParent(newNode.get());
+      }
+
       return newNode;
+    }
+
+
+    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
+      std::unordered_map<triton::usize, std::set<SharedAbstractNode>> sortedlist;
+      std::deque<std::pair<SharedAbstractNode,triton::usize>> worklist;
+      triton::usize depth = 0;
+
+      if (node == nullptr)
+        throw triton::exceptions::Ast("triton::ast::nodesExtraction(): Node cannot be null.");
+
+      /*
+       *  We use a worklist strategy to avoid recursive calls
+       *  and so stack overflow when going through a big AST.
+       */
+      worklist.push_back({node, 0});
+      while (worklist.empty() == false) {
+        auto ast = worklist.front().first;
+        auto lvl = worklist.front().second;
+        worklist.pop_front();
+
+        /* Keep up-to-date the depth of the tree */
+        depth = std::max(depth, lvl);
+
+        /* Proceed children */
+        for (const auto& child : ast->getChildren()) {
+          if (std::find(worklist.begin(), worklist.end(), std::make_pair(child, lvl + 1)) == worklist.end()) {
+            worklist.push_back({child, lvl + 1});
+          }
+        }
+
+        /* If unroll is true, we unroll all references */
+        if (unroll == true && ast->getType() == REFERENCE_NODE) {
+          const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
+          if (std::find(worklist.begin(), worklist.end(), std::make_pair(ref, lvl + 1)) == worklist.end()) {
+            worklist.push_back({ref, lvl + 1});
+          }
+        }
+
+        sortedlist[lvl].insert(ast);
+      }
+
+      /* Sort nodes into the output list */
+      for (triton::usize index = 0; index <= depth; index++) {
+        auto& nodes = revert ? sortedlist[depth - index] : sortedlist[index];
+        for (auto&& n : nodes) {
+          if (std::find(output->begin(), output->end(), n) == output->end()) {
+            output->push_back(n);
+          }
+        }
+      }
     }
 
   }; /* ast namespace */

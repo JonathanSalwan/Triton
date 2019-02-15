@@ -8,6 +8,7 @@
 #ifndef TRITON_AST_H
 #define TRITON_AST_H
 
+#include <deque>
 #include <list>
 #include <map>
 #include <memory>
@@ -90,9 +91,6 @@ namespace triton {
       public:
         //! Constructor.
         TRITON_EXPORT AbstractNode(triton::ast::ast_e type, AstContext& ctxt);
-
-        //! Constructor by copy.
-        TRITON_EXPORT AbstractNode(const AbstractNode& other, AstContext& ctxt);
 
         //! Destructor.
         TRITON_EXPORT virtual ~AbstractNode();
@@ -264,8 +262,8 @@ namespace triton {
     //! `((_ rotate_left rot) <expr>)` node
     class BvrolNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvrolNode(triton::uint32 rot, const SharedAbstractNode& expr);
-        TRITON_EXPORT BvrolNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot);
+        TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -274,8 +272,8 @@ namespace triton {
     //! `((_ rotate_right rot) <expr>)` node
     class BvrorNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvrorNode(triton::uint32 rot, const SharedAbstractNode& expr);
-        TRITON_EXPORT BvrorNode(const SharedAbstractNode& rot, const SharedAbstractNode& expr);
+        TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot);
+        TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -521,6 +519,15 @@ namespace triton {
     };
 
 
+    //! `(iff <expr1> <expr2>)`
+    class IffNode : public AbstractNode {
+      public:
+        TRITON_EXPORT IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
     //! `(ite <ifExpr> <thenExpr> <elseExpr>)`
     class IteNode : public AbstractNode {
       public:
@@ -639,7 +646,7 @@ namespace triton {
     TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
 
     //! AST C++ API - Duplicates the AST
-    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node);
+    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
 
     //! Custom hash2n function for hash routine.
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
@@ -649,6 +656,9 @@ namespace triton {
 
     //! Custom modular sign extend for bitwise operation.
     triton::sint512 modularSignExtend(AbstractNode* node);
+
+    //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
+    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
 
   /*! @} End of ast namespace */
   };

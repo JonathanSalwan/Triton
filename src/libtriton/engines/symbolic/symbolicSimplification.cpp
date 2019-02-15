@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <list>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicSimplification.hpp>
 
@@ -177,18 +178,31 @@ namespace triton {
 
 
       triton::ast::SharedAbstractNode SymbolicSimplification::processSimplification(const triton::ast::SharedAbstractNode& node) const {
+        std::list<triton::ast::SharedAbstractNode> worklist;
         triton::ast::SharedAbstractNode snode = node;
 
-        if (snode == nullptr)
+        if (node == nullptr)
           throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
         if (this->callbacks) {
-          for (triton::uint32 index = 0; index < snode->getChildren().size(); index++)
-            snode->setChild(index, this->processSimplification(snode->getChildren()[index]));
-
-          if (snode->getBitvectorSize()) {
-            /* Don't apply simplification on nodes like String, Decimale, etc... */
-            snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, snode);
+          snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
+          /*
+           *  We use a worklist strategy to avoid recursive calls
+           *  and so stack overflow when going through a big AST.
+           */
+          worklist.push_back(snode);
+          while (worklist.size()) {
+            auto ast = worklist.front();
+            worklist.pop_front();
+            for (triton::uint32 index = 0; index < ast->getChildren().size(); index++) {
+              auto child = ast->getChildren()[index];
+              /* Don't apply simplification on nodes like String, Decimale, etc. */
+              if (child->getBitvectorSize()) {
+                auto schild = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, child);
+                ast->setChild(index, schild);
+                worklist.push_back(schild);
+              }
+            }
           }
         }
 

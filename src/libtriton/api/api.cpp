@@ -224,7 +224,7 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt() {
+  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt(this->modes) {
   }
 
 
@@ -434,7 +434,7 @@ namespace triton {
     if (this->symbolic == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
-    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine(this->symbolic);
+    this->solver = new(std::nothrow) triton::engines::solver::SolverEngine();
     if (this->solver == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
 
@@ -465,7 +465,7 @@ namespace triton {
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context
-    this->astCtxt = triton::ast::AstContext();
+    this->astCtxt = triton::ast::AstContext(this->modes);
   }
 
 
@@ -929,8 +929,7 @@ namespace triton {
 
 
   triton::ast::SharedAbstractNode API::unrollAst(const triton::ast::SharedAbstractNode& node) {
-    this->checkSymbolic();
-    return this->symbolic->unrollAst(node);
+    return triton::ast::newInstance(node.get(), true);
   }
 
 

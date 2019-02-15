@@ -424,51 +424,24 @@ namespace triton {
       }
 
 
-      /* Returns the full symbolic expression backtracked. */
-      triton::ast::SharedAbstractNode SymbolicEngine::unrollAst(const triton::ast::SharedAbstractNode& node) {
-        std::vector<triton::ast::SharedAbstractNode>& children = node->getChildren();
-
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          const triton::ast::SharedAbstractNode& ref = expr->getAst();
-          return this->unrollAst(ref);
-        }
-
-        for (triton::uint32 index = 0; index < children.size(); index++)
-          children[index] = this->unrollAst(children[index]);
-
-        return node;
-      }
-
-
-      /* [private method] Slices all expressions from a given node */
-      void SymbolicEngine::sliceExpressions(const triton::ast::SharedAbstractNode& node, std::map<triton::usize, SharedSymbolicExpression>& exprs) {
-        std::vector<triton::ast::SharedAbstractNode>& children = node->getChildren();
-
-        if (node->getType() == triton::ast::REFERENCE_NODE) {
-          const SharedSymbolicExpression& expr = reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression();
-          triton::usize id = expr->getId();
-          if (exprs.find(id) == exprs.end()) {
-            exprs[id] = expr;
-            this->sliceExpressions(expr->getAst(), exprs);
-          }
-        }
-
-        for (triton::uint32 index = 0; index < children.size(); index++) {
-          this->sliceExpressions(children[index], exprs);
-        }
-      }
-
-
       /* Slices all expressions from a given one */
       std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
         std::map<triton::usize, SharedSymbolicExpression> exprs;
+        std::deque<triton::ast::SharedAbstractNode> worklist;
 
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
 
         exprs[expr->getId()] = expr;
-        this->sliceExpressions(expr->getAst(), exprs);
+        triton::ast::nodesExtraction(&worklist, expr->getAst(), true /* unroll */, false /* revert */);
+
+        for (auto&& n : worklist) {
+          if (n->getType() == triton::ast::REFERENCE_NODE) {
+            auto expr = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
+            auto eid  = expr->getId();
+            exprs[eid] = expr;
+          }
+        }
 
         return exprs;
       }
@@ -670,7 +643,7 @@ namespace triton {
             return this->astCtxt.bvlshr(node, this->astCtxt.bv(value, node->getBitvectorSize()));
 
           case triton::arch::aarch64::ID_SHIFT_ROR:
-            return this->astCtxt.bvror(value, node);
+            return this->astCtxt.bvror(node, value);
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");

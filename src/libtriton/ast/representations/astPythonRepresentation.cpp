@@ -61,6 +61,7 @@ namespace triton {
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
+          case IFF_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IffNode*>(node)); break;
           case ITE_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IteNode*>(node)); break;
           case LAND_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LandNode*>(node)); break;
           case LET_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LetNode*>(node)); break;
@@ -361,6 +362,13 @@ namespace triton {
         else
           stream << "((" << node->getChildren()[2] << " >> " << low << ")" << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
 
+        return stream;
+      }
+
+
+      /* iff representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::IffNode* node) {
+        stream << "(" << node->getChildren()[0] << " and " << node->getChildren()[1] << ") or (not " << node->getChildren()[0] << " and not " << node->getChildren()[1] << ")";
         return stream;
       }
 

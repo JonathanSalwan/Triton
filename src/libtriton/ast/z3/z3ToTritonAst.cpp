@@ -7,20 +7,17 @@
 
 #include <list>
 
+#include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/z3ToTritonAst.hpp>
-#include <triton/astContext.hpp>
 
 
 
 namespace triton {
   namespace ast {
 
-    Z3ToTritonAst::Z3ToTritonAst(triton::engines::symbolic::SymbolicEngine* symbolicEngine, AstContext& astCtxt)
-      : symbolicEngine(symbolicEngine),
-        astCtxt(astCtxt) {
-      if (symbolicEngine == nullptr)
-        throw triton::exceptions::AstTranslations("Z3ToTritonAst::Z3ToTritonAst(): The symbolicEngine API cannot be null.");
+    Z3ToTritonAst::Z3ToTritonAst(AstContext& astCtxt)
+      : astCtxt(astCtxt) {
     }
 
 
@@ -53,6 +50,13 @@ namespace triton {
           node = this->astCtxt.distinct(this->convert(expr.arg(0)), this->convert(expr.arg(1)));
           for (triton::uint32 i = 2; i < expr.num_args(); i++)
             node = this->astCtxt.distinct(node, this->convert(expr.arg(i)));
+          break;
+        }
+
+        case Z3_OP_IFF: {
+          if (expr.num_args() != 2)
+            throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_IFF must contain two arguments.");
+          node = this->astCtxt.iff(this->convert(expr.arg(0)), this->convert(expr.arg(1)));
           break;
         }
 
@@ -385,25 +389,35 @@ namespace triton {
         case Z3_OP_ROTATE_LEFT: {
           if (expr.num_args() != 1)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_ROTATE_LEFT must contain one argument.");
-          node = this->astCtxt.bvrol(expr.hi(), this->convert(expr.arg(0)));
+          node = this->astCtxt.bvrol(this->convert(expr.arg(0)), expr.hi());
           break;
         }
 
         case Z3_OP_ROTATE_RIGHT: {
           if (expr.num_args() != 1)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_ROTATE_RIGHT must contain one argument.");
-          node = this->astCtxt.bvror(expr.hi(), this->convert(expr.arg(0)));
+          node = this->astCtxt.bvror(this->convert(expr.arg(0)), expr.hi());
+          break;
+        }
+
+        /* Always TRUE */
+        case Z3_OP_TRUE: {
+          node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvtrue());
+          break;
+        }
+
+        /* Always FALSE */
+        case Z3_OP_FALSE: {
+          node = this->astCtxt.equal(this->astCtxt.bvtrue(), this->astCtxt.bvfalse());
           break;
         }
 
         /* Variable or string */
         case Z3_OP_UNINTERPRETED: {
           std::string name = function.name().str();
-          const triton::engines::symbolic::SharedSymbolicVariable& symVar = this->symbolicEngine->getSymbolicVariableFromName(name);
 
-          if (symVar)
-            node = this->astCtxt.variable(symVar);
-          else
+          node = this->astCtxt.getVariableNode(name);
+          if (node == nullptr)
             node = this->astCtxt.string(name);
 
           break;

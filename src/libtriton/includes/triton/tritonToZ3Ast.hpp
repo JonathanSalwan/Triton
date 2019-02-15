@@ -9,10 +9,10 @@
 #define TRITON_TRITONTOZ3AST_H
 
 #include <z3++.h>
+#include <unordered_map>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/symbolicEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -36,9 +36,6 @@ namespace triton {
     /*! \brief Converts a Triton's AST to Z3's AST. */
     class TritonToZ3Ast {
       private:
-        //! Symbolic Engine API
-        triton::engines::symbolic::SymbolicEngine* symbolicEngine;
-
         //! This flag define if the conversion is used to evaluated a node or not.
         bool isEval;
 
@@ -51,13 +48,16 @@ namespace triton {
         //! Returns the integer of the z3 expression as a string.
         std::string getStringValue(const z3::expr& expr);
 
+        //! The convert internal process
+        z3::expr do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, z3::expr>* output);
+
       protected:
         //! The z3's context.
         z3::context context;
 
       public:
         //! Constructor.
-        TRITON_EXPORT TritonToZ3Ast(triton::engines::symbolic::SymbolicEngine* symbolicEngine, bool eval=true);
+        TRITON_EXPORT TritonToZ3Ast(bool eval=true);
 
         //! Converts to Z3's AST
         TRITON_EXPORT z3::expr convert(const triton::ast::SharedAbstractNode& node);

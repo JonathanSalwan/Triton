@@ -459,3 +459,42 @@ class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
     @unittest.skip("Not possible")
     def test_defcamp_2015(self):
         pass
+
+
+class TestSymbolicEngineSymOpti(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine without optimization."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        super(TestSymbolicEngineSymOpti, self).setUp()
+
+
+class TestSymbolicEngineAlignedSymOpti(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ALIGNED_MEMORY."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        super(TestSymbolicEngineAlignedSymOpti, self).setUp()
+
+
+class TestSymbolicEngineAlignedOnlySymbolizedSymOpti(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with ALIGNED_MEMORY, ONLY_ON_SYMBOLIZED and AST_OPTIMIZATIONS."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        super(TestSymbolicEngineAlignedOnlySymbolizedSymOpti, self).setUp()
