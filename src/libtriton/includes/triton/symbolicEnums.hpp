@@ -8,11 +8,8 @@
 #ifndef TRITON_SYMBOLICENUMS_HPP
 #define TRITON_SYMBOLICENUMS_HPP
 
-/*! Defines the name of a symbolic variable. */
+/*! Defines the default name of a symbolic variable. */
 #define TRITON_SYMVAR_NAME "SymVar_"
-
-/*! Defines the size of a symbolic variable' name. */
-#define TRITON_SYMVAR_NAME_SIZE (sizeof(TRITON_SYMVAR_NAME) - 1)
 
 
 
