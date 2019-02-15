@@ -77,9 +77,6 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT SymbolicVariable();
-
-          //! Constructor.
           TRITON_EXPORT SymbolicVariable(triton::engines::symbolic::variable_e type,
                                          triton::uint64 origin,
                                          triton::usize id,

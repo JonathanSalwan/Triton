@@ -15,27 +15,18 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      SymbolicVariable::SymbolicVariable() {
-        this->comment = "";
-        this->id      = static_cast<triton::usize>(-1);
-        this->name    = "";
-        this->origin  = 0;
-        this->size    = 0;
-        this->type    = triton::engines::symbolic::UNDEFINED_VARIABLE;
-      }
-
-
       SymbolicVariable::SymbolicVariable(triton::engines::symbolic::variable_e type,
                                          triton::uint64 origin,
                                          triton::usize id,
                                          triton::uint32 size,
                                          const std::string& comment) {
-        this->comment         = comment;
-        this->id              = id;
-        this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
-        this->origin          = origin;
-        this->size            = size;
-        this->type            = type;
+        this->alias   = "";
+        this->comment = comment;
+        this->id      = id;
+        this->name    = TRITON_SYMVAR_NAME + std::to_string(id);
+        this->origin  = origin;
+        this->size    = size;
+        this->type    = type;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
@@ -43,24 +34,24 @@ namespace triton {
 
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable& other) {
-        this->alias           = other.alias;
-        this->comment         = other.comment;
-        this->id              = other.id;
-        this->name            = other.name;
-        this->origin          = other.origin;
-        this->size            = other.size;
-        this->type            = other.type;
+        this->alias   = other.alias;
+        this->comment = other.comment;
+        this->id      = other.id;
+        this->name    = other.name;
+        this->origin  = other.origin;
+        this->size    = other.size;
+        this->type    = other.type;
       }
 
 
       SymbolicVariable& SymbolicVariable::operator=(const SymbolicVariable& other) {
-        this->alias           = other.alias;
-        this->comment         = other.comment;
-        this->id              = other.id;
-        this->name            = other.name;
-        this->origin          = other.origin;
-        this->size            = other.size;
-        this->type            = other.type;
+        this->alias   = other.alias;
+        this->comment = other.comment;
+        this->id      = other.id;
+        this->name    = other.name;
+        this->origin  = other.origin;
+        this->size    = other.size;
+        this->type    = other.type;
         return *this;
       }
 
