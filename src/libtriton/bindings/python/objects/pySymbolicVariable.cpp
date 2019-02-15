@@ -84,6 +84,16 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicVariable_getAlias(PyObject* self, PyObject* noarg) {
+        try {
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getAlias().c_str());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SymbolicVariable_getName(PyObject* self, PyObject* noarg) {
         try {
           return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getName().c_str());
@@ -144,6 +154,20 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicVariable_setAlias(PyObject* self, PyObject* alias) {
+        try {
+          if (!PyString_Check(alias))
+            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setAlias(): Expected a string as argument.");
+          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyString_AsString(alias));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
         try {
           if (!PyString_Check(comment))
@@ -188,12 +212,14 @@ namespace triton {
 
       //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
+        {"getAlias",          SymbolicVariable_getAlias,          METH_NOARGS,    ""},
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},
         {"getId",             SymbolicVariable_getId,             METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
         {"getOrigin",         SymbolicVariable_getOrigin,         METH_NOARGS,    ""},
         {"getType",           SymbolicVariable_getType,           METH_NOARGS,    ""},
+        {"setAlias",          SymbolicVariable_setAlias,          METH_O,         ""},
         {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };

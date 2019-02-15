@@ -5,17 +5,18 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <z3++.h>                        // for expr, model, solver, expr_ve...
-#include <z3_api.h>                      // for Z3_ast, _Z3_ast
-#include <string>                        // for string
+#include <z3++.h>
+#include <z3_api.h>
+#include <string>
 
-#include <triton/astContext.hpp>         // for AstContext
-#include <triton/exceptions.hpp>         // for SolverEngine
-#include <triton/solverModel.hpp>        // for SolverModel
-#include <triton/tritonToZ3Ast.hpp>      // for TritonToZ3Ast
-#include <triton/tritonTypes.hpp>        // for uint32, uint512
-#include <triton/z3Solver.hpp>           // for Z3Solver
-#include <triton/z3ToTritonAst.hpp>      // for Z3ToTritonAst
+#include <triton/astContext.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/solverModel.hpp>
+#include <triton/symbolicVariable.hpp>
+#include <triton/tritonToZ3Ast.hpp>
+#include <triton/tritonTypes.hpp>
+#include <triton/z3Solver.hpp>
+#include <triton/z3ToTritonAst.hpp>
 
 /*! \page solver_interface_page SMT Solver Interface
     \brief [**internal**] All information about the SMT solver interface.
@@ -166,7 +167,7 @@ namespace triton {
               triton::uint512 value = triton::uint512(svalue);
 
               /* Create a triton model */
-              SolverModel trionModel = SolverModel(varName, value);
+              SolverModel trionModel = SolverModel(z3Ast.variables[varName], value);
 
               /* Map the result */
               smodel[trionModel.getId()] = trionModel;

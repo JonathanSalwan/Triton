@@ -75,7 +75,7 @@ int main(int ac, const char **av) {
   std::cout << "Model:" << std::endl;
   for (auto it = model.begin(); it != model.end(); it++) {
     std::cout << "  - Variable id  : " << it->first << std::endl;
-    std::cout << "  - Variable name: " << it->second.getName() << std::endl;
+    std::cout << "  - Variable name: " << it->second.getVariable()->getName() << std::endl;
     std::cout << "  - Value        : " << std::hex << it->second.getValue() << std::endl;
   }
 

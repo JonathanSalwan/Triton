@@ -52,6 +52,9 @@ namespace triton {
           //! The symbolic variable type assignment.
           triton::engines::symbolic::variable_e type;
 
+          //! The alias of the symbolic variable.
+          std::string alias;
+
           //! The comment of the symbolic variable.
           std::string comment;
 
@@ -74,6 +77,9 @@ namespace triton {
 
         public:
           //! Constructor.
+          TRITON_EXPORT SymbolicVariable();
+
+          //! Constructor.
           TRITON_EXPORT SymbolicVariable(triton::engines::symbolic::variable_e type,
                                          triton::uint64 origin,
                                          triton::usize id,
@@ -89,6 +95,9 @@ namespace triton {
           //! Returns the symbolic variable type assignment.
           TRITON_EXPORT triton::engines::symbolic::variable_e getType(void) const;
 
+          //! Returns the alias of the symbolic variable.
+          TRITON_EXPORT const std::string& getAlias(void) const;
+
           //! Returns the comment of the symbolic variable.
           TRITON_EXPORT const std::string& getComment(void) const;
 
@@ -103,6 +112,9 @@ namespace triton {
 
           //! Returns the size (in bits) of the symbolic variable.
           TRITON_EXPORT triton::uint32 getSize(void) const;
+
+          //! Sets the alias of the symbolic variable.
+          TRITON_EXPORT void setAlias(const std::string& alias);
 
           //! Sets the comment of the symbolic variable.
           TRITON_EXPORT void setComment(const std::string& comment);

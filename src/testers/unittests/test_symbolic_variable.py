@@ -12,11 +12,13 @@ class TestSymbolicVariable(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.v0 = self.Triton.newSymbolicVariable(8)
-        self.v1 = self.Triton.newSymbolicVariable(16)
-        self.v2 = self.Triton.newSymbolicVariable(32, "test com")
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.v0 = self.ctx.newSymbolicVariable(8)
+        self.v1 = self.ctx.newSymbolicVariable(16)
+        self.v2 = self.ctx.newSymbolicVariable(32, "test com")
+        self.v3 = self.ctx.newSymbolicVariable(32)
+        self.v3.setAlias("v3")
 
     def test_id(self):
         """Test IDs"""
@@ -61,3 +63,33 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(str(self.v1), "SymVar_1:16")
         self.assertEqual(str(self.v2), "SymVar_2:32")
 
+    def test_alias(self):
+        """Test alias"""
+        self.assertEqual(self.v3.getName(), "SymVar_3")
+        self.assertEqual(self.v3.getAlias(), "v3")
+        self.assertEqual(str(self.v3), "v3:32")
+        self.assertEqual(self.v3.getId(), 3)
+
+    def test_model_with_alias(self):
+        var = self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.rax)
+        var.setAlias("rax")
+        inst = Instruction("\x48\x31\xd8")
+        self.ctx.processing(inst)
+
+        ast = self.ctx.getAstContext()
+        rax_ast = self.ctx.unrollAst(self.ctx.getRegisterAst(self.ctx.registers.rax))
+        model = self.ctx.getModel(rax_ast == 0x41)
+        self.assertEqual(str(rax_ast), "(bvxor rax (_ bv0 64))")
+        self.assertEqual(str(model[4]), "rax:64 = 0x41")
+        self.assertEqual(str(model[4].getVariable()), "rax:64")
+        self.assertEqual(str(model[4].getVariable().getName()), "SymVar_4")
+        self.assertEqual(model[4].getVariable().getId(), 4)
+
+        # Reset alias
+        var.setAlias("")
+        self.assertEqual(str(rax_ast), "(bvxor SymVar_4 (_ bv0 64))")
+        self.assertEqual(str(model[4]), "SymVar_4:64 = 0x41")
+        self.assertEqual(str(model[4].getVariable()), "SymVar_4:64")
+        self.assertEqual(str(model[4].getVariable().getName()), "SymVar_4")
+        self.assertEqual(str(model[4].getVariable().getAlias()), "")
+        self.assertEqual(model[4].getVariable().getId(), 4)

@@ -15,6 +15,16 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
+      SymbolicVariable::SymbolicVariable() {
+        this->comment = "";
+        this->id      = static_cast<triton::usize>(-1);
+        this->name    = "";
+        this->origin  = 0;
+        this->size    = 0;
+        this->type    = triton::engines::symbolic::UNDEFINED_VARIABLE;
+      }
+
+
       SymbolicVariable::SymbolicVariable(triton::engines::symbolic::variable_e type,
                                          triton::uint64 origin,
                                          triton::usize id,
@@ -33,6 +43,7 @@ namespace triton {
 
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable& other) {
+        this->alias           = other.alias;
         this->comment         = other.comment;
         this->id              = other.id;
         this->name            = other.name;
@@ -43,6 +54,7 @@ namespace triton {
 
 
       SymbolicVariable& SymbolicVariable::operator=(const SymbolicVariable& other) {
+        this->alias           = other.alias;
         this->comment         = other.comment;
         this->id              = other.id;
         this->name            = other.name;
@@ -55,6 +67,16 @@ namespace triton {
 
       triton::engines::symbolic::variable_e SymbolicVariable::getType(void) const {
         return this->type;
+      }
+
+
+      const std::string& SymbolicVariable::getAlias(void) const {
+        return this->alias;
+      }
+
+
+      const std::string& SymbolicVariable::getComment(void) const {
+        return this->comment;
       }
 
 
@@ -78,8 +100,8 @@ namespace triton {
       }
 
 
-      const std::string& SymbolicVariable::getComment(void) const {
-        return this->comment;
+      void SymbolicVariable::setAlias(const std::string& alias) {
+        this->alias = alias;
       }
 
 
@@ -89,7 +111,10 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
-        stream << symVar.getName() << ":" << symVar.getSize();
+        if (symVar.getAlias().empty())
+          stream << symVar.getName() << ":" << symVar.getSize();
+        else
+          stream << symVar.getAlias() << ":" << symVar.getSize();
         return stream;
       }
 

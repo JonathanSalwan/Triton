@@ -294,6 +294,9 @@ namespace triton {
         case VARIABLE_NODE: {
           const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar();
 
+          /* Record variable */
+          this->variables[symVar->getName()] = symVar;
+
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
