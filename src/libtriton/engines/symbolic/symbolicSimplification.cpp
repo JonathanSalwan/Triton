@@ -19,16 +19,11 @@
 <hr>
 
 Triton allows you to optimize your AST (See: \ref py_AstContext_page) just before the assignment to a register, a memory
-or a volatile symbolic expression.
-
-<p align="center"><img src="https://triton.quarkslab.com/files/simplification.png"/></p>
-
-The record of a simplification pass is really straightforward. You have to record your simplification
+or a volatile symbolic expression. The record of a simplification pass is really straightforward. You have to record your simplification
 callback using the triton::API::addCallback() function. Your simplification callback
-must takes as unique parameter a triton::ast::SharedAbstractNode and returns a triton::ast::SharedAbstractNode.
-Then, your callback will be called before every symbolic assignment.
-Note that you can record several simplification callbacks or remove a specific callback using the
-triton::API::removeCallback() function.
+must takes as parameters a triton::API and a triton::ast::SharedAbstractNode. The callback must return a triton::ast::SharedAbstractNode.
+Then, your callback will be called before every symbolic assignment. Note that you can record several simplification callbacks or
+remove a specific callback using the triton::API::removeCallback() function.
 
 \subsection SMT_simplification_triton Simplification via Triton's rules
 <hr>

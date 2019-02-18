@@ -17,27 +17,6 @@
 
 
 
-/* setup doctest context
-
->>> from triton import REG, TritonContext, ARCH, Instruction, AST_REPRESENTATION
->>> ctxt = TritonContext()
->>> ctxt.setArchitecture(ARCH.X86_64)
-
->>> opcode = "\x48\x31\xD0"
->>> inst = Instruction()
-
->>> inst.setOpcode(opcode)
->>> inst.setAddress(0x400000)
->>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
->>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
-
->>> ctxt.processing(inst)
-True
->>> print inst
-0x400000: xor rax, rdx
-
-*/
-
 /*! \page py_AstContext_page AstContext
     \brief [**python api**] All information about the AstContext python object.
 
@@ -46,203 +25,8 @@ True
 \section ast_description Description
 <hr>
 
-Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representations which
-allows you to perform precise analysis and allows you to build and to modify your own symbolic expressions.
-
-\subsection ast_form_page AST Form
-<hr>
-
-~~~~~~~~~~~~~{.asm}
-Instruction:  add rax, rdx
-Expression:   ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))
-~~~~~~~~~~~~~
-
-As all Triton's expressions are on [SSA form](http://en.wikipedia.org/wiki/Static_single_assignment_form), the `ref!41` is the new expression of the `RAX`
-register, the `ref!40` is the previous expression of the `RAX` register and the `ref!39` is the previous expression of the `RDX` register.
-An \ref py_Instruction_page may contain several expressions (\ref py_SymbolicExpression_page). For example, the previous `add rax, rdx` instruction contains
-7 expressions: 1 `ADD` semantics and 6 flags (`AF, CF, OF, PF, SF and ZF`) semantics where each flag is stored in a new \ref py_SymbolicExpression_page.
-
-~~~~~~~~~~~~~{.asm}
-Instruction: add rax, rdx
-Expressions: ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))
-             ref!42 = (ite (= (_ bv16 64) (bvand (_ bv16 64) (bvxor ref!41 (bvxor ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39))))) (_ bv1 1) (_ bv0 1))
-             ref!43 = (ite (bvult ref!41 ((_ extract 63 0) ref!40)) (_ bv1 1) (_ bv0 1))
-             ref!44 = (ite (= ((_ extract 63 63) (bvand (bvxor ((_ extract 63 0) ref!40) (bvnot ((_ extract 63 0) ref!39))) (bvxor ((_ extract 63 0) ref!40) ref!41))) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
-             ref!45 = (ite (= (parity_flag ((_ extract 7 0) ref!41)) (_ bv0 1)) (_ bv1 1) (_ bv0 1))
-             ref!46 = (ite (= ((_ extract 63 63) ref!41) (_ bv1 1)) (_ bv1 1) (_ bv0 1))
-             ref!47 = (ite (= ref!41 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
-~~~~~~~~~~~~~
-
-\section ast_representation_page AST representation
-<hr>
-
-An abstract syntax tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tree)) is a representation of a grammar as tree. Triton uses a custom AST
-for its expressions. As all expressions are built at runtime, an AST is available at each program point. For example, let assume this set of instructions:
-
-~~~~~~~~~~~~~{.asm}
-1. mov al, 1
-2. mov cl, 10
-3. mov dl, 20
-4. xor cl, dl
-5. add al, cl
-~~~~~~~~~~~~~
-
-At the line 5, the AST of the `AL` register looks like this:
-
-<p align="center"><img width="400" src="https://triton.quarkslab.com/files/smt_ast.svg"/></p>
-
-This AST represents the semantics of the `AL` register at the program point 5 from the program point 1. Note that this AST has been simplified for
-a better comprehension. According to the API you can build and modify your own AST. Then, you can perform some modifications and simplifications
-before sending it to the solver.
-
-\subsection ast_reference_node_page The AST reference node
-<hr>
-
-To manage more easily the subtree and to keep the SSA form of registers and memory, we have added a `REFERENCE` node which is a "terminate" node of a
-tree but contains a reference to another subtree. Below, an example of one "partial" tree linked with two other subtrees.
-
-<p align="center"><img width="600" src="https://triton.quarkslab.com/files/smt_ast_ref.svg"/></p>
-
-If you try to go through the full AST you will fail at the first reference node because a reference node does not contains child nodes.
-The only way to jump from a reference node to the targeted node is to use the triton::engines::symbolic::SymbolicEngine::unrollAst() function.
-
-~~~~~~~~~~~~~{.py}
->>> zf = ctxt.getSymbolicRegister(ctxt.registers.zf)
->>> partialTree = zf.getAst()
->>> print partialTree
-(ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
-
->>> fullTree = ctxt.unrollAst(partialTree)
->>> print fullTree
-(ite (= (bvxor (_ bv12345 64) (_ bv67890 64)) (_ bv0 64)) (_ bv1 1) (_ bv0 1))
-
-~~~~~~~~~~~~~
-
-\subsection ast_smt_python_page The SMT or Python Syntax
-<hr>
-
-By default, Triton represents semantics into [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
-Triton allows you to display your AST via a Python syntax.
-
-~~~~~~~~~~~~~{.py}
->>> ctxt = TritonContext()
->>> ctxt.setArchitecture(ARCH.X86_64)
->>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
->>> inst = Instruction()
->>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
->>> inst.setAddress(0x400000)
->>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 0x1122334455667788)
->>> ctxt.setConcreteRegisterValue(ctxt.registers.rbx, 0x8877665544332211)
->>> ctxt.processing(inst)
-True
->>> print inst
-0x400000: add rax, rbx
-
->>> for expr in inst.getSymbolicExpressions():
-...     print expr
-...
-ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) # ADD operation
-ref_1 = (0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag
-ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ ref_0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) # Carry flag
-ref_3 = ((((0x1122334455667788 ^ (~(0x8877665544332211) & 0xFFFFFFFFFFFFFFFF)) & (0x1122334455667788 ^ ref_0)) >> 63) & 0x1) # Overflow flag
-ref_4 = ((((((((0x1 ^ (((ref_0 & 0xFF) >> 0x0) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x1) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x2) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x3) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x4) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x5) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x6) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x7) & 0x1)) # Parity flag
-ref_5 = ((ref_0 >> 63) & 0x1) # Sign flag
-ref_6 = (0x1 if (ref_0 == 0x0) else 0x0) # Zero flag
-ref_7 = 0x400003 # Program Counter
-
-~~~~~~~~~~~~~
-
-\section ast_py_examples_page Examples
-<hr>
-
-\subsection ast_py_examples_page_1 Get a register expression and ask for a model
-
-~~~~~~~~~~~~~{.py}
->>> # Get the symbolic expression of the ZF flag
->>> zf      = ctxt.getSymbolicRegister(ctxt.registers.zf)
->>> zfExpr  = ctxt.unrollAst(zf.getAst())
-
->>> astCtxt = ctxt.getAstContext()
-
->>> # (= zf True)
->>> newExpr = astCtxt.equal(
-...             zfExpr,
-...             astCtxt.bvtrue()
-...           )
-
->>> # Get a model
->>> models = ctxt.getModel(newExpr)
-
-~~~~~~~~~~~~~
-
-\subsection ast_py_examples_page_2 Play with the AST
-
-~~~~~~~~~~~~~{.py}
-# Node information
-
->>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.SMT)
->>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> print type(node)
-<type 'AstNode'>
-
->>> print node
-(bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
->>> subchild = node.getChildren()[1].getChildren()[0]
->>> print subchild
-(_ bv10 8)
-
->>> print subchild.getChildren()[0].getValue()
-10
->>> print subchild.getChildren()[1].getValue()
-8
-
-# Node modification
-
->>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> print node
-(bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
->>> node.setChild(0, astCtxt.bv(123, 8))
-True
->>> print node
-(bvadd (_ bv123 8) (bvxor (_ bv10 8) (_ bv20 8)))
-
-~~~~~~~~~~~~~
-
-\subsection ast_py_examples_page_3 Python operators
-
-~~~~~~~~~~~~~{.py}
->>> a = astCtxt.bv(1, 8)
->>> b = astCtxt.bv(2, 8)
->>> c = (a & ~b) | (~a & b)
->>> print c
-(bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
-
-~~~~~~~~~~~~~
-
-As we can not overload all AST's operators only these following operators are overloaded:
-
-Python's Operator | e.g: SMT2-Lib format
-------------------|---------------------
-a + b             | (bvadd a b)
-a - b             | (bvsub a b)
-a \* b            | (bvmul a b)
-a / b             | (bvudiv a b)
-a \| b            | (bvor a b)
-a & b             | (bvand a b)
-a ^ b             | (bvxor a b)
-a % b             | (bvurem a b)
-a << b            | (bvshl a b)
-a \>> b           | (bvlshr a b)
-~a                | (bvnot a)
--a                | (bvneg a)
-a == b            | (= a b)
-a != b            | (not (= a b))
-a <= b            | (bvule a b)
-a >= b            | (bvuge a b)
-a < b             | (bvult a b)
-a > b             | (bvugt a b)
+Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representation. The class is used
+to build your own AST nodes.
 
 \anchor ast
 \section AstContext_py_api Python API - Methods of the AstContext class
@@ -440,6 +224,67 @@ Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
 Convert a Triton AST to a Z3 AST.
+
+
+\section ast_py_examples_page_3 Python API - Operators
+<hr>
+
+As we can not overload all AST's operators only these following operators are overloaded:
+
+Python's Operator | e.g: SMT2-Lib format
+------------------|---------------------
+a + b             | (bvadd a b)
+a - b             | (bvsub a b)
+a \* b            | (bvmul a b)
+a / b             | (bvudiv a b)
+a \| b            | (bvor a b)
+a & b             | (bvand a b)
+a ^ b             | (bvxor a b)
+a % b             | (bvurem a b)
+a << b            | (bvshl a b)
+a \>> b           | (bvlshr a b)
+~a                | (bvnot a)
+-a                | (bvneg a)
+a == b            | (= a b)
+a != b            | (not (= a b))
+a <= b            | (bvule a b)
+a >= b            | (bvuge a b)
+a < b             | (bvult a b)
+a > b             | (bvugt a b)
+
+\section ast_smt_python_page The SMT or Python Syntax
+<hr>
+
+By default, Triton represents semantics into [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
+Triton allows you to display your AST via a Python syntax.
+
+~~~~~~~~~~~~~{.py}
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+>>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
+>>> inst = Instruction()
+>>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
+>>> inst.setAddress(0x400000)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 0x1122334455667788)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rbx, 0x8877665544332211)
+>>> ctxt.processing(inst)
+True
+>>> print inst
+0x400000: add rax, rbx
+
+>>> for expr in inst.getSymbolicExpressions():
+...     print expr
+...
+ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) # ADD operation
+ref_1 = (0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag
+ref_2 = ((((0x1122334455667788 & 0x8877665544332211) ^ (((0x1122334455667788 ^ 0x8877665544332211) ^ ref_0) & (0x1122334455667788 ^ 0x8877665544332211))) >> 63) & 0x1) # Carry flag
+ref_3 = ((((0x1122334455667788 ^ (~(0x8877665544332211) & 0xFFFFFFFFFFFFFFFF)) & (0x1122334455667788 ^ ref_0)) >> 63) & 0x1) # Overflow flag
+ref_4 = ((((((((0x1 ^ (((ref_0 & 0xFF) >> 0x0) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x1) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x2) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x3) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x4) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x5) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x6) & 0x1)) ^ (((ref_0 & 0xFF) >> 0x7) & 0x1)) # Parity flag
+ref_5 = ((ref_0 >> 63) & 0x1) # Sign flag
+ref_6 = (0x1 if (ref_0 == 0x0) else 0x0) # Zero flag
+ref_7 = 0x400003 # Program Counter
+
+~~~~~~~~~~~~~
 
 */
 
