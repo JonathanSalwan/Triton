@@ -3329,7 +3329,7 @@ namespace triton {
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op2 = this->astCtxt.zx(src1.getBitSize() - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
         auto node = this->astCtxt.extract(0, 0,
@@ -3367,7 +3367,7 @@ namespace triton {
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst2);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.zx(dst2.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,
@@ -3435,7 +3435,7 @@ namespace triton {
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst2);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.zx(dst2.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,
@@ -3492,7 +3492,7 @@ namespace triton {
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst2);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->astCtxt.zx(dst2.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
 
         /* Create the semantics */
         auto node1 = this->astCtxt.extract(0, 0,

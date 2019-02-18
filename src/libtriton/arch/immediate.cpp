@@ -36,8 +36,13 @@ namespace triton {
 
 
     void Immediate::setValue(triton::uint64 value, triton::uint32 size /* bytes */) {
-      if (size == 0)
-        throw triton::exceptions::Immediate("Immediate::setValue(): size cannot be zero.");
+      /* If the size is zero, try to define the size according to the value. */
+      if (size == 0) {
+        if      (/* ..... 0x0000000000000000 */ value <= 0x00000000000000ff) size = BYTE_SIZE;
+        else if (value >= 0x0000000000000100 && value <= 0x000000000000ffff) size = WORD_SIZE;
+        else if (value >= 0x0000000000010000 && value <= 0x00000000ffffffff) size = DWORD_SIZE;
+        else if (value >= 0x0000000100000000 && value <= 0xffffffffffffffff) size = QWORD_SIZE;
+      }
 
       if (size != BYTE_SIZE     &&
           size != WORD_SIZE     &&
