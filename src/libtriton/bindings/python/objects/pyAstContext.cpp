@@ -17,6 +17,27 @@
 
 
 
+/* setup doctest context
+
+>>> from triton import REG, TritonContext, ARCH, Instruction, AST_REPRESENTATION
+>>> ctxt = TritonContext()
+>>> ctxt.setArchitecture(ARCH.X86_64)
+
+>>> opcode = "\x48\x31\xD0"
+>>> inst = Instruction()
+
+>>> inst.setOpcode(opcode)
+>>> inst.setAddress(0x400000)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 12345)
+>>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
+
+>>> ctxt.processing(inst)
+True
+>>> print inst
+0x400000: xor rax, rdx
+
+*/
+
 /*! \page py_AstContext_page AstContext
     \brief [**python api**] All information about the AstContext python object.
 
