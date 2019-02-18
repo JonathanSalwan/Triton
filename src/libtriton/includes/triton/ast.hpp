@@ -470,19 +470,6 @@ namespace triton {
     };
 
 
-    //! Decimal node
-    class DecimalNode : public AbstractNode {
-      protected:
-        triton::uint512 value;
-
-      public:
-        TRITON_EXPORT DecimalNode(triton::uint512 value, AstContext& ctxt);
-        TRITON_EXPORT void init(void);
-        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT triton::uint512 getValue(void);
-    };
-
-
     //! `(declare-fun <var_name> () (_ BitVec <var_size>))` node
     class DeclareNode : public AbstractNode {
       public:
@@ -525,6 +512,19 @@ namespace triton {
         TRITON_EXPORT IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
+    //! Integer node
+    class IntegerNode : public AbstractNode {
+      protected:
+        triton::uint512 value;
+
+      public:
+        TRITON_EXPORT IntegerNode(triton::uint512 value, AstContext& ctxt);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+        TRITON_EXPORT triton::uint512 getInteger(void);
     };
 
 
@@ -607,7 +607,7 @@ namespace triton {
         TRITON_EXPORT StringNode(std::string value, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT std::string getValue(void);
+        TRITON_EXPORT std::string getString(void);
     };
 
 

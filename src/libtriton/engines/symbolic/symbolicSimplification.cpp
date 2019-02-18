@@ -191,7 +191,7 @@ namespace triton {
             worklist.pop_front();
             for (triton::uint32 index = 0; index < ast->getChildren().size(); index++) {
               auto child = ast->getChildren()[index];
-              /* Don't apply simplification on nodes like String, Decimale, etc. */
+              /* Don't apply simplification on nodes like String, Integer, etc. */
               if (child->getBitvectorSize()) {
                 auto schild = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, child);
                 ast->setChild(index, schild);

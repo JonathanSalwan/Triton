@@ -81,7 +81,7 @@ Returns the kind of the node.<br>
 e.g: `AST_NODE.BVADD`
 
 - <b>integer/string getValue(void)</b><br>
-Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `decimal`, the value is an integer.
+Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `integer`, the value is an integer.
 
 - <b>bool isLogical(void)</b><br>
 Returns true if it's a logical node.
@@ -242,14 +242,14 @@ namespace triton {
         try {
           triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
 
-          if (node->getType() == triton::ast::DECIMAL_NODE)
-            return PyLong_FromUint512(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue());
+          if (node->getType() == triton::ast::INTEGER_NODE)
+            return PyLong_FromUint512(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger());
 
           else if (node->getType() == triton::ast::REFERENCE_NODE)
             return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getId());
 
           else if (node->getType() == triton::ast::STRING_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getValue().c_str());
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getString().c_str());
 
           else if (node->getType() == triton::ast::VARIABLE_NODE)
             return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable()->getName().c_str());
