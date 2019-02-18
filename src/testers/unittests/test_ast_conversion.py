@@ -245,10 +245,10 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     @utils.xfail
-    def test_decimal(self):
+    def test_integer(self):
         # Decimal node is not exported in the python interface
         for cv1 in xrange(0, 256):
-            n = self.astCtxt.decimale(cv1)
+            n = self.astCtxt.integer(cv1)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
