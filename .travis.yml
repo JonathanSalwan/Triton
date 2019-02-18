@@ -147,9 +147,9 @@ install:
   - if [ "$GCOV" == "ON" ]; then tar xf lcov_1.13.orig.tar.gz; fi
   - if [ "$GCOV" == "ON" ]; then sudo make -C lcov-1.13/ install; fi
   # Install capstone. Same command lines for OSX and Linux
-  - wget https://github.com/aquynh/capstone/archive/3.0.5.tar.gz
-  - tar -xf ./3.0.5.tar.gz
-  - cd ./capstone-3.0.5
+  - wget https://github.com/aquynh/capstone/archive/4.0.1.tar.gz
+  - tar -xf ./4.0.1.tar.gz
+  - cd ./capstone-4.0.1
   - bash ./make.sh
   - sudo make install
   - cd ../
