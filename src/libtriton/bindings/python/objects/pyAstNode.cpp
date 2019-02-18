@@ -99,7 +99,7 @@ Replaces a child node.
 \section AstNode_operator_py_api Python API - Operators
 <hr>
 
-As we can't overload all AST's operators only these following operators are overloaded:
+As we can not overload all AST's operators only these following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
 ------------------|---------------------
