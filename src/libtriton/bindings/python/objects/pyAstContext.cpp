@@ -46,8 +46,8 @@ True
 \section ast_description Description
 <hr>
 
-Triton converts the x86 and the x86-64 instruction set semantics into AST representations which allows
-you to perform precise analysis and allows you to build and to modify your own symbolic expressions.
+Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representations which
+allows you to perform precise analysis and allows you to build and to modify your own symbolic expressions.
 
 \subsection ast_form_page AST Form
 <hr>
@@ -73,17 +73,6 @@ Expressions: ref!41 = (bvadd ((_ extract 63 0) ref!40) ((_ extract 63 0) ref!39)
              ref!47 = (ite (= ref!41 (_ bv0 64)) (_ bv1 1) (_ bv0 1))
 ~~~~~~~~~~~~~
 
-Triton deals with 64-bits registers (and 128-bits for SSE). It means that it uses the `concat` and `extract` functions when operations are performed on subregister.
-
-~~~~~~~~~~~~~{.asm}
-mov al, 0xff  -> ref!193 = (concat ((_ extract 63 8) ref!191) (_ bv255 8))
-movsx eax, al -> ref!195 = ((_ zero_extend 32) ((_ sign_extend 24) ((_ extract 7 0) ref!193)))
-~~~~~~~~~~~~~
-
-On the line 1, a new 64bit-vector is created with the concatenation of `RAX[63..8]` and the concretization of the value `0xff`. On the line 2, according
-to the AMD64 behavior, if a 32-bit register is written, the CPU clears the 32-bit MSB of the corresponding register. So, in this case, we apply a sign
-extension from al to `EAX`, then a zero extension from `EAX` to `RAX`.
-
 \section ast_representation_page AST representation
 <hr>
 
@@ -91,11 +80,11 @@ An abstract syntax tree ([AST](https://en.wikipedia.org/wiki/Abstract_syntax_tre
 for its expressions. As all expressions are built at runtime, an AST is available at each program point. For example, let assume this set of instructions:
 
 ~~~~~~~~~~~~~{.asm}
-mov al, 1
-mov cl, 10
-mov dl, 20
-xor cl, dl
-add al, cl
+1. mov al, 1
+2. mov cl, 10
+3. mov dl, 20
+4. xor cl, dl
+5. add al, cl
 ~~~~~~~~~~~~~
 
 At the line 5, the AST of the `AL` register looks like this:
@@ -103,9 +92,8 @@ At the line 5, the AST of the `AL` register looks like this:
 <p align="center"><img width="400" src="https://triton.quarkslab.com/files/smt_ast.svg"/></p>
 
 This AST represents the semantics of the `AL` register at the program point 5 from the program point 1. Note that this AST has been simplified for
-a better comprehension. The real AST contains some `concat` and `extract` as mentioned in the previous chapter. According to the API you can build
-and modify your own AST. Then, you can perform some modifications and simplifications before sending it to the solver.
-
+a better comprehension. According to the API you can build and modify your own AST. Then, you can perform some modifications and simplifications
+before sending it to the solver.
 
 \subsection ast_reference_node_page The AST reference node
 <hr>
@@ -233,7 +221,7 @@ True
 
 ~~~~~~~~~~~~~
 
-As we can't overload all AST's operators only these following operators are overloaded:
+As we can not overload all AST's operators only these following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
 ------------------|---------------------
@@ -393,9 +381,6 @@ Concatenates several nodes.
 Creates a `distinct` node.<br>
 e.g: `(distinct expr1 expr2)`
 
-- <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
-Duplicates the node and returns a new instance as \ref py_AstNode_page. When you play with a node, it's recommended to use this function before any manipulation.
-
 - <b>\ref py_AstNode_page equal(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
 Creates an `equal` node.<br>
 e.g: `(= expr1 epxr2)`.
@@ -447,8 +432,11 @@ Creates a `zx` node (zero extend).<br>
 e.g: `((_ zero_extend sizeExt) expr1)`.
 
 
-\section AstContext_convert_py_api Python API - Methods of the AstContext class for AST conversion
+\section AstContext_convert_py_api Python API - Utility methods of the AstContext class
 <hr>
+
+- <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
+Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
 Convert a Triton AST to a Z3 AST.
