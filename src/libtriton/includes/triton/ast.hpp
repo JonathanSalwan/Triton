@@ -658,7 +658,10 @@ namespace triton {
     triton::sint512 modularSignExtend(AbstractNode* node);
 
     //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
-    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
+    TRITON_EXPORT void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
+
+    //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
+    TRITON_EXPORT std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
   /*! @} End of ast namespace */
   };

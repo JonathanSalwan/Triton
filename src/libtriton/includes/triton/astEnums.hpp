@@ -28,6 +28,7 @@ namespace triton {
     /*! Enumerates all types of node. Must be prime numbers. */
     enum ast_e {
       INVALID_NODE = 0,               /*!< Invalid node */
+      ANY_NODE = 0,                   /*!< Any node */
       ASSERT_NODE = 3,                /*!< (assert x) */
       BVADD_NODE = 5,                 /*!< (bvadd x y) */
       BVAND_NODE = 7,                 /*!< (bvand x y) */

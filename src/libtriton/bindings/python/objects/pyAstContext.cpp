@@ -243,6 +243,9 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 - <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
+- <b>[\ref py_AstNode_page, ...] lookingForNodes(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
+Returns a list of collected matched nodes via a depth-first pre order traversal.
+
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
 Convert a Triton AST to a Z3 AST.
 
@@ -1248,6 +1251,36 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_lookingForNodes(PyObject* self, PyObject* args) {
+        PyObject* ret = nullptr;
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+
+        /* Extract arguments */
+        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+
+        if (op1 == nullptr || !PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AstNode object as first argument");
+
+        if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
+          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AST_NODE enum as second argument");
+
+        try {
+          auto nodes = triton::ast::lookingForNodes(PyAstNode_AsAstNode(op1), static_cast<triton::ast::ast_e>(PyLong_AsUint32(op2)));
+          ret = xPyList_New(nodes.size());
+
+          triton::uint32 index = 0;
+          for (auto&& node : nodes)
+            PyList_SetItem(ret, index++, PyAstNode(node));
+
+          return ret;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_lor(PyObject* self, PyObject* exprsList) {
         std::vector<triton::ast::SharedAbstractNode> exprs;
 
@@ -1412,61 +1445,62 @@ namespace triton {
 
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
-        {"assert_",       AstContext_assert,          METH_O,           ""},
-        {"bv",            AstContext_bv,              METH_VARARGS,     ""},
-        {"bvadd",         AstContext_bvadd,           METH_VARARGS,     ""},
-        {"bvand",         AstContext_bvand,           METH_VARARGS,     ""},
-        {"bvashr",        AstContext_bvashr,          METH_VARARGS,     ""},
-        {"bvfalse",       AstContext_bvfalse,         METH_NOARGS,      ""},
-        {"bvtrue",        AstContext_bvtrue,          METH_NOARGS,      ""},
-        {"bvlshr",        AstContext_bvlshr,          METH_VARARGS,     ""},
-        {"bvmul",         AstContext_bvmul,           METH_VARARGS,     ""},
-        {"bvnand",        AstContext_bvnand,          METH_VARARGS,     ""},
-        {"bvneg",         AstContext_bvneg,           METH_O,           ""},
-        {"bvnor",         AstContext_bvnor,           METH_VARARGS,     ""},
-        {"bvnot",         AstContext_bvnot,           METH_O,           ""},
-        {"bvor",          AstContext_bvor,            METH_VARARGS,     ""},
-        {"bvrol",         AstContext_bvrol,           METH_VARARGS,     ""},
-        {"bvror",         AstContext_bvror,           METH_VARARGS,     ""},
-        {"bvsdiv",        AstContext_bvsdiv,          METH_VARARGS,     ""},
-        {"bvsge",         AstContext_bvsge,           METH_VARARGS,     ""},
-        {"bvsgt",         AstContext_bvsgt,           METH_VARARGS,     ""},
-        {"bvshl",         AstContext_bvshl,           METH_VARARGS,     ""},
-        {"bvsle",         AstContext_bvsle,           METH_VARARGS,     ""},
-        {"bvslt",         AstContext_bvslt,           METH_VARARGS,     ""},
-        {"bvsmod",        AstContext_bvsmod,          METH_VARARGS,     ""},
-        {"bvsrem",        AstContext_bvsrem,          METH_VARARGS,     ""},
-        {"bvsub",         AstContext_bvsub,           METH_VARARGS,     ""},
-        {"bvudiv",        AstContext_bvudiv,          METH_VARARGS,     ""},
-        {"bvuge",         AstContext_bvuge,           METH_VARARGS,     ""},
-        {"bvugt",         AstContext_bvugt,           METH_VARARGS,     ""},
-        {"bvule",         AstContext_bvule,           METH_VARARGS,     ""},
-        {"bvult",         AstContext_bvult,           METH_VARARGS,     ""},
-        {"bvurem",        AstContext_bvurem,          METH_VARARGS,     ""},
-        {"bvxnor",        AstContext_bvxnor ,         METH_VARARGS,     ""},
-        {"bvxor",         AstContext_bvxor,           METH_VARARGS,     ""},
-        {"compound",      AstContext_compound,        METH_O,           ""},
-        {"concat",        AstContext_concat,          METH_O,           ""},
-        {"declare",       AstContext_declare,         METH_O,           ""},
-        {"distinct",      AstContext_distinct,        METH_VARARGS,     ""},
-        {"duplicate",     AstContext_duplicate,       METH_O,           ""},
-        {"equal",         AstContext_equal,           METH_VARARGS,     ""},
-        {"extract",       AstContext_extract,         METH_VARARGS,     ""},
-        {"iff",           AstContext_iff,             METH_VARARGS,     ""},
-        {"ite",           AstContext_ite,             METH_VARARGS,     ""},
-        {"land",          AstContext_land,            METH_O,           ""},
-        {"let",           AstContext_let,             METH_VARARGS,     ""},
-        {"lnot",          AstContext_lnot,            METH_O,           ""},
-        {"lor",           AstContext_lor,             METH_O,           ""},
-        {"reference",     AstContext_reference,       METH_O,           ""},
-        {"string",        AstContext_string,          METH_O,           ""},
-        {"sx",            AstContext_sx,              METH_VARARGS,     ""},
-        {"variable",      AstContext_variable,        METH_O,           ""},
-        {"zx",            AstContext_zx,              METH_VARARGS,     ""},
+        {"assert_",         AstContext_assert,          METH_O,           ""},
+        {"bv",              AstContext_bv,              METH_VARARGS,     ""},
+        {"bvadd",           AstContext_bvadd,           METH_VARARGS,     ""},
+        {"bvand",           AstContext_bvand,           METH_VARARGS,     ""},
+        {"bvashr",          AstContext_bvashr,          METH_VARARGS,     ""},
+        {"bvfalse",         AstContext_bvfalse,         METH_NOARGS,      ""},
+        {"bvlshr",          AstContext_bvlshr,          METH_VARARGS,     ""},
+        {"bvmul",           AstContext_bvmul,           METH_VARARGS,     ""},
+        {"bvnand",          AstContext_bvnand,          METH_VARARGS,     ""},
+        {"bvneg",           AstContext_bvneg,           METH_O,           ""},
+        {"bvnor",           AstContext_bvnor,           METH_VARARGS,     ""},
+        {"bvnot",           AstContext_bvnot,           METH_O,           ""},
+        {"bvor",            AstContext_bvor,            METH_VARARGS,     ""},
+        {"bvrol",           AstContext_bvrol,           METH_VARARGS,     ""},
+        {"bvror",           AstContext_bvror,           METH_VARARGS,     ""},
+        {"bvsdiv",          AstContext_bvsdiv,          METH_VARARGS,     ""},
+        {"bvsge",           AstContext_bvsge,           METH_VARARGS,     ""},
+        {"bvsgt",           AstContext_bvsgt,           METH_VARARGS,     ""},
+        {"bvshl",           AstContext_bvshl,           METH_VARARGS,     ""},
+        {"bvsle",           AstContext_bvsle,           METH_VARARGS,     ""},
+        {"bvslt",           AstContext_bvslt,           METH_VARARGS,     ""},
+        {"bvsmod",          AstContext_bvsmod,          METH_VARARGS,     ""},
+        {"bvsrem",          AstContext_bvsrem,          METH_VARARGS,     ""},
+        {"bvsub",           AstContext_bvsub,           METH_VARARGS,     ""},
+        {"bvtrue",          AstContext_bvtrue,          METH_NOARGS,      ""},
+        {"bvudiv",          AstContext_bvudiv,          METH_VARARGS,     ""},
+        {"bvuge",           AstContext_bvuge,           METH_VARARGS,     ""},
+        {"bvugt",           AstContext_bvugt,           METH_VARARGS,     ""},
+        {"bvule",           AstContext_bvule,           METH_VARARGS,     ""},
+        {"bvult",           AstContext_bvult,           METH_VARARGS,     ""},
+        {"bvurem",          AstContext_bvurem,          METH_VARARGS,     ""},
+        {"bvxnor",          AstContext_bvxnor ,         METH_VARARGS,     ""},
+        {"bvxor",           AstContext_bvxor,           METH_VARARGS,     ""},
+        {"compound",        AstContext_compound,        METH_O,           ""},
+        {"concat",          AstContext_concat,          METH_O,           ""},
+        {"declare",         AstContext_declare,         METH_O,           ""},
+        {"distinct",        AstContext_distinct,        METH_VARARGS,     ""},
+        {"duplicate",       AstContext_duplicate,       METH_O,           ""},
+        {"equal",           AstContext_equal,           METH_VARARGS,     ""},
+        {"extract",         AstContext_extract,         METH_VARARGS,     ""},
+        {"iff",             AstContext_iff,             METH_VARARGS,     ""},
+        {"ite",             AstContext_ite,             METH_VARARGS,     ""},
+        {"land",            AstContext_land,            METH_O,           ""},
+        {"let",             AstContext_let,             METH_VARARGS,     ""},
+        {"lnot",            AstContext_lnot,            METH_O,           ""},
+        {"lookingForNodes", AstContext_lookingForNodes, METH_VARARGS,     ""},
+        {"lor",             AstContext_lor,             METH_O,           ""},
+        {"reference",       AstContext_reference,       METH_O,           ""},
+        {"string",          AstContext_string,          METH_O,           ""},
+        {"sx",              AstContext_sx,              METH_VARARGS,     ""},
+        {"variable",        AstContext_variable,        METH_O,           ""},
+        {"zx",              AstContext_zx,              METH_VARARGS,     ""},
         #ifdef Z3_INTERFACE
-        {"tritonToZ3",    AstContext_tritonToZ3,      METH_O,           ""},
+        {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
         #endif
-        {nullptr,         nullptr,                    0,                nullptr}
+        {nullptr,           nullptr,                    0,                nullptr}
       };
 
 

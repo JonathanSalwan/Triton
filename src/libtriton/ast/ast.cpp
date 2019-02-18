@@ -8,8 +8,9 @@
 #include <algorithm>
 #include <cmath>
 #include <new>
-#include <utility>
+#include <stack>
 #include <unordered_map>
+#include <utility>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -2529,6 +2530,37 @@ namespace triton {
           }
         }
       }
+    }
+
+
+    std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match) {
+      std::stack<triton::ast::AbstractNode*>      worklist;
+      std::deque<triton::ast::SharedAbstractNode> result;
+      std::set<const triton::ast::AbstractNode*>  visited;
+
+      worklist.push(node.get());
+      while (!worklist.empty()) {
+        auto current = worklist.top();
+        worklist.pop();
+
+        // This means that node is already in work_stack and we will not need to convert it second time
+        if (visited.find(current) != visited.end()) {
+          continue;
+        }
+
+        visited.insert(current);
+        if (match == triton::ast::ANY_NODE || current->getType() == match)
+          result.push_front(current->shared_from_this());
+
+        if (current->getType() == REFERENCE_NODE) {
+          worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
+        } else {
+          for (const auto &child : current->getChildren())
+            worklist.push(child.get());
+        }
+      }
+
+      return result;
     }
 
   }; /* ast namespace */

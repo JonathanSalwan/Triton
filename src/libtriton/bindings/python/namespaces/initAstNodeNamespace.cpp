@@ -25,6 +25,7 @@ The AST_NODE namespace contains all kinds of node.
 \section AST_NODE_py_api Python API - Items of the AST_NODE namespace
 <hr>
 
+- **AST_NODE.ANY**
 - **AST_NODE.ASSERT**
 - **AST_NODE.BV**
 - **AST_NODE.BVADD**
@@ -63,8 +64,8 @@ The AST_NODE namespace contains all kinds of node.
 - **AST_NODE.DISTINCT**
 - **AST_NODE.EQUAL**
 - **AST_NODE.EXTRACT**
-- **AST_NODE.INVALID**
 - **AST_NODE.IFF**
+- **AST_NODE.INVALID**
 - **AST_NODE.ITE**
 - **AST_NODE.LAND**
 - **AST_NODE.LET**
@@ -85,6 +86,7 @@ namespace triton {
     namespace python {
 
       void initAstNodeNamespace(PyObject* astNodeDict) {
+        xPyDict_SetItemString(astNodeDict, "ANY",               PyLong_FromUint32(triton::ast::ANY_NODE));
         xPyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint32(triton::ast::ASSERT_NODE));
         xPyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint32(triton::ast::BV_NODE));
         xPyDict_SetItemString(astNodeDict, "BVADD",             PyLong_FromUint32(triton::ast::BVADD_NODE));
