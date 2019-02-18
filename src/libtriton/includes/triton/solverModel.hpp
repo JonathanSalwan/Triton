@@ -65,7 +65,7 @@ namespace triton {
           TRITON_EXPORT SolverModel& operator=(const SolverModel& other);
 
           //! Returns the id of the variable.
-          TRITON_EXPORT triton::uint32 getId(void) const;
+          TRITON_EXPORT triton::usize getId(void) const;
 
           //! Returns the value of the model.
           TRITON_EXPORT triton::uint512 getValue(void) const;

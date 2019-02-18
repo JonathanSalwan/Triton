@@ -333,7 +333,7 @@ namespace triton {
 
       /* declare representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
-        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
+        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
         if (var->getAlias().empty())
           stream << var->getName() << " = " << "0xdeadbeef";
         else
@@ -452,10 +452,10 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        if (node->getVar()->getAlias().empty())
-          stream << node->getVar()->getName();
+        if (node->getSymbolicVariable()->getAlias().empty())
+          stream << node->getSymbolicVariable()->getName();
         else
-          stream << node->getVar()->getAlias();
+          stream << node->getSymbolicVariable()->getAlias();
         return stream;
       }
 

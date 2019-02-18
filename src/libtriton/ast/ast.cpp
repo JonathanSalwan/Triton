@@ -2254,7 +2254,7 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicVariable& VariableNode::getVar() {
+    const triton::engines::symbolic::SharedSymbolicVariable& VariableNode::getSymbolicVariable() {
       return this->symVar;
     }
 

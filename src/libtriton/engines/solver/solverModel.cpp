@@ -38,7 +38,7 @@ namespace triton {
       }
 
 
-      triton::uint32 SolverModel::getId(void) const {
+      triton::usize SolverModel::getId(void) const {
         return this->variable->getId();
       }
 

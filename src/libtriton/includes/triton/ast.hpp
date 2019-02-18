@@ -629,7 +629,7 @@ namespace triton {
         TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getVar(void);
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariable(void);
     };
 
 

@@ -252,7 +252,7 @@ namespace triton {
             return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getValue().c_str());
 
           else if (node->getType() == triton::ast::VARIABLE_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar()->getName().c_str());
+            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable()->getName().c_str());
 
           return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
         }

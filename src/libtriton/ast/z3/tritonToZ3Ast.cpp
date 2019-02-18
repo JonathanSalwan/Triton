@@ -292,7 +292,7 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar();
+          const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable();
 
           /* Record variable */
           this->variables[symVar->getName()] = symVar;
