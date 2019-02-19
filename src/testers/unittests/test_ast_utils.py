@@ -31,6 +31,8 @@ class TestAstUtils(unittest.TestCase):
         self.assertEqual(len(l), 2)
         self.assertEqual(l[0], self.v1)
         self.assertEqual(l[1], self.v2)
+        self.assertEqual(l[0].getSymbolicVariable().getName(), self.sv1.getName())
+        self.assertEqual(l[1].getSymbolicVariable().getName(), self.sv2.getName())
 
         l = self.astCtxt.lookingForNodes(n, AST_NODE.ANY)
         self.assertEqual(len(l), 12)

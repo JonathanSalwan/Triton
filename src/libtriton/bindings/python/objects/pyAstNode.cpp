@@ -73,15 +73,24 @@ Returns the list of child nodes.
 - <b>integer getHash(void)</b><br>
 Returns the hash (signature) of the AST .
 
+- <b>integer getInteger(void)</b><br>
+Returns the integer of the node. Only available on `INTEGER_NODE`, raises an exception otherwise.
+
 - <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
 Returns the parents list nodes. The list is empty if there is still no parent defined.
+
+- <b>string getString(void)</b><br>
+Returns the string of the node. Only available on `STRING_NODE`, raises an exception otherwise.
+
+- <b>\ref py_SymbolicExpression_page getSymbolicExpression(void)</b><br>
+Returns the symbolic expression of the node. Only available on `REFERENCE_NODE`, raises an exception otherwise.
+
+- <b>\ref py_SymbolicVariable_page getSymbolicVariable(void)</b><br>
+Returns the symbolic variable of the node. Only available on `VARIABLE_NODE`, raises an exception otherwise.
 
 - <b>\ref py_AST_NODE_page getType(void)</b><br>
 Returns the kind of the node.<br>
 e.g: `AST_NODE.BVADD`
-
-- <b>integer/string getValue(void)</b><br>
-Returns the node value (metadata) as integer or string (it depends of the kind). For example if the kind of node is `integer`, the value is an integer.
 
 - <b>bool isLogical(void)</b><br>
 Returns true if it's a logical node.
@@ -212,6 +221,21 @@ namespace triton {
       }
 
 
+      static PyObject* AstNode_getInteger(PyObject* self, PyObject* noarg) {
+        triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
+
+        if (node->getType() != triton::ast::INTEGER_NODE)
+          return PyErr_Format(PyExc_TypeError, "AstNode::getInteger(): Only available on INTEGER_NODE type.");
+
+        try {
+          return PyLong_FromUint512(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
@@ -228,9 +252,14 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_getType(PyObject* self, PyObject* noarg) {
+      static PyObject* AstNode_getString(PyObject* self, PyObject* noarg) {
+        triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
+
+        if (node->getType() != triton::ast::STRING_NODE)
+          return PyErr_Format(PyExc_TypeError, "AstNode::getString(): Only available on STRING_NODE type.");
+
         try {
-          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getType());
+          return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getString().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -238,23 +267,39 @@ namespace triton {
       }
 
 
-      static PyObject* AstNode_getValue(PyObject* self, PyObject* noarg) {
+      static PyObject* AstNode_getSymbolicExpression(PyObject* self, PyObject* noarg) {
+        triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
+
+        if (node->getType() != triton::ast::REFERENCE_NODE)
+          return PyErr_Format(PyExc_TypeError, "AstNode::getSymbolicExpression(): Only available on REFERENCE_NODE type.");
+
         try {
-          triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
+          return PySymbolicExpression(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
-          if (node->getType() == triton::ast::INTEGER_NODE)
-            return PyLong_FromUint512(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger());
 
-          else if (node->getType() == triton::ast::REFERENCE_NODE)
-            return PyLong_FromUsize(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getId());
+      static PyObject* AstNode_getSymbolicVariable(PyObject* self, PyObject* noarg) {
+        triton::ast::SharedAbstractNode node = PyAstNode_AsAstNode(self);
 
-          else if (node->getType() == triton::ast::STRING_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::StringNode*>(node.get())->getString().c_str());
+        if (node->getType() != triton::ast::VARIABLE_NODE)
+          return PyErr_Format(PyExc_TypeError, "AstNode::getSymbolicVariable(): Only available on VARIABLE_NODE type.");
 
-          else if (node->getType() == triton::ast::VARIABLE_NODE)
-            return Py_BuildValue("s", reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable()->getName().c_str());
+        try {
+          return PySymbolicVariable(reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
-          return PyErr_Format(PyExc_TypeError, "AstNode::getValue(): Cannot use getValue() on this kind of node.");
+
+      static PyObject* AstNode_getType(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getType());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -565,20 +610,23 @@ namespace triton {
 
       //! AstNode methods.
       PyMethodDef AstNode_callbacks[] = {
-        {"equalTo",           AstNode_equalTo,           METH_O,          ""},
-        {"evaluate",          AstNode_evaluate,          METH_NOARGS,     ""},
-        {"getBitvectorMask",  AstNode_getBitvectorMask,  METH_NOARGS,     ""},
-        {"getBitvectorSize",  AstNode_getBitvectorSize,  METH_NOARGS,     ""},
-        {"getChildren",       AstNode_getChildren,       METH_NOARGS,     ""},
-        {"getHash",           AstNode_getHash,           METH_NOARGS,     ""},
-        {"getParents",        AstNode_getParents,        METH_NOARGS,     ""},
-        {"getType",           AstNode_getType,           METH_NOARGS,     ""},
-        {"getValue",          AstNode_getValue,          METH_NOARGS,     ""},
-        {"isLogical",         AstNode_isLogical,         METH_NOARGS,     ""},
-        {"isSigned",          AstNode_isSigned,          METH_NOARGS,     ""},
-        {"isSymbolized",      AstNode_isSymbolized,      METH_NOARGS,     ""},
-        {"setChild",          AstNode_setChild,          METH_VARARGS,    ""},
-        {nullptr,             nullptr,                   0,               nullptr}
+        {"equalTo",                 AstNode_equalTo,                METH_O,          ""},
+        {"evaluate",                AstNode_evaluate,               METH_NOARGS,     ""},
+        {"getBitvectorMask",        AstNode_getBitvectorMask,       METH_NOARGS,     ""},
+        {"getBitvectorSize",        AstNode_getBitvectorSize,       METH_NOARGS,     ""},
+        {"getChildren",             AstNode_getChildren,            METH_NOARGS,     ""},
+        {"getHash",                 AstNode_getHash,                METH_NOARGS,     ""},
+        {"getInteger",              AstNode_getInteger,             METH_NOARGS,     ""},
+        {"getParents",              AstNode_getParents,             METH_NOARGS,     ""},
+        {"getString",               AstNode_getString,              METH_NOARGS,     ""},
+        {"getSymbolicExpression",   AstNode_getSymbolicExpression,  METH_NOARGS,     ""},
+        {"getSymbolicVariable",     AstNode_getSymbolicVariable,    METH_NOARGS,     ""},
+        {"getType",                 AstNode_getType,                METH_NOARGS,     ""},
+        {"isLogical",               AstNode_isLogical,              METH_NOARGS,     ""},
+        {"isSigned",                AstNode_isSigned,               METH_NOARGS,     ""},
+        {"isSymbolized",            AstNode_isSymbolized,           METH_NOARGS,     ""},
+        {"setChild",                AstNode_setChild,               METH_VARARGS,    ""},
+        {nullptr,                   nullptr,                        0,               nullptr}
       };
 
 

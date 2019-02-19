@@ -134,7 +134,7 @@ To be able to compile Triton, you must install these libraries before:
  [libboost](http://www.boost.org/)                                             | >= 1.55
  [libpython](https://www.python.org/)                                          | == 2.7.x
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
- [libcapstone](http://www.capstone-engine.org/)                                | == 3.0.5
+ [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0.5
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
 <hr>
