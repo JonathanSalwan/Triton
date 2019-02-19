@@ -642,12 +642,6 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
-    //! Displays the node in ast representation.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
-
-    //! AST C++ API - Duplicates the AST
-    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
-
     //! Custom hash2n function for hash routine.
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
 
@@ -656,6 +650,15 @@ namespace triton {
 
     //! Custom modular sign extend for bitwise operation.
     triton::sint512 modularSignExtend(AbstractNode* node);
+
+    //! Displays the node in ast representation.
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
+
+    //! AST C++ API - Duplicates the AST
+    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
+
+    //! AST C++ API - Unrolls the SSA form of a given AST.
+    TRITON_EXPORT SharedAbstractNode unrollAst(const SharedAbstractNode& node);
 
     //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
     TRITON_EXPORT void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);

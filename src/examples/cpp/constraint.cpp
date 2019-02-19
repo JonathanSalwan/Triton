@@ -13,6 +13,7 @@
 
 #include <iostream>
 #include <triton/api.hpp>
+#include <triton/ast.hpp>
 #include <triton/x86Specifications.hpp>
 
 using namespace triton;
@@ -54,7 +55,7 @@ int main(int ac, const char **av) {
   auto raxSym = api.getSymbolicRegister(api.getRegister(ID_REG_X86_RAX));
 
   /* Get the RAX full AST */
-  auto raxFullAst = api.unrollAst(raxSym->getAst());
+  auto raxFullAst = triton::ast::unrollAst(raxSym->getAst());
 
   /* Display RAX's AST*/
   std::cout << "RAX expr: " << raxFullAst << std::endl;

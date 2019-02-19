@@ -928,11 +928,6 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::unrollAst(const triton::ast::SharedAbstractNode& node) {
-    return triton::ast::newInstance(node.get(), true);
-  }
-
-
   std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> API::sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
     this->checkSymbolic();
     return this->symbolic->sliceExpressions(expr);

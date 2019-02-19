@@ -2482,6 +2482,11 @@ namespace triton {
     }
 
 
+    SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
+      return triton::ast::newInstance(node.get(), true);
+    }
+
+
     void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
       std::unordered_map<triton::usize, std::set<SharedAbstractNode>> sortedlist;
       std::deque<std::pair<SharedAbstractNode,triton::usize>> worklist;
