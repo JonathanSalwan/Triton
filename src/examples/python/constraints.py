@@ -86,9 +86,34 @@ def test5():
 
     return
 
+
+# From instruction
+def test6():
+    Triton = TritonContext()
+    Triton.setArchitecture(ARCH.X86)
+    astCtxt = Triton.getAstContext()
+
+    # rax is now symbolic
+    var = Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
+    var.setAlias("eax")
+
+    # process instruction
+    Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
+
+    # get rax ast
+    eaxAst = Triton.getSymbolicRegister(Triton.registers.eax).getAst()
+
+    # constraint
+    c = eaxAst ^ 0x11223344 == 0xdeadbeaf
+
+    print 'Test 6:', Triton.getModel(c)[0]
+
+    return
+
 if __name__ == '__main__':
     test1()
     test2()
     test3()
     test4()
     test5()
+    test6()

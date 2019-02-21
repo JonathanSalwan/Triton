@@ -98,12 +98,12 @@ namespace triton {
           return to_expr(this->context, Z3_mk_bvor(this->context, children[0], children[1]));
 
         case BVROL_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[1].get())->getValue().convert_to<triton::uint32>();
+          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
           return to_expr(this->context, Z3_mk_rotate_left(this->context, rot, children[0]));
         }
 
         case BVROR_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[1].get())->getValue().convert_to<triton::uint32>();
+          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
           return to_expr(this->context, Z3_mk_rotate_right(this->context, rot, children[0]));
         }
 
@@ -177,11 +177,6 @@ namespace triton {
           return currentValue;
         }
 
-        case DECIMAL_NODE: {
-          std::string value(reinterpret_cast<triton::ast::DecimalNode*>(node.get())->getValue().convert_to<std::string>());
-          return this->context.int_val(value.c_str());
-        }
-
         case DISTINCT_NODE: {
           z3::expr op1 = children[0];
           z3::expr op2 = children[1];
@@ -208,6 +203,11 @@ namespace triton {
           z3::expr op2 = children[1];
 
           return to_expr(this->context, Z3_mk_iff(this->context, op1, op2));
+        }
+
+        case INTEGER_NODE: {
+          std::string value(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger().convert_to<std::string>());
+          return this->context.int_val(value.c_str());
         }
 
         case ITE_NODE: {
@@ -238,7 +238,7 @@ namespace triton {
         }
 
         case LET_NODE: {
-          std::string symbol    = reinterpret_cast<triton::ast::StringNode*>(node->getChildren()[0].get())->getValue();
+          std::string symbol    = reinterpret_cast<triton::ast::StringNode*>(node->getChildren()[0].get())->getString();
           this->symbols[symbol] = node->getChildren()[1];
 
           return children[2];
@@ -275,7 +275,7 @@ namespace triton {
           return results->at(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getAst());
 
         case STRING_NODE: {
-          std::string value = reinterpret_cast<triton::ast::StringNode*>(node.get())->getValue();
+          std::string value = reinterpret_cast<triton::ast::StringNode*>(node.get())->getString();
 
           if (this->symbols.find(value) == this->symbols.end())
             throw triton::exceptions::AstTranslations("TritonToZ3Ast::do_convert(): [STRING_NODE] Symbols not found.");
@@ -292,7 +292,10 @@ namespace triton {
         }
 
         case VARIABLE_NODE: {
-          const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getVar();
+          const triton::engines::symbolic::SharedSymbolicVariable& symVar = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable();
+
+          /* Record variable */
+          this->variables[symVar->getName()] = symVar;
 
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {

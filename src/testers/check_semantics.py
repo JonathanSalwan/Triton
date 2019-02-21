@@ -83,7 +83,7 @@ def cafter(instruction):
         if se is None:
             continue
 
-        expr   = Triton.unrollAst(se.getAst())
+        expr   = se.getAst()
         svalue = expr.evaluate()
         #svalue = Triton.evaluateAstViaZ3(expr)
 

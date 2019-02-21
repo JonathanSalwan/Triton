@@ -40,7 +40,8 @@ True
 >>> print inst
 0x0: xor rax, 0x11223344
 
->>> raxAst = ctxt.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
+>>> ast = ctxt.getAstContext()
+>>> raxAst = ast.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
 >>> print raxAst
 (bvxor SymVar_0 (_ bv287454020 64))
 
@@ -55,7 +56,7 @@ True
 
 >>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
 >>> print symvarModel
-SymVar_0 = 0x11223344
+SymVar_0:64 = 0x11223344
 >>> hex(symvarModel.getValue())
 '0x11223344L'
 
@@ -67,11 +68,11 @@ SymVar_0 = 0x11223344
 - <b>integer getId(void)</b><br>
 Returns the id of the model. This id is the same that the variable id.
 
-- <b>string getName(void)</b><br>
-Returns the name of the model. This name is the same that the variable name. Names are always something like this: SymVar_X.
-
 - <b>integer getValue(void)</b><br>
 Returns the value of the model.
+
+- <b>\ref py_SymbolicVariable_page getVariable(void)</b><br>
+Returns the symbolic variable.
 
 */
 
@@ -99,9 +100,9 @@ namespace triton {
       }
 
 
-      static PyObject* SolverModel_getName(PyObject* self, PyObject* noarg) {
+      static PyObject* SolverModel_getValue(PyObject* self, PyObject* noarg) {
         try {
-          return Py_BuildValue("s", PySolverModel_AsSolverModel(self)->getName().c_str());
+          return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -109,9 +110,9 @@ namespace triton {
       }
 
 
-      static PyObject* SolverModel_getValue(PyObject* self, PyObject* noarg) {
+      static PyObject* SolverModel_getVariable(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint512(PySolverModel_AsSolverModel(self)->getValue());
+          return PySymbolicVariable(PySolverModel_AsSolverModel(self)->getVariable());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -139,10 +140,10 @@ namespace triton {
 
       //! SolverModel methods.
       PyMethodDef SolverModel_callbacks[] = {
-        {"getId",     SolverModel_getId,      METH_NOARGS,    ""},
-        {"getName",   SolverModel_getName,    METH_NOARGS,    ""},
-        {"getValue",  SolverModel_getValue,   METH_NOARGS,    ""},
-        {nullptr,     nullptr,                0,              nullptr}
+        {"getId",       SolverModel_getId,        METH_NOARGS,    ""},
+        {"getValue",    SolverModel_getValue,     METH_NOARGS,    ""},
+        {"getVariable", SolverModel_getVariable,  METH_NOARGS,    ""},
+        {nullptr,       nullptr,                  0,              nullptr}
       };
 
 

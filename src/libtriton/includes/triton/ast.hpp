@@ -470,19 +470,6 @@ namespace triton {
     };
 
 
-    //! Decimal node
-    class DecimalNode : public AbstractNode {
-      protected:
-        triton::uint512 value;
-
-      public:
-        TRITON_EXPORT DecimalNode(triton::uint512 value, AstContext& ctxt);
-        TRITON_EXPORT void init(void);
-        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT triton::uint512 getValue(void);
-    };
-
-
     //! `(declare-fun <var_name> () (_ BitVec <var_size>))` node
     class DeclareNode : public AbstractNode {
       public:
@@ -525,6 +512,19 @@ namespace triton {
         TRITON_EXPORT IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
+    //! Integer node
+    class IntegerNode : public AbstractNode {
+      protected:
+        triton::uint512 value;
+
+      public:
+        TRITON_EXPORT IntegerNode(triton::uint512 value, AstContext& ctxt);
+        TRITON_EXPORT void init(void);
+        TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+        TRITON_EXPORT triton::uint512 getInteger(void);
     };
 
 
@@ -607,7 +607,7 @@ namespace triton {
         TRITON_EXPORT StringNode(std::string value, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT std::string getValue(void);
+        TRITON_EXPORT std::string getString(void);
     };
 
 
@@ -629,7 +629,7 @@ namespace triton {
         TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
-        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getVar(void);
+        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariable(void);
     };
 
 
@@ -642,12 +642,6 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
-    //! Displays the node in ast representation.
-    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
-
-    //! AST C++ API - Duplicates the AST
-    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
-
     //! Custom hash2n function for hash routine.
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
 
@@ -657,8 +651,20 @@ namespace triton {
     //! Custom modular sign extend for bitwise operation.
     triton::sint512 modularSignExtend(AbstractNode* node);
 
+    //! Displays the node in ast representation.
+    TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, AbstractNode* node);
+
+    //! AST C++ API - Duplicates the AST
+    TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
+
+    //! AST C++ API - Unrolls the SSA form of a given AST.
+    TRITON_EXPORT SharedAbstractNode unrollAst(const SharedAbstractNode& node);
+
     //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
-    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
+    TRITON_EXPORT void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
+
+    //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
+    TRITON_EXPORT std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
   /*! @} End of ast namespace */
   };

@@ -56,7 +56,7 @@ Returns name of the the symbolic variable.<br>
 e.g: `SymVar_18`
 
 - <b>integer getOrigin(void)</b><br>
-Returns the origin according to the \ref py_SYMBOLIC_page.<br>
+Returns the origin according to the \ref py_SYMBOLIC_page value.<br>
 If `getType()` returns triton::engines::symbolic::REGISTER_VARIABLE, so `getOrigin()` returns the id of the register.<br>
 Otherwise, if `getType()` returns triton::engines::symbolic::MEMORY_VARIABLE, so `getOrigin()` returns the address of the memory access.<br>
 Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, so `getOrigin()` returns `0`.
@@ -81,6 +81,16 @@ namespace triton {
         std::cout << std::flush;
         PySymbolicVariable_AsSymbolicVariable(self) = nullptr; // decref the shared_ptr
         Py_TYPE(self)->tp_free((PyObject*)self);
+      }
+
+
+      static PyObject* SymbolicVariable_getAlias(PyObject* self, PyObject* noarg) {
+        try {
+          return Py_BuildValue("s", PySymbolicVariable_AsSymbolicVariable(self)->getAlias().c_str());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
       }
 
 
@@ -144,6 +154,20 @@ namespace triton {
       }
 
 
+      static PyObject* SymbolicVariable_setAlias(PyObject* self, PyObject* alias) {
+        try {
+          if (!PyString_Check(alias))
+            return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setAlias(): Expected a string as argument.");
+          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyString_AsString(alias));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
         try {
           if (!PyString_Check(comment))
@@ -188,12 +212,14 @@ namespace triton {
 
       //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
+        {"getAlias",          SymbolicVariable_getAlias,          METH_NOARGS,    ""},
         {"getBitSize",        SymbolicVariable_getBitSize,        METH_NOARGS,    ""},
         {"getComment",        SymbolicVariable_getComment,        METH_NOARGS,    ""},
         {"getId",             SymbolicVariable_getId,             METH_NOARGS,    ""},
         {"getName",           SymbolicVariable_getName,           METH_NOARGS,    ""},
         {"getOrigin",         SymbolicVariable_getOrigin,         METH_NOARGS,    ""},
         {"getType",           SymbolicVariable_getType,           METH_NOARGS,    ""},
+        {"setAlias",          SymbolicVariable_setAlias,          METH_O,         ""},
         {"setComment",        SymbolicVariable_setComment,        METH_O,         ""},
         {nullptr,             nullptr,                            0,              nullptr}
       };

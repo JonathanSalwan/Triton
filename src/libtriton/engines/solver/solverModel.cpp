@@ -17,16 +17,13 @@ namespace triton {
     namespace solver {
 
       SolverModel::SolverModel() {
-        this->id    = static_cast<triton::uint32>(-1);
-        this->name  = "";
         this->value = 0;
       }
 
 
-      SolverModel::SolverModel(const std::string& name, triton::uint512 value) {
-        this->id    = std::atoi(name.c_str() + TRITON_SYMVAR_NAME_SIZE);
-        this->name  = name;
-        this->value = value;
+      SolverModel::SolverModel(const triton::engines::symbolic::SharedSymbolicVariable& variable, triton::uint512 value) {
+        this->value    = value;
+        this->variable = variable;
       }
 
 
@@ -36,24 +33,23 @@ namespace triton {
 
 
       void SolverModel::copy(const SolverModel& other) {
-        this->id    = other.id;
-        this->name  = other.name;
-        this->value = other.value;
+        this->value    = other.value;
+        this->variable = other.variable;
       }
 
 
-      const std::string& SolverModel::getName(void) const {
-        return this->name;
-      }
-
-
-      triton::uint32 SolverModel::getId(void) const {
-        return this->id;
+      triton::usize SolverModel::getId(void) const {
+        return this->variable->getId();
       }
 
 
       triton::uint512 SolverModel::getValue(void) const {
         return this->value;
+      }
+
+
+      const triton::engines::symbolic::SharedSymbolicVariable& SolverModel::getVariable(void) const {
+        return this->variable;
       }
 
 
@@ -64,7 +60,7 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SolverModel& model) {
-        stream << model.getName() << " = 0x" << std::hex << model.getValue() << std::dec;
+        stream << model.getVariable() << " = 0x" << std::hex << model.getValue() << std::dec;
         return stream;
       }
 

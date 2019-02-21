@@ -8,8 +8,9 @@
 #include <algorithm>
 #include <cmath>
 #include <new>
-#include <utility>
+#include <stack>
 #include <unordered_map>
+#include <utility>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -685,7 +686,7 @@ namespace triton {
     /* ====== bvrol */
 
 
-    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext().decimal(rot)) {
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext().integer(rot)) {
     }
 
 
@@ -702,10 +703,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrolNode::init(): Must take at least two children.");
 
-      if (this->children[1]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("BvrolNode::init(): rot must be a DECIMAL_NODE.");
+      if (this->children[1]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("BvrolNode::init(): rot must be a INTEGER_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -736,7 +737,7 @@ namespace triton {
     /* ====== bvror */
 
 
-    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext().decimal(rot)) {
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext().integer(rot)) {
     }
 
 
@@ -753,10 +754,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrorNode::init(): Must take at least two children.");
 
-      if (this->children[1]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("BvrorNode::init(): rot must be a DECIMAL_NODE.");
+      if (this->children[1]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("BvrorNode::init(): rot must be a INTEGER_NODE.");
 
-      rot   = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -1539,8 +1540,8 @@ namespace triton {
 
 
     BvNode::BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
-      this->addChild(ctxt.decimal(value));
-      this->addChild(ctxt.decimal(size));
+      this->addChild(ctxt.integer(value));
+      this->addChild(ctxt.integer(size));
     }
 
 
@@ -1551,11 +1552,11 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE || this->children[1]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("BvNode::init(): Size and value must be a DECIMAL_NODE.");
+      if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("BvNode::init(): Size and value must be a INTEGER_NODE.");
 
-      value = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue();
-      size  = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      value = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger();
+      size  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
 
       if (!size)
         throw triton::exceptions::Ast("BvNode::init(): Size connot be equal to zero.");
@@ -1661,36 +1662,6 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
-    }
-
-
-    /* ====== Decimal node */
-
-
-    DecimalNode::DecimalNode(triton::uint512 value, AstContext& ctxt): AbstractNode(DECIMAL_NODE, ctxt) {
-      this->value = value;
-    }
-
-
-    void DecimalNode::init(void) {
-      /* Init attributes */
-      this->eval        = 0;
-      this->size        = 0;
-      this->symbolized  = false;
-
-      /* Init parents */
-      this->initParents();
-    }
-
-
-    triton::uint512 DecimalNode::getValue(void) {
-      return this->value;
-    }
-
-
-    triton::uint512 DecimalNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->type ^ this->value;
-      return hash;
     }
 
 
@@ -1817,8 +1788,8 @@ namespace triton {
 
 
     ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr): AbstractNode(EXTRACT_NODE, expr->getContext()) {
-      this->addChild(this->ctxt.decimal(high));
-      this->addChild(this->ctxt.decimal(low));
+      this->addChild(this->ctxt.integer(high));
+      this->addChild(this->ctxt.integer(low));
       this->addChild(expr);
     }
 
@@ -1830,11 +1801,11 @@ namespace triton {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("ExtractNode::init(): Must take at least three children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE || this->children[1]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("ExtractNode::init(): The highest and lower bit must be a DECIMAL_NODE.");
+      if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("ExtractNode::init(): The highest and lower bit must be a INTEGER_NODE.");
 
-      high = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
-      low  = reinterpret_cast<DecimalNode*>(this->children[1].get())->getValue().convert_to<triton::uint32>();
+      high = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
+      low  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
 
       if (low > high)
         throw triton::exceptions::Ast("ExtractNode::init(): The high bit must be greater than the low bit.");
@@ -1909,6 +1880,36 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
       return triton::ast::rotl(h, deep);
+    }
+
+
+    /* ====== Integer node */
+
+
+    IntegerNode::IntegerNode(triton::uint512 value, AstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
+      this->value = value;
+    }
+
+
+    void IntegerNode::init(void) {
+      /* Init attributes */
+      this->eval        = 0;
+      this->size        = 0;
+      this->symbolized  = false;
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 IntegerNode::getInteger(void) {
+      return this->value;
+    }
+
+
+    triton::uint512 IntegerNode::hash(triton::uint32 deep) const {
+      triton::uint512 hash = this->type ^ this->value;
+      return hash;
     }
 
 
@@ -2172,7 +2173,7 @@ namespace triton {
     }
 
 
-    std::string StringNode::getValue(void) {
+    std::string StringNode::getString(void) {
       return this->value;
     }
 
@@ -2190,7 +2191,7 @@ namespace triton {
 
 
     SxNode::SxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(SX_NODE, expr->getContext()) {
-      this->addChild(ctxt.decimal(sizeExt));
+      this->addChild(ctxt.integer(sizeExt));
       this->addChild(expr);
     }
 
@@ -2201,10 +2202,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("SxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("SxNode::init(): The sizeExt must be a DECIMAL_NODE.");
+      if (this->children[0]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("SxNode::init(): The sizeExt must be a INTEGER_NODE.");
 
-      sizeExt = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
+      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
@@ -2253,7 +2254,7 @@ namespace triton {
     }
 
 
-    const triton::engines::symbolic::SharedSymbolicVariable& VariableNode::getVar() {
+    const triton::engines::symbolic::SharedSymbolicVariable& VariableNode::getSymbolicVariable() {
       return this->symVar;
     }
 
@@ -2273,7 +2274,7 @@ namespace triton {
 
 
     ZxNode::ZxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(ZX_NODE, expr->getContext()) {
-      this->addChild(ctxt.decimal(sizeExt));
+      this->addChild(ctxt.integer(sizeExt));
       this->addChild(expr);
     }
 
@@ -2284,10 +2285,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("ZxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != DECIMAL_NODE)
-        throw triton::exceptions::Ast("ZxNode::init(): The sizeExt must be a DECIMAL_NODE.");
+      if (this->children[0]->getType() != INTEGER_NODE)
+        throw triton::exceptions::Ast("ZxNode::init(): The sizeExt must be a INTEGER_NODE.");
 
-      sizeExt = reinterpret_cast<DecimalNode*>(this->children[0].get())->getValue().convert_to<triton::uint32>();
+      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
@@ -2438,12 +2439,12 @@ namespace triton {
         case BV_NODE:                   newNode = std::make_shared<BvNode>(*reinterpret_cast<BvNode*>(node));             break;
         case COMPOUND_NODE:             newNode = std::make_shared<CompoundNode>(*reinterpret_cast<CompoundNode*>(node)); break;
         case CONCAT_NODE:               newNode = std::make_shared<ConcatNode>(*reinterpret_cast<ConcatNode*>(node));     break;
-        case DECIMAL_NODE:              newNode = std::make_shared<DecimalNode>(*reinterpret_cast<DecimalNode*>(node));   break;
         case DECLARE_NODE:              newNode = std::make_shared<DeclareNode>(*reinterpret_cast<DeclareNode*>(node));   break;
         case DISTINCT_NODE:             newNode = std::make_shared<DistinctNode>(*reinterpret_cast<DistinctNode*>(node)); break;
         case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node));       break;
         case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node));   break;
         case IFF_NODE:                  newNode = std::make_shared<IffNode>(*reinterpret_cast<IffNode*>(node));           break;
+        case INTEGER_NODE:              newNode = std::make_shared<IntegerNode>(*reinterpret_cast<IntegerNode*>(node));   break;
         case ITE_NODE:                  newNode = std::make_shared<IteNode>(*reinterpret_cast<IteNode*>(node));           break;
         case LAND_NODE:                 newNode = std::make_shared<LandNode>(*reinterpret_cast<LandNode*>(node));         break;
         case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node));           break;
@@ -2478,6 +2479,11 @@ namespace triton {
       }
 
       return newNode;
+    }
+
+
+    SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
+      return triton::ast::newInstance(node.get(), true);
     }
 
 
@@ -2529,6 +2535,37 @@ namespace triton {
           }
         }
       }
+    }
+
+
+    std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match) {
+      std::stack<triton::ast::AbstractNode*>      worklist;
+      std::deque<triton::ast::SharedAbstractNode> result;
+      std::set<const triton::ast::AbstractNode*>  visited;
+
+      worklist.push(node.get());
+      while (!worklist.empty()) {
+        auto current = worklist.top();
+        worklist.pop();
+
+        // This means that node is already in work_stack and we will not need to convert it second time
+        if (visited.find(current) != visited.end()) {
+          continue;
+        }
+
+        visited.insert(current);
+        if (match == triton::ast::ANY_NODE || current->getType() == match)
+          result.push_front(current->shared_from_this());
+
+        if (current->getType() == REFERENCE_NODE) {
+          worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
+        } else {
+          for (const auto &child : current->getChildren())
+            worklist.push(child.get());
+        }
+      }
+
+      return result;
     }
 
   }; /* ast namespace */

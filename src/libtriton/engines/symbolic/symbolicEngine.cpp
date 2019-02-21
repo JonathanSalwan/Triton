@@ -15,58 +15,6 @@
 
 
 
-/*! \page engine_DSE_page Dynamic Symbolic Execution
-    \brief [**internal**] All information about the dynamic symbolic execution engine.
-
-\tableofcontents
-
-\section engine_DSE_description Description
-<hr>
-
-Triton contains an internal Dynamic Symbolic Execution (DSE) engine. This engine maintains a
-symbolic states of registers and part of memory at each program point.
-
-The symbolic engine maintains:
-
-- a table of symbolic registers states
-- a map of symbolic memory states
-- a global set of all symbolic references
-
-During the execution, according to the instruction semantics, the table of symbolic registers states
-is updated at each instruction executed. This table is modeled by a correspondence of \f$ \langle rid \rightarrow \varphi_x \rangle \f$ for
-each register where \f$ rid \in N \f$ represents the unique register's reference and \f$ \varphi_{x \in N} \f$ represents the unique
-symbolic expression's reference and the link to its SMT graph. In other words, at each program point,
-all registers points on its symbolic expression which represents the last semantics of the assignment.
-
- Step | Register                | Instruction | Set of symbolic expressions
-------|-------------------------|-------------|------------------------------------
- init | eax = UNSET             | None        | \f$ \bot \f$
- 1    | eax = \f$ \varphi_1 \f$ | mov eax, 0  | \f$ \{\varphi_1 = 0\} \f$
- 2    | eax = \f$ \varphi_2 \f$ | inc eax     | \f$ \{\varphi_1 = 0, \varphi_2 = \varphi_1 + 1\} \f$
- 3    | eax = \f$ \varphi_3 \f$ | add eax, 5  | \f$ \{\varphi_1 = 0, \varphi_2 = \varphi_1 + 1, \varphi_3 = \varphi_2 + 5\} \f$
-
-Like with registers, Triton maintains a symbolic states of part of memory. This is modeled by a correspondence
-of \f$ \langle addr \rightarrow \varphi_x \rangle \f$ for each address where \f$ addr \in N \f$ represents the address of the
-memory and \f$ \varphi_{x \in N} \f$ represents the unique symbolic expression's reference.
-
- Step | Register                | Memory                  | Instruction | Set of Symbolic Expressions
-------|-------------------------|-------------------------|-------------|----------------------------
- 1    | eax = \f$ \varphi_1 \f$ | n/a                     | mov eax, 0  | \f$ \{\varphi_1 = 0\} \f$
- 2    | n/a                     | sp = \f$ \varphi_2 \f$  | push eax    | \f$ \{\varphi_1 = 0, \varphi_2 = \varphi_1\} \f$
- ...  | ...                     | ...                     | ...         | ...
- 10   | ebx = \f$ \varphi_3 \f$ | n/a                     | pop ebx     | \f$ \{\varphi_1 = 0, \varphi_2 = \varphi_1, \varphi_3 = \varphi_2\} \f$
-
-Based on this process, we know that \f$ ebx = eax = 0 \f$.
-
-There also exists an important point, if there is no previous symbolic reference of a register or part of memory when
-the instruction is processed, Triton builds the expression with the concretization of the value and assigns the
-expression to a new symbolic reference. This allows us to start the analysis everywhere.
-
-*/
-
-
-
-
 namespace triton {
   namespace engines {
     namespace symbolic {

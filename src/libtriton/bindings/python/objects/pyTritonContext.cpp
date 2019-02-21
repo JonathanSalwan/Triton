@@ -378,9 +378,6 @@ tainted. Returns true if `regDst` is tainted.
 - <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
 Removes the range `[baseAddr:size]` from the internal memory representation.
 
-- <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
-Unrolls the SSA form of a given AST.
-
 - <b>bool untaintMemory(integer addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
 
@@ -2688,19 +2685,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_unrollAst(PyObject* self, PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "unrollAst(): Expects a AstNode as argument.");
-
-        try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->unrollAst(PyAstNode_AsAstNode(node)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* TritonContext_untaintMemory(PyObject* self, PyObject* mem) {
         try {
           if (PyMemoryAccess_Check(mem)) {
@@ -2877,7 +2861,6 @@ namespace triton {
         {"taintUnionRegisterMemory",            (PyCFunction)TritonContext_taintUnionRegisterMemory,               METH_VARARGS,       ""},
         {"taintUnionRegisterRegister",          (PyCFunction)TritonContext_taintUnionRegisterRegister,             METH_VARARGS,       ""},
         {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
-        {"unrollAst",                           (PyCFunction)TritonContext_unrollAst,                              METH_O,             ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
         {nullptr,                               nullptr,                                                           0,                  nullptr}

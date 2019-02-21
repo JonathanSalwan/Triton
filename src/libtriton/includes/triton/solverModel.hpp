@@ -10,8 +10,9 @@
 
 #include <string>
 
-#include <triton/tritonTypes.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/symbolicVariable.hpp>
+#include <triton/tritonTypes.hpp>
 
 
 
@@ -40,11 +41,8 @@ namespace triton {
       /*! \brief This class is used to represent a constraint model solved. */
       class SolverModel {
         protected:
-          //! The name of the variable. Names are always something like this: SymVar_X.
-          std::string name;
-
-          //! The id of the variable.
-          triton::uint32 id;
+          //! The symbolic variable.
+          triton::engines::symbolic::SharedSymbolicVariable variable;
 
           //! The value of the model.
           triton::uint512 value;
@@ -58,7 +56,7 @@ namespace triton {
           TRITON_EXPORT SolverModel();
 
           //! Constructor.
-          TRITON_EXPORT SolverModel(const std::string& name, triton::uint512 value);
+          TRITON_EXPORT SolverModel(const triton::engines::symbolic::SharedSymbolicVariable& variable, triton::uint512 value);
 
           //! Constructor by copy.
           TRITON_EXPORT SolverModel(const SolverModel& other);
@@ -66,14 +64,14 @@ namespace triton {
           //! Copies a SolverModel
           TRITON_EXPORT SolverModel& operator=(const SolverModel& other);
 
-          //! Returns the name of the variable.
-          TRITON_EXPORT const std::string& getName(void) const;
-
           //! Returns the id of the variable.
-          TRITON_EXPORT triton::uint32 getId(void) const;
+          TRITON_EXPORT triton::usize getId(void) const;
 
           //! Returns the value of the model.
           TRITON_EXPORT triton::uint512 getValue(void) const;
+
+          //! Returns the symbolic variable.
+          TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getVariable(void) const;
       };
 
     //! Display a solver model.

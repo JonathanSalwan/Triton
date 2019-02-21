@@ -197,9 +197,6 @@ namespace triton {
           return node;
         }
 
-        //! AST C++ API - decimal node builder
-        TRITON_EXPORT SharedAbstractNode decimal(triton::uint512 value);
-
         //! AST C++ API - declare node builder
         TRITON_EXPORT SharedAbstractNode declare(const SharedAbstractNode& var);
 
@@ -214,6 +211,9 @@ namespace triton {
 
         //! AST C++ API - iff node builder
         TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+
+        //! AST C++ API - integer node builder
+        TRITON_EXPORT SharedAbstractNode integer(triton::uint512 value);
 
         //! AST C++ API - ite node builder
         TRITON_EXPORT SharedAbstractNode ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);

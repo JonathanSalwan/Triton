@@ -72,7 +72,7 @@ This object is used to represent an Instruction.
          disp  :  0x13b8:64 bv[63..0]
          scale :  0x1:64 bv[63..0]
 <BLANKLINE>
-0x400007: lea rsi, qword ptr [rbx + rax*8]
+0x400007: lea rsi, [rbx + rax*8]
     rsi:64 bv[63..0]
     [@0x0]:64 bv[63..0]
          base  :  rbx:64 bv[63..0]
@@ -80,9 +80,9 @@ This object is used to represent an Instruction.
          disp  :  0x0:64 bv[63..0]
          scale :  0x8:64 bv[63..0]
 <BLANKLINE>
-0x40000b: lea rsi, dword ptr [ebx + eax*8 + 0xa]
+0x40000b: lea rsi, [ebx + eax*8 + 0xa]
     rsi:64 bv[63..0]
-    [@0xa]:32 bv[31..0]
+    [@0xa]:64 bv[63..0]
          base  :  ebx:32 bv[31..0]
          index :  eax:32 bv[31..0]
          disp  :  0xa:32 bv[31..0]

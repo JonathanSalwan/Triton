@@ -56,12 +56,12 @@ namespace triton {
           case BV_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::BvNode*>(node)); break;
           case COMPOUND_NODE:             return this->print(stream, reinterpret_cast<triton::ast::CompoundNode*>(node)); break;
           case CONCAT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::ConcatNode*>(node)); break;
-          case DECIMAL_NODE:              return this->print(stream, reinterpret_cast<triton::ast::DecimalNode*>(node)); break;
           case DECLARE_NODE:              return this->print(stream, reinterpret_cast<triton::ast::DeclareNode*>(node)); break;
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
           case IFF_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IffNode*>(node)); break;
+          case INTEGER_NODE:              return this->print(stream, reinterpret_cast<triton::ast::IntegerNode*>(node)); break;
           case ITE_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IteNode*>(node)); break;
           case LAND_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LandNode*>(node)); break;
           case LET_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LetNode*>(node)); break;
@@ -324,17 +324,13 @@ namespace triton {
       }
 
 
-      /* decimal representation */
-      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DecimalNode* node) {
-        stream << std::hex << "0x" << node->getValue() << std::dec;
-        return stream;
-      }
-
-
       /* declare representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
-        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getVar();
-        stream << var->getName() << " = " << "0xdeadbeef";
+        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
+        if (var->getAlias().empty())
+          stream << var->getName() << " = " << "0xdeadbeef";
+        else
+          stream << var->getAlias() << " = " << "0xdeadbeef";
         return stream;
       }
 
@@ -355,7 +351,7 @@ namespace triton {
 
       /* extract representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
-        triton::uint32 low = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[1].get())->getValue().convert_to<triton::uint32>();
+        triton::uint32 low = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
 
         if (low == 0)
           stream << "(" << node->getChildren()[2] << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
@@ -369,6 +365,13 @@ namespace triton {
       /* iff representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::IffNode* node) {
         stream << "(" << node->getChildren()[0] << " and " << node->getChildren()[1] << ") or (not " << node->getChildren()[0] << " and not " << node->getChildren()[1] << ")";
+        return stream;
+      }
+
+
+      /* integer representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::IntegerNode* node) {
+        stream << std::hex << "0x" << node->getInteger() << std::dec;
         return stream;
       }
 
@@ -429,14 +432,14 @@ namespace triton {
 
       /* string representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::StringNode* node) {
-        stream << node->getValue();
+        stream << node->getString();
         return stream;
       }
 
 
       /* sx representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::SxNode* node) {
-        triton::uint512 extend = reinterpret_cast<triton::ast::DecimalNode*>(node->getChildren()[0].get())->getValue();
+        triton::uint512 extend = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[0].get())->getInteger();
 
         if (extend)
           stream << "sx(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
@@ -449,7 +452,10 @@ namespace triton {
 
       /* variable representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
-        stream << node->getVar()->getName();
+        if (node->getSymbolicVariable()->getAlias().empty())
+          stream << node->getSymbolicVariable()->getName();
+        else
+          stream << node->getSymbolicVariable()->getAlias();
         return stream;
       }
 

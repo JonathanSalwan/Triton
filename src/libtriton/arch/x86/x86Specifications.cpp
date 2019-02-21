@@ -511,10 +511,6 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_FCOMP;
             break;
 
-          case triton::extlibs::capstone::X86_INS_FCOMPI:
-            tritonId = triton::arch::x86::ID_INS_FCOMPI;
-            break;
-
           case triton::extlibs::capstone::X86_INS_FCOMI:
             tritonId = triton::arch::x86::ID_INS_FCOMI;
             break;
@@ -1041,10 +1037,6 @@ namespace triton {
 
           case triton::extlibs::capstone::X86_INS_UCOMISS:
             tritonId = triton::arch::x86::ID_INS_UCOMISS;
-            break;
-
-          case triton::extlibs::capstone::X86_INS_VCMP:
-            tritonId = triton::arch::x86::ID_INS_VCMP;
             break;
 
           case triton::extlibs::capstone::X86_INS_VCOMISD:
@@ -2867,10 +2859,6 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_TZMSK;
             break;
 
-          case triton::extlibs::capstone::X86_INS_FUCOMPI:
-            tritonId = triton::arch::x86::ID_INS_FUCOMPI;
-            break;
-
           case triton::extlibs::capstone::X86_INS_FUCOMI:
             tritonId = triton::arch::x86::ID_INS_FUCOMI;
             break;
@@ -3005,10 +2993,6 @@ namespace triton {
 
           case triton::extlibs::capstone::X86_INS_VBROADCASTF128:
             tritonId = triton::arch::x86::ID_INS_VBROADCASTF128;
-            break;
-
-          case triton::extlibs::capstone::X86_INS_VBROADCASTI128:
-            tritonId = triton::arch::x86::ID_INS_VBROADCASTI128;
             break;
 
           case triton::extlibs::capstone::X86_INS_VBROADCASTI32X4:
@@ -4037,10 +4021,6 @@ namespace triton {
 
           case triton::extlibs::capstone::X86_INS_VPCMOV:
             tritonId = triton::arch::x86::ID_INS_VPCMOV;
-            break;
-
-          case triton::extlibs::capstone::X86_INS_VPCMP:
-            tritonId = triton::arch::x86::ID_INS_VPCMP;
             break;
 
           case triton::extlibs::capstone::X86_INS_VPCMPD:

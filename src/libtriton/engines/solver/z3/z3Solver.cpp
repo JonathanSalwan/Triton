@@ -5,92 +5,18 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <z3++.h>                        // for expr, model, solver, expr_ve...
-#include <z3_api.h>                      // for Z3_ast, _Z3_ast
-#include <string>                        // for string
+#include <z3++.h>
+#include <z3_api.h>
+#include <string>
 
-#include <triton/astContext.hpp>         // for AstContext
-#include <triton/exceptions.hpp>         // for SolverEngine
-#include <triton/solverModel.hpp>        // for SolverModel
-#include <triton/tritonToZ3Ast.hpp>      // for TritonToZ3Ast
-#include <triton/tritonTypes.hpp>        // for uint32, uint512
-#include <triton/z3Solver.hpp>           // for Z3Solver
-#include <triton/z3ToTritonAst.hpp>      // for Z3ToTritonAst
-
-/*! \page solver_interface_page SMT Solver Interface
-    \brief [**internal**] All information about the SMT solver interface.
-
-\tableofcontents
-
-\section solver_interface_description Description
-<hr>
-
-The solver engine is the interface between an SMT solver and **Triton** itself. All requests are sent to the SMT solver
-as Triton AST (See: \ref py_AstContext_page). The AST representation as string looks like a manually crafted SMT2-LIB script.
-
-<b>Example:</b>
-
-~~~~~~~~~~~~~
-; Declaration of the theory
-(set-logic QF_AUFBV)
-
-; Utility function
-(define-fun parity ((x!1 (_ BitVec 8))) (_ BitVec 1)
-  ; x ^= x >> 4;
-  ; v &= 0xf;
-  ; return (0x6996 >> v) & 1;
-
-  ((_ extract 0 0)
-    (bvlshr
-       (_ bv27030 16)
-       ((_ zero_extend 8)
-        (bvand
-          (bvxor
-            x!1
-            (bvlshr x!1 (_ bv4 8)))
-          (_ bv15 8)))))
-)
-
-; Declaration of the free variables
-(declare-fun SymVar_0 () (_ BitVec 8))
-
-; Formula
-(assert (= (ite ...)))
-~~~~~~~~~~~~~
-
-\section solver_interface_examples C++ example
-<hr>
-
-Let assume that the \f$rax\f$'s symbolic expression contains a symbolic variable \f$x_0 \in X\f$ which has been instantiated previously. At
-this program point, we want that \f$rax = 0\f$. We first get the symbolic expression id corresponding to the \f$rax\f$ register, then, its AST.
-When the AST has been got, we are able to build our constraint such that \f$ AST_{constraint} = assert(AST_{rax} == 0) \f$.
-
-The solver interface triton::API::getModel() gets as parameter a triton::ast::SharedAbstractNode which corresponds to the \f$ AST_{constraint} \f$ and
-returns a list of triton::engines::solver::SolverModel. Each model for a symbolic variable \f$x \in X\f$ is represented by a triton::engines::solver::SolverModel.
-For example, if there are two symbolic variables in your constraint, the triton::API::getModel() function will return a list of two items.
-
-~~~~~~~~~~~~~{cpp}
-// Get the symbolic id of RAX
-auto raxSym = api.getSymbolicRegister(TRITON_X86_REG_RAX);
-
-// Get the full AST of RAX
-auto raxFullAst = api.unrollAst(raxSym.getAst());
-
-// Modify the AST of RAX to build the constraint
-auto constraint = triton::ast::equal(raxFullAst, triton::ast::bv(0, raxFullAst->getBitvectorSize()));
-
-// Ask a model
-auto model = api.getModel(constraint);
-
-// Display all symbolic variable value contained in the model
-std::cout << "Model:" << std::endl;
-for (auto it = model.begin(); it != model.end(); it++) {
-  std::cout << "  - Variable: " << it->getName() << std::endl;
-  std::cout << "  - Value   : " << std::hex << it->getValue() << std::endl;
-}
-~~~~~~~~~~~~~
-
-*/
+#include <triton/astContext.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/solverModel.hpp>
+#include <triton/symbolicVariable.hpp>
+#include <triton/tritonToZ3Ast.hpp>
+#include <triton/tritonTypes.hpp>
+#include <triton/z3Solver.hpp>
+#include <triton/z3ToTritonAst.hpp>
 
 
 
@@ -166,7 +92,7 @@ namespace triton {
               triton::uint512 value = triton::uint512(svalue);
 
               /* Create a triton model */
-              SolverModel trionModel = SolverModel(varName, value);
+              SolverModel trionModel = SolverModel(z3Ast.variables[varName], value);
 
               /* Map the result */
               smodel[trionModel.getId()] = trionModel;

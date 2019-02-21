@@ -35,19 +35,8 @@ A full documentation is available on our [doxygen page](http://triton.quarkslab.
 * [Description](http://triton.quarkslab.com/documentation/doxygen/#description_sec)
 * [Installation](http://triton.quarkslab.com/documentation/doxygen/#install_sec)
 * [Examples](https://github.com/JonathanSalwan/Triton/tree/master/src/examples)
-* [Presentations and Publications](http://triton.quarkslab.com/documentation/doxygen/#publications_sec)
-
-### Internal documentation
-
-* [Dynamic Symbolic Execution](http://triton.quarkslab.com/documentation/doxygen/engine_DSE_page.html)
-* [Symbolic Execution Optimizations](http://triton.quarkslab.com/documentation/doxygen/py_MODE_page.html)
-* [AST Representations of Semantics](https://triton.quarkslab.com/documentation/doxygen/py_AstContext_page.html)
-* [SMT Semantics Supported](http://triton.quarkslab.com/documentation/doxygen/SMT_Semantics_Supported_page.html)
-* [SMT Solver Interface](http://triton.quarkslab.com/documentation/doxygen/solver_interface_page.html)
-* [SMT Simplification Passes](http://triton.quarkslab.com/documentation/doxygen/SMT_simplification_page.html)
-* [Spread Taint](http://triton.quarkslab.com/documentation/doxygen/engine_Taint_page.html)
-* [Tracer Independent](http://triton.quarkslab.com/documentation/doxygen/Tracer_page.html)
 * [Python Bindings](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+* [Presentations and Publications](http://triton.quarkslab.com/documentation/doxygen/#publications_sec)
 
 ### News
 

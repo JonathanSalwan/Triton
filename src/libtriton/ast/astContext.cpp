@@ -280,7 +280,7 @@ namespace triton {
       }
 
       /* Otherwise, we concretize the index rotation */
-      SharedAbstractNode node = std::make_shared<BvrolNode>(expr, this->decimal(rot->evaluate()));
+      SharedAbstractNode node = std::make_shared<BvrolNode>(expr, this->integer(rot->evaluate()));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -317,7 +317,7 @@ namespace triton {
       }
 
       /* Otherwise, we concretize the index rotation */
-      SharedAbstractNode node = std::make_shared<BvrorNode>(expr, this->decimal(rot->evaluate()));
+      SharedAbstractNode node = std::make_shared<BvrorNode>(expr, this->integer(rot->evaluate()));
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -564,15 +564,6 @@ namespace triton {
     template TRITON_EXPORT SharedAbstractNode AstContext::concat(const std::list<SharedAbstractNode>& exprs);
 
 
-    SharedAbstractNode AstContext::decimal(triton::uint512 value) {
-      SharedAbstractNode node = std::make_shared<DecimalNode>(value, *this);
-      if (node == nullptr)
-        throw triton::exceptions::Ast("Node builders - Not enough memory");
-      node->init();
-      return node;
-    }
-
-
     SharedAbstractNode AstContext::declare(const SharedAbstractNode& var) {
       SharedAbstractNode node = std::make_shared<DeclareNode>(var);
       if (node == nullptr)
@@ -617,6 +608,15 @@ namespace triton {
 
     SharedAbstractNode AstContext::iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
       SharedAbstractNode node = std::make_shared<IffNode>(expr1, expr2);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("Node builders - Not enough memory");
+      node->init();
+      return node;
+    }
+
+
+    SharedAbstractNode AstContext::integer(triton::uint512 value) {
+      SharedAbstractNode node = std::make_shared<IntegerNode>(value, *this);
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();

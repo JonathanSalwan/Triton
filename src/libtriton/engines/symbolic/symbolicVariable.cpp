@@ -20,12 +20,13 @@ namespace triton {
                                          triton::usize id,
                                          triton::uint32 size,
                                          const std::string& comment) {
-        this->comment         = comment;
-        this->id              = id;
-        this->name            = TRITON_SYMVAR_NAME + std::to_string(id);
-        this->origin          = origin;
-        this->size            = size;
-        this->type            = type;
+        this->alias   = "";
+        this->comment = comment;
+        this->id      = id;
+        this->name    = TRITON_SYMVAR_NAME + std::to_string(id);
+        this->origin  = origin;
+        this->size    = size;
+        this->type    = type;
 
         if (this->size > MAX_BITS_SUPPORTED)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size connot be greater than MAX_BITS_SUPPORTED.");
@@ -33,28 +34,40 @@ namespace triton {
 
 
       SymbolicVariable::SymbolicVariable(const SymbolicVariable& other) {
-        this->comment         = other.comment;
-        this->id              = other.id;
-        this->name            = other.name;
-        this->origin          = other.origin;
-        this->size            = other.size;
-        this->type            = other.type;
+        this->alias   = other.alias;
+        this->comment = other.comment;
+        this->id      = other.id;
+        this->name    = other.name;
+        this->origin  = other.origin;
+        this->size    = other.size;
+        this->type    = other.type;
       }
 
 
       SymbolicVariable& SymbolicVariable::operator=(const SymbolicVariable& other) {
-        this->comment         = other.comment;
-        this->id              = other.id;
-        this->name            = other.name;
-        this->origin          = other.origin;
-        this->size            = other.size;
-        this->type            = other.type;
+        this->alias   = other.alias;
+        this->comment = other.comment;
+        this->id      = other.id;
+        this->name    = other.name;
+        this->origin  = other.origin;
+        this->size    = other.size;
+        this->type    = other.type;
         return *this;
       }
 
 
       triton::engines::symbolic::variable_e SymbolicVariable::getType(void) const {
         return this->type;
+      }
+
+
+      const std::string& SymbolicVariable::getAlias(void) const {
+        return this->alias;
+      }
+
+
+      const std::string& SymbolicVariable::getComment(void) const {
+        return this->comment;
       }
 
 
@@ -78,8 +91,8 @@ namespace triton {
       }
 
 
-      const std::string& SymbolicVariable::getComment(void) const {
-        return this->comment;
+      void SymbolicVariable::setAlias(const std::string& alias) {
+        this->alias = alias;
       }
 
 
@@ -89,7 +102,10 @@ namespace triton {
 
 
       std::ostream& operator<<(std::ostream& stream, const SymbolicVariable& symVar) {
-        stream << symVar.getName() << ":" << symVar.getSize();
+        if (symVar.getAlias().empty())
+          stream << symVar.getName() << ":" << symVar.getSize();
+        else
+          stream << symVar.getAlias() << ":" << symVar.getSize();
         return stream;
       }
 

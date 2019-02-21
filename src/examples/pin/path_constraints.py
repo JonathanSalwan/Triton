@@ -4,46 +4,46 @@
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor a
 ##  [+] 10 bytes tainted from the argv[1] (0x7ffd4a50c60e) pointer
 ##  loose
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
 ##
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor e
 ##  [+] 10 bytes tainted from the argv[1] (0x7fff0b23160e) pointer
 ##  loose
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
-##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
+##  B1: SymVar_1:8 = 6C (l)  |  B2: SymVar_1:8 = 0 ()
 ##
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor el
 ##  [+] 10 bytes tainted from the argv[1] (0x7ffda0d4e60d) pointer
 ##  loose
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
-##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
-##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
+##  B1: SymVar_1:8 = 6C (l)  |  B2: SymVar_1:8 = 0 ()
+##  B1: SymVar_2:8 = 69 (i)  |  B2: SymVar_2:8 = 0 ()
 ##
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor eli
 ##  [+] 10 bytes tainted from the argv[1] (0x7ffc18b6f60c) pointer
 ##  loose
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
-##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
-##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
-##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
+##  B1: SymVar_1:8 = 6C (l)  |  B2: SymVar_1:8 = 0 ()
+##  B1: SymVar_2:8 = 69 (i)  |  B2: SymVar_2:8 = 0 ()
+##  B1: SymVar_3:8 = 74 (t)  |  B2: SymVar_3:8 = 0 ()
 ##
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor elit
 ##  [+] 10 bytes tainted from the argv[1] (0x7ffcf797160b) pointer
 ##  loose
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
-##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
-##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
-##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
-##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
+##  B1: SymVar_1:8 = 6C (l)  |  B2: SymVar_1:8 = 0 ()
+##  B1: SymVar_2:8 = 69 (i)  |  B2: SymVar_2:8 = 0 ()
+##  B1: SymVar_3:8 = 74 (t)  |  B2: SymVar_3:8 = 0 ()
+##  B1: SymVar_4:8 = 65 (e)  |  B2: SymVar_4:8 = 0 ()
 ##
 ##  $ ./build/triton ./src/examples/pin/path_constraints.py ./src/samples/crackmes/crackme_xor elite
 ##  [+] 10 bytes tainted from the argv[1] (0x7ffdfa2d260a) pointer
 ##  Win
-##  B1: SymVar_0 = 65 (e)  |  B2: SymVar_0 = 0 ()
-##  B1: SymVar_1 = 6C (l)  |  B2: SymVar_1 = 0 ()
-##  B1: SymVar_2 = 69 (i)  |  B2: SymVar_2 = 0 ()
-##  B1: SymVar_3 = 74 (t)  |  B2: SymVar_3 = 0 ()
-##  B1: SymVar_4 = 65 (e)  |  B2: SymVar_4 = 0 ()
+##  B1: SymVar_0:8 = 65 (e)  |  B2: SymVar_0:8 = 0 ()
+##  B1: SymVar_1:8 = 6C (l)  |  B2: SymVar_1:8 = 0 ()
+##  B1: SymVar_2:8 = 69 (i)  |  B2: SymVar_2:8 = 0 ()
+##  B1: SymVar_3:8 = 74 (t)  |  B2: SymVar_3:8 = 0 ()
+##  B1: SymVar_4:8 = 65 (e)  |  B2: SymVar_4:8 = 0 ()
 ##
 
 from triton     import ARCH, CPUSIZE, MemoryAccess, MODE

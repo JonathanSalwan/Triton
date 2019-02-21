@@ -148,9 +148,6 @@ namespace triton {
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ConcatNode* node);
 
           //! Displays the node according to the representation mode.
-          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::DecimalNode* node);
-
-          //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::DeclareNode* node);
 
           //! Displays the node according to the representation mode.
@@ -164,6 +161,9 @@ namespace triton {
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::IffNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::IntegerNode* node);
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::IteNode* node);
