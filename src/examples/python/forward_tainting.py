@@ -113,7 +113,7 @@ if __name__ == '__main__':
 
         # Print only instructions that are tainted.
         if inst.isTainted():
-            print '[tainted] %s' %(str(inst))
+            print('[tainted] %s' %(str(inst)))
 
         # Next instruction
         pc = ctx.getConcreteRegisterValue(ctx.registers.rip)

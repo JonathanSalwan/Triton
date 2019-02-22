@@ -78,7 +78,7 @@ DEBUG  = True
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_STACK = 0x9fffffff
@@ -153,7 +153,7 @@ def main():
     for i in range(45):
         flag += chr(run(ctx, binary, i))
 
-    print 'Flag is: %s' %(flag)
+    print('Flag is: %s' %(flag))
     return not (flag == 'MMA{fc7d90ca001fc8712497d88d9ee7efa9e9b32ed8}')
 
 

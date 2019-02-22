@@ -87,7 +87,7 @@ def load_dump(Triton, path):
     mems = data[1]
 
     # Load registers and memory into the libTriton
-    print '[+] Define registers'
+    print('[+] Define registers')
     Triton.setConcreteRegisterValue(Triton.registers.rax,    regs['rax'])
     Triton.setConcreteRegisterValue(Triton.registers.rbx,    regs['rbx'])
     Triton.setConcreteRegisterValue(Triton.registers.rcx,    regs['rcx'])
@@ -106,11 +106,11 @@ def load_dump(Triton, path):
     Triton.setConcreteRegisterValue(Triton.registers.r14,    regs['r14'])
     Triton.setConcreteRegisterValue(Triton.registers.eflags, regs['eflags'])
 
-    print '[+] Define memory areas'
+    print('[+] Define memory areas')
     for mem in mems:
         start = mem['start']
         end   = mem['end']
-        print '[+] Memory caching %x-%x' %(start, end)
+        print('[+] Memory caching %x-%x' %(start, end))
         if mem['memory']:
             memoryCache.append({
                 'start':  start,
@@ -163,9 +163,9 @@ def symbolizeInputs(Triton):
 # Print the final solution.
 def solution():
     global variables
-    print '[+] Final solution:'
-    for k, v in variables.items():
-        print '[+] Symbolic variable %d = %02x (%c)' %(k, v, chr(v))
+    print('[+] Final solution:')
+    for k, v in list(variables.items()):
+        print('[+] Symbolic variable %d = %02x (%c)' %(k, v, chr(v)))
     return
 
 
@@ -174,7 +174,7 @@ def emulate(Triton, pc):
     global variables
     global goodBranches
 
-    print '[+] Starting emulation.'
+    print('[+] Starting emulation.')
     while pc:
         # Fetch opcode
         opcode = Triton.getConcreteMemoryAreaValue(pc, 16)
@@ -186,14 +186,14 @@ def emulate(Triton, pc):
 
         # Process
         Triton.processing(instruction)
-        print instruction
+        print(instruction)
 
         # End of the CheckSolution() function
         if pc == 0x4025E6:
             break
 
         if pc == 0x4025CC:
-            print '[+] Win'
+            print('[+] Win')
             break
 
         if pc in goodBranches:
@@ -210,12 +210,12 @@ def emulate(Triton, pc):
                         astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
                     ])
 
-            print '[+] Asking for a model, please wait...'
+            print('[+] Asking for a model, please wait...')
             model = Triton.getModel(cstr)
 
             # Save new state
-            for k, v in model.items():
-                print '[+]', v
+            for k, v in list(model.items()):
+                print('[+]', v)
                 variables[k] = v.getValue()
 
             # Go deeper
@@ -227,7 +227,7 @@ def emulate(Triton, pc):
         # Next
         pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
 
-    print '[+] Emulation done.'
+    print('[+] Emulation done.')
     return
 
 

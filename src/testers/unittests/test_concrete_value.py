@@ -144,9 +144,9 @@ class TestX86ConcreteMemoryValue(unittest.TestCase):
         self.Triton.unmapMemory(base, size)
         self.assertFalse(self.Triton.isMemoryMapped(base, size))
 
-        self.Triton.setConcreteMemoryAreaValue(0x1000, "\x11\x22\x33\x44\x55\x66")
+        self.Triton.setConcreteMemoryAreaValue(0x1000, b"\x11\x22\x33\x44\x55\x66")
         self.Triton.setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
-        self.assertEqual(self.Triton.getConcreteMemoryAreaValue(0x1000, 12), "\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")
+        self.assertEqual(self.Triton.getConcreteMemoryAreaValue(0x1000, 12), b"\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")
 
 class TestX8664ConcreteMemoryValue(unittest.TestCase):
 
@@ -173,6 +173,6 @@ class TestX8664ConcreteMemoryValue(unittest.TestCase):
         self.Triton.unmapMemory(base, size)
         self.assertFalse(self.Triton.isMemoryMapped(base, size))
 
-        self.Triton.setConcreteMemoryAreaValue(0x1000, "\x11\x22\x33\x44\x55\x66")
+        self.Triton.setConcreteMemoryAreaValue(0x1000, b"\x11\x22\x33\x44\x55\x66")
         self.Triton.setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
-        self.assertEqual(self.Triton.getConcreteMemoryAreaValue(0x1000, 12), "\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")
+        self.assertEqual(self.Triton.getConcreteMemoryAreaValue(0x1000, 12), b"\x11\x22\x33\x44\x55\x66\x77\x88\x99\xaa\xbb\xcc")

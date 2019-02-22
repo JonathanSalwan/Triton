@@ -17,7 +17,7 @@ def cbefore(instruction):
         if mnemonic in unsuportedSemantics:
             unsuportedSemantics[mnemonic] += 1
         else:
-            print instruction
+            print(instruction)
             unsuportedSemantics.update({mnemonic: 1})
     return
 
@@ -28,14 +28,14 @@ def cafter(instruction):
 
 
 def cfini():
-    l = unsuportedSemantics.items()
+    l = list(unsuportedSemantics.items())
     l.sort(key=itemgetter(1), reverse=True)
-    print '============================================================='
-    print 'Unsuported Semantics'
-    print '============================================================='
+    print('=============================================================')
+    print('Unsuported Semantics')
+    print('=============================================================')
     for i in l:
-        print '%s: %d' %(i[0].lower(), i[1])
-    print '============================================================='
+        print('%s: %d' %(i[0].lower(), i[1]))
+    print('=============================================================')
     return
 
 

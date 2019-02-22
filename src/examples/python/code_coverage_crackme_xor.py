@@ -158,7 +158,7 @@ def getNewInput():
                     # Ask for a model
                     models = Triton.getModel(astCtxt.land([previousConstraints, branch['constraint']]))
                     seed   = dict()
-                    for k, v in models.items():
+                    for k, v in list(models.items()):
                         # Get the symbolic variable assigned to the model
                         symVar = Triton.getSymbolicVariableFromId(k)
                         # Save the new input as seed.
@@ -179,7 +179,7 @@ def symbolizeInputs(seed):
     # Clean symbolic state
     Triton.concretizeAllRegister()
     Triton.concretizeAllMemory()
-    for address, value in seed.items():
+    for address, value in list(seed.items()):
         Triton.setConcreteMemoryValue(address, value)
         Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
         Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
@@ -205,7 +205,7 @@ if __name__ == '__main__':
         # Take the first seed
         seed = worklist[0]
 
-        print 'Seed injected:', seed
+        print('Seed injected:', seed)
 
         # Symbolize inputs
         symbolizeInputs(seed)

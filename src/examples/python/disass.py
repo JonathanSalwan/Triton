@@ -155,22 +155,22 @@ if __name__ == '__main__':
         Triton.processing(inst)
 
         # Display instruction
-        print inst
-        print '    ---------------'
-        print '    Is memory read :', inst.isMemoryRead()
-        print '    Is memory write:', inst.isMemoryWrite()
-        print '    ---------------'
+        print(inst)
+        print('    ---------------')
+        print('    Is memory read :', inst.isMemoryRead())
+        print('    Is memory write:', inst.isMemoryWrite())
+        print('    ---------------')
         for op in inst.getOperands():
-            print '    Operand:', op
+            print('    Operand:', op)
             if op.getType() == OPERAND.MEM:
-                print '    - segment :', op.getSegmentRegister()
-                print '    - base    :', op.getBaseRegister()
-                print '    - index   :', op.getIndexRegister()
-                print '    - scale   :', op.getScale()
-                print '    - disp    :', op.getDisplacement()
-            print '    ---------------'
+                print('    - segment :', op.getSegmentRegister())
+                print('    - base    :', op.getBaseRegister())
+                print('    - index   :', op.getIndexRegister())
+                print('    - scale   :', op.getScale())
+                print('    - disp    :', op.getDisplacement())
+            print('    ---------------')
 
-        print
+        print()
 
     sys.exit(0)
 

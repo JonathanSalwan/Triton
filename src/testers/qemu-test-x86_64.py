@@ -72,13 +72,13 @@ def cafter(instruction):
             dump += '\n     Concrete Value : %016x' %(w['cvalue'])
             dump += '\n     Expression     : %s'    %(w['expr'])
 
-        print dump
+        print(dump)
         with open('./semantics_issues', 'a') as fd:
             fd.write(dump+'\n')
 
     if len(instruction.getSymbolicExpressions()) == 0:
         dump = '[unsupported] %#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
-        print dump
+        print(dump)
         with open('./semantics_issues', 'a') as fd:
             fd.write(dump+'\n')
         return

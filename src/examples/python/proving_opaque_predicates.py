@@ -97,7 +97,7 @@ def test_trace(trace):
         instruction = Instruction()
         instruction.setOpcode(opcode)
         Triton.processing(instruction)
-        print instruction.getDisassembly()
+        print(instruction.getDisassembly())
 
         if instruction.isBranch():
             # Opaque Predicate AST
@@ -105,14 +105,14 @@ def test_trace(trace):
             # Try another model
             model = Triton.getModel(astCtxt.lnot(op_ast))
             if model:
-                print "not an opaque predicate"
+                print("not an opaque predicate")
             else:
                 if instruction.isConditionTaken():
-                    print "opaque predicate: always taken"
+                    print("opaque predicate: always taken")
                 else:
-                    print "opaque predicate: never taken"
+                    print("opaque predicate: never taken")
 
-    print '----------------------------------'
+    print('----------------------------------')
     return
 
 if __name__ == '__main__':

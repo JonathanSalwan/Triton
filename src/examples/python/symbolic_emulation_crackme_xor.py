@@ -94,7 +94,7 @@ if __name__ == '__main__':
         Triton.processing(inst)
 
         # Display instruction
-        print inst
+        print(inst)
 
         # Next instruction
         pc = Triton.getRegisterAst(Triton.registers.rip).evaluate()

@@ -86,41 +86,41 @@ if __name__ == "__main__":
 
     # Example 1
     c = a ^ a
-    print 'Expr: ', c
+    print('Expr: ', c)
     c = Triton.simplify(c)
-    print 'Simp: ', c
+    print('Simp: ', c)
 
-    print
+    print()
 
     # Example 2 - forme A
     c = (a & ~b) | (~a & b)
-    print 'Expr: ', c
+    print('Expr: ', c)
     c = Triton.simplify(c)
-    print 'Simp: ', c
+    print('Simp: ', c)
 
-    print
+    print()
 
     # Example 2 - forme B
     c = (~b & a) | (~a & b)
-    print 'Expr: ', c
+    print('Expr: ', c)
     c = Triton.simplify(c)
-    print 'Simp: ', c
+    print('Simp: ', c)
 
-    print
+    print()
 
     # Example 2 - forme C
     c = (~b & a) | (b & ~a)
-    print 'Expr: ', c
+    print('Expr: ', c)
     c = Triton.simplify(c)
-    print 'Simp: ', c
+    print('Simp: ', c)
 
-    print
+    print()
 
     # Example 2 - forme D
     c = (b & ~a) | (~b & a)
-    print 'Expr: ', c
+    print('Expr: ', c)
     c = Triton.simplify(c)
-    print 'Simp: ', c
+    print('Simp: ', c)
 
     sys.exit(0)
 

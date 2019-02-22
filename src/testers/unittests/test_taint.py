@@ -19,7 +19,7 @@ class TestTaint(unittest.TestCase):
         Triton.taintRegister(Triton.registers.eax)
         inst = Instruction()
         # lea eax,[esi+eax*1]
-        inst.setOpcode("\x8D\x04\x06")
+        inst.setOpcode(b"\x8D\x04\x06")
         Triton.processing(inst)
 
         self.assertTrue(Triton.isRegisterTainted(Triton.registers.eax))
@@ -477,7 +477,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
 
-        inst = Instruction("\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
+        inst = Instruction(b"\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
         inst.setAddress(0)
         ctx.processing(inst)
 
@@ -492,7 +492,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
 
-        inst = Instruction("\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
+        inst = Instruction(b"\x48\x0F\xB6\x18") # movzx  rbx,BYTE PTR [rax]
         inst.setAddress(0)
         ctx.processing(inst)
 
@@ -507,7 +507,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
 
-        inst = Instruction("\x48\x89\x18") # mov [rax], rbx
+        inst = Instruction(b"\x48\x89\x18") # mov [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -522,7 +522,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
 
-        inst = Instruction("\x48\x89\x18") # mov [rax], rbx
+        inst = Instruction(b"\x48\x89\x18") # mov [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -537,7 +537,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
 
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -552,7 +552,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
 
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -565,7 +565,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintMemory(0)
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -578,7 +578,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintMemory(0)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -591,7 +591,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rax)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -604,7 +604,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rbx)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -619,7 +619,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
 
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -634,7 +634,7 @@ class TestTaint(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
 
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -647,7 +647,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintMemory(0)
-        inst = Instruction("\x48\x31\x18") # xor [rax], rbx
+        inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -660,7 +660,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintMemory(0)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -673,7 +673,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rax)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 
@@ -686,7 +686,7 @@ class TestTaint(unittest.TestCase):
         ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rbx)
-        inst = Instruction("\x48\x33\x18") # xor rbx, [rax]
+        inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
         inst.setAddress(0x1000)
         ctx.processing(inst)
 

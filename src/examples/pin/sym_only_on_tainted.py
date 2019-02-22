@@ -16,9 +16,9 @@ def cb_ir(inst):
 
 
 def cb_before(inst):
-    print inst
+    print(inst)
     for expr in inst.getSymbolicExpressions():
-        print '\t', expr
+        print('\t', expr)
     return
 
 

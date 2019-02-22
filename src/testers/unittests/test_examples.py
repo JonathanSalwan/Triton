@@ -27,7 +27,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
 
     def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        args = [v for k, v in ARGS.items() if k in example_name]
+        args = [v for k, v in list(ARGS.items()) if k in example_name]
         assert len(args) <= 1
         if len(args) == 1:
             args = args[0]

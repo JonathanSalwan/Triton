@@ -82,7 +82,7 @@ VALID  = False
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -236,7 +236,7 @@ def emulate(ctx, pc):
         # .text:000000000000085C CMP   W1, W0
         # .text:0000000000000860 B.NE  loc_874
         if pc == 0x85c and SERIAL is None:
-            print '[+] Please wait, calculating hash collisions...'
+            print('[+] Please wait, calculating hash collisions...')
             x1 = ctx.getSymbolicRegister(ctx.registers.x1)
 
             SymVar_0 = ctx.getSymbolicVariableFromName('SymVar_0')
@@ -264,15 +264,15 @@ def emulate(ctx, pc):
 
             # Get max 20 different models
             models = ctx.getModels(expr, 20)
-            print '[+] Found several hash collisions:'
+            print('[+] Found several hash collisions:')
             for model in models:
-                print {k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in model.items()}
+                print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
 
             SERIAL = str()
-            for _, v in models[0].items():
+            for _, v in list(models[0].items()):
                 SERIAL += "%c" % (v.getValue())
 
-            print '[+] Pick up the first serial: %s' %(SERIAL)
+            print('[+] Pick up the first serial: %s' %(SERIAL))
 
         # Inc the number of instructions exected
         count += 1
@@ -370,7 +370,7 @@ def main():
     INPUT = SERIAL
 
     # Second emulation
-    print '[+] Start a second emualtion with the good serial to validate the chall'
+    print('[+] Start a second emualtion with the good serial to validate the chall')
     run(ctx, binary)
 
     return not VALID == True

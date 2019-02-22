@@ -20,10 +20,10 @@ from pintool import *
 
 
 def image(imagePath, imageBase, imageSize):
-    print '----------'
-    print 'Image path: ', imagePath
-    print 'Image base: ', hex(imageBase)
-    print 'Image size: ', imageSize
+    print('----------')
+    print('Image path: ', imagePath)
+    print('Image base: ', hex(imageBase))
+    print('Image size: ', imageSize)
     return
 
 

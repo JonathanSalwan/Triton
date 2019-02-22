@@ -1994,11 +1994,11 @@ def emu_with_triton(opcode, istate):
     return ostate
 
 def diff_state(state1, state2):
-    for k, v in state1.items():
+    for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
-            print '\t%s: (UC) != (TT)' %(k)
+            print('\t%s: (UC) != (TT)' %(k))
         elif not (k == 'heap' or k == 'stack') and v != state2[k]:
-            print '\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k])
+            print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
 
 if __name__ == '__main__':
@@ -2050,17 +2050,17 @@ if __name__ == '__main__':
         try:
             uc_state = emu_with_unicorn(opcode, state)
             tt_state = emu_with_triton(opcode, state)
-        except Exception, e:
-            print '[KO] %s' %(disassembly)
-            print '\t%s' %(e)
+        except Exception as e:
+            print('[KO] %s' %(disassembly))
+            print('\t%s' %(e))
             sys.exit(-1)
 
         if uc_state != tt_state:
-            print '[KO] %s' %(disassembly)
+            print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             sys.exit(-1)
 
-        print '[OK] %s' %(disassembly)
+        print('[OK] %s' %(disassembly))
         state = tt_state
 
     sys.exit(0)

@@ -6,7 +6,7 @@ from triton  import ARCH
 
 
 def mycb(inst):
-    print inst
+    print(inst)
     return
 
 

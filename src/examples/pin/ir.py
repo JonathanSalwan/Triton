@@ -6,10 +6,10 @@ from triton  import ARCH
 
 
 def mycb(inst):
-    print inst
+    print(inst)
     for expr in inst.getSymbolicExpressions():
-        print expr
-    print
+        print(expr)
+    print()
     return
 
 

@@ -42,14 +42,14 @@ def before(instruction):
         rax = Triton.getSymbolicRegister(Triton.registers.rax)
         raxAst = rax.getAst()
         astCtxt = Triton.getAstContext()
-        constraint = astCtxt.assert_(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
+        constraint = astCtxt.assertTrue(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
         models = Triton.getModels(constraint, SOLUTIONS)
         for model in models:
             s = str()
             for i in range(STRLEN_ASSERT_LEN+5):
                 try:    s += chr(model[i].getValue())
                 except: pass
-            print "Possible solution:", ":".join("{:02x}".format(ord(c)) for c in s)
+            print("Possible solution:", ":".join("{:02x}".format(ord(c)) for c in s))
     return
 
 
@@ -67,7 +67,7 @@ def tainting(threadId):
             Triton.setConcreteMemoryValue(argv + offset, concreteValue)
             Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
-        print '[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
+        print('[+] %03d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv))
         rdi -= 1
 
     return

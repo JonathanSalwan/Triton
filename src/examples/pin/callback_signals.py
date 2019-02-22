@@ -53,13 +53,13 @@ from pintool import *
 
 
 def signals(threadId, sig):
-    print 'Signal %d received on thread %d.' %(sig, threadId)
-    print '========================== DUMP =========================='
+    print('Signal %d received on thread %d.' %(sig, threadId))
+    print('========================== DUMP ==========================')
     regs = getTritonContext().getParentRegisters()
     for reg in regs:
         value = getCurrentRegisterValue(reg)
         expr  = getTritonContext().getSymbolicRegister(reg)
-        print '%s:\t%#016x\t%s' %(reg.getName(), value, (expr.getAst() if expr is not None else 'UNSET'))
+        print('%s:\t%#016x\t%s' %(reg.getName(), value, (expr.getAst() if expr is not None else 'UNSET')))
     return
 
 

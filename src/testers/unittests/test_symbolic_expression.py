@@ -15,11 +15,11 @@ class TestSymbolicExpression(unittest.TestCase):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
 
-        self.inst1 = Instruction("\x48\x31\xd8") # xor rax, rbx
+        self.inst1 = Instruction(b"\x48\x31\xd8") # xor rax, rbx
         self.ctx.setConcreteRegisterValue(self.ctx.registers.al, 0x10)
         self.ctx.setConcreteRegisterValue(self.ctx.registers.bl, 0x55)
 
-        self.inst2 = Instruction("\x48\x89\x03") # mov [rbx], rax
+        self.inst2 = Instruction(b"\x48\x89\x03") # mov [rbx], rax
 
         self.ctx.processing(self.inst1)
         self.ctx.processing(self.inst2)

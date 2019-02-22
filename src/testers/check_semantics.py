@@ -111,12 +111,12 @@ def cafter(instruction):
             })
 
     if bad:
-        print "[%sKO%s] %#x: %s (%s%d register error(s)%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, len(bad), ENDC)
+        print("[%sKO%s] %#x: %s (%s%d register error(s)%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, len(bad), ENDC))
         for w in bad:
-            print "     Register       : %s" %(w['reg'])
-            print "     Symbolic Value : %016x" %(w['svalue'])
-            print "     Concrete Value : %016x" %(w['cvalue'])
-            print "     Expression     : %s" %(w['expr'])
+            print("     Register       : %s" %(w['reg']))
+            print("     Symbolic Value : %016x" %(w['svalue']))
+            print("     Concrete Value : %016x" %(w['cvalue']))
+            print("     Expression     : %s" %(w['expr']))
 
     # Check memory access
     for op in instruction.getOperands():
@@ -125,16 +125,16 @@ def cafter(instruction):
             astAddress = op.getLeaAst().evaluate()
             if nativeAddress != astAddress:
                 good = False
-                print "[%sKO%s] %#x: %s (%smemory error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, ENDC)
-                print "     Native address   : %016x" %(nativeAddress)
-                print "     Symbolic address : %016x" %(astAddress)
+                print("[%sKO%s] %#x: %s (%smemory error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, ENDC))
+                print("     Native address   : %016x" %(nativeAddress))
+                print("     Symbolic address : %016x" %(astAddress))
 
     if len(instruction.getSymbolicExpressions()) == 0:
-        print "[%s??%s] %#x: %s" %(BLUE, ENDC, instruction.getAddress(), instruction.getDisassembly())
+        print("[%s??%s] %#x: %s" %(BLUE, ENDC, instruction.getAddress(), instruction.getDisassembly()))
         return
 
     if good:
-        print "[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly())
+        print("[%sOK%s] %#x: %s" %(GREEN, ENDC, instruction.getAddress(), instruction.getDisassembly()))
         return
     else:
         #time.sleep(2)

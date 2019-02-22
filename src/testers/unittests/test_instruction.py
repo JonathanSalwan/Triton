@@ -16,7 +16,7 @@ class TestInstruction(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.inst = Instruction()
-        self.inst.setOpcode("\x48\x01\xd8")  # add rax, rbx
+        self.inst.setOpcode(b"\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
         self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0x1122334455667788)
         self.Triton.setConcreteRegisterValue(self.Triton.registers.rbx, 0x8877665544332211)
@@ -98,7 +98,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov eax, DWORD PTR fs:0xffffffffffffdf98
-        inst.setOpcode("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
+        inst.setOpcode(b"\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
@@ -117,7 +117,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov rax, QWORD PTR fs:[rax]
-        inst.setOpcode("\x64\x48\x8B\x00")
+        inst.setOpcode(b"\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
@@ -137,7 +137,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov ax, ds:word_40213C
-        inst.setOpcode("\x66\xA1\x3C\x21\x40\x00")
+        inst.setOpcode(b"\x66\xA1\x3C\x21\x40\x00")
         self.Triton.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x40213C)

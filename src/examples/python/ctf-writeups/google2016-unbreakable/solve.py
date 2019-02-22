@@ -48,7 +48,7 @@ DEBUG  = True
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -219,7 +219,7 @@ def exitHandler(ctx):
     flag = str()
     for k, v in sorted(mod.items()):
         flag += chr(v.getValue())
-    print 'Flag: %s' %(flag)
+    print('Flag: %s' %(flag))
 
     sys.exit(not (flag == 'CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}'))
 
@@ -344,7 +344,7 @@ def emulate(ctx, pc):
             ast = ctx.getAstContext()
             pco = ctx.getPathConstraintsAst()
             mod = ctx.getModel(ast.land([pco, zf == 1]))
-            for k,v in mod.items():
+            for k,v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(v.getId()), v.getValue())
 
         # Next

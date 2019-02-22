@@ -21,7 +21,7 @@ def looking_for_main_addr(instruction):
         # This is the first call into the ___libc_start_main function.
         # Get the main() function address located into RDI.
         MAIN_ADDR = getCurrentRegisterValue(getTritonContext().registers.rdi)
-        print '[+] main() found at %x' %(MAIN_ADDR)
+        print('[+] main() found at %x' %(MAIN_ADDR))
     return
 
 
@@ -31,7 +31,7 @@ def looking_for_stack_base_addr():
     if STACK_BASE is None:
         STACK_BASE = getCurrentRegisterValue(getTritonContext().registers.rsp)
         STACK_BASE &= 0xfffffffffffff000
-        print '[+] stack base found at %x' %(STACK_BASE)
+        print('[+] stack base found at %x' %(STACK_BASE))
     return
 
 

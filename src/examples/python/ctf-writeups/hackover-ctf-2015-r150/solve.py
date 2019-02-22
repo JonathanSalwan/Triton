@@ -297,7 +297,7 @@ def makeRelocation(binary):
 
 def debug(s):
     if DEBUG:
-        print '[Triton] %s' %(s)
+        print('[Triton] %s' %(s))
     return
 
 
@@ -306,7 +306,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     if len(sys.argv) < 2:
-        print 'Syntax: %s ./rvs' %(sys.argv[0])
+        print('Syntax: %s ./rvs' %(sys.argv[0]))
         sys.exit(1)
 
     # Load the binary

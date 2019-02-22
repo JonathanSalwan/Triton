@@ -125,6 +125,6 @@ if __name__ == '__main__':
             for k, v in sorted(slicing.items()):
                 # Here we display the comment to understand the correspondence
                 # between an expression and its referenced instruction.
-                print '[slicing]', v.getComment()
+                print('[slicing]', v.getComment())
 
     sys.exit(0)

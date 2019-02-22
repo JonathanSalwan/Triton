@@ -56,12 +56,12 @@ def run(ip):
         Triton.processing(inst)
 
         # Display instruction
-        print 'Curr ip:', inst
+        print('Curr ip:', inst)
 
         # Next instruction
         ip = Triton.getRegisterAst(Triton.registers.rip).evaluate()
-        print 'Next ip:', hex(ip)
-        print
+        print('Next ip:', hex(ip))
+        print()
     return
 
 

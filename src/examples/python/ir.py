@@ -69,12 +69,12 @@ if __name__ == '__main__':
         Triton.processing(inst)
 
         # Display instruction
-        print inst
+        print(inst)
 
         # Display symbolic expressions
         for expr in inst.getSymbolicExpressions():
-            print '\t', expr
+            print('\t', expr)
 
-        print
+        print()
 
     sys.exit(0)

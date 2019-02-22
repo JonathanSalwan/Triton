@@ -20,11 +20,11 @@ class TestUndefinedRegisters(unittest.TestCase):
         self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_REGISTERS, True)
 
         trace = [
-            "\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
-            "\x48\xc7\xc3\x20\x00\x00\x00", # mov rbx, 0x20
-            "\x48\xff\xc0",                 # inc rax
-            "\x48\x31\xd8",                 # xor rax, rbx
-            "\x48\xf7\xe3",                 # mul rbx
+            b"\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
+            b"\x48\xc7\xc3\x20\x00\x00\x00", # mov rbx, 0x20
+            b"\x48\xff\xc0",                 # inc rax
+            b"\x48\x31\xd8",                 # xor rax, rbx
+            b"\x48\xf7\xe3",                 # mul rbx
         ]
 
         for op in trace:
@@ -45,11 +45,11 @@ class TestUndefinedRegisters(unittest.TestCase):
         self.ctx.enableMode(MODE.CONCRETIZE_UNDEFINED_REGISTERS, False)
 
         trace = [
-            "\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
-            "\x48\xc7\xc3\x20\x00\x00\x00", # mov rbx, 0x20
-            "\x48\xff\xc0",                 # inc rax
-            "\x48\x31\xd8",                 # xor rax, rbx
-            "\x48\xf7\xe3",                 # mul rbx
+            b"\x48\xc7\xc0\x10\x00\x00\x00", # mov rax, 0x10
+            b"\x48\xc7\xc3\x20\x00\x00\x00", # mov rbx, 0x20
+            b"\x48\xff\xc0",                 # inc rax
+            b"\x48\x31\xd8",                 # xor rax, rbx
+            b"\x48\xf7\xe3",                 # mul rbx
         ]
 
         for op in trace:

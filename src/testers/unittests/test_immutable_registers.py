@@ -34,7 +34,7 @@ class TestImmutableAArch64Registers(unittest.TestCase):
         self.assertEqual(self.ctx.getConcreteRegisterValue(x1), 10)
         self.assertEqual(self.ctx.getConcreteRegisterValue(x2), 20)
 
-        inst = Instruction("\x3f\x00\x02\x8b") # add xzr, x1, x2
+        inst = Instruction(b"\x3f\x00\x02\x8b") # add xzr, x1, x2
         self.ctx.processing(inst)
 
         # Concrete

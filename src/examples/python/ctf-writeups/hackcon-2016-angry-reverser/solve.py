@@ -79,7 +79,7 @@ SERIAL = str()
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -315,7 +315,7 @@ def hookingHandler(ctx):
 def getVarSyntax(ctx):
     s = str()
     ast = ctx.getAstContext()
-    for k, v in ctx.getSymbolicVariables().items():
+    for k, v in list(ctx.getSymbolicVariables().items()):
         s += str(ast.declare(ast.variable(v))) + '\n'
     return s
 
@@ -393,7 +393,7 @@ def emulate(ctx, pc):
             ast = ctx.getAstContext()
             pco = ctx.getPathConstraintsAst()
             mod = myExternalSolver(ctx, zf == 1, pc)
-            for k, v in mod.items():
+            for k, v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(k), v)
 
         # End of the execution
@@ -410,7 +410,7 @@ def emulate(ctx, pc):
             serial = str()
             for k, v in sorted(mod.items()):
                 serial += chr(v)
-            print 'Serial is: %s' %(serial)
+            print('Serial is: %s' %(serial))
             SERIAL = serial
 
         # Next

@@ -345,8 +345,8 @@ class TestCustomIR(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86)
         esp = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
         code = [
-            (0xdeadbeaf, "\x54"),  # push esp
-            (0xdeadbeb0, "\xc3"),  # ret
+            (0xdeadbeaf, b"\x54"),  # push esp
+            (0xdeadbeb0, b"\xc3"),  # ret
         ]
         for addr, opcode in code:
             insn = Instruction()
@@ -361,7 +361,7 @@ class TestCustomIR(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86)
         esp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
         insn = Instruction()
-        insn.setOpcode("\x61")  # popal
+        insn.setOpcode(b"\x61")  # popal
         ctx.processing(insn)
         esp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
         self.assertTrue(ctx.isSat(esp_new == esp_old + 32))
@@ -371,7 +371,7 @@ class TestCustomIR(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86)
         esp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
         insn = Instruction()
-        insn.setOpcode("\x66\x9d")  # popf
+        insn.setOpcode(b"\x66\x9d")  # popf
         ctx.processing(insn)
         esp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86.ESP))
         self.assertTrue(ctx.isSat(esp_new == esp_old + 4))
@@ -381,7 +381,7 @@ class TestCustomIR(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86_64)
         rsp_old = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
         insn = Instruction()
-        insn.setOpcode("\x66\x9d")  # popf
+        insn.setOpcode(b"\x66\x9d")  # popf
         ctx.processing(insn)
         rsp_new = ctx.getRegisterAst(ctx.getRegister(REG.X86_64.RSP))
         self.assertTrue(ctx.isSat(rsp_new == rsp_old + 8))
@@ -390,7 +390,7 @@ class TestCustomIR(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.AARCH64)
 
-        inst = Instruction("\x27\x44\x40\xf8") # ldr x7, [x1], #4
+        inst = Instruction(b"\x27\x44\x40\xf8") # ldr x7, [x1], #4
         ctx.processing(inst)
 
         found = False
@@ -427,7 +427,7 @@ class TestCustomIR(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.AARCH64)
 
-        inst = Instruction("\x27\x00\x40\xf9") # ldr x7, [x1]
+        inst = Instruction(b"\x27\x00\x40\xf9") # ldr x7, [x1]
         ctx.processing(inst)
 
         found = False

@@ -182,7 +182,7 @@ def __strtoul():
     base   = Triton.getConcreteRegisterValue(Triton.registers.rdx)
 
     # Return value
-    return long(nptr, base)
+    return int(nptr, base)
 
 
 # Simulate the printf() function
@@ -299,7 +299,7 @@ def __atol():
     arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
 
     # Return value
-    return long(arg1)
+    return int(arg1)
 
 
 # Simulate the atoll() function
@@ -310,7 +310,7 @@ def __atoll():
     arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
 
     # Return value
-    return long(arg1)
+    return int(arg1)
 
 
 customRelocation = [
@@ -415,7 +415,7 @@ def makeRelocation(binary):
 
 def debug(s):
     if DEBUG:
-        print '[Triton] %s' %(s)
+        print('[Triton] %s' %(s))
     return
 
 

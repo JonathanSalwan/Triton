@@ -21,13 +21,13 @@ def cbeforeSymProc(instruction):
 
 
 def cafter(instruction):
-    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
+    print('%#x: %s' %(instruction.getAddress(), instruction.getDisassembly()))
     for se in instruction.getSymbolicExpressions():
         if se.isTainted() == True:
-            print '\t -> %s%s%s' %(GREEN, se.getAst(), ENDC)
+            print('\t -> %s%s%s' %(GREEN, se.getAst(), ENDC))
         else:
-            print '\t -> %s' %(se.getAst())
-    print
+            print('\t -> %s' %(se.getAst()))
+    print()
 
 
 if __name__ == '__main__':
