@@ -182,7 +182,7 @@ namespace triton {
       }
 
 
-      static int SymbolicVariable_print(PyObject* self) {
+      static int SymbolicVariable_print(PyObject* self, void* io, int s) {
         std::cout << PySymbolicVariable_AsSymbolicVariable(self);
         return 0;
       }

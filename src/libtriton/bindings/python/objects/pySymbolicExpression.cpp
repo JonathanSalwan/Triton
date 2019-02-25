@@ -282,7 +282,7 @@ namespace triton {
       }
 
 
-      static int SymbolicExpression_print(PyObject* self) {
+      static int SymbolicExpression_print(PyObject* self, void* io, int s) {
         std::cout << PySymbolicExpression_AsSymbolicExpression(self);
         return 0;
       }

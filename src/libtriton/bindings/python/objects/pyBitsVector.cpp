@@ -116,7 +116,7 @@ namespace triton {
       }
 
 
-      static int BitsVector_print(PyObject* self) {
+      static int BitsVector_print(PyObject* self, void* io, int s) {
         std::cout << PyBitsVector_AsBitsVector(self);
         return 0;
       }

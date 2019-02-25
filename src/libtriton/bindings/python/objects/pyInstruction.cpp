@@ -673,7 +673,7 @@ namespace triton {
       }
 
 
-      static int Instruction_print(PyObject* self) {
+      static int Instruction_print(PyObject* self, void* io, int s) {
         std::cout << PyInstruction_AsInstruction(self);
         return 0;
       }
