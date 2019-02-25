@@ -5,6 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <vector>
+#include <boost/multiprecision/cpp_int/import_export.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/exceptions.hpp>
@@ -163,7 +165,7 @@ namespace triton {
         }
 
         try {
-          import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
+          boost::multiprecision::detail::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
         }
         catch (std::overflow_error&) {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
@@ -195,7 +197,7 @@ namespace triton {
         }
 
         try {
-          import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
+          boost::multiprecision::detail::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
         }
         catch (std::overflow_error&) {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
@@ -227,7 +229,7 @@ namespace triton {
         }
 
         try {
-          import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
+          boost::multiprecision::detail::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
         }
         catch (std::overflow_error&) {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
@@ -364,7 +366,7 @@ namespace triton {
         PyLongObject* v;
         std::vector<digit> digits;
 
-        export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
+        boost::multiprecision::detail::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
         v = _PyLong_New(digits.size());
         std::copy(digits.begin(), digits.end(), v->ob_digit);
 
@@ -381,7 +383,7 @@ namespace triton {
         PyLongObject* v;
         std::vector<digit> digits;
 
-        export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
+        boost::multiprecision::detail::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
         v = _PyLong_New(digits.size());
         std::copy(digits.begin(), digits.end(), v->ob_digit);
 
@@ -398,7 +400,7 @@ namespace triton {
         PyLongObject* v;
         std::vector<digit> digits;
 
-        export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
+        boost::multiprecision::detail::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
         v = _PyLong_New(digits.size());
         std::copy(digits.begin(), digits.end(), v->ob_digit);
 
