@@ -372,10 +372,10 @@ namespace triton {
       }
 
 
-      static int AstNode_print(PyObject* self) {
+      /*static int AstNode_print(PyObject* self) {
         std::cout << PyAstNode_AsAstNode(self);
         return 0;
-      }
+      }*/
 
 
       static int AstNode_cmp(PyObject* a, PyObject* b) {
