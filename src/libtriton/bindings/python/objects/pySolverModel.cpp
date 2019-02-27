@@ -53,13 +53,13 @@ True
 
 >>> model = ctxt.getModel(constraint)
 >>> print(model) #doctest: +ELLIPSIS
-{0L: <SolverModel object at 0x...>}
+{0: <SolverModel object at 0x...>}
 
 >>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
 >>> print(symvarModel)
 SymVar_0:64 = 0x11223344
 >>> hex(symvarModel.getValue())
-'0x11223344L'
+'0x11223344'
 
 ~~~~~~~~~~~~~
 
@@ -195,7 +195,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)SolverModel_dealloc,            /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

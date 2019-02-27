@@ -378,6 +378,7 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3) || !IS_PY3
       static int AstNode_cmp(PyObject* a, PyObject* b) {
         if (!PyAstNode_Check(a) || !PyAstNode_Check(b)) {
           PyErr_Format(
@@ -391,6 +392,8 @@ namespace triton {
         auto hb = PyAstNode_AsAstNode(b)->hash(1);
         return (ha == hb ? 0 : (ha > hb ? 1 : -1));
       }
+      #endif
+
 
       static PyObject* AstNode_str(PyObject* self) {
         try {
@@ -548,6 +551,7 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3) || !IS_PY3
       static int AstNode_coerce(PyObject** self, PyObject** other) {
         if (PyLong_Check(*other) || PyInt_Check(*other)) {
           triton::uint512 value = PyLong_AsUint512(*other);
@@ -560,6 +564,7 @@ namespace triton {
         }
         return 1;
       }
+      #endif
 
 
       static PyObject* AstNode_richcompare(PyObject* self, PyObject* other, int op) {
@@ -746,7 +751,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)AstNode_dealloc,                /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

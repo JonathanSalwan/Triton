@@ -35,13 +35,13 @@ This object is used to represent a bits vector. Mainly used by \ref py_Register_
 >>> ah = ctxt.registers.ah
 >>> bv = ah.getBitvector()
 >>> bv.getHigh()
-15L
+15
 >>> bv.getLow()
-8L
+8
 >>> bv.getVectorSize()
-8L
+8
 >>> bv.getMaxValue()
-255L
+255
 
 ~~~~~~~~~~~~~
 
@@ -191,7 +191,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)BitsVector_dealloc,             /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

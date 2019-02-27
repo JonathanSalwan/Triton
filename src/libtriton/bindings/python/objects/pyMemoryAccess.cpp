@@ -63,10 +63,10 @@ rcx:64 bv[63..0]
 (bvadd (_ bv0 64) (bvadd (bvmul (_ bv0 64) (_ bv2 64)) (_ bv256 64)))
 
 >>> print(hex(op1.getLeaAst().evaluate()))
-0x100L
+0x100
 
 >>> print(hex(op1.getAddress()))
-0x100L
+0x100
 
 >>> print(op1.getSize())
 1
@@ -81,10 +81,10 @@ rcx:64 bv[63..0]
 [@0x400f4d3]:64 bv[63..0]
 
 >>> hex(mem.getAddress())
-'0x400f4d3L'
+'0x400f4d3'
 
 >>> mem.getSize()
-8L
+8
 
 ~~~~~~~~~~~~~
 
@@ -474,7 +474,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)MemoryAccess_dealloc,           /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

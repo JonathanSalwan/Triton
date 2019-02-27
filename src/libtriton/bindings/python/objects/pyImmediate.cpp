@@ -49,7 +49,7 @@ True
 0x14:32 bv[31..0]
 
 >>> print(hex(op1.getValue()))
-0x14L
+0x14
 
 >>> print(op1.getBitSize())
 32
@@ -63,11 +63,11 @@ True
 >>> print(imm)
 0x1234:16 bv[15..0]
 >>> imm.getValue()
-4660L
+4660
 >>> imm.getSize()
-2L
+2
 >>> imm.getBitSize()
-16L
+16
 
 ~~~~~~~~~~~~~
 
@@ -291,7 +291,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)Immediate_dealloc,              /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

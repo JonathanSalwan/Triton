@@ -5,10 +5,13 @@
 **  This program is under the terms of the BSD License.
 */
 
+
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/tritonTypes.hpp>
+
+#include <limits>
 
 
 
@@ -237,6 +240,10 @@ namespace triton {
         triton::__uint t;
         int ndigits = 0;
 
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(static_cast<long>(value));
+
         /* Count the number of Python digits. */
         t = value;
         while (t) {
@@ -261,6 +268,10 @@ namespace triton {
         PyLongObject* v;
         triton::usize t;
         int ndigits = 0;
+
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(static_cast<long>(value));
 
         /* Count the number of Python digits. */
         t = value;
@@ -287,6 +298,10 @@ namespace triton {
         triton::uint32 t;
         int ndigits = 0;
 
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(static_cast<long>(value));
+
         /* Count the number of Python digits. */
         t = value;
         while (t) {
@@ -311,6 +326,10 @@ namespace triton {
         PyLongObject* v;
         triton::uint64 t;
         int ndigits = 0;
+
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(static_cast<long>(value));
 
         /* Count the number of Python digits. */
         t = value;
@@ -337,6 +356,10 @@ namespace triton {
         triton::uint128 t;
         int ndigits = 0;
 
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(value.convert_to<long>());
+
         /* Count the number of Python digits. */
         t = value;
         while (t) {
@@ -362,6 +385,10 @@ namespace triton {
         triton::uint256 t;
         int ndigits = 0;
 
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(value.convert_to<long>());
+
         /* Count the number of Python digits. */
         t = value;
         while (t) {
@@ -386,6 +413,10 @@ namespace triton {
         PyLongObject* v;
         triton::uint512 t = 0;
         int ndigits = 0;
+
+        // it is mandatory to let Python deal with small numbers (static objects)
+        if (value <= std::numeric_limits<long>::max())
+          return PyInt_FromLong(value.convert_to<long>());
 
         /* Count the number of Python digits. */
         t = value;

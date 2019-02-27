@@ -52,10 +52,10 @@ ah:8 bv[15..8]
 'ah'
 
 >>> op0.getSize()
-1L
+1
 
 >>> op0.getBitSize()
-8L
+8
 
 >>> ctxt.getParentRegister(op0).getName()
 'rax'
@@ -398,7 +398,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)Register_dealloc,               /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

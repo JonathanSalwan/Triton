@@ -24,14 +24,21 @@ namespace triton {
         "triton",
         NULL,
         -1,
+        #if IS_PY3
+        tritonCallbacks,
+        NULL, /* m_slots    */
+        NULL, /* m_traverse */
+        NULL, /* m_clear    */
+        NULL  /* m_free     */
+        #else
         tritonCallbacks
+        #endif
       };
 
       /* Python entry point (Py2/3) */
       #if IS_PY3
       PyMODINIT_FUNC PyInit_triton(void) {
       #else
-      
       PyMODINIT_FUNC inittriton(void) {
         PyInit_triton();
       }
