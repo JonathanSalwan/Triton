@@ -35,13 +35,14 @@
 ##  python ./solve.py  14.32s user 0.03s system 99% cpu 14.363 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
-
-from triton import *
 
 TARGET = os.path.join(os.path.dirname(__file__), 'unbreakable-enterprise-product-activation')
 DEBUG  = True

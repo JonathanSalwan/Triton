@@ -644,9 +644,9 @@ namespace triton {
         AstNode_operatorAdd,                        /* nb_add */
         AstNode_operatorSub,                        /* nb_subtract */
         AstNode_operatorMul,                        /* nb_multiply */
-#if !defined(IS_PY3) || !IS_PY3
+        #if !defined(IS_PY3) || !IS_PY3
         AstNode_operatorDiv,                        /* nb_divide */
-#endif
+        #endif
         AstNode_operatorRem,                        /* nb_remainder */
         0,                                          /* nb_divmod */
         0,                                          /* nb_power */
@@ -660,22 +660,22 @@ namespace triton {
         AstNode_operatorAnd,                        /* nb_and */
         AstNode_operatorXor,                        /* nb_xor */
         AstNode_operatorOr,                         /* nb_or */
-#if !defined(IS_PY3) || !IS_PY3
+        #if !defined(IS_PY3) || !IS_PY3
         AstNode_coerce,                             /* nb_coerce */
-#endif
+        #endif
         0,                                          /* nb_int */
         0,                                          /* nb_long/nb_reserved */
         0,                                          /* nb_float */
-#if !defined(IS_PY3) || !IS_PY3
+        #if !defined(IS_PY3) || !IS_PY3
         0,                                          /* nb_oct */
         0,                                          /* nb_hex */
-#endif
+        #endif
         AstNode_operatorAdd,                        /* nb_inplace_add */
         AstNode_operatorSub,                        /* nb_inplace_subtract */
         AstNode_operatorMul,                        /* nb_inplace_multiply */
-#if !defined(IS_PY3) || !IS_PY3
+        #if !defined(IS_PY3) || !IS_PY3
         AstNode_operatorDiv,                        /* nb_inplace_divide */
-#endif
+        #endif
         AstNode_operatorRem,                        /* nb_inplace_remainder */
         0,                                          /* nb_inplace_power */
         AstNode_operatorShl,                        /* nb_inplace_lshift */
@@ -688,10 +688,10 @@ namespace triton {
         AstNode_operatorDiv,                        /* nb_inplace_floor_divide */
         0,                                          /* nb_inplace_true_divide */
         0,                                          /* nb_index */
-#if defined(IS_PY3) && IS_PY3
+        #if defined(IS_PY3) && IS_PY3
         0,                                          /* nb_matrix_multiply */
         0,                                          /* nb_inplace_matrix_multiply */
-#endif
+        #endif
       };
 
 
@@ -704,11 +704,11 @@ namespace triton {
         (printfunc)AstNode_print,                   /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
-#if defined(IS_PY3) && IS_PY3
+        #if defined(IS_PY3) && IS_PY3
         0,                                          /* tp_as_async */
-#else
+        #else
         (cmpfunc)AstNode_cmp,                       /* tp_compare */
-#endif
+        #endif
         0,                                          /* tp_repr */
         &AstNode_NumberMethods,                     /* tp_as_number */
         0,                                          /* tp_as_sequence */

@@ -15,6 +15,7 @@
 
 /* setup doctest context
 
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, Immediate, CPUSIZE
 
 >>> ctxt = TritonContext()
@@ -40,17 +41,17 @@ This object is used to represent an immediate.
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x0: mov eax, 0x14
 
 >>> op1 = inst.getOperands()[1]
->>> print op1
+>>> print(op1)
 0x14:32 bv[31..0]
 
->>> print hex(op1.getValue())
+>>> print(hex(op1.getValue()))
 0x14L
 
->>> print op1.getBitSize()
+>>> print(op1.getBitSize())
 32
 
 ~~~~~~~~~~~~~
@@ -59,7 +60,7 @@ True
 
 ~~~~~~~~~~~~~{.py}
 >>> imm = Immediate(0x1234, CPUSIZE.WORD)
->>> print imm
+>>> print(imm)
 0x1234:16 bv[15..0]
 >>> imm.getValue()
 4660L

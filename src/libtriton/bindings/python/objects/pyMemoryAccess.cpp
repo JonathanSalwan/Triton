@@ -15,6 +15,7 @@
 
 /* setup doctest context
 
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, MemoryAccess
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
@@ -39,35 +40,35 @@ This object is used to represent a memory access.
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
 
 >>> op1 = inst.getOperands()[1]
->>> print op1
+>>> print(op1)
 [@0x100]:8 bv[7..0]
 
->>> print op1.getBaseRegister()
+>>> print(op1.getBaseRegister())
 rdx:64 bv[63..0]
 
->>> print op1.getIndexRegister()
+>>> print(op1.getIndexRegister())
 rcx:64 bv[63..0]
 
->>> print op1.getScale()
+>>> print(op1.getScale())
 0x2:64 bv[63..0]
 
->>> print op1.getDisplacement()
+>>> print(op1.getDisplacement())
 0x100:64 bv[63..0]
 
->>> print op1.getLeaAst()
+>>> print(op1.getLeaAst())
 (bvadd (_ bv0 64) (bvadd (bvmul (_ bv0 64) (_ bv2 64)) (_ bv256 64)))
 
->>> print hex(op1.getLeaAst().evaluate())
+>>> print(hex(op1.getLeaAst().evaluate()))
 0x100L
 
->>> print hex(op1.getAddress())
+>>> print(hex(op1.getAddress()))
 0x100L
 
->>> print op1.getSize()
+>>> print(op1.getSize())
 1
 
 ~~~~~~~~~~~~~
@@ -76,7 +77,7 @@ rcx:64 bv[63..0]
 
 ~~~~~~~~~~~~~{.py}
 >>> mem = MemoryAccess(0x400f4d3, 8)
->>> print mem
+>>> print(mem)
 [@0x400f4d3]:64 bv[63..0]
 
 >>> hex(mem.getAddress())

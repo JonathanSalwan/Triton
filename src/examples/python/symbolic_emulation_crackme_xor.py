@@ -2,9 +2,9 @@
 ## -*- coding: utf-8 -*-
 
 from __future__ import print_function
-import  sys
-
 from triton     import TritonContext, ARCH, MODE, Instruction
+
+import  sys
 
 function = {
                                               #   <serial> function
@@ -43,8 +43,8 @@ function = {
 
 
 if __name__ == '__main__':
-
     Triton = TritonContext()
+
     # Set the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
@@ -101,4 +101,3 @@ if __name__ == '__main__':
         pc = Triton.getRegisterAst(Triton.registers.rip).evaluate()
 
     sys.exit(0)
-

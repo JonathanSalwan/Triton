@@ -24,15 +24,16 @@
 This object is used to represent an Instruction.
 
 ~~~~~~~~~~~~~{.py}
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, OPERAND
 
 >>> trace = [
-...     (0x400000, "\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
-...     (0x400007, "\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
-...     (0x40000b, "\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
-...     (0x400011, "\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
-...     (0x400015, "\x89\xd0"),                     # mov        eax, edx
-...     (0x400017, "\x80\xf4\x99"),                 # xor        ah, 0x99
+...     (0x400000, b"\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
+...     (0x400007, b"\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
+...     (0x40000b, b"\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
+...     (0x400011, b"\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
+...     (0x400015, b"\x89\xd0"),                     # mov        eax, edx
+...     (0x400017, b"\x80\xf4\x99"),                 # xor        ah, 0x99
 ... ]
 
 >>> ctxt = TritonContext()
@@ -53,17 +54,17 @@ This object is used to represent an Instruction.
 ...
 ...     # Process everything
 ...     if not ctxt.processing(inst):
-...         print "Fail an instruction"
+...         print("Fail an instruction")
 ...
-...     print inst
+...     print(inst)
 ...     for op in inst.getOperands():
-...         print '   ', op
+...         print('   '), op
 ...         if op.getType() == OPERAND.MEM:
-...             print '         base  : ', op.getBaseRegister()
-...             print '         index : ', op.getIndexRegister()
-...             print '         disp  : ', op.getDisplacement()
-...             print '         scale : ', op.getScale()
-...     print
+...             print('         base  : '), op.getBaseRegister()
+...             print('         index : '), op.getIndexRegister()
+...             print('         disp  : '), op.getDisplacement()
+...             print('         scale : '), op.getScale()
+...     print('')
 0x400000: mov rax, qword ptr [rip + 0x13b8]
     rax:64 bv[63..0]
     [@0x4013bf]:64 bv[63..0]
@@ -106,11 +107,11 @@ This object is used to represent an Instruction.
 \subsection py_Instruction_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> inst = Instruction("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst = Instruction(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> inst.setAddress(0x40000)
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov rax, 1
 
 ~~~~~~~~~~~~~
@@ -118,10 +119,10 @@ True
 ~~~~~~~~~~~~~{.py}
 >>> inst = Instruction()
 >>> inst.setAddress(0x40000)
->>> inst.setOpcode("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst.setOpcode(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov rax, 1
 
 ~~~~~~~~~~~~~

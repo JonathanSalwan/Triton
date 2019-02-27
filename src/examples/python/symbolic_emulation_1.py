@@ -63,9 +63,9 @@
 ##
 
 from __future__ import print_function
-import sys
+from triton     import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
 
-from triton import TritonContext, ARCH, Instruction, MemoryAccess, CPUSIZE
+import sys
 
 
 code = [
@@ -140,4 +140,3 @@ if __name__ == '__main__':
     print('Compute  AH       :', hex(ah.evaluate()))
 
     sys.exit(0)
-

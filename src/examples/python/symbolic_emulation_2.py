@@ -24,9 +24,9 @@
 ##
 
 from __future__ import print_function
-import sys
+from triton     import TritonContext, ARCH, Instruction, MODE
 
-from triton import TritonContext, ARCH, Instruction, MODE
+import sys
 
 
 function = {
@@ -76,7 +76,6 @@ def initContext():
 
 
 if __name__ == '__main__':
-
     # Set the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
@@ -93,4 +92,3 @@ if __name__ == '__main__':
     run(ENTRY)
 
     sys.exit(0)
-

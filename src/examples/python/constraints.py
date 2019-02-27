@@ -1,7 +1,8 @@
 #!/usr/bin/env python2
 ## -*- coding: utf-8 -*-
 
-from triton import TritonContext, ARCH, Instruction
+from __future__ import print_function
+from triton     import TritonContext, ARCH, Instruction
 
 
 # Constraint using AST form
@@ -74,7 +75,7 @@ def test5():
     Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
 
     # process instruction
-    Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
+    Triton.processing(Instruction(b"\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
     eaxAst = Triton.getSymbolicRegister(Triton.registers.eax).getAst()
@@ -98,7 +99,7 @@ def test6():
     var.setAlias("eax")
 
     # process instruction
-    Triton.processing(Instruction("\x83\xc0\x07")) # add eax, 0x7
+    Triton.processing(Instruction(b"\x83\xc0\x07")) # add eax, 0x7
 
     # get rax ast
     eaxAst = Triton.getSymbolicRegister(Triton.registers.eax).getAst()

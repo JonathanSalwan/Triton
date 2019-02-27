@@ -164,4 +164,3 @@ class TestOnlySymbolizedMode(unittest.TestCase):
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
         self.assertIsNotNone(inst.getOperands()[1].getLeaAst())
-

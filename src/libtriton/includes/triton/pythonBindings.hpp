@@ -18,6 +18,7 @@
 #include <triton/py3c_compat.h>
 
 
+
 //! The Triton namespace
 namespace triton {
 /*!
@@ -106,11 +107,12 @@ namespace triton {
       void initVersionNamespace(PyObject* versionDict);
 
       //! Entry point python bindings (Py2/3).
-#if IS_PY3
+      #if IS_PY3
       PyMODINIT_FUNC PyInit_triton(void);
-#else
+      #else
+      PyMODINIT_FUNC inittriton(void);
       PyObject* PyInit_triton(void);
-#endif
+      #endif
 
     /*! @} End of python namespace */
     };

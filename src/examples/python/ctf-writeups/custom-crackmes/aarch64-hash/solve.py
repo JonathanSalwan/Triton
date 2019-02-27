@@ -66,13 +66,14 @@
 ##  ./solve.py  0.10s user 0.00s system 99% cpu 0.105 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
-
-from triton import *
 
 DEBUG  = True
 INPUT  = 'arm64'
@@ -223,7 +224,7 @@ def emulate(ctx, pc):
             debug('[-] Instruction not supported: %s' %(str(instruction)))
             break
 
-        #print instruction
+        #print(instruction)
 
         # .text:0000000000000864 ADRP  X0, #aWin@PAGE ; "Win"
         # .text:0000000000000868 ADD   X0, X0, #aWin@PAGEOFF ; "Win"

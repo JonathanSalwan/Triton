@@ -1,5 +1,7 @@
 
-from triton import *
+from __future__ import print_function
+from triton     import *
+
 import pintool as Pintool
 import os
 

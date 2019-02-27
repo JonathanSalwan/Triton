@@ -31,9 +31,11 @@
 ##   [+] Symbolic variable 12 = 21 (!)
 ##
 
+from __future__ import print_function
+from triton     import ARCH, TritonContext, MemoryAccess, CPUSIZE, Instruction, MODE, CALLBACK
+
 import os
 import sys
-from triton import ARCH, TritonContext, MemoryAccess, CPUSIZE, Instruction, MODE, CALLBACK
 
 # Symbolic variables with random inputs at the first iteration.
 variables = {

@@ -15,11 +15,11 @@
 ##   PASSWORD:hackover15{I_USE_GOTO_WHEREEVER_I_W4NT}
 ##
 
+from __future__ import print_function
+from triton     import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
+
 import sys
 import string
-
-from triton import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
-
 
 # Script options
 DEBUG = False
@@ -242,7 +242,7 @@ def emulate(pc):
         Triton.processing(instruction)
         count += 1
 
-        #print instruction
+        #print(instruction)
 
         # NOTE: Here is the solution of the challenge. The flag is decoded
         # and written into the memory. So, let's track all memory STORE of

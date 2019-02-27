@@ -38,7 +38,8 @@
 ##  [+] Emulation done.
 ##
 
-from triton import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPUSIZE
+from __future__ import print_function
+from triton     import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPUSIZE
 
 import os
 import sys

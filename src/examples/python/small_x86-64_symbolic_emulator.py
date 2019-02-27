@@ -46,11 +46,12 @@
 ##  [Triton] Emulation done
 ##
 
+from __future__ import print_function
+from triton     import TritonContext, ARCH, MemoryAccess, CPUSIZE, Instruction, OPCODE, MODE
+
 import sys
 import string
 import random
-
-from triton import TritonContext, ARCH, MemoryAccess, CPUSIZE, Instruction, OPCODE, MODE
 
 Triton = TritonContext()
 
@@ -449,4 +450,3 @@ if __name__ == '__main__':
     debug('Emulation done')
 
     sys.exit(0)
-

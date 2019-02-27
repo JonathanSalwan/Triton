@@ -85,4 +85,3 @@ class TestOnlyTaintedMode(unittest.TestCase):
         self.assertEqual(len(inst.getWrittenRegisters()), 2)
         self.assertEqual(len(inst.getLoadAccess()), 0)
         self.assertEqual(len(inst.getStoreAccess()), 0)
-

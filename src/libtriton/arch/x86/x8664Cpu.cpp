@@ -821,12 +821,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
-        if (value > reg.getMaxValue()) {
-          std::ostringstream oss;
-          oss << "x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value ";
-          oss << std::hex << value << " (too big) to this register.";
-          throw triton::exceptions::Register(oss.str());
-        }
+        if (value > reg.getMaxValue())
+          throw triton::exceptions::Register("x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
 
         if (this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);

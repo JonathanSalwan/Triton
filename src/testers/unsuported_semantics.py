@@ -1,6 +1,6 @@
 
 # Note: Display the list of unsuported semantics
-
+from __future__ import print_function
 from operator   import itemgetter
 from triton     import ARCH
 from pintool    import getTritonContext, startAnalysisFromEntry, runProgram, insertCall, INSERT_POINT

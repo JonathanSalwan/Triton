@@ -1753,7 +1753,7 @@ namespace triton {
       void initOpcodesNamespace(PyObject* opcodesDict) {
         PyDict_Clear(opcodesDict);
 
-        PyObject* x86OpcodesDict      = xPyDict_New();
+        PyObject* x86OpcodesDict = xPyDict_New();
 
         xPyDict_SetItemString(x86OpcodesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_INS_INVALID));
         xPyDict_SetItemString(x86OpcodesDict, "AAA", PyLong_FromUint32(triton::arch::x86::ID_INS_AAA));
@@ -3054,7 +3054,7 @@ namespace triton {
         PyObject* x86OpcodesDictClass = xPyClass_New(nullptr, x86OpcodesDict, xPyString_FromString("X86"));
         xPyDict_SetItemString(opcodesDict, "X86", x86OpcodesDictClass);
 
-        PyObject* Aarch64OpcodesDict      = xPyDict_New();
+        PyObject* Aarch64OpcodesDict = xPyDict_New();
 
         xPyDict_SetItemString(Aarch64OpcodesDict, "ABS", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ABS));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ADC", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ADC));

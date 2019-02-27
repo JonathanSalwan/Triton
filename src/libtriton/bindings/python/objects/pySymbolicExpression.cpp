@@ -24,12 +24,13 @@
 This object is used to represent a symbolic expression.
 
 ~~~~~~~~~~~~~{.py}
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, REG
 
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcode = "\x48\x31\xD0"
+>>> opcode = b"\x48\x31\xD0"
 >>> inst = Instruction()
 
 >>> inst.setOpcode(opcode)
@@ -39,11 +40,11 @@ This object is used to represent a symbolic expression.
 
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x400000: xor rax, rdx
 
 >>> for expr in inst.getSymbolicExpressions():
-...     print expr
+...     print(expr)
 ...
 (define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
 (define-fun ref!1 () (_ BitVec 1) (_ bv0 1)) ; Clears carry flag
@@ -56,16 +57,16 @@ True
 >>> expr_1 = inst.getSymbolicExpressions()[0]
 >>> expr_1 # doctest: +ELLIPSIS
 <SymbolicExpression object at 0x...>
->>> print expr_1
+>>> print(expr_1)
 (define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
 
->>> print expr_1.getId()
+>>> print(expr_1.getId())
 0
 
 >>> ast = expr_1.getAst()
 >>> ast # doctest: +ELLIPSIS
 <AstNode object at 0x...>
->>> print ast
+>>> print(ast)
 (bvxor (_ bv12345 64) (_ bv67890 64))
 
 
@@ -75,7 +76,7 @@ False
 >>> expr_1.isRegister()
 True
 
->>> print expr_1.getOrigin()
+>>> print(expr_1.getOrigin())
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~

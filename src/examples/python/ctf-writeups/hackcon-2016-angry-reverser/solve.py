@@ -65,13 +65,14 @@
 ##  python solve.py  279.91s user 0.13s system 99% cpu 4:40.07 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
-
-from triton import *
 
 TARGET = os.path.join(os.path.dirname(__file__), 'yolomolo')
 DEBUG  = True
@@ -380,7 +381,7 @@ def emulate(ctx, pc):
 
         count += 1
 
-        #print instruction
+        #print(instruction)
 
         if instruction.getType() == OPCODE.X86.HLT:
             break

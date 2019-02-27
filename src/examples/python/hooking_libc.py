@@ -59,11 +59,12 @@
 ##  [+] Emulation done
 ##
 
+from __future__ import print_function
+from triton     import TritonContext, ARCH, CPUSIZE, MemoryAccess, OPCODE, Instruction
+
 import os
 import sys
 import string
-
-from triton import TritonContext, ARCH, CPUSIZE, MemoryAccess, OPCODE, Instruction
 
 Triton = TritonContext()
 
@@ -267,4 +268,3 @@ if __name__ == '__main__':
     emulate(binary.entrypoint)
 
     sys.exit(0)
-

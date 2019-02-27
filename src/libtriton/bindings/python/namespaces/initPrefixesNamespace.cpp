@@ -43,7 +43,7 @@ namespace triton {
       void initPrefixesNamespace(PyObject* prefixesDict) {
         PyDict_Clear(prefixesDict);
 
-        PyObject* x86PrefixesDict      = xPyDict_New();
+        PyObject* x86PrefixesDict = xPyDict_New();
 
         xPyDict_SetItemString(x86PrefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
         xPyDict_SetItemString(x86PrefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));

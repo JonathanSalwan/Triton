@@ -20,9 +20,10 @@
 ##  Simp:  (bvxor (_ bv2 8) (_ bv1 8))
 ##
 
-import sys
+from __future__ import print_function
+from triton     import TritonContext, AST_NODE, CALLBACK, ARCH
 
-from triton import TritonContext, AST_NODE, CALLBACK, ARCH
+import sys
 
 Triton = TritonContext()
 

@@ -26,14 +26,17 @@ namespace triton {
         -1,
         tritonCallbacks
       };
-      
+
       /* Python entry point (Py2/3) */
-#if IS_PY3
+      #if IS_PY3
       PyMODINIT_FUNC PyInit_triton(void) {
-#else
-      PyMODINIT_FUNC inittriton(void) { PyInit_triton(); }
+      #else
+      
+      PyMODINIT_FUNC inittriton(void) {
+        PyInit_triton();
+      }
       PyObject* PyInit_triton(void) {
-#endif
+      #endif
         /* Init python */
         Py_Initialize();
 
@@ -43,7 +46,6 @@ namespace triton {
         if (triton::bindings::python::tritonModule == nullptr) {
           std::cerr << "Failed to initialize the triton bindings" << std::endl;
           PyErr_Print();
-          exit(1);
           return nullptr;
         }
 
@@ -52,7 +54,7 @@ namespace triton {
         PyObject* archDict = xPyDict_New();
         initArchNamespace(archDict);
         PyObject* idArchClass = xPyClass_New(nullptr, archDict, xPyString_FromString("ARCH"));
-        
+
         /* Create the AST_NODE namespace ============================================================= */
 
         PyObject* astNodeDict = xPyDict_New();
@@ -90,7 +92,7 @@ namespace triton {
         PyObject* idExtendClass = xPyClass_New(nullptr, extendDict, xPyString_FromString("EXTEND"));
 
         /* Create the OPCODE namespace =============================================================== */
-        
+
         PyObject* opcodesDict = xPyDict_New();
         initOpcodesNamespace(opcodesDict);
         PyObject* idOpcodesClass = xPyClass_New(nullptr, opcodesDict, xPyString_FromString("OPCODE"));
@@ -102,13 +104,13 @@ namespace triton {
         PyObject* idOperandClass = xPyClass_New(nullptr, operandDict, xPyString_FromString("OPERAND"));
 
         /* Create the OPTIMIZATION namespace ========================================================= */
-        
+
         PyObject* modeDict = xPyDict_New();
         initModeNamespace(modeDict);
         PyObject* idModeClass = xPyClass_New(nullptr, modeDict, xPyString_FromString("MODE"));
 
         /* Create the PREFIX namespace =============================================================== */
-        
+
         PyObject* prefixesDict = xPyDict_New();
         initPrefixesNamespace(prefixesDict);
         PyObject* idPrefixesClass = xPyClass_New(nullptr, prefixesDict, xPyString_FromString("PREFIX"));

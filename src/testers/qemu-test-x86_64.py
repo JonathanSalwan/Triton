@@ -1,7 +1,10 @@
 # $ ./triton ./src/testers/qemu-test-x86_64.py ./src/samples/ir_test_suite/qemu-test-x86_64
 
-from triton import *
+from __future__ import print_function
+from triton     import *
+
 import pintool as Pintool
+
 
 # Get the Triton context over the pintool
 Triton = Pintool.getTritonContext()

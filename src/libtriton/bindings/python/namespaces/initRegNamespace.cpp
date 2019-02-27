@@ -76,7 +76,7 @@ namespace triton {
 
         // Create X86 REG namespace
 
-        PyObject* x86RegistersDict      = xPyDict_New();
+        PyObject* x86RegistersDict = xPyDict_New();
 
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, X86_AVAIL) \
           if (X86_AVAIL) \
@@ -90,7 +90,7 @@ namespace triton {
 
         // Create X86_64 REG namespace
 
-        PyObject* x8664RegistersDict      = xPyDict_New();
+        PyObject* x8664RegistersDict = xPyDict_New();
 
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, _8) \
           xPyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_X86_##UPPER_NAME));
@@ -103,7 +103,7 @@ namespace triton {
 
         // Create AArch64 REG namespace
 
-        PyObject* aarch64RegistersDict      = xPyDict_New();
+        PyObject* aarch64RegistersDict = xPyDict_New();
 
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
           xPyDict_SetItemString(aarch64RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_AARCH64_##UPPER_NAME));

@@ -5,8 +5,6 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <vector>
-#include <boost/multiprecision/cpp_int.hpp>
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/exceptions.hpp>
@@ -145,106 +143,96 @@ namespace triton {
 
       triton::uint128 PyLong_AsUint128(PyObject* vv) {
         PyLongObject* v;
-        boost::multiprecision::checked_int128_t tmp;
+        triton::uint128 x, prev;
         Py_ssize_t i;
 
         if (vv == NULL || !PyLong_Check(vv)) {
-          if (vv != NULL && PyInt_Check(vv))
-            return PyInt_AsLong(vv);
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): bad internal call.");
+          if (vv != NULL && PyInt_Check(vv)) {
+              triton::uint128 val = PyInt_AsLong(vv);
+              return val;
+          }
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
+        x = 0;
+        if (i < 0)
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): Cannot convert negative value to unsigned long.");
 
-        const bool neg = (i <= 0);
-        if (neg) {
-          if (i == 0)
-            return 0;
-          i = -i;
+        while (--i >= 0) {
+            prev = x;
+            x = (x << PyLong_SHIFT) | v->ob_digit[i];
+            if ((x >> PyLong_SHIFT) != prev)
+                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): long int too large to convert.");
         }
 
-        try {
-          boost::multiprecision::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
-        }
-        catch (std::overflow_error&) {
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
-        }
-
-        return static_cast<triton::uint128>(neg ? -tmp : tmp);
+        return x;
       }
 
 
       triton::uint256 PyLong_AsUint256(PyObject* vv) {
         PyLongObject* v;
-        boost::multiprecision::checked_int256_t tmp;
+        triton::uint256 x, prev;
         Py_ssize_t i;
 
         if (vv == NULL || !PyLong_Check(vv)) {
-          if (vv != NULL && PyInt_Check(vv))
-              return PyInt_AsLong(vv);
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): bad internal call.");
+          if (vv != NULL && PyInt_Check(vv)) {
+              triton::uint256 val = PyInt_AsLong(vv);
+              return val;
+          }
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
+        x = 0;
+        if (i < 0)
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): Cannot convert negative value to unsigned long.");
 
-        const bool neg = (i <= 0);
-        if (neg) {
-          if (i == 0)
-            return 0;
-          i = -i;
+        while (--i >= 0) {
+            prev = x;
+            x = (x << PyLong_SHIFT) | v->ob_digit[i];
+            if ((x >> PyLong_SHIFT) != prev)
+                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long int too large to convert.");
         }
 
-        try {
-          boost::multiprecision::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
-        }
-        catch (std::overflow_error&) {
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
-        }
-
-        return static_cast<triton::uint256>(neg ? -tmp : tmp);
+        return x;
       }
 
 
       triton::uint512 PyLong_AsUint512(PyObject* vv) {
         PyLongObject* v;
-        boost::multiprecision::checked_int512_t tmp;
+        triton::uint512 x, prev;
         Py_ssize_t i;
 
         if (vv == NULL || !PyLong_Check(vv)) {
-          if (vv != NULL && PyInt_Check(vv))
-            return PyInt_AsLong(vv);
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): bad internal call.");
+          if (vv != NULL && PyInt_Check(vv)) {
+              triton::uint512 val = PyInt_AsLong(vv);
+              return val;
+          }
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): Bad internal call.");
         }
 
         v = reinterpret_cast<PyLongObject*>(vv);
         i = Py_SIZE(v);
+        x = 0;
+        if (i < 0)
+          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): Cannot convert negative value to unsigned long.");
 
-        const bool neg = (i <= 0);
-        if (neg) {
-          if (i == 0)
-            return 0;
-          i = -i;
+        while (--i >= 0) {
+            prev = x;
+            x = (x << PyLong_SHIFT) | v->ob_digit[i];
+            if ((x >> PyLong_SHIFT) != prev)
+                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): long int too large to convert.");
         }
 
-        try {
-          boost::multiprecision::import_bits(tmp, v->ob_digit, v->ob_digit + i, PyLong_SHIFT, false);
-        }
-        catch (std::overflow_error&) {
-          throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long integer too large to convert.");
-        }
-
-        return static_cast<triton::uint512>(neg ? -tmp : tmp);
+        return x;
       }
 
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUint(triton::__uint value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
         triton::__uint t;
         int ndigits = 0;
@@ -270,15 +258,9 @@ namespace triton {
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUsize(triton::usize value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
         triton::usize t;
         int ndigits = 0;
-
-        
 
         /* Count the number of Python digits. */
         t = value;
@@ -301,10 +283,6 @@ namespace triton {
 
       /* Returns a PyObject from a 32-bits integer */
       PyObject* PyLong_FromUint32(triton::uint32 value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
         triton::uint32 t;
         int ndigits = 0;
@@ -330,10 +308,6 @@ namespace triton {
 
       /* Returns a PyObject from a 64-bits integer */
       PyObject* PyLong_FromUint64(triton::uint64 value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
         triton::uint64 t;
         int ndigits = 0;
@@ -359,16 +333,24 @@ namespace triton {
 
       /* Returns a PyObject from a 128-bits integer */
       PyObject* PyLong_FromUint128(triton::uint128 value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
-        std::vector<digit> digits;
+        triton::uint128 t;
+        int ndigits = 0;
 
-        boost::multiprecision::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
-        v = _PyLong_New(digits.size());
-        std::copy(digits.begin(), digits.end(), v->ob_digit);
+        /* Count the number of Python digits. */
+        t = value;
+        while (t) {
+          ++ndigits;
+          t >>= PyLong_SHIFT;
+        }
+
+        v = _PyLong_New(ndigits);
+        digit* p = v->ob_digit;
+        Py_SIZE(v) = ndigits;
+        while (value) {
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
+          value >>= PyLong_SHIFT;
+        }
 
         return (PyObject*)v;
       }
@@ -376,16 +358,24 @@ namespace triton {
 
       /* Returns a PyObject from a 256-bits integer */
       PyObject* PyLong_FromUint256(triton::uint256 value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
-        std::vector<digit> digits;
+        triton::uint256 t;
+        int ndigits = 0;
 
-        boost::multiprecision::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
-        v = _PyLong_New(digits.size());
-        std::copy(digits.begin(), digits.end(), v->ob_digit);
+        /* Count the number of Python digits. */
+        t = value;
+        while (t) {
+          ++ndigits;
+          t >>= PyLong_SHIFT;
+        }
+
+        v = _PyLong_New(ndigits);
+        digit* p = v->ob_digit;
+        Py_SIZE(v) = ndigits;
+        while (value) {
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
+          value >>= PyLong_SHIFT;
+        }
 
         return (PyObject*)v;
       }
@@ -393,16 +383,24 @@ namespace triton {
 
       /* Returns a PyObject from a 512-bits integer */
       PyObject* PyLong_FromUint512(triton::uint512 value) {
-        // it is mandatory to let Python impl deal with small numbers (static objects)
-        if (value <= std::numeric_limits<unsigned long>::max())
-          return PyLong_FromUnsignedLong(static_cast<unsigned long>(value));
-
         PyLongObject* v;
-        std::vector<digit> digits;
+        triton::uint512 t = 0;
+        int ndigits = 0;
 
-        boost::multiprecision::export_bits(value, std::back_inserter(digits), PyLong_SHIFT, false);
-        v = _PyLong_New(digits.size());
-        std::copy(digits.begin(), digits.end(), v->ob_digit);
+        /* Count the number of Python digits. */
+        t = value;
+        while (t) {
+          ++ndigits;
+          t >>= PyLong_SHIFT;
+        }
+
+        v = _PyLong_New(ndigits);
+        digit* p = v->ob_digit;
+        Py_SIZE(v) = ndigits;
+        while (value) {
+          *p++ = (value & PyLong_MASK).convert_to<digit>();
+          value >>= PyLong_SHIFT;
+        }
 
         return (PyObject*)v;
       }

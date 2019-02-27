@@ -84,7 +84,7 @@ namespace triton {
       void initConditionsNamespace(PyObject* conditionsDict) {
         PyDict_Clear(conditionsDict);
 
-        PyObject* aarch64ConditionsDict      = xPyDict_New();
+        PyObject* aarch64ConditionsDict = xPyDict_New();
 
         xPyDict_SetItemString(aarch64ConditionsDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_INVALID));
         xPyDict_SetItemString(aarch64ConditionsDict, "AL",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_AL));

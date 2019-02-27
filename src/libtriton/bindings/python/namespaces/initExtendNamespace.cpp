@@ -63,7 +63,7 @@ namespace triton {
       void initExtendNamespace(PyObject* extendDict) {
         PyDict_Clear(extendDict);
 
-        PyObject* aarch64ExtendDict      = xPyDict_New();
+        PyObject* aarch64ExtendDict = xPyDict_New();
 
         xPyDict_SetItemString(aarch64ExtendDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_INVALID));
         xPyDict_SetItemString(aarch64ExtendDict, "UXTB",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTB));

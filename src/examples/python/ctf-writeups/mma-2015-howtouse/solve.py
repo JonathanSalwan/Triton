@@ -65,13 +65,14 @@
 ##  python solve.py  0.18s user 0.02s system 99% cpu 0.200 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
-
-from triton import *
 
 TARGET = os.path.join(os.path.dirname(__file__), 'howtouse.dll')
 DEBUG  = True

@@ -10,9 +10,9 @@
 ##
 
 from __future__ import print_function
-import  sys
+from triton     import *
 
-from triton import *
+import sys
 
 
 # A dumb function to emulate.

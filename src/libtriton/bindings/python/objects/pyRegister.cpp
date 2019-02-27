@@ -15,6 +15,7 @@
 
 /* setup doctest context
 
+>>> from __future__ import print_function
 >>> from triton import ARCH, TritonContext, Instruction, REG
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
@@ -40,11 +41,11 @@ This object is used to represent a register operand according to the CPU archite
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
 
 >>> op0 = inst.getOperands()[0]
->>> print op0
+>>> print(op0)
 ah:8 bv[15..8]
 
 >>> op0.getName()
@@ -65,13 +66,13 @@ ah:8 bv[15..8]
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.getRegister(REG.X86_64.AH)
->>> print ah
+>>> print(ah)
 ah:8 bv[15..8]
 
->>> print ah.getBitSize()
+>>> print(ah.getBitSize())
 8
 
->>> print ctxt.registers.rax
+>>> print(ctxt.registers.rax)
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~
