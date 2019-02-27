@@ -51,11 +51,12 @@ namespace triton {
 
 
       PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n) {
+        PyObject* c = nullptr;
+
         if (b == NULL)
           b = PyTuple_New(0);
 
-        PyObject *c = PyObject_CallFunctionObjArgs((PyObject*)&PyType_Type, n, b, d, NULL);
-
+        c = PyObject_CallFunctionObjArgs((PyObject*)&PyType_Type, n, b, d, NULL);
         if (!c)
           notEnoughMemory();
 
