@@ -52,9 +52,13 @@ class TestAstConversion(unittest.TestCase):
             operator.ge,
             operator.lt,
             operator.gt,
-            operator.div,
+            operator.floordiv,
             operator.mod,
         ]
+        operator_div = operator.floordiv
+        if hasattr(operator, "div"):
+            operator_div = operator.div
+            binop.append(operator_div)
 
         for _ in range(100):
             cv1 = random.randint(0, 255)
@@ -63,7 +67,7 @@ class TestAstConversion(unittest.TestCase):
             self.Triton.setConcreteVariableValue(self.sv2, cv2)
             for op in binop:
                 n = op(self.v1, self.v2)
-                if op == operator.div and cv2 == 0:
+                if op in (operator.floordiv, operator_div) and cv2 == 0:
                     ref = 255
                 elif op == operator.mod and cv2 == 0:
                     ref = cv1

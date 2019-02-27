@@ -126,7 +126,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyBitsVector_AsBitsVector(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -145,8 +145,7 @@ namespace triton {
 
 
       PyTypeObject BitsVector_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "BitsVector",                               /* tp_name */
         sizeof(BitsVector_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */

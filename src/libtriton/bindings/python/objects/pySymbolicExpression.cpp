@@ -270,9 +270,9 @@ namespace triton {
 
       static PyObject* SymbolicExpression_setComment(PyObject* self, PyObject* comment) {
         try {
-          if (!PyString_Check(comment))
+          if (!PyStr_Check(comment))
             return PyErr_Format(PyExc_TypeError, "SymbolicExpression::setComment(): Expected a string as argument.");
-          PySymbolicExpression_AsSymbolicExpression(self)->setComment(PyString_AsString(comment));
+          PySymbolicExpression_AsSymbolicExpression(self)->setComment(PyStr_AsString(comment));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -292,7 +292,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PySymbolicExpression_AsSymbolicExpression(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -329,8 +329,7 @@ namespace triton {
 
 
       PyTypeObject SymbolicExpression_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "SymbolicExpression",                       /* tp_name */
         sizeof(SymbolicExpression_Object),          /* tp_basicsize */
         0,                                          /* tp_itemsize */

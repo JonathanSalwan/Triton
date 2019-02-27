@@ -378,16 +378,25 @@ namespace triton {
       }
 
 
-      static int AstNode_cmp(AstNode_Object* a, AstNode_Object* b) {
-        return !(a->node->hash(1) == b->node->hash(1));
+      static int AstNode_cmp(PyObject* a, PyObject* b) {
+        if (!PyAstNode_Check(a) || !PyAstNode_Check(b)) {
+          PyErr_Format(
+            PyExc_TypeError,
+            "__cmp__ not supported between instances of '%.100s' and '%.100s'",
+            a->ob_type->tp_name,
+            b->ob_type->tp_name);
+          return -1;
+        }
+        auto ha = PyAstNode_AsAstNode(a)->hash(1);
+        auto hb = PyAstNode_AsAstNode(b)->hash(1);
+        return (ha == hb ? 0 : (ha > hb ? 1 : -1));
       }
-
 
       static PyObject* AstNode_str(PyObject* self) {
         try {
           std::stringstream str;
           str << PyAstNode_AsAstNode(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -635,30 +644,38 @@ namespace triton {
         AstNode_operatorAdd,                        /* nb_add */
         AstNode_operatorSub,                        /* nb_subtract */
         AstNode_operatorMul,                        /* nb_multiply */
+#if !defined(IS_PY3) || !IS_PY3
         AstNode_operatorDiv,                        /* nb_divide */
+#endif
         AstNode_operatorRem,                        /* nb_remainder */
         0,                                          /* nb_divmod */
         0,                                          /* nb_power */
         AstNode_operatorNeg,                        /* nb_negative */
         0,                                          /* nb_positive */
         0,                                          /* nb_absolute */
-        0,                                          /* nb_nonzero */
+        0,                                          /* nb_nonzero/nb_bool */
         AstNode_operatorNot,                        /* nb_invert */
         AstNode_operatorShl,                        /* nb_lshift */
         AstNode_operatorShr,                        /* nb_rshift */
         AstNode_operatorAnd,                        /* nb_and */
         AstNode_operatorXor,                        /* nb_xor */
         AstNode_operatorOr,                         /* nb_or */
+#if !defined(IS_PY3) || !IS_PY3
         AstNode_coerce,                             /* nb_coerce */
+#endif
         0,                                          /* nb_int */
-        0,                                          /* nb_long */
+        0,                                          /* nb_long/nb_reserved */
         0,                                          /* nb_float */
+#if !defined(IS_PY3) || !IS_PY3
         0,                                          /* nb_oct */
         0,                                          /* nb_hex */
+#endif
         AstNode_operatorAdd,                        /* nb_inplace_add */
         AstNode_operatorSub,                        /* nb_inplace_subtract */
         AstNode_operatorMul,                        /* nb_inplace_multiply */
+#if !defined(IS_PY3) || !IS_PY3
         AstNode_operatorDiv,                        /* nb_inplace_divide */
+#endif
         AstNode_operatorRem,                        /* nb_inplace_remainder */
         0,                                          /* nb_inplace_power */
         AstNode_operatorShl,                        /* nb_inplace_lshift */
@@ -666,17 +683,20 @@ namespace triton {
         AstNode_operatorAnd,                        /* nb_inplace_and */
         AstNode_operatorXor,                        /* nb_inplace_xor */
         AstNode_operatorOr,                         /* nb_inplace_or */
-        0,                                          /* nb_floor_divide */
+        AstNode_operatorDiv,                        /* nb_floor_divide */
         0,                                          /* nb_true_divide */
-        0,                                          /* nb_inplace_floor_divide */
+        AstNode_operatorDiv,                        /* nb_inplace_floor_divide */
         0,                                          /* nb_inplace_true_divide */
         0,                                          /* nb_index */
+#if defined(IS_PY3) && IS_PY3
+        0,                                          /* nb_matrix_multiply */
+        0,                                          /* nb_inplace_matrix_multiply */
+#endif
       };
 
 
       PyTypeObject AstNode_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "AstNode",                                  /* tp_name */
         sizeof(AstNode_Object),                     /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -684,7 +704,11 @@ namespace triton {
         (printfunc)AstNode_print,                   /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
+#if defined(IS_PY3) && IS_PY3
+        0,                                          /* tp_as_async */
+#else
         (cmpfunc)AstNode_cmp,                       /* tp_compare */
+#endif
         0,                                          /* tp_repr */
         &AstNode_NumberMethods,                     /* tp_as_number */
         0,                                          /* tp_as_sequence */

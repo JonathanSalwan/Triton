@@ -162,9 +162,9 @@ namespace triton {
 
       static PyObject* SymbolicVariable_setAlias(PyObject* self, PyObject* alias) {
         try {
-          if (!PyString_Check(alias))
+          if (!PyStr_Check(alias))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setAlias(): Expected a string as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyString_AsString(alias));
+          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyStr_AsString(alias));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -176,9 +176,9 @@ namespace triton {
 
       static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
         try {
-          if (!PyString_Check(comment))
+          if (!PyStr_Check(comment))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setComment(): Expected a string as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setComment(PyString_AsString(comment));
+          PySymbolicVariable_AsSymbolicVariable(self)->setComment(PyStr_AsString(comment));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -198,7 +198,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PySymbolicVariable_AsSymbolicVariable(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -232,8 +232,7 @@ namespace triton {
 
 
       PyTypeObject SymbolicVariable_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "SymbolicVariable",                         /* tp_name */
         sizeof(SymbolicVariable_Object),            /* tp_basicsize */
         0,                                          /* tp_itemsize */

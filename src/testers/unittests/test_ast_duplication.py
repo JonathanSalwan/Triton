@@ -29,7 +29,7 @@ class TestAstDuplication(unittest.TestCase):
             (self.v1 ^ self.v2),
             (self.v1 | self.v2),
             (self.v1 * self.v2),
-            (self.v1 / self.v2),
+            (self.v1 // self.v2),
             (self.v1 % self.v2),
             (self.v1 << self.v2),
             (self.v1 >> self.v2),

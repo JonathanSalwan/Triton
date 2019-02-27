@@ -23,18 +23,19 @@
 ##  Next ip: 0x99999999L
 ##
 
-import  sys
+from __future__ import print_function
+import sys
 
 from triton import TritonContext, ARCH, Instruction, MODE
 
 
 function = {
-  0x40056d:   "\x55",                         #   push    rbp
-  0x40056e:   "\x48\xC7\xC0\x44\x43\x42\x41", #   mov     rax, 0x41424344
-  0x400575:   "\xFF\xD0",                     #   call    rax
-  0x400577:   "\xc3",                         #   ret
-  0x41424344: "\x48\x31\xDB",                 #   xor     rbx, rbx
-  0x41424347: "\xc3",                         #   ret
+  0x40056d:   b"\x55",                         #   push    rbp
+  0x40056e:   b"\x48\xC7\xC0\x44\x43\x42\x41", #   mov     rax, 0x41424344
+  0x400575:   b"\xFF\xD0",                     #   call    rax
+  0x400577:   b"\xc3",                         #   ret
+  0x41424344: b"\x48\x31\xDB",                 #   xor     rbx, rbx
+  0x41424347: b"\xc3",                         #   ret
 }
 
 Triton = TritonContext()

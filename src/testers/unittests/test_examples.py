@@ -38,7 +38,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
 
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        self.assertEqual(p.returncode, 0, "\n".join((out, err, str(p.returncode))))
+        self.assertEqual(p.returncode, 0, "\n".join((str(out), str(err), str(p.returncode))))
 
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda

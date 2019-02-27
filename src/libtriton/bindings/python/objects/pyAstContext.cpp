@@ -19,11 +19,12 @@
 
 /* setup doctest context
 
+>>> from __future__ import print_function
 >>> from triton import REG, TritonContext, ARCH, Instruction, AST_REPRESENTATION
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> opcode = "\x48\x31\xD0"
+>>> opcode = b"\x48\x31\xD0"
 >>> inst = Instruction()
 
 >>> inst.setOpcode(opcode)
@@ -33,7 +34,7 @@
 
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x400000: xor rax, rdx
 
 */
@@ -1223,7 +1224,7 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
 
-        if (op1 == nullptr || !PyString_Check(op1))
+        if (op1 == nullptr || !PyStr_Check(op1))
           return PyErr_Format(PyExc_TypeError, "let(): expected a string as first argument");
 
         if (op2 == nullptr || !PyAstNode_Check(op2))
@@ -1233,7 +1234,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "let(): expected a AstNode as third argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->let(PyString_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->let(PyStr_AsString(op1), PyAstNode_AsAstNode(op2), PyAstNode_AsAstNode(op3)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1323,11 +1324,11 @@ namespace triton {
 
 
       static PyObject* AstContext_string(PyObject* self, PyObject* expr) {
-        if (!PyString_Check(expr))
+        if (!PyStr_Check(expr))
           return PyErr_Format(PyExc_TypeError, "string(): expected a string as first argument");
 
         try {
-          return PyAstNode(PyAstContext_AsAstContext(self)->string(PyString_AsString(expr)));
+          return PyAstNode(PyAstContext_AsAstContext(self)->string(PyStr_AsString(expr)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1446,7 +1447,7 @@ namespace triton {
         // return z3.ExprRef(ast)
         PyObject* z3ExprRef = PyObject_GetAttrString(z3mod, "ExprRef");
         pyArgs = Py_BuildValue("(O)", retAst);
-        PyObject* retExpr = PyInstance_New(z3ExprRef, pyArgs, nullptr);
+        PyObject* retExpr = PyObject_CallObject(z3ExprRef, pyArgs);
         Py_DECREF(pyArgs);
         Py_DECREF(retAst);
         Py_DECREF(z3ExprRef);
@@ -1523,8 +1524,7 @@ namespace triton {
 
       //! Python description for an ast context.
       PyTypeObject AstContext_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "AstContext",                               /* tp_name */
         sizeof(AstContext_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */

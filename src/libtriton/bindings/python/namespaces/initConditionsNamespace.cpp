@@ -85,8 +85,6 @@ namespace triton {
         PyDict_Clear(conditionsDict);
 
         PyObject* aarch64ConditionsDict      = xPyDict_New();
-        PyObject* aarch64ConditionsDictClass = xPyClass_New(nullptr, aarch64ConditionsDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(conditionsDict, "AARCH64", aarch64ConditionsDictClass);
 
         xPyDict_SetItemString(aarch64ConditionsDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_INVALID));
         xPyDict_SetItemString(aarch64ConditionsDict, "AL",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_AL));
@@ -104,6 +102,9 @@ namespace triton {
         xPyDict_SetItemString(aarch64ConditionsDict, "PL",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_PL));
         xPyDict_SetItemString(aarch64ConditionsDict, "VC",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_VC));
         xPyDict_SetItemString(aarch64ConditionsDict, "VS",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_VS));
+
+        PyObject* aarch64ConditionsDictClass = xPyClass_New(nullptr, aarch64ConditionsDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(conditionsDict, "AARCH64", aarch64ConditionsDictClass);
       }
 
     }; /* python namespace */
