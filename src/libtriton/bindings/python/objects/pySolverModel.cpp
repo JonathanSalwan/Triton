@@ -120,7 +120,7 @@ namespace triton {
       }
 
 
-      static int SolverModel_print(PyObject* self) {
+      static int SolverModel_print(PyObject* self, void* io, int s) {
         std::cout << PySolverModel_AsSolverModel(self);
         return 0;
       }

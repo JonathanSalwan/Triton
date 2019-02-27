@@ -385,7 +385,7 @@ namespace triton {
       }
 
 
-      static int MemoryAccess_print(PyObject* self) {
+      static int MemoryAccess_print(PyObject* self, void* io, int s) {
         std::cout << PyMemoryAccess_AsMemoryAccess(self);
         return 0;
       }

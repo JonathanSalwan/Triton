@@ -372,10 +372,10 @@ namespace triton {
       }
 
 
-      /*static int AstNode_print(PyObject* self) {
+      static int AstNode_print(PyObject* self, void* io, int s) {
         std::cout << PyAstNode_AsAstNode(self);
         return 0;
-      }*/
+      }
 
 
       static int AstNode_cmp(PyObject* a, PyObject* b) {
@@ -701,7 +701,7 @@ namespace triton {
         sizeof(AstNode_Object),                     /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)AstNode_dealloc,                /* tp_dealloc */
-        0,/*(printfunc)AstNode_print,*/             /* tp_print -> int tp_print(PyObject *self, FILE *file, int flags) */
+        (printfunc)AstNode_print,                   /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
 #if defined(IS_PY3) && IS_PY3

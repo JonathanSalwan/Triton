@@ -269,7 +269,7 @@ namespace triton {
       }
 
 
-      static int Register_print(PyObject* self) {
+      static int Register_print(PyObject* self, void* io, int s) {
         std::cout << PyRegister_AsRegister(self);
         return 0;
       }

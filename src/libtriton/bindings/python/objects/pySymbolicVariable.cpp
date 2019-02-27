@@ -41,6 +41,9 @@ SymVar_0:64
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>
 
+- <b>string getAlias(void)</b><br>
+Returns the alias (if exists) of the symbolic variable.
+
 - <b>integer getBitSize(void)</b><br>
 Returns the size of the symbolic variable.
 
@@ -64,6 +67,9 @@ Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, so `
 - <b>\ref py_SYMBOLIC_page getType(void)</b><br>
 Returns the type of the symbolic variable.<br>
 e.g: `SYMBOLIC.REGISTER_VARIABLE`
+
+- <b>void setAlias(string comment)</b><br>
+Sets an alias to the symbolic variable.
 
 - <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
@@ -182,7 +188,7 @@ namespace triton {
       }
 
 
-      static int SymbolicVariable_print(PyObject* self) {
+      static int SymbolicVariable_print(PyObject* self, void* io, int s) {
         std::cout << PySymbolicVariable_AsSymbolicVariable(self);
         return 0;
       }

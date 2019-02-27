@@ -211,7 +211,7 @@ namespace triton {
       }
 
 
-      static int Immediate_print(PyObject* self) {
+      static int Immediate_print(PyObject* self, void* io, int s) {
         std::cout << PyImmediate_AsImmediate(self);
         return 0;
       }
