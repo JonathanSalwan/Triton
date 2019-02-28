@@ -31,8 +31,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::__uint val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint(): Bad internal call.");
         }
@@ -44,10 +43,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint(): long int too large to convert.");
         }
 
         return x;
@@ -61,8 +60,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::usize val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUsize(): Bad internal call.");
         }
@@ -74,10 +72,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUsize(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUsize(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUsize(): long int too large to convert.");
         }
 
         return x;
@@ -91,8 +89,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::uint32 val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint32(): Bad internal call.");
         }
@@ -104,10 +101,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint32(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint32(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint32(): long int too large to convert.");
         }
 
         return x;
@@ -121,8 +118,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::uint64 val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint64(): Bad internal call.");
         }
@@ -134,10 +130,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint64(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint64(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint64(): long int too large to convert.");
         }
 
         return x;
@@ -151,8 +147,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::uint128 val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): Bad internal call.");
         }
@@ -164,10 +159,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint128(): long int too large to convert.");
         }
 
         return x;
@@ -181,8 +176,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::uint256 val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): Bad internal call.");
         }
@@ -194,10 +188,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint256(): long int too large to convert.");
         }
 
         return x;
@@ -211,8 +205,7 @@ namespace triton {
 
         if (vv == NULL || !PyLong_Check(vv)) {
           if (vv != NULL && PyInt_Check(vv)) {
-              triton::uint512 val = PyInt_AsLong(vv);
-              return val;
+            return PyInt_AsLong(vv);
           }
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): Bad internal call.");
         }
@@ -224,10 +217,10 @@ namespace triton {
           throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): Cannot convert negative value to unsigned long.");
 
         while (--i >= 0) {
-            prev = x;
-            x = (x << PyLong_SHIFT) | v->ob_digit[i];
-            if ((x >> PyLong_SHIFT) != prev)
-                throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): long int too large to convert.");
+          prev = x;
+          x = (x << PyLong_SHIFT) | v->ob_digit[i];
+          if ((x >> PyLong_SHIFT) != prev)
+            throw triton::exceptions::Bindings("triton::bindings::python::PyLong_AsUint512(): long int too large to convert.");
         }
 
         return x;
