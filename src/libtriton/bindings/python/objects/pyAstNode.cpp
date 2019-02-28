@@ -409,9 +409,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorAdd(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvadd(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvadd(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvadd(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorAdd(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -421,9 +436,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorSub(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvsub(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvsub(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvsub(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorSub(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -433,9 +463,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorMul(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvmul(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvmul(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvmul(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorMul(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -445,9 +490,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorDiv(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvudiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvudiv(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvudiv(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvudiv(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorDiv(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -457,9 +517,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorRem(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvurem(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvurem(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvurem(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorMod(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -493,9 +568,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorShl(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvshl(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvshl(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvshl(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorShl(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -505,9 +595,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorShr(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvlshr(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvlshr(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvlshr(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorShr(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -517,9 +622,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorAnd(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvand(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvand(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvand(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorAnd(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -529,9 +649,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorXor(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvxor(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvxor(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvxor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorXor(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -541,9 +676,24 @@ namespace triton {
 
       static PyObject* AstNode_operatorOr(PyObject* self, PyObject* other) {
         try {
-          if (!PyAstNode_Check(self) || !PyAstNode_Check(other))
-            return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
-          return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+          if ((PyInt_Check(self) || PyLong_Check(self)) && PyAstNode_Check(other)) {
+            auto& nother = PyAstNode_AsAstNode(other);
+            auto& ast    = nother->getContext();
+            auto  nself  = ast.bv(PyLong_AsUint512(self), nother->getBitvectorSize());
+            return PyAstNode(ast.bvor(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && (PyInt_Check(other) || PyLong_Check(other))) {
+            auto& nself  = PyAstNode_AsAstNode(self);
+            auto& ast    = nself->getContext();
+            auto  nother = ast.bv(PyLong_AsUint512(other), nself->getBitvectorSize());
+            return PyAstNode(ast.bvor(nself, nother));
+          }
+
+          if (PyAstNode_Check(self) && PyAstNode_Check(other))
+            return PyAstNode(PyAstNode_AsAstNode(self)->getContext().bvor(PyAstNode_AsAstNode(self), PyAstNode_AsAstNode(other)));
+
+          return PyErr_Format(PyExc_TypeError, "AstNode::operatorOr(): Expected a AstNode as arguments.");
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -689,9 +839,9 @@ namespace triton {
         AstNode_operatorXor,                        /* nb_inplace_xor */
         AstNode_operatorOr,                         /* nb_inplace_or */
         AstNode_operatorDiv,                        /* nb_floor_divide */
-        0,                                          /* nb_true_divide */
+        AstNode_operatorDiv,                        /* nb_true_divide */
         AstNode_operatorDiv,                        /* nb_inplace_floor_divide */
-        0,                                          /* nb_inplace_true_divide */
+        AstNode_operatorDiv,                        /* nb_inplace_true_divide */
         0,                                          /* nb_index */
         #if defined(IS_PY3) && IS_PY3
         0,                                          /* nb_matrix_multiply */
