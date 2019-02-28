@@ -236,6 +236,9 @@ namespace triton {
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUint(triton::__uint value) {
+        #if defined(__i386) || defined(_M_IX86)
+        return PyInt_FromLong(static_cast<long>(value));
+        #else
         PyLongObject* v;
         triton::__uint t;
         int ndigits = 0;
@@ -260,11 +263,15 @@ namespace triton {
         }
 
         return (PyObject*)v;
+        #endif
       }
 
 
       /* Returns a PyObject from a {32,64}-bits integer */
       PyObject* PyLong_FromUsize(triton::usize value) {
+        #if defined(__i386) || defined(_M_IX86)
+        return PyInt_FromLong(static_cast<long>(value));
+        #else
         PyLongObject* v;
         triton::usize t;
         int ndigits = 0;
@@ -289,35 +296,13 @@ namespace triton {
         }
 
         return (PyObject*)v;
+        #endif
       }
 
 
       /* Returns a PyObject from a 32-bits integer */
       PyObject* PyLong_FromUint32(triton::uint32 value) {
-        PyLongObject* v;
-        triton::uint32 t;
-        int ndigits = 0;
-
-        // it is mandatory to let Python deal with small numbers (static objects)
-        if (value <= std::numeric_limits<long>::max())
-          return PyInt_FromLong(static_cast<long>(value));
-
-        /* Count the number of Python digits. */
-        t = value;
-        while (t) {
-          ++ndigits;
-          t >>= PyLong_SHIFT;
-        }
-
-        v = _PyLong_New(ndigits);
-        digit* p = v->ob_digit;
-        Py_SIZE(v) = ndigits;
-        while (value) {
-          *p++ = static_cast<digit>(value & PyLong_MASK);
-          value >>= PyLong_SHIFT;
-        }
-
-        return (PyObject*)v;
+        return PyInt_FromLong(static_cast<long>(value));
       }
 
 
