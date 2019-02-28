@@ -71,8 +71,8 @@ from triton     import *
 import random
 import string
 import sys
-import lief
 import os
+import lief
 
 TARGET = os.path.join(os.path.dirname(__file__), 'yolomolo')
 DEBUG  = True
@@ -176,7 +176,7 @@ def scanfHandler(ctx):
     arg2 = ctx.getConcreteRegisterValue(ctx.registers.rsi)
 
     # Fill scanf buffer with dummy inputs
-    ctx.setConcreteMemoryAreaValue(arg2, "a" * 30 + '\n\x00')
+    ctx.setConcreteMemoryAreaValue(arg2, b"a" * 30 + b'\n\x00')
 
     # Symbolize 30 bytes
     debug('[+] symbolizing scanf buffer')
@@ -260,7 +260,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf8')) + b'\x00')
         base += len(argv)+1
         debug('[+] argv[%d] = %s' %(index, argv))
         index += 1

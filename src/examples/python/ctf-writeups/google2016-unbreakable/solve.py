@@ -244,8 +244,8 @@ def libcMainHandler(ctx):
     ctx.concretizeRegister(ctx.registers.rsi)
 
     argvs = [
-        TARGET,     # argv[0]
-        'a' * 70,   # argv[1]
+        bytes(TARGET.encode('utf-8')),  # argv[0]
+        bytes(b'a' * 70),               # argv[1]
     ]
 
     # Define argc / argv
@@ -255,7 +255,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, argv+b'\x00')
         base += len(argv)+1
         debug('[+] argv[%d] = %s' %(index, argv))
         index += 1

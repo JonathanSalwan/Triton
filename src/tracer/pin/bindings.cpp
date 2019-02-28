@@ -243,7 +243,7 @@ namespace tracer {
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getImageName(): Expected an address (integer) as argument.");
 
       std::string imageName = tracer::pintool::getImageName(triton::bindings::python::PyLong_AsUint(addr));
-      return PyString_FromFormat("%s", imageName.c_str());;
+      return PyStr_FromFormat("%s", imageName.c_str());;
     }
 
 
@@ -252,7 +252,7 @@ namespace tracer {
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getImageName(): Expected an address (integer) as argument.");
 
       std::string routineName = tracer::pintool::getRoutineName(triton::bindings::python::PyLong_AsUint(addr));
-      return PyString_FromFormat("%s", routineName.c_str());;
+      return PyStr_FromFormat("%s", routineName.c_str());;
     }
 
 
@@ -353,15 +353,15 @@ namespace tracer {
         tracer::pintool::options::callbackImageLoad = function;
 
       else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_ROUTINE_ENTRY)) {
-        if (routine == nullptr || !PyString_Check(routine))
+        if (routine == nullptr || !PyStr_Check(routine))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::insertCall(): Expected a routine name (string) as third argument.");
-        tracer::pintool::options::callbackRoutineEntry.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
+        tracer::pintool::options::callbackRoutineEntry.insert(std::pair<const char*,PyObject*>(PyStr_AsString(routine), function));
       }
 
       else if ((triton::bindings::python::PyLong_AsUint32(flag) == tracer::pintool::options::CB_ROUTINE_EXIT)) {
-        if (routine == nullptr || !PyString_Check(routine))
+        if (routine == nullptr || !PyStr_Check(routine))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::insertCall(): Expected a routine name (string) as third argument.");
-        tracer::pintool::options::callbackRoutineExit.insert(std::pair<const char*,PyObject*>(PyString_AsString(routine), function));
+        tracer::pintool::options::callbackRoutineExit.insert(std::pair<const char*,PyObject*>(PyStr_AsString(routine), function));
       }
 
       else
@@ -471,10 +471,10 @@ namespace tracer {
       for (Py_ssize_t i = 0; i < PyList_Size(arg); i++) {
         PyObject* item = PyList_GetItem(arg, i);
 
-        if (!PyString_Check(item))
+        if (!PyStr_Check(item))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::setupImageBlacklist(): Each item of the list must be a string.");
 
-        tracer::pintool::options::imageBlacklist.push_back(PyString_AsString(item));
+        tracer::pintool::options::imageBlacklist.push_back(PyStr_AsString(item));
       }
 
       Py_INCREF(Py_None);
@@ -491,10 +491,10 @@ namespace tracer {
       for (Py_ssize_t i = 0; i < PyList_Size(arg); i++) {
         PyObject* item = PyList_GetItem(arg, i);
 
-        if (!PyString_Check(item))
+        if (!PyStr_Check(item))
           return PyErr_Format(PyExc_TypeError, "tracer::pintool::setupImageWhitelist(): Each item of the list must be a string.");
 
-        tracer::pintool::options::imageWhitelist.push_back(PyString_AsString(item));
+        tracer::pintool::options::imageWhitelist.push_back(PyStr_AsString(item));
       }
 
       Py_INCREF(Py_None);
@@ -530,10 +530,10 @@ namespace tracer {
 
 
     static PyObject* pintool_startAnalysisFromSymbol(PyObject* self, PyObject* name) {
-      if (!PyString_Check(name))
+      if (!PyStr_Check(name))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::startAnalysisFromSymbol(): Expected a string as argument.");
 
-      tracer::pintool::options::startAnalysisFromSymbol = PyString_AsString(name);
+      tracer::pintool::options::startAnalysisFromSymbol = PyStr_AsString(name);
       Py_INCREF(Py_None);
       return Py_None;
     }

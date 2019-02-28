@@ -46,8 +46,8 @@
 ##  B1: SymVar_4:8 = 65 (e)  |  B2: SymVar_4:8 = 0 ()
 ##
 
-from triton     import ARCH, CPUSIZE, MemoryAccess, MODE
-from pintool    import *
+from triton  import *
+from pintool import *
 
 TAINTING_SIZE = 10
 

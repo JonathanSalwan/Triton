@@ -35,9 +35,6 @@ This object is used to represent each AST node of an expression.
 ~~~~~~~~~~~~~{.py}
 >>> astCtxt = ctxt.getAstContext()
 >>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> type(node)
-<type 'AstNode'>
-
 >>> print(node)
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
 

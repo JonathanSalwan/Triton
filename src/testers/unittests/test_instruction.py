@@ -27,6 +27,16 @@ class TestInstruction(unittest.TestCase):
         self.assertEqual(self.inst.getAddress(), 0x400000)
         self.assertEqual(self.inst.getNextAddress(), 0x400003)
 
+        inst = Instruction()
+        inst.setAddress(-1)
+        self.assertEqual(inst.getAddress(), 0xffffffffffffffff)
+
+        inst.setAddress(-2)
+        self.assertEqual(inst.getAddress(), 0xfffffffffffffffe)
+
+        inst.setAddress(-3)
+        self.assertEqual(inst.getAddress(), 0xfffffffffffffffd)
+
     def test_memory(self):
         """Check memory access."""
         self.assertListEqual(self.inst.getLoadAccess(), [])

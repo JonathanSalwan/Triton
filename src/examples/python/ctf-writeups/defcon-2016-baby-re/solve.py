@@ -243,7 +243,8 @@ def memoryCaching(Triton, mem):
         if not Triton.isMemoryMapped(addr+index):
             for r in memoryCache:
                 if addr+index >= r['start'] and addr+index < r['start'] + r['size']:
-                    value = ord(r['memory'][((addr+index)-r['start'])])
+                    i = ((addr + index) - r['start'])
+                    value = ord(r['memory'][i : i+1])
                     Triton.setConcreteMemoryValue(addr+index, value)
                     return
 

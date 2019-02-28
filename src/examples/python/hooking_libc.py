@@ -152,7 +152,7 @@ def libcMainHandler():
 
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf8')) + b'\x00')
         base += len(argv)+1
 
     argc = len(argvs)

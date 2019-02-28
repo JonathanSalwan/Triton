@@ -52,8 +52,16 @@ namespace tracer {
     //! The python script which will be executed by Pin.
     bool execScript(const char* fileName);
 
-    //! The initialization of the Pin's Python env.
-    void initBindings(int argc, char* argv[]);
+    #if IS_PY3
+    //! The initialization of the pintool python 3 module.
+    PyObject* initpintool(void);
+    #else
+    //! The initialization of the pintool python 2 module.
+    void initpintool(void);
+    #endif
+
+    //! The initialization of the pintool python arguments.
+    void initPythonArgs(int argc, char* argv[]);
 
     //! The Options namespace
     namespace options {

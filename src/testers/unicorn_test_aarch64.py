@@ -2005,8 +2005,8 @@ def diff_state(state1, state2):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": "".join([chr(255 - i) for i in range(256)]),
-        "heap":  "".join([chr(i) for i in range(256)]),
+        "stack": b"".join([bytes(255 - i) for i in range(256)]),
+        "heap":  b"".join([bytes(i) for i in range(256)]),
         "x0":    0,
         "x1":    0,
         "x2":    0,

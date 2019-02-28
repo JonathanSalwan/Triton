@@ -150,7 +150,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf-8'))+b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):

@@ -155,7 +155,7 @@ def __raise():
     signal  = Triton.getConcreteRegisterValue(Triton.registers.rdi)
     handler = sigHandlers[signal]
 
-    Triton.processing(Instruction("\x6A\x00")) # push 0
+    Triton.processing(Instruction(b"\x6A\x00")) # push 0
     emulate(handler)
 
     # Return value
@@ -259,7 +259,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf8')) + b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):

@@ -140,8 +140,8 @@ def libcMainHandler(ctx):
     ctx.concretizeRegister(ctx.registers.x1)
 
     argvs = [
-        TARGET, # argv[0]
-        INPUT
+        bytes(TARGET.encode('utf-8')), # argv[0]
+        bytes(INPUT.encode('utf-8'))
     ]
 
     # Define argc / argv
@@ -151,7 +151,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, argv+b'\x00')
         if index == 1:
             # Only symbolized argv[1]
             for indexCell in range(len(argv)):
