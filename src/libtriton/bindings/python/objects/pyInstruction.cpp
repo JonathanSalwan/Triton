@@ -58,36 +58,36 @@ This object is used to represent an Instruction.
 ...
 ...     print(inst)
 ...     for op in inst.getOperands():
-...         print('   '), op
+...         print('    %s' % (op))
 ...         if op.getType() == OPERAND.MEM:
-...             print('         base  : '), op.getBaseRegister()
-...             print('         index : '), op.getIndexRegister()
-...             print('         disp  : '), op.getDisplacement()
-...             print('         scale : '), op.getScale()
+...             print('         base  : %s' % (op.getBaseRegister()))
+...             print('         index : %s' % (op.getIndexRegister()))
+...             print('         disp  : %s' % (op.getDisplacement()))
+...             print('         scale : %s' % (op.getScale()))
 ...     print('')
 0x400000: mov rax, qword ptr [rip + 0x13b8]
     rax:64 bv[63..0]
     [@0x4013bf]:64 bv[63..0]
-         base  :  rip:64 bv[63..0]
-         index :  unknown:1 bv[0..0]
-         disp  :  0x13b8:64 bv[63..0]
-         scale :  0x1:64 bv[63..0]
+         base  : rip:64 bv[63..0]
+         index : unknown:1 bv[0..0]
+         disp  : 0x13b8:64 bv[63..0]
+         scale : 0x1:64 bv[63..0]
 <BLANKLINE>
 0x400007: lea rsi, [rbx + rax*8]
     rsi:64 bv[63..0]
     [@0x0]:64 bv[63..0]
-         base  :  rbx:64 bv[63..0]
-         index :  rax:64 bv[63..0]
-         disp  :  0x0:64 bv[63..0]
-         scale :  0x8:64 bv[63..0]
+         base  : rbx:64 bv[63..0]
+         index : rax:64 bv[63..0]
+         disp  : 0x0:64 bv[63..0]
+         scale : 0x8:64 bv[63..0]
 <BLANKLINE>
 0x40000b: lea rsi, [ebx + eax*8 + 0xa]
     rsi:64 bv[63..0]
     [@0xa]:64 bv[63..0]
-         base  :  ebx:32 bv[31..0]
-         index :  eax:32 bv[31..0]
-         disp  :  0xa:32 bv[31..0]
-         scale :  0x8:32 bv[31..0]
+         base  : ebx:32 bv[31..0]
+         index : eax:32 bv[31..0]
+         disp  : 0xa:32 bv[31..0]
+         scale : 0x8:32 bv[31..0]
 <BLANKLINE>
 0x400011: pmovmskb edx, xmm1
     edx:32 bv[31..0]

@@ -35,10 +35,10 @@ This object is used to represent each AST node of an expression.
 ~~~~~~~~~~~~~{.py}
 >>> astCtxt = ctxt.getAstContext()
 >>> node = astCtxt.bvadd(astCtxt.bv(1, 8), astCtxt.bvxor(astCtxt.bv(10, 8), astCtxt.bv(20, 8)))
->>> print type(node)
+>>> type(node)
 <type 'AstNode'>
 
->>> print node
+>>> print(node)
 (bvadd (_ bv1 8) (bvxor (_ bv10 8) (_ bv20 8)))
 
 # Python's opertors overloaded
@@ -46,7 +46,7 @@ This object is used to represent each AST node of an expression.
 >>> a = astCtxt.bv(1, 8)
 >>> b = astCtxt.bv(2, 8)
 >>> c = (a & ~b) | (~a & b)
->>> print c
+>>> print(c)
 (bvor (bvand (_ bv1 8) (bvnot (_ bv2 8))) (bvand (bvnot (_ bv1 8)) (_ bv2 8)))
 
 ~~~~~~~~~~~~~

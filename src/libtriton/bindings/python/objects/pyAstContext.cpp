@@ -291,17 +291,17 @@ Triton allows you to display your AST via a Python syntax.
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> ctxt.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 >>> inst = Instruction()
->>> inst.setOpcode("\x48\x01\xd8") # add rax, rbx
+>>> inst.setOpcode(b"\x48\x01\xd8") # add rax, rbx
 >>> inst.setAddress(0x400000)
 >>> ctxt.setConcreteRegisterValue(ctxt.registers.rax, 0x1122334455667788)
 >>> ctxt.setConcreteRegisterValue(ctxt.registers.rbx, 0x8877665544332211)
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x400000: add rax, rbx
 
 >>> for expr in inst.getSymbolicExpressions():
-...     print expr
+...     print(expr)
 ...
 ref_0 = ((0x1122334455667788 + 0x8877665544332211) & 0xFFFFFFFFFFFFFFFF) # ADD operation
 ref_1 = (0x1 if (0x10 == (0x10 & (ref_0 ^ (0x1122334455667788 ^ 0x8877665544332211)))) else 0x0) # Adjust flag

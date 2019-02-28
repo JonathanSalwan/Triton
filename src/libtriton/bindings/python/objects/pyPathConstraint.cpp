@@ -37,11 +37,11 @@ This object is used to represent a path constraint.
 >>> pcl = ctxt.getPathConstraints()
 >>> for pc in pcl:
 ...     if pc.isMultipleBranches():
-...         b1   =  pc.getBranchConstraints()[0]['constraint']
-...         b2   =  pc.getBranchConstraints()[1]['constraint']
+...         b1 =  pc.getBranchConstraints()[0]['constraint']
+...         b2 =  pc.getBranchConstraints()[1]['constraint']
 ...
-...         print 'Constraint branch 1:', b1
-...         print 'Constraint branch 2:', b2
+...         print('Constraint branch 1: %s' % (b1))
+...         print('Constraint branch 2: %s' % (b2))
 ...
 ...         seed = list()
 ...
@@ -56,7 +56,7 @@ This object is used to represent a path constraint.
 ...             seed.append(v)
 ...
 ...         if seed:
-...             print 'B1: %s (%c)  |  B2: %s (%c)' % (seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue()))
+...             print('B1: %s (%c)  |  B2: %s (%c)' % (seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue())))
 ...
 
 ~~~~~~~~~~~~~
