@@ -1,6 +1,6 @@
 # Pintool
 # FIXME: python3
-if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT PYTHON3)
+if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT PYTHON36)
     enable_testing()
 
     set(TRITON_SCRIPT ${CMAKE_BINARY_DIR}/triton)
