@@ -18,7 +18,7 @@
 namespace triton {
   namespace ast {
 
-    AstContext::AstContext(triton::modes::Modes& modes)
+    AstContext::AstContext(const triton::modes::SharedModes& modes)
       : modes(modes) {
     }
 
@@ -64,7 +64,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvadd(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 + A = A */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return expr2;
@@ -84,7 +84,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvand(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 & A = 0 */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
@@ -116,7 +116,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvashr(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 >> A = 0 */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
@@ -145,7 +145,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvlshr(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 >> A = 0 */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
@@ -169,7 +169,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvmul(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 * A = 0 */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
@@ -225,7 +225,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 | A = A */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return expr2;
@@ -273,7 +273,7 @@ namespace triton {
        *
        * bvrol(rot, expr) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
        **/
-      if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
+      if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size   = expr->getBitvectorSize();
         auto bvsize = this->bv(size, size);
         auto node   = this->bvor(
@@ -310,7 +310,7 @@ namespace triton {
        *
        * bvror(rot, expr) = ((value >> (rot % size)) | (value << (size - (rot % size))))
        **/
-      if (this->modes.isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
+      if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size   = expr->getBitvectorSize();
         auto bvsize = this->bv(size, size);
         auto node   = this->bvor(
@@ -331,7 +331,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvsdiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: A / 1 = A */
         if (!expr2->isSymbolized() && expr2->evaluate() == 1)
           return expr1;
@@ -365,7 +365,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvshl(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: 0 << A = 0 */
         if (!expr1->isSymbolized() && expr1->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
@@ -425,7 +425,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvsub(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: A - 0 = A */
         if (!expr2->isSymbolized() && expr2->evaluate() == 0)
           return expr1;
@@ -458,7 +458,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvudiv(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: A / 1 = A */
         if (!expr2->isSymbolized() && expr2->evaluate() == 1)
           return expr1;
@@ -528,7 +528,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
-      if (this->modes.isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: A ^ 0 = A */
         if (!expr2->isSymbolized() && expr2->evaluate() == 0)
           return expr1;

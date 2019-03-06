@@ -22,7 +22,7 @@ namespace triton {
   namespace arch {
 
     IrBuilder::IrBuilder(triton::arch::Architecture* architecture,
-                         triton::modes::Modes& modes,
+                         const triton::modes::SharedModes& modes,
                          const triton::ast::SharedAstContext& astCtxt,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine)
@@ -161,7 +161,7 @@ namespace triton {
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
-      if (this->symbolicEngine->isEnabled() && this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
+      if (this->symbolicEngine->isEnabled() && this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clear memory operands */
         this->collectUnsymbolizedNodes(inst.operands);
 
@@ -198,7 +198,7 @@ namespace triton {
        * execution only on tainted instructions, we delete all
        * expressions untainted and their AST nodes.
        */
-      else if (this->modes.isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
+      else if (this->modes->isModeEnabled(triton::modes::ONLY_ON_TAINTED) && !inst.isTainted()) {
         /* Memory operands */
         this->collectNodes(inst.operands);
 

@@ -53,7 +53,7 @@ namespace triton {
       class TaintEngine {
         private:
           //! Modes API
-          triton::modes::Modes& modes;
+          triton::modes::SharedModes modes;
 
           //! Symbolic Engine API
           triton::engines::symbolic::SymbolicEngine* symbolicEngine;
@@ -73,7 +73,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT TaintEngine(triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu);
+          TRITON_EXPORT TaintEngine(const triton::modes::SharedModes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu);
 
           //! Constructor by copy.
           TRITON_EXPORT TaintEngine(const TaintEngine& other);

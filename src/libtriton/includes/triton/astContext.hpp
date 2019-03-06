@@ -51,7 +51,7 @@ namespace triton {
     class AstContext : public std::enable_shared_from_this<AstContext> {
       private:
         //! Modes API
-        triton::modes::Modes& modes;
+        triton::modes::SharedModes modes;
 
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
@@ -61,7 +61,7 @@ namespace triton {
 
       public:
         //! Constructor
-        TRITON_EXPORT AstContext(triton::modes::Modes& modes);
+        TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
 
         //! Constructor by copy
         TRITON_EXPORT AstContext(const AstContext& other);

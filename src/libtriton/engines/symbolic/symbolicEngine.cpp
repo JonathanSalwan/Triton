@@ -20,18 +20,18 @@ namespace triton {
     namespace symbolic {
 
       SymbolicEngine::SymbolicEngine(triton::arch::Architecture* architecture,
-                                     triton::modes::Modes& modes,
+                                     const triton::modes::SharedModes& modes,
                                      const triton::ast::SharedAstContext& astCtxt,
                                      triton::callbacks::Callbacks* callbacks)
         : triton::engines::symbolic::SymbolicSimplification(callbacks),
           triton::engines::symbolic::PathManager(modes, astCtxt),
+          astCtxt(astCtxt),
           modes(modes) {
 
         if (architecture == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
 
         this->architecture      = architecture;
-        this->astCtxt           = astCtxt;
         this->callbacks         = callbacks;
         this->enableFlag        = true;
         this->numberOfRegisters = this->architecture->numberOfRegisters();
@@ -45,11 +45,11 @@ namespace triton {
       SymbolicEngine::SymbolicEngine(const SymbolicEngine& other)
         : triton::engines::symbolic::SymbolicSimplification(other),
           triton::engines::symbolic::PathManager(other),
+          astCtxt(other.astCtxt),
           modes(other.modes) {
 
         this->alignedMemoryReference      = other.alignedMemoryReference;
         this->architecture                = other.architecture;
-        this->astCtxt                     = other.astCtxt;
         this->callbacks                   = other.callbacks;
         this->enableFlag                  = other.enableFlag;
         this->memoryReference             = other.memoryReference;
@@ -127,7 +127,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->removeAlignedMemory(addr, BYTE_SIZE);
       }
 
@@ -158,7 +158,7 @@ namespace triton {
       /* Adds an aligned memory */
       void SymbolicEngine::addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr) {
         this->removeAlignedMemory(address, size);
-        if (!(this->modes.isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && expr->getAst()->isSymbolized() == false))
+        if (!(this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && expr->getAst()->isSymbolized() == false))
           this->alignedMemoryReference[std::make_pair(address, size)] = expr;
       }
 
@@ -474,7 +474,7 @@ namespace triton {
         this->setConcreteVariableValue(symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           const SharedSymbolicExpression& se = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "aligned Byte reference");
           this->addAlignedMemory(memAddr, symVarSize, se);
         }
@@ -667,7 +667,7 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
           triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
           return anode;
         }
@@ -790,7 +790,7 @@ namespace triton {
         triton::uint32 writeSize            = mem.getSize();
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned Byte reference - " + comment);
           this->addAlignedMemory(address, writeSize, aligned);
         }
@@ -963,7 +963,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes.isModeEnabled(triton::modes::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
           this->addAlignedMemory(address, writeSize, se);
 
         /*

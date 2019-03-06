@@ -9,6 +9,7 @@
 #define TRITON_ASTREPRESENTATIONINTERFACE_HPP
 
 #include <iostream>
+
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
 

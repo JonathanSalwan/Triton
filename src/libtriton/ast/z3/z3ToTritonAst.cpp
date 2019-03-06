@@ -16,8 +16,8 @@
 namespace triton {
   namespace ast {
 
-    Z3ToTritonAst::Z3ToTritonAst(const SharedAstContext& astCtxt) {
-      this->astCtxt = astCtxt;
+    Z3ToTritonAst::Z3ToTritonAst(const SharedAstContext& astCtxt)
+      : astCtxt(astCtxt) {
     }
 
 

@@ -118,7 +118,7 @@ namespace triton {
           triton::callbacks::Callbacks* callbacks;
 
           //! Modes API.
-          triton::modes::Modes& modes;
+          triton::modes::SharedModes modes;
 
           //! Returns an unique symbolic expression id.
           triton::usize getUniqueSymExprId(void);
@@ -150,7 +150,7 @@ namespace triton {
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
-                                       triton::modes::Modes& modes,
+                                       const triton::modes::SharedModes& modes,
                                        const triton::ast::SharedAstContext& astCtxt,
                                        triton::callbacks::Callbacks* callbacks=nullptr);
 

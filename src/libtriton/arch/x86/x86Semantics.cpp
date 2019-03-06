@@ -328,7 +328,7 @@ namespace triton {
       x86Semantics::x86Semantics(triton::arch::Architecture* architecture,
                                  triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                  triton::engines::taint::TaintEngine* taintEngine,
-                                 triton::modes::Modes& modes,
+                                 const triton::modes::SharedModes& modes,
                                  const triton::ast::SharedAstContext& astCtxt) : modes(modes), astCtxt(astCtxt) {
 
         this->architecture    = architecture;
@@ -710,7 +710,7 @@ namespace triton {
 
 
       void x86Semantics::undefined_s(triton::arch::Instruction& inst, const triton::arch::Register& reg) {
-        if (this->modes.isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS)) {
+        if (this->modes->isModeEnabled(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS)) {
           this->symbolicEngine->concretizeRegister(reg);
         }
         /* Tell that the instruction defines a register as undefined and untaint */

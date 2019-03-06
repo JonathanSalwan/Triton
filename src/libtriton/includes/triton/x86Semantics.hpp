@@ -55,7 +55,7 @@ namespace triton {
           triton::engines::taint::TaintEngine* taintEngine;
 
           //! The Modes API
-          triton::modes::Modes& modes;
+          triton::modes::SharedModes modes;
 
           //! The AST Context API
           triton::ast::SharedAstContext astCtxt;
@@ -65,7 +65,7 @@ namespace triton {
           TRITON_EXPORT x86Semantics(triton::arch::Architecture* architecture,
                                      triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                      triton::engines::taint::TaintEngine* taintEngine,
-                                     triton::modes::Modes& modes,
+                                     const triton::modes::SharedModes& modes,
                                      const triton::ast::SharedAstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.

@@ -325,7 +325,7 @@ namespace triton {
                   break;
                 }
 
-                case triton::extlibs::capstone::X86_OP_REG: {
+                case triton::extlibs::capstone::ARM64_OP_REG: {
                   triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
 
                   /* Set Shift type and value */

@@ -14,7 +14,7 @@ namespace triton {
   namespace engines {
     namespace taint {
 
-      TaintEngine::TaintEngine(triton::modes::Modes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu)
+      TaintEngine::TaintEngine(const triton::modes::SharedModes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu)
         : modes(modes),
           symbolicEngine(symbolicEngine),
           cpu(cpu),
@@ -84,7 +84,7 @@ namespace triton {
         }
 
         /* Spread the taint through pointers if the mode is enabled */
-        if (mode && this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+        if (mode && this->modes->isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
           if (this->isRegisterTainted(mem.getConstBaseRegister()))
             return TAINTED;
           if (this->isRegisterTainted(mem.getConstIndexRegister()))
@@ -498,7 +498,7 @@ namespace triton {
         }
 
         /* Spread the taint through pointers if the mode is enabled */
-        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+        if (this->modes->isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
           if (this->isMemoryTainted(memSrc)) {
             this->taintMemory(memDst);
             isTainted = TAINTED;
@@ -576,7 +576,7 @@ namespace triton {
         }
 
         /* Spread the taint through pointers if the mode is enabled */
-        if (this->modes.isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
+        if (this->modes->isModeEnabled(triton::modes::TAINT_THROUGH_POINTERS)) {
           if (this->isMemoryTainted(memSrc)) {
             this->taintMemory(memDst);
             isTainted = TAINTED;

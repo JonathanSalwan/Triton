@@ -225,7 +225,8 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks), modes() {
+  API::API() : callbacks(*this), arch(&this->callbacks) {
+    this->modes   = std::make_shared<triton::modes::Modes>();
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
   }
 
@@ -462,13 +463,14 @@ namespace triton {
 
       this->astCtxt   = nullptr;
       this->irBuilder = nullptr;
+      this->modes     = nullptr;
       this->solver    = nullptr;
       this->symbolic  = nullptr;
       this->taint     = nullptr;
     }
 
     // Use default modes.
-    this->modes = triton::modes::Modes();
+    this->modes = std::make_shared<triton::modes::Modes>();
 
     // Clean up the ast context
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
@@ -609,12 +611,12 @@ namespace triton {
   /* Modes API======================================================================================= */
 
   void API::enableMode(triton::modes::mode_e mode, bool flag) {
-    this->modes.enableMode(mode, flag);
+    this->modes->enableMode(mode, flag);
   }
 
 
   bool API::isModeEnabled(triton::modes::mode_e mode) const {
-    return this->modes.isModeEnabled(mode);
+    return this->modes->isModeEnabled(mode);
   }
 
 

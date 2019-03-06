@@ -9,6 +9,8 @@
 #define TRITON_MODES_H
 
 #include <set>
+#include <memory>
+
 #include <triton/dllexport.hpp>
 #include <triton/modesEnums.hpp>
 
@@ -56,6 +58,9 @@ namespace triton {
         //! Copies a Modes.
         TRITON_EXPORT Modes& operator=(const Modes& other);
     };
+
+    //! Shared Modes.
+    using SharedModes = std::shared_ptr<triton::modes::Modes>;
 
   /*! @} End of modes namespace */
   };

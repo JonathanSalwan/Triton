@@ -47,7 +47,7 @@ namespace triton {
         triton::arch::Architecture arch;
 
         //! The modes.
-        triton::modes::Modes modes;
+        triton::modes::SharedModes modes;
 
         //! The taint engine.
         triton::engines::taint::TaintEngine* taint = nullptr;
