@@ -58,7 +58,7 @@ namespace triton {
           triton::modes::Modes& modes;
 
           //! The AST Context API
-          triton::ast::AstContext& astCtxt;
+          triton::ast::SharedAstContext astCtxt;
 
         public:
           //! Constructor.
@@ -66,7 +66,7 @@ namespace triton {
                                      triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                      triton::engines::taint::TaintEngine* taintEngine,
                                      triton::modes::Modes& modes,
-                                     triton::ast::AstContext& astCtxt);
+                                     const triton::ast::SharedAstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
           TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);

@@ -26,7 +26,8 @@ namespace triton {
 
     /* ====== Abstract node */
 
-    AbstractNode::AbstractNode(triton::ast::ast_e type, AstContext& ctxt): ctxt(ctxt) {
+    AbstractNode::AbstractNode(triton::ast::ast_e type, const SharedAstContext& ctxt) {
+      this->ctxt        = ctxt;
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
@@ -39,7 +40,7 @@ namespace triton {
     }
 
 
-    AstContext& AbstractNode::getContext(void) const {
+    SharedAstContext AbstractNode::getContext(void) const {
       return this->ctxt;
     }
 
@@ -686,7 +687,7 @@ namespace triton {
     /* ====== bvrol */
 
 
-    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext().integer(rot)) {
+    BvrolNode::BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrolNode(expr, expr->getContext()->integer(rot)) {
     }
 
 
@@ -737,7 +738,7 @@ namespace triton {
     /* ====== bvror */
 
 
-    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext().integer(rot)) {
+    BvrorNode::BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot): BvrorNode(expr, expr->getContext()->integer(rot)) {
     }
 
 
@@ -1539,9 +1540,9 @@ namespace triton {
     /* ====== bv */
 
 
-    BvNode::BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
-      this->addChild(ctxt.integer(value));
-      this->addChild(ctxt.integer(size));
+    BvNode::BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
+      this->addChild(this->ctxt->integer(value));
+      this->addChild(this->ctxt->integer(size));
     }
 
 
@@ -1788,8 +1789,8 @@ namespace triton {
 
 
     ExtractNode::ExtractNode(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr): AbstractNode(EXTRACT_NODE, expr->getContext()) {
-      this->addChild(this->ctxt.integer(high));
-      this->addChild(this->ctxt.integer(low));
+      this->addChild(this->ctxt->integer(high));
+      this->addChild(this->ctxt->integer(low));
       this->addChild(expr);
     }
 
@@ -1886,7 +1887,7 @@ namespace triton {
     /* ====== Integer node */
 
 
-    IntegerNode::IntegerNode(triton::uint512 value, AstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
+    IntegerNode::IntegerNode(triton::uint512 value, const SharedAstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
       this->value = value;
     }
 
@@ -2002,7 +2003,7 @@ namespace triton {
 
 
     LetNode::LetNode(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3): AbstractNode(LET_NODE, expr2->getContext()) {
-      this->addChild(ctxt.string(alias));
+      this->addChild(this->ctxt->string(alias));
       this->addChild(expr2);
       this->addChild(expr3);
     }
@@ -2157,7 +2158,7 @@ namespace triton {
     /* ====== String node */
 
 
-    StringNode::StringNode(std::string value, AstContext& ctxt): AbstractNode(STRING_NODE, ctxt) {
+    StringNode::StringNode(std::string value, const SharedAstContext& ctxt): AbstractNode(STRING_NODE, ctxt) {
       this->value = value;
     }
 
@@ -2191,7 +2192,7 @@ namespace triton {
 
 
     SxNode::SxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(SX_NODE, expr->getContext()) {
-      this->addChild(ctxt.integer(sizeExt));
+      this->addChild(this->ctxt->integer(sizeExt));
       this->addChild(expr);
     }
 
@@ -2238,7 +2239,7 @@ namespace triton {
 
 
     // WARNING: A variable ast node should not live once the SymbolicVariable is dead
-    VariableNode::VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt)
+    VariableNode::VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const SharedAstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
         symVar(symVar) {
     }
@@ -2246,7 +2247,7 @@ namespace triton {
 
     void VariableNode::init(void) {
       this->size        = this->symVar->getSize();
-      this->eval        = ctxt.getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
+      this->eval        = this->ctxt->getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
 
       /* Init parents */
@@ -2274,7 +2275,7 @@ namespace triton {
 
 
     ZxNode::ZxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr): AbstractNode(ZX_NODE, expr->getContext()) {
-      this->addChild(ctxt.integer(sizeExt));
+      this->addChild(this->ctxt->integer(sizeExt));
       this->addChild(expr);
     }
 
@@ -2326,14 +2327,14 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, AstContext& ctxt);
-    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, AstContext& ctxt);
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
 
   }; /* ast namespace */
 }; /* triton namespace */
@@ -2347,7 +2348,7 @@ namespace triton {
 
     /* Representation dispatcher from an abstract node */
     std::ostream& operator<<(std::ostream& stream, AbstractNode* node) {
-      return node->getContext().print(stream, node);
+      return node->getContext()->print(stream, node);
     }
 
   }; /* ast namespace */

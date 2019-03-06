@@ -50,7 +50,7 @@ namespace triton {
           triton::modes::Modes& modes;
 
           //! AstContext API
-          triton::ast::AstContext& astCtxt;
+          triton::ast::SharedAstContext astCtxt;
 
         protected:
           //! \brief The logical conjunction vector of path constraints.
@@ -58,7 +58,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT PathManager(triton::modes::Modes& modes, triton::ast::AstContext& astCtxt);
+          TRITON_EXPORT PathManager(triton::modes::Modes& modes, const triton::ast::SharedAstContext& astCtxt);
 
           //! Constructor by copy.
           TRITON_EXPORT PathManager(const PathManager& other);

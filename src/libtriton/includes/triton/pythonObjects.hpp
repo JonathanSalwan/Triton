@@ -79,7 +79,7 @@ namespace triton {
       PyObject* PyTritonContextRef(triton::API& api);
 
       //! Creates an AstContext python class.
-      PyObject* PyAstContext(triton::ast::AstContext& ctxt);
+      PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt);
 
       //! Creates the Register python class.
       PyObject* PyRegister(const triton::arch::Register& reg);
@@ -188,7 +188,7 @@ namespace triton {
       //! pyAstContext object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::AstContext* ctxt; //!< Pointer to the cpp ast context
+        triton::ast::SharedAstContext ctxt;
       } AstContext_Object;
 
       //! pyRegister type.

@@ -47,7 +47,7 @@ namespace tracer {
         this->snapshotTaintEngine = new triton::engines::taint::TaintEngine(*tracer::pintool::api.getTaintEngine());
 
         /* 4 - Save AST Context */
-        this->astCtx = new triton::ast::AstContext(tracer::pintool::api.getAstContext());
+        this->astCtx = new triton::ast::AstContext(*tracer::pintool::api.getAstContext());
 
         /* 5 - Save the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)
@@ -81,7 +81,7 @@ namespace tracer {
         *tracer::pintool::api.getTaintEngine() = *this->snapshotTaintEngine;
 
         /* 4 - Restore AST Context */
-        tracer::pintool::api.getAstContext() = *this->astCtx;
+        *tracer::pintool::api.getAstContext() = *this->astCtx;
 
         /* 5 - Restore the Triton CPU state */
         #if defined(__x86_64__) || defined(_M_X64)

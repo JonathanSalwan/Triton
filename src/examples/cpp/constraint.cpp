@@ -61,10 +61,10 @@ int main(int ac, const char **av) {
   std::cout << "RAX expr: " << raxFullAst << std::endl;
 
   /* Get the context to create and ast constraint*/
-  auto& C = api.getAstContext();
+  auto ast = api.getAstContext();
 
   /* Modify RAX's AST to build the constraint */
-  auto constraint = C.equal(raxFullAst, C.bv(0, raxFullAst->getBitvectorSize()));
+  auto constraint = ast->equal(raxFullAst, ast->bv(0, raxFullAst->getBitvectorSize()));
 
   /* Display the AST */
   std::cout << "constraint: " << constraint << std::endl;

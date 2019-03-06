@@ -16,15 +16,15 @@ namespace triton {
   namespace engines {
     namespace symbolic {
 
-      PathManager::PathManager(triton::modes::Modes& modes, triton::ast::AstContext& astCtxt)
-        : modes(modes),
-          astCtxt(astCtxt) {
+      PathManager::PathManager(triton::modes::Modes& modes, const triton::ast::SharedAstContext& astCtxt)
+        : modes(modes) {
+        this->astCtxt = astCtxt;
       }
 
 
       PathManager::PathManager(const PathManager& other)
-        : modes(other.modes),
-          astCtxt(other.astCtxt) {
+        : modes(other.modes) {
+        this->astCtxt         = other.astCtxt;
         this->pathConstraints = other.pathConstraints;
       }
 
@@ -50,14 +50,14 @@ namespace triton {
         std::vector<triton::engines::symbolic::PathConstraint>::const_iterator it;
 
         /* by default PC is T (top) */
-        auto node = this->astCtxt.equal(
-                      this->astCtxt.bvtrue(),
-                      this->astCtxt.bvtrue()
+        auto node = this->astCtxt->equal(
+                      this->astCtxt->bvtrue(),
+                      this->astCtxt->bvtrue()
                     );
 
         /* Then, we create a conjunction of pc */
         for (it = this->pathConstraints.begin(); it != this->pathConstraints.end(); it++) {
-          node = this->astCtxt.land(node, it->getTakenPathConstraintAst());
+          node = this->astCtxt->land(node, it->getTakenPathConstraintAst());
         }
 
         return node;
@@ -104,11 +104,11 @@ namespace triton {
           triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
           triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
 
-          triton::ast::SharedAbstractNode bb1pc = (bb1 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
-                                                                     this->astCtxt.lnot(this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));
+          triton::ast::SharedAbstractNode bb1pc = (bb1 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
+                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
 
-          triton::ast::SharedAbstractNode bb2pc = (bb2 == dstAddr) ? this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)) :
-                                                                     this->astCtxt.lnot(this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));
+          triton::ast::SharedAbstractNode bb2pc = (bb2 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
+                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
 
           pco.addBranchConstraint(bb1 == dstAddr, srcAddr, bb1, bb1pc);
           pco.addBranchConstraint(bb2 == dstAddr, srcAddr, bb2, bb2pc);
@@ -118,7 +118,7 @@ namespace triton {
 
         /* Direct branch */
         else {
-          pco.addBranchConstraint(true, srcAddr, dstAddr, this->astCtxt.equal(pc, this->astCtxt.bv(dstAddr, size)));
+          pco.addBranchConstraint(true, srcAddr, dstAddr, this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
           this->pathConstraints.push_back(pco);
         }
 

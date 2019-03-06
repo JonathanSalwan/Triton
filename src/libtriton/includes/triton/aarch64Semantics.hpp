@@ -54,14 +54,14 @@ namespace triton {
           triton::engines::taint::TaintEngine* taintEngine;
 
           //! The AST Context API
-          triton::ast::AstContext& astCtxt;
+          triton::ast::SharedAstContext astCtxt;
 
         public:
           //! Constructor.
           TRITON_EXPORT AArch64Semantics(triton::arch::Architecture* architecture,
                                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                          triton::engines::taint::TaintEngine* taintEngine,
-                                         triton::ast::AstContext& astCtxt);
+                                         const triton::ast::SharedAstContext& astCtxt);
 
           //! Builds the semantics of the instruction. Returns true if the instruction is supported.
           TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);

@@ -109,7 +109,7 @@ namespace triton {
 
         private:
           //! Reference to the context managing ast nodes.
-          triton::ast::AstContext& astCtxt;
+          triton::ast::SharedAstContext astCtxt;
 
           //! Architecture API
           triton::arch::Architecture* architecture;
@@ -151,7 +151,7 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
                                        triton::modes::Modes& modes,
-                                       triton::ast::AstContext& astCtxt,
+                                       const triton::ast::SharedAstContext& astCtxt,
                                        triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor by copy.

@@ -301,13 +301,13 @@ namespace triton {
       }
 
 
-      static PyObject* SymbolicExpression_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
-        return type->tp_alloc(type, 0);
+      static int SymbolicExpression_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
+        return 0;
       }
 
 
-      static int SymbolicExpression_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
-        return 0;
+      static PyObject* SymbolicExpression_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+        return type->tp_alloc(type, 0);
       }
 
 

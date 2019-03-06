@@ -78,7 +78,7 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT IrBuilder(triton::arch::Architecture* architecture,
                                 triton::modes::Modes& modes,
-                                triton::ast::AstContext& astCtxt,
+                                const triton::ast::SharedAstContext& astCtxt,
                                 triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                 triton::engines::taint::TaintEngine* taintEngine);
 

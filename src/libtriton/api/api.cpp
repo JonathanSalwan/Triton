@@ -10,6 +10,7 @@
 
 #include <list>
 #include <map>
+#include <memory>
 #include <new>
 
 
@@ -224,7 +225,8 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks), modes(), astCtxt(this->modes) {
+  API::API() : callbacks(*this), arch(&this->callbacks), modes() {
+    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
   }
 
 
@@ -458,17 +460,18 @@ namespace triton {
       delete this->symbolic;
       delete this->taint;
 
-      this->irBuilder           = nullptr;
-      this->solver              = nullptr;
-      this->symbolic            = nullptr;
-      this->taint               = nullptr;
+      this->astCtxt   = nullptr;
+      this->irBuilder = nullptr;
+      this->solver    = nullptr;
+      this->symbolic  = nullptr;
+      this->taint     = nullptr;
     }
 
     // Use default modes.
     this->modes = triton::modes::Modes();
 
     // Clean up the ast context
-    this->astCtxt = triton::ast::AstContext(this->modes);
+    this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
 
     // Clean up the registers shortcut
     this->registers.clear();
@@ -507,7 +510,7 @@ namespace triton {
   }
 
 
-  triton::ast::AstContext& API::getAstContext(void) {
+  triton::ast::SharedAstContext API::getAstContext(void) {
     return this->astCtxt;
   }
 
@@ -516,12 +519,12 @@ namespace triton {
   /* AST representation API ========================================================================= */
 
   triton::uint32 API::getAstRepresentationMode(void) const {
-    return this->astCtxt.getRepresentationMode();
+    return this->astCtxt->getRepresentationMode();
   }
 
 
   void API::setAstRepresentationMode(triton::uint32 mode) {
-    this->astCtxt.setRepresentationMode(mode);
+    this->astCtxt->setRepresentationMode(mode);
   }
 
 

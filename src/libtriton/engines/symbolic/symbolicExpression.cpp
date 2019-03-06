@@ -5,16 +5,18 @@
 **  This program is under the terms of the BSD License.
 */
 
-#include <iosfwd>                         // for ostream
-#include <string>                         // for string
-#include <sstream>                        // for sstream
-#include <triton/ast.hpp>                 // for AbstractNode, newInstance
-#include <triton/astContext.hpp>          // for AstContext
-#include <triton/astRepresentation.hpp>   // for AstRepresentation, astRepre...
-#include <triton/exceptions.hpp>          // for SymbolicExpression
-#include <triton/symbolicEnums.hpp>       // for expression_e, variable_e
-#include <triton/symbolicExpression.hpp>  // for SymbolicExpression
-#include <triton/tritonTypes.hpp>         // for usize
+#include <iosfwd>
+#include <string>
+#include <sstream>
+
+#include <triton/ast.hpp>
+#include <triton/astContext.hpp>
+#include <triton/astRepresentation.hpp>
+#include <triton/exceptions.hpp>
+#include <triton/symbolicEnums.hpp>
+#include <triton/symbolicExpression.hpp>
+#include <triton/tritonTypes.hpp>
+
 
 
 namespace triton {
@@ -83,10 +85,10 @@ namespace triton {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedId(): No AST defined.");
 
-        if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
+        if (ast->getContext()->getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "ref!" + std::to_string(this->id);
 
-        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "ref_" + std::to_string(this->id);
 
         else
@@ -101,10 +103,10 @@ namespace triton {
         if (this->getComment().empty())
           return "";
 
-        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
           return "; " + this->getComment();
 
-        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "# " + this->getComment();
 
         else
@@ -118,14 +120,14 @@ namespace triton {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): No AST defined.");
 
-        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION) {
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION) {
           stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
           if (!this->getComment().empty())
             stream << " " << this->getFormattedComment();
           return stream.str();
         }
 
-        else if (ast->getContext().getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION) {
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION) {
           stream << this->getFormattedId() << " = " << this->getAst();
           if (!this->getComment().empty())
             stream << " " << this->getFormattedComment();

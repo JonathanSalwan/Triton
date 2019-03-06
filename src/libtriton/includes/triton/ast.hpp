@@ -60,6 +60,9 @@ namespace triton {
     //! Weak Abstract Node
     using WeakAbstractNode = std::weak_ptr<triton::ast::AbstractNode>;
 
+    //! Shared AST context
+    using SharedAstContext = std::shared_ptr<triton::ast::AstContext>;
+
     //! Abstract node
     class AbstractNode : public std::enable_shared_from_this<AbstractNode> {
       protected:
@@ -86,17 +89,17 @@ namespace triton {
         bool logical;
 
         //! Contect use to create this node
-        AstContext& ctxt;
+        SharedAstContext ctxt;
 
       public:
         //! Constructor.
-        TRITON_EXPORT AbstractNode(triton::ast::ast_e type, AstContext& ctxt);
+        TRITON_EXPORT AbstractNode(triton::ast::ast_e type, const SharedAstContext& ctxt);
 
         //! Destructor.
         TRITON_EXPORT virtual ~AbstractNode();
 
         //! Access to its context
-        TRITON_EXPORT AstContext& getContext(void) const;
+        TRITON_EXPORT SharedAstContext getContext(void) const;
 
         //! Returns the type of the node.
         TRITON_EXPORT triton::ast::ast_e getType(void) const;
@@ -435,7 +438,7 @@ namespace triton {
     //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvNode(triton::uint512 value, triton::uint32 size, AstContext& ctxt);
+        TRITON_EXPORT BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -444,7 +447,7 @@ namespace triton {
     //! `[<expr1> <expr2> <expr3> ...]` node
     class CompoundNode : public AbstractNode {
       public:
-        template <typename T> CompoundNode(const T& exprs, AstContext& ctxt)
+        template <typename T> CompoundNode(const T& exprs, const SharedAstContext& ctxt)
           : AbstractNode(COMPOUND_NODE, ctxt) {
           for (auto expr : exprs)
             this->addChild(expr);
@@ -458,7 +461,7 @@ namespace triton {
     //! `(concat <expr1> <expr2> ...)` node
     class ConcatNode : public AbstractNode {
       public:
-        template <typename T> ConcatNode(const T& exprs, AstContext& ctxt)
+        template <typename T> ConcatNode(const T& exprs, const SharedAstContext& ctxt)
           : AbstractNode(CONCAT_NODE, ctxt) {
           for (auto expr : exprs)
             this->addChild(expr);
@@ -521,7 +524,7 @@ namespace triton {
         triton::uint512 value;
 
       public:
-        TRITON_EXPORT IntegerNode(triton::uint512 value, AstContext& ctxt);
+        TRITON_EXPORT IntegerNode(triton::uint512 value, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT triton::uint512 getInteger(void);
@@ -540,7 +543,7 @@ namespace triton {
     //! `(and <expr1> <expr2>)`
     class LandNode : public AbstractNode {
       public:
-        template <typename T> LandNode(const T& exprs, AstContext& ctxt)
+        template <typename T> LandNode(const T& exprs, const SharedAstContext& ctxt)
           : AbstractNode(LAND_NODE, ctxt) {
           for (auto expr : exprs)
             this->addChild(expr);
@@ -573,7 +576,7 @@ namespace triton {
     //! `(or <expr1> <expr2>)`
     class LorNode : public AbstractNode {
       public:
-        template <typename T> LorNode(const T& exprs, AstContext& ctxt)
+        template <typename T> LorNode(const T& exprs, const SharedAstContext& ctxt)
           : AbstractNode(LOR_NODE, ctxt) {
           for (auto expr : exprs)
             this->addChild(expr);
@@ -604,7 +607,7 @@ namespace triton {
         std::string value;
 
       public:
-        TRITON_EXPORT StringNode(std::string value, AstContext& ctxt);
+        TRITON_EXPORT StringNode(std::string value, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT std::string getString(void);
@@ -626,7 +629,7 @@ namespace triton {
         triton::engines::symbolic::SharedSymbolicVariable symVar;
 
       public:
-        TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, AstContext& ctxt);
+        TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariable(void);

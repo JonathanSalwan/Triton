@@ -59,7 +59,7 @@ namespace triton {
         triton::engines::solver::SolverEngine* solver = nullptr;
 
         //! The AST Context interface.
-        triton::ast::AstContext astCtxt;
+        triton::ast::SharedAstContext astCtxt;
 
         //! The IR builder.
         triton::arch::IrBuilder* irBuilder = nullptr;
@@ -230,7 +230,7 @@ namespace triton {
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
-        TRITON_EXPORT triton::ast::AstContext& getAstContext(void);
+        TRITON_EXPORT triton::ast::SharedAstContext getAstContext(void);
 
 
 

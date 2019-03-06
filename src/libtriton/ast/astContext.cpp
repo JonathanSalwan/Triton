@@ -5,6 +5,8 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <memory>
+
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
@@ -22,7 +24,8 @@ namespace triton {
 
 
     AstContext::AstContext(const AstContext& other)
-      : modes(other.modes),
+      : std::enable_shared_from_this<AstContext>(other),
+        modes(other.modes),
         astRepresentation(other.astRepresentation),
         valueMapping(other.valueMapping) {
     }
@@ -34,6 +37,7 @@ namespace triton {
 
 
     AstContext& AstContext::operator=(const AstContext& other) {
+      std::enable_shared_from_this<AstContext>::operator=(other);
       this->astRepresentation = other.astRepresentation;
       this->modes = other.modes;
       this->valueMapping = other.valueMapping;
@@ -51,7 +55,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bv(triton::uint512 value, triton::uint32 size) {
-      SharedAbstractNode node = std::make_shared<BvNode>(value, size, *this);
+      SharedAbstractNode node = std::make_shared<BvNode>(value, size, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -132,7 +136,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvfalse(void) {
-      SharedAbstractNode node = std::make_shared<BvNode>(0, 1, *this);
+      SharedAbstractNode node = std::make_shared<BvNode>(0, 1, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -445,7 +449,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::bvtrue(void) {
-      SharedAbstractNode node = std::make_shared<BvNode>(1, 1, *this);
+      SharedAbstractNode node = std::make_shared<BvNode>(1, 1, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -616,7 +620,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::integer(triton::uint512 value) {
-      SharedAbstractNode node = std::make_shared<IntegerNode>(value, *this);
+      SharedAbstractNode node = std::make_shared<IntegerNode>(value, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -687,7 +691,7 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::string(std::string value) {
-      SharedAbstractNode node = std::make_shared<StringNode>(value, *this);
+      SharedAbstractNode node = std::make_shared<StringNode>(value, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("Node builders - Not enough memory");
       node->init();
@@ -725,7 +729,7 @@ namespace triton {
       }
       else {
         // if not found, create a new variable node
-        SharedAbstractNode node = std::make_shared<VariableNode>(symVar, *this);
+        SharedAbstractNode node = std::make_shared<VariableNode>(symVar, this->shared_from_this());
         this->initVariable(symVar->getName(), 0, node);
         if (node == nullptr)
           throw triton::exceptions::Ast("Node builders - Not enough memory");

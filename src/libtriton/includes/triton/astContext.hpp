@@ -9,6 +9,7 @@
 #define TRITON_AST_CONTEXT_H
 
 #include <map>
+#include <memory>
 #include <vector>
 
 #include <triton/ast.hpp>
@@ -47,7 +48,7 @@ namespace triton {
 
     //! \class AstContext
     /*! \brief AST Context - Used as AST builder. */
-    class AstContext {
+    class AstContext : public std::enable_shared_from_this<AstContext> {
       private:
         //! Modes API
         triton::modes::Modes& modes;
@@ -178,7 +179,7 @@ namespace triton {
 
         //! AST C++ API - compound node builder
         template <typename T> SharedAbstractNode compound(const T& exprs) {
-          SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, *this);
+          SharedAbstractNode node = std::make_shared<CompoundNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
@@ -190,7 +191,7 @@ namespace triton {
 
         //! AST C++ API - concat node builder
         template <typename T> SharedAbstractNode concat(const T& exprs) {
-          SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, *this);
+          SharedAbstractNode node = std::make_shared<ConcatNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
@@ -223,7 +224,7 @@ namespace triton {
 
         //! AST C++ API - land node builder
         template <typename T> SharedAbstractNode land(const T& exprs) {
-          SharedAbstractNode node = std::make_shared<LandNode>(exprs, *this);
+          SharedAbstractNode node = std::make_shared<LandNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
@@ -241,7 +242,7 @@ namespace triton {
 
         //! AST C++ API - lor node builder
         template <typename T> SharedAbstractNode lor(const T& exprs) {
-          SharedAbstractNode node = std::make_shared<LorNode>(exprs, *this);
+          SharedAbstractNode node = std::make_shared<LorNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
@@ -284,6 +285,9 @@ namespace triton {
         //! Print the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
     };
+
+    //! Shared AST context
+    using SharedAstContext = std::shared_ptr<triton::ast::AstContext>;
 
   /*! @} End of ast namespace */
   };

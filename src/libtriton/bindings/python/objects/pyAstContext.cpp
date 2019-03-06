@@ -321,6 +321,12 @@ namespace triton {
   namespace bindings {
     namespace python {
 
+      //! AstContext destructor.
+      void AstContext_dealloc(PyObject* self) {
+        PyAstContext_AsAstContext(self) = nullptr; // decref the shared_ptr
+        Py_TYPE(self)->tp_free((PyObject*)self);
+      }
+
 
       static PyObject* AstContext_assert(PyObject* self, PyObject* op1) {
         if (!PyAstNode_Check(op1))
@@ -1460,6 +1466,16 @@ namespace triton {
       #endif
 
 
+      static int AstContext_init(AstNode_Object *self, PyObject *args, PyObject *kwds) {
+        return 0;
+      }
+
+
+      static PyObject* AstContext_new(PyTypeObject* type, PyObject* args, PyObject* kwds) {
+        return type->tp_alloc(type, 0);
+      }
+
+
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
         {"assert_",         AstContext_assert,          METH_O,           ""},
@@ -1528,7 +1544,7 @@ namespace triton {
         "AstContext",                               /* tp_name */
         sizeof(AstContext_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
-        0,                                          /* tp_dealloc */
+        (destructor)AstContext_dealloc,             /* tp_dealloc */
         0,                                          /* tp_print */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
@@ -1559,9 +1575,9 @@ namespace triton {
         0,                                          /* tp_descr_get */
         0,                                          /* tp_descr_set */
         0,                                          /* tp_dictoffset */
-        0,                                          /* tp_init */
+        (initproc)AstContext_init,                  /* tp_init */
         0,                                          /* tp_alloc */
-        0,                                          /* tp_new */
+        (newfunc)AstContext_new,                    /* tp_new */
         0,                                          /* tp_free */
         0,                                          /* tp_is_gc */
         0,                                          /* tp_bases */
@@ -1569,7 +1585,7 @@ namespace triton {
         0,                                          /* tp_cache */
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
-        0,                                          /* tp_del */
+        (destructor)AstContext_dealloc,             /* tp_del */
         #if IS_PY3
         0,                                          /* tp_version_tag */
         0,                                          /* tp_finalize */
@@ -1579,12 +1595,17 @@ namespace triton {
       };
 
 
-      PyObject* PyAstContext(triton::ast::AstContext& ctxt) {
-        PyType_Ready(&AstContext_Type);
-        AstContext_Object* object = PyObject_NEW(AstContext_Object, &AstContext_Type);
+      PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt) {
+        if (ctxt == nullptr) {
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
 
-        if (object != nullptr)
-          object->ctxt = &ctxt;
+        PyType_Ready(&AstContext_Type);
+        auto* object = (triton::bindings::python::AstContext_Object*)PyObject_CallObject((PyObject*)&AstContext_Type, nullptr);
+        if (object != NULL) {
+          object->ctxt = ctxt;
+        }
 
         return (PyObject*)object;
       }
