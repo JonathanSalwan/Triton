@@ -37,7 +37,7 @@ def csym(instruction):
     # Prologue of the function
     if instruction.getAddress() == 0x400556 and isSnapshotEnabled() == False:
         takeSnapshot()
-        print '[+] Take a snapshot at the prologue of the function'
+        print('[+] Take a snapshot at the prologue of the function')
         return
 
     # 0x40058b: movzx eax, byte ptr [rax]
@@ -47,7 +47,7 @@ def csym(instruction):
         symVarMem = rax
         if rax in password:
             setCurrentMemoryValue(rax, password[rax])
-            print '[+] Inject the character \'%c\' in memory' %(chr(password[rax]))
+            print('[+] Inject the character \'%c\' in memory' %(chr(password[rax])))
         return
 
     # Epilogue of the function
@@ -57,10 +57,10 @@ def csym(instruction):
         # So, we restore the snapshot until this function
         # returns something else than 0.
         if rax != 0:
-            print '[+] Still not the good password. Restore snapshot.'
+            print('[+] Still not the good password. Restore snapshot.')
             restoreSnapshot()
         else:
-            print '[+] Good password found!'
+            print('[+] Good password found!')
             disableSnapshot()
         return
     return
@@ -80,7 +80,7 @@ def cafter(instruction):
         expr    = astCtxt.equal(zfAst, astCtxt.bvtrue()) # (= zf True)
         models  = Triton.getModel(expr)
         global password
-        for k, v in models.items():
+        for k, v in list(models.items()):
             password.update({symVarMem: v.getValue()})
         return
 
@@ -88,7 +88,7 @@ def cafter(instruction):
 
 
 def fini():
-    print '[+] Analysis done!'
+    print('[+] Analysis done!')
     return
 
 

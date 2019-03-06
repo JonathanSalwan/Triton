@@ -18,7 +18,7 @@ class TestIssue673(unittest.TestCase):
 
 
     def test_issue1(self):
-        inst = Instruction("\xc0\xc0\x00") # rol al, 0
+        inst = Instruction(b"\xc0\xc0\x00") # rol al, 0
         self.ctx.processing(inst)
         self.assertEqual(len(inst.getUndefinedRegisters()), 0)
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -26,7 +26,7 @@ class TestIssue673(unittest.TestCase):
 
 
     def test_issue2(self):
-        inst = Instruction("\xc0\xc0\x01") # rol al, 1
+        inst = Instruction(b"\xc0\xc0\x01") # rol al, 1
         self.ctx.processing(inst)
         self.assertEqual(len(inst.getUndefinedRegisters()), 0)
         self.assertEqual(len(inst.getReadRegisters()), 2)
@@ -34,7 +34,7 @@ class TestIssue673(unittest.TestCase):
 
 
     def test_issue3(self):
-        inst = Instruction("\xc0\xc0\x07") # rol al, 7
+        inst = Instruction(b"\xc0\xc0\x07") # rol al, 7
         self.ctx.processing(inst)
         self.assertEqual(len(inst.getUndefinedRegisters()), 1)
         self.assertEqual(len(inst.getReadRegisters()), 2)

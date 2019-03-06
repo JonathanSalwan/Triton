@@ -38,7 +38,8 @@
 ##  [+] Emulation done.
 ##
 
-from triton import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPUSIZE
+from __future__ import print_function
+from triton     import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPUSIZE
 
 import os
 import sys
@@ -49,7 +50,7 @@ Triton = TritonContext()
 # Emulate the CheckSolution() function.
 def emulate(pc):
     astCtxt = Triton.getAstContext()
-    print '[+] Starting emulation.'
+    print('[+] Starting emulation.')
     while pc:
         # Fetch opcode
         opcode = Triton.getConcreteMemoryAreaValue(pc, 16)
@@ -61,7 +62,7 @@ def emulate(pc):
 
         # Process
         Triton.processing(instruction)
-        print instruction
+        print(instruction)
 
         # 40078B: cmp eax, 1
         # eax must be equal to 1 at each round.
@@ -76,17 +77,17 @@ def emulate(pc):
                         astCtxt.equal(eax, astCtxt.bv(1, 32))
                     ])
 
-            print '[+] Asking for a model, please wait...'
+            print('[+] Asking for a model, please wait...')
             model = Triton.getModel(cstr)
-            for k, v in model.items():
+            for k, v in list(model.items()):
                 value = v.getValue()
                 Triton.setConcreteVariableValue(Triton.getSymbolicVariableFromId(k), value)
-                print '[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value))
+                print('[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value)))
 
         # Next
         pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
 
-    print '[+] Emulation done.'
+    print('[+] Emulation done.')
     return
 
 
@@ -98,7 +99,7 @@ def loadBinary(path):
     for phdr in phdrs:
         size   = phdr.physical_size
         vaddr  = phdr.virtual_address
-        print '[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size)
+        print('[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
         Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
     return
 

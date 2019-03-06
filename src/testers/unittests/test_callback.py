@@ -19,13 +19,13 @@ class TestCallback(unittest.TestCase):
         flag = False
         self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
         # movabs rax, qword ptr [0x1000]
-        self.Triton.processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
+        self.Triton.processing(Instruction(b"\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
         self.assertTrue(flag)
 
         flag = False
         self.Triton.removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
         # movabs rax, qword ptr [0x1000]
-        self.Triton.processing(Instruction("\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
+        self.Triton.processing(Instruction(b"\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00"))
         self.assertFalse(flag)
 
     def test_get_concrete_register_value(self):
@@ -35,23 +35,23 @@ class TestCallback(unittest.TestCase):
 
         flag = False
         self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.Triton.processing(Instruction(b"\x48\x89\xd8"))  # mov rax, rbx
         self.assertTrue(flag)
 
         flag = False
         self.Triton.removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.Triton.processing(Instruction(b"\x48\x89\xd8"))  # mov rax, rbx
         self.assertFalse(flag)
 
         # Remove all callbacks
         flag = False
         self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.Triton.processing(Instruction(b"\x48\x89\xd8"))  # mov rax, rbx
         self.assertTrue(flag)
 
         flag = False
         self.Triton.removeAllCallbacks()
-        self.Triton.processing(Instruction("\x48\x89\xd8"))  # mov rax, rbx
+        self.Triton.processing(Instruction(b"\x48\x89\xd8"))  # mov rax, rbx
         self.assertFalse(flag)
 
     @staticmethod

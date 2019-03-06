@@ -27,7 +27,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
 
     def _test_example(self, example_name=example):
         """Run example and show stdout in case of fail."""
-        args = [v for k, v in ARGS.items() if k in example_name]
+        args = [v for k, v in list(ARGS.items()) if k in example_name]
         assert len(args) <= 1
         if len(args) == 1:
             args = args[0]
@@ -38,7 +38,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
 
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
-        self.assertEqual(p.returncode, 0, "\n".join((out, err, str(p.returncode))))
+        self.assertEqual(p.returncode, 0, "\n".join((str(out), str(err), str(p.returncode))))
 
     # Define an arguments with a default value as default value is capture at
     # lambda creation so that example_name is not in the closure of the lambda

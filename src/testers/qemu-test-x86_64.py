@@ -1,7 +1,10 @@
 # $ ./triton ./src/testers/qemu-test-x86_64.py ./src/samples/ir_test_suite/qemu-test-x86_64
 
-from triton import *
+from __future__ import print_function
+from triton     import *
+
 import pintool as Pintool
+
 
 # Get the Triton context over the pintool
 Triton = Pintool.getTritonContext()
@@ -72,13 +75,13 @@ def cafter(instruction):
             dump += '\n     Concrete Value : %016x' %(w['cvalue'])
             dump += '\n     Expression     : %s'    %(w['expr'])
 
-        print dump
+        print(dump)
         with open('./semantics_issues', 'a') as fd:
             fd.write(dump+'\n')
 
     if len(instruction.getSymbolicExpressions()) == 0:
         dump = '[unsupported] %#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
-        print dump
+        print(dump)
         with open('./semantics_issues', 'a') as fd:
             fd.write(dump+'\n')
         return

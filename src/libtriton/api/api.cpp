@@ -445,6 +445,9 @@ namespace triton {
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): No enough memory.");
+
+    /* Setup registers shortcut */
+    this->registers.init(this->arch.getArchitecture());
   }
 
 
@@ -466,6 +469,9 @@ namespace triton {
 
     // Clean up the ast context
     this->astCtxt = triton::ast::AstContext(this->modes);
+
+    // Clean up the registers shortcut
+    this->registers.clear();
   }
 
 

@@ -21,7 +21,18 @@ class TestMemory(unittest.TestCase):
         """Check address data is correct."""
         mem = MemoryAccess(0x1122334455667788, 8)
         self.assertEqual(mem.getAddress(), 0x1122334455667788)
-        self.assertEqual(self.mem.getAddress(), 0x400f4d3)
+
+        mem = MemoryAccess(0x400f4d3, 8)
+        self.assertEqual(mem.getAddress(), 0x400f4d3)
+
+        mem = MemoryAccess(-1, 8)
+        self.assertEqual(mem.getAddress(), 0xffffffffffffffff)
+
+        mem = MemoryAccess(-2, 8)
+        self.assertEqual(mem.getAddress(), 0xfffffffffffffffe)
+
+        mem = MemoryAccess(-3, 8)
+        self.assertEqual(mem.getAddress(), 0xfffffffffffffffd)
 
     def test_bit_size(self):
         """Check bit size of the accessed memory."""

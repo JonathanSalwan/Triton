@@ -65,13 +65,14 @@
 ##  python solve.py  279.91s user 0.13s system 99% cpu 4:40.07 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
-import lief
 import os
-
-from triton import *
+import lief
 
 TARGET = os.path.join(os.path.dirname(__file__), 'yolomolo')
 DEBUG  = True
@@ -79,7 +80,7 @@ SERIAL = str()
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -175,7 +176,7 @@ def scanfHandler(ctx):
     arg2 = ctx.getConcreteRegisterValue(ctx.registers.rsi)
 
     # Fill scanf buffer with dummy inputs
-    ctx.setConcreteMemoryAreaValue(arg2, "a" * 30 + '\n\x00')
+    ctx.setConcreteMemoryAreaValue(arg2, b"a" * 30 + b'\n\x00')
 
     # Symbolize 30 bytes
     debug('[+] symbolizing scanf buffer')
@@ -259,7 +260,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf8')) + b'\x00')
         base += len(argv)+1
         debug('[+] argv[%d] = %s' %(index, argv))
         index += 1
@@ -315,7 +316,7 @@ def hookingHandler(ctx):
 def getVarSyntax(ctx):
     s = str()
     ast = ctx.getAstContext()
-    for k, v in ctx.getSymbolicVariables().items():
+    for k, v in list(ctx.getSymbolicVariables().items()):
         s += str(ast.declare(ast.variable(v))) + '\n'
     return s
 
@@ -380,7 +381,7 @@ def emulate(ctx, pc):
 
         count += 1
 
-        #print instruction
+        #print(instruction)
 
         if instruction.getType() == OPCODE.X86.HLT:
             break
@@ -393,7 +394,7 @@ def emulate(ctx, pc):
             ast = ctx.getAstContext()
             pco = ctx.getPathConstraintsAst()
             mod = myExternalSolver(ctx, zf == 1, pc)
-            for k, v in mod.items():
+            for k, v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(k), v)
 
         # End of the execution
@@ -410,7 +411,7 @@ def emulate(ctx, pc):
             serial = str()
             for k, v in sorted(mod.items()):
                 serial += chr(v)
-            print 'Serial is: %s' %(serial)
+            print('Serial is: %s' %(serial))
             SERIAL = serial
 
         # Next

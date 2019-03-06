@@ -23,22 +23,22 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   /* Taint the RAX */
-  api.taintRegister(api.getRegister(ID_REG_X86_AH));
+  api.taintRegister(api.registers.x86_ah);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_X86_RDX)) << std::endl;
+  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
 
   /* Spread RAX into RDX */
-  api.taintAssignmentRegisterRegister(api.getRegister(ID_REG_X86_RDX), api.getRegister(ID_REG_X86_RAX));
+  api.taintAssignmentRegisterRegister(api.registers.x86_rdx, api.registers.x86_rax);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_X86_RDX)) << std::endl;
+  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
 
   /* Untaint RDX */
-  api.untaintRegister(api.getRegister(ID_REG_X86_RDX));
+  api.untaintRegister(api.registers.x86_rdx);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.getRegister(ID_REG_X86_RDX)) << std::endl;
+  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
 
   return 0;
 }

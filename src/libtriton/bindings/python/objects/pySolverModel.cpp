@@ -24,41 +24,42 @@
 This object is used to represent a model from an SMT solver.
 
 ~~~~~~~~~~~~~{.py}
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, REG
 
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> inst = Instruction()
->>> inst.setOpcode("\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
+>>> inst.setOpcode(b"\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
 >>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
->>> print symvar
+>>> print(symvar)
 SymVar_0:64
 
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x0: xor rax, 0x11223344
 
 >>> ast = ctxt.getAstContext()
 >>> raxAst = ast.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
->>> print raxAst
+>>> print(raxAst)
 (bvxor SymVar_0 (_ bv287454020 64))
 
 >>> astCtxt = ctxt.getAstContext()
 >>> constraint = astCtxt.equal(raxAst, astCtxt.bv(0, raxAst.getBitvectorSize()))
->>> print constraint
+>>> print(constraint)
 (= (bvxor SymVar_0 (_ bv287454020 64)) (_ bv0 64))
 
 >>> model = ctxt.getModel(constraint)
->>> print model #doctest: +ELLIPSIS
-{0L: <SolverModel object at 0x...>}
+>>> print(model) #doctest: +ELLIPSIS
+{0: <SolverModel object at 0x...>}
 
 >>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
->>> print symvarModel
+>>> print(symvarModel)
 SymVar_0:64 = 0x11223344
 >>> hex(symvarModel.getValue())
-'0x11223344L'
+'0x11223344'
 
 ~~~~~~~~~~~~~
 
@@ -120,7 +121,7 @@ namespace triton {
       }
 
 
-      static int SolverModel_print(PyObject* self) {
+      static int SolverModel_print(PyObject* self, void* io, int s) {
         std::cout << PySolverModel_AsSolverModel(self);
         return 0;
       }
@@ -130,7 +131,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PySolverModel_AsSolverModel(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -148,8 +149,7 @@ namespace triton {
 
 
       PyTypeObject SolverModel_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "SolverModel",                              /* tp_name */
         sizeof(SolverModel_Object),                 /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -195,7 +195,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)SolverModel_dealloc,            /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

@@ -46,7 +46,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86_64)
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, False)
 
-        inst = Instruction("\x48\x89\xc3") # mov rbx, rax
+        inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -69,7 +69,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
 
-        inst = Instruction("\x48\x89\xc3") # mov rbx, rax
+        inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -82,7 +82,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -97,7 +97,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -112,7 +112,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -128,7 +128,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -143,7 +143,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
@@ -158,10 +158,9 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
         ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
 
-        inst = Instruction("\x48\x8b\x18") # mov rbx, qword ptr [rax]
+        inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
         self.assertIsNotNone(inst.getOperands()[1].getLeaAst())
-

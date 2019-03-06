@@ -65,20 +65,21 @@
 ##  python solve.py  0.18s user 0.02s system 99% cpu 0.200 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
 
-from triton import *
-
 TARGET = os.path.join(os.path.dirname(__file__), 'howtouse.dll')
 DEBUG  = True
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_STACK = 0x9fffffff
@@ -153,7 +154,7 @@ def main():
     for i in range(45):
         flag += chr(run(ctx, binary, i))
 
-    print 'Flag is: %s' %(flag)
+    print('Flag is: %s' %(flag))
     return not (flag == 'MMA{fc7d90ca001fc8712497d88d9ee7efa9e9b32ed8}')
 
 

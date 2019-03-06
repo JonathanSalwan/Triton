@@ -25,9 +25,9 @@ def cb1(inst):
 
 def cb2(inst):
     if inst.getAddress() == 0x4005e2:
-        print inst
+        print(inst)
         for expr in inst.getSymbolicExpressions():
-            print '\t', expr
+            print('\t', expr)
 
 
 if __name__ == '__main__':

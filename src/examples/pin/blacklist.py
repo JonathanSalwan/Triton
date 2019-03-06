@@ -59,7 +59,7 @@ from pintool import *
 # $
 
 def mycb(instruction):
-    print '%#x: %s' %(instruction.getAddress(), instruction.getDisassembly())
+    print('%#x: %s' %(instruction.getAddress(), instruction.getDisassembly()))
     return
 
 

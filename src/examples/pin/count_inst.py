@@ -11,7 +11,7 @@ def mycb(inst):
     count += 1
 
 def fini():
-    print "Instruction count : ", count
+    print("Instruction count : ", count)
 
 if __name__ == '__main__':
     ctx = getTritonContext()

@@ -56,7 +56,7 @@ def cafter(instruction):
     # mov eax,DWORD PTR [rbp-0x4]
     # RAX must be equal to 0xad6d to win
     if instruction.getAddress() == 0x4005ce:
-        print '[+] Please wait, computing in progress...'
+        print('[+] Please wait, computing in progress...')
         rax = Triton.getSymbolicRegister(Triton.registers.rax)
 
         SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')
@@ -85,7 +85,7 @@ def cafter(instruction):
         # Get max 20 different models
         models = Triton.getModels(expr, 20)
         for model in models:
-            print {k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in model.items()}
+            print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
 
 
 if __name__ == '__main__':

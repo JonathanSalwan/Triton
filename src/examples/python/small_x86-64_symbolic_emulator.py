@@ -46,11 +46,12 @@
 ##  [Triton] Emulation done
 ##
 
+from __future__ import print_function
+from triton     import TritonContext, ARCH, MemoryAccess, CPUSIZE, Instruction, OPCODE, MODE
+
 import sys
 import string
 import random
-
-from triton import TritonContext, ARCH, MemoryAccess, CPUSIZE, Instruction, OPCODE, MODE
 
 Triton = TritonContext()
 
@@ -154,7 +155,7 @@ def __raise():
     signal  = Triton.getConcreteRegisterValue(Triton.registers.rdi)
     handler = sigHandlers[signal]
 
-    Triton.processing(Instruction("\x6A\x00")) # push 0
+    Triton.processing(Instruction(b"\x6A\x00")) # push 0
     emulate(handler)
 
     # Return value
@@ -182,7 +183,7 @@ def __strtoul():
     base   = Triton.getConcreteRegisterValue(Triton.registers.rdx)
 
     # Return value
-    return long(nptr, base)
+    return int(nptr, base)
 
 
 # Simulate the printf() function
@@ -258,7 +259,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf8')) + b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):
@@ -299,7 +300,7 @@ def __atol():
     arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
 
     # Return value
-    return long(arg1)
+    return int(arg1)
 
 
 # Simulate the atoll() function
@@ -310,7 +311,7 @@ def __atoll():
     arg1 = getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
 
     # Return value
-    return long(arg1)
+    return int(arg1)
 
 
 customRelocation = [
@@ -415,7 +416,7 @@ def makeRelocation(binary):
 
 def debug(s):
     if DEBUG:
-        print '[Triton] %s' %(s)
+        print('[Triton] %s' %(s))
     return
 
 
@@ -449,4 +450,3 @@ if __name__ == '__main__':
     debug('Emulation done')
 
     sys.exit(0)
-

@@ -73,7 +73,7 @@ class TestSymbolicVariable(unittest.TestCase):
     def test_model_with_alias(self):
         var = self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.rax)
         var.setAlias("rax")
-        inst = Instruction("\x48\x31\xd8")
+        inst = Instruction(b"\x48\x31\xd8")
         self.ctx.processing(inst)
 
         ast = self.ctx.getAstContext()

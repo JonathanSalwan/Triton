@@ -35,20 +35,21 @@
 ##  python ./solve.py  14.32s user 0.03s system 99% cpu 14.363 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
 
-from triton import *
-
 TARGET = os.path.join(os.path.dirname(__file__), 'unbreakable-enterprise-product-activation')
 DEBUG  = True
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -219,7 +220,7 @@ def exitHandler(ctx):
     flag = str()
     for k, v in sorted(mod.items()):
         flag += chr(v.getValue())
-    print 'Flag: %s' %(flag)
+    print('Flag: %s' %(flag))
 
     sys.exit(not (flag == 'CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}'))
 
@@ -243,8 +244,8 @@ def libcMainHandler(ctx):
     ctx.concretizeRegister(ctx.registers.rsi)
 
     argvs = [
-        TARGET,     # argv[0]
-        'a' * 70,   # argv[1]
+        bytes(TARGET.encode('utf-8')),  # argv[0]
+        bytes(b'a' * 70),               # argv[1]
     ]
 
     # Define argc / argv
@@ -254,7 +255,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, argv+b'\x00')
         base += len(argv)+1
         debug('[+] argv[%d] = %s' %(index, argv))
         index += 1
@@ -344,7 +345,7 @@ def emulate(ctx, pc):
             ast = ctx.getAstContext()
             pco = ctx.getPathConstraintsAst()
             mod = ctx.getModel(ast.land([pco, zf == 1]))
-            for k,v in mod.items():
+            for k,v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(v.getId()), v.getValue())
 
         # Next

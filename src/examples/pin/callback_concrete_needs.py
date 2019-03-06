@@ -6,15 +6,15 @@ from triton  import CALLBACK, ARCH
 
 
 def mycb(inst):
-    print 'Processing instruction at', inst, '\n'
+    print('Processing instruction at', inst, '\n')
     return
 
 def reg_hit(ctxt, reg):
-    print 'Need concrete register value:', reg
+    print('Need concrete register value:', reg)
     return
 
 def mem_hit(ctxt, mem):
-    print 'Need concrete memory value:', mem
+    print('Need concrete memory value:', mem)
     return
 
 if __name__ == '__main__':

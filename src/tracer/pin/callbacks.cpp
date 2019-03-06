@@ -186,7 +186,7 @@ namespace tracer {
           /* CallObject needs a tuple. The size of the tuple is the number of arguments.
            * imagePath, imageBase and imageSize are sent to the callback. */
           PyObject* args = triton::bindings::python::xPyTuple_New(3);
-          PyTuple_SetItem(args, 0, PyString_FromString(imagePath.c_str()));
+          PyTuple_SetItem(args, 0, PyStr_FromString(imagePath.c_str()));
           PyTuple_SetItem(args, 1, triton::bindings::python::PyLong_FromUint(imageBase));
           PyTuple_SetItem(args, 2, triton::bindings::python::PyLong_FromUint(imageSize));
           if (PyObject_CallObject(tracer::pintool::options::callbackImageLoad, args) == nullptr) {

@@ -74,11 +74,10 @@ namespace triton {
       void initRegNamespace(PyObject* registersDict) {
         PyDict_Clear(registersDict);
 
-        PyObject* x86RegistersDict      = xPyDict_New();
-        PyObject* x86RegistersDictClass = xPyClass_New(nullptr, x86RegistersDict, xPyString_FromString("X86"));
-        xPyDict_SetItemString(registersDict, "X86", x86RegistersDictClass);
+        // Create X86 REG namespace
 
-        // Init X86 REG namespace
+        PyObject* x86RegistersDict = xPyDict_New();
+
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, X86_AVAIL) \
           if (X86_AVAIL) \
             xPyDict_SetItemString(x86RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_X86_##UPPER_NAME));
@@ -86,27 +85,34 @@ namespace triton {
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 
-        PyObject* x8664RegistersDict      = xPyDict_New();
-        PyObject* x8664RegistersDictClass = xPyClass_New(nullptr, x8664RegistersDict, xPyString_FromString("X86_64"));
-        xPyDict_SetItemString(registersDict, "X86_64", x8664RegistersDictClass);
+        PyObject* x86RegistersDictClass = xPyClass_New(nullptr, x86RegistersDict, xPyString_FromString("X86"));
+        xPyDict_SetItemString(registersDict, "X86", x86RegistersDictClass);
 
-        // Init X86_64 REG namespace
+        // Create X86_64 REG namespace
+
+        PyObject* x8664RegistersDict = xPyDict_New();
+
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5, _6, _7, _8) \
           xPyDict_SetItemString(x8664RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_X86_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/x86.spec"
 
-        PyObject* aarch64RegistersDict      = xPyDict_New();
-        PyObject* aarch64RegistersDictClass = xPyClass_New(nullptr, aarch64RegistersDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(registersDict, "AARCH64", aarch64RegistersDictClass);
+        PyObject* x8664RegistersDictClass = xPyClass_New(nullptr, x8664RegistersDict, xPyString_FromString("X86_64"));
+        xPyDict_SetItemString(registersDict, "X86_64", x8664RegistersDictClass);
 
-        // Init AArch64 REG namespace
+        // Create AArch64 REG namespace
+
+        PyObject* aarch64RegistersDict = xPyDict_New();
+
         #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
           xPyDict_SetItemString(aarch64RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_AARCH64_##UPPER_NAME));
         // Use REG not available in capstone as normal register
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/aarch64.spec"
+
+        PyObject* aarch64RegistersDictClass = xPyClass_New(nullptr, aarch64RegistersDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(registersDict, "AARCH64", aarch64RegistersDictClass);
       }
 
     }; /* python namespace */

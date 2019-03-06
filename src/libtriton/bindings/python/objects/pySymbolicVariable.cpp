@@ -33,13 +33,16 @@ This object is used to represent a symbolic variable.
 
 ~~~~~~~~~~~~~{.py}
 >>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
->>> print symvar
+>>> print(symvar)
 SymVar_0:64
 
 ~~~~~~~~~~~~~
 
 \section SymbolicVariable_py_api Python API - Methods of the SymbolicVariable class
 <hr>
+
+- <b>string getAlias(void)</b><br>
+Returns the alias (if exists) of the symbolic variable.
 
 - <b>integer getBitSize(void)</b><br>
 Returns the size of the symbolic variable.
@@ -64,6 +67,9 @@ Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, so `
 - <b>\ref py_SYMBOLIC_page getType(void)</b><br>
 Returns the type of the symbolic variable.<br>
 e.g: `SYMBOLIC.REGISTER_VARIABLE`
+
+- <b>void setAlias(string comment)</b><br>
+Sets an alias to the symbolic variable.
 
 - <b>void setComment(string comment)</b><br>
 Sets a comment to the symbolic variable.
@@ -156,9 +162,9 @@ namespace triton {
 
       static PyObject* SymbolicVariable_setAlias(PyObject* self, PyObject* alias) {
         try {
-          if (!PyString_Check(alias))
+          if (!PyStr_Check(alias))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setAlias(): Expected a string as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyString_AsString(alias));
+          PySymbolicVariable_AsSymbolicVariable(self)->setAlias(PyStr_AsString(alias));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -170,9 +176,9 @@ namespace triton {
 
       static PyObject* SymbolicVariable_setComment(PyObject* self, PyObject* comment) {
         try {
-          if (!PyString_Check(comment))
+          if (!PyStr_Check(comment))
             return PyErr_Format(PyExc_TypeError, "SymbolicVariable::setComment(): Expected a string as argument.");
-          PySymbolicVariable_AsSymbolicVariable(self)->setComment(PyString_AsString(comment));
+          PySymbolicVariable_AsSymbolicVariable(self)->setComment(PyStr_AsString(comment));
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -182,7 +188,7 @@ namespace triton {
       }
 
 
-      static int SymbolicVariable_print(PyObject* self) {
+      static int SymbolicVariable_print(PyObject* self, void* io, int s) {
         std::cout << PySymbolicVariable_AsSymbolicVariable(self);
         return 0;
       }
@@ -192,7 +198,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PySymbolicVariable_AsSymbolicVariable(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -226,8 +232,7 @@ namespace triton {
 
 
       PyTypeObject SymbolicVariable_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "SymbolicVariable",                         /* tp_name */
         sizeof(SymbolicVariable_Object),            /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -273,7 +278,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)SymbolicVariable_dealloc,       /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

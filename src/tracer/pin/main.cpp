@@ -671,14 +671,11 @@ namespace tracer {
 
 
     //! The pintool's entry point
-    int main(int argc, char *argv[]) {
+    int main(int argc, char* argv[]) {
       PIN_InitSymbols();
       PIN_SetSyntaxIntel();
       if(PIN_Init(argc, argv))
-          return Usage();
-
-      /* Init the Triton module */
-      triton::bindings::python::inittriton();
+        return Usage();
 
       /* Define Triton architecure */
       if (sizeof(void*) == QWORD_SIZE)
@@ -719,8 +716,21 @@ namespace tracer {
       PIN_InterceptSignal(SIGTERM, callbackSignals, nullptr);
       PIN_InterceptSignal(SIGBUS,  callbackSignals, nullptr);
 
+      /* Init the triton and pintool python module */
+      PyImport_AppendInittab("pintool", tracer::pintool::initpintool);
+      #if IS_PY3
+      PyImport_AppendInittab("triton",  triton::bindings::python::PyInit_triton);
+      #else
+      PyImport_AppendInittab("triton",  triton::bindings::python::inittriton);
+      #endif
+
+      /* Init python */
+      Py_Initialize();
+
+      /* Init the pintool python arguments */
+      tracer::pintool::initPythonArgs(argc, argv);
+
       /* Exec the Pin's python bindings */
-      tracer::pintool::initBindings(argc, argv);
       tracer::pintool::execScript(KnobPythonModule.Value().c_str());
 
       return 0;

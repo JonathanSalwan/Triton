@@ -15,6 +15,8 @@
   #define _hypot hypot
 #endif
 
+#include <triton/py3c_compat.h>
+
 
 
 //! The Triton namespace
@@ -42,6 +44,9 @@ namespace triton {
 
       //! triton python module.
       extern PyObject* tritonModule;
+
+      //! triton python module definition.
+      extern PyModuleDef tritonModuleDef;
 
       //! triton python methods.
       extern PyMethodDef tritonCallbacks[];
@@ -101,8 +106,13 @@ namespace triton {
       //! Initializes the VERSION python namespace.
       void initVersionNamespace(PyObject* versionDict);
 
-      //! Entry point python bindings.
+      //! Entry point python bindings (Py2/3).
+      #if IS_PY3
+      PyMODINIT_FUNC PyInit_triton(void);
+      #else
       PyMODINIT_FUNC inittriton(void);
+      PyObject* PyInit_triton(void);
+      #endif
 
     /*! @} End of python namespace */
     };

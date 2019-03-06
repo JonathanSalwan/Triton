@@ -15,11 +15,12 @@
 
 /* setup doctest context
 
+>>> from __future__ import print_function
 >>> from triton import ARCH, TritonContext, Instruction, REG
 >>> ctxt = TritonContext()
 >>> ctxt.setArchitecture(ARCH.X86_64)
 
->>> inst = Instruction("\x8A\xA4\x4A\x00\x01\x00\x00")
+>>> inst = Instruction(b"\x8A\xA4\x4A\x00\x01\x00\x00")
 >>> inst.setAddress(0x40000)
 
 */
@@ -40,21 +41,21 @@ This object is used to represent a register operand according to the CPU archite
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
 
 >>> op0 = inst.getOperands()[0]
->>> print op0
+>>> print(op0)
 ah:8 bv[15..8]
 
 >>> op0.getName()
 'ah'
 
 >>> op0.getSize()
-1L
+1
 
 >>> op0.getBitSize()
-8L
+8
 
 >>> ctxt.getParentRegister(op0).getName()
 'rax'
@@ -65,13 +66,13 @@ ah:8 bv[15..8]
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.getRegister(REG.X86_64.AH)
->>> print ah
+>>> print(ah)
 ah:8 bv[15..8]
 
->>> print ah.getBitSize()
+>>> print(ah.getBitSize())
 8
 
->>> print ctxt.registers.rax
+>>> print(ctxt.registers.rax)
 rax:64 bv[63..0]
 
 ~~~~~~~~~~~~~
@@ -269,7 +270,7 @@ namespace triton {
       }
 
 
-      static int Register_print(PyObject* self) {
+      static int Register_print(PyObject* self, void* io, int s) {
         std::cout << PyRegister_AsRegister(self);
         return 0;
       }
@@ -284,7 +285,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyRegister_AsRegister(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -351,8 +352,7 @@ namespace triton {
 
 
       PyTypeObject Register_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "Register",                                 /* tp_name */
         sizeof(Register_Object),                    /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -398,7 +398,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)Register_dealloc,               /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

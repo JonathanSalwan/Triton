@@ -24,15 +24,16 @@
 This object is used to represent an Instruction.
 
 ~~~~~~~~~~~~~{.py}
+>>> from __future__ import print_function
 >>> from triton import TritonContext, ARCH, Instruction, OPERAND
 
 >>> trace = [
-...     (0x400000, "\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
-...     (0x400007, "\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
-...     (0x40000b, "\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
-...     (0x400011, "\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
-...     (0x400015, "\x89\xd0"),                     # mov        eax, edx
-...     (0x400017, "\x80\xf4\x99"),                 # xor        ah, 0x99
+...     (0x400000, b"\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
+...     (0x400007, b"\x48\x8d\x34\xc3"),             # lea        rsi, [rbx+rax*8]
+...     (0x40000b, b"\x67\x48\x8D\x74\xC3\x0A"),     # lea        rsi, [ebx+eax*8+0xa]
+...     (0x400011, b"\x66\x0F\xD7\xD1"),             # pmovmskb   edx, xmm1
+...     (0x400015, b"\x89\xd0"),                     # mov        eax, edx
+...     (0x400017, b"\x80\xf4\x99"),                 # xor        ah, 0x99
 ... ]
 
 >>> ctxt = TritonContext()
@@ -53,40 +54,40 @@ This object is used to represent an Instruction.
 ...
 ...     # Process everything
 ...     if not ctxt.processing(inst):
-...         print "Fail an instruction"
+...         print("Fail an instruction")
 ...
-...     print inst
+...     print(inst)
 ...     for op in inst.getOperands():
-...         print '   ', op
+...         print('    %s' % (op))
 ...         if op.getType() == OPERAND.MEM:
-...             print '         base  : ', op.getBaseRegister()
-...             print '         index : ', op.getIndexRegister()
-...             print '         disp  : ', op.getDisplacement()
-...             print '         scale : ', op.getScale()
-...     print
+...             print('         base  : %s' % (op.getBaseRegister()))
+...             print('         index : %s' % (op.getIndexRegister()))
+...             print('         disp  : %s' % (op.getDisplacement()))
+...             print('         scale : %s' % (op.getScale()))
+...     print('')
 0x400000: mov rax, qword ptr [rip + 0x13b8]
     rax:64 bv[63..0]
     [@0x4013bf]:64 bv[63..0]
-         base  :  rip:64 bv[63..0]
-         index :  unknown:1 bv[0..0]
-         disp  :  0x13b8:64 bv[63..0]
-         scale :  0x1:64 bv[63..0]
+         base  : rip:64 bv[63..0]
+         index : unknown:1 bv[0..0]
+         disp  : 0x13b8:64 bv[63..0]
+         scale : 0x1:64 bv[63..0]
 <BLANKLINE>
 0x400007: lea rsi, [rbx + rax*8]
     rsi:64 bv[63..0]
     [@0x0]:64 bv[63..0]
-         base  :  rbx:64 bv[63..0]
-         index :  rax:64 bv[63..0]
-         disp  :  0x0:64 bv[63..0]
-         scale :  0x8:64 bv[63..0]
+         base  : rbx:64 bv[63..0]
+         index : rax:64 bv[63..0]
+         disp  : 0x0:64 bv[63..0]
+         scale : 0x8:64 bv[63..0]
 <BLANKLINE>
 0x40000b: lea rsi, [ebx + eax*8 + 0xa]
     rsi:64 bv[63..0]
     [@0xa]:64 bv[63..0]
-         base  :  ebx:32 bv[31..0]
-         index :  eax:32 bv[31..0]
-         disp  :  0xa:32 bv[31..0]
-         scale :  0x8:32 bv[31..0]
+         base  : ebx:32 bv[31..0]
+         index : eax:32 bv[31..0]
+         disp  : 0xa:32 bv[31..0]
+         scale : 0x8:32 bv[31..0]
 <BLANKLINE>
 0x400011: pmovmskb edx, xmm1
     edx:32 bv[31..0]
@@ -106,11 +107,11 @@ This object is used to represent an Instruction.
 \subsection py_Instruction_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
->>> inst = Instruction("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst = Instruction(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> inst.setAddress(0x40000)
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov rax, 1
 
 ~~~~~~~~~~~~~
@@ -118,10 +119,10 @@ True
 ~~~~~~~~~~~~~{.py}
 >>> inst = Instruction()
 >>> inst.setAddress(0x40000)
->>> inst.setOpcode("\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst.setOpcode(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
 True
->>> print inst
+>>> print(inst)
 0x40000: mov rax, 1
 
 ~~~~~~~~~~~~~
@@ -255,7 +256,7 @@ namespace triton {
       static PyObject* Instruction_getDisassembly(PyObject* self, PyObject* noarg) {
         try {
           if (!PyInstruction_AsInstruction(self)->getDisassembly().empty())
-            return PyString_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
+            return PyStr_FromFormat("%s", PyInstruction_AsInstruction(self)->getDisassembly().c_str());
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -673,7 +674,7 @@ namespace triton {
       }
 
 
-      static int Instruction_print(PyObject* self) {
+      static int Instruction_print(PyObject* self, void* io, int s) {
         std::cout << PyInstruction_AsInstruction(self);
         return 0;
       }
@@ -683,7 +684,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyInstruction_AsInstruction(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -727,8 +728,7 @@ namespace triton {
 
 
       PyTypeObject Instruction_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "Instruction",                              /* tp_name */
         sizeof(Instruction_Object),                 /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -774,7 +774,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)Instruction_dealloc,            /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

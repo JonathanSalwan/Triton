@@ -35,13 +35,13 @@ This object is used to represent a bits vector. Mainly used by \ref py_Register_
 >>> ah = ctxt.registers.ah
 >>> bv = ah.getBitvector()
 >>> bv.getHigh()
-15L
+15
 >>> bv.getLow()
-8L
+8
 >>> bv.getVectorSize()
-8L
+8
 >>> bv.getMaxValue()
-255L
+255
 
 ~~~~~~~~~~~~~
 
@@ -116,7 +116,7 @@ namespace triton {
       }
 
 
-      static int BitsVector_print(PyObject* self) {
+      static int BitsVector_print(PyObject* self, void* io, int s) {
         std::cout << PyBitsVector_AsBitsVector(self);
         return 0;
       }
@@ -126,7 +126,7 @@ namespace triton {
         try {
           std::stringstream str;
           str << PyBitsVector_AsBitsVector(self);
-          return PyString_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", str.str().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -145,8 +145,7 @@ namespace triton {
 
 
       PyTypeObject BitsVector_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "BitsVector",                               /* tp_name */
         sizeof(BitsVector_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -192,7 +191,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)BitsVector_dealloc,             /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

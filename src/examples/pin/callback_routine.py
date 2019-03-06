@@ -16,12 +16,12 @@ Triton = getTritonContext()
 
 def mallocEntry(threadId):
     sizeAllocated = getCurrentRegisterValue(Triton.registers.rdi)
-    print '-> malloc(%#x)' %(sizeAllocated)
+    print('-> malloc(%#x)' %(sizeAllocated))
 
 
 def mallocExit(threadId):
     ptrAllocated = getCurrentRegisterValue(Triton.registers.rax)
-    print '<- %#x' %(ptrAllocated)
+    print('<- %#x' %(ptrAllocated))
 
 
 if __name__ == '__main__':

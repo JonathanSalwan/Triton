@@ -23,13 +23,13 @@ int test_1(void) {
   triton::API                   api;
 
   api.setArchitecture(triton::arch::ARCH_X86_64);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX), 12345);
+  api.setConcreteRegisterValue(api.registers.x86_rax, 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.registers.x86_rax) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_RAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
     std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -44,13 +44,13 @@ int test_2(void) {
   triton::API                 api;
 
   api.setArchitecture(triton::arch::ARCH_X86);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX), 12345);
+  api.setConcreteRegisterValue(api.registers.x86_eax, 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345)
+  if (api.getConcreteRegisterValue(api.registers.x86_eax) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::x86::x86Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_X86_EAX)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.registers.x86_eax) != 12345) {
     std::cerr << "test_2: KO (cpy context != api context)" << std::endl;
     return 1;
   }
@@ -424,13 +424,13 @@ int test_8(void) {
   triton::API api;
 
   api.setArchitecture(triton::arch::ARCH_AARCH64);
-  api.setConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0), 12345);
+  api.setConcreteRegisterValue(api.registers.aarch64_x0, 12345);
 
-  if (api.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345)
+  if (api.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345)
     return 1;
 
   cpy = *reinterpret_cast<triton::arch::aarch64::AArch64Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.getRegister(triton::arch::ID_REG_AARCH64_X0)) != 12345) {
+  if (cpy.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345) {
     std::cerr << "test_8: KO (cpy context != api context)" << std::endl;
     return 1;
   }

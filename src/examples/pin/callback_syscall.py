@@ -14,7 +14,7 @@ def my_callback_syscall_entry(threadId, std):
         arg0 = getSyscallArgument(std, 0)
         arg1 = getSyscallArgument(std, 1)
         arg2 = getSyscallArgument(std, 2)
-        print 'sys_write(%x, %x, %x)' %(arg0, arg1, arg2)
+        print('sys_write(%x, %x, %x)' %(arg0, arg1, arg2))
 
 
 if __name__ == '__main__':

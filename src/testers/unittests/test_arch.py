@@ -15,7 +15,7 @@ class TestArchitecture(unittest.TestCase):
     def test_modify_arch(self):
         """Check we can change arch at anytime."""
         self.ctx = TritonContext()
-        for _ in xrange(10):
+        for _ in range(10):
             self.ctx.setArchitecture(random.choice((ARCH.X86_64, ARCH.X86, ARCH.AARCH64)))
 
 

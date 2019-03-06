@@ -16,7 +16,7 @@ class TestInstruction(unittest.TestCase):
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
         self.inst = Instruction()
-        self.inst.setOpcode("\x48\x01\xd8")  # add rax, rbx
+        self.inst.setOpcode(b"\x48\x01\xd8")  # add rax, rbx
         self.inst.setAddress(0x400000)
         self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, 0x1122334455667788)
         self.Triton.setConcreteRegisterValue(self.Triton.registers.rbx, 0x8877665544332211)
@@ -26,6 +26,16 @@ class TestInstruction(unittest.TestCase):
         """Check instruction current and next address."""
         self.assertEqual(self.inst.getAddress(), 0x400000)
         self.assertEqual(self.inst.getNextAddress(), 0x400003)
+
+        inst = Instruction()
+        inst.setAddress(-1)
+        self.assertEqual(inst.getAddress(), 0xffffffffffffffff)
+
+        inst.setAddress(-2)
+        self.assertEqual(inst.getAddress(), 0xfffffffffffffffe)
+
+        inst.setAddress(-3)
+        self.assertEqual(inst.getAddress(), 0xfffffffffffffffd)
 
     def test_memory(self):
         """Check memory access."""
@@ -59,7 +69,7 @@ class TestInstruction(unittest.TestCase):
 
     def test_opcode(self):
         """Check opcode informations."""
-        self.assertEqual(self.inst.getOpcode(), "\x48\x01\xd8")
+        self.assertEqual(self.inst.getOpcode(), b"\x48\x01\xd8")
         self.assertEqual(self.inst.getType(), OPCODE.X86.ADD)
 
     def test_thread(self):
@@ -98,7 +108,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov eax, DWORD PTR fs:0xffffffffffffdf98
-        inst.setOpcode("\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
+        inst.setOpcode(b"\x64\x8B\x04\x25\x98\xDF\xFF\xFF")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
@@ -117,7 +127,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov rax, QWORD PTR fs:[rax]
-        inst.setOpcode("\x64\x48\x8B\x00")
+        inst.setOpcode(b"\x64\x48\x8B\x00")
         inst.setAddress(0x400000)
 
         self.Triton.setConcreteRegisterValue(self.Triton.registers.fs, 0x7fffda8ab700)
@@ -137,7 +147,7 @@ class TestLoadAccess(unittest.TestCase):
 
         inst = Instruction()
         # mov ax, ds:word_40213C
-        inst.setOpcode("\x66\xA1\x3C\x21\x40\x00")
+        inst.setOpcode(b"\x66\xA1\x3C\x21\x40\x00")
         self.Triton.processing(inst)
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x40213C)
@@ -154,11 +164,11 @@ class TestProcessing(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86)
 
         # mov esp, 0x19fe00
-        inst1 = Instruction('\xBC\x00\xFE\x19\x00')
+        inst1 = Instruction(b'\xBC\x00\xFE\x19\x00')
         # mov dword ptr [esp], 0x11111111
-        inst2 = Instruction('\xC7\x04\x24\x11\x11\x11\x11')
+        inst2 = Instruction(b'\xC7\x04\x24\x11\x11\x11\x11')
         # pop dword ptr [esp]
-        inst3 = Instruction('\x8F\x04\x24')
+        inst3 = Instruction(b'\x8F\x04\x24')
         self.Triton.processing(inst1)
         self.Triton.processing(inst2)
         self.Triton.processing(inst3)
@@ -173,13 +183,13 @@ class TestProcessing(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86)
 
         # mov esp, 0x19fe00
-        inst1 = Instruction('\xBC\x00\xFE\x19\x00')
+        inst1 = Instruction(b'\xBC\x00\xFE\x19\x00')
         # mov edi, 0x19fe00
-        inst2 = Instruction('\xBF\x00\xFE\x19\x00')
+        inst2 = Instruction(b'\xBF\x00\xFE\x19\x00')
         # mov dword ptr [esp], 0x11111111
-        inst3 = Instruction('\xC7\x04\x24\x11\x11\x11\x11')
+        inst3 = Instruction(b'\xC7\x04\x24\x11\x11\x11\x11')
         # pop dword ptr [edi]
-        inst4 = Instruction('\x8F\x07')
+        inst4 = Instruction(b'\x8F\x07')
         self.Triton.processing(inst1)
         self.Triton.processing(inst2)
         self.Triton.processing(inst3)
@@ -195,25 +205,25 @@ class TestProcessing(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
 
         # movhpd QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction("\x66\x0F\x17\x08"))
+        self.Triton.processing(Instruction(b"\x66\x0F\x17\x08"))
         # movhpd xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction("\x66\x0F\x16\x08"))
+        self.Triton.processing(Instruction(b"\x66\x0F\x16\x08"))
         # movhps QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction("\x0F\x17\x08"))
+        self.Triton.processing(Instruction(b"\x0F\x17\x08"))
         # movhps xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction("\x0F\x16\x08"))
+        self.Triton.processing(Instruction(b"\x0F\x16\x08"))
         # movlpd QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction("\x66\x0F\x13\x08"))
+        self.Triton.processing(Instruction(b"\x66\x0F\x13\x08"))
         # movlpd xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction("\x66\x0F\x12\x08"))
+        self.Triton.processing(Instruction(b"\x66\x0F\x12\x08"))
         # movlps QWORD PTR [rax], xmm1
-        self.Triton.processing(Instruction("\x0F\x13\x08"))
+        self.Triton.processing(Instruction(b"\x0F\x13\x08"))
         # movlps xmm1, QWORD PTR [rax]
-        self.Triton.processing(Instruction("\x0F\x12\x08"))
+        self.Triton.processing(Instruction(b"\x0F\x12\x08"))
 
     def test_mix_high_low_register(self):
         """Check operation on lower and higher register."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        inst = Instruction("\x00\xDC")  # add ah,bl
+        inst = Instruction(b"\x00\xDC")  # add ah,bl
         self.Triton.processing(inst)

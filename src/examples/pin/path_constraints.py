@@ -46,8 +46,8 @@
 ##  B1: SymVar_4:8 = 65 (e)  |  B2: SymVar_4:8 = 0 ()
 ##
 
-from triton     import ARCH, CPUSIZE, MemoryAccess, MODE
-from pintool    import *
+from triton  import *
+from pintool import *
 
 TAINTING_SIZE = 10
 
@@ -67,7 +67,7 @@ def tainting(threadId):
             Triton.setConcreteMemoryValue(argv + offset, concreteValue)
             Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
-        print '[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv)
+        print('[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv))
         rdi -= 1
 
     return
@@ -84,16 +84,16 @@ def fini():
 
             # Branch 1
             models  = Triton.getModel(b1)
-            for k, v in models.items():
+            for k, v in list(models.items()):
                 seed.append(v)
 
             # Branch 2
             models  = Triton.getModel(b2)
-            for k, v in models.items():
+            for k, v in list(models.items()):
                 seed.append(v)
 
             if seed:
-                print 'B1: %s (%c)  |  B2: %s (%c)' %(seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue()))
+                print('B1: %s (%c)  |  B2: %s (%c)' %(seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue())))
     return
 
 

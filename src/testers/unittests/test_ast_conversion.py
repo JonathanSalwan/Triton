@@ -52,18 +52,22 @@ class TestAstConversion(unittest.TestCase):
             operator.ge,
             operator.lt,
             operator.gt,
-            operator.div,
+            operator.floordiv,
             operator.mod,
         ]
+        operator_div = operator.floordiv
+        if hasattr(operator, "div"):
+            operator_div = operator.div
+            binop.append(operator_div)
 
-        for _ in xrange(100):
+        for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
             self.Triton.setConcreteVariableValue(self.sv2, cv2)
             for op in binop:
                 n = op(self.v1, self.v2)
-                if op == operator.div and cv2 == 0:
+                if op in (operator.floordiv, operator_div) and cv2 == 0:
                     ref = 255
                 elif op == operator.mod and cv2 == 0:
                     ref = cv1
@@ -92,7 +96,7 @@ class TestAstConversion(unittest.TestCase):
             operator.neg,
         ]
 
-        for cv1 in xrange(0, 256):
+        for cv1 in range(0, 256):
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
             for op in unop:
                 n = op(self.v1)
@@ -149,7 +153,7 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.lor,
         ]
 
-        for _ in xrange(100):
+        for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
@@ -198,7 +202,7 @@ class TestAstConversion(unittest.TestCase):
             lambda x: self.astCtxt.zx(16, x),
         ]
 
-        for cv1 in xrange(0, 256):
+        for cv1 in range(0, 256):
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
             for op in smtunop:
                 if op == self.astCtxt.lnot:
@@ -210,7 +214,7 @@ class TestAstConversion(unittest.TestCase):
 
     def test_bvnode(self):
         """Check python bit vector declaration."""
-        for _ in xrange(100):
+        for _ in range(100):
             cv1 = random.randint(-127, 255)
             n = self.astCtxt.bv(cv1, 8)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
@@ -218,11 +222,11 @@ class TestAstConversion(unittest.TestCase):
 
     def test_extract(self):
         """Check bit extraction from bitvector."""
-        for _ in xrange(100):
+        for _ in range(100):
             cv1 = random.randint(0, 255)
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
-            for lo in xrange(0, 8):
-                for hi in xrange(lo, 8):
+            for lo in range(0, 8):
+                for hi in range(lo, 8):
                     n = self.astCtxt.extract(hi, lo, self.v1)
                     ref = ((cv1 << (7 - hi)) % 256) >> (7 - hi + lo)
                     self.assertEqual(ref, n.evaluate(),
@@ -235,7 +239,7 @@ class TestAstConversion(unittest.TestCase):
 
     def test_ite(self):
         """Check ite node."""
-        for _ in xrange(100):
+        for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
@@ -247,7 +251,7 @@ class TestAstConversion(unittest.TestCase):
     @utils.xfail
     def test_integer(self):
         # Decimal node is not exported in the python interface
-        for cv1 in xrange(0, 256):
+        for cv1 in range(0, 256):
             n = self.astCtxt.integer(cv1)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
@@ -255,7 +259,7 @@ class TestAstConversion(unittest.TestCase):
     @utils.xfail
     def test_let(self):
         # Let node didn't take the variable in its computation
-        for run in xrange(100):
+        for run in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
@@ -322,9 +326,9 @@ class TestAstConversion(unittest.TestCase):
             (self.v1, 0),
             (self.v2, 0),
         ]
-        for _ in xrange(10):
+        for _ in range(10):
             n = self.new_node(0, self.bvop)
-            for _ in xrange(10):
+            for _ in range(10):
                 cv1 = random.randint(0, 255)
                 cv2 = random.randint(0, 255)
                 self.Triton.setConcreteVariableValue(self.sv1, cv1)
@@ -343,7 +347,7 @@ class TestAstConversion(unittest.TestCase):
                       self.new_node(depth + 1, self.bvop),
                       self.new_node(depth + 1, self.bvop))
         elif any(op == ibo for ibo, _ in self.in_bool):
-            args = [self.new_node(depth, self.to_bool) for _ in xrange(nargs)]
+            args = [self.new_node(depth, self.to_bool) for _ in range(nargs)]
             if op in (self.astCtxt.land, self.astCtxt.lor):
                 return op(args)
             else:
@@ -351,7 +355,7 @@ class TestAstConversion(unittest.TestCase):
         elif nargs == 0:
             return op
         else:
-            return op(*[self.new_node(depth + 1, self.bvop) for _ in xrange(nargs)])
+            return op(*[self.new_node(depth + 1, self.bvop) for _ in range(nargs)])
 
 
 class TestUnrollAst(unittest.TestCase):
@@ -365,29 +369,29 @@ class TestUnrollAst(unittest.TestCase):
         self.ast = self.ctx.getAstContext()
 
     def test_1(self):
-        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
-        self.ctx.processing(Instruction("\x48\x89\xc3")) # mov rbx, rax
-        self.ctx.processing(Instruction("\x48\x89\xd9")) # mov rcx, rbx
-        self.ctx.processing(Instruction("\x48\x89\xca")) # mov rdx, rcx
+        self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction(b"\x48\x89\xc3")) # mov rbx, rax
+        self.ctx.processing(Instruction(b"\x48\x89\xd9")) # mov rcx, rbx
+        self.ctx.processing(Instruction(b"\x48\x89\xca")) # mov rdx, rcx
         rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
         self.assertEqual(str(rdx), "ref!6")
         self.assertEqual(str(self.ast.unrollAst(rdx)), "(_ bv1 64)")
         return
 
     def test_2(self):
-        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
-        self.ctx.processing(Instruction("\x48\x31\xc0")) # xor rax, rax
+        self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction(b"\x48\x31\xc0")) # xor rax, rax
         rax = self.ctx.getRegisterAst(self.ctx.registers.rax)
         self.assertEqual(str(rax), "ref!2")
         self.assertEqual(str(self.ast.unrollAst(rax)), "(bvxor (_ bv1 64) (_ bv1 64))")
         return
 
     def test_3(self):
-        self.ctx.processing(Instruction("\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
-        self.ctx.processing(Instruction("\x48\xc7\xc3\x02\x00\x00\x00")) # mov rbx, 2
-        self.ctx.processing(Instruction("\x48\x31\xd8")) # xor rax, rbx
-        self.ctx.processing(Instruction("\x48\xff\xc0")) # inc rax
-        self.ctx.processing(Instruction("\x48\x89\xc2")) # mov rdx, rax
+        self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
+        self.ctx.processing(Instruction(b"\x48\xc7\xc3\x02\x00\x00\x00")) # mov rbx, 2
+        self.ctx.processing(Instruction(b"\x48\x31\xd8")) # xor rax, rbx
+        self.ctx.processing(Instruction(b"\x48\xff\xc0")) # inc rax
+        self.ctx.processing(Instruction(b"\x48\x89\xc2")) # mov rdx, rax
         rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
         self.assertEqual(str(rdx), "ref!18")
         self.assertEqual(str(self.ast.unrollAst(rdx)), "(bvadd (bvxor (_ bv1 64) (_ bv2 64)) (_ bv1 64))")

@@ -15,7 +15,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.AARCH64)
 
     def test_inst1(self):
-        inst = Instruction("\x80\x46\xc2\xd2") # movz x0, #0x1234, lsl #32
+        inst = Instruction(b"\x80\x46\xc2\xd2") # movz x0, #0x1234, lsl #32
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "movz x0, #0x1234, lsl #32")
@@ -31,7 +31,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op1.getShiftValue(), 32)
 
     def test_inst2(self):
-        inst = Instruction("\xe1\x0b\x40\xb9") # ldr w1, [sp, #8]
+        inst = Instruction(b"\xe1\x0b\x40\xb9") # ldr w1, [sp, #8]
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "ldr w1, [sp, #8]")
@@ -49,7 +49,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op1.getDisplacement().getSize(), CPUSIZE.QWORD)
 
     def test_inst3(self):
-        inst = Instruction("\x20\x08\x02\x8b") # add x0, x1, x2, lsl #2
+        inst = Instruction(b"\x20\x08\x02\x8b") # add x0, x1, x2, lsl #2
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "add x0, x1, x2, lsl #2")
@@ -73,7 +73,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op2.getShiftValue(), 2)
 
     def test_inst4(self):
-        inst = Instruction("\x20\xc0\x22\x8b") # add x0, x1, w2, sxtw
+        inst = Instruction(b"\x20\xc0\x22\x8b") # add x0, x1, w2, sxtw
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxtw")
@@ -98,7 +98,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op2.getExtendSize(), 32)
 
     def test_inst5(self):
-        inst = Instruction("\x20\x80\x22\x8b") # add x0, x1, w2, sxtb
+        inst = Instruction(b"\x20\x80\x22\x8b") # add x0, x1, w2, sxtb
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxtb")
@@ -109,7 +109,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op2.getExtendSize(), 56)
 
     def test_inst6(self):
-        inst = Instruction("\x20\xa0\x22\x8b") # add x0, x1, w2, sxth
+        inst = Instruction(b"\x20\xa0\x22\x8b") # add x0, x1, w2, sxth
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "add x0, x1, w2, sxth")
@@ -120,7 +120,7 @@ class TestAArch64Disass(unittest.TestCase):
         self.assertEqual(op2.getExtendSize(), 48)
 
     def test_inst7(self):
-        inst = Instruction("\x20\xe0\x22\x8b") # add x0, x1, x2, sxtx
+        inst = Instruction(b"\x20\xe0\x22\x8b") # add x0, x1, x2, sxtx
 
         self.ctx.disassembly(inst)
         self.assertEqual(inst.getDisassembly(), "add x0, x1, x2, sxtx")

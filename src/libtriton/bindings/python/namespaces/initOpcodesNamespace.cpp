@@ -1753,9 +1753,7 @@ namespace triton {
       void initOpcodesNamespace(PyObject* opcodesDict) {
         PyDict_Clear(opcodesDict);
 
-        PyObject* x86OpcodesDict      = xPyDict_New();
-        PyObject* x86OpcodesDictClass = xPyClass_New(nullptr, x86OpcodesDict, xPyString_FromString("X86"));
-        xPyDict_SetItemString(opcodesDict, "X86", x86OpcodesDictClass);
+        PyObject* x86OpcodesDict = xPyDict_New();
 
         xPyDict_SetItemString(x86OpcodesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_INS_INVALID));
         xPyDict_SetItemString(x86OpcodesDict, "AAA", PyLong_FromUint32(triton::arch::x86::ID_INS_AAA));
@@ -3053,9 +3051,10 @@ namespace triton {
         xPyDict_SetItemString(x86OpcodesDict, "XSTORE", PyLong_FromUint32(triton::arch::x86::ID_INS_XSTORE));
         xPyDict_SetItemString(x86OpcodesDict, "XTEST", PyLong_FromUint32(triton::arch::x86::ID_INS_XTEST));
 
-        PyObject* Aarch64OpcodesDict      = xPyDict_New();
-        PyObject* Aarch64OpcodesDictClass = xPyClass_New(nullptr, Aarch64OpcodesDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(opcodesDict, "AARCH64", Aarch64OpcodesDictClass);
+        PyObject* x86OpcodesDictClass = xPyClass_New(nullptr, x86OpcodesDict, xPyString_FromString("X86"));
+        xPyDict_SetItemString(opcodesDict, "X86", x86OpcodesDictClass);
+
+        PyObject* Aarch64OpcodesDict = xPyDict_New();
 
         xPyDict_SetItemString(Aarch64OpcodesDict, "ABS", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ABS));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ADC", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ADC));
@@ -3473,6 +3472,9 @@ namespace triton {
         xPyDict_SetItemString(Aarch64OpcodesDict, "XTN", PyLong_FromUint32(triton::arch::aarch64::ID_INS_XTN));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ZIP1", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ZIP1));
         xPyDict_SetItemString(Aarch64OpcodesDict, "ZIP2", PyLong_FromUint32(triton::arch::aarch64::ID_INS_ZIP2));
+
+        PyObject* Aarch64OpcodesDictClass = xPyClass_New(nullptr, Aarch64OpcodesDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(opcodesDict, "AARCH64", Aarch64OpcodesDictClass);
       }
 
     }; /* python namespace */

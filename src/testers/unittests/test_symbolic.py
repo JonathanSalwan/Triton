@@ -25,7 +25,7 @@ class TestSymbolic(unittest.TestCase):
         """
         inst = Instruction()
         # update RAX
-        inst.setOpcode("\x48\xFF\xC0")
+        inst.setOpcode(b"\x48\xFF\xC0")
         self.Triton.processing(inst)
 
         self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.registers.rax), 1)
@@ -35,7 +35,7 @@ class TestSymbolic(unittest.TestCase):
 
         inst = Instruction()
         # update RAX again
-        inst.setOpcode("\x48\xFF\xC0")
+        inst.setOpcode(b"\x48\xFF\xC0")
         self.Triton.processing(inst)
 
         self.assertEqual(self.Triton.getConcreteRegisterValue(self.Triton.registers.rax), 2, "concrete value is updated")

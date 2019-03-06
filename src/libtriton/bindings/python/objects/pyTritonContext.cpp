@@ -409,7 +409,7 @@ namespace triton {
 
         PyObject* registersDict = xPyDict_New();
         for (auto& reg : regs)
-          xPyDict_SetItem(registersDict, PyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
+          xPyDict_SetItem(registersDict, xPyString_FromString(reg.second.getName().c_str()), PyRegister(reg.second));
 
         Py_XDECREF(((TritonContext_Object*)(self))->regAttr);
         ((TritonContext_Object*)(self))->regAttr = xPyClass_New(nullptr, registersDict, xPyString_FromString("registers"));
@@ -474,7 +474,7 @@ namespace triton {
                   /* Fetch the last exception */
                   PyErr_Fetch(&type, &value, &traceback);
 
-                  std::string str = PyString_AsString(PyObject_Str(value));
+                  std::string str = PyStr_AsString(PyObject_Str(value));
                   Py_XDECREF(type);
                   Py_XDECREF(value);
                   Py_XDECREF(traceback);
@@ -518,7 +518,7 @@ namespace triton {
                   /* Fetch the last exception */
                   PyErr_Fetch(&type, &value, &traceback);
 
-                  std::string str = PyString_AsString(PyObject_Str(value));
+                  std::string str = PyStr_AsString(PyObject_Str(value));
                   Py_XDECREF(type);
                   Py_XDECREF(value);
                   Py_XDECREF(traceback);
@@ -564,7 +564,7 @@ namespace triton {
                   /* Fetch the last exception */
                   PyErr_Fetch(&type, &value, &traceback);
 
-                  std::string str = PyString_AsString(PyObject_Str(value));
+                  std::string str = PyStr_AsString(PyObject_Str(value));
                   Py_XDECREF(type);
                   Py_XDECREF(value);
                   Py_XDECREF(traceback);
@@ -610,7 +610,7 @@ namespace triton {
                   /* Fetch the last exception */
                   PyErr_Fetch(&type, &value, &traceback);
 
-                  std::string str = PyString_AsString(PyObject_Str(value));
+                  std::string str = PyStr_AsString(PyObject_Str(value));
                   Py_XDECREF(type);
                   Py_XDECREF(value);
                   Py_XDECREF(traceback);
@@ -654,7 +654,7 @@ namespace triton {
                   /* Fetch the last exception */
                   PyErr_Fetch(&type, &value, &traceback);
 
-                  std::string str = PyString_AsString(PyObject_Str(value));
+                  std::string str = PyStr_AsString(PyObject_Str(value));
                   Py_XDECREF(type);
                   Py_XDECREF(value);
                   Py_XDECREF(traceback);
@@ -857,11 +857,11 @@ namespace triton {
         if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
           return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects an integer as second argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects a sting as third argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertExpressionToSymbolicVariable(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
@@ -883,11 +883,11 @@ namespace triton {
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a MemoryAccess as first argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a sting as second argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertMemoryToSymbolicVariable(*PyMemoryAccess_AsMemoryAccess(mem), ccomment));
@@ -909,11 +909,11 @@ namespace triton {
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a Register as first argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a sting as second argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertRegisterToSymbolicVariable(*PyRegister_AsRegister(reg), ccomment));
@@ -934,7 +934,7 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment);
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -943,11 +943,11 @@ namespace triton {
         if (flag == nullptr || (!PyRegister_Check(flag)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a Register as third argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects a sting as fourth argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
@@ -972,7 +972,7 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &mem, &comment);
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -981,11 +981,11 @@ namespace triton {
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects a MemoryAccess as third argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects a sting as fourth argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
@@ -1010,7 +1010,7 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOOO", &inst, &node, &reg, &comment);
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
@@ -1019,11 +1019,11 @@ namespace triton {
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a Register as third argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects a sting as fourth argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
@@ -1047,17 +1047,17 @@ namespace triton {
         /* Extract arguments */
         PyArg_ParseTuple(args, "|OOO", &inst, &node, &comment);
 
-        if (inst == nullptr || (!PyInstance_Check(inst)))
+        if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
 
         if (node == nullptr || (!PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects a AstNode as second argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects a sting as third argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
@@ -1598,11 +1598,11 @@ namespace triton {
 
 
       static PyObject* TritonContext_getSymbolicVariableFromName(PyObject* self, PyObject* symVarName) {
-        if (!PyString_Check(symVarName))
+        if (!PyStr_Check(symVarName))
           return PyErr_Format(PyExc_TypeError, "getSymbolicVariableFromName(): Expects a string as argument.");
 
         try {
-          std::string arg = PyString_AsString(symVarName);
+          std::string arg = PyStr_AsString(symVarName);
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariableFromName(arg));
         }
         catch (const triton::exceptions::Exception& e) {
@@ -1937,11 +1937,11 @@ namespace triton {
         if (node == nullptr || (!PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a AstNode as first argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a sting as second argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->newSymbolicExpression(PyAstNode_AsAstNode(node), ccomment));
@@ -1963,11 +1963,11 @@ namespace triton {
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects an integer as first argument.");
 
-        if (comment != nullptr && !PyString_Check(comment))
+        if (comment != nullptr && !PyStr_Check(comment))
           return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects a sting as second  argument.");
 
         if (comment != nullptr)
-          ccomment = PyString_AsString(comment);
+          ccomment = PyStr_AsString(comment);
 
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->newSymbolicVariable(PyLong_AsUint32(size), ccomment));
@@ -2738,7 +2738,7 @@ namespace triton {
       static PyObject* TritonContext_getattro(PyObject* self, PyObject* name) {
         try {
           /* Access to the registers attribute */
-          if (std::string(PyString_AsString(name)) == "registers") {
+          if (std::string(PyStr_AsString(name)) == "registers") {
 
             /* Check if the architecture is defined */
             if (PyTritonContext_AsTritonContext(self)->getArchitecture() == triton::arch::ARCH_INVALID)
@@ -2869,8 +2869,7 @@ namespace triton {
 
       //! Description of the python representation of a TritonContext
       PyTypeObject TritonContext_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "TritonContext",                            /* tp_name */
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -2916,7 +2915,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)TritonContext_dealloc,          /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

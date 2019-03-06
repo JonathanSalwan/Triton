@@ -15,11 +15,11 @@
 ##   PASSWORD:hackover15{I_USE_GOTO_WHEREEVER_I_W4NT}
 ##
 
+from __future__ import print_function
+from triton     import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
+
 import sys
 import string
-
-from triton import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
-
 
 # Script options
 DEBUG = False
@@ -150,7 +150,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf-8'))+b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):
@@ -242,7 +242,7 @@ def emulate(pc):
         Triton.processing(instruction)
         count += 1
 
-        #print instruction
+        #print(instruction)
 
         # NOTE: Here is the solution of the challenge. The flag is decoded
         # and written into the memory. So, let's track all memory STORE of
@@ -297,7 +297,7 @@ def makeRelocation(binary):
 
 def debug(s):
     if DEBUG:
-        print '[Triton] %s' %(s)
+        print('[Triton] %s' %(s))
     return
 
 
@@ -306,7 +306,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     if len(sys.argv) < 2:
-        print 'Syntax: %s ./rvs' %(sys.argv[0])
+        print('Syntax: %s ./rvs' %(sys.argv[0]))
         sys.exit(1)
 
     # Load the binary

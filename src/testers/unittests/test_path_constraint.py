@@ -16,12 +16,12 @@ class TestPathConstraint(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.X86)
 
         trace = [
-            "\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
-            "\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
-            "\x31\xd1",                  # xor ecx, edx
-            "\x31\xfa",                  # xor edx, edi
-            "\x31\xD8",                  # xor eax, ebx
-            "\x0F\x84\x55\x00\x00\x00",  # je 0x55
+            b"\x25\xff\xff\xff\x3f",      # and eax, 0x3fffffff
+            b"\x81\xe3\xff\xff\xff\x3f",  # and ebx, 0x3fffffff
+            b"\x31\xd1",                  # xor ecx, edx
+            b"\x31\xfa",                  # xor edx, edi
+            b"\x31\xD8",                  # xor eax, ebx
+            b"\x0F\x84\x55\x00\x00\x00",  # je 0x55
         ]
 
         self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.eax)
@@ -64,4 +64,3 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['dstAddr'], 91)
         self.assertEqual(pc[1]['dstAddr'], 23)
-

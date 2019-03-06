@@ -63,9 +63,7 @@ namespace triton {
       void initExtendNamespace(PyObject* extendDict) {
         PyDict_Clear(extendDict);
 
-        PyObject* aarch64ExtendDict      = xPyDict_New();
-        PyObject* aarch64ExtendDictClass = xPyClass_New(nullptr, aarch64ExtendDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(extendDict, "AARCH64", aarch64ExtendDictClass);
+        PyObject* aarch64ExtendDict = xPyDict_New();
 
         xPyDict_SetItemString(aarch64ExtendDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_INVALID));
         xPyDict_SetItemString(aarch64ExtendDict, "UXTB",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTB));
@@ -76,6 +74,9 @@ namespace triton {
         xPyDict_SetItemString(aarch64ExtendDict, "SXTH",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTH));
         xPyDict_SetItemString(aarch64ExtendDict, "SXTW",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTW));
         xPyDict_SetItemString(aarch64ExtendDict, "SXTX",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTX));
+
+        PyObject* aarch64ExtendDictClass = xPyClass_New(nullptr, aarch64ExtendDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(extendDict, "AARCH64", aarch64ExtendDictClass);
       }
 
     }; /* python namespace */

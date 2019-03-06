@@ -1,5 +1,6 @@
 # Pintool
-if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+# FIXME: python3
+if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT PYTHON36)
     enable_testing()
 
     set(TRITON_SCRIPT ${CMAKE_BINARY_DIR}/triton)
@@ -30,5 +31,5 @@ endif()
 # Misc
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
     enable_testing()
-    add_test(UnicornAArch64Semantics sh -c "python ${CMAKE_CURRENT_SOURCE_DIR}/unicorn_test_aarch64.py")
+    add_test(UnicornAArch64Semantics sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/unicorn_test_aarch64.py")
 endif()

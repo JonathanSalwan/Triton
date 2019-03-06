@@ -66,13 +66,14 @@
 ##  ./solve.py  0.10s user 0.00s system 99% cpu 0.105 total
 ##
 
+from __future__ import print_function
+from triton     import *
+
 import random
 import string
 import sys
 import lief
 import os
-
-from triton import *
 
 DEBUG  = True
 INPUT  = 'arm64'
@@ -82,7 +83,7 @@ VALID  = False
 
 # The debug function
 def debug(s):
-    if DEBUG: print s
+    if DEBUG: print(s)
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -139,8 +140,8 @@ def libcMainHandler(ctx):
     ctx.concretizeRegister(ctx.registers.x1)
 
     argvs = [
-        TARGET, # argv[0]
-        INPUT
+        bytes(TARGET.encode('utf-8')), # argv[0]
+        bytes(INPUT.encode('utf-8'))
     ]
 
     # Define argc / argv
@@ -150,7 +151,7 @@ def libcMainHandler(ctx):
     index = 0
     for argv in argvs:
         addrs.append(base)
-        ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
+        ctx.setConcreteMemoryAreaValue(base, argv+b'\x00')
         if index == 1:
             # Only symbolized argv[1]
             for indexCell in range(len(argv)):
@@ -223,7 +224,7 @@ def emulate(ctx, pc):
             debug('[-] Instruction not supported: %s' %(str(instruction)))
             break
 
-        #print instruction
+        #print(instruction)
 
         # .text:0000000000000864 ADRP  X0, #aWin@PAGE ; "Win"
         # .text:0000000000000868 ADD   X0, X0, #aWin@PAGEOFF ; "Win"
@@ -236,7 +237,7 @@ def emulate(ctx, pc):
         # .text:000000000000085C CMP   W1, W0
         # .text:0000000000000860 B.NE  loc_874
         if pc == 0x85c and SERIAL is None:
-            print '[+] Please wait, calculating hash collisions...'
+            print('[+] Please wait, calculating hash collisions...')
             x1 = ctx.getSymbolicRegister(ctx.registers.x1)
 
             SymVar_0 = ctx.getSymbolicVariableFromName('SymVar_0')
@@ -264,15 +265,15 @@ def emulate(ctx, pc):
 
             # Get max 20 different models
             models = ctx.getModels(expr, 20)
-            print '[+] Found several hash collisions:'
+            print('[+] Found several hash collisions:')
             for model in models:
-                print {k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in model.items()}
+                print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
 
             SERIAL = str()
-            for _, v in models[0].items():
+            for _, v in list(models[0].items()):
                 SERIAL += "%c" % (v.getValue())
 
-            print '[+] Pick up the first serial: %s' %(SERIAL)
+            print('[+] Pick up the first serial: %s' %(SERIAL))
 
         # Inc the number of instructions exected
         count += 1
@@ -370,7 +371,7 @@ def main():
     INPUT = SERIAL
 
     # Second emulation
-    print '[+] Start a second emualtion with the good serial to validate the chall'
+    print('[+] Start a second emualtion with the good serial to validate the chall')
     run(ctx, binary)
 
     return not VALID == True

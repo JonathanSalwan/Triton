@@ -21,6 +21,7 @@
 #include <triton/modes.hpp>
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>
+#include <triton/shortcutRegister.hpp>
 #include <triton/solverEngine.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
@@ -65,6 +66,10 @@ namespace triton {
 
 
       public:
+        //! A shortcut to access to a Register class from a register name.
+        triton::arch::ShortcutRegister registers;
+
+
         //! Constructor of the API.
         TRITON_EXPORT API();
 

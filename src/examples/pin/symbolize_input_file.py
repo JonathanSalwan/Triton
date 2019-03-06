@@ -49,7 +49,7 @@ def syscallsEntry(threadId, std):
         name = getMemoryString(getSyscallArgument(std, 0))
         if name == targetName:
             isOpen = True
-            print '[TT] Target name match: %s' %(name)
+            print('[TT] Target name match: %s' %(name))
 
     elif getSyscallNumber(std) == SYSCALL64.READ:
         fd   = getSyscallArgument(std, 0)
@@ -69,12 +69,12 @@ def syscallsExit(threadId, std):
     if isOpen:
         targetFd = getSyscallReturn(std)
         isOpen = False
-        print '[TT] Target fd: %d' %(targetFd)
+        print('[TT] Target fd: %d' %(targetFd))
 
     elif isRead is not None:
         size = isRead['size']
         buff = isRead['buff']
-        print '[TT] Symbolizing the input file'
+        print('[TT] Symbolizing the input file')
         for index in range(size):
             Triton.setConcreteMemoryValue(buff+index, getCurrentMemoryValue(buff+index))
             Triton.convertMemoryToSymbolicVariable(MemoryAccess(buff+index, CPUSIZE.BYTE))
@@ -87,7 +87,7 @@ def fini():
     pc = Triton.getPathConstraintsAst()
     astCtxt = Triton.getAstContext()
     m = Triton.getModel(astCtxt.lnot(pc))
-    print '[TT] Model:', m
+    print('[TT] Model:', m)
     return
 
 

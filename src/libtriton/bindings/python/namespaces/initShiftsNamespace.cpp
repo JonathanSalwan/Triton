@@ -51,15 +51,16 @@ namespace triton {
       void initShiftsNamespace(PyObject* shiftsDict) {
         PyDict_Clear(shiftsDict);
 
-        PyObject* aarch64ShiftsDict      = xPyDict_New();
-        PyObject* aarch64ShiftsDictClass = xPyClass_New(nullptr, aarch64ShiftsDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(shiftsDict, "AARCH64", aarch64ShiftsDictClass);
+        PyObject* aarch64ShiftsDict = xPyDict_New();
 
         xPyDict_SetItemString(aarch64ShiftsDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_INVALID));
         xPyDict_SetItemString(aarch64ShiftsDict, "ASR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_ASR));
         xPyDict_SetItemString(aarch64ShiftsDict, "LSL",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_LSL));
         xPyDict_SetItemString(aarch64ShiftsDict, "LSR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_LSR));
         xPyDict_SetItemString(aarch64ShiftsDict, "ROR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_ROR));
+
+        PyObject* aarch64ShiftsDictClass = xPyClass_New(nullptr, aarch64ShiftsDict, xPyString_FromString("AARCH64"));
+        xPyDict_SetItemString(shiftsDict, "AARCH64", aarch64ShiftsDictClass);
       }
 
     }; /* python namespace */

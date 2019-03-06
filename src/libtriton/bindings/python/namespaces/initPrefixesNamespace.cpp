@@ -43,15 +43,16 @@ namespace triton {
       void initPrefixesNamespace(PyObject* prefixesDict) {
         PyDict_Clear(prefixesDict);
 
-        PyObject* x86PrefixesDict      = xPyDict_New();
-        PyObject* x86PrefixesDictClass = xPyClass_New(nullptr, x86PrefixesDict, xPyString_FromString("X86"));
-        xPyDict_SetItemString(prefixesDict, "X86", x86PrefixesDictClass);
+        PyObject* x86PrefixesDict = xPyDict_New();
 
         xPyDict_SetItemString(x86PrefixesDict, "INVALID", PyLong_FromUint32(triton::arch::x86::ID_PREFIX_INVALID));
         xPyDict_SetItemString(x86PrefixesDict, "LOCK",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_LOCK));
         xPyDict_SetItemString(x86PrefixesDict, "REP",     PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REP));
         xPyDict_SetItemString(x86PrefixesDict, "REPE",    PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPE));
         xPyDict_SetItemString(x86PrefixesDict, "REPNE",   PyLong_FromUint32(triton::arch::x86::ID_PREFIX_REPNE));
+
+        PyObject* x86PrefixesDictClass = xPyClass_New(nullptr, x86PrefixesDict, xPyString_FromString("X86"));
+        xPyDict_SetItemString(prefixesDict, "X86", x86PrefixesDictClass);
       }
 
     }; /* python namespace */

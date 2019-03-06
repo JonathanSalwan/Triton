@@ -37,11 +37,11 @@ This object is used to represent a path constraint.
 >>> pcl = ctxt.getPathConstraints()
 >>> for pc in pcl:
 ...     if pc.isMultipleBranches():
-...         b1   =  pc.getBranchConstraints()[0]['constraint']
-...         b2   =  pc.getBranchConstraints()[1]['constraint']
+...         b1 =  pc.getBranchConstraints()[0]['constraint']
+...         b2 =  pc.getBranchConstraints()[1]['constraint']
 ...
-...         print 'Constraint branch 1:', b1
-...         print 'Constraint branch 2:', b2
+...         print('Constraint branch 1: %s' % (b1))
+...         print('Constraint branch 2: %s' % (b2))
 ...
 ...         seed = list()
 ...
@@ -56,7 +56,7 @@ This object is used to represent a path constraint.
 ...             seed.append(v)
 ...
 ...         if seed:
-...             print 'B1: %s (%c)  |  B2: %s (%c)' % (seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue()))
+...             print('B1: %s (%c)  |  B2: %s (%c)' % (seed[0], chr(seed[0].getValue()), seed[1], chr(seed[1].getValue())))
 ...
 
 ~~~~~~~~~~~~~
@@ -112,10 +112,10 @@ namespace triton {
           ret = xPyList_New(branches.size());
           for (triton::usize index = 0; index != branches.size(); index++) {
             PyObject* dict = xPyDict_New();
-            xPyDict_SetItem(dict, PyString_FromString("isTaken"),    PyBool_FromLong(std::get<0>(branches[index])));
-            xPyDict_SetItem(dict, PyString_FromString("srcAddr"),    PyLong_FromUint64(std::get<1>(branches[index])));
-            xPyDict_SetItem(dict, PyString_FromString("dstAddr"),    PyLong_FromUint64(std::get<2>(branches[index])));
-            xPyDict_SetItem(dict, PyString_FromString("constraint"), PyAstNode(std::get<3>(branches[index])));
+            xPyDict_SetItem(dict, PyStr_FromString("isTaken"),    PyBool_FromLong(std::get<0>(branches[index])));
+            xPyDict_SetItem(dict, PyStr_FromString("srcAddr"),    PyLong_FromUint64(std::get<1>(branches[index])));
+            xPyDict_SetItem(dict, PyStr_FromString("dstAddr"),    PyLong_FromUint64(std::get<2>(branches[index])));
+            xPyDict_SetItem(dict, PyStr_FromString("constraint"), PyAstNode(std::get<3>(branches[index])));
             PyList_SetItem(ret, index, dict);
           }
 
@@ -170,8 +170,7 @@ namespace triton {
 
 
       PyTypeObject PathConstraint_Type = {
-        PyObject_HEAD_INIT(&PyType_Type)
-        0,                                          /* ob_size */
+        PyVarObject_HEAD_INIT(&PyType_Type, 0)
         "PathConstraint",                           /* tp_name */
         sizeof(PathConstraint_Object),              /* tp_basicsize */
         0,                                          /* tp_itemsize */
@@ -217,7 +216,12 @@ namespace triton {
         0,                                          /* tp_subclasses */
         0,                                          /* tp_weaklist */
         (destructor)PathConstraint_dealloc,         /* tp_del */
+        #if IS_PY3
+        0,                                          /* tp_version_tag */
+        0,                                          /* tp_finalize */
+        #else
         0                                           /* tp_version_tag */
+        #endif
       };
 
 

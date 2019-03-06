@@ -76,7 +76,7 @@ class DefCamp2015(object):
 
                 model = self.Triton.getModel(cstr)
                 solution = str()
-                for k, v in model.items():
+                for k, v in list(model.items()):
                     value = v.getValue()
                     solution += chr(value)
                     self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
@@ -152,7 +152,7 @@ class SeedCoverage(object):
         """Add symboles in memory for seed."""
         self.Triton.concretizeAllRegister()
         self.Triton.concretizeAllMemory()
-        for address, value in seed.items():
+        for address, value in list(seed.items()):
             self.Triton.setConcreteMemoryValue(address, value)
             self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
             self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
@@ -162,65 +162,65 @@ class SeedCoverage(object):
         function = {
             #   <serial> function
             #   push    rbp
-            0x40056d: "\x55",
+            0x40056d: b"\x55",
             #   mov     rbp,rsp
-            0x40056e: "\x48\x89\xe5",
+            0x40056e: b"\x48\x89\xe5",
             #   mov     QWORD PTR [rbp-0x18],rdi
-            0x400571: "\x48\x89\x7d\xe8",
+            0x400571: b"\x48\x89\x7d\xe8",
             #   mov     DWORD PTR [rbp-0x4],0x0
-            0x400575: "\xc7\x45\xfc\x00\x00\x00\x00",
+            0x400575: b"\xc7\x45\xfc\x00\x00\x00\x00",
             #   jmp     4005bd <check+0x50>
-            0x40057c: "\xeb\x3f",
+            0x40057c: b"\xeb\x3f",
             #   mov     eax,DWORD PTR [rbp-0x4]
-            0x40057e: "\x8b\x45\xfc",
+            0x40057e: b"\x8b\x45\xfc",
             #   movsxd  rdx,eax
-            0x400581: "\x48\x63\xd0",
+            0x400581: b"\x48\x63\xd0",
             #   mov     rax,QWORD PTR [rbp-0x18]
-            0x400584: "\x48\x8b\x45\xe8",
+            0x400584: b"\x48\x8b\x45\xe8",
             #   add     rax,rdx
-            0x400588: "\x48\x01\xd0",
+            0x400588: b"\x48\x01\xd0",
             #   movzx   eax,BYTE PTR [rax]
-            0x40058b: "\x0f\xb6\x00",
+            0x40058b: b"\x0f\xb6\x00",
             #   movsx   eax,al
-            0x40058e: "\x0f\xbe\xc0",
+            0x40058e: b"\x0f\xbe\xc0",
             #   sub     eax,0x1
-            0x400591: "\x83\xe8\x01",
+            0x400591: b"\x83\xe8\x01",
             #   xor     eax,0x55
-            0x400594: "\x83\xf0\x55",
+            0x400594: b"\x83\xf0\x55",
             #   mov     ecx,eax
-            0x400597: "\x89\xc1",
+            0x400597: b"\x89\xc1",
             #   mov     rdx,QWORD PTR [rip+0x200aa0]        # 601040 <serial>
-            0x400599: "\x48\x8b\x15\xa0\x0a\x20\x00",
+            0x400599: b"\x48\x8b\x15\xa0\x0a\x20\x00",
             #   mov     eax,DWORD PTR [rbp-0x4]
-            0x4005a0: "\x8b\x45\xfc",
+            0x4005a0: b"\x8b\x45\xfc",
             #   cdqe
-            0x4005a3: "\x48\x98",
+            0x4005a3: b"\x48\x98",
             #   add     rax,rdx
-            0x4005a5: "\x48\x01\xd0",
+            0x4005a5: b"\x48\x01\xd0",
             #   movzx   eax,BYTE PTR [rax]
-            0x4005a8: "\x0f\xb6\x00",
+            0x4005a8: b"\x0f\xb6\x00",
             #   movsx   eax,al
-            0x4005ab: "\x0f\xbe\xc0",
+            0x4005ab: b"\x0f\xbe\xc0",
             #   cmp     ecx,eax
-            0x4005ae: "\x39\xc1",
+            0x4005ae: b"\x39\xc1",
             #   je      4005b9 <check+0x4c>
-            0x4005b0: "\x74\x07",
+            0x4005b0: b"\x74\x07",
             #   mov     eax,0x1
-            0x4005b2: "\xb8\x01\x00\x00\x00",
+            0x4005b2: b"\xb8\x01\x00\x00\x00",
             #   jmp     4005c8 <check+0x5b>
-            0x4005b7: "\xeb\x0f",
+            0x4005b7: b"\xeb\x0f",
             #   add     DWORD PTR [rbp-0x4],0x1
-            0x4005b9: "\x83\x45\xfc\x01",
+            0x4005b9: b"\x83\x45\xfc\x01",
             #   cmp     DWORD PTR [rbp-0x4],0x4
-            0x4005bd: "\x83\x7d\xfc\x04",
+            0x4005bd: b"\x83\x7d\xfc\x04",
             #   jle     40057e <check+0x11>
-            0x4005c1: "\x7e\xbb",
+            0x4005c1: b"\x7e\xbb",
             #   mov     eax,0x0
-            0x4005c3: "\xb8\x00\x00\x00\x00",
+            0x4005c3: b"\xb8\x00\x00\x00\x00",
             #   pop     rbp
-            0x4005c8: "\x5d",
+            0x4005c8: b"\x5d",
             #   ret
-            0x4005c9: "\xc3",
+            0x4005c9: b"\xc3",
         }
         while ip in function:
             # Build an instruction
@@ -264,7 +264,7 @@ class SeedCoverage(object):
                         # Ask for a model
                         models = self.Triton.getModel(astCtxt.land([previousConstraints, branch['constraint']]))
                         seed = dict()
-                        for k, v in models.items():
+                        for k, v in list(models.items()):
                             # Get the symbolic variable assigned to the model
                             symVar = self.Triton.getSymbolicVariableFromId(k)
                             # Save the new input as seed.
@@ -311,11 +311,11 @@ class SeedCoverage(object):
                 if inputs not in lastInput and inputs not in worklist:
                     worklist += [dict(inputs)]
 
-        self.assertIn({4096L: 101L,
-                       4097L: 108L,
-                       4098L: 105L,
-                       4099L: 116L,
-                       4100L: 101L}, lastInput)
+        self.assertIn({4096: 101,
+                       4097: 108,
+                       4098: 105,
+                       4099: 116,
+                       4100: 101}, lastInput)
 
 
 class Emu1(object):

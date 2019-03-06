@@ -19,20 +19,41 @@ namespace triton {
       /* Triton module */
       PyObject* tritonModule = nullptr; /* Must be global because may be updated on-the-fly */
 
+      PyModuleDef tritonModuleDef = {
+        PyModuleDef_HEAD_INIT,
+        "triton",
+        NULL,
+        -1,
+        #if IS_PY3
+        tritonCallbacks,
+        NULL, /* m_slots    */
+        NULL, /* m_traverse */
+        NULL, /* m_clear    */
+        NULL  /* m_free     */
+        #else
+        tritonCallbacks
+        #endif
+      };
 
-      /* Python entry point */
+      /* Python entry point (Py2/3) */
+      #if IS_PY3
+      PyMODINIT_FUNC PyInit_triton(void) {
+      #else
       PyMODINIT_FUNC inittriton(void) {
-
+        PyInit_triton();
+      }
+      PyObject* PyInit_triton(void) {
+      #endif
         /* Init python */
         Py_Initialize();
 
         /* Create the triton module ================================================================== */
 
-        triton::bindings::python::tritonModule = Py_InitModule("triton", tritonCallbacks);
+        triton::bindings::python::tritonModule = PyModule_Create(&tritonModuleDef);
         if (triton::bindings::python::tritonModule == nullptr) {
           std::cerr << "Failed to initialize the triton bindings" << std::endl;
           PyErr_Print();
-          exit(1);
+          return nullptr;
         }
 
         /* Create the ARCH namespace ================================================================= */
@@ -163,6 +184,8 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL32",           idSyscallsClass32);
         #endif
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
+
+        return triton::bindings::python::tritonModule;
       }
 
     }; /* python namespace */
