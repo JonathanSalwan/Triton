@@ -1074,6 +1074,16 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->getCodeConditionTainteSate(inst));
+
+        /* Set condition flag */
+        if (node->getType() == triton::ast::ITE_NODE) {
+          if (!(node->getChildren()[0]->evaluate().is_zero())) {
+            inst.setConditionTaken(true);
+          }
+        }
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr);
       }
 
 
@@ -1093,6 +1103,12 @@ namespace triton {
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
         expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+        /* Set condition flag */
+        inst.setConditionTaken(true);
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr2);
       }
 
 
@@ -1112,6 +1128,12 @@ namespace triton {
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src);
         expr2->isTainted = this->taintEngine->taintAssignment(dst2, src);
+
+        /* Set condition flag */
+        inst.setConditionTaken(true);
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr2);
       }
 
 
@@ -1127,6 +1149,12 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Set condition flag */
+        inst.setConditionTaken(true);
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr);
       }
 
 
@@ -1151,6 +1179,13 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Set condition flag */
+        if (op1->evaluate() != 0)
+          inst.setConditionTaken(true);
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr);
       }
 
 
@@ -1175,6 +1210,13 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Set condition flag */
+        if (op1->evaluate() == 0)
+          inst.setConditionTaken(true);
+
+        /* Create the path constraint */
+        this->symbolicEngine->addPathConstraint(inst, expr);
       }
 
 
