@@ -949,7 +949,7 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyStr_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::arch::Instruction& arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
         triton::arch::Register arg3 = *PyRegister_AsRegister(flag);
 
@@ -987,7 +987,7 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyStr_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::arch::Instruction& arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
         triton::arch::MemoryAccess arg3 = *PyMemoryAccess_AsMemoryAccess(mem);
 
@@ -1025,7 +1025,7 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyStr_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::arch::Instruction& arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
         triton::arch::Register arg3 = *PyRegister_AsRegister(reg);
 
@@ -1059,7 +1059,7 @@ namespace triton {
         if (comment != nullptr)
           ccomment = PyStr_AsString(comment);
 
-        triton::arch::Instruction arg1 = *PyInstruction_AsInstruction(inst);
+        triton::arch::Instruction& arg1 = *PyInstruction_AsInstruction(inst);
         triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
 
         try {
