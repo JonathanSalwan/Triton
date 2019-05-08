@@ -3421,7 +3421,7 @@ namespace triton {
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintUnion(dst1, dst2);
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
-        expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
+        expr2->isTainted = this->taintEngine->taintUnion(dst2, src1);
 
         /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
@@ -3478,7 +3478,7 @@ namespace triton {
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintUnion(dst1, dst2);
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
-        expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
+        expr2->isTainted = this->taintEngine->taintUnion(dst2, src1);
 
         /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
@@ -3528,7 +3528,7 @@ namespace triton {
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintUnion(dst1, dst2);
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src1);
-        expr2->isTainted = this->taintEngine->taintUnion(dst2, dst1);
+        expr2->isTainted = this->taintEngine->taintUnion(dst2, src1);
 
         /* Tag undefined flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
