@@ -998,11 +998,11 @@ namespace triton {
           //! The PSHUFW semantics.
           void pshufw_s(triton::arch::Instruction& inst);
 
-          //! The PSLLDQ semantics.
-          void pslldq_s(triton::arch::Instruction& inst);
-
           //! The PSLLD semantics.
           void pslld_s(triton::arch::Instruction& inst);
+
+          //! The PSLLDQ semantics.
+          void pslldq_s(triton::arch::Instruction& inst);
 
           //! The PSLLQ semantics.
           void psllq_s(triton::arch::Instruction& inst);
