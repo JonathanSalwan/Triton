@@ -1001,6 +1001,12 @@ namespace triton {
           //! The PSLLDQ semantics.
           void pslldq_s(triton::arch::Instruction& inst);
 
+          //! The PSLLD semantics.
+          void pslld_s(triton::arch::Instruction& inst);
+
+          //! The PSLLQ semantics.
+          void psllq_s(triton::arch::Instruction& inst);
+
           //! The PSRLDQ semantics.
           void psrldq_s(triton::arch::Instruction& inst);
 
@@ -1231,6 +1237,9 @@ namespace triton {
 
           //! The VPAND semantics.
           void vpand_s(triton::arch::Instruction& inst);
+
+          //! The VPMOVMSKB semantics.
+          void vpmovmskb_s(triton::arch::Instruction& inst);
 
           //! The VPANDN semantics.
           void vpandn_s(triton::arch::Instruction& inst);
