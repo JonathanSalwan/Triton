@@ -143,6 +143,7 @@ SUB (shifted register)        | Subtract (shifted register)
 SUBS (extended register)      | Subtract (extended register), setting flags
 SUBS (immediate)              | Subtract (immediate), setting flags
 SUBS (shifted register)       | Subtract (shifted register), setting flags
+SVC                           | Supervisor Call
 SXTB                          | Signed Extend Byte: an alias of SBFM
 SXTH                          | Sign Extend Halfword: an alias of SBFM
 SXTW                          | Sign Extend Word: an alias of SBFM
@@ -274,6 +275,7 @@ namespace triton {
           case ID_INS_STURB:     this->sturb_s(inst);         break;
           case ID_INS_STURH:     this->sturh_s(inst);         break;
           case ID_INS_SUB:       this->sub_s(inst);           break;
+          case ID_INS_SVC:       this->svc_s(inst);           break;
           case ID_INS_SXTB:      this->sxtb_s(inst);          break;
           case ID_INS_SXTH:      this->sxth_s(inst);          break;
           case ID_INS_SXTW:      this->sxtw_s(inst);          break;
@@ -3439,6 +3441,17 @@ namespace triton {
           this->vfSub_s(inst, expr, dst, op1, op2);
           this->zf_s(inst, expr, dst);
         }
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void AArch64Semantics::svc_s(triton::arch::Instruction& inst) {
+        auto& src = inst.operands[0];
+
+        /* Link the immediate to the instruction */
+        this->symbolicEngine->getOperandAst(inst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);

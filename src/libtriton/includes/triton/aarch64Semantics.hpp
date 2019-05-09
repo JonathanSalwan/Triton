@@ -408,6 +408,9 @@ namespace triton {
           //! The SUB semantics.
           void sub_s(triton::arch::Instruction& inst);
 
+          //! The SVC semantics.
+          void svc_s(triton::arch::Instruction& inst);
+
           //! The SXTB semantics.
           void sxtb_s(triton::arch::Instruction& inst);
 
