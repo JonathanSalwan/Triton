@@ -228,6 +228,7 @@ PSHUFW                       | sse1       | Shuffle Packed Words
 PSLLD                        | mmx/ssed2  | Shift Doubleword Left Logical
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSLLQ                        | mmx/ssed2  | Shift Quadword Left Logical
+PSLLW                        | mmx/ssed2  | Shift Word Left Logical
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PSUBB                        | mmx/sse2   | Subtract packed byte integers
 PSUBD                        | mmx/sse2   | Subtract packed doubleword integers
@@ -551,6 +552,7 @@ namespace triton {
           case ID_INS_PSLLD:          this->pslld_s(inst);        break;
           case ID_INS_PSLLDQ:         this->pslldq_s(inst);       break;
           case ID_INS_PSLLQ:          this->psllq_s(inst);        break;
+          case ID_INS_PSLLW:          this->psllw_s(inst);        break;
           case ID_INS_PSRLDQ:         this->psrldq_s(inst);       break;
           case ID_INS_PSUBB:          this->psubb_s(inst);        break;
           case ID_INS_PSUBD:          this->psubd_s(inst);        break;
@@ -9609,6 +9611,50 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLQ operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::psllw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->astCtxt->zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> packed;
+
+        switch (dst.getBitSize()) {
+          /* XMM */
+          case DQWORD_SIZE_BIT:
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(127, 112, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(111,  96, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 95,  80, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 79,  64, op1), this->astCtxt->extract(15, 0, op2)));
+
+          /* MMX */
+          case QWORD_SIZE_BIT:
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(63, 48, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(47, 32, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(31, 16, op1), this->astCtxt->extract(15, 0, op2)));
+            packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(15,  0, op1), this->astCtxt->extract(15, 0, op2)));
+            break;
+
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::psllw_s(): Invalid operand size.");
+        }
+
+        auto node = this->astCtxt->concat(packed);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLW operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);

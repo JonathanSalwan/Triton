@@ -3706,6 +3706,39 @@ void check(void)
   asm("pslld mm1, mm3");
 
   asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("psllw xmm1, 0");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab2));
+  asm("psllw xmm1, 8");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab3));
+  asm("psllw xmm1, 31");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("psllw xmm1, 32");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("psllw xmm1, 33");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab2));
+  asm("psllw xmm1, 120");
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("psllw xmm1, xmm2");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab2));
+  asm("psllw xmm1, xmm2");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab3));
+  asm("psllw xmm1, xmm2");
+
+  asm("psllw xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("psllw xmm1, xmmword ptr [%0]" :: "r"(tab2));
+  asm("psllw xmm1, xmmword ptr [%0]" :: "r"(tab3));
+  asm("psllw xmm1, xmmword ptr [%0]" :: "r"(tab4));
+
+  asm("psllw mm1, 1");
+  asm("psllw mm1, 2");
+  asm("psllw mm1, 3");
+
+  asm("psllw mm1, mm1");
+  asm("psllw mm1, mm2");
+  asm("psllw mm1, mm3");
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("psllq xmm1, 0");
   asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab2));
   asm("psllq xmm1, 8");

@@ -1007,6 +1007,9 @@ namespace triton {
           //! The PSLLQ semantics.
           void psllq_s(triton::arch::Instruction& inst);
 
+          //! The PSLLW semantics.
+          void psllw_s(triton::arch::Instruction& inst);
+
           //! The PSRLDQ semantics.
           void psrldq_s(triton::arch::Instruction& inst);
 
