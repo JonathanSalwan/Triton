@@ -5445,7 +5445,6 @@ namespace triton {
         if (!op1->evaluate().is_zero() || !op2->evaluate().is_zero())
           inst.setConditionTaken(true);
 
-
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(pc, cf);
         expr->isTainted = this->taintEngine->taintUnion(pc, zf);
@@ -11381,14 +11380,14 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETA operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero() && op3->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, cf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, cf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11412,13 +11411,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETAE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, cf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11442,13 +11441,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETB operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, cf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, cf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11474,14 +11473,14 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETBE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero() || !op3->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, cf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, cf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11505,13 +11504,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11539,15 +11538,15 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETG operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if ((op2->evaluate().is_zero() == op3->evaluate().is_zero()) && op4->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, of);
+        expr->isTainted = this->taintEngine->taintUnion(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11573,14 +11572,14 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETGE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero() == op3->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11606,14 +11605,14 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETL operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero() != op3->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11641,15 +11640,15 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETLE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if ((op2->evaluate().is_zero() != op3->evaluate().is_zero()) || !op4->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
+        expr->isTainted = this->taintEngine->taintUnion(dst, of);
+        expr->isTainted = this->taintEngine->taintUnion(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11673,13 +11672,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNE operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, zf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11703,13 +11702,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNO operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11733,13 +11732,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNP operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, pf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, pf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11763,13 +11762,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETNS operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11793,13 +11792,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETO operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, of);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11823,13 +11822,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETP operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, pf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, pf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -11853,13 +11852,13 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "SETS operation");
 
-        /* Spread taint and condition flag */
+        /* Set condition flag */
         if (!op2->evaluate().is_zero()) {
-          expr->isTainted = this->taintEngine->taintUnion(dst, sf);
           inst.setConditionTaken(true);
         }
-        else
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, sf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
