@@ -7,15 +7,15 @@
 ##################################################################################### CMake libtriton
 
 add_custom_target(gen_x86_doc_from_spec
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/x86.spec "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py ${TRITON_ROOT}/src/libtriton/includes/triton/x86.spec "${CMAKE_CURRENT_BINARY_DIR}"
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py
-    DEPENDS ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/x86.spec
+    DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/x86.spec
 )
 
 add_custom_target(gen_aarch64_doc_from_spec
-    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/aarch64.spec "${CMAKE_CURRENT_BINARY_DIR}"
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py ${TRITON_ROOT}/src/libtriton/includes/triton/aarch64.spec "${CMAKE_CURRENT_BINARY_DIR}"
     DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py
-    DEPENDS ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton/aarch64.spec
+    DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/aarch64.spec
 )
 
 add_custom_target(doc

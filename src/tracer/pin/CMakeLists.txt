@@ -4,7 +4,7 @@ set(PROJECT_PINTOOL "pintool")
 add_definitions(-DTRITON_PINTOOL)
 
 # Root directory of the Pin toolkit
-set(PIN_ROOT "${CMAKE_SOURCE_DIR}/../../.." CACHE PATH "Path to pin root directory")
+set(PIN_ROOT "${TRITON_ROOT}/../../.." CACHE PATH "Path to pin root directory")
 
 # Specific Linux CXX Flags
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -98,7 +98,7 @@ endif()
 file(
     GLOB_RECURSE
     PINTOOL_SOURCE_FILES
-    ${CMAKE_SOURCE_DIR}/src/tracer/pin/*
+    ${TRITON_ROOT}/src/tracer/pin/*
 )
 
 add_library(${PROJECT_PINTOOL} SHARED ${PINTOOL_SOURCE_FILES})
@@ -130,13 +130,13 @@ endif()
 # Generate Triton pintool script
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     configure_file(
-        ${CMAKE_SOURCE_DIR}/src/scripts/triton.in
+        ${TRITON_ROOT}/src/scripts/triton.in
         ${CMAKE_BINARY_DIR}/triton
         IMMEDIATE @ONLY
     )
 
     configure_file(
-        ${CMAKE_SOURCE_DIR}/src/scripts/tritonAttach.in
+        ${TRITON_ROOT}/src/scripts/tritonAttach.in
         ${CMAKE_BINARY_DIR}/tritonAttach
         IMMEDIATE @ONLY
     )
