@@ -3750,6 +3750,9 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(cf)
+          || this->taintEngine->isTainted(zf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3779,6 +3782,8 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(cf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3807,6 +3812,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(cf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3839,6 +3846,9 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(cf)
+          || this->taintEngine->isTainted(zf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3867,6 +3877,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3901,6 +3913,10 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(sf)
+            || this->taintEngine->isTainted(of)
+            || this->taintEngine->isTainted(zf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3932,6 +3948,9 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(sf)
+          || this->taintEngine->isTainted(of);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -3962,6 +3981,10 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(sf)
+          || this->taintEngine->isTainted(of);
+
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3996,6 +4019,10 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(sf)
+          || this->taintEngine->isTainted(of)
+          || this->taintEngine->isTainted(zf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -4024,6 +4051,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4054,6 +4083,8 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(of);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -4082,6 +4113,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(pf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4112,6 +4145,8 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(sf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -4140,6 +4175,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4170,6 +4207,8 @@ namespace triton {
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
+        expr->isTainted |= this->taintEngine->isTainted(pf);
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -4198,6 +4237,8 @@ namespace triton {
         }
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+        expr->isTainted |= this->taintEngine->isTainted(sf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
