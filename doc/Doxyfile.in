@@ -684,7 +684,7 @@ FILE_VERSION_FILTER    =
 # DoxygenLayout.xml, doxygen will parse it automatically even if the LAYOUT_FILE
 # tag is left empty.
 
-LAYOUT_FILE            = @CMAKE_SOURCE_DIR@/doc/DoxygenLayout.xml
+LAYOUT_FILE            = @TRITON_ROOT@/doc/DoxygenLayout.xml
 
 # The CITE_BIB_FILES tag can be used to specify one or more bib files containing
 # the reference definitions. This must be a list of .bib files. The .bib
@@ -765,8 +765,8 @@ WARN_LOGFILE           =
 # spaces. See also FILE_PATTERNS and EXTENSION_MAPPING
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                 += @CMAKE_SOURCE_DIR@/src/libtriton
-INPUT                 += @CMAKE_SOURCE_DIR@/src/tracer
+INPUT                 += @TRITON_ROOT@/src/libtriton
+INPUT                 += @TRITON_ROOT@/src/tracer
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -839,7 +839,7 @@ EXCLUDE_SYMBOLS        =
 # that contain example code fragments that are included (see the \include
 # command).
 
-EXAMPLE_PATH            = @CMAKE_SOURCE_DIR@/src/examples
+EXAMPLE_PATH            = @TRITON_ROOT@/src/examples
 EXAMPLE_PATH           += @CMAKE_BINARY_DIR@/doc
 
 # If the value of the EXAMPLE_PATH tag contains directories, you can use the
@@ -1064,7 +1064,7 @@ HTML_FILE_EXTENSION    = .html
 # of the possible markers and block names see the documentation.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_HEADER            = @CMAKE_SOURCE_DIR@/doc/header.html
+HTML_HEADER            = @TRITON_ROOT@/doc/header.html
 
 # The HTML_FOOTER tag can be used to specify a user-defined HTML footer for each
 # generated HTML page. If the tag is left blank doxygen will generate a standard
@@ -1074,7 +1074,7 @@ HTML_HEADER            = @CMAKE_SOURCE_DIR@/doc/header.html
 # that doxygen normally uses.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_FOOTER            = @CMAKE_SOURCE_DIR@/doc/footer.html
+HTML_FOOTER            = @TRITON_ROOT@/doc/footer.html
 
 # The HTML_STYLESHEET tag can be used to specify a user-defined cascading style
 # sheet that is used by each HTML page. It can be used to fine-tune the look of
@@ -1086,7 +1086,7 @@ HTML_FOOTER            = @CMAKE_SOURCE_DIR@/doc/footer.html
 # obsolete.
 # This tag requires that the tag GENERATE_HTML is set to YES.
 
-HTML_STYLESHEET        = @CMAKE_SOURCE_DIR@/doc/customdoxygen.css
+HTML_STYLESHEET        = @TRITON_ROOT@/doc/customdoxygen.css
 
 # The HTML_EXTRA_STYLESHEET tag can be used to specify additional user-defined
 # cascading style sheets that are included after the standard style sheets
@@ -1980,7 +1980,7 @@ SEARCH_INCLUDES        = YES
 # preprocessor.
 # This tag requires that the tag SEARCH_INCLUDES is set to YES.
 
-INCLUDE_PATH           = @CMAKE_SOURCE_DIR@/src/libtriton/includes
+INCLUDE_PATH           = @TRITON_ROOT@/src/libtriton/includes
 
 # You can use the INCLUDE_FILE_PATTERNS tag to specify one or more wildcard
 # patterns (like *.h and *.hpp) to filter out the header-files in the

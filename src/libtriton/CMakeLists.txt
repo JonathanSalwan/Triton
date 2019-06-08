@@ -57,7 +57,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
 endif()
 
 # Add Triton includes
-include_directories("${CMAKE_SOURCE_DIR}/src/libtriton/includes")
+include_directories("${TRITON_ROOT}/src/libtriton/includes")
 include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
 
 # Define all source files
@@ -173,7 +173,7 @@ endif()
 # Create syscall generted file directory
 file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/os/unix/)
 
-set(EXTRACT_SYSCALL_SCRIPT ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py)
+set(EXTRACT_SYSCALL_SCRIPT ${TRITON_ROOT}/src/scripts/extract_syscall.py)
 
 macro(gen_syscall bits)
     # If the unistd_64.h or syscall.h is not found, we exit
@@ -185,7 +185,7 @@ macro(gen_syscall bits)
     set(OUT_SYSCALL${bits} ${CMAKE_CURRENT_BINARY_DIR}/os/unix/syscalls${bits}.cpp)
 
     # We generate the syscalls${bits}.cpp from the unistd_${bits}.h or syscall.h.
-    # Added python after COMMAND since to be sure that if ${CMAKE_SOURCE_DIR}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
+    # Added python after COMMAND since to be sure that if ${TRITON_ROOT}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
     add_custom_command(
         OUTPUT ${OUT_SYSCALL${bits}}
         COMMAND ${PYTHON_EXECUTABLE} ${EXTRACT_SYSCALL_SCRIPT} ${syscalls${bits}_table_file} ${bits} > ${OUT_SYSCALL${bits}}
@@ -234,6 +234,7 @@ endif()
 
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${Z3_INTERFACE_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
+add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies
@@ -249,7 +250,7 @@ add_dependencies(check triton)
 
 # Add the install targets
 install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
-install (DIRECTORY ${CMAKE_SOURCE_DIR}/src/libtriton/includes/triton DESTINATION include)
+install (DIRECTORY ${TRITON_ROOT}/src/libtriton/includes/triton DESTINATION include)
 install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
 
 # Install Python bindings
