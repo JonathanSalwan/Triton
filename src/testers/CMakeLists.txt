@@ -5,9 +5,9 @@ if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT PYTHON36)
 
     set(TRITON_SCRIPT ${CMAKE_BINARY_DIR}/triton)
 
-    add_test(PinToolCheckUnsupportedSemantic    sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/unsuported_semantics.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
-    add_test(PinToolCheckSemantic               sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/check_semantics.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
-    add_test(PinToolCheckSemanticQemu           sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_SOURCE_DIR}/qemu-test-x86_64.py ${TRITON_ROOT}/src/samples/ir_test_suite/qemu-test-x86_64| tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
+    add_test(PinToolCheckUnsupportedSemantic    sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_LIST_DIR}/unsuported_semantics.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
+    add_test(PinToolCheckSemantic               sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_LIST_DIR}/check_semantics.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
+    add_test(PinToolCheckSemanticQemu           sh -c "${TRITON_SCRIPT} ${CMAKE_CURRENT_LIST_DIR}/qemu-test-x86_64.py ${TRITON_ROOT}/src/samples/ir_test_suite/qemu-test-x86_64| tee /tmp/tester_triton_xxx && ! grep -nr KO /tmp/tester_triton_xxx")
     add_test(PinToolBlackList                   sh -c "${TRITON_SCRIPT} ${TRITON_ROOT}/src/examples/pin/blacklist.py ${TRITON_ROOT}/src/samples/crackmes/crackme_xor a | tee /tmp/tester_triton_xxx && grep -nr fail /tmp/tester_triton_xxx") # FAIL
     add_test(PinToolCallBackConcreteNeeds       sh -c "${TRITON_SCRIPT} ${TRITON_ROOT}/src/examples/pin/callback_concrete_needs.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && grep -nr \"Need concrete register value\" /tmp/tester_triton_xxx") # WIN OR FAIL, DUNNO
     add_test(PinToolCallBackImage               sh -c "${TRITON_SCRIPT} ${TRITON_ROOT}/src/examples/pin/callback_image.py ${TRITON_ROOT}/src/samples/ir_test_suite/ir | tee /tmp/tester_triton_xxx && grep -nr \"Image size:\" /tmp/tester_triton_xxx") # WIN OR FAIL, DUNNO
@@ -31,5 +31,5 @@ endif()
 # Misc
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
     enable_testing()
-    add_test(UnicornAArch64Semantics sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/unicorn_test_aarch64.py")
+    add_test(UnicornAArch64Semantics sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/unicorn_test_aarch64.py")
 endif()
