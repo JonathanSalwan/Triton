@@ -40,7 +40,7 @@ if(PYTHON_BINDINGS)
     endif()
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     add_custom_target(test-python
-        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${CMAKE_CURRENT_LIST_DIR}/src/testers/unittests
+        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
     )
 else()
@@ -55,7 +55,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
         COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
         COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
-        COMMAND ${PYTHONPATH_CMD} ${CMAKE_CURRENT_LIST_DIR}/src/scripts/run_linux_test.sh
+        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
         COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
         COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
         COMMAND genhtml coverage.info -o coverage
@@ -64,7 +64,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
   else()
     # Special handling of Linux test to check if pin can be attached on other binaries.
     add_custom_target(check
-        COMMAND ${PYTHONPATH_CMD} ${CMAKE_CURRENT_LIST_DIR}/src/scripts/run_linux_test.sh
+        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
         DEPENDS test-python
     )
   endif()
@@ -108,19 +108,19 @@ endif()
 # Triton version
 if(INCBUILD)
     # Get and increment the build number
-    file(READ ${CMAKE_CURRENT_LIST_DIR}/.build_number BUILD_NUMBER)
+    file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
     math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
-    file(WRITE ${CMAKE_CURRENT_LIST_DIR}/.build_number ${NEW_BUILD_NUMBER})
+    file(WRITE ${TRITON_ROOT}/.build_number ${NEW_BUILD_NUMBER})
 endif()
 
 # Read the build version
-file(READ ${CMAKE_CURRENT_LIST_DIR}/.build_number BUILD_NUMBER)
+file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
 set(VERSION_MINOR 7)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 # Custom cmake search
-list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/CMakeModules/")
+list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
 
 # Find Python 2.7
 if(PYTHON_BINDINGS)
@@ -188,7 +188,7 @@ if(PINTOOL)
 endif()
 
 # Add triton includes for every project
-include_directories("${CMAKE_CURRENT_LIST_DIR}/src/libtriton/includes")
+include_directories("${TRITON_ROOT}/src/libtriton/includes")
 
 set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
