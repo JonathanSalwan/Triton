@@ -3747,11 +3747,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(cf)
-          || this->taintEngine->isTainted(zf);
+        expr->isTainted |= this->taintEngine->isTainted(cf) || this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3779,8 +3779,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(cf);
 
@@ -3810,8 +3811,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(cf);
 
@@ -3843,11 +3845,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(cf)
-          || this->taintEngine->isTainted(zf);
+        expr->isTainted |= this->taintEngine->isTainted(cf) || this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3875,8 +3877,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(zf);
 
@@ -3910,12 +3913,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(sf)
-            || this->taintEngine->isTainted(of)
-            || this->taintEngine->isTainted(zf);
+        expr->isTainted |= this->taintEngine->isTainted(sf) || this->taintEngine->isTainted(of) || this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3945,11 +3947,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(sf)
-          || this->taintEngine->isTainted(of);
+        expr->isTainted |= this->taintEngine->isTainted(sf) || this->taintEngine->isTainted(of);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -3979,11 +3981,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(sf)
-          || this->taintEngine->isTainted(of);
+        expr->isTainted |= this->taintEngine->isTainted(sf) || this->taintEngine->isTainted(of);
 
 
         /* Update the symbolic control flow */
@@ -4016,12 +4018,11 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
-        expr->isTainted |= this->taintEngine->isTainted(sf)
-          || this->taintEngine->isTainted(of)
-          || this->taintEngine->isTainted(zf);
+        expr->isTainted |= this->taintEngine->isTainted(sf) || this->taintEngine->isTainted(of) || this->taintEngine->isTainted(zf);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -4049,8 +4050,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(zf);
 
@@ -4080,8 +4082,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(of);
 
@@ -4111,8 +4114,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(pf);
 
@@ -4142,8 +4146,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(sf);
 
@@ -4173,8 +4178,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(of);
 
@@ -4204,8 +4210,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(pf);
 
@@ -4235,8 +4242,9 @@ namespace triton {
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
           inst.setConditionTaken(true);
         }
-        else
+        else {
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+        }
 
         expr->isTainted |= this->taintEngine->isTainted(sf);
 
