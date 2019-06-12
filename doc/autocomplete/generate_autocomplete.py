@@ -143,11 +143,15 @@ def gen_module_for_namespace(classname, input_str):
     if not matches:
         return ""
 
+    submodules = set()
     for match in matches:
-        member = '    {member} = triton.{namespace}.{member}'.format(
-            member = match.group('member'), namespace=classname)
+        member = '    {member} = triton.{namespace}.{member}'.format(member = match.group('member'), namespace=classname)
         members.append(member)
+        submod = member.split('=')[0].split('.')[:-1]
+        for x in submod:
+            submodules.add('    class %s: pass' % (x.lstrip()))
 
+    print(submodules)
     if not members:
         print("warning: empty namespace {}".format(classname))
         members.append('    pass')
@@ -155,9 +159,9 @@ def gen_module_for_namespace(classname, input_str):
     # generate
     autogen_str = '''
 class {classname}:
-
+{submodules}
 {members}
-'''.format(classname=classname, members='\n'.join(members))
+'''.format(classname=classname, submodules='\n'.join(submodules), members='\n'.join(members))
 
     return autogen_str
 
