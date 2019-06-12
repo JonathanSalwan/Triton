@@ -588,20 +588,20 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) const {
+  triton::ast::SharedAbstractNode API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) {
     if (this->callbacks.isDefined)
       return this->callbacks.processCallbacks(kind, node);
     return node;
   }
 
 
-  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
+  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) {
     if (this->callbacks.isDefined)
       this->callbacks.processCallbacks(kind, mem);
   }
 
 
-  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
+  void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) {
     if (this->callbacks.isDefined)
       this->callbacks.processCallbacks(kind, reg);
   }

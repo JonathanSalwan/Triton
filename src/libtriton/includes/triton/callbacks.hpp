@@ -8,6 +8,7 @@
 #ifndef TRITON_CALLBACKS_H
 #define TRITON_CALLBACKS_H
 
+#include <atomic>
 #include <list>
 
 #include <triton/ast.hpp>
@@ -80,6 +81,18 @@ namespace triton {
         //! Reference to the API handling these callbacks
         triton::API& api;
 
+        //! Mutex for the getConcreteRegisterValue callback
+        std::atomic<bool> mget;
+
+        //! Mutex for the getConcreteMemoryValue callback
+        std::atomic<bool> mload;
+
+        //! Mutex for the setConcreteRegisterValue callback
+        std::atomic<bool> mput;
+
+        //! Mutex for the setConcreteMemoryValue callback
+        std::atomic<bool> mstore;
+
       protected:
         //! [c++] Callbacks for all concrete memory needs (LOAD).
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
@@ -101,7 +114,7 @@ namespace triton {
 
       public:
         //! True if there is at least one callback defined.
-        bool isDefined;
+        std::atomic<bool> isDefined;
 
         //! Constructor.
         TRITON_EXPORT Callbacks(triton::API& api);
@@ -140,19 +153,19 @@ namespace triton {
         TRITON_EXPORT void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        TRITON_EXPORT triton::ast::SharedAbstractNode processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) const;
+        TRITON_EXPORT triton::ast::SharedAbstractNode processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value) const;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg);
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
-        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value) const;
+        TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value);
     };
 
   /*! @} End of callbacks namespace */

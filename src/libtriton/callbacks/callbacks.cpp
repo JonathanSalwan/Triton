@@ -16,6 +16,10 @@ namespace triton {
 
     Callbacks::Callbacks(triton::API& api) : api(api) {
       this->isDefined = false;
+      this->mget      = false;
+      this->mload     = false;
+      this->mput      = false;
+      this->mstore    = false;
     }
 
 
@@ -93,7 +97,7 @@ namespace triton {
     }
 
 
-    triton::ast::SharedAbstractNode Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) const {
+    triton::ast::SharedAbstractNode Callbacks::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) {
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION: {
           for (auto& function: this->symbolicSimplificationCallbacks) {
@@ -112,14 +116,22 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE: {
-           for (auto& function: this->getConcreteMemoryValueCallbacks) {
-             function(this->api, mem);
-             if (mem.getLeaAst() != nullptr)
-                 this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem), true);
-           }
+          /* Check if we are already in the callback to avoid infinite recursion */
+          if (this->mload) {
+            break;
+          }
+
+          for (auto& function: this->getConcreteMemoryValueCallbacks) {
+            this->mload = true;
+            function(this->api, mem);
+            if (mem.getLeaAst() != nullptr)
+                this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem), true);
+            this->mload = false;
+          }
+
           break;
         }
 
@@ -129,12 +141,20 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE: {
-           for (auto& function: this->getConcreteRegisterValueCallbacks) {
-             function(this->api, reg);
-           }
+          /* Check if we are already in the callback to avoid infinite recursion */
+          if (this->mget) {
+            break;
+          }
+
+          for (auto& function: this->getConcreteRegisterValueCallbacks) {
+            this->mget = true;
+            function(this->api, reg);
+            this->mget = false;
+          }
+
           break;
         }
 
@@ -144,12 +164,20 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_MEMORY_VALUE: {
-           for (auto& function: this->setConcreteMemoryValueCallbacks) {
-             function(this->api, mem, value);
-           }
+          /* Check if we are already in the callback to avoid infinite recursion */
+          if (this->mstore) {
+            break;
+          }
+
+          for (auto& function: this->setConcreteMemoryValueCallbacks) {
+            this->mstore = true;
+            function(this->api, mem, value);
+            this->mstore = false;
+          }
+
           break;
         }
 
@@ -159,12 +187,20 @@ namespace triton {
     }
 
 
-    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value) const {
+    void Callbacks::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_REGISTER_VALUE: {
-           for (auto& function: this->setConcreteRegisterValueCallbacks) {
-             function(this->api, reg, value);
-           }
+          /* Check if we are already in the callback to avoid infinite recursion */
+          if (this->mput) {
+            break;
+          }
+
+          for (auto& function: this->setConcreteRegisterValueCallbacks) {
+            this->mput = true;
+            function(this->api, reg, value);
+            this->mput = false;
+          }
+
           break;
         }
 
