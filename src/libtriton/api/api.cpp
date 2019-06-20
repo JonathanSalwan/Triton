@@ -149,7 +149,7 @@ $ cd Triton
 $ mkdir build
 $ cd build
 $ cmake ..
-$ sudo make -j install
+$ sudo make -j2 install
 ~~~~~~~~~~~~~
 
 <hr>
@@ -165,7 +165,7 @@ $ cd Triton
 $ mkdir build
 $ cd build
 $ cmake $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | python) ..
-$ sudo make -j install
+$ sudo make -j2 install
 ~~~~~~~~~~~~~
 
 <hr>
@@ -204,7 +204,7 @@ $ cd Triton
 $ mkdir build
 $ cd build
 $ cmake -DPINTOOL=on ..
-$ make
+$ make -j2
 $ cd ..
 $ ./build/triton ./src/examples/pin/ir.py /usr/bin/id
 ~~~~~~~~~~~~~
