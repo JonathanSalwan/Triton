@@ -93,3 +93,44 @@ class TestIssue673(unittest.TestCase):
         self.assertEqual(len(inst.getUndefinedRegisters()), 1)
         self.assertEqual(len(inst.getReadRegisters()), 2)
         self.assertEqual(len(inst.getWrittenRegisters()), 4)
+
+
+
+class TestIssue792(unittest.TestCase):
+
+    """Testing #792."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+
+
+    def test_issue(self):
+        ac = self.ctx.getAstContext()
+
+        var1 = self.ctx.newSymbolicVariable(64, 'var1')
+        var2 = self.ctx.newSymbolicVariable(64, 'var2')
+
+        ast_original  = ac.bvadd(ac.variable(var1), ac.variable(var2))
+        ast_duplicate = ac.duplicate(ast_original)
+        ast_unrolled  = ac.unrollAst(ast_original)
+
+        self.ctx.setConcreteVariableValue(var1, 4)
+        self.ctx.setConcreteVariableValue(var2, 2)
+
+        self.assertEqual(ast_original.evaluate(), 6)
+        self.assertEqual(ast_duplicate.evaluate(), 6)
+        self.assertEqual(ast_unrolled.evaluate(), 6)
+
+        ast_original.setChild(0, ac.bv(1, 64))
+
+        self.assertEqual(ast_original.evaluate(), 3)
+        self.assertEqual(ast_duplicate.evaluate(), 6)
+        self.assertEqual(ast_unrolled.evaluate(), 6)
+
+        ast_duplicate.setChild(0, ac.bv(10, 64))
+
+        self.assertEqual(ast_original.evaluate(), 3)
+        self.assertEqual(ast_duplicate.evaluate(), 12)
+        self.assertEqual(ast_unrolled.evaluate(), 6)

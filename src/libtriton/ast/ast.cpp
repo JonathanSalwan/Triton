@@ -2460,7 +2460,7 @@ namespace triton {
         }
         case STRING_NODE:               newNode = std::make_shared<StringNode>(*reinterpret_cast<StringNode*>(node));     break;
         case SX_NODE:                   newNode = std::make_shared<SxNode>(*reinterpret_cast<SxNode*>(node));             break;
-        case VARIABLE_NODE:             newNode = std::make_shared<VariableNode>(*reinterpret_cast<VariableNode*>(node)); break;
+        case VARIABLE_NODE:             newNode = node->shared_from_this(); /* Do not duplicate shared var (see #792) */  break;
         case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node));             break;
         default:
           throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid type node.");
