@@ -740,6 +740,11 @@ namespace triton {
         /* Otherwise, use the concerte value */
         else {
           node = this->astCtxt->bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
+
+          /* Double check the node is still not symbolic (eg. has been made symbolic during a callback) */
+          if (const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg)) {
+	    node = this->astCtxt->extract(high, low, this->astCtxt->reference(symReg));
+          }
         }
 
         /* extend AST if it's a extend operand (mainly used for AArch64) */
