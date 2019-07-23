@@ -91,6 +91,8 @@ namespace triton {
         case LNOT_NODE:
         case LOR_NODE:
           return true;
+        case BV_NODE:
+          return (this->getBitvectorSize() == 1);
 
         case REFERENCE_NODE:
           return this->logical;
