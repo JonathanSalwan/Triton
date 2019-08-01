@@ -2473,7 +2473,7 @@ namespace triton {
       if (node->getType() != VARIABLE_NODE) {
         /* VARIABLE_NODE are not duplicated (see #792), so don't remove their parents */
         auto parents = newNode->getParents();
-        for (auto & p : parents) {
+        for (auto& p : parents) {
           newNode->removeParent(p.get());
         }
       }

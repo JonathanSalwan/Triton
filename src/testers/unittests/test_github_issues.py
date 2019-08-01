@@ -134,3 +134,38 @@ class TestIssue792(unittest.TestCase):
         self.assertEqual(ast_original.evaluate(), 3)
         self.assertEqual(ast_duplicate.evaluate(), 12)
         self.assertEqual(ast_unrolled.evaluate(), 6)
+
+
+
+class TestIssue795(unittest.TestCase):
+
+    """Testing #795."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+
+
+    def test_issue(self):
+        ast = self.ctx.getAstContext()
+
+        var1    = self.ctx.newSymbolicVariable(64, 'var1')
+        var2    = self.ctx.newSymbolicVariable(64, 'var2')
+        var1ast = ast.variable(var1)
+        var2ast = ast.variable(var2)
+
+        a1 = ast.bvadd(var1ast, var2ast)
+        b1 = ast.bvnot(a1)
+        b2 = ast.duplicate(b1)
+
+        self.assertEqual(len(a1.getParents()), 1)
+        self.assertEqual(len(b2.getParents()), 0)
+        self.assertEqual(len(b2.getChildren()[0].getParents()), 1)
+        self.assertEqual(len(var1ast.getParents()), 2)
+        self.assertEqual(len(var2ast.getParents()), 2)
+
+        self.assertEqual(b1.evaluate(), b2.evaluate())
+        self.ctx.setConcreteVariableValue(var1, 4)
+        self.ctx.setConcreteVariableValue(var2, 2)
+        self.assertEqual(b1.evaluate(), b2.evaluate())
