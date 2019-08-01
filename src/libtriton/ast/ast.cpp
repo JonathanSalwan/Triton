@@ -2470,7 +2470,13 @@ namespace triton {
         throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
 
       /* Remove parents as this is a new node which has no connections with original AST */
-      newNode->getParents().clear();
+      if (node->getType() != VARIABLE_NODE) {
+        /* VARIABLE_NODE are not duplicated (see #792), so don't remove their parents */
+        auto parents = newNode->getParents();
+        for (auto & p : parents) {
+          newNode->removeParent(p.get());
+        }
+      }
 
       /* Create new instances of children and set their new parents */
       auto& children = newNode->getChildren();
