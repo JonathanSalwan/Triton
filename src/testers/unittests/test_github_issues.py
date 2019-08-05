@@ -169,3 +169,64 @@ class TestIssue795(unittest.TestCase):
         self.ctx.setConcreteVariableValue(var1, 4)
         self.ctx.setConcreteVariableValue(var2, 2)
         self.assertEqual(b1.evaluate(), b2.evaluate())
+
+
+
+class TestIssue789(unittest.TestCase):
+
+    """Testing #789."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+
+        self.mem_symvars = []
+        self.reg_symvars = []
+        self.seen_regs   = []
+        self.seen_mem    = []
+        self.code        = [
+            b"\x48\x8b\x1d\x00\x01\x00\x00",    # mov rbx, [0x100]
+            b"\x48\x01\xd8",                    # add rax, rbx
+        ]
+
+
+    def handle_mem_read(self, ctx, ma):
+        # Keep track of seen registers to avoid recursion
+        addr = ma.getAddress()
+        if addr in self.seen_mem: return
+        self.seen_mem.append(addr)
+
+        # Create symbolic var
+        comment = "mem_{:#x}".format(ma.getAddress())
+        symvar = ctx.convertMemoryToSymbolicVariable(ma,comment)
+        self.mem_symvars.append(symvar)
+
+
+    def handle_reg_read(self, ctx, reg):
+        # Keep track of seen registers to avoid recursion
+        reg_id = reg.getId()
+        if reg_id in self.seen_regs: return
+        self.seen_regs.append(reg_id)
+
+        # Create symbolic var
+        comment = "sym_reg_{}".format(reg.getName())
+        symvar = ctx.convertRegisterToSymbolicVariable(reg, comment)
+        self.reg_symvars.append(symvar)
+
+
+    def emulate(self, ip):
+        for opcode in self.code:
+            inst = Instruction(opcode)
+            inst.setAddress(ip)
+            self.ctx.processing(inst)
+            ip = self.ctx.getRegisterAst(self.ctx.registers.rip).evaluate()
+
+
+    def test_issue(self):
+        self.ctx.addCallback(self.handle_mem_read, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.ctx.addCallback(self.handle_reg_read, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+        self.emulate(0x400000)
+        ast = self.ctx.getAstContext()
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(str(ast.unrollAst(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")

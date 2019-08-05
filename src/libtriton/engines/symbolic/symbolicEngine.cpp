@@ -732,6 +732,7 @@ namespace triton {
         triton::uint32 bvSize                = reg.getBitSize();
         triton::uint32 high                  = reg.getHigh();
         triton::uint32 low                   = reg.getLow();
+        triton::uint512 value                = this->architecture->getConcreteRegisterValue(reg);
 
         /* Check if the register is already symbolic */
         if (const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg)) {
@@ -739,7 +740,7 @@ namespace triton {
         }
         /* Otherwise, use the concerte value */
         else {
-          node = this->astCtxt->bv(this->architecture->getConcreteRegisterValue(reg), bvSize);
+          node = this->astCtxt->bv(value, bvSize);
         }
 
         /* extend AST if it's a extend operand (mainly used for AArch64) */
