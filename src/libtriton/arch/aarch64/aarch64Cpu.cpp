@@ -281,6 +281,16 @@ namespace triton {
                 case triton::extlibs::capstone::ARM64_OP_IMM: {
                   triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
 
+                  /*
+                   * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
+                   * So, if Triton truncates the value by setting a size less than
+                   * the original one, we redefine the size automatically.
+                   */
+                  if (static_cast<triton::uint64>(op->imm) > imm.getValue()) {
+                    imm = Immediate();
+                    imm.setValue(op->imm, 0); /* By setting 0 as size, we automatically identify the size of the value */
+                  }
+
                   /* Set Shift type and value */
                   imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
                   imm.setShiftValue(op->shift.value);

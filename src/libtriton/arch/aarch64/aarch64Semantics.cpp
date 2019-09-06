@@ -1166,12 +1166,12 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1 = this->astCtxt->zx(dst.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
+        auto op2 = this->astCtxt->zx(dst.getBitSize() - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
         auto node = this->astCtxt->ite(
-                      this->astCtxt->lnot(this->astCtxt->equal(op1, this->astCtxt->bv(0, src1.getBitSize()))),
+                      this->astCtxt->lnot(this->astCtxt->equal(op1, this->astCtxt->bv(0, op1->getBitvectorSize()))),
                       op2,
                       this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize())
                     );
@@ -1197,12 +1197,12 @@ namespace triton {
         auto& src2 = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1 = this->astCtxt->zx(dst.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
+        auto op2 = this->astCtxt->zx(dst.getBitSize() - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
         auto node = this->astCtxt->ite(
-                      this->astCtxt->equal(op1, this->astCtxt->bv(0, src1.getBitSize())),
+                      this->astCtxt->equal(op1, this->astCtxt->bv(0, op1->getBitvectorSize())),
                       op2,
                       this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize())
                     );
@@ -3557,9 +3557,9 @@ namespace triton {
         auto& src3 = inst.operands[2];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
-        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+        auto op1 = this->astCtxt->zx(dst.getBitSize() - src1.getBitSize(), this->symbolicEngine->getOperandAst(inst, src1));
+        auto op2 = this->astCtxt->zx(dst.getBitSize() - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
+        auto op3 = this->astCtxt->zx(dst.getBitSize() - src3.getBitSize(), this->symbolicEngine->getOperandAst(inst, src3));
 
         /* Create the semantics */
         auto node = this->astCtxt->ite(
