@@ -28,7 +28,7 @@ namespace triton {
       if (!expr.is_int())
         throw triton::exceptions::Exception("TritonToZ3Ast::getUintValue(): The ast is not a numerical value.");
 
-      #if defined(__x86_64__) || defined(_M_X64)
+      #if defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__)
       return expr.get_numeral_uint64();
       #endif
       #if defined(__i386) || defined(_M_IX86)
