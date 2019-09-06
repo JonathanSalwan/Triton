@@ -177,6 +177,12 @@ namespace triton {
           //! The B and B.cond semantics.
           void b_s(triton::arch::Instruction& inst);
 
+          //! The BFI semantics.
+          void bfi_s(triton::arch::Instruction& inst);
+
+          //! The BIC semantics.
+          void bic_s(triton::arch::Instruction& inst);
+
           //! The BL semantics.
           void bl_s(triton::arch::Instruction& inst);
 
