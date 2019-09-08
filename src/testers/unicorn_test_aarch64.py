@@ -1796,6 +1796,43 @@ CODE  = [
     (b"\x20\x00\x80\xd2", "movz x0, #1"),
     (b"\x20\x00\xc0\xda", "rbit x0, x1"),
     (b"\x20\x00\xc0\x5a", "rbit w0, w1"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x41\x14\x7d\xb3", "bfi x1, x2, 3, 6"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x41\x0c\x7f\xb3", "bfi x1, x2, 1, 4"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x41\x0c\x7f\xb3", "bfi x1, x2, 1, 4"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x41\x24\x7c\xb3", "bfi x1, x2, 4, 10"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x20\x00\x3f\x8a", "bic x0, x1, xzr"),
+
+    (b"\x41\x9a\x80\xd2", "movz x1, #1234"),
+    (b"\xc2\x88\x83\xd2", "movz x2, #7238"),
+    (b"\x20\x00\x3f\x8a", "bic x0, x1, x2"),
+
+    (b"\x40\xf8\x7f\x92", "bic x0, x2, #1"),
+    (b"\x40\xf8\x7e\x92", "bic x0, x2, #2"),
+    (b"\x40\xf4\x7e\x92", "bic x0, x2, #3"),
+    (b"\x40\xf8\x7d\x92", "bic x0, x2, #4"),
+    (b"\x41\xf8\x7f\x92", "bic x1, x2, #1"),
+    (b"\x41\xf8\x7e\x92", "bic x1, x2, #2"),
+    (b"\x41\xf4\x7e\x92", "bic x1, x2, #3"),
+    (b"\x41\xf8\x7d\x92", "bic x1, x2, #4"),
+    (b"\x22\xf8\x7f\x92", "bic x2, x1, #1"),
+    (b"\x22\xf8\x7e\x92", "bic x2, x1, #2"),
+    (b"\x22\xf4\x7e\x92", "bic x2, x1, #3"),
+    (b"\x22\xf8\x7d\x92", "bic x2, x1, #4"),
 ]
 
 def emu_with_unicorn(opcode, istate):

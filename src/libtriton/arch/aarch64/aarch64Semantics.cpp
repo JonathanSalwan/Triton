@@ -1091,6 +1091,8 @@ namespace triton {
         /* Create the path constraint */
         this->symbolicEngine->addPathConstraint(inst, expr);
       }
+
+
       void AArch64Semantics::bfi_s(triton::arch::Instruction& inst) {
         auto& dst   = inst.operands[0]; // Reg
         auto& src1  = inst.operands[1]; // Reg
@@ -1122,7 +1124,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BFI operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
