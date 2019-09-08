@@ -36,6 +36,8 @@ ANDS (shifted register)       | Bitwise AND (shifted register), setting flags
 ASR (immediate)               | Arithmetic Shift Right (immediate): an alias of SBFM
 ASR (register)                | Arithmetic Shift Right (register): an alias of ASRV
 B                             | Branch
+BFI                           | Bit Field Insert
+BIC                           | Bitwise Bit Clear
 BL                            | Branch with Link
 BLR                           | Branch with Link to Register
 BR                            | Branch to Register
@@ -197,6 +199,8 @@ namespace triton {
           case ID_INS_AND:       this->and_s(inst);           break;
           case ID_INS_ASR:       this->asr_s(inst);           break;
           case ID_INS_B:         this->b_s(inst);             break;
+          case ID_INS_BFI:       this->bfi_s(inst);           break;
+          case ID_INS_BIC:       this->bic_s(inst);           break;
           case ID_INS_BL:        this->bl_s(inst);            break;
           case ID_INS_BLR:       this->blr_s(inst);           break;
           case ID_INS_BR:        this->br_s(inst);            break;
@@ -1086,6 +1090,64 @@ namespace triton {
 
         /* Create the path constraint */
         this->symbolicEngine->addPathConstraint(inst, expr);
+      }
+      void AArch64Semantics::bfi_s(triton::arch::Instruction& inst) {
+        auto& dst   = inst.operands[0]; // Reg
+        auto& src1  = inst.operands[1]; // Reg
+        auto& src2  = inst.operands[2]; // Imm (Lsb)
+        auto& src3  = inst.operands[3]; // Imm (Width)
+
+        auto  lsb   = src2.getImmediate().getValue();
+        auto  width = src3.getImmediate().getValue();
+
+        if (lsb + width > dst.getBitSize())
+          throw triton::exceptions::Semantics("AArch64Semantics::bfi_s(): Invalid lsb and width.");
+
+        /* Create symbolic operands */
+        auto op    = this->symbolicEngine->getOperandAst(inst, src1);
+        auto opDst = this->symbolicEngine->getOperandAst(inst, dst);
+
+        /* Create the semantics */
+        std::list<triton::ast::SharedAbstractNode> chunks;
+
+        if (lsb + width < dst.getBitSize()) {
+          chunks.push_back(this->astCtxt->extract(dst.getBitSize() - 1, lsb + width, /* src */ opDst));
+        }
+        chunks.push_back(this->astCtxt->extract(width - 1, 0, /* src */ op));
+        chunks.push_back(this->astCtxt->extract(lsb - 1, 0, /* dst */ opDst));
+
+        auto node = this->astCtxt->concat(chunks);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BFI operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+      void AArch64Semantics::bic_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0]; // Reg
+        auto& src1 = inst.operands[1]; // Reg
+        auto& src2 = inst.operands[2]; // Reg + [Shift]
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        auto node = this->astCtxt->bvand(op1, this->astCtxt->bvnot(op2));
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BIC operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
