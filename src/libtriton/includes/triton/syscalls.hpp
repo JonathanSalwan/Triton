@@ -12,7 +12,7 @@
 
 #ifdef __APPLE__
   #include <sys/syscall.h>
-#ifdef __ANDROID___
+#elif defined(__ANDROID___)
   #if defined(__aarch64__)
     #include <aarch64-linux-android/asm/unistd.h>
   #endif
