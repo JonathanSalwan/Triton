@@ -488,41 +488,41 @@ namespace triton {
         ID_INS_ZIP2, //!< zip2
 
         // Alias
-	ID_INS_MNEG, //!< mneg
-	ID_INS_UMNEGL, //!< umnegl
-	ID_INS_SMNEGL, //!< smnegl
-	ID_INS_NOP, //!< nop
-	ID_INS_YIELD, //!< yield
-	ID_INS_WFE, //!< wfe
-	ID_INS_WFI, //!< wfi
-	ID_INS_SEV, //!< sev
-	ID_INS_SEVL, //!< sevl
-	ID_INS_NGC, //!< ngc
-	ID_INS_SBFIZ, //!< sbfiz
-	ID_INS_UBFIZ, //!< ubfiz
-	ID_INS_SBFX, //!< sbfx
-	ID_INS_UBFX, //!< ubfx
-	ID_INS_BFI, //!< bfi
-	ID_INS_BFXIL, //!< bfxil
-	ID_INS_CMN, //!< cmn
-	ID_INS_MVN, //!< mvn
-	ID_INS_TST, //!< tst
-	ID_INS_CSET, //!< cset
-	ID_INS_CINC, //!< cinc
-	ID_INS_CSETM, //!< csetm
-	ID_INS_CINV, //!< cinv
-	ID_INS_CNEG, //!< cneg
-	ID_INS_SXTB, //!< sxtb
-	ID_INS_SXTH, //!< sxth
-	ID_INS_SXTW, //!< sxtw
-	ID_INS_CMP, //!< cmp
-	ID_INS_UXTB, //!< uxtb
-	ID_INS_UXTH, //!< uxth
-	ID_INS_UXTW, //!< uxtw
-	ID_INS_IC, //!< ic
-	ID_INS_DC, //!< dc
-	ID_INS_AT, //!< at
-	ID_INS_TLBI, //!< tlbi
+        ID_INS_MNEG, //!< mneg
+        ID_INS_UMNEGL, //!< umnegl
+        ID_INS_SMNEGL, //!< smnegl
+        ID_INS_NOP, //!< nop
+        ID_INS_YIELD, //!< yield
+        ID_INS_WFE, //!< wfe
+        ID_INS_WFI, //!< wfi
+        ID_INS_SEV, //!< sev
+        ID_INS_SEVL, //!< sevl
+        ID_INS_NGC, //!< ngc
+        ID_INS_SBFIZ, //!< sbfiz
+        ID_INS_UBFIZ, //!< ubfiz
+        ID_INS_SBFX, //!< sbfx
+        ID_INS_UBFX, //!< ubfx
+        ID_INS_BFI, //!< bfi
+        ID_INS_BFXIL, //!< bfxil
+        ID_INS_CMN, //!< cmn
+        ID_INS_MVN, //!< mvn
+        ID_INS_TST, //!< tst
+        ID_INS_CSET, //!< cset
+        ID_INS_CINC, //!< cinc
+        ID_INS_CSETM, //!< csetm
+        ID_INS_CINV, //!< cinv
+        ID_INS_CNEG, //!< cneg
+        ID_INS_SXTB, //!< sxtb
+        ID_INS_SXTH, //!< sxth
+        ID_INS_SXTW, //!< sxtw
+        ID_INS_CMP, //!< cmp
+        ID_INS_UXTB, //!< uxtb
+        ID_INS_UXTH, //!< uxth
+        ID_INS_UXTW, //!< uxtw
+        ID_INS_IC, //!< ic
+        ID_INS_DC, //!< dc
+        ID_INS_AT, //!< at
+        ID_INS_TLBI, //!< tlbi
 
         /* Must be the last item */
         ID_INS_LAST_ITEM //!< must be the last item
