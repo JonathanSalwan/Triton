@@ -57,7 +57,7 @@ namespace triton {
         triton::ast::representations::AstRepresentation astRepresentation;
 
         //! Map a concrete value and ast node for a variable name.
-        std::map<std::string, std::pair<triton::ast::SharedAbstractNode, triton::uint512>> valueMapping;
+        std::map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
 
       public:
         //! Constructor
@@ -274,7 +274,7 @@ namespace triton {
         SharedAbstractNode getVariableNode(const std::string& name);
 
         //! Gets a variable value from its name.
-        TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& varName) const;
+        TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& name) const;
 
         //! Sets the representation mode for this astContext
         TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);
