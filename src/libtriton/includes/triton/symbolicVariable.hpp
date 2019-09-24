@@ -45,6 +45,9 @@ namespace triton {
       //! Shared Symbolic variable
       using SharedSymbolicVariable = std::shared_ptr<triton::engines::symbolic::SymbolicVariable>;
 
+      //! Weak Symbolic variable
+      using WeakSymbolicVariable = std::weak_ptr<triton::engines::symbolic::SymbolicVariable>;
+
       /*! \class SymbolicVariable
           \brief The symbolic variable class. */
       class SymbolicVariable {

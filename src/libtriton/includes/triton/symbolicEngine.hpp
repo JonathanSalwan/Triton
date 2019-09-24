@@ -78,7 +78,7 @@ namespace triton {
            * **item1**: variable id<br>
            * **item2**: symbolic variable
            */
-          std::unordered_map<triton::usize, SharedSymbolicVariable> symbolicVariables;
+          mutable std::unordered_map<triton::usize, WeakSymbolicVariable> symbolicVariables;
 
           /*! \brief The map of symbolic expressions
            *
@@ -167,22 +167,22 @@ namespace triton {
           TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
 
           //! Adds a symbolic variable.
-          TRITON_EXPORT const SharedSymbolicVariable& newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
+          TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          TRITON_EXPORT const SharedSymbolicVariable& convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
 
           //! Converts a symbolic memory expression to a symbolic variable.
-          TRITON_EXPORT const SharedSymbolicVariable& convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
 
           //! Converts a symbolic register expression to a symbolic variable.
-          TRITON_EXPORT const SharedSymbolicVariable& convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
-          TRITON_EXPORT const SharedSymbolicVariable& getSymbolicVariableFromId(triton::usize symVarId) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
-          TRITON_EXPORT const SharedSymbolicVariable& getSymbolicVariableFromName(const std::string& symVarName) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
 
           //! Returns the symbolic expression corresponding to an id.
           TRITON_EXPORT SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
@@ -266,7 +266,7 @@ namespace triton {
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> getSymbolicExpressions(void) const;
 
           //! Returns all symbolic variables.
-          TRITON_EXPORT const std::unordered_map<triton::usize, SharedSymbolicVariable>& getSymbolicVariables(void) const;
+          TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicVariable> getSymbolicVariables(void) const;
 
           //! Concretizes all symbolic memory references.
           TRITON_EXPORT void concretizeAllMemory(void);
