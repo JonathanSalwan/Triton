@@ -1130,6 +1130,7 @@ namespace triton {
         this->controlFlow_s(inst);
       }
 
+
       void AArch64Semantics::bic_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0]; // Reg
         auto& src1 = inst.operands[1]; // Reg
