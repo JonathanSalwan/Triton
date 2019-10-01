@@ -14,7 +14,7 @@
 
 
 /*! \page py_OPCODE_page OPCODE
-    \brief [**python api**] All information about the OPCODE python namespace.
+    \brief [**python api**] All information about the OPCODE Python namespace.
 
 \tableofcontents
 

@@ -13,7 +13,7 @@
 
 
 /*! \page py_PREFIX_page PREFIX
-    \brief [**python api**] All information about the PREFIX python namespace.
+    \brief [**python api**] All information about the PREFIX Python namespace.
 
 \tableofcontents
 

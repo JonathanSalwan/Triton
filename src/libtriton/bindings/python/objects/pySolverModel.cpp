@@ -14,14 +14,14 @@
 
 
 /*! \page py_SolverModel_page SolverModel
-    \brief [**python api**] All information about the SolverModel python object.
+    \brief [**python api**] All information about the SolverModel Python object.
 
 \tableofcontents
 
 \section py_SolverModel_description Description
 <hr>
 
-This object is used to represent a model from an SMT solver.
+This object is used to represent a model for an SMT solver.
 
 ~~~~~~~~~~~~~{.py}
 >>> from __future__ import print_function
@@ -67,7 +67,7 @@ SymVar_0:64 = 0x11223344
 <hr>
 
 - <b>integer getId(void)</b><br>
-Returns the id of the model. This id is the same that the variable id.
+Returns the id of the model. This id is the same as the variable id.
 
 - <b>integer getValue(void)</b><br>
 Returns the value of the model.

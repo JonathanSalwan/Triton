@@ -1560,10 +1560,10 @@ namespace triton {
       size  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
 
       if (!size)
-        throw triton::exceptions::Ast("BvNode::init(): Size connot be equal to zero.");
+        throw triton::exceptions::Ast("BvNode::init(): Size cannot be equal to zero.");
 
       if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("BvNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::Ast("BvNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       /* Init attributes */
       this->size = size;
@@ -1640,7 +1640,7 @@ namespace triton {
       }
 
       if (this->size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("ConcatNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::Ast("ConcatNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = this->children[0]->evaluate();
       for (triton::uint32 index = 0; index < this->children.size()-1; index++)
@@ -1803,7 +1803,7 @@ namespace triton {
         throw triton::exceptions::Ast("ExtractNode::init(): Must take at least three children.");
 
       if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("ExtractNode::init(): The highest and lower bit must be a INTEGER_NODE.");
+        throw triton::exceptions::Ast("ExtractNode::init(): The high and low bit must both be a INTEGER_NODE.");
 
       high = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
       low  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
@@ -2211,7 +2211,7 @@ namespace triton {
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("SxNode::SxNode(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = ((((this->children[1]->evaluate() >> (this->children[1]->getBitvectorSize()-1)) == 0) ? this->children[1]->evaluate() : (this->children[1]->evaluate() | ~(this->children[1]->getBitvectorMask()))) & this->getBitvectorMask());
 
@@ -2294,7 +2294,7 @@ namespace triton {
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
       if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("ZxNode::init(): Size connot be greater than MAX_BITS_SUPPORTED.");
+        throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = (this->children[1]->evaluate() & this->getBitvectorMask());
 
@@ -2467,7 +2467,7 @@ namespace triton {
       }
 
       if (newNode == nullptr)
-        throw triton::exceptions::Ast("triton::ast::newInstance(): No enough memory.");
+        throw triton::exceptions::Ast("triton::ast::newInstance(): Not enough memory.");
 
       /* Remove parents as this is a new node which has no connections with original AST */
       if (node->getType() != VARIABLE_NODE) {

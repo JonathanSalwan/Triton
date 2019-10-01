@@ -14,7 +14,7 @@
 
 
 /*! \page py_SymbolicExpression_page SymbolicExpression
-    \brief [**python api**] All information about the SymbolicExpression python object.
+    \brief [**python api**] All information about the SymbolicExpression Python object.
 
 \tableofcontents
 
@@ -91,7 +91,7 @@ Returns the AST root node of the symbolic expression.
 Returns the comment (if exists) of the symbolic expression.
 
 - <b>integer getId(void)</b><br>
-Returns the if of the symbolic expression. This id is always unique.<br>
+Returns the id of the symbolic expression. This id is always unique.<br>
 e.g: `2387`
 
 - <b>\ref py_AstNode_page getNewAst(void)</b><br>
@@ -107,7 +107,7 @@ Returns the type of the symbolic expression.<br>
 e.g: `SYMBOLIC.REGISTER_EXPRESSION`
 
 - <b>bool isMemory(void)</b><br>
-Returns true if the expression is assigned to a memory.
+Returns true if the expression is assigned to memory.
 
 - <b>bool isRegister(void)</b><br>
 Returns true if the expression is assigned to a register.

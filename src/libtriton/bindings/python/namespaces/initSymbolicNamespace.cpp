@@ -13,7 +13,7 @@
 
 
 /*! \page py_SYMBOLIC_page SYMBOLIC
-    \brief [**python api**] All information about the SYMBOLIC python namespace.
+    \brief [**python api**] All information about the SYMBOLIC Python namespace.
 
 \tableofcontents
 

@@ -24,7 +24,7 @@
 */
 
 /*! \page py_PathConstraint_page PathConstraint
-    \brief [**python api**] All information about the PathConstraint python object.
+    \brief [**python api**] All information about the PathConstraint Python object.
 
 \tableofcontents
 

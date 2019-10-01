@@ -26,7 +26,7 @@
 */
 
 /*! \page py_MemoryAccess_page MemoryAccess
-    \brief [**python api**] All information about the memory access python object.
+    \brief [**python api**] All information about the memory access Python object.
 
 \tableofcontents
 
@@ -96,14 +96,14 @@ Returns the target address of the memory access.<br>
 e.g: `0x7fffdd745ae0`
 
 - <b>\ref py_Register_page getBaseRegister(void)</b><br>
-Returns the base register (if exists) of the memory access<br>
+Returns the base register (if exists) of the memory access.<br>
 
 - <b>integer getBitSize(void)</b><br>
 Returns the size (in bits) of the memory access.<br>
 e.g: `64`
 
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
-Returns the bitvector of the memory cells.
+Returns the bit vector of the memory cells.
 
 - <b>\ref py_Immediate_page getDisplacement(void)</b><br>
 Returns the displacement (if exists) of the memory access.
@@ -115,18 +115,18 @@ Returns the index register (if exists) of the memory access.<br>
 Returns the AST of the memory access (LEA).
 
 - <b>\ref py_Immediate_page getScale(void)</b><br>
-Returns the scale (if exists) of the  memory access.
+Returns the scale (if exists) of the memory access.
 
 - <b>\ref py_Register_page getSegmentRegister(void)</b><br>
 Returns the segment register (if exists) of the memory access. Note that to be user-friendly, the
 segment register is used as base register and not as a selector into the GDT.<br>
 
 - <b>integer getSize(void)</b><br>
-Returns the size (in bytes) of the  memory access.<br>
+Returns the size (in bytes) of the memory access.<br>
 e.g: `8`
 
 - <b>\ref py_OPERAND_page getType(void)</b><br>
-Returns type of the memory access. In this case this function returns `OPERAND.MEM`.
+Returns the type of the memory access. In this case this function returns `OPERAND.MEM`.
 
 - <b>bool isOverlapWith(\ref py_MemoryAccess_page other)</b><br>
 Returns true if `other` and `self` overlap.
@@ -138,7 +138,7 @@ Sets the base register of the memory access.
 Sets the displacement of the memory access.
 
 - <b>void setIndexRegister(\ref py_Register_page reg)</b><br>
-Sets the index register of the memory' access.
+Sets the index register of the memory access.
 
 - <b>void setScale(\ref py_Immediate_page imm)</b><br>
 Sets the scale of the memory access.

@@ -22,14 +22,14 @@
 */
 
 /*! \page py_BitsVector_page BitsVector
-    \brief [**python api**] All information about the BitsVector python object.
+    \brief [**python api**] All information about the BitsVector Python object.
 
 \tableofcontents
 
 \section py_BitsVector_description Description
 <hr>
 
-This object is used to represent a bits vector. Mainly used by \ref py_Register_page, \ref py_MemoryAccess_page and \ref py_Immediate_page.
+This object is used to represent a bit vector. Mainly used by \ref py_Register_page, \ref py_MemoryAccess_page and \ref py_Immediate_page.
 
 ~~~~~~~~~~~~~{.py}
 >>> ah = ctxt.registers.ah
@@ -52,7 +52,7 @@ This object is used to represent a bits vector. Mainly used by \ref py_Register_
 Returns the highest bit position.
 
 - <b>integer getLow(void)</b><br>
-Returns the lower bit position.
+Returns the lowest bit position.
 
 - <b>integer getMaxValue(void)</b><br>
 Returns the max value of the vector.

@@ -22,7 +22,7 @@
 */
 
 /*! \page py_SymbolicVariable_page SymbolicVariable
-    \brief [**python api**] All information about the SymbolicVariable python object.
+    \brief [**python api**] All information about the SymbolicVariable Python object.
 
 \tableofcontents
 
@@ -55,14 +55,14 @@ Returns the id of the symbolic variable. This id is always unique.<br>
 e.g: `18`
 
 - <b>string getName(void)</b><br>
-Returns name of the the symbolic variable.<br>
+Returns name of the symbolic variable.<br>
 e.g: `SymVar_18`
 
 - <b>integer getOrigin(void)</b><br>
 Returns the origin according to the \ref py_SYMBOLIC_page value.<br>
-If `getType()` returns triton::engines::symbolic::REGISTER_VARIABLE, so `getOrigin()` returns the id of the register.<br>
-Otherwise, if `getType()` returns triton::engines::symbolic::MEMORY_VARIABLE, so `getOrigin()` returns the address of the memory access.<br>
-Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, so `getOrigin()` returns `0`.
+If `getType()` returns triton::engines::symbolic::REGISTER_VARIABLE, then `getOrigin()` returns the id of the register.<br>
+Otherwise, if `getType()` returns triton::engines::symbolic::MEMORY_VARIABLE, then `getOrigin()` returns the address of the memory access.<br>
+Then, if `getType()` returns triton::engines::symbolic::UNDEFINED_VARIABLE, then `getOrigin()` returns `0`.
 
 - <b>\ref py_SYMBOLIC_page getType(void)</b><br>
 Returns the type of the symbolic variable.<br>

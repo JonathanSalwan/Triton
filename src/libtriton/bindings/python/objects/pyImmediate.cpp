@@ -27,7 +27,7 @@
 */
 
 /*! \page py_Immediate_page Immediate
-    \brief [**python api**] All information about the Immediate python object.
+    \brief [**python api**] All information about the Immediate Python object.
 
 \tableofcontents
 
@@ -79,7 +79,7 @@ Returns the size (in bits) of the immediate.<br>
 e.g: `64`
 
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
-Returns the bitvector.
+Returns the bit vector.
 
 - <b>\ref py_SHIFT_page getShiftType(void)</b><br>
 Returns the shift type of the operand. Mainly used for AArch64.<br>

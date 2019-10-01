@@ -13,14 +13,14 @@
 
 
 /*! \page py_MODE_page MODE
-    \brief [**python api**] All information about the MODE python namespace.
+    \brief [**python api**] All information about the MODE Python namespace.
 
 \tableofcontents
 
 \section MODE_py_description Description
 <hr>
 
-The MODE namespace contains all kinds of mode.
+The MODE namespace contains all kinds of modes.
 
 \subsection MODE_py_example Example
 
@@ -32,13 +32,13 @@ The MODE namespace contains all kinds of mode.
 <hr>
 
 - **MODE.ALIGNED_MEMORY**<br>
-Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` acceess.
+Enabled, Triton will keep a map of aligned memory to reduce the symbolic memory explosion of `LOAD` and `STORE` accesses.
 
 - **MODE.AST_OPTIMIZATIONS**<br>
 Enabled, Triton will reduces the depth of the trees using classical arithmetic optimisations.
 
 - **MODE.CONCRETIZE_UNDEFINED_REGISTERS**<br>
-Enabled, Triton will concretize every registers tagged as undefined (see #750).
+Enabled, Triton will concretize every register tagged as undefined (see #750).
 
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
 Enabled, Triton will perform symbolic execution only on symbolized expressions.

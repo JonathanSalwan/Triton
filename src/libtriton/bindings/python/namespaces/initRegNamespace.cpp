@@ -20,14 +20,14 @@
 */
 
 /*! \page py_REG_page REG
-    \brief [**python api**] All information about the REG python namespace.
+    \brief [**python api**] All information about the REG Python namespace.
 
 \tableofcontents
 
 \section REG_py_description Description
 <hr>
 
-According to the CPU architecture, the REG namespace contains all enums of register.
+According to the CPU architecture, the REG namespace contains all enums of registers.
 It's possible to create a \ref py_Register_page from a register id using `getRegister`
 like this:
 
@@ -38,7 +38,7 @@ ah:8 bv[15..8]
 
 ~~~~~~~~~~~~~
 
-Note that creating a \ref py_TritonContext_page, you can directly access to constructed
+Note that creating a \ref py_TritonContext_page, you can directly access the constructed
 \ref py_Register_page according to your defined architecture.
 
 ~~~~~~~~~~~~~{.py}

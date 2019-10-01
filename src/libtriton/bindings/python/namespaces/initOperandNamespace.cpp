@@ -13,14 +13,14 @@
 
 
 /*! \page py_OPERAND_page OPERAND
-    \brief [**python api**] All information about the OPERAND python namespace.
+    \brief [**python api**] All information about the OPERAND Python namespace.
 
 \tableofcontents
 
 \section OPERAND_py_description Description
 <hr>
 
-The OPERAND namespace contains all kinds of operand.
+The OPERAND namespace contains all kinds of operands.
 
 \section OPERAND_py_api Python API - Items of the OPERAND namespace
 <hr>

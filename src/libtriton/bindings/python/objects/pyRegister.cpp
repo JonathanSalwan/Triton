@@ -26,7 +26,7 @@
 */
 
 /*! \page py_Register_page Register
-    \brief [**python api**] All information about the Register python object.
+    \brief [**python api**] All information about the Register Python object.
 
 \tableofcontents
 
@@ -85,7 +85,7 @@ Returns the size (in bits) of the register.<br>
 e.g: `64`
 
 - <b>\ref py_BitsVector_page getBitvector(void)</b><br>
-Returns the bitvector of the register.
+Returns the bit vector of the register.
 
 - <b>\ref py_EXTEND_page getExtendSize(void)</b><br>
 Returns the size (in bits) of the extend. Mainly used for AArch64.<br>
@@ -116,7 +116,7 @@ Returns the size (in bytes) of the register.<br>
 e.g: `8`
 
 - <b>\ref py_OPERAND_page getType(void)</b><br>
-Returns type of the register. In this case this function returns `OPERAND.REG`.
+Returns the type of the register. In this case this function returns `OPERAND.REG`.
 
 - <b>bool isMutable(void)</b><br>
 Returns true if this register is mutable. Mainly used in AArch64 to define that some registers like XZR are immutable.

@@ -21,7 +21,7 @@
 \section triton_py_description Description
 <hr>
 
-The libTriton offers Python bindings on its C++ API which allow you to build analysis in Python as well as in C++.
+libTriton offers Python bindings on top of its C++ API which allow you to build analysis in Python as well as in C++.
 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import TritonContext, ARCH
@@ -46,8 +46,8 @@ The symbolic expression (`symExpr`) must be aligned to the memory access.
 - <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_Register_page reg)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_Register_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
-to 128-bits. Otherwise, you will probably get a sort mismatch error when you will solve the expression. If you want to assign an
-expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` ast functions.
+to 128 bits. Otherwise, you will probably get a sort mismatch error when you solve the expression. If you want to assign an
+expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` AST functions.
 
 - <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
@@ -92,7 +92,7 @@ Returns the new symbolic register expression and links this expression to the in
 Returns the new symbolic volatile expression and links this expression to the instruction.
 
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
-Disassembles the instruction and setup operands. You must define an architecture before.
+Disassembles the instruction and sets up operands. You must define an architecture before.
 
 - <b>void enableMode(\ref py_MODE_page mode, bool flag)</b><br>
 Enables or disables a specific mode.
@@ -134,10 +134,10 @@ Returns the concrete value of a register.
 Returns the concrete value of a symbolic variable.
 
 - <b>integer getGprBitSize(void)</b><br>
-Returns the size in bit of the General Purpose Registers.
+Returns the size in bits of the General Purpose Registers.
 
 - <b>integer getGprSize(void)</b><br>
-Returns the size in byte of the General Purpose Registers.
+Returns the size in bytes of the General Purpose Registers.
 
 - <b>\ref py_AstNode_page getImmediateAst(\ref py_Immediate_page imm)</b><br>
 Returns the AST corresponding to the \ref py_Immediate_page.
@@ -158,7 +158,7 @@ Returns the parent \ref py_Register_page from a \ref py_Register_page.
 Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
 
 - <b>[\ref py_PathConstraint_page, ...] getPathConstraints(void)</b><br>
-Returns the logical conjunction vector of path constraints as list of \ref py_PathConstraint_page.
+Returns the logical conjunction vector of path constraints as a list of \ref py_PathConstraint_page.
 
 - <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
 Returns the logical conjunction AST of path constraints.
@@ -188,7 +188,7 @@ Returns the symbolic memory value.
 Returns the symbolic memory value.
 
 - <b>dict getSymbolicRegisters(void)</b><br>
-Returns the map of symbolic register as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
+Returns the map of symbolic registers as {\ref py_REG_page reg : \ref py_SymbolicExpression_page expr}.
 
 - <b>\ref py_SymbolicExpression_page getSymbolicRegister(\ref py_Register_page reg)</b><br>
 Returns the \ref py_SymbolicExpression_page corresponding to the parent register.
@@ -203,7 +203,7 @@ Returns the symbolic variable corresponding to a symbolic variable id.
 Returns the symbolic variable corresponding to a symbolic variable name.
 
 - <b>dict getSymbolicVariables(void)</b><br>
-Returns all symbolic variable as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
+Returns all symbolic variables as a dictionary of {integer SymVarId : \ref py_SymbolicVariable_page var}.
 
 - <b>[integer, ...] getTaintedMemory(void)</b><br>
 Returns the list of all tainted addresses.
@@ -287,23 +287,23 @@ Initializes an architecture. This function must be called before any call to the
 Sets the AST representation mode.
 
 - <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
-Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+Sets the concrete value of a memory area. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - <b>void setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)</b><br>
-Sets the concrete value of a memory area. Note that by setting a concrete value will probably imply a desynchronization with
+Sets the concrete value of a memory area. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - <b>void setConcreteMemoryValue(integer addr, integer value)</b><br>
-Sets the concrete value of a memory cell. Note that by setting a concrete value will probably imply a desynchronization with
+Sets the concrete value of a memory cell. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem, integer value)</b><br>
-Sets the concrete value of memory cells. Note that by setting a concrete value will probably imply a desynchronization with
+Sets the concrete value of memory cells. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - <b>void setConcreteRegisterValue(\ref py_Register_page reg, integer value)</b><br>
-Sets the concrete value of a register. Note that by setting a concrete value will probably imply a desynchronization with
+Sets the concrete value of a register. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
 - <b>void setConcreteVariableValue(\ref py_SymbolicVariable_page symVar, integer value)</b><br>
@@ -317,7 +317,7 @@ Sets the targeted register as tainted or not. Returns true if the register is st
 
 - <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
 Calls all simplification callbacks recorded and returns a new simplified node. If the `z3` flag is
-set to True, Triton will use z3 to simplify the given `node` before to call its recorded callbacks.
+set to True, Triton will use z3 to simplify the given `node` before calling its recorded callbacks.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.

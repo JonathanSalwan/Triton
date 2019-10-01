@@ -16,7 +16,7 @@
 
 
 /*! \page py_SYSCALL_page SYSCALL
-    \brief [**python api**] All information about the SYSCALL python namespace.
+    \brief [**python api**] All information about the SYSCALL Python namespace.
 
 \tableofcontents
 
@@ -24,12 +24,12 @@
 <hr>
 
 According to the CPU architecture, the SYSCALL namespace contains all syscall numbers. The list of syscalls depends
-of your Kernel version. That's why the list is generated at the compile time by this [extract_syscall.py](https://github.com/JonathanSalwan/Triton/blob/master/src/scripts/extract_syscall.py) script.
+of your kernel version. That's why the list is generated at compile time by the [extract_syscall.py](https://github.com/JonathanSalwan/Triton/blob/master/src/scripts/extract_syscall.py) script.
 
 \section SYSCALL_py_api Python API - Items of the SYSCALL namespace
 <hr>
 
-According to your kernel version, this list is not exhaustive.
+Dependnig on your kernel version, this list is not exhaustive.
 
 - **SYSCALL.READ**
 - **SYSCALL.WRITE**
