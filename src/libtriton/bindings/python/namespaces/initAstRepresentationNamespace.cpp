@@ -13,14 +13,14 @@
 
 
 /*! \page py_AST_REPRESENTATION_page AST_REPRESENTATION
-    \brief [**python api**] All information about the AST_REPRESENTATION python namespace.
+    \brief [**python api**] All information about the AST_REPRESENTATION Python namespace.
 
 \tableofcontents
 
 \section AST_REPRESENTATION_py_description Description
 <hr>
 
-The AST_REPRESENTATION namespace contains all kinds of AST representation.
+The AST_REPRESENTATION namespace contains all kinds of AST representations.
 
 \subsection AST_REPRESENTATION_py_example Example
 
@@ -32,10 +32,10 @@ The AST_REPRESENTATION namespace contains all kinds of AST representation.
 <hr>
 
 - **AST_REPRESENTATION.SMT**<br>
-Enabled, all prints of AST expressions will be represented into the SMT2-Lib syntax. This is the default mode.
+Enabled, AST expressions will be represented in the SMT2-Lib syntax. This is the default mode.
 
 - **AST_REPRESENTATION.PYTHON**<br>
-Enabled, all prints of AST expressions will be represented into the Python syntax.
+Enabled, AST expressions will be represented in the Python syntax.
 
 
 */

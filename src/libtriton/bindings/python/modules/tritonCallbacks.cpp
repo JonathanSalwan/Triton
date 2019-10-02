@@ -17,14 +17,14 @@
 
 
 
-/*! \page py_triton_page Python bindings of the libTriton
-    \brief [**python api**] All information about the libTriton's Python API.
+/*! \page py_triton_page Python bindings of libTriton
+    \brief [**python api**] All information about libTriton's Python API.
     \anchor triton
 
 \section triton_py_api Python API - Methods and namespaces of the triton module
 <hr>
 
-This project work using a `TritonContext` which contains all the required internal state
+This project works using a `TritonContext` which contains all the required internal state
 to simulate your instructions. You may also find [helpers](https://github.com/JonathanSalwan/Triton/tree/master/src/examples/python)
 to wrap more generic concepts.
 
@@ -106,7 +106,7 @@ namespace triton {
           return PyInstruction();
 
         if (!PyBytes_Check(opcodes))
-          return PyErr_Format(PyExc_TypeError, "Instruction(): Expected bytes as argument.");
+          return PyErr_Format(PyExc_TypeError, "Instruction(): Expects bytes as argument.");
 
         try {
           triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opcodes));

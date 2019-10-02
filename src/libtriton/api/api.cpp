@@ -25,7 +25,7 @@
 <b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
 like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
 of the <b>x86</b>, <b>x86-64</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
-an <b>SMT Solver</b> interface and, the last but not least, <b>Python bindings</b>.
+an <b>SMT solver</b> interface and, the last but not least, <b>Python bindings</b>.
 
 
 <br>
@@ -141,7 +141,7 @@ To be able to compile Triton, you must install these libraries before:
 <hr>
 \subsection linux_install_sec Linux Installation
 
-Once the libraries are installed, you can use `cmake` and `make` to build the `libTriton`.
+Once the libraries are installed, you can use `cmake` and `make` to build `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
 $ git clone https://github.com/JonathanSalwan/Triton.git
@@ -155,8 +155,8 @@ $ sudo make -j2 install
 <hr>
 \subsection osx_install_sec OSX Installation
 
-On OSX cmake might have some difficulties finding the correct python include/library paths.
-You can run the following to build indenpendent of your python version:
+On OSX cmake` might have some difficulties finding the correct Python include/library paths.
+You can run the following to build independent of your Python version:
 
 ~~~~~~~~~~~~~{.sh}
 $ brew install boost capstone z3
@@ -171,7 +171,7 @@ $ sudo make -j2 install
 <hr>
 \subsection windows_install_sec Windows Installation
 
-Once libraries installed, you can use `cmake` to generate the `.sln` file of the `libTriton`.
+Once libraries installed, you can use `cmake` to generate the `.sln` file of `libTriton`.
 
 ~~~~~~~~~~~~~{.sh}
 > git clone https://github.com/JonathanSalwan/Triton.git
@@ -182,8 +182,8 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of the
   -DBOOST_ROOT="C:/Users/jonathan/Works/Tools/boost_1_61_0" \
   -DPYTHON_INCLUDE_DIRS="C:/Python27/include" \
   -DPYTHON_LIBRARIES="C:/Python27/libs/python27.lib" \
-  -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/include" \
-  -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.4.1-x64-win/bin/libz3.lib" \
+  -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/include" \
+  -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/bin/libz3.lib" \
   -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/include" \
   -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/capstone.lib" ..
 ~~~~~~~~~~~~~
@@ -435,19 +435,19 @@ namespace triton {
 
     this->symbolic = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(&this->arch, this->modes, this->astCtxt, &this->callbacks);
     if (this->symbolic == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
     this->solver = new(std::nothrow) triton::engines::solver::SolverEngine();
     if (this->solver == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
     this->taint = new(std::nothrow) triton::engines::taint::TaintEngine(this->modes, this->symbolic, *this->getCpuInstance());
     if (this->taint == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
-      throw triton::exceptions::API("API::initEngines(): No enough memory.");
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
     /* Setup registers shortcut */
     this->registers.init(this->arch.getArchitecture());

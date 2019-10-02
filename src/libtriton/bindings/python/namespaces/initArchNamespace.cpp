@@ -13,7 +13,7 @@
 
 
 /*! \page py_ARCH_page ARCH
-    \brief [**python api**] All information about the ARCH python namespace.
+    \brief [**python api**] All information about the ARCH Python namespace.
 
 \tableofcontents
 

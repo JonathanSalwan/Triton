@@ -13,7 +13,7 @@
 
 
 /*! \page py_VERSION_page VERSION
-    \brief [**python api**] All information about the VERSION python namespace.
+    \brief [**python api**] All information about the VERSION Python namespace.
 
 \tableofcontents
 

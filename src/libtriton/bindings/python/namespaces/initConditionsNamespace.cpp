@@ -13,14 +13,14 @@
 
 
 /*! \page py_CONDITION_page CONDITION
-    \brief [**python api**] All information about the CONDITION python namespace.
+    \brief [**python api**] All information about the CONDITION Python namespace.
 
 \tableofcontents
 
 \section CONDITION_py_description Description
 <hr>
 
-The CONDITION namespace contains all kinds of instruction condition for AArch64.
+The CONDITION namespace contains all kinds of instruction conditions for AArch64.
 
 \section CONDITION_py_api Python API - Items of the CONDITION namespace
 <hr>

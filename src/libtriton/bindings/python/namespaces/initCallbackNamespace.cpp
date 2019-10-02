@@ -13,7 +13,7 @@
 
 
 /*! \page py_CALLBACK_page CALLBACK
-    \brief [**python api**] All information about the CALLBACK python namespace.
+    \brief [**python api**] All information about the CALLBACK Python namespace.
 
 \tableofcontents
 
@@ -48,7 +48,7 @@ The callback takes as arguments a \ref py_TritonContext_page, \ref py_Register_p
 Triton library will need to PUT a concrete register value. The callback must return nothing.
 
 - **CALLBACK.SYMBOLIC_SIMPLIFICATION**<br>
-Defines a callback which be called before all symbolic assignments. The callback takes as arguments
+Defines a callback which will be called before all symbolic assignments. The callback takes as arguments
 a \ref py_TritonContext_page and an \ref py_AstNode_page. This callback must return a valid \ref py_AstNode_page. The returned node is
 used as assignment. See also the page about \ref SMT_simplification_page.
 

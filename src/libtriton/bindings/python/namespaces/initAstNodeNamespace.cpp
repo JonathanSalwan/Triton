@@ -13,14 +13,14 @@
 
 
 /*! \page py_AST_NODE_page AST_NODE
-    \brief [**python api**] All information about the AST_NODE python namespace.
+    \brief [**python api**] All information about the AST_NODE Python namespace.
 
 \tableofcontents
 
 \section AST_NODE_py_description Description
 <hr>
 
-The AST_NODE namespace contains all kinds of node.
+The AST_NODE namespace contains all kinds of nodes.
 
 \section AST_NODE_py_api Python API - Items of the AST_NODE namespace
 <hr>

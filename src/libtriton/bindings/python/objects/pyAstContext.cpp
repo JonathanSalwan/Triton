@@ -40,7 +40,7 @@ True
 */
 
 /*! \page py_AstContext_page AstContext
-    \brief [**python api**] All information about the AstContext python object.
+    \brief [**python api**] All information about the AstContext Python object.
 
 \tableofcontents
 
@@ -257,7 +257,7 @@ Unrolls the SSA form of a given AST.
 \section ast_py_examples_page_3 Python API - Operators
 <hr>
 
-As we can not overload all AST's operators only these following operators are overloaded:
+As we can not overload all AST operators only the following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
 ------------------|---------------------
@@ -283,8 +283,8 @@ a > b             | (bvugt a b)
 \section ast_smt_python_page The SMT or Python Syntax
 <hr>
 
-By default, Triton represents semantics into [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
-Triton allows you to display your AST via a Python syntax.
+By default, Triton represents semantics in [SMT-LIB](http://smtlib.cs.uiowa.edu/) which is an international initiative aimed at facilitating research and development in Satisfiability Modulo Theories (SMT). However,
+Triton also allows you to display your AST using a Python syntax.
 
 ~~~~~~~~~~~~~{.py}
 >>> ctxt = TritonContext()
@@ -330,7 +330,7 @@ namespace triton {
 
       static PyObject* AstContext_assert(PyObject* self, PyObject* op1) {
         if (!PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
+          return PyErr_Format(PyExc_TypeError, "assert(): expected a AstNode as first argument");
 
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(op1)));

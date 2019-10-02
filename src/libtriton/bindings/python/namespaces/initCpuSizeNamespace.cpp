@@ -13,14 +13,14 @@
 
 
 /*! \page py_CPUSIZE_page CPUSIZE
-    \brief [**python api**] All information about the CPUSIZE python namespace.
+    \brief [**python api**] All information about the CPUSIZE Python namespace.
 
 \tableofcontents
 
 \section CPUSIZE_py_description Description
 <hr>
 
-According to the CPU architecture, the CPUSIZE namespace contains all kinds of size.
+According to the CPU architecture, the CPUSIZE namespace contains all kinds of sizes.
 
 \section CPUSIZE_py_api Python API - Items of the CPUSIZE namespace
 <hr>

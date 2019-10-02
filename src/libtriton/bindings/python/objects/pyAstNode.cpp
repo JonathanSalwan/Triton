@@ -23,7 +23,7 @@
 */
 
 /*! \page py_AstNode_page AstNode
-    \brief [**python api**] All information about the AstNode python object.
+    \brief [**python api**] All information about the AstNode Python object.
 
 \tableofcontents
 
@@ -68,13 +68,13 @@ Returns the node vector size.
 Returns the list of child nodes.
 
 - <b>integer getHash(void)</b><br>
-Returns the hash (signature) of the AST .
+Returns the hash (signature) of the AST.
 
 - <b>integer getInteger(void)</b><br>
 Returns the integer of the node. Only available on `INTEGER_NODE`, raises an exception otherwise.
 
 - <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
-Returns the parents list nodes. The list is empty if there is still no parent defined.
+Returns the parents list nodes. The list is empty if there is no parent defined yet.
 
 - <b>string getString(void)</b><br>
 Returns the string of the node. Only available on `STRING_NODE`, raises an exception otherwise.
@@ -86,7 +86,7 @@ Returns the symbolic expression of the node. Only available on `REFERENCE_NODE`,
 Returns the symbolic variable of the node. Only available on `VARIABLE_NODE`, raises an exception otherwise.
 
 - <b>\ref py_AST_NODE_page getType(void)</b><br>
-Returns the kind of the node.<br>
+Returns the type of the node.<br>
 e.g: `AST_NODE.BVADD`
 
 - <b>bool isLogical(void)</b><br>
@@ -105,7 +105,7 @@ Replaces a child node.
 \section AstNode_operator_py_api Python API - Operators
 <hr>
 
-As we can not overload all AST's operators only these following operators are overloaded:
+As we can not overload all AST operators only the following operators are overloaded:
 
 Python's Operator | e.g: SMT2-Lib format
 ------------------|---------------------

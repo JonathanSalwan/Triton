@@ -14,7 +14,7 @@
 
 
 /*! \page py_Instruction_page Instruction
-    \brief [**python api**] All information about the Instruction python object.
+    \brief [**python api**] All information about the Instruction Python object.
 
 \tableofcontents
 
@@ -140,7 +140,7 @@ Returns the code condition of the instruction (mainly used for AArch64).
 Returns the disassembly of the instruction.
 
 - <b>[tuple, ...] getLoadAccess(void)</b><br>
-Returns the list of all implicit and explicit LOAD access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
+Returns the list of all implicit and explicit LOAD accesses as a list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
 - <b>integer getNextAddress(void)</b><br>
 Returns the next address of the instruction.
@@ -149,7 +149,7 @@ Returns the next address of the instruction.
 Returns the opcode of the instruction.
 
 - <b>[\ref py_Immediate_page, \ref py_MemoryAccess_page, \ref py_Register_page, ...] getOperands(void)</b><br>
-Returns the operands of the instruction as list of \ref py_Immediate_page, \ref py_MemoryAccess_page or \ref py_Register_page.
+Returns the operands of the instruction as a list of \ref py_Immediate_page, \ref py_MemoryAccess_page or \ref py_Register_page.
 
 - <b>\ref py_PREFIX_page getPrefix(void)</b><br>
 Returns the instruction prefix. Mainly used for X86.
@@ -164,7 +164,7 @@ Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which repr
 Returns the size of the instruction.
 
 - <b>[tuple, ...] getStoreAccess(void)</b><br>
-Returns the list of all implicit and explicit STORE access as list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
+Returns the list of all implicit and explicit STORE accesses as a list of tuple <\ref py_MemoryAccess_page, \ref py_AstNode_page>.
 
 - <b>[\ref py_SymbolicExpression_page, ...] getSymbolicExpressions(void)</b><br>
 Returns the list of symbolic expressions of the instruction.
@@ -179,7 +179,7 @@ Returns the type of the instruction.
 Returns a list \ref py_Register_page which represents all implicit and explicit undefined registers.
 
 - <b>[tuple, ...] getWrittenRegisters(void)</b><br>
-Returns a list of tuple <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) outputs.
+Returns a list of tuples <\ref py_Register_page, \ref py_AstNode_page> which represents all implicit and explicit register (flags includes) outputs.
 
 - <b>bool isBranch(void)</b><br>
 Returns true if the instruction is a branch (i.e x86: JUMP, JCC).

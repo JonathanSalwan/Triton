@@ -13,14 +13,14 @@
 
 
 /*! \page py_SHIFT_page SHIFT
-    \brief [**python api**] All information about the SHIFT python namespace.
+    \brief [**python api**] All information about the SHIFT Python namespace.
 
 \tableofcontents
 
 \section SHIFT_py_description Description
 <hr>
 
-The SHIFT namespace contains all kinds of shift operand for AArch64.
+The SHIFT namespace contains all kinds of shift operands for AArch64.
 
 \section SHIFT_py_api Python API - Items of the SHIFT namespace
 <hr>
