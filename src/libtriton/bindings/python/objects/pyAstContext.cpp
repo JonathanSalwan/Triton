@@ -330,7 +330,7 @@ namespace triton {
 
       static PyObject* AstContext_assert(PyObject* self, PyObject* op1) {
         if (!PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "assert(): expected a AstNode as first argument");
+          return PyErr_Format(PyExc_TypeError, "assert_(): expected a AstNode as first argument");
 
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(op1)));

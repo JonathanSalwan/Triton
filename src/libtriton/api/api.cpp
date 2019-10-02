@@ -155,7 +155,7 @@ $ sudo make -j2 install
 <hr>
 \subsection osx_install_sec OSX Installation
 
-On OSX cmake` might have some difficulties finding the correct Python include/library paths.
+On OSX `cmake` might have some difficulties finding the correct Python include/library paths.
 You can run the following to build independent of your Python version:
 
 ~~~~~~~~~~~~~{.sh}
