@@ -2182,8 +2182,11 @@ namespace triton {
     triton::uint512 StringNode::hash(triton::uint32 deep) const {
       triton::uint512 h = this->type;
       triton::uint32 index = 1;
-      for (std::string::const_iterator it=this->value.cbegin(); it != this->value.cend(); it++)
-        h = h ^ triton::ast::hash2n(*it, index++);
+
+      for (std::string::const_iterator it=this->value.cbegin(); it != this->value.cend(); it++) {
+        h = triton::ast::rotl(*it ^ h ^ triton::ast::hash2n(h, index++), *it);
+      }
+
       return triton::ast::rotl(h, deep);
     }
 
@@ -2238,7 +2241,6 @@ namespace triton {
     /* ====== Variable node */
 
 
-    // WARNING: A variable ast node should not live once the SymbolicVariable is dead
     VariableNode::VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const SharedAstContext& ctxt)
       : AbstractNode(VARIABLE_NODE, ctxt),
         symVar(symVar) {
@@ -2261,11 +2263,13 @@ namespace triton {
 
 
     triton::uint512 VariableNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type;
+      triton::uint512 h    = this->type;
       triton::uint32 index = 1;
+      triton::usize  id    = this->symVar->getId();
 
-      for (char c : this->symVar->getName())
-        h = h ^ triton::ast::hash2n(c, index++);
+      for (char c : this->symVar->getName()) {
+        h = triton::ast::rotl(c ^ h ^ triton::ast::hash2n(h, index++), id);
+      }
 
       return triton::ast::rotl(h, deep);
     }
