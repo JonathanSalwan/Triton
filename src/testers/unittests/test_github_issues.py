@@ -230,3 +230,32 @@ class TestIssue789(unittest.TestCase):
         ast = self.ctx.getAstContext()
         rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
         self.assertEqual(str(ast.unrollAst(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
+
+
+class TestIssue803(unittest.TestCase):
+
+    """Testing #803."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+
+    def test_issue(self):
+        # Create two different symbolic variables
+        other_vars = [self.ctx.newSymbolicVariable(64, 'myvar1') for _ in range(4)] # Unused vars (ignore this)
+        var1 = self.ctx.newSymbolicVariable(64, 'myvar1')
+        other_vars2 = [self.ctx.newSymbolicVariable(64, 'myvar1') for _ in range(3)] # Unused vars (ingore this)
+        var2 = self.ctx.newSymbolicVariable(64, 'myvar2')
+
+        # Create two different variable nodes
+        ast1 = self.ast.variable(var1)
+        ast2 = self.ast.variable(var2)
+
+        # Make variables have the same value (optional)
+        self.ctx.setConcreteVariableValue(var1, 42)
+        self.ctx.setConcreteVariableValue(var2, 42)
+
+        # Test
+        self.assertFalse(ast1.equalTo(ast2))
