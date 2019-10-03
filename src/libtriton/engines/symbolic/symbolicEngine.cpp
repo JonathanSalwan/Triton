@@ -127,8 +127,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
-          this->removeAlignedMemory(addr, BYTE_SIZE);
+        this->removeAlignedMemory(addr, BYTE_SIZE);
       }
 
 
@@ -334,6 +333,13 @@ namespace triton {
       /* Removes the symbolic expression corresponding to the id */
       void SymbolicEngine::removeSymbolicExpression(triton::usize symExprId) {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end()) {
+          /* Remove aligned memory */
+          auto expr = this->getSymbolicExpressionFromId(symExprId);
+          if (expr->getType() == MEMORY_EXPRESSION) {
+            auto mem = expr->getOriginMemory();
+            this->removeAlignedMemory(mem.getAddress(), mem.getSize());
+          }
+
           /* Delete and remove the pointer */
           this->symbolicExpressions.erase(symExprId);
 
@@ -352,8 +358,6 @@ namespace triton {
               return;
             }
           }
-          // FIXME: Also try to remove it from alignedMemory
-          // FIXME: Remove it from ast context too
         }
       }
 
@@ -985,8 +989,9 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY))
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           this->addAlignedMemory(address, writeSize, se);
+        }
 
         /*
          * As the x86's memory can be accessed without alignment, each byte of the
