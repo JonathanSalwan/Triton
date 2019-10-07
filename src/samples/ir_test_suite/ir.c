@@ -79,6 +79,31 @@ void check(void)
   asm("mov rcx, 5");
   asm("xadd rdx, rcx");
 
+  asm("mov rdx, 0xffffffff11223344");
+  asm("mov rcx, 0x11223344ffffffff");
+  asm("xadd rdx, rcx");
+  asm("xadd rdx, rcx");
+  asm("xadd rdx, rcx");
+  asm("xadd rdx, rcx");
+  asm("xadd rdx, rcx");
+  asm("xadd rdx, rcx");
+  asm("mov rsi, %0" :: "r"(tab1));
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("mov rsi, %0" :: "r"(tab2));
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("mov rsi, %0" :: "r"(tab3));
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("mov rsi, %0" :: "r"(tab4));
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+  asm("xadd [rsi], rcx");
+
   asm("mov rsi, %0" :: "r"(tab1));
   asm("mov rcx, 5");
   asm("rep lodsb");

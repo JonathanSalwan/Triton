@@ -252,7 +252,7 @@ namespace tracer {
         #endif
 
         value = triton::utils::fromBufferToUint<triton::uint512>(buffer);
-        tracer::pintool::api.setConcreteRegisterValue(*syncReg, value);
+        tracer::pintool::api.getCpuInstance()->setConcreteRegisterValue(*syncReg, value);
 
         /* Returns the good casted value */
         return tracer::pintool::api.getConcreteRegisterValue(reg, false);
@@ -415,9 +415,6 @@ namespace tracer {
         const triton::arch::Register syncReg(reg);
         tracer::pintool::api.setConcreteRegisterValue(syncReg, value);
 
-        /* We must concretize the register because the last symbolic value is now false */
-        tracer::pintool::api.concretizeRegister(reg);
-
         /* Define that the context must be executed as soon as possible */
         tracer::pintool::context::mustBeExecuted = true;
       }
@@ -429,9 +426,6 @@ namespace tracer {
 
         /* Sync with the libTriton */
         tracer::pintool::api.setConcreteMemoryValue(mem, value);
-
-        /* We must concretize the memory because the last symbolic value is now false */
-        tracer::pintool::api.concretizeMemory(mem);
 
         /* Inject memory value */
         for (triton::uint32 i = 0; i < size; i++) {
@@ -450,9 +444,6 @@ namespace tracer {
         /* Sync with the libTriton */
         tracer::pintool::api.setConcreteMemoryValue(addr, value);
 
-        /* We must concretize the memory because the last symbolic value is now false */
-        tracer::pintool::api.concretizeMemory(addr);
-
         /* Inject memory value */
         *((triton::uint8*)(addr)) = (value & 0xff);
       }
@@ -466,15 +457,9 @@ namespace tracer {
       }
 
 
-      void needConcreteRegisterValue(triton::API& api, const triton::arch::Register& reg) {
-        triton::uint512 value = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(reg));
-        api.setConcreteRegisterValue(reg, value);
-      }
-
-
       void needConcreteMemoryValue(triton::API& api, const triton::arch::MemoryAccess& mem) {
-        triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(triton::arch::MemoryAccess(mem));
-        api.setConcreteMemoryValue(mem, value);
+        triton::uint512 cv = tracer::pintool::context::getCurrentMemoryValue(mem);
+        tracer::pintool::api.getCpuInstance()->setConcreteMemoryValue(mem, cv);
       }
 
 
@@ -483,17 +468,15 @@ namespace tracer {
           return;
 
         for (const triton::arch::Register* reg : tracer::pintool::api.getParentRegisters()) {
-          if (reg->getId() > triton::arch::ID_REG_X86_EFLAGS)
-            continue;
+          triton::arch::register_e regId = reg->getId();
 
-          if (tracer::pintool::api.getSymbolicRegister(*reg) == nullptr)
+          if (regId > triton::arch::ID_REG_X86_EFLAGS && !(regId >= triton::arch::ID_REG_X86_CS && regId <= triton::arch::ID_REG_X86_SS))
             continue;
 
           triton::uint512 cv = tracer::pintool::context::getCurrentRegisterValue(triton::arch::Register(*reg));
           triton::uint512 sv = tracer::pintool::api.getSymbolicRegisterValue(triton::arch::Register(*reg));
 
           if (sv != cv) {
-            tracer::pintool::api.concretizeRegister(*reg);
             tracer::pintool::api.setConcreteRegisterValue(*reg, cv);
           }
         }

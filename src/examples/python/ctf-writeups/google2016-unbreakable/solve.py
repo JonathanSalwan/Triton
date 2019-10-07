@@ -192,8 +192,8 @@ def strncpyHandler(ctx):
         smem  = MemoryAccess(src + index, 1)
         cell = ctx.getMemoryAst(smem)
         expr = ctx.newSymbolicExpression(cell, "strncpy byte")
-        ctx.assignSymbolicExpressionToMemory(expr, dmem)
         ctx.setConcreteMemoryValue(dmem, cell.evaluate())
+        ctx.assignSymbolicExpressionToMemory(expr, dmem)
 
     return dst
 
@@ -232,11 +232,9 @@ def libcMainHandler(ctx):
     main = ctx.getConcreteRegisterValue(ctx.registers.rdi)
 
     # Push the return value to jump into the main() function
-    ctx.concretizeRegister(ctx.registers.rsp)
     ctx.setConcreteRegisterValue(ctx.registers.rsp, ctx.getConcreteRegisterValue(ctx.registers.rsp)-CPUSIZE.QWORD)
 
     ret2main = MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.rsp), CPUSIZE.QWORD)
-    ctx.concretizeMemory(ret2main)
     ctx.setConcreteMemoryValue(ret2main, main)
 
     # Setup argc / argv
@@ -295,18 +293,15 @@ def hookingHandler(ctx):
             # Emulate the routine and the return value
             ret_value = rel[1](ctx)
             if ret_value is not None:
-                ctx.concretizeRegister(ctx.registers.rax)
                 ctx.setConcreteRegisterValue(ctx.registers.rax, ret_value)
 
             # Get the return address
             ret_addr = ctx.getConcreteMemoryValue(MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.rsp), CPUSIZE.QWORD))
 
             # Hijack RIP to skip the call
-            ctx.concretizeRegister(ctx.registers.rip)
             ctx.setConcreteRegisterValue(ctx.registers.rip, ret_addr)
 
             # Restore RSP (simulate the ret)
-            ctx.concretizeRegister(ctx.registers.rsp)
             ctx.setConcreteRegisterValue(ctx.registers.rsp, ctx.getConcreteRegisterValue(ctx.registers.rsp)+CPUSIZE.QWORD)
     return
 

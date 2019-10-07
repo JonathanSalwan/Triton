@@ -42,7 +42,7 @@ def before(instruction):
         rax = Triton.getSymbolicRegister(Triton.registers.rax)
         raxAst = rax.getAst()
         astCtxt = Triton.getAstContext()
-        constraint = astCtxt.assertTrue(astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize())))
+        constraint = astCtxt.equal(raxAst, astCtxt.bv(STRLEN_ASSERT_LEN, raxAst.getBitvectorSize()))
         models = Triton.getModels(constraint, SOLUTIONS)
         for model in models:
             s = str()

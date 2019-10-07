@@ -11,20 +11,9 @@ Triton = Pintool.getTritonContext()
 
 
 
-def needReg(ctx, reg):
-    ctx.setConcreteRegisterValue(reg, Pintool.getCurrentRegisterValue(reg))
-    return
-
-
-def needMem(ctx, mem):
-    ctx.setConcreteMemoryValue(mem, Pintool.getCurrentMemoryValue(mem))
-    return
-
-
 def sbefore(instruction):
-    Triton.reset()
-    Triton.addCallback(needReg, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
-    Triton.addCallback(needMem, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+    Triton.concretizeAllRegister()
+    Triton.concretizeAllMemory()
     return
 
 
@@ -47,12 +36,14 @@ def cafter(instruction):
 
     for reg in regs:
 
-        se = Triton.getSymbolicRegister(reg)
+        cvalue  = Pintool.getCurrentRegisterValue(reg)
+        se      = Triton.getSymbolicRegister(reg)
+
         if se is None:
             continue
 
-        svalue = se.getAst().evaluate()
-        cvalue = Pintool.getCurrentRegisterValue(reg)
+        expr   = se.getAst()
+        svalue = expr.evaluate()
 
         # Check register
         if cvalue != svalue:

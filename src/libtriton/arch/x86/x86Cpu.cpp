@@ -263,6 +263,10 @@ namespace triton {
           /* Add Control */
           else if (this->isControl(regId))
             ret.insert(&reg);
+
+          /* Add Segment */
+          else if (this->isSegment(regId))
+            ret.insert(&reg);
         }
 
         return ret;

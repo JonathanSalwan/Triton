@@ -9,7 +9,7 @@ def mycb(inst):
     print(inst)
     for expr in inst.getSymbolicExpressions():
         print(expr)
-    print()
+    print
     return
 
 

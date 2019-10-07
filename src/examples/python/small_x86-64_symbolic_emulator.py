@@ -238,11 +238,9 @@ def __libc_start_main():
     main = Triton.getConcreteRegisterValue(Triton.registers.rdi)
 
     # Push the return value to jump into the main() function
-    Triton.concretizeRegister(Triton.registers.rsp)
     Triton.setConcreteRegisterValue(Triton.registers.rsp, Triton.getConcreteRegisterValue(Triton.registers.rsp)-CPUSIZE.QWORD)
 
     ret2main = MemoryAccess(Triton.getConcreteRegisterValue(Triton.registers.rsp), CPUSIZE.QWORD)
-    Triton.concretizeMemory(ret2main)
     Triton.setConcreteMemoryValue(ret2main, main)
 
     # Setup argc / argv
@@ -337,18 +335,15 @@ def hookingHandler():
         if rel[2] == pc:
             # Emulate the routine and the return value
             ret_value = rel[1]()
-            Triton.concretizeRegister(Triton.registers.rax)
             Triton.setConcreteRegisterValue(Triton.registers.rax, ret_value)
 
             # Get the return address
             ret_addr = Triton.getConcreteMemoryValue(MemoryAccess(Triton.getConcreteRegisterValue(Triton.registers.rsp), CPUSIZE.QWORD))
 
             # Hijack RIP to skip the call
-            Triton.concretizeRegister(Triton.registers.rip)
             Triton.setConcreteRegisterValue(Triton.registers.rip, ret_addr)
 
             # Restore RSP (simulate the ret)
-            Triton.concretizeRegister(Triton.registers.rsp)
             Triton.setConcreteRegisterValue(Triton.registers.rsp, Triton.getConcreteRegisterValue(Triton.registers.rsp)+CPUSIZE.QWORD)
     return
 

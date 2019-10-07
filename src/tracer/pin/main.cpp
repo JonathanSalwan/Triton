@@ -312,8 +312,12 @@ namespace tracer {
     static void saveMemoryAccess(triton::arch::Instruction* tritonInst, triton::__uint addr, triton::uint32 size) {
       /* Mutex */
       PIN_LockClient();
-      triton::uint512 value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
-      tracer::pintool::api.setConcreteMemoryValue(triton::arch::MemoryAccess(addr, size), value);
+
+      auto mem   = triton::arch::MemoryAccess(addr, size);
+      auto value = tracer::pintool::context::getCurrentMemoryValue(addr, size);
+
+      tracer::pintool::api.getCpuInstance()->setConcreteMemoryValue(mem, value);
+
       /* Mutex */
       PIN_UnlockClient();
     }
@@ -684,7 +688,6 @@ namespace tracer {
         tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86);
 
       /* During the execution provide concrete values only if Triton needs them - cf #376, #632 and #645 */
-      tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteRegisterValue);
       tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
 
       /* Image callback */
@@ -744,4 +747,3 @@ namespace tracer {
 int main(int argc, char *argv[]) {
   return tracer::pintool::main(argc, argv);
 }
-

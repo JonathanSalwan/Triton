@@ -382,30 +382,59 @@ namespace triton {
   void API::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
     this->checkArchitecture();
     this->arch.setConcreteMemoryValue(addr, value);
+    /*
+     * In order to synchronize the concrete state with the symbolic
+     * one, the symbolic expression is removed.
+     */
+    this->concretizeMemory(addr);
   }
 
 
   void API::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
     this->checkArchitecture();
     this->arch.setConcreteMemoryValue(mem, value);
+    /*
+     * In order to synchronize the concrete state with the symbolic
+     * one, the symbolic expression is removed.
+     */
+    this->concretizeMemory(mem);
   }
 
 
   void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
     this->checkArchitecture();
     this->arch.setConcreteMemoryAreaValue(baseAddr, values);
+    /*
+     * In order to synchronize the concrete state with the symbolic
+     * one, the symbolic expression is removed.
+     */
+    for (triton::usize index = 0 ; index < values.size() ; index++) {
+      this->concretizeMemory(baseAddr + index);
+    }
   }
 
 
   void API::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
     this->checkArchitecture();
     this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
+    /*
+     * In order to synchronize the concrete state with the symbolic
+     * one, the symbolic expression is removed.
+     */
+    for (triton::usize index = 0 ; index < size ; index++) {
+      this->concretizeMemory(baseAddr + index);
+    }
   }
 
 
   void API::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
     this->checkArchitecture();
     this->arch.setConcreteRegisterValue(reg, value);
+    /*
+     * In order to synchronize the concrete state with the symbolic
+     * one, the symbolic expression is removed.
+     */
+    this->concretizeRegister(reg);
   }
 
 

@@ -128,11 +128,9 @@ def libcMainHandler(ctx):
     main = ctx.getConcreteRegisterValue(ctx.registers.x0)
 
     # Push the return value to jump into the main() function
-    ctx.concretizeRegister(ctx.registers.sp)
     ctx.setConcreteRegisterValue(ctx.registers.sp, ctx.getConcreteRegisterValue(ctx.registers.pc)-CPUSIZE.QWORD)
 
     ret2main = MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.sp), CPUSIZE.QWORD)
-    ctx.concretizeMemory(ret2main)
     ctx.setConcreteMemoryValue(ret2main, main)
 
     # Setup argc / argv
@@ -188,18 +186,15 @@ def hookingHandler(ctx):
             # Emulate the routine and the return value
             ret_value = rel[1](ctx)
             if ret_value is not None:
-                ctx.concretizeRegister(ctx.registers.x0)
                 ctx.setConcreteRegisterValue(ctx.registers.x0, ret_value)
 
             # Get the return address
             ret_addr = ctx.getConcreteMemoryValue(MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.sp), CPUSIZE.QWORD))
 
             # Hijack RIP to skip the call
-            ctx.concretizeRegister(ctx.registers.pc)
             ctx.setConcreteRegisterValue(ctx.registers.pc, ret_addr)
 
             # Restore RSP (simulate the ret)
-            ctx.concretizeRegister(ctx.registers.sp)
             ctx.setConcreteRegisterValue(ctx.registers.sp, ctx.getConcreteRegisterValue(ctx.registers.sp)+CPUSIZE.QWORD)
     return
 

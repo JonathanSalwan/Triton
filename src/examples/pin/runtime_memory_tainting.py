@@ -27,7 +27,7 @@ def cafter(instruction):
             print('\t -> %s%s%s' %(GREEN, se.getAst(), ENDC))
         else:
             print('\t -> %s' %(se.getAst()))
-    print()
+    print
 
 
 if __name__ == '__main__':
