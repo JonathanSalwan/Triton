@@ -384,7 +384,7 @@ namespace triton {
     this->arch.setConcreteMemoryValue(addr, value);
     /*
      * In order to synchronize the concrete state with the symbolic
-     * one, the symbolic expression is removed.
+     * one, the symbolic expression is concretized.
      */
     this->concretizeMemory(addr);
   }
@@ -395,7 +395,7 @@ namespace triton {
     this->arch.setConcreteMemoryValue(mem, value);
     /*
      * In order to synchronize the concrete state with the symbolic
-     * one, the symbolic expression is removed.
+     * one, the symbolic expression is concretized.
      */
     this->concretizeMemory(mem);
   }
@@ -406,7 +406,7 @@ namespace triton {
     this->arch.setConcreteMemoryAreaValue(baseAddr, values);
     /*
      * In order to synchronize the concrete state with the symbolic
-     * one, the symbolic expression is removed.
+     * one, the symbolic expression is concretized.
      */
     for (triton::usize index = 0 ; index < values.size() ; index++) {
       this->concretizeMemory(baseAddr + index);
@@ -419,7 +419,7 @@ namespace triton {
     this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
     /*
      * In order to synchronize the concrete state with the symbolic
-     * one, the symbolic expression is removed.
+     * one, the symbolic expression is concretized.
      */
     for (triton::usize index = 0 ; index < size ; index++) {
       this->concretizeMemory(baseAddr + index);
@@ -432,7 +432,7 @@ namespace triton {
     this->arch.setConcreteRegisterValue(reg, value);
     /*
      * In order to synchronize the concrete state with the symbolic
-     * one, the symbolic expression is removed.
+     * one, the symbolic expression is concretized.
      */
     this->concretizeRegister(reg);
   }
