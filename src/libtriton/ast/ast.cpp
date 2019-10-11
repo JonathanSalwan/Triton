@@ -91,6 +91,7 @@ namespace triton {
         case LAND_NODE:
         case LNOT_NODE:
         case LOR_NODE:
+        case LXOR_NODE:
           return true;
 
         case ITE_NODE:
@@ -2172,6 +2173,46 @@ namespace triton {
     }
 
 
+    /* ====== Lxor */
+
+
+    LxorNode::LxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) : AbstractNode(LXOR_NODE, expr1->getContext()) {
+      this->addChild(expr1);
+      this->addChild(expr2);
+    }
+
+    void LxorNode::init(void) {
+      if (this->children.size() < 2)
+        throw triton::exceptions::Ast("LxorNode::init(): Must take at least two children.");
+
+      /* Init attributes */
+      this->size = 1;
+      this->eval = 0;
+      this->symbolized = false;
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+        this->eval = !this->eval != !this->children[index]->evaluate();
+
+        if (this->children[index]->isLogical() == false)
+          throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
+      }
+
+      /* Init parents */
+      this->initParents();
+    }
+
+
+    triton::uint512 LxorNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->type, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * this->children[index]->hash(deep + 1);
+      return triton::ast::rotl(h, deep);
+    }
+
     /* ====== Reference node */
 
 
@@ -2508,6 +2549,7 @@ namespace triton {
         case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node));           break;
         case LNOT_NODE:                 newNode = std::make_shared<LnotNode>(*reinterpret_cast<LnotNode*>(node));         break;
         case LOR_NODE:                  newNode = std::make_shared<LorNode>(*reinterpret_cast<LorNode*>(node));           break;
+        case LXOR_NODE:                 newNode = std::make_shared<LxorNode>(*reinterpret_cast<LxorNode*>(node));         break;
         case REFERENCE_NODE: {
           if (unroll)
             return triton::ast::newInstance(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);

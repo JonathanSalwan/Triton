@@ -93,6 +93,12 @@ namespace triton {
           break;
         }
 
+        case Z3_OP_XOR: {
+          if (expr.num_args() != 2)
+            throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_XOR must contain two arguments.");
+          node = this->astCtxt->lxor(this->convert(expr.arg(0)), this->convert(expr.arg(1)));
+          break;
+        }
 
         case Z3_OP_NOT: {
           if (expr.num_args() != 1)

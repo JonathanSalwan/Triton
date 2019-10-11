@@ -1316,6 +1316,31 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_lxor(PyObject* self, PyObject* exprsList) {
+        std::vector<triton::ast::SharedAbstractNode> exprs;
+
+        if (exprsList == nullptr || !PyList_Check(exprsList))
+          return PyErr_Format(PyExc_TypeError, "lxor(): expected a list of AstNodes as first argument");
+
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+          PyObject* item = PyList_GetItem(exprsList, i);
+
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "lxor(): Each element from the list must be a AstNode");
+
+          exprs.push_back(PyAstNode_AsAstNode(item));
+        }
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->lxor(exprs));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_reference(PyObject* self, PyObject* symExpr) {
         if (!PySymbolicExpression_Check(symExpr))
           return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
@@ -1525,6 +1550,7 @@ namespace triton {
         {"lnot",            AstContext_lnot,            METH_O,           ""},
         {"lookingForNodes", AstContext_lookingForNodes, METH_VARARGS,     ""},
         {"lor",             AstContext_lor,             METH_O,           ""},
+        {"lxor",            AstContext_lxor,            METH_O,           ""},
         {"reference",       AstContext_reference,       METH_O,           ""},
         {"string",          AstContext_string,          METH_O,           ""},
         {"sx",              AstContext_sx,              METH_VARARGS,     ""},

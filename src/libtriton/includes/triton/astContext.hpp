@@ -249,6 +249,18 @@ namespace triton {
           return node;
         }
 
+        //! AST C++ API - lxor node builder
+        TRITON_EXPORT SharedAbstractNode lxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+
+        //! AST C++ API - lxor node builder
+        template <typename T> SharedAbstractNode lxor(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<LxorNode>(exprs, this->shared_from_this());
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
+
         //! AST C++ API - reference node builder
         TRITON_EXPORT SharedAbstractNode reference(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 

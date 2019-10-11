@@ -78,6 +78,7 @@ namespace triton {
       SX_NODE = 227,                  /*!< ((_ sign_extend x) y) */
       VARIABLE_NODE = 229,            /*!< Variable node */
       ZX_NODE = 233,                  /*!< ((_ zero_extend x) y) */
+      LXOR_NODE = 239,                /*!< (xor x y) */
     };
 
     //! The Representations namespace

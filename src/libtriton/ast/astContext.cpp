@@ -683,6 +683,19 @@ namespace triton {
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::list<SharedAbstractNode>& exprs);
 
 
+    SharedAbstractNode AstContext::lxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      SharedAbstractNode node = std::make_shared<LxorNode>(expr1, expr2);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::lxor(): Not enough memory");
+      node->init();
+      return node;
+    }
+
+
+    template TRITON_EXPORT SharedAbstractNode AstContext::lxor(const std::vector<SharedAbstractNode>& exprs);
+    template TRITON_EXPORT SharedAbstractNode AstContext::lxor(const std::list<SharedAbstractNode>& exprs);
+
+
     SharedAbstractNode AstContext::reference(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
       SharedAbstractNode node = std::make_shared<ReferenceNode>(expr);
       if (node == nullptr)
