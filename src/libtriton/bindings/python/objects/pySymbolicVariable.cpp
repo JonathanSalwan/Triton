@@ -215,6 +215,47 @@ namespace triton {
         return type->tp_alloc(type, 0);
       }
 
+      static long SymbolicVariable_hash(PyObject* self) {
+        return PySymbolicVariable_AsSymbolicVariable(self)->getId();
+      }
+
+      static PyObject* SymbolicVariable_richcompare(PyObject* self, PyObject* other, int op) {
+        PyObject* result = nullptr;
+        triton::usize id1 = 0;
+        triton::usize id2 = 0;
+
+        if (!PySymbolicVariable_Check(other)) {
+          result = Py_NotImplemented;
+        }
+        else {
+          id1 = PySymbolicVariable_AsSymbolicVariable(self)->getId();
+          id2 = PySymbolicVariable_AsSymbolicVariable(other)->getId();
+
+          switch (op) {
+          case Py_LT:
+            result = (id1 < id2) ? Py_True : Py_False;
+            break;
+          case Py_LE:
+            result = (id1 <= id2) ? Py_True : Py_False;
+            break;
+          case Py_EQ:
+            result = (id1 == id2) ? Py_True : Py_False;
+            break;
+          case Py_NE:
+            result = (id1 != id2) ? Py_True : Py_False;
+            break;
+          case Py_GT:
+            result = (id1 > id2) ? Py_True : Py_False;
+            break;
+          case Py_GE:
+            result = (id1 >= id2) ? Py_True : Py_False;
+            break;
+          }
+        }
+
+        Py_INCREF(result);
+        return result;
+      }
 
       //! SymbolicVariable methods.
       PyMethodDef SymbolicVariable_callbacks[] = {
@@ -245,7 +286,7 @@ namespace triton {
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */
-        0,                                          /* tp_hash */
+        (hashfunc)SymbolicVariable_hash,                      /* tp_hash */
         0,                                          /* tp_call */
         (reprfunc)SymbolicVariable_str,             /* tp_str */
         0,                                          /* tp_getattro */
@@ -255,7 +296,7 @@ namespace triton {
         "SymbolicVariable objects",                 /* tp_doc */
         0,                                          /* tp_traverse */
         0,                                          /* tp_clear */
-        0,                                          /* tp_richcompare */
+        SymbolicVariable_richcompare,               /* tp_richcompare */
         0,                                          /* tp_weaklistoffset */
         0,                                          /* tp_iter */
         0,                                          /* tp_iternext */
