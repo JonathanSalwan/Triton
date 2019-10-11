@@ -99,6 +99,73 @@ set(LIBTRITON_SOURCE_FILES
     utils/coreUtils.cpp
 )
 
+# Define all header files
+set(LIBTRITON_HEADER_FILES
+    includes/triton/aarch64Cpu.hpp
+    includes/triton/aarch64OperandProperties.hpp
+    includes/triton/aarch64Semantics.hpp
+    includes/triton/aarch64Specifications.hpp
+    includes/triton/api.hpp
+    includes/triton/archEnums.hpp
+    includes/triton/architecture.hpp
+    includes/triton/ast.hpp
+    includes/triton/astContext.hpp
+    includes/triton/astEnums.hpp
+    includes/triton/astPythonRepresentation.hpp
+    includes/triton/astRepresentation.hpp
+    includes/triton/astRepresentationInterface.hpp
+    includes/triton/astSmtRepresentation.hpp
+    includes/triton/bitsVector.hpp
+    includes/triton/callbacks.hpp
+    includes/triton/callbacksEnums.hpp
+    includes/triton/comparableFunctor.hpp
+    includes/triton/coreUtils.hpp
+    includes/triton/cpuInterface.hpp
+    includes/triton/cpuSize.hpp
+    includes/triton/dllexport.hpp
+    includes/triton/exceptions.hpp
+    includes/triton/externalLibs.hpp
+    includes/triton/immediate.hpp
+    includes/triton/instruction.hpp
+    includes/triton/irBuilder.hpp
+    includes/triton/memoryAccess.hpp
+    includes/triton/modes.hpp
+    includes/triton/modesEnums.hpp
+    includes/triton/operandWrapper.hpp
+    includes/triton/pathConstraint.hpp
+    includes/triton/pathManager.hpp
+    includes/triton/register.hpp
+    includes/triton/semanticsInterface.hpp
+    includes/triton/shortcutRegister.hpp
+    includes/triton/solverEngine.hpp
+    includes/triton/solverEnums.hpp
+    includes/triton/solverInterface.hpp
+    includes/triton/solverModel.hpp
+    includes/triton/symbolicEngine.hpp
+    includes/triton/symbolicEnums.hpp
+    includes/triton/symbolicExpression.hpp
+    includes/triton/symbolicSimplification.hpp
+    includes/triton/symbolicVariable.hpp
+    includes/triton/syscalls.hpp
+    includes/triton/taintEngine.hpp
+    includes/triton/tritonToZ3Ast.hpp
+    includes/triton/tritonTypes.hpp
+    includes/triton/unix.hpp
+    includes/triton/x8664Cpu.hpp
+    includes/triton/x86Cpu.hpp
+    includes/triton/x86Semantics.hpp
+    includes/triton/x86Specifications.hpp
+    includes/triton/z3Solver.hpp
+    includes/triton/z3ToTritonAst.hpp
+)
+
+# Define all resource files
+set(LIBTRITON_RESOURCE_FILES
+    includes/triton/aarch64.spec
+    includes/triton/x86.spec
+    includes/triton/version.hpp.in
+)
+
 if(Z3_INTERFACE)
     set(Z3_INTERFACE_SOURCE_FILES
         ast/z3/tritonToZ3Ast.cpp
@@ -144,8 +211,16 @@ if(PYTHON_BINDINGS)
         bindings/python/pyXFunctions.cpp
         bindings/python/utils.cpp
     )
+    set(LIBTRITON_PYTHON_HEADER_FILES
+        includes/triton/py3c_compat.h
+        includes/triton/pythonBindings.hpp
+        includes/triton/pythonObjects.hpp
+        includes/triton/pythonUtils.hpp
+        includes/triton/pythonXFunctions.hpp
+    )
 else()
     set(LIBTRITON_PYTHON_SOURCE_FILES)
+    set(LIBTRITON_PYTHON_HEADER_FILES)
 endif()
 
 # Triton have to generate a syscalls table from the kernel source
@@ -233,7 +308,12 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "
 endif()
 
 # Define library's properties
-add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${Z3_INTERFACE_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
+add_library(
+    ${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK}
+    ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_HEADER_FILES} ${LIBTRITON_RESOURCE_FILES}
+    ${Z3_INTERFACE_SOURCE_FILES}
+    ${LIBTRITON_PYTHON_SOURCE_FILES} ${LIBTRITON_PYTHON_HEADER_FILES}
+)
 add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
