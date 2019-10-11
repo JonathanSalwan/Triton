@@ -3325,6 +3325,12 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(src, src);
 
+        /* Tag undefined registers */
+        if (src.getSize() == WORD_SIZE) {
+          // When the BSWAP instruction references a 16-bit register, the result is undefined.
+          this->undefined_s(inst, src.getRegister());
+        }
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
