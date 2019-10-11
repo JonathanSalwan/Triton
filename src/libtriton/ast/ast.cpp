@@ -31,6 +31,7 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
+      this->logical     = false;
       this->type        = type;
     }
 
@@ -92,6 +93,7 @@ namespace triton {
         case LOR_NODE:
           return true;
 
+        case ITE_NODE:
         case REFERENCE_NODE:
           return this->logical;
 
@@ -168,11 +170,11 @@ namespace triton {
     void AbstractNode::removeParent(AbstractNode* p) {
       auto it = this->parents.find(p);
 
-      if(it == parents.end())
+      if (it == parents.end())
         return;
 
       it->second.first--;
-      if(it->second.first == 0)
+      if (it->second.first == 0)
         this->parents.erase(it);
     }
 
@@ -238,6 +240,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -278,6 +281,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() + this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -318,6 +322,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() & this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -365,6 +370,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       /* Mask based on the sign */
       if (this->children[0]->isSigned()) {
@@ -431,6 +437,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -471,6 +478,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() * this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -511,6 +519,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() & this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -547,6 +556,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -587,6 +597,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() | this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -623,6 +634,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~this->children[0]->evaluate() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -663,6 +675,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() | this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -714,6 +727,7 @@ namespace triton {
       this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -765,6 +779,7 @@ namespace triton {
       this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -811,6 +826,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (op2Signed == 0) {
         this->eval = (op1Signed < 0 ? 1 : -1);
@@ -865,6 +881,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed >= op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -912,6 +929,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed > op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -952,6 +970,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -999,6 +1018,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed <= op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1046,6 +1066,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed < op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1092,6 +1113,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1143,6 +1165,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1188,6 +1211,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() - this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1227,6 +1251,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = (-1 & this->getBitvectorMask());
@@ -1272,6 +1297,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() >= this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1312,6 +1338,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() > this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1352,6 +1379,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() <= this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1392,6 +1420,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() < this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1431,6 +1460,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1476,6 +1506,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() ^ this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1516,6 +1547,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() ^ this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1568,6 +1600,7 @@ namespace triton {
       /* Init attributes */
       this->size = size;
       this->eval = (value & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1599,6 +1632,7 @@ namespace triton {
       /* Init attributes */
       this->size = 0;
       this->eval = 0;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1634,6 +1668,7 @@ namespace triton {
         throw triton::exceptions::Ast("ConcatNode::init(): Must take at least two children.");
 
       /* Init attributes */
+      this->symbolized = false;
       this->size = 0;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->size += this->children[index]->getBitvectorSize();
@@ -1684,6 +1719,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = this->children[0]->evaluate();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1724,6 +1760,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() != this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1764,6 +1801,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() == this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1814,6 +1852,7 @@ namespace triton {
       /* Init attributes */
       this->size = ((high - low) + 1);
       this->eval = ((this->children[2]->evaluate() >> low) & this->getBitvectorMask());
+      this->symbolized = false;
 
       if (this->size > this->children[2]->getBitvectorSize() || high >= this->children[2]->getBitvectorSize())
         throw triton::exceptions::Ast("ExtractNode::init(): The size of the extraction is higher than the child expression.");
@@ -1863,6 +1902,7 @@ namespace triton {
 
       this->size = 1;
       this->eval = (P && Q) || (!P && !Q);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1934,9 +1974,14 @@ namespace triton {
       if (this->children[1]->getBitvectorSize() != this->children[2]->getBitvectorSize())
         throw triton::exceptions::Ast("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
 
+      if (this->children[1]->isLogical() != this->children[2]->isLogical())
+        throw triton::exceptions::Ast("IteNode::init(): Must take either two logical nodes or two bv nodes as 'then' and 'else' branches.");
+
       /* Init attributes */
       this->size = this->children[1]->getBitvectorSize();
       this->eval = this->children[0]->evaluate() ? this->children[1]->evaluate() : this->children[2]->evaluate();
+      this->logical = this->children[1]->isLogical();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1974,6 +2019,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = 1;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2019,6 +2065,7 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[2]->getBitvectorSize();
       this->eval = this->children[2]->evaluate();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2055,6 +2102,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = !(this->children[0]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2096,6 +2144,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = 0;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2217,6 +2266,7 @@ namespace triton {
         throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = ((((this->children[1]->evaluate() >> (this->children[1]->getBitvectorSize()-1)) == 0) ? this->children[1]->evaluate() : (this->children[1]->evaluate() | ~(this->children[1]->getBitvectorMask()))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2301,6 +2351,7 @@ namespace triton {
         throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = (this->children[1]->evaluate() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
