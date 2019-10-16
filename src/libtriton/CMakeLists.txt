@@ -57,8 +57,8 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin"
 endif()
 
 # Add Triton includes
-include_directories("${TRITON_ROOT}/src/libtriton/includes")
-include_directories("${CMAKE_BINARY_DIR}/src/libtriton/includes")
+include_directories("${CMAKE_CURRENT_LIST_DIR}/includes")
+include_directories("${CMAKE_CURRENT_BINARY_DIR}/includes")
 
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
@@ -235,6 +235,8 @@ endif()
 # Define library's properties
 add_library(${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK} ${LIBTRITON_SOURCE_FILES} ${Z3_INTERFACE_SOURCE_FILES} ${LIBTRITON_PYTHON_SOURCE_FILES})
 add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
+target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/includes")
+target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/includes")
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies
