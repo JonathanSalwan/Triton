@@ -2404,7 +2404,7 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
+    SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
@@ -2457,7 +2457,7 @@ namespace triton {
         case LOR_NODE:                  newNode = std::make_shared<LorNode>(*reinterpret_cast<LorNode*>(node));           break;
         case REFERENCE_NODE: {
           if (unroll)
-            return triton::ast::newInstance(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);
+            return triton::ast::shallowCopy(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);
           else
             newNode = std::make_shared<ReferenceNode>(*reinterpret_cast<ReferenceNode*>(node));
           break;
@@ -2467,11 +2467,11 @@ namespace triton {
         case VARIABLE_NODE:             newNode = node->shared_from_this(); /* Do not duplicate shared var (see #792) */  break;
         case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node));             break;
         default:
-          throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid type node.");
+          throw triton::exceptions::Ast("triton::ast::shallowCopy(): Invalid type node.");
       }
 
       if (newNode == nullptr)
-        throw triton::exceptions::Ast("triton::ast::newInstance(): Not enough memory.");
+        throw triton::exceptions::Ast("triton::ast::shallowCopy(): Not enough memory.");
 
       /* Remove parents as this is a new node which has no connections with original AST */
       if (node->getType() != VARIABLE_NODE) {
@@ -2481,15 +2481,23 @@ namespace triton {
           newNode->removeParent(p.get());
         }
       }
-
-      /* Create new instances of children and set their new parents */
-      auto& children = newNode->getChildren();
-      for (triton::usize idx = 0; idx < children.size(); idx++) {
-        children[idx] = triton::ast::newInstance(children[idx].get(), unroll);
-        children[idx]->setParent(newNode.get());
-      }
-
       return newNode;
+    }
+
+    SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
+      std::map<AbstractNode *, SharedAbstractNode> exprs;
+      auto nodes = nodesExtraction(node->shared_from_this(), unroll, true);
+
+      for (auto&& n : nodes) {
+        auto newNode = shallowCopy(n.get(), unroll);
+        exprs[n.get()] = newNode;
+        auto& children = newNode->getChildren();
+        for (auto& child : children) {
+          child = exprs[child.get()];
+          child->setParent(newNode.get());
+        }
+      }
+      return exprs.at(node);
     }
 
     SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
