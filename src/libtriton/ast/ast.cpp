@@ -2492,16 +2492,20 @@ namespace triton {
       return newNode;
     }
 
-
     SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
       return triton::ast::newInstance(node.get(), true);
     }
 
-
-    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
-      std::unordered_map<triton::usize, std::set<SharedAbstractNode>> sortedlist;
-      std::deque<std::pair<SharedAbstractNode,triton::usize>> worklist;
-      triton::usize depth = 0;
+    /* Returns a vector of unique AST-nodes sorted topologically
+     *
+     * The result has property that any parent has smaller index than its children.
+     * @unroll - traverses through ReferenceNodes
+     * @revert - reverses the result
+     */
+    std::vector<SharedAbstractNode> nodesExtraction(const SharedAbstractNode& node, bool unroll, bool revert) {
+      std::vector<SharedAbstractNode> result;
+      std::set<AbstractNode *> visited;
+      std::stack<std::pair<SharedAbstractNode, bool>> worklist;
 
       if (node == nullptr)
         throw triton::exceptions::Ast("triton::ast::nodesExtraction(): Node cannot be null.");
@@ -2510,42 +2514,45 @@ namespace triton {
        *  We use a worklist strategy to avoid recursive calls
        *  and so stack overflow when going through a big AST.
        */
-      worklist.push_back({node, 0});
-      while (worklist.empty() == false) {
-        auto ast = worklist.front().first;
-        auto lvl = worklist.front().second;
-        worklist.pop_front();
+      worklist.push({node, false});
 
-        /* Keep up-to-date the depth of the tree */
-        depth = std::max(depth, lvl);
+      while (!worklist.empty()) {
+        SharedAbstractNode ast;
+        bool postOrder;
+        std::tie(ast, postOrder) = worklist.top();
+        worklist.pop();
+
+        /* It means that we visited all children of this node and we can put it in the result */
+        if (postOrder) {
+          result.push_back(ast);
+          continue;
+        }
+
+        if (!visited.insert(ast.get()).second)
+          continue;
+        worklist.push({ast, true});
 
         /* Proceed children */
         for (const auto& child : ast->getChildren()) {
-          if (std::find(worklist.begin(), worklist.end(), std::make_pair(child, lvl + 1)) == worklist.end()) {
-            worklist.push_back({child, lvl + 1});
+          if (visited.find(child.get()) == visited.end()) {
+            worklist.push({child, false});
           }
         }
 
         /* If unroll is true, we unroll all references */
-        if (unroll == true && ast->getType() == REFERENCE_NODE) {
+        if (unroll && ast->getType() == REFERENCE_NODE) {
           const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
-          if (std::find(worklist.begin(), worklist.end(), std::make_pair(ref, lvl + 1)) == worklist.end()) {
-            worklist.push_back({ref, lvl + 1});
-          }
-        }
-
-        sortedlist[lvl].insert(ast);
-      }
-
-      /* Sort nodes into the output list */
-      for (triton::usize index = 0; index <= depth; index++) {
-        auto& nodes = revert ? sortedlist[depth - index] : sortedlist[index];
-        for (auto&& n : nodes) {
-          if (std::find(output->begin(), output->end(), n) == output->end()) {
-            output->push_back(n);
+          if (visited.find(ref.get()) == visited.end()) {
+            worklist.push({ref, false});
           }
         }
       }
+
+      /* The result is in reversed topological sort meaning that children go before parents */
+      if (!revert)
+        std::reverse(result.begin(), result.end());
+
+      return result;
     }
 
 
