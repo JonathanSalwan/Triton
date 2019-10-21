@@ -58,3 +58,17 @@ class TestCallback(unittest.TestCase):
     def cb_flag(api, x):
         global flag
         flag = True
+
+    def method_callback(self, api, _):
+        pass
+
+    def test_method_callback_removal(self):
+        # regression test for #809
+        import sys
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        cb = self.method_callback.__func__
+        cb_initial_refcnt = sys.getrefcount(cb)
+        self.Triton.addCallback(self.method_callback, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.Triton.removeCallback(self.method_callback, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.assertTrue(cb_initial_refcnt == sys.getrefcount(cb))
