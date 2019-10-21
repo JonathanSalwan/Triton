@@ -155,11 +155,22 @@ namespace triton {
 
 
       void SymbolicExpression::setAst(const triton::ast::SharedAbstractNode& node) {
-        for(auto sp : this->ast->getParents()) {
-          node->setParent(sp.get());
+        auto old = this->ast;
+        if (node == old)
+          return;
+
+        if (old) {
+          for (auto sp : old->getParents()) {
+            node->setParent(sp.get());
+          }
         }
+
         this->ast = node;
-        this->ast->init();
+
+        if (!old || !old->canReplaceNodeWithoutUpdate(ast)) {
+          this->ast->initParents();
+        }
+
       }
 
 

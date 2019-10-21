@@ -189,15 +189,19 @@ namespace triton {
           while (worklist.size()) {
             auto ast = worklist.front();
             worklist.pop_front();
+            bool needs_update = false;
             for (triton::uint32 index = 0; index < ast->getChildren().size(); index++) {
               auto child = ast->getChildren()[index];
               /* Don't apply simplification on nodes like String, Integer, etc. */
               if (child->getBitvectorSize()) {
                 auto schild = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, child);
                 ast->setChild(index, schild);
+                needs_update |= !schild->canReplaceNodeWithoutUpdate(child);
                 worklist.push_back(schild);
               }
             }
+            if (needs_update)
+              ast->init();
           }
         }
 

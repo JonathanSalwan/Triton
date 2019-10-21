@@ -119,6 +119,12 @@ namespace triton {
         //! Returns true if it's a logical node.
         TRITON_EXPORT bool isLogical(void) const;
 
+        //! Returns true if the node's concrete value and value type match those of the second one.
+        TRITON_EXPORT bool hasSameConcreteValueAndTypeAs(const SharedAbstractNode&) const;
+
+        //! Returns true if the node's value, value type and properties match those of the second one.
+        TRITON_EXPORT bool canReplaceNodeWithoutUpdate(const SharedAbstractNode&) const;
+
         //! Returns true if the current tree is equal to the second one.
         TRITON_EXPORT bool equalTo(const SharedAbstractNode&) const;
 
