@@ -3325,6 +3325,12 @@ namespace triton {
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(src, src);
 
+        /* Tag undefined registers */
+        if (src.getSize() == WORD_SIZE) {
+          // When the BSWAP instruction references a 16-bit register, the result is undefined.
+          this->undefined_s(inst, src.getRegister());
+        }
+
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
@@ -12028,7 +12034,7 @@ namespace triton {
         this->sfShld_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
-        /* Tag undefined flags */
+        /* Tag undefined flags/registers */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -12044,6 +12050,8 @@ namespace triton {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
+          if (dst.getType() == triton::arch::OP_REG)
+            this->undefined_s(inst, dst.getRegister());
         }
 
         /* Update the symbolic control flow */
@@ -12198,7 +12206,7 @@ namespace triton {
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
-        /* Tag undefined flags */
+        /* Tag undefined flags/registers */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -12214,6 +12222,8 @@ namespace triton {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
+          if (dst.getType() == triton::arch::OP_REG)
+            this->undefined_s(inst, dst.getRegister());
         }
 
         /* Update the symbolic control flow */

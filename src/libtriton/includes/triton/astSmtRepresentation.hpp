@@ -181,6 +181,9 @@ namespace triton {
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::LorNode* node);
 
           //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::LxorNode* node);
+
+          //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ReferenceNode* node);
 
           //! Displays the node according to the representation mode.

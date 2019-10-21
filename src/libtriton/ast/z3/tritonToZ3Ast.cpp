@@ -271,6 +271,24 @@ namespace triton {
           return currentValue;
         }
 
+        case LXOR_NODE: {
+          z3::expr currentValue = children[0];
+          if (!currentValue.get_sort().is_bool()) {
+            throw triton::exceptions::AstTranslations("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+          }
+          z3::expr nextValue(this->context);
+
+          for (triton::uint32 idx = 1; idx < children.size(); idx++) {
+            nextValue = children[idx];
+            if (!nextValue.get_sort().is_bool()) {
+              throw triton::exceptions::AstTranslations("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+            }
+            currentValue = to_expr(this->context, Z3_mk_xor(this->context, currentValue, nextValue));
+          }
+
+          return currentValue;
+        }
+
         case REFERENCE_NODE:
           return results->at(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getAst());
 

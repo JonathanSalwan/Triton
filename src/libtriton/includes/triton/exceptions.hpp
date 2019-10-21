@@ -395,6 +395,14 @@ namespace triton {
         TRITON_EXPORT Callbacks(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
+    /*! \class Callbacks
+     *  \brief The exception class used by python callbacks. */
+    class PyCallbacks : public triton::exceptions::Exception {
+    public:
+      //! Constructor.
+      TRITON_EXPORT PyCallbacks() : triton::exceptions::Exception("exception info is stored in python state") {};
+    };
+
   /*! @} End of exceptions namespace */
   };
 /*! @} End of exceptions namespace */

@@ -587,6 +587,19 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
+    //! `(xor <expr1> <expr2>)`
+    class LxorNode : public AbstractNode {
+    public:
+      template <typename T> LxorNode(const T& exprs, const SharedAstContext& ctxt)
+        : AbstractNode(LXOR_NODE, ctxt) {
+        for (auto expr : exprs)
+          this->addChild(expr);
+      }
+
+      TRITON_EXPORT LxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+      TRITON_EXPORT void init(void);
+      TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
 
     //! Reference node
     class ReferenceNode : public AbstractNode {
