@@ -818,6 +818,26 @@ class TestAstEval(unittest.TestCase):
         ]
         self.check_ast(tests)
 
+    def test_logical(self):
+        """Check logical operations."""
+        T = self.astCtxt.bvtrue()
+        F = self.astCtxt.bvfalse()
+        tests = [
+            self.astCtxt.land([T == T, F == F]),
+            self.astCtxt.land([F == F, T == F]),
+            self.astCtxt.land([T == F, F == T]),
+            self.astCtxt.land([F == T, T == T]),
+            self.astCtxt.lor([T == T, F == F]),
+            self.astCtxt.lor([F == F, T == F]),
+            self.astCtxt.lor([T == F, F == T]),
+            self.astCtxt.lor([F == T, T == T]),
+            self.astCtxt.lxor([T == T, F == F]),
+            self.astCtxt.lxor([F == F, T == F]),
+            self.astCtxt.lxor([T == F, F == T]),
+            self.astCtxt.lxor([F == T, T == T]),
+        ]
+        self.check_ast(tests)
+
     def test_reference(self):
         """Check evaluation of reference node after variable update."""
         self.sv1 = self.Triton.newSymbolicVariable(8)

@@ -151,6 +151,7 @@ class TestAstConversion(unittest.TestCase):
             self.astCtxt.iff,
             self.astCtxt.land,
             self.astCtxt.lor,
+            self.astCtxt.lxor,
         ]
 
         for _ in range(100):
@@ -161,7 +162,7 @@ class TestAstConversion(unittest.TestCase):
             for op in smtbinop:
                 if op == self.astCtxt.concat:
                     n = op([self.v1, self.v2])
-                elif op in (self.astCtxt.land, self.astCtxt.lor):
+                elif op in (self.astCtxt.land, self.astCtxt.lor, self.astCtxt.lxor):
                     n = op([self.v1 != cv1, self.v2 != cv2])
                 elif op == self.astCtxt.iff:
                     n = op(self.v1 > cv1, self.v2 < cv2)
@@ -279,6 +280,7 @@ class TestAstConversion(unittest.TestCase):
             (self.astCtxt.lnot, 1),
             (self.astCtxt.land, 2),
             (self.astCtxt.lor, 2),
+            (self.astCtxt.lxor, 2),
             (self.astCtxt.iff, 2),
         ]
         self.to_bool = [
@@ -348,7 +350,7 @@ class TestAstConversion(unittest.TestCase):
                       self.new_node(depth + 1, self.bvop))
         elif any(op == ibo for ibo, _ in self.in_bool):
             args = [self.new_node(depth, self.to_bool) for _ in range(nargs)]
-            if op in (self.astCtxt.land, self.astCtxt.lor):
+            if op in (self.astCtxt.land, self.astCtxt.lor, self.astCtxt.lxor):
                 return op(args)
             else:
                 return op(*args)
