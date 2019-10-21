@@ -302,7 +302,7 @@ namespace triton {
           TRITON_EXPORT bool isRegisterSymbolized(const triton::arch::Register& reg) const;
 
           //! Initializes the memory access AST (LOAD and STORE).
-          TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=false);
+          TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=true);
 
           //! Gets the concrete value of a symbolic variable.
           TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const SharedSymbolicVariable& symVar) const;

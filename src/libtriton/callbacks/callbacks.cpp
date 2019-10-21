@@ -128,7 +128,7 @@ namespace triton {
             this->mload = true;
             function(this->api, mem);
             if (mem.getLeaAst() != nullptr)
-                this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem), true);
+                this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem));
             this->mload = false;
           }
 
