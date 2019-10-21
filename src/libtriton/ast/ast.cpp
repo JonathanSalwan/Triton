@@ -197,14 +197,16 @@ namespace triton {
       if (child == nullptr)
         throw triton::exceptions::Ast("AbstractNode::setChild(): child cannot be null.");
 
-      /* Remove the parent of the old child */
-      this->children[index]->removeParent(this);
+      if (this->children[index] != child) {
+        /* Remove the parent of the old child */
+        this->children[index]->removeParent(this);
 
-      /* Setup the parent of the child */
-      child->setParent(this);
+        /* Setup the parent of the child */
+        child->setParent(this);
 
-      /* Setup the child of the parent */
-      this->children[index] = child;
+        /* Setup the child of the parent */
+        this->children[index] = child;
+      }
     }
 
 
