@@ -73,12 +73,12 @@ namespace triton {
       LET_NODE = 193,                 /*!< (let ((x y)) z) */
       LNOT_NODE = 197,                /*!< (and x y) */
       LOR_NODE = 199,                 /*!< (or x y) */
-      REFERENCE_NODE = 211,           /*!< Reference node */
-      STRING_NODE = 223,              /*!< String node */
-      SX_NODE = 227,                  /*!< ((_ sign_extend x) y) */
-      VARIABLE_NODE = 229,            /*!< Variable node */
-      ZX_NODE = 233,                  /*!< ((_ zero_extend x) y) */
-      LXOR_NODE = 239,                /*!< (xor x y) */
+      LXOR_NODE = 211,                /*!< (xor x y) */
+      REFERENCE_NODE = 223,           /*!< Reference node */
+      STRING_NODE = 227,              /*!< String node */
+      SX_NODE = 229,                  /*!< ((_ sign_extend x) y) */
+      VARIABLE_NODE = 233,            /*!< Variable node */
+      ZX_NODE = 239,                  /*!< ((_ zero_extend x) y) */
     };
 
     //! The Representations namespace

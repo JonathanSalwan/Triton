@@ -2213,6 +2213,7 @@ namespace triton {
       return triton::ast::rotl(h, deep);
     }
 
+
     /* ====== Reference node */
 
 
@@ -2433,6 +2434,8 @@ namespace triton {
     template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LxorNode::LxorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LxorNode::LxorNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
 
   }; /* ast namespace */
 }; /* triton namespace */

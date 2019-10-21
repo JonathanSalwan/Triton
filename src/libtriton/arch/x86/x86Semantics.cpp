@@ -12034,7 +12034,7 @@ namespace triton {
         this->sfShld_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
-        /* Tag undefined flags/registers */
+        /* Tag undefined flags */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }
@@ -12206,7 +12206,7 @@ namespace triton {
         this->sfShrd_s(inst, expr, dst, op1, op2, op3);
         this->zfShl_s(inst, expr, dst, op3); /* Same that shl */
 
-        /* Tag undefined flags/registers */
+        /* Tag undefined flags */
         if (op3->evaluate() != 0) {
           this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
         }

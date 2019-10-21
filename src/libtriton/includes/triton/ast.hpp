@@ -587,6 +587,7 @@ namespace triton {
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
+
     //! `(xor <expr1> <expr2>)`
     class LxorNode : public AbstractNode {
     public:
@@ -600,6 +601,7 @@ namespace triton {
       TRITON_EXPORT void init(void);
       TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
+
 
     //! Reference node
     class ReferenceNode : public AbstractNode {

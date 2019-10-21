@@ -215,9 +215,11 @@ namespace triton {
         return type->tp_alloc(type, 0);
       }
 
+
       static long SymbolicVariable_hash(PyObject* self) {
         return PySymbolicVariable_AsSymbolicVariable(self)->getId();
       }
+
 
       static PyObject* SymbolicVariable_richcompare(PyObject* self, PyObject* other, int op) {
         PyObject* result = nullptr;
@@ -286,7 +288,7 @@ namespace triton {
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */
-        (hashfunc)SymbolicVariable_hash,                      /* tp_hash */
+        (hashfunc)SymbolicVariable_hash,            /* tp_hash */
         0,                                          /* tp_call */
         (reprfunc)SymbolicVariable_str,             /* tp_str */
         0,                                          /* tp_getattro */
