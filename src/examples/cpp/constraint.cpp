@@ -55,7 +55,7 @@ int main(int ac, const char **av) {
   auto raxSym = api.getSymbolicRegister(api.registers.x86_rax);
 
   /* Get the RAX full AST */
-  auto raxFullAst = triton::ast::unrollAst(raxSym->getAst());
+  auto raxFullAst = triton::ast::unroll(raxSym->getAst());
 
   /* Display RAX's AST*/
   std::cout << "RAX expr: " << raxFullAst << std::endl;

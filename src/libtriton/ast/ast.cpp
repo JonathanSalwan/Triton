@@ -2591,7 +2591,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
+    SharedAbstractNode unroll(const triton::ast::SharedAbstractNode& node) {
       return triton::ast::newInstance(node.get(), true);
     }
 

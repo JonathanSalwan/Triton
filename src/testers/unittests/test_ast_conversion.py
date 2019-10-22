@@ -377,7 +377,7 @@ class TestUnrollAst(unittest.TestCase):
         self.ctx.processing(Instruction(b"\x48\x89\xca")) # mov rdx, rcx
         rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
         self.assertEqual(str(rdx), "ref!6")
-        self.assertEqual(str(self.ast.unrollAst(rdx)), "(_ bv1 64)")
+        self.assertEqual(str(self.ast.unroll(rdx)), "(_ bv1 64)")
         return
 
     def test_2(self):
@@ -385,7 +385,7 @@ class TestUnrollAst(unittest.TestCase):
         self.ctx.processing(Instruction(b"\x48\x31\xc0")) # xor rax, rax
         rax = self.ctx.getRegisterAst(self.ctx.registers.rax)
         self.assertEqual(str(rax), "ref!2")
-        self.assertEqual(str(self.ast.unrollAst(rax)), "(bvxor (_ bv1 64) (_ bv1 64))")
+        self.assertEqual(str(self.ast.unroll(rax)), "(bvxor (_ bv1 64) (_ bv1 64))")
         return
 
     def test_3(self):
@@ -396,7 +396,7 @@ class TestUnrollAst(unittest.TestCase):
         self.ctx.processing(Instruction(b"\x48\x89\xc2")) # mov rdx, rax
         rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
         self.assertEqual(str(rdx), "ref!18")
-        self.assertEqual(str(self.ast.unrollAst(rdx)), "(bvadd (bvxor (_ bv1 64) (_ bv2 64)) (_ bv1 64))")
+        self.assertEqual(str(self.ast.unroll(rdx)), "(bvadd (bvxor (_ bv1 64) (_ bv2 64)) (_ bv1 64))")
         ref4 = self.ctx.getSymbolicExpressionFromId(4)
         self.assertEqual(str(ref4.getAst()), "(bvxor ref!0 ref!2)")
         return

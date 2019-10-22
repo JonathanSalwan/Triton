@@ -77,7 +77,7 @@ class TestSymbolicVariable(unittest.TestCase):
         self.ctx.processing(inst)
 
         ast = self.ctx.getAstContext()
-        rax_ast = ast.unrollAst(self.ctx.getRegisterAst(self.ctx.registers.rax))
+        rax_ast = ast.unroll(self.ctx.getRegisterAst(self.ctx.registers.rax))
         model = self.ctx.getModel(rax_ast == 0x41)
         self.assertEqual(str(rax_ast), "(bvxor rax (_ bv0 64))")
         self.assertEqual(str(model[4]), "rax:64 = 0x41")

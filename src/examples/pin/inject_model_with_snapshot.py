@@ -76,7 +76,7 @@ def cafter(instruction):
     if instruction.getAddress() == 0x400597:
         astCtxt = Triton.getAstContext();
         zf      = Triton.getSymbolicRegister(Triton.registers.zf)
-        zfAst   = astCtxt.unrollAst(zf.getAst())
+        zfAst   = astCtxt.unroll(zf.getAst())
         expr    = astCtxt.equal(zfAst, astCtxt.bvtrue()) # (= zf True)
         models  = Triton.getModel(expr)
         global password

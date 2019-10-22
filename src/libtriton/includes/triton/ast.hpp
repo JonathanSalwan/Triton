@@ -676,7 +676,7 @@ namespace triton {
     TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
 
     //! AST C++ API - Unrolls the SSA form of a given AST.
-    TRITON_EXPORT SharedAbstractNode unrollAst(const SharedAbstractNode& node);
+    TRITON_EXPORT SharedAbstractNode unroll(const SharedAbstractNode& node);
 
     //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
     TRITON_EXPORT void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);

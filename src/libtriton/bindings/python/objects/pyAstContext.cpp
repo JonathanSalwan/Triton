@@ -250,7 +250,7 @@ Returns a list of collected matched nodes via a depth-first pre order traversal.
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
 Convert a Triton AST to a Z3 AST.
 
-- <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
+- <b>\ref py_AstNode_page unroll(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
 
 
@@ -1389,12 +1389,12 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_unrollAst(PyObject* self, PyObject* node) {
+      static PyObject* AstContext_unroll(PyObject* self, PyObject* node) {
         if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "unrollAst(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "unroll(): Expects a AstNode as argument.");
 
         try {
-          return PyAstNode(triton::ast::unrollAst(PyAstNode_AsAstNode(node)));
+          return PyAstNode(triton::ast::unroll(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1554,7 +1554,7 @@ namespace triton {
         {"reference",       AstContext_reference,       METH_O,           ""},
         {"string",          AstContext_string,          METH_O,           ""},
         {"sx",              AstContext_sx,              METH_VARARGS,     ""},
-        {"unrollAst",       AstContext_unrollAst,       METH_O,           ""},
+        {"unroll",          AstContext_unroll,          METH_O,           ""},
         {"variable",        AstContext_variable,        METH_O,           ""},
         {"zx",              AstContext_zx,              METH_VARARGS,     ""},
         #ifdef Z3_INTERFACE

@@ -42,7 +42,7 @@ True
 0x0: xor rax, 0x11223344
 
 >>> ast = ctxt.getAstContext()
->>> raxAst = ast.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
+>>> raxAst = ast.unroll(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
 >>> print(raxAst)
 (bvxor SymVar_0 (_ bv287454020 64))
 

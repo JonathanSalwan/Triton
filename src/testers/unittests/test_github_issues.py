@@ -114,7 +114,7 @@ class TestIssue792(unittest.TestCase):
 
         ast_original  = ac.bvadd(ac.variable(var1), ac.variable(var2))
         ast_duplicate = ac.duplicate(ast_original)
-        ast_unrolled  = ac.unrollAst(ast_original)
+        ast_unrolled  = ac.unroll(ast_original)
 
         self.ctx.setConcreteVariableValue(var1, 4)
         self.ctx.setConcreteVariableValue(var2, 2)
@@ -229,7 +229,7 @@ class TestIssue789(unittest.TestCase):
         self.emulate(0x400000)
         ast = self.ctx.getAstContext()
         rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
-        self.assertEqual(str(ast.unrollAst(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
+        self.assertEqual(str(ast.unroll(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
 
 
 class TestIssue803(unittest.TestCase):
