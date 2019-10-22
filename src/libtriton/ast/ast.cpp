@@ -2647,7 +2647,7 @@ namespace triton {
     }
 
 
-    std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match) {
+    std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match) {
       std::stack<triton::ast::AbstractNode*>      worklist;
       std::deque<triton::ast::SharedAbstractNode> result;
       std::set<const triton::ast::AbstractNode*>  visited;

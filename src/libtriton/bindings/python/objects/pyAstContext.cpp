@@ -244,7 +244,7 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 - <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
-- <b>[\ref py_AstNode_page, ...] lookingForNodes(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
+- <b>[\ref py_AstNode_page, ...] search(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
 Returns a list of collected matched nodes via a depth-first pre order traversal.
 
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
@@ -1261,7 +1261,7 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_lookingForNodes(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_search(PyObject* self, PyObject* args) {
         PyObject* ret = nullptr;
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1270,13 +1270,13 @@ namespace triton {
         PyArg_ParseTuple(args, "|OO", &op1, &op2);
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AstNode object as first argument");
+          return PyErr_Format(PyExc_TypeError, "search(): expected a AstNode object as first argument");
 
         if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
-          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AST_NODE enum as second argument");
+          return PyErr_Format(PyExc_TypeError, "search(): expected a AST_NODE enum as second argument");
 
         try {
-          auto nodes = triton::ast::lookingForNodes(PyAstNode_AsAstNode(op1), static_cast<triton::ast::ast_e>(PyLong_AsUint32(op2)));
+          auto nodes = triton::ast::search(PyAstNode_AsAstNode(op1), static_cast<triton::ast::ast_e>(PyLong_AsUint32(op2)));
           ret = xPyList_New(nodes.size());
 
           triton::uint32 index = 0;
@@ -1548,10 +1548,10 @@ namespace triton {
         {"land",            AstContext_land,            METH_O,           ""},
         {"let",             AstContext_let,             METH_VARARGS,     ""},
         {"lnot",            AstContext_lnot,            METH_O,           ""},
-        {"lookingForNodes", AstContext_lookingForNodes, METH_VARARGS,     ""},
         {"lor",             AstContext_lor,             METH_O,           ""},
         {"lxor",            AstContext_lxor,            METH_O,           ""},
         {"reference",       AstContext_reference,       METH_O,           ""},
+        {"search",          AstContext_search,          METH_VARARGS,     ""},
         {"string",          AstContext_string,          METH_O,           ""},
         {"sx",              AstContext_sx,              METH_VARARGS,     ""},
         {"unroll",          AstContext_unroll,          METH_O,           ""},
