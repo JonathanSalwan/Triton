@@ -264,7 +264,7 @@ namespace tracer {
       triton::__uint ret;
 
       /* Extract arguments */
-      if (PyArg_ParseTuple(args, "|OO", &std, &num) == false {
+      if (PyArg_ParseTuple(args, "|OO", &std, &num) == false) {
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallArgument(): Invalid number of arguments");
       }
 
