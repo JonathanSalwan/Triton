@@ -334,7 +334,7 @@ namespace triton {
       void SymbolicEngine::removeSymbolicExpression(triton::usize symExprId) {
         if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end()) {
           /* Remove aligned memory */
-          auto expr = this->getSymbolicExpressionFromId(symExprId);
+          auto expr = this->getSymbolicExpression(symExprId);
           if (expr->getType() == MEMORY_EXPRESSION) {
             auto mem = expr->getOriginMemory();
             this->removeAlignedMemory(mem.getAddress(), mem.getSize());
@@ -363,16 +363,16 @@ namespace triton {
 
 
       /* Gets the shared symbolic expression from a symbolic id */
-      SharedSymbolicExpression SymbolicEngine::getSymbolicExpressionFromId(triton::usize symExprId) const {
+      SharedSymbolicExpression SymbolicEngine::getSymbolicExpression(triton::usize symExprId) const {
         auto it = this->symbolicExpressions.find(symExprId);
         if (it == this->symbolicExpressions.end())
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression id not found");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpression(): symbolic expression id not found");
 
         if (auto sp = it->second.lock())
           return sp;
 
         this->symbolicExpressions.erase(symExprId);
-        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpressionFromId(): symbolic expression is not available anymore");
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpression(): symbolic expression is not available anymore");
       }
 
 
@@ -470,7 +470,7 @@ namespace triton {
        * #43 = SymVar_4
        */
       SharedSymbolicVariable SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
-        const SharedSymbolicExpression& expression = this->getSymbolicExpressionFromId(exprId);
+        const SharedSymbolicExpression& expression = this->getSymbolicExpression(exprId);
         const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(UNDEFINED_VARIABLE, 0, symVarSize, symVarComment);
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt->variable(symVar);
 
@@ -1021,7 +1021,7 @@ namespace triton {
 
 
       /* Returns true if the symbolic expression ID exists */
-      bool SymbolicEngine::isSymbolicExpressionIdExists(triton::usize symExprId) const {
+      bool SymbolicEngine::isSymbolicExpressionExists(triton::usize symExprId) const {
         auto it = this->symbolicExpressions.find(symExprId);
 
         if (it != this->symbolicExpressions.end())

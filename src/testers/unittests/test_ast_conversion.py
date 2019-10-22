@@ -397,7 +397,7 @@ class TestUnrollAst(unittest.TestCase):
         rdx = self.ctx.getRegisterAst(self.ctx.registers.rdx)
         self.assertEqual(str(rdx), "ref!18")
         self.assertEqual(str(self.ast.unroll(rdx)), "(bvadd (bvxor (_ bv1 64) (_ bv2 64)) (_ bv1 64))")
-        ref4 = self.ctx.getSymbolicExpressionFromId(4)
+        ref4 = self.ctx.getSymbolicExpression(4)
         self.assertEqual(str(ref4.getAst()), "(bvxor ref!0 ref!2)")
         return
 

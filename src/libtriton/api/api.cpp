@@ -856,9 +856,9 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SharedSymbolicExpression API::getSymbolicExpressionFromId(triton::usize symExprId) const {
+  triton::engines::symbolic::SharedSymbolicExpression API::getSymbolicExpression(triton::usize symExprId) const {
     this->checkSymbolic();
-    return this->symbolic->getSymbolicExpressionFromId(symExprId);
+    return this->symbolic->getSymbolicExpression(symExprId);
   }
 
 
@@ -934,9 +934,9 @@ namespace triton {
   }
 
 
-  bool API::isSymbolicExpressionIdExists(triton::usize symExprId) const {
+  bool API::isSymbolicExpressionExists(triton::usize symExprId) const {
     this->checkSymbolic();
-    return this->symbolic->isSymbolicExpressionIdExists(symExprId);
+    return this->symbolic->isSymbolicExpressionExists(symExprId);
   }
 
 

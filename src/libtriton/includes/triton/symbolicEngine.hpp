@@ -185,7 +185,7 @@ namespace triton {
           TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
 
           //! Returns the symbolic expression corresponding to an id.
-          TRITON_EXPORT SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
+          TRITON_EXPORT SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
 
           //! Returns the shared symbolic expression corresponding to the memory address.
           TRITON_EXPORT SharedSymbolicExpression getSymbolicMemory(triton::uint64 addr) const;
@@ -290,7 +290,7 @@ namespace triton {
           TRITON_EXPORT bool isEnabled(void) const;
 
           //! Returns true if the symbolic expression ID exists.
-          TRITON_EXPORT bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
+          TRITON_EXPORT bool isSymbolicExpressionExists(triton::usize symExprId) const;
 
           //! Returns true if memory cell expressions contain symbolic variables.
           TRITON_EXPORT bool isMemorySymbolized(const triton::arch::MemoryAccess& mem) const;

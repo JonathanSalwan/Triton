@@ -406,7 +406,7 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode processSimplification(const triton::ast::SharedAbstractNode& node, bool z3=false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
@@ -439,7 +439,7 @@ namespace triton {
         TRITON_EXPORT bool isSymbolicEngineEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
-        TRITON_EXPORT bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
+        TRITON_EXPORT bool isSymbolicExpressionExists(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns true if memory cell expressions contain symbolic variables.
         TRITON_EXPORT bool isMemorySymbolized(const triton::arch::MemoryAccess& mem) const;
