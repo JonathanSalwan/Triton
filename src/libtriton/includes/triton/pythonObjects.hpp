@@ -10,6 +10,8 @@
 #define TRITON_PYOBJECT_H
 
 #include <triton/pythonBindings.hpp>
+
+#include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/immediate.hpp>
@@ -74,6 +76,9 @@ namespace triton {
 
       //! Creates the new TritonContext python class.
       PyObject* PyTritonContext(void);
+
+      //! Creates the new TritonContext python class.
+      PyObject* PyTritonContext(triton::arch::architecture_e arch);
 
       //! Creates a TritonContext python class which is a reference to another Context.
       PyObject* PyTritonContextRef(triton::API& api);

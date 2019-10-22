@@ -423,7 +423,9 @@ namespace triton {
         PyObject* cb_self  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &function, &mode);
+        if (PyArg_ParseTuple(args, "|OO", &function, &mode) == false) {
+          return PyErr_Format(PyExc_TypeError, "addCallback(): Invalid number of arguments");
+        }
 
         if (function == nullptr || !PyCallable_Check(function))
           return PyErr_Format(PyExc_TypeError, "addCallback(): Expects a function as first argument.");
@@ -639,7 +641,9 @@ namespace triton {
         PyObject* mem = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &se, &mem);
+        if (PyArg_ParseTuple(args, "|OO", &se, &mem) == false) {
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Invalid number of arguments");
+        }
 
         if (se == nullptr || (!PySymbolicExpression_Check(se)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToMemory(): Expects a SymbolicExpression as first argument.");
@@ -670,7 +674,9 @@ namespace triton {
         PyObject* reg = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &se, &reg);
+        if (PyArg_ParseTuple(args, "|OO", &se, &reg) == false) {
+          return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Invalid number of arguments");
+        }
 
         if (se == nullptr || (!PySymbolicExpression_Check(se)))
           return PyErr_Format(PyExc_TypeError, "assignSymbolicExpressionToRegister(): Expects a SymbolicExpression as first argument.");
@@ -821,7 +827,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment);
+        if (PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Invalid number of arguments");
+        }
 
         if (exprId == nullptr || (!PyLong_Check(exprId) && !PyInt_Check(exprId)))
           return PyErr_Format(PyExc_TypeError, "convertExpressionToSymbolicVariable(): Expects an integer as first argument.");
@@ -853,7 +861,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem, &comment);
+        if (PyArg_ParseTuple(args, "|OO", &mem, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Invalid number of arguments");
+        }
 
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "convertMemoryToSymbolicVariable(): Expects a MemoryAccess as first argument.");
@@ -882,7 +892,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg, &comment);
+        if (PyArg_ParseTuple(args, "|OO", &reg, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Invalid number of arguments");
+        }
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "convertRegisterToSymbolicVariable(): Expects a Register as first argument.");
@@ -913,7 +925,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment);
+        if (PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Invalid number of arguments");
+        }
 
         if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicFlagExpression(): Expects an Instruction as first argument.");
@@ -954,7 +968,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOOO", &inst, &node, &mem, &comment);
+        if (PyArg_ParseTuple(args, "|OOOO", &inst, &node, &mem, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Invalid number of arguments");
+        }
 
         if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicMemoryExpression(): Expects an Instruction as first argument.");
@@ -995,7 +1011,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOOO", &inst, &node, &reg, &comment);
+        if (PyArg_ParseTuple(args, "|OOOO", &inst, &node, &reg, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Invalid number of arguments");
+        }
 
         if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicRegisterExpression(): Expects an Instruction as first argument.");
@@ -1035,7 +1053,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &inst, &node, &comment);
+        if (PyArg_ParseTuple(args, "|OOO", &inst, &node, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Invalid number of arguments");
+        }
 
         if (inst == nullptr || (!PyInstruction_Check(inst)))
           return PyErr_Format(PyExc_TypeError, "createSymbolicVolatileExpression(): Expects an Instruction as first argument.");
@@ -1088,7 +1108,9 @@ namespace triton {
         PyObject* flag = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mode, &flag);
+        if (PyArg_ParseTuple(args, "|OO", &mode, &flag) == false) {
+          return PyErr_Format(PyExc_TypeError, "enableMode(): Invalid number of arguments");
+        }
 
         if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
           return PyErr_Format(PyExc_TypeError, "enableMode(): Expects a MODE as argument.");
@@ -1236,7 +1258,9 @@ namespace triton {
         PyObject*       size = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &addr, &size);
+        if (PyArg_ParseTuple(args, "|OO", &addr, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "getConcreteMemoryAreaValue(): Invalid number of arguments");
+        }
 
         try {
           std::vector<triton::uint8> vv = PyTritonContext_AsTritonContext(self)->getConcreteMemoryAreaValue(PyLong_AsUint64(addr), PyLong_AsUsize(size));
@@ -1399,7 +1423,9 @@ namespace triton {
         PyObject* limit = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &node, &limit);
+        if (PyArg_ParseTuple(args, "|OO", &node, &limit) == false) {
+          return PyErr_Format(PyExc_TypeError, "getModels(): Invalid number of arguments");
+        }
 
         if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "getModels(): Expects a AstNode as first argument.");
@@ -1570,7 +1596,9 @@ namespace triton {
         PyObject* addr = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|O", &addr);
+        if (PyArg_ParseTuple(args, "|O", &addr) == false) {
+          return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Invalid number of arguments");
+        }
 
         try {
           if (addr == nullptr) {
@@ -1839,7 +1867,9 @@ namespace triton {
         triton::usize c_size      = 1;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
+        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Invalid number of arguments");
+        }
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "isMemoryMapped(): Expects a base address (integer) as first argument.");
@@ -2078,7 +2108,9 @@ namespace triton {
         std::string ccomment    = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &node, &comment);
+        if (PyArg_ParseTuple(args, "|OO", &node, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Invalid number of arguments");
+        }
 
         if (node == nullptr || (!PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicExpression(): Expects a AstNode as first argument.");
@@ -2107,7 +2139,9 @@ namespace triton {
         std::string ccomment  = "";
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &size, &comment);
+        if (PyArg_ParseTuple(args, "|OO", &size, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Invalid number of arguments");
+        }
 
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "newSymbolicVariable(): Expects an integer as first argument.");
@@ -2170,7 +2204,9 @@ namespace triton {
         PyObject* mode     = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &function, &mode);
+        if (PyArg_ParseTuple(args, "|OO", &function, &mode) == false) {
+          return PyErr_Format(PyExc_TypeError, "removeCallback(): Invalid number of arguments");
+        }
 
         if (function == nullptr || !PyCallable_Check(function))
           return PyErr_Format(PyExc_TypeError, "removeCallback(): Expects a function as first argument.");
@@ -2285,7 +2321,9 @@ namespace triton {
         PyObject* values    = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &baseAddr, &values);
+        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &values) == false) {
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Invalid number of arguments");
+        }
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "setConcreteMemoryAreaValue(): Expects an integer as first argument.");
@@ -2361,7 +2399,9 @@ namespace triton {
         PyObject* value  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem, &value);
+        if (PyArg_ParseTuple(args, "|OO", &mem, &value) == false) {
+          return PyErr_Format(PyExc_TypeError, "setConcreteMemoryValue(): Invalid number of arguments");
+        }
 
         /* setConcreteMemoryValue(integer, integer) */
         if (mem != nullptr && (PyLong_Check(mem) || PyInt_Check(mem))) {
@@ -2416,7 +2456,9 @@ namespace triton {
         PyObject* value  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg, &value);
+        if (PyArg_ParseTuple(args, "|OO", &reg, &value) == false) {
+          return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Invalid number of arguments");
+        }
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "setConcreteRegisterValue(): Expects a Register as first argument.");
@@ -2445,7 +2487,9 @@ namespace triton {
         PyObject* value  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &symVar, &value);
+        if (PyArg_ParseTuple(args, "|OO", &symVar, &value) == false) {
+          return PyErr_Format(PyExc_TypeError, "setConcreteVariableValue(): Invalid number of arguments");
+        }
 
         if (symVar == nullptr || !PySymbolicVariable_Check(symVar))
           return PyErr_Format(PyExc_TypeError, "setConcreteVariableValue(): Bad argument type.");
@@ -2473,7 +2517,9 @@ namespace triton {
         PyObject* flag = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem, &flag);
+        if (PyArg_ParseTuple(args, "|OO", &mem, &flag) == false) {
+          return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Invalid number of arguments");
+        }
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "setTaintMemory(): Expects a MemoryAccess as first argument.");
@@ -2500,7 +2546,9 @@ namespace triton {
         PyObject* flag   = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg, &flag);
+        if (PyArg_ParseTuple(args, "|OO", &reg, &flag) == false) {
+          return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Invalid number of arguments");
+        }
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "setTaintRegister(): Expects a Register as first argument.");
@@ -2527,7 +2575,9 @@ namespace triton {
         PyObject* z3Flag      = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &node, &z3Flag);
+        if (PyArg_ParseTuple(args, "|OO", &node, &z3Flag) == false) {
+          return PyErr_Format(PyExc_TypeError, "simplify(): Invalid number of arguments");
+        }
 
         if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "simplify(): Expects a AstNode as first argument.");
@@ -2597,7 +2647,9 @@ namespace triton {
         PyObject* mem2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem1, &mem2);
+        if (PyArg_ParseTuple(args, "|OO", &mem1, &mem2) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryMemory(): Invalid number of arguments");
+        }
 
         if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryMemory(): Expects a MemoryAccess as first argument.");
@@ -2624,7 +2676,9 @@ namespace triton {
         PyObject* reg = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem, &reg);
+        if (PyArg_ParseTuple(args, "|OO", &mem, &reg) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Invalid number of arguments");
+        }
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentMemoryRegister(): Expects a MemoryAccess as first argument.");
@@ -2669,7 +2723,9 @@ namespace triton {
         PyObject* mem = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg, &mem);
+        if (PyArg_ParseTuple(args, "|OO", &reg, &mem) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Invalid number of arguments");
+        }
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterMemory(): Expects a Register as first argument.");
@@ -2696,7 +2752,9 @@ namespace triton {
         PyObject* reg2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg1, &reg2);
+        if (PyArg_ParseTuple(args, "|OO", &reg1, &reg2) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Invalid number of arguments");
+        }
 
         if (reg1 == nullptr || !PyRegister_Check(reg1))
           return PyErr_Format(PyExc_TypeError, "taintAssignmentRegisterRegister(): Expects a Register as first argument.");
@@ -2784,7 +2842,9 @@ namespace triton {
         PyObject* mem2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem1, &mem2);
+        if (PyArg_ParseTuple(args, "|OO", &mem1, &mem2) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryMemory(): Invalid number of arguments");
+        }
 
         if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryMemory(): Expects a MemoryAccess as first argument.");
@@ -2811,7 +2871,9 @@ namespace triton {
         PyObject* reg = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &mem, &reg);
+        if (PyArg_ParseTuple(args, "|OO", &mem, &reg) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Invalid number of arguments");
+        }
 
         if (mem == nullptr || !PyMemoryAccess_Check(mem))
           return PyErr_Format(PyExc_TypeError, "taintUnionMemoryRegister(): Expects a MemoryAccess as first argument.");
@@ -2856,7 +2918,9 @@ namespace triton {
         PyObject* mem = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg, &mem);
+        if (PyArg_ParseTuple(args, "|OO", &reg, &mem) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Invalid number of arguments");
+        }
 
         if (reg == nullptr || !PyRegister_Check(reg))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterMemory(): Expects a Register as first argument.");
@@ -2883,7 +2947,9 @@ namespace triton {
         PyObject* reg2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &reg1, &reg2);
+        if (PyArg_ParseTuple(args, "|OO", &reg1, &reg2) == false) {
+          return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Invalid number of arguments");
+        }
 
         if (reg1 == nullptr || !PyRegister_Check(reg1))
           return PyErr_Format(PyExc_TypeError, "taintUnionRegisterRegister(): Expects a Register as first argument.");
@@ -2912,7 +2978,9 @@ namespace triton {
         triton::usize c_size      = 1;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &baseAddr, &size);
+        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "unmapMemory(): Invalid number of arguments");
+        }
 
         if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
           return PyErr_Format(PyExc_TypeError, "unmapMemory(): Expects a base address (integer) as first argument.");
@@ -3195,6 +3263,20 @@ namespace triton {
 
         if (object != nullptr) {
           object->api = new triton::API();
+          object->ref = false;
+          object->regAttr = nullptr;
+        }
+
+        return (PyObject*)object;
+      }
+
+
+      PyObject* PyTritonContext(triton::arch::architecture_e arch) {
+        PyType_Ready(&TritonContext_Type);
+        TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
+
+        if (object != nullptr) {
+          object->api = new triton::API(arch);
           object->ref = false;
           object->regAttr = nullptr;
         }

@@ -225,9 +225,17 @@ Note that only the version `71313` of Pin is supported.
 
 namespace triton {
 
-  API::API() : callbacks(*this), arch(&this->callbacks) {
+  API::API() :
+    callbacks(*this),
+    arch(&this->callbacks) {
     this->modes   = std::make_shared<triton::modes::Modes>();
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
+  }
+
+
+  API::API(triton::arch::architecture_e arch) :
+    API() {
+    this->setArchitecture(arch);
   }
 
 

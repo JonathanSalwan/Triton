@@ -73,6 +73,9 @@ namespace triton {
         //! Constructor of the API.
         TRITON_EXPORT API();
 
+        //! Constructor of the API.
+        TRITON_EXPORT API(triton::arch::architecture_e arch);
+
         //! Destructor of the API.
         TRITON_EXPORT ~API();
 

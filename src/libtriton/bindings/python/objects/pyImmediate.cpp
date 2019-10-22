@@ -193,7 +193,9 @@ namespace triton {
         PyObject* size  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &value, &size);
+        if (PyArg_ParseTuple(args, "|OO", &value, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "Immediate::setValue(): Invalid number of arguments");
+        }
 
         try {
           if (!PyLong_Check(value) && !PyInt_Check(value))
