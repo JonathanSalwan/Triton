@@ -64,3 +64,18 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['dstAddr'], 91)
         self.assertEqual(pc[1]['dstAddr'], 23)
+
+    def test_pushpop(self):
+        ast = self.ctx.getAstContext()
+        pc  = self.ctx.getPathPredicate()
+        opc = pc
+
+        self.assertEqual(str(pc), "(and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32)))")
+        self.ctx.pushPathConstraint(ast.equal(ast.bvtrue(), ast.bvtrue()))
+
+        pc  = self.ctx.getPathPredicate()
+        self.assertEqual(str(pc), "(and (and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32))) (= (_ bv1 1) (_ bv1 1)))")
+
+        self.ctx.popPathConstraint()
+        pc  = self.ctx.getPathPredicate()
+        self.assertEqual(str(pc), str(opc))
