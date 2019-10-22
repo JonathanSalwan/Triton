@@ -26,8 +26,10 @@ libTriton offers Python bindings on top of its C++ API which allow you to build 
 ~~~~~~~~~~~~~{.py}
 >>> from triton import TritonContext, ARCH
 >>>
->>> ctx = TritonContext()
->>> ctx.setArchitecture(ARCH.X86_64)
+>>> ctx1 = TritonContext()
+>>> ctx1.setArchitecture(ARCH.X86_64)
+>>>
+>>> ctx2 = TritonContext(ARCH.AARCH64)
 
 ~~~~~~~~~~~~~
 
