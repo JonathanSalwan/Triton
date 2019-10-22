@@ -417,13 +417,16 @@ namespace triton {
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
-        //! [**symbolic api**] - Returns the logical conjunction AST of path constraints.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getPathConstraintsAst(void);
+        //! [**symbolic api**] - Returns the current path predicate as an AST of logical conjunction of each taken branch.
+        TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void);
 
-        //! [**symbolic api**] - Adds a path constraint.
-        TRITON_EXPORT void addPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+        //! [**symbolic api**] - Pushs constraints to the current path predicate.
+        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
 
-        //! [**symbolic api**] - Clears the logical conjunction vector of path constraints.
+        //! [**symbolic api**] - Pops the last constraints added to the path predicate.
+        TRITON_EXPORT void popPathConstraint(void);
+
+        //! [**symbolic api**] - Clears the current path predicate.
         TRITON_EXPORT void clearPathConstraints(void);
 
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.

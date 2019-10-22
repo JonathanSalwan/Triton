@@ -84,7 +84,7 @@ def syscallsExit(threadId, std):
 
 
 def fini():
-    pc = Triton.getPathConstraintsAst()
+    pc = Triton.getPathPredicate()
     astCtxt = Triton.getAstContext()
     m = Triton.getModel(astCtxt.lnot(pc))
     print('[TT] Model:', m)

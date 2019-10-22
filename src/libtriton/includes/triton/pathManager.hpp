@@ -69,16 +69,19 @@ namespace triton {
           //! Returns the logical conjunction vector of path constraints.
           TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
-          //! Returns the logical conjunction AST of path constraints.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getPathConstraintsAst(void) const;
+          //! Returns the current path predicate as an AST of logical conjunction of each taken branch.
+          TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void) const;
 
-          //! Returns the number of constraints.
-          TRITON_EXPORT triton::usize getNumberOfPathConstraints(void) const;
+          //! Pushs constraints of a branch instruction to the path predicate.
+          TRITON_EXPORT void pushPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
-          //! Adds a path constraint.
-          TRITON_EXPORT void addPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+          //! Pushs constraints to the current path predicate.
+          TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
 
-          //! Clears the logical conjunction vector of path constraints.
+          //! Pops the last constraints added to the path predicate.
+          TRITON_EXPORT void popPathConstraint(void);
+
+          //! Clears the current path predicate.
           TRITON_EXPORT void clearPathConstraints(void);
       };
 

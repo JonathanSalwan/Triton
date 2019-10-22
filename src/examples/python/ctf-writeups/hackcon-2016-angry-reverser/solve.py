@@ -387,7 +387,7 @@ def emulate(ctx, pc):
         if pc in conditions:
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
             ast = ctx.getAstContext()
-            pco = ctx.getPathConstraintsAst()
+            pco = ctx.getPathPredicate()
             mod = myExternalSolver(ctx, zf == 1, pc)
             for k, v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(k), v)
@@ -396,7 +396,7 @@ def emulate(ctx, pc):
         if pc == 0x405B00:
             debug('[+] Solving the last query to get the good serial...')
             ast = ctx.getAstContext()
-            pco = ctx.getPathConstraintsAst()
+            pco = ctx.getPathPredicate()
             mod = myExternalSolver(ctx, ast.land(
                     [pco] +
                     [ast.variable(ctx.getSymbolicVariableFromId(x)) >= 0x20 for x in range(0, 20)] +

@@ -72,7 +72,7 @@ class DefCamp2015(object):
                 eax = astCtxt.extract(31, 0, rax.getAst())
 
                 # Define constraint
-                cstr = astCtxt.land([self.Triton.getPathConstraintsAst(), astCtxt.equal(eax, astCtxt.bv(1, 32))])
+                cstr = astCtxt.land([self.Triton.getPathPredicate(), astCtxt.equal(eax, astCtxt.bv(1, 32))])
 
                 model = self.Triton.getModel(cstr)
                 solution = str()
@@ -274,7 +274,7 @@ class SeedCoverage(object):
 
             # Update the previous constraints with true branch to keep a good
             # path.
-            previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPathConstraintAst()])
+            previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPredicate()])
 
         # Clear the path constraints to be clean at the next execution.
         self.Triton.clearPathConstraints()

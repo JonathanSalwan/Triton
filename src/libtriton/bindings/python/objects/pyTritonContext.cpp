@@ -55,7 +55,7 @@ expression to a sub-register like `AX`, `AH` or `AL`, please, craft your express
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
 - <b>void clearPathConstraints(void)</b><br>
-Clears the logical conjunction vector of path constraints.
+Clears the current path predicate.
 
 - <b>void concretizeAllMemory(void)</b><br>
 Concretizes all symbolic memory references.
@@ -162,8 +162,8 @@ Returns the list of parent registers. Each item of this list is a \ref py_Regist
 - <b>[\ref py_PathConstraint_page, ...] getPathConstraints(void)</b><br>
 Returns the logical conjunction vector of path constraints as a list of \ref py_PathConstraint_page.
 
-- <b>\ref py_AstNode_page getPathConstraintsAst(void)</b><br>
-Returns the logical conjunction AST of path constraints.
+- <b>\ref py_AstNode_page getPathPredicate(void)</b><br>
+Returns the current path predicate as an AST of logical conjunction of each taken branch.
 
 - <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
 Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
@@ -270,8 +270,14 @@ Returns a new symbolic expression. Note that if there are simplification passes 
 - <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string comment)</b><br>
 Returns a new symbolic variable.
 
+- <b>void popPathConstraint(void)</b><br>
+Pops the last constraints added to the path predicate.
+
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+
+- <b>void pushPathConstraint(\ref py_AstNode_page node)</b><br>
+Pushs constraints to the current path predicate.
 
 - <b>void removeAllCallbacks(void)</b><br>
 Removes all recorded callbacks.
@@ -1507,9 +1513,9 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getPathConstraintsAst(PyObject* self, PyObject* noarg) {
+      static PyObject* TritonContext_getPathPredicate(PyObject* self, PyObject* noarg) {
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathConstraintsAst());
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathPredicate());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2166,6 +2172,21 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_popPathConstraint(PyObject* self, PyObject* noarg) {
+        try {
+          PyTritonContext_AsTritonContext(self)->popPathConstraint();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_processing(PyObject* self, PyObject* inst) {
         if (!PyInstruction_Check(inst))
           return PyErr_Format(PyExc_TypeError, "processing(): Expects an Instruction as argument.");
@@ -2181,6 +2202,25 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "pushPathConstraint(): Expects an AstNode as argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 
@@ -3135,7 +3175,7 @@ namespace triton {
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
-        {"getPathConstraintsAst",               (PyCFunction)TritonContext_getPathConstraintsAst,                  METH_NOARGS,        ""},
+        {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                       METH_NOARGS,        ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},
@@ -3167,7 +3207,9 @@ namespace triton {
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                   METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                    METH_VARARGS,       ""},
+        {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                      METH_NOARGS,        ""},
         {"processing",                          (PyCFunction)TritonContext_processing,                             METH_O,             ""},
+        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                     METH_O,             ""},
         {"removeAllCallbacks",                  (PyCFunction)TritonContext_removeAllCallbacks,                     METH_NOARGS,        ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                         METH_VARARGS,       ""},
         {"reset",                               (PyCFunction)TritonContext_reset,                                  METH_NOARGS,        ""},

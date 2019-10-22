@@ -73,7 +73,7 @@ def emulate(pc):
 
             # Define constraint
             cstr  = astCtxt.land([
-                        Triton.getPathConstraintsAst(),
+                        Triton.getPathPredicate(),
                         astCtxt.equal(eax, astCtxt.bv(1, 32))
                     ])
 

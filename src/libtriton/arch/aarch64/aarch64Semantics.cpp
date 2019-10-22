@@ -1089,7 +1089,7 @@ namespace triton {
         }
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -1175,7 +1175,7 @@ namespace triton {
         inst.setConditionTaken(true);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr2);
+        this->symbolicEngine->pushPathConstraint(inst, expr2);
       }
 
 
@@ -1200,7 +1200,7 @@ namespace triton {
         inst.setConditionTaken(true);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr2);
+        this->symbolicEngine->pushPathConstraint(inst, expr2);
       }
 
 
@@ -1221,7 +1221,7 @@ namespace triton {
         inst.setConditionTaken(true);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -1252,7 +1252,7 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -1283,7 +1283,7 @@ namespace triton {
           inst.setConditionTaken(true);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 

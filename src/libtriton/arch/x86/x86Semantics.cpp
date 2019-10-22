@@ -3578,7 +3578,7 @@ namespace triton {
         expr2->isTainted = this->taintEngine->taintAssignment(pc, src);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr2);
+        this->symbolicEngine->pushPathConstraint(inst, expr2);
       }
 
 
@@ -5415,7 +5415,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5444,7 +5444,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, cf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5473,7 +5473,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, cf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5505,7 +5505,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5534,7 +5534,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5569,7 +5569,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5601,7 +5601,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, of);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5633,7 +5633,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, of);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5668,7 +5668,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5692,7 +5692,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, src);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5721,7 +5721,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, zf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5750,7 +5750,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, of);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5779,7 +5779,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, pf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5808,7 +5808,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, sf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5837,7 +5837,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, of);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5866,7 +5866,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, pf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -5895,7 +5895,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(pc, sf);
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 
@@ -10856,7 +10856,7 @@ namespace triton {
         }
 
         /* Create the path constraint */
-        this->symbolicEngine->addPathConstraint(inst, expr);
+        this->symbolicEngine->pushPathConstraint(inst, expr);
       }
 
 

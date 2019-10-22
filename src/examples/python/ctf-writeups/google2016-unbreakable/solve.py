@@ -203,7 +203,7 @@ def exitHandler(ctx):
 
     ret = ctx.getConcreteRegisterValue(ctx.registers.rdi)
     ast = ctx.getAstContext()
-    pco = ctx.getPathConstraintsAst()
+    pco = ctx.getPathPredicate()
     # Ask for a new model which set all symbolic variables to ascii printable characters
     mod = ctx.getModel(ast.land(
             [pco] +
@@ -338,7 +338,7 @@ def emulate(ctx, pc):
         if instruction.getAddress() in conditions:
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
             ast = ctx.getAstContext()
-            pco = ctx.getPathConstraintsAst()
+            pco = ctx.getPathPredicate()
             mod = ctx.getModel(ast.land([pco, zf == 1]))
             for k,v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(v.getId()), v.getValue())

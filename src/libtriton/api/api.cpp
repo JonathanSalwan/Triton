@@ -892,15 +892,21 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::getPathConstraintsAst(void) {
+  triton::ast::SharedAbstractNode API::getPathPredicate(void) {
     this->checkSymbolic();
-    return this->symbolic->getPathConstraintsAst();
+    return this->symbolic->getPathPredicate();
   }
 
 
-  void API::addPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+  void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
     this->checkSymbolic();
-    this->symbolic->addPathConstraint(inst, expr);
+    this->symbolic->pushPathConstraint(node);
+  }
+
+
+  void API::popPathConstraint(void) {
+    this->checkSymbolic();
+    this->symbolic->popPathConstraint();
   }
 
 

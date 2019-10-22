@@ -103,7 +103,7 @@ def test_trace(trace):
 
         if instruction.isBranch():
             # Opaque Predicate AST
-            op_ast = Triton.getPathConstraintsAst()
+            op_ast = Triton.getPathPredicate()
             # Try another model
             model = Triton.getModel(astCtxt.lnot(op_ast))
             if model:

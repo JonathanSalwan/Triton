@@ -167,7 +167,7 @@ def getNewInput():
                         inputs.append(seed)
 
         # Update the previous constraints with true branch to keep a good path.
-        previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPathConstraintAst()])
+        previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPredicate()])
 
     # Clear the path constraints to be clean at the next execution.
     Triton.clearPathConstraints()

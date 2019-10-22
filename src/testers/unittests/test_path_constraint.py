@@ -30,10 +30,10 @@ class TestPathConstraint(unittest.TestCase):
         for opcodes in trace:
             self.ctx.processing(Instruction(opcodes))
 
-    def test_getPathConstraintsAst(self):
-        """Test getPathConstraintsAst"""
+    def test_getPathPredicate(self):
+        """Test getPathPredicate"""
         astCtx = self.ctx.getAstContext()
-        crst = self.ctx.getPathConstraintsAst()
+        crst = self.ctx.getPathPredicate()
         self.assertNotEqual(len(self.ctx.getModel(crst)), 0)
         self.assertNotEqual(len(self.ctx.getModel(astCtx.lnot(crst))), 0)
 
@@ -46,9 +46,9 @@ class TestPathConstraint(unittest.TestCase):
         pc = self.ctx.getPathConstraints()[0]
         self.assertTrue(pc.isMultipleBranches())
 
-    def test_getTakenPathConstraintAst(self):
+    def test_getTakenPredicate(self):
         pc = self.ctx.getPathConstraints()[0]
-        self.assertEqual(pc.getTakenPathConstraintAst().evaluate(), 1)
+        self.assertEqual(pc.getTakenPredicate().evaluate(), 1)
 
     def test_getTakenAddress(self):
         pc = self.ctx.getPathConstraints()[0]

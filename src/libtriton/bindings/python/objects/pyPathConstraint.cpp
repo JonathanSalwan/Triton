@@ -82,8 +82,8 @@ instruction address.
 - <b>integer getTakenAddress(void)</b><br>
 Returns the address of the taken branch.
 
-- <b>\ref py_AstNode_page getTakenPathConstraintAst(void)</b><br>
-Returns the path constraint AST of the taken branch.
+- <b>\ref py_AstNode_page getTakenPredicate(void)</b><br>
+Returns the predicate of the taken branch.
 
 - <b>bool isMultipleBranches(void)</b><br>
 Returns true if it is not a direct jump.
@@ -137,9 +137,9 @@ namespace triton {
       }
 
 
-      static PyObject* PathConstraint_getTakenPathConstraintAst(PyObject* self, PyObject* noarg) {
+      static PyObject* PathConstraint_getTakenPredicate(PyObject* self, PyObject* noarg) {
         try {
-          return PyAstNode(PyPathConstraint_AsPathConstraint(self)->getTakenPathConstraintAst());
+          return PyAstNode(PyPathConstraint_AsPathConstraint(self)->getTakenPredicate());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -163,7 +163,7 @@ namespace triton {
       PyMethodDef PathConstraint_callbacks[] = {
         {"getBranchConstraints",        PathConstraint_getBranchConstraints,      METH_NOARGS,    ""},
         {"getTakenAddress",             PathConstraint_getTakenAddress,           METH_NOARGS,    ""},
-        {"getTakenPathConstraintAst",   PathConstraint_getTakenPathConstraintAst, METH_NOARGS,    ""},
+        {"getTakenPredicate",           PathConstraint_getTakenPredicate,         METH_NOARGS,    ""},
         {"isMultipleBranches",          PathConstraint_isMultipleBranches,        METH_NOARGS,    ""},
         {nullptr,                       nullptr,                                  0,              nullptr}
       };

@@ -206,11 +206,11 @@ def emulate(Triton, pc):
             rax   = Triton.getSymbolicRegister(Triton.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
-            # Define constraint
-            cstr  = astCtxt.land([
-                        Triton.getPathConstraintsAst(),
-                        astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
-                    ])
+            # Push a new constraint to the current path predicate
+            Triton.pushPathConstraint(eax == goodBranches[pc])
+
+            # Solve the path predicate
+            cstr = Triton.getPathPredicate()
 
             print('[+] Asking for a model, please wait...')
             model = Triton.getModel(cstr)
