@@ -79,3 +79,25 @@ class TestPathConstraint(unittest.TestCase):
         self.ctx.popPathConstraint()
         pc  = self.ctx.getPathPredicate()
         self.assertEqual(str(pc), str(opc))
+
+    def test_reachingBB(self):
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(91)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(23)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(20)), 0)
+
+    def test_reachingBB2(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86)
+
+        trace = [
+            b"\x40",        # inc eax
+            b"\xff\xe0",    # jmp eax
+        ]
+
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.eax)
+        ctx.convertRegisterToSymbolicVariable(ctx.registers.ebx)
+
+        for opcodes in trace:
+            ctx.processing(Instruction(opcodes))
+
+        self.assertEqual(ctx.getModel(ctx.getPredicatesToReachAddress(0x1337)[0])[0].getValue(), 0x1336)

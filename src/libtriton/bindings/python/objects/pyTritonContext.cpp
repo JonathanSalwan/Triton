@@ -165,6 +165,9 @@ Returns the logical conjunction vector of path constraints as a list of \ref py_
 - <b>\ref py_AstNode_page getPathPredicate(void)</b><br>
 Returns the current path predicate as an AST of logical conjunction of each taken branch.
 
+- <b>[\ref py_AstNode_page, ...] getPredicatesToReachAddress(integer addr)</b><br>
+Returns path predicates which may reach the targeted address.
+
 - <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
 Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
 
@@ -1474,8 +1477,8 @@ namespace triton {
         try {
           triton::uint32 index = 0;
           auto regs = PyTritonContext_AsTritonContext(self)->getParentRegisters();
-          ret = xPyList_New(regs.size());
 
+          ret = xPyList_New(regs.size());
           for (const auto* reg: regs) {
             PyList_SetItem(ret, index++, PyRegister(*reg));
           }
@@ -1496,13 +1499,12 @@ namespace triton {
 
         try {
           triton::uint32 index = 0;
-          const std::vector<triton::engines::symbolic::PathConstraint>& pc = PyTritonContext_AsTritonContext(self)->getPathConstraints();
+          const auto& pc = PyTritonContext_AsTritonContext(self)->getPathConstraints();
+
           ret = xPyList_New(pc.size());
-
-          for (auto it = pc.begin(); it != pc.end(); it++)
+          for (auto it = pc.begin(); it != pc.end(); it++) {
             PyList_SetItem(ret, index++, PyPathConstraint(*it));
-
-          return ret;
+          }
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1510,6 +1512,8 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+
+        return ret;
       }
 
 
@@ -1523,6 +1527,32 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* TritonContext_getPredicatesToReachAddress(PyObject* self, PyObject* addr) {
+        PyObject* ret = nullptr;
+
+        if (addr == nullptr || (!PyLong_Check(addr) && !PyInt_Check(addr)))
+          return PyErr_Format(PyExc_TypeError, "getPredicatesToReachAddress(): Expects an address as argument.");
+
+        try {
+          triton::uint32 index = 0;
+          auto preds = PyTritonContext_AsTritonContext(self)->getPredicatesToReachAddress(PyLong_AsUint64(addr));
+
+          ret = xPyList_New(preds.size());
+          for (auto it = preds.begin(); it != preds.end(); it++) {
+            PyList_SetItem(ret, index++, PyAstNode(*it));
+          }
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        return ret;
       }
 
 
@@ -3176,6 +3206,7 @@ namespace triton {
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
         {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                       METH_NOARGS,        ""},
+        {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,            METH_O,             ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"getSymbolicExpressionFromId",         (PyCFunction)TritonContext_getSymbolicExpressionFromId,            METH_O,             ""},

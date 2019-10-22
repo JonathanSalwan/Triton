@@ -898,6 +898,12 @@ namespace triton {
   }
 
 
+  std::vector<triton::ast::SharedAbstractNode> API::getPredicatesToReachAddress(triton::uint64 addr) {
+    this->checkSymbolic();
+    return this->symbolic->getPredicatesToReachAddress(addr);
+  }
+
+
   void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
     this->checkSymbolic();
     this->symbolic->pushPathConstraint(node);

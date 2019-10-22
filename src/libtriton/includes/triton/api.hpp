@@ -420,6 +420,9 @@ namespace triton {
         //! [**symbolic api**] - Returns the current path predicate as an AST of logical conjunction of each taken branch.
         TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void);
 
+        //! [**symbolic api**] - Returns path predicates which may reach the targeted address.
+        TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr);
+
         //! [**symbolic api**] - Pushs constraints to the current path predicate.
         TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
 

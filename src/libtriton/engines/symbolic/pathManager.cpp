@@ -43,8 +43,6 @@ namespace triton {
 
       /* Returns the current path predicate as an AST of logical conjunction of each taken branch. */
       triton::ast::SharedAbstractNode PathManager::getPathPredicate(void) const {
-        // Every constraint should have the same context otherwise, we can't know
-        // which one to use for the current node computation.
         std::vector<triton::engines::symbolic::PathConstraint>::const_iterator it;
 
         /* by default PC is T (top) */
@@ -59,6 +57,54 @@ namespace triton {
         }
 
         return node;
+      }
+
+
+
+      std::vector<triton::ast::SharedAbstractNode> PathManager::getPredicatesToReachAddress(triton::uint64 addr) const {
+        std::vector<triton::ast::SharedAbstractNode> predicates;
+
+        /* by default PC is T (top) */
+        auto node = this->astCtxt->equal(
+                      this->astCtxt->bvtrue(),
+                      this->astCtxt->bvtrue()
+                    );
+
+        /* Go through all path constraints */
+        for (auto pc = this->pathConstraints.begin(); pc != this->pathConstraints.end(); pc++) {
+          auto branches = pc->getBranchConstraints();
+          bool isMultib = (branches.size() >= 2);
+
+          /* Check if one of the branch constraint may reach the targeted address */
+          for (auto branch = branches.begin(); branch != branches.end(); branch++) {
+            /* if source branch == target, add the current path predicate */
+            if (std::get<1>(*branch) == addr) {
+              predicates.push_back(node);
+            }
+            /*
+             * if dst branch == target, do the conjunction of the current
+             * path predicate and the branch constraint.
+             */
+            if (std::get<2>(*branch) == addr) {
+              predicates.push_back(this->astCtxt->land(node, std::get<3>(*branch)));
+            }
+            /*
+             * if it's a direct branch (call reg, jmp reg) and not a standalone
+             * constraint. Try to reach the targeted address.
+             */
+            if (isMultib == false && std::get<1>(*branch) != 0 && std::get<2>(*branch) != 0) {
+              if (std::get<3>(*branch)->getType() == triton::ast::EQUAL_NODE) {
+                auto ip = std::get<3>(*branch)->getChildren()[0];
+                predicates.push_back(this->astCtxt->land(node, this->astCtxt->equal(ip, this->astCtxt->bv(addr, ip->getBitvectorSize()))));
+              }
+            }
+          } /* branch constraints */
+
+          /* Continue to create the conjunction of the current path predicate */
+          node = this->astCtxt->land(node, pc->getTakenPredicate());
+        } /* path constraint */
+
+        return predicates;
       }
 
 
