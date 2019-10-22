@@ -706,7 +706,7 @@ namespace triton {
           Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::PyCallbacks&) {
-           return nullptr;
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1099,6 +1099,9 @@ namespace triton {
         try {
           PyTritonContext_AsTritonContext(self)->enableMode(static_cast<triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1114,6 +1117,9 @@ namespace triton {
 
         try {
           PyTritonContext_AsTritonContext(self)->enableSymbolicEngine(PyLong_AsBool(flag));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1131,6 +1137,9 @@ namespace triton {
         try {
           PyTritonContext_AsTritonContext(self)->enableTaintEngine(PyLong_AsBool(flag));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1146,6 +1155,9 @@ namespace triton {
 
         try {
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->evaluateAstViaZ3(PyAstNode_AsAstNode(node)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1167,6 +1179,9 @@ namespace triton {
           for (auto& reg: regs)
             PyList_SetItem(ret, index++, PyRegister(reg.second));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1179,6 +1194,9 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getArchitecture());
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1189,6 +1207,9 @@ namespace triton {
         try {
           return PyAstContext(PyTritonContext_AsTritonContext(self)->getAstContext());
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1198,6 +1219,9 @@ namespace triton {
       static PyObject* TritonContext_getAstRepresentationMode(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getAstRepresentationMode());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1291,6 +1315,9 @@ namespace triton {
         try {
           return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getGprBitSize());
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1300,6 +1327,9 @@ namespace triton {
       static PyObject* TritonContext_getGprSize(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getGprSize());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1314,6 +1344,9 @@ namespace triton {
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getImmediateAst(*PyImmediate_AsImmediate(imm)));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1326,6 +1359,9 @@ namespace triton {
 
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyMemoryAccess_AsMemoryAccess(mem)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1345,6 +1381,9 @@ namespace triton {
           for (auto it = model.begin(); it != model.end(); it++) {
             xPyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
           }
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1384,6 +1423,9 @@ namespace triton {
               PyList_SetItem(ret, index++, mdict);
           }
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1403,6 +1445,9 @@ namespace triton {
           for (const auto* reg: regs) {
             PyList_SetItem(ret, index++, PyRegister(*reg));
           }
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1425,6 +1470,9 @@ namespace triton {
 
           return ret;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1434,6 +1482,9 @@ namespace triton {
       static PyObject* TritonContext_getPathConstraintsAst(PyObject* self, PyObject* noarg) {
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathConstraintsAst());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1452,6 +1503,9 @@ namespace triton {
           triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
           return PyRegister(regOut);
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1465,6 +1519,9 @@ namespace triton {
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1477,6 +1534,9 @@ namespace triton {
 
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->getSymbolicExpressionFromId(PyLong_AsUsize(symExprId)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1493,6 +1553,9 @@ namespace triton {
           ret = xPyDict_New();
           for (auto it = expressions.begin(); it != expressions.end(); it++)
             xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1524,6 +1587,9 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "getSymbolicMemory(): Expects an integer or nothing as argument.");
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1540,6 +1606,9 @@ namespace triton {
           if (PyLong_Check(mem) || PyInt_Check(mem))
             return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getSymbolicMemoryValue(PyLong_AsUint64(mem)));
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getSymbolicMemoryValue(*PyMemoryAccess_AsMemoryAccess(mem)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1558,6 +1627,9 @@ namespace triton {
             xPyDict_SetItem(ret, PyLong_FromUint64(it->first), PySymbolicExpression(it->second));
           }
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1573,6 +1645,9 @@ namespace triton {
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->getSymbolicRegister(*PyRegister_AsRegister(reg)));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1585,6 +1660,9 @@ namespace triton {
 
         try {
           return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->getSymbolicRegisterValue(*PyRegister_AsRegister(reg)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1599,6 +1677,9 @@ namespace triton {
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariableFromId(PyLong_AsUsize(symVarId)));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1612,6 +1693,9 @@ namespace triton {
         try {
           std::string arg = PyStr_AsString(symVarName);
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariableFromName(arg));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1628,6 +1712,9 @@ namespace triton {
           ret = xPyDict_New();
           for (auto sv: variables)
             xPyDict_SetItem(ret, PyLong_FromUsize(sv.first), PySymbolicVariable(sv.second));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1651,6 +1738,9 @@ namespace triton {
             index++;
           }
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1672,6 +1762,9 @@ namespace triton {
             PyList_SetItem(ret, index, PyRegister(*reg));
             index++;
           }
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1695,6 +1788,9 @@ namespace triton {
             index++;
           }
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1708,6 +1804,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isArchitectureValid() == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1723,6 +1822,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1753,6 +1855,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1773,6 +1878,9 @@ namespace triton {
 
           else
             return PyErr_Format(PyExc_TypeError, "isMemorySymbolized(): Expects a MemoryAccess or an integer as argument.");
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1797,6 +1905,9 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "isMemoryTainted(): Expects a MemoryAccess or an integer as argument.");
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1814,6 +1925,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1828,6 +1942,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isRegisterSymbolized(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1844,6 +1961,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1858,6 +1978,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isRegisterValid(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1874,6 +1997,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1885,6 +2011,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isSymbolicEngineEnabled() == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1901,6 +2030,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1916,6 +2048,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1927,6 +2062,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->isTaintEngineEnabled() == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1954,6 +2092,9 @@ namespace triton {
         try {
           return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->newSymbolicExpression(PyAstNode_AsAstNode(node), ccomment));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1980,6 +2121,9 @@ namespace triton {
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->newSymbolicVariable(PyLong_AsUint32(size), ccomment));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1995,6 +2139,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2004,6 +2151,9 @@ namespace triton {
       static PyObject* TritonContext_removeAllCallbacks(PyObject* self, PyObject* noarg) {
         try {
           PyTritonContext_AsTritonContext(self)->removeAllCallbacks();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2052,6 +2202,9 @@ namespace triton {
               return PyErr_Format(PyExc_TypeError, "removeCallback(): Invalid kind of callback.");
           }
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2074,6 +2227,9 @@ namespace triton {
         try {
           PyTritonContext_AsTritonContext(self)->reset();
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2092,6 +2248,9 @@ namespace triton {
           PyTritonContext_AsTritonContext(self)->setArchitecture(static_cast<triton::arch::architecture_e>(PyLong_AsUint32(arg)));
           TritonContext_fillRegistersAttribute(self);
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2107,6 +2266,9 @@ namespace triton {
 
         try {
           PyTritonContext_AsTritonContext(self)->setAstRepresentationMode(PyLong_AsUint32(arg));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2324,6 +2486,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2347,6 +2512,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->setTaintRegister(*PyRegister_AsRegister(reg), PyLong_AsBool(flag)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2395,6 +2563,9 @@ namespace triton {
           for (auto it = exprs.begin(); it != exprs.end(); it++)
             xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySymbolicExpression(it->second));
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2411,6 +2582,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->taintAssignmentMemoryImmediate(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2436,6 +2610,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2460,6 +2637,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2474,6 +2654,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2499,6 +2682,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2523,6 +2709,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2544,6 +2733,9 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "taintMemory(): Expects a MemoryAccess or an integer as argument.");
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2560,6 +2752,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2574,6 +2769,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->taintUnionMemoryImmediate(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2599,6 +2797,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2623,6 +2824,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2637,6 +2841,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2662,6 +2869,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2685,6 +2895,9 @@ namespace triton {
           if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterRegister(*PyRegister_AsRegister(reg1), *PyRegister_AsRegister(reg2)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2713,6 +2926,9 @@ namespace triton {
             c_size = PyLong_AsUsize(size);
           PyTritonContext_AsTritonContext(self)->unmapMemory(c_baseAddr, c_size);
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2737,6 +2953,9 @@ namespace triton {
           else
             return PyErr_Format(PyExc_TypeError, "untaintMemory(): Expects a MemoryAccess or an integer as argument.");
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2753,6 +2972,9 @@ namespace triton {
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -2765,6 +2987,9 @@ namespace triton {
 
         try {
           return PyRegister(PyTritonContext_AsTritonContext(self)->getParentRegister(PyRegister_AsRegister(reg)->getId()));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -2788,6 +3013,9 @@ namespace triton {
             Py_INCREF(((TritonContext_Object*)(self))->regAttr);
             return ((TritonContext_Object*)(self))->regAttr;
           }
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
