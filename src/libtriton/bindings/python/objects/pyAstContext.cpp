@@ -47,8 +47,8 @@ True
 \section ast_description Description
 <hr>
 
-Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representation. The class is used
-to build your own AST nodes.
+Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representation.
+This class is used to build your own AST nodes.
 
 \anchor ast
 \section AstContext_py_api Python API - Methods of the AstContext class
@@ -218,6 +218,10 @@ e.g: `(not expr)`.
 - <b>\ref py_AstNode_page lor([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `OR` on several nodes.
 e.g: `(or expr1 expr2 expr3 expr4)`.
+
+- <b>\ref py_AstNode_page lxor([\ref py_AstNode_page, ...])</b><br>
+Creates a logical `XOR` on several nodes.
+e.g: `(xor expr1 expr2 expr3 expr4)`.
 
 - <b>\ref py_AstNode_page reference(\ref py_SymbolicExpression_page expr)</b><br>
 Creates a reference node (SSA-based).<br>
