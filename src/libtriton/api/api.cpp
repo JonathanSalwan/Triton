@@ -786,12 +786,6 @@ namespace triton {
   }
 
 
-  const triton::engines::symbolic::SharedSymbolicExpression& API::createSymbolicFlagExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& flag, const std::string& comment) {
-    this->checkSymbolic();
-    return this->symbolic->createSymbolicFlagExpression(inst, node, flag, comment);
-  }
-
-
   const triton::engines::symbolic::SharedSymbolicExpression& API::createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment) {
     this->checkSymbolic();
     return this->symbolic->createSymbolicVolatileExpression(inst, node, comment);

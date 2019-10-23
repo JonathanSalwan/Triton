@@ -793,14 +793,8 @@ namespace triton {
         switch (dst.getType()) {
           case triton::arch::OP_MEM:
             return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
-
-          case triton::arch::OP_REG: {
-            if (this->architecture->isFlag(dst.getConstRegister()))
-              return this->createSymbolicFlagExpression(inst, node, dst.getConstRegister(), comment);
-            else
-              return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
-          }
-
+          case triton::arch::OP_REG:
+            return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicExpression(): Invalid operand.");
         }
@@ -885,8 +879,13 @@ namespace triton {
         triton::ast::SharedAbstractNode origReg   = nullptr;
         triton::uint32 regSize                    = reg.getSize();
 
-        if (this->architecture->isFlag(reg))
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicRegisterExpression(): The register cannot be a flag.");
+        /* Check if the register is a flag */
+        if (this->architecture->isFlag(reg)) {
+          const SharedSymbolicExpression& se = this->newSymbolicExpression(node, REGISTER_EXPRESSION, comment);
+          this->assignSymbolicExpressionToRegister(se, reg);
+          inst.setWrittenRegister(reg, node);
+          return inst.addSymbolicExpression(se);
+        }
 
         if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
           origReg = this->getRegisterAst(parentReg);
@@ -922,18 +921,6 @@ namespace triton {
         const SharedSymbolicExpression& se = this->newSymbolicExpression(finalExpr, REGISTER_EXPRESSION, comment);
         this->assignSymbolicExpressionToRegister(se, parentReg);
         inst.setWrittenRegister(reg, node);
-        return inst.addSymbolicExpression(se);
-      }
-
-
-      /* Returns the new symbolic flag expression */
-      const SharedSymbolicExpression& SymbolicEngine::createSymbolicFlagExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& flag, const std::string& comment) {
-        if (!this->architecture->isFlag(flag))
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicFlagExpression(): The register must be a flag.");
-
-        const SharedSymbolicExpression& se = this->newSymbolicExpression(node, REGISTER_EXPRESSION, comment);
-        this->assignSymbolicExpressionToRegister(se, flag);
-        inst.setWrittenRegister(flag, node);
         return inst.addSymbolicExpression(se);
       }
 

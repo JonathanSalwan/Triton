@@ -394,9 +394,6 @@ namespace triton {
         //! [**symbolic api**] - Returns the new shared symbolic register expression and links this expression to the instruction.
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment="");
 
-        //! [**symbolic api**] - Returns the new shared symbolic flag expression and links this expression to the instruction.
-        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicFlagExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& flag, const std::string& comment="");
-
         //! [**symbolic api**] - Returns the new shared symbolic volatile expression and links this expression to the instruction.
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 

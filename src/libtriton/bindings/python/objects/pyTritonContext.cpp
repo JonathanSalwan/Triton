@@ -81,9 +81,6 @@ Converts a symbolic memory expression to a symbolic variable. This function retu
 - <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_Register_page reg, string comment)</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicExpression_page createSymbolicFlagExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_Register_page flag, string comment)</b><br>
-Returns the new symbolic register expression and links this expression to the instruction.
-
 - <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment)</b><br>
 Returns the new symbolic memory expression and links this expression to the instruction.
 
@@ -918,49 +915,6 @@ namespace triton {
 
         try {
           return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertRegisterToSymbolicVariable(*PyRegister_AsRegister(reg), ccomment));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_createSymbolicFlagExpression(PyObject* self, PyObject* args) {
-        PyObject* inst          = nullptr;
-        PyObject* node          = nullptr;
-        PyObject* flag          = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OOOO", &inst, &node, &flag, &comment) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::createSymbolicFlagExpression(): Invalid number of arguments");
-        }
-
-        if (inst == nullptr || (!PyInstruction_Check(inst)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::createSymbolicFlagExpression(): Expects an Instruction as first argument.");
-
-        if (node == nullptr || (!PyAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::createSymbolicFlagExpression(): Expects a AstNode as second argument.");
-
-        if (flag == nullptr || (!PyRegister_Check(flag)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::createSymbolicFlagExpression(): Expects a Register as third argument.");
-
-        if (comment != nullptr && !PyStr_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::createSymbolicFlagExpression(): Expects a sting as fourth argument.");
-
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
-
-        triton::arch::Instruction& arg1 = *PyInstruction_AsInstruction(inst);
-        triton::ast::SharedAbstractNode arg2 = PyAstNode_AsAstNode(node);
-        triton::arch::Register arg3 = *PyRegister_AsRegister(flag);
-
-        try {
-          return PySymbolicExpression(PyTritonContext_AsTritonContext(self)->createSymbolicFlagExpression(arg1, arg2, arg3, ccomment));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3166,7 +3120,6 @@ namespace triton {
         {"convertExpressionToSymbolicVariable", (PyCFunction)TritonContext_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
         {"convertMemoryToSymbolicVariable",     (PyCFunction)TritonContext_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
         {"convertRegisterToSymbolicVariable",   (PyCFunction)TritonContext_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
-        {"createSymbolicFlagExpression",        (PyCFunction)TritonContext_createSymbolicFlagExpression,           METH_VARARGS,       ""},
         {"createSymbolicMemoryExpression",      (PyCFunction)TritonContext_createSymbolicMemoryExpression,         METH_VARARGS,       ""},
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
