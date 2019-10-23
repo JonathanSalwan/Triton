@@ -684,21 +684,21 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->symbolic->convertExpressionToSymbolicVariable(exprId, symVarSize, symVarComment);
+    return this->symbolic->symbolizeExpression(exprId, symVarSize, symVarComment);
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->symbolic->convertMemoryToSymbolicVariable(mem, symVarComment);
+    return this->symbolic->symbolizeMemory(mem, symVarComment);
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment) {
     this->checkSymbolic();
-    return this->symbolic->convertRegisterToSymbolicVariable(reg, symVarComment);
+    return this->symbolic->symbolizeRegister(reg, symVarComment);
   }
 
 
@@ -1210,81 +1210,81 @@ namespace triton {
   }
 
 
+  bool API::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm) {
+    this->checkTaint();
+    return this->taint->taintUnion(memDst, imm);
+  }
+
+
+  bool API::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
+    this->checkTaint();
+    return this->taint->taintUnion(memDst, memSrc);
+  }
+
+
+  bool API::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
+    this->checkTaint();
+    return this->taint->taintUnion(memDst, regSrc);
+  }
+
+
+  bool API::taintUnion(const triton::arch::Register& regDst, const triton::arch::Immediate& imm) {
+    this->checkTaint();
+    return this->taint->taintUnion(regDst, imm);
+  }
+
+
+  bool API::taintUnion(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
+    this->checkTaint();
+    return this->taint->taintUnion(regDst, memSrc);
+  }
+
+
+  bool API::taintUnion(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
+    this->checkTaint();
+    return this->taint->taintUnion(regDst, regSrc);
+  }
+
+
   bool API::taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2) {
     this->checkTaint();
     return this->taint->taintAssignment(op1, op2);
   }
 
 
-  bool API::taintUnionMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
+  bool API::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm) {
     this->checkTaint();
-    return this->taint->taintUnionMemoryImmediate(memDst);
+    return this->taint->taintAssignment(memDst, imm);
   }
 
 
-  bool API::taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
+  bool API::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
     this->checkTaint();
-    return this->taint->taintUnionMemoryMemory(memDst, memSrc);
+    return this->taint->taintAssignment(memDst, memSrc);
   }
 
 
-  bool API::taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
+  bool API::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
     this->checkTaint();
-    return this->taint->taintUnionMemoryRegister(memDst, regSrc);
+    return this->taint->taintAssignment(memDst, regSrc);
   }
 
 
-  bool API::taintUnionRegisterImmediate(const triton::arch::Register& regDst) {
+  bool API::taintAssignment(const triton::arch::Register& regDst, const triton::arch::Immediate& imm) {
     this->checkTaint();
-    return this->taint->taintUnionRegisterImmediate(regDst);
+    return this->taint->taintAssignment(regDst, imm);
   }
 
 
-  bool API::taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
+  bool API::taintAssignment(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
     this->checkTaint();
-    return this->taint->taintUnionRegisterMemory(regDst, memSrc);
+    return this->taint->taintAssignment(regDst, memSrc);
   }
 
 
-  bool API::taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
+  bool API::taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
     this->checkTaint();
-    return this->taint->taintUnionRegisterRegister(regDst, regSrc);
-  }
-
-
-  bool API::taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
-    this->checkTaint();
-    return this->taint->taintAssignmentMemoryImmediate(memDst);
-  }
-
-
-  bool API::taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
-    this->checkTaint();
-    return this->taint->taintAssignmentMemoryMemory(memDst, memSrc);
-  }
-
-
-  bool API::taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
-    this->checkTaint();
-    return this->taint->taintAssignmentMemoryRegister(memDst, regSrc);
-  }
-
-
-  bool API::taintAssignmentRegisterImmediate(const triton::arch::Register& regDst) {
-    this->checkTaint();
-    return this->taint->taintAssignmentRegisterImmediate(regDst);
-  }
-
-
-  bool API::taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
-    this->checkTaint();
-    return this->taint->taintAssignmentRegisterMemory(regDst, memSrc);
-  }
-
-
-  bool API::taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
-    this->checkTaint();
-    return this->taint->taintAssignmentRegisterRegister(regDst, regSrc);
+    return this->taint->taintAssignment(regDst, regSrc);
   }
 
 }; /* triton namespace */

@@ -46,7 +46,7 @@ int main(int ac, const char **av) {
   inst.setOpcode(trace[0].inst, trace[0].size);
 
   /* Define RAX as symbolic variable */
-  api.convertRegisterToSymbolicVariable(api.registers.x86_rax);
+  api.symbolizeRegister(api.registers.x86_rax);
 
   /* Process everything */
   api.processing(inst);

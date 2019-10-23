@@ -169,15 +169,6 @@ namespace triton {
           //! Adds a symbolic variable.
           TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
 
-          //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          TRITON_EXPORT SharedSymbolicVariable convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
-
-          //! Converts a symbolic memory expression to a symbolic variable.
-          TRITON_EXPORT SharedSymbolicVariable convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
-
-          //! Converts a symbolic register expression to a symbolic variable.
-          TRITON_EXPORT SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
-
           //! Returns the symbolic variable corresponding to the symbolic variable id.
           TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
 
@@ -264,6 +255,15 @@ namespace triton {
 
           //! Returns all symbolic variables.
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicVariable> getSymbolicVariables(void) const;
+
+          //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
+          TRITON_EXPORT SharedSymbolicVariable symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+
+          //! Converts a symbolic memory expression to a symbolic variable.
+          TRITON_EXPORT SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+
+          //! Converts a symbolic register expression to a symbolic variable.
+          TRITON_EXPORT SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment="");
 
           //! Concretizes all symbolic memory references.
           TRITON_EXPORT void concretizeAllMemory(void);

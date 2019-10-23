@@ -32,7 +32,7 @@ This object is used to represent a model for an SMT solver.
 >>> inst = Instruction()
 >>> inst.setOpcode(b"\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
+>>> symvar = ctxt.symbolizeRegister(ctxt.registers.rax)
 >>> print(symvar)
 SymVar_0:64
 

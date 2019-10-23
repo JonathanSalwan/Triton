@@ -270,7 +270,7 @@ def libcMainHandler(ctx):
     # Symbolize the first 51 bytes of the argv[1]
     argv1 = ctx.getConcreteMemoryValue(MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.rsi) + 8, CPUSIZE.QWORD))
     for index in range(51):
-        var = ctx.convertMemoryToSymbolicVariable(MemoryAccess(argv1+index, CPUSIZE.BYTE))
+        var = ctx.symbolizeMemory(MemoryAccess(argv1+index, CPUSIZE.BYTE))
 
     return 0
 

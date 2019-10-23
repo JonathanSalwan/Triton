@@ -24,8 +24,8 @@ class TestPathConstraint(unittest.TestCase):
             b"\x0F\x84\x55\x00\x00\x00",  # je 0x55
         ]
 
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.eax)
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.ebx)
+        self.ctx.symbolizeRegister(self.ctx.registers.eax)
+        self.ctx.symbolizeRegister(self.ctx.registers.ebx)
 
         for opcodes in trace:
             self.ctx.processing(Instruction(opcodes))
@@ -94,8 +94,8 @@ class TestPathConstraint(unittest.TestCase):
             b"\xff\xe0",    # jmp eax
         ]
 
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.eax)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.ebx)
+        ctx.symbolizeRegister(ctx.registers.eax)
+        ctx.symbolizeRegister(ctx.registers.ebx)
 
         for opcodes in trace:
             ctx.processing(Instruction(opcodes))

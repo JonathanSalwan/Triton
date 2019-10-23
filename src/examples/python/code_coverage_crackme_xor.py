@@ -181,8 +181,8 @@ def symbolizeInputs(seed):
     Triton.concretizeAllMemory()
     for address, value in list(seed.items()):
         Triton.setConcreteMemoryValue(address, value)
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(address, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
 
 

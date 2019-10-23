@@ -71,7 +71,7 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v3.getId(), 3)
 
     def test_model_with_alias(self):
-        var = self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.rax)
+        var = self.ctx.symbolizeRegister(self.ctx.registers.rax)
         var.setAlias("rax")
         inst = Instruction(b"\x48\x31\xd8")
         self.ctx.processing(inst)

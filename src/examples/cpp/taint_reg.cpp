@@ -29,7 +29,7 @@ int main(int ac, const char **av) {
   std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
 
   /* Spread RAX into RDX */
-  api.taintAssignmentRegisterRegister(api.registers.x86_rdx, api.registers.x86_rax);
+  api.taintAssignment(api.registers.x86_rdx, api.registers.x86_rax);
 
   /* Is RDX tainted ? */
   std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;

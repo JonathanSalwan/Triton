@@ -3574,7 +3574,7 @@ namespace triton {
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, pc, "Program Counter");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->taintAssignmentMemoryImmediate(sp.getMemory());
+        expr1->isTainted = this->taintEngine->untaintMemory(sp.getMemory());
         expr2->isTainted = this->taintEngine->taintAssignment(pc, src);
 
         /* Create the path constraint */

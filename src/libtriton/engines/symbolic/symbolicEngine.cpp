@@ -466,10 +466,10 @@ namespace triton {
        * Converts an expression id to a symbolic variable.
        * e.g:
        * #43 = (_ bv10 8)
-       * convertExpressionToSymbolicVariable(43, 8)
+       * symbolizeExpression(43, 8)
        * #43 = SymVar_4
        */
-      SharedSymbolicVariable SymbolicEngine::convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
         const SharedSymbolicExpression& expression = this->getSymbolicExpression(exprId);
         const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(UNDEFINED_VARIABLE, 0, symVarSize, symVarComment);
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt->variable(symVar);
@@ -484,7 +484,7 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SharedSymbolicVariable SymbolicEngine::convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
         triton::uint64 memAddr          = mem.getAddress();
         triton::uint32 symVarSize       = mem.getSize();
         triton::uint512 cv              = this->architecture->getConcreteMemoryValue(mem);
@@ -530,16 +530,16 @@ namespace triton {
       }
 
 
-      SharedSymbolicVariable SymbolicEngine::convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment) {
         const triton::arch::Register& parent  = this->architecture->getRegister(reg.getParent());
         triton::uint32 symVarSize             = reg.getBitSize();
         triton::uint512 cv                    = this->architecture->getConcreteRegisterValue(reg);
 
         if (!this->architecture->isRegisterValid(parent.getId()))
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): Invalid register id");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::symbolizeRegister(): Invalid register id");
 
         if (reg.isMutable() == false)
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::convertRegisterToSymbolicVariable(): This register is immutable");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::symbolizeRegister(): This register is immutable");
 
         /* Get the symbolic expression */
         const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);

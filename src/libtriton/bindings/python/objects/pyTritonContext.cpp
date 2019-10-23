@@ -72,15 +72,6 @@ Concretizes a specific symbolic memory reference.
 - <b>void concretizeRegister(\ref py_Register_page reg)</b><br>
 Concretizes a specific symbolic register reference.
 
-- <b>\ref py_SymbolicVariable_page convertExpressionToSymbolicVariable(integer symExprId, integer symVarSize, string comment)</b><br>
-Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
-
-- <b>\ref py_SymbolicVariable_page convertMemoryToSymbolicVariable(\ref py_MemoryAccess_page mem, string comment)</b><br>
-Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
-
-- <b>\ref py_SymbolicVariable_page convertRegisterToSymbolicVariable(\ref py_Register_page reg, string comment)</b><br>
-Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
-
 - <b>\ref py_SymbolicExpression_page createSymbolicMemoryExpression(\ref py_Instruction_page inst, \ref py_AstNode_page node, \ref py_MemoryAccess_page mem, string comment)</b><br>
 Returns the new symbolic memory expression and links this expression to the instruction.
 
@@ -330,25 +321,34 @@ set to True, Triton will use z3 to simplify the given `node` before calling its 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
-- <b>bool taintAssignmentMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
-Taints `memDst` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
+- <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string comment)</b><br>
+Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
-- <b>bool taintAssignmentMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeMemory(\ref py_MemoryAccess_page mem, string comment)</b><br>
+Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
+
+- <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string comment)</b><br>
+Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
+
+- <b>bool taintAssignment(\ref py_MemoryAccess_page memDst, \ref py_Immediate_page immSrc)</b><br>
+Taints `memDst` from `immSrc` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
+
+- <b>bool taintAssignment(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `memDst` from `memSrc` with an assignment - `memDst` is tainted if `memSrc` is tainted, otherwise
 `memDst` is untained. Returns true if `memDst` is tainted.
 
-- <b>bool taintAssignmentMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
+- <b>bool taintAssignment(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
 Taints `memDst` from `regSrc` with an assignment - `memDst` is tainted if `regSrc` is tainted, otherwise
 `memDst` is untained. Return true if `memDst` is tainted.
 
-- <b>bool taintAssignmentRegisterImmediate(\ref py_Register_page regDst)</b><br>
-Taints `regDst` with an assignment - `regDst` is untained. Returns true if `reDst` is still tainted.
+- <b>bool taintAssignment(\ref py_Register_page regDst, \ref py_Immediate_page immSrc)</b><br>
+Taints `regDst` from `immSrc` with an assignment - `regDst` is untained. Returns true if `reDst` is still tainted.
 
-- <b>bool taintAssignmentRegisterMemory(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>bool taintAssignment(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `regDst` from `MemSrc` with an assignment - `regDst` is tainted if `memSrc` is tainted, otherwise
 `regDst` is untained. Return true if `regDst` is tainted.
 
-- <b>bool taintAssignmentRegisterRegister(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
+- <b>bool taintAssignment(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an assignment - `regDst` is tainted if `regSrc` is tainted, otherwise
 `regDst` is untained. Return true if `regDst` is tainted.
 
@@ -361,25 +361,25 @@ Taints a memory. Returns true if the memory is tainted.
 - <b>bool taintRegister(\ref py_Register_page reg)</b><br>
 Taints a register. Returns true if the register is tainted.
 
-- <b>bool taintUnionMemoryImmediate(\ref py_MemoryAccess_page memDst)</b><br>
-Taints `memDst` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
+- <b>bool taintUnion(\ref py_MemoryAccess_page memDst, \ref py_Immediate_page immSrc)</b><br>
+Taints `memDst` from `immSrc` with an union - `memDst` does not changes. Returns true if `memDst` is tainted.
 
-- <b>bool taintUnionMemoryMemory(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>bool taintUnion(\ref py_MemoryAccess_page memDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `memDst` from `memSrc` with an union - `memDst` is tainted if `memDst` or `memSrc` are
 tainted. Returns true if `memDst` is tainted.
 
-- <b>bool taintUnionMemoryRegister(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
+- <b>bool taintUnion(\ref py_MemoryAccess_page memDst, \ref py_Register_page regSrc)</b><br>
 Taints `memDst` from `RegSrc` with an union - `memDst` is tainted if `memDst` or `regSrc` are
 tainted. Returns true if `memDst` is tainted.
 
-- <b>bool taintUnionRegisterImmediate(\ref py_Register_page regDst)</b><br>
-Taints `regDst` with an union - `regDst` does not changes. Returns true if `regDst` is tainted.
+- <b>bool taintUnion(\ref py_Register_page regDst, \ref py_Immediate_page immSrc)</b><br>
+Taints `regDst` from `immSrc` with an union - `regDst` does not changes. Returns true if `regDst` is tainted.
 
-- <b>bool taintUnionRegisterMemory(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
+- <b>bool taintUnion(\ref py_Register_page regDst, \ref py_MemoryAccess_page memSrc)</b><br>
 Taints `regDst` from `memSrc` with an union - `regDst` is tainted if `regDst` or `memSrc` are
 tainted. Returns true if `regDst` is tainted.
 
-- <b>bool taintUnionRegisterRegister(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
+- <b>bool taintUnion(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are
 tainted. Returns true if `regDst` is tainted.
 
@@ -825,103 +825,6 @@ namespace triton {
 
         Py_INCREF(Py_None);
         return Py_None;
-      }
-
-
-      static PyObject* TritonContext_convertExpressionToSymbolicVariable(PyObject* self, PyObject* args) {
-        PyObject* exprId        = nullptr;
-        PyObject* symVarSize    = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertExpressionToSymbolicVariable(): Invalid number of arguments");
-        }
-
-        if (exprId == nullptr || (!PyLong_Check(exprId) && !PyInt_Check(exprId)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertExpressionToSymbolicVariable(): Expects an integer as first argument.");
-
-        if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertExpressionToSymbolicVariable(): Expects an integer as second argument.");
-
-        if (comment != nullptr && !PyStr_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertExpressionToSymbolicVariable(): Expects a sting as third argument.");
-
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
-
-        try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertExpressionToSymbolicVariable(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_convertMemoryToSymbolicVariable(PyObject* self, PyObject* args) {
-        PyObject* mem           = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem, &comment) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertMemoryToSymbolicVariable(): Invalid number of arguments");
-        }
-
-        if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertMemoryToSymbolicVariable(): Expects a MemoryAccess as first argument.");
-
-        if (comment != nullptr && !PyStr_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertMemoryToSymbolicVariable(): Expects a sting as second argument.");
-
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
-
-        try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertMemoryToSymbolicVariable(*PyMemoryAccess_AsMemoryAccess(mem), ccomment));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_convertRegisterToSymbolicVariable(PyObject* self, PyObject* args) {
-        PyObject* reg           = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg, &comment) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertRegisterToSymbolicVariable(): Invalid number of arguments");
-        }
-
-        if (reg == nullptr || (!PyRegister_Check(reg)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertRegisterToSymbolicVariable(): Expects a Register as first argument.");
-
-        if (comment != nullptr && !PyStr_Check(comment))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::convertRegisterToSymbolicVariable(): Expects a sting as second argument.");
-
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
-
-        try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->convertRegisterToSymbolicVariable(*PyRegister_AsRegister(reg), ccomment));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
       }
 
 
@@ -2637,43 +2540,31 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_taintAssignmentMemoryImmediate(PyObject* self, PyObject* mem) {
-        if (!PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryImmediate(): Expects a MemoryAccess as argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentMemoryImmediate(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintAssignmentMemoryMemory(PyObject* self, PyObject* args) {
-        PyObject* mem1 = nullptr;
-        PyObject* mem2 = nullptr;
+      static PyObject* TritonContext_symbolizeExpression(PyObject* self, PyObject* args) {
+        PyObject* exprId        = nullptr;
+        PyObject* symVarSize    = nullptr;
+        PyObject* comment       = nullptr;
+        std::string ccomment    = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem1, &mem2) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryMemory(): Invalid number of arguments");
+        if (PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Invalid number of arguments");
         }
 
-        if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryMemory(): Expects a MemoryAccess as first argument.");
+        if (exprId == nullptr || (!PyLong_Check(exprId) && !PyInt_Check(exprId)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Expects an integer as first argument.");
 
-        if (mem2 == nullptr || !PyMemoryAccess_Check(mem2))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryMemory(): Expects a MemoryAccess as second argument.");
+        if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Expects an integer as second argument.");
+
+        if (comment != nullptr && !PyStr_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Expects a sting as third argument.");
+
+        if (comment != nullptr)
+          ccomment = PyStr_AsString(comment);
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentMemoryMemory(*PyMemoryAccess_AsMemoryAccess(mem1), *PyMemoryAccess_AsMemoryAccess(mem2)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeExpression(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2684,25 +2575,27 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_taintAssignmentMemoryRegister(PyObject* self, PyObject* args) {
-        PyObject* mem = nullptr;
-        PyObject* reg = nullptr;
+      static PyObject* TritonContext_symbolizeMemory(PyObject* self, PyObject* args) {
+        PyObject* mem           = nullptr;
+        PyObject* comment       = nullptr;
+        std::string ccomment    = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem, &reg) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryRegister(): Invalid number of arguments");
+        if (PyArg_ParseTuple(args, "|OO", &mem, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Invalid number of arguments");
         }
 
-        if (mem == nullptr || !PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryRegister(): Expects a MemoryAccess as first argument.");
+        if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Expects a MemoryAccess as first argument.");
 
-        if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentMemoryRegister(): Expects a Register as second argument.");
+        if (comment != nullptr && !PyStr_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Expects a sting as second argument.");
+
+        if (comment != nullptr)
+          ccomment = PyStr_AsString(comment);
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentMemoryRegister(*PyMemoryAccess_AsMemoryAccess(mem), *PyRegister_AsRegister(reg)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeMemory(*PyMemoryAccess_AsMemoryAccess(mem), ccomment));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2713,43 +2606,27 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_taintAssignmentRegisterImmediate(PyObject* self, PyObject* reg) {
-        if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterImmediate(): Expects a Register as argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintAssignmentRegisterMemory(PyObject* self, PyObject* args) {
-        PyObject* reg = nullptr;
-        PyObject* mem = nullptr;
+      static PyObject* TritonContext_symbolizeRegister(PyObject* self, PyObject* args) {
+        PyObject* reg           = nullptr;
+        PyObject* comment       = nullptr;
+        std::string ccomment    = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg, &mem) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterMemory(): Invalid number of arguments");
+        if (PyArg_ParseTuple(args, "|OO", &reg, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Invalid number of arguments");
         }
 
-        if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterMemory(): Expects a Register as first argument.");
+        if (reg == nullptr || (!PyRegister_Check(reg)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Expects a Register as first argument.");
 
-        if (mem == nullptr || !PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterMemory(): Expects a MemoryAccess as second argument.");
+        if (comment != nullptr && !PyStr_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Expects a sting as second argument.");
+
+        if (comment != nullptr)
+          ccomment = PyStr_AsString(comment);
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterMemory(*PyRegister_AsRegister(reg), *PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeRegister(*PyRegister_AsRegister(reg), ccomment));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2760,24 +2637,41 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_taintAssignmentRegisterRegister(PyObject* self, PyObject* args) {
-        PyObject* reg1 = nullptr;
-        PyObject* reg2 = nullptr;
+      static PyObject* TritonContext_taintAssignment(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+        bool ret      = false;
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg1, &reg2) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterRegister(): Invalid number of arguments");
+        if (PyArg_ParseTuple(args, "OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignment(): Invalid number of arguments");
         }
 
-        if (reg1 == nullptr || !PyRegister_Check(reg1))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterRegister(): Expects a Register as first argument.");
-
-        if (reg2 == nullptr || !PyRegister_Check(reg2))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignmentRegisterRegister(): Expects a Register as second argument.");
-
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintAssignmentRegisterRegister(*PyRegister_AsRegister(reg1), *PyRegister_AsRegister(reg2)) == true)
+          if (PyMemoryAccess_Check(op1) && PyImmediate_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyMemoryAccess_AsMemoryAccess(op1), *PyImmediate_AsImmediate(op2));
+
+          else if (PyMemoryAccess_Check(op1) && PyMemoryAccess_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyMemoryAccess_AsMemoryAccess(op1), *PyMemoryAccess_AsMemoryAccess(op2));
+
+          else if (PyMemoryAccess_Check(op1) && PyRegister_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyMemoryAccess_AsMemoryAccess(op1), *PyRegister_AsRegister(op2));
+
+          else if (PyRegister_Check(op1) && PyImmediate_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyRegister_AsRegister(op1), *PyImmediate_AsImmediate(op2));
+
+          else if (PyRegister_Check(op1) && PyMemoryAccess_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyRegister_AsRegister(op1), *PyMemoryAccess_AsMemoryAccess(op2));
+
+          else if (PyRegister_Check(op1) && PyRegister_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintAssignment(*PyRegister_AsRegister(op1), *PyRegister_AsRegister(op2));
+
+          else
+            return PyErr_Format(PyExc_TypeError, "TritonContext::taintAssignment(): Invalid kind of parameter.");
+
+          if (ret == true) {
             Py_RETURN_TRUE;
+          }
           Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -2832,147 +2726,41 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_taintUnionMemoryImmediate(PyObject* self, PyObject* mem) {
-        if (!PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryImmediate(): Expects a MemoryAccess as argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionMemoryImmediate(*PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintUnionMemoryMemory(PyObject* self, PyObject* args) {
-        PyObject* mem1 = nullptr;
-        PyObject* mem2 = nullptr;
+      static PyObject* TritonContext_taintUnion(PyObject* self, PyObject* args) {
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+        bool ret      = false;
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem1, &mem2) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryMemory(): Invalid number of arguments");
+        if (PyArg_ParseTuple(args, "OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnion(): Invalid number of arguments");
         }
-
-        if (mem1 == nullptr || !PyMemoryAccess_Check(mem1))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryMemory(): Expects a MemoryAccess as first argument.");
-
-        if (mem2 == nullptr || !PyMemoryAccess_Check(mem2))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryMemory(): Expects a MemoryAccess as second argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionMemoryMemory(*PyMemoryAccess_AsMemoryAccess(mem1), *PyMemoryAccess_AsMemoryAccess(mem2)) == true)
+          if (PyMemoryAccess_Check(op1) && PyImmediate_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyMemoryAccess_AsMemoryAccess(op1), *PyImmediate_AsImmediate(op2));
+
+          else if (PyMemoryAccess_Check(op1) && PyMemoryAccess_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyMemoryAccess_AsMemoryAccess(op1), *PyMemoryAccess_AsMemoryAccess(op2));
+
+          else if (PyMemoryAccess_Check(op1) && PyRegister_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyMemoryAccess_AsMemoryAccess(op1), *PyRegister_AsRegister(op2));
+
+          else if (PyRegister_Check(op1) && PyImmediate_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyRegister_AsRegister(op1), *PyImmediate_AsImmediate(op2));
+
+          else if (PyRegister_Check(op1) && PyMemoryAccess_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyRegister_AsRegister(op1), *PyMemoryAccess_AsMemoryAccess(op2));
+
+          else if (PyRegister_Check(op1) && PyRegister_Check(op2))
+            ret = PyTritonContext_AsTritonContext(self)->taintUnion(*PyRegister_AsRegister(op1), *PyRegister_AsRegister(op2));
+
+          else
+            return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnion(): Invalid kind of parameter.");
+
+          if (ret == true) {
             Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintUnionMemoryRegister(PyObject* self, PyObject* args) {
-        PyObject* mem = nullptr;
-        PyObject* reg = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem, &reg) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryRegister(): Invalid number of arguments");
-        }
-
-        if (mem == nullptr || !PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryRegister(): Expects a MemoryAccess as first argument.");
-
-        if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionMemoryRegister(): Expects a Register as second argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionMemoryRegister(*PyMemoryAccess_AsMemoryAccess(mem), *PyRegister_AsRegister(reg)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintUnionRegisterImmediate(PyObject* self, PyObject* reg) {
-        if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterImmediate(): Expects a Register as argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterImmediate(*PyRegister_AsRegister(reg)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintUnionRegisterMemory(PyObject* self, PyObject* args) {
-        PyObject* reg = nullptr;
-        PyObject* mem = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg, &mem) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterMemory(): Invalid number of arguments");
-        }
-
-        if (reg == nullptr || !PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterMemory(): Expects a Register as first argument.");
-
-        if (mem == nullptr || !PyMemoryAccess_Check(mem))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterMemory(): Expects a MemoryAccess as second argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterMemory(*PyRegister_AsRegister(reg), *PyMemoryAccess_AsMemoryAccess(mem)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
-      static PyObject* TritonContext_taintUnionRegisterRegister(PyObject* self, PyObject* args) {
-        PyObject* reg1 = nullptr;
-        PyObject* reg2 = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg1, &reg2) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterRegister(): Invalid number of arguments");
-        }
-
-        if (reg1 == nullptr || !PyRegister_Check(reg1))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterRegister(): Expects a Register as first argument.");
-
-        if (reg2 == nullptr || !PyRegister_Check(reg2))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::taintUnionRegisterRegister(): Expects a Register as second argument.");
-
-        try {
-          if (PyTritonContext_AsTritonContext(self)->taintUnionRegisterRegister(*PyRegister_AsRegister(reg1), *PyRegister_AsRegister(reg2)) == true)
-            Py_RETURN_TRUE;
+          }
           Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -3117,9 +2905,6 @@ namespace triton {
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
         {"concretizeMemory",                    (PyCFunction)TritonContext_concretizeMemory,                       METH_O,             ""},
         {"concretizeRegister",                  (PyCFunction)TritonContext_concretizeRegister,                     METH_O,             ""},
-        {"convertExpressionToSymbolicVariable", (PyCFunction)TritonContext_convertExpressionToSymbolicVariable,    METH_VARARGS,       ""},
-        {"convertMemoryToSymbolicVariable",     (PyCFunction)TritonContext_convertMemoryToSymbolicVariable,        METH_VARARGS,       ""},
-        {"convertRegisterToSymbolicVariable",   (PyCFunction)TritonContext_convertRegisterToSymbolicVariable,      METH_VARARGS,       ""},
         {"createSymbolicMemoryExpression",      (PyCFunction)TritonContext_createSymbolicMemoryExpression,         METH_VARARGS,       ""},
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
@@ -3193,20 +2978,13 @@ namespace triton {
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)TritonContext_simplify,                               METH_VARARGS,       ""},
         {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                       METH_O,             ""},
-        {"taintAssignmentMemoryImmediate",      (PyCFunction)TritonContext_taintAssignmentMemoryImmediate,         METH_O,             ""},
-        {"taintAssignmentMemoryMemory",         (PyCFunction)TritonContext_taintAssignmentMemoryMemory,            METH_VARARGS,       ""},
-        {"taintAssignmentMemoryRegister",       (PyCFunction)TritonContext_taintAssignmentMemoryRegister,          METH_VARARGS,       ""},
-        {"taintAssignmentRegisterImmediate",    (PyCFunction)TritonContext_taintAssignmentRegisterImmediate,       METH_O,             ""},
-        {"taintAssignmentRegisterMemory",       (PyCFunction)TritonContext_taintAssignmentRegisterMemory,          METH_VARARGS,       ""},
-        {"taintAssignmentRegisterRegister",     (PyCFunction)TritonContext_taintAssignmentRegisterRegister,        METH_VARARGS,       ""},
+        {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                    METH_VARARGS,       ""},
+        {"symbolizeMemory",                     (PyCFunction)TritonContext_symbolizeMemory,                        METH_VARARGS,       ""},
+        {"symbolizeRegister",                   (PyCFunction)TritonContext_symbolizeRegister,                      METH_VARARGS,       ""},
+        {"taintAssignment",                     (PyCFunction)TritonContext_taintAssignment,                        METH_VARARGS,       ""},
         {"taintMemory",                         (PyCFunction)TritonContext_taintMemory,                            METH_O,             ""},
         {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                          METH_O,             ""},
-        {"taintUnionMemoryImmediate",           (PyCFunction)TritonContext_taintUnionMemoryImmediate,              METH_O,             ""},
-        {"taintUnionMemoryMemory",              (PyCFunction)TritonContext_taintUnionMemoryMemory,                 METH_VARARGS,       ""},
-        {"taintUnionMemoryRegister",            (PyCFunction)TritonContext_taintUnionMemoryRegister,               METH_VARARGS,       ""},
-        {"taintUnionRegisterImmediate",         (PyCFunction)TritonContext_taintUnionRegisterImmediate,            METH_O,             ""},
-        {"taintUnionRegisterMemory",            (PyCFunction)TritonContext_taintUnionRegisterMemory,               METH_VARARGS,       ""},
-        {"taintUnionRegisterRegister",          (PyCFunction)TritonContext_taintUnionRegisterRegister,             METH_VARARGS,       ""},
+        {"taintUnion",                          (PyCFunction)TritonContext_taintUnion,                             METH_VARARGS,       ""},
         {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},

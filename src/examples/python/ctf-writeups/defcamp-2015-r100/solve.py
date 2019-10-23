@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     # Symbolize user inputs (30 bytes)
     for index in range(30):
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
     # Emulate from the verification function
     emulate(0x4006FD)

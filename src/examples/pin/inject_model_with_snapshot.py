@@ -69,7 +69,7 @@ def csym(instruction):
 def cafter(instruction):
     # 0x40058b: movzx eax, byte ptr [rax]
     if instruction.getAddress() == 0x400574:
-        var = Triton.convertRegisterToSymbolicVariable(Triton.registers.rax)
+        var = Triton.symbolizeRegister(Triton.registers.rax)
         return
 
     # 0x4005ae: cmp ecx, eax

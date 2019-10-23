@@ -145,19 +145,19 @@ def symbolizeInputs(Triton):
     Triton.setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD), variables[0x0c])
 
     # Create symbolic variables.
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+12, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+16, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+20, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+24, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+28, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+32, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+36, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+40, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+44, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+48, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+12, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+16, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+20, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+24, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+28, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+32, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+36, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+40, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+44, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+48, CPUSIZE.DWORD))
 
     return
 

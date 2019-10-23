@@ -182,7 +182,7 @@ def scanfHandler(ctx):
     debug('[+] symbolizing scanf buffer')
     for index in range(20):
         ctx.taintMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
-        var = ctx.convertMemoryToSymbolicVariable(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
+        var = ctx.symbolizeMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
 
     # Return value
     return 21

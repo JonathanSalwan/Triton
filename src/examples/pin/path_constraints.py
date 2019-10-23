@@ -65,7 +65,7 @@ def tainting(threadId):
             Triton.taintMemory(argv + offset)
             concreteValue = getCurrentMemoryValue(argv + offset)
             Triton.setConcreteMemoryValue(argv + offset, concreteValue)
-            Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
+            Triton.symbolizeMemory(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
         print('[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv))
         rdi -= 1

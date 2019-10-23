@@ -67,7 +67,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
+        ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
@@ -95,7 +95,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
+        ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -110,7 +110,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -125,8 +125,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.symbolizeRegister(ctx.registers.rax)
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -155,8 +155,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86_64)
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.symbolizeRegister(ctx.registers.rax)
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))

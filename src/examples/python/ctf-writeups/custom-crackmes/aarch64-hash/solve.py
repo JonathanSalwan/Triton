@@ -153,7 +153,7 @@ def libcMainHandler(ctx):
         if index == 1:
             # Only symbolized argv[1]
             for indexCell in range(len(argv)):
-                var = ctx.convertMemoryToSymbolicVariable(MemoryAccess(base+indexCell, CPUSIZE.BYTE))
+                var = ctx.symbolizeMemory(MemoryAccess(base+indexCell, CPUSIZE.BYTE))
                 var.setComment('argv[%d][%d]' %(index, indexCell))
         debug('[+] argv[%d] = %s' %(index, argv))
         base += len(argv)+1

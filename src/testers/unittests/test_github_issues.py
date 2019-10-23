@@ -27,7 +27,7 @@ class TestIssue656(unittest.TestCase):
         )
 
         for gpr in gprs:
-            ctx.convertRegisterToSymbolicVariable(gpr)
+            ctx.symbolizeRegister(gpr)
 
         for assembly in gadget:
             i = Instruction()
@@ -199,7 +199,7 @@ class TestIssue789(unittest.TestCase):
 
         # Create symbolic var
         comment = "mem_{:#x}".format(ma.getAddress())
-        symvar = ctx.convertMemoryToSymbolicVariable(ma,comment)
+        symvar = ctx.symbolizeMemory(ma,comment)
         self.mem_symvars.append(symvar)
 
 
@@ -211,7 +211,7 @@ class TestIssue789(unittest.TestCase):
 
         # Create symbolic var
         comment = "sym_reg_{}".format(reg.getName())
-        symvar = ctx.convertRegisterToSymbolicVariable(reg, comment)
+        symvar = ctx.symbolizeRegister(reg, comment)
         self.reg_symvars.append(symvar)
 
 

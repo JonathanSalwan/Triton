@@ -343,15 +343,6 @@ namespace triton {
         //! [**symbolic api**] - Returns the symbolic register value.
         TRITON_EXPORT triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
-
-        //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
-
-        //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
-
         //! [**symbolic api**] - Returns the AST corresponding to the operand.
         TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
 
@@ -450,6 +441,15 @@ namespace triton {
 
         //! [**symbolic api**] - Returns true if the register expression contains a symbolic variable.
         TRITON_EXPORT bool isRegisterSymbolized(const triton::arch::Register& reg) const;
+
+        //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+
+        //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+
+        //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Concretizes all symbolic memory references.
         TRITON_EXPORT void concretizeAllMemory(void);
@@ -591,44 +591,44 @@ namespace triton {
         //! [**taint api**] - Abstract union tainting.
         TRITON_EXPORT bool taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
+        //! [**taint api**] - Taints MemoryImmediate with union. Returns true if the memDst is TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm);
+
+        //! [**taint api**] - Taints MemoryMemory with union. Returns true if the memDst or memSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
+
+        //! [**taint api**] - Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
+
+        //! [**taint api**] - Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::Immediate& imm);
+
+        //! [**taint api**] - Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
+
+        //! [**taint api**] - Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
+
         //! [**taint api**] - Abstract assignment tainting.
         TRITON_EXPORT bool taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
-        //! [**taint api**] - Taints MemoryImmediate with union. Returns true if the memDst is TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryImmediate(const triton::arch::MemoryAccess& memDst);
-
-        //! [**taint api**] - Taints MemoryMemory with union. Returns true if the memDst or memSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
-
-        //! [**taint api**] - Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
-
-        //! [**taint api**] - Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterImmediate(const triton::arch::Register& regDst);
-
-        //! [**taint api**] - Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
-
-        //! [**taint api**] - Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
-
         //! [**taint api**] - Taints MemoryImmediate with assignment. Returns always false.
-        TRITON_EXPORT bool taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm);
 
         //! [**taint api**] - Taints MemoryMemory with assignment. Returns true if the memDst is tainted.
-        TRITON_EXPORT bool taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
         //! [**taint api**] - Taints MemoryRegister with assignment. Returns true if the memDst is tainted.
-        TRITON_EXPORT bool taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
         //! [**taint api**] - Taints RegisterImmediate with assignment. Returns always false.
-        TRITON_EXPORT bool taintAssignmentRegisterImmediate(const triton::arch::Register& regDst);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::Immediate& imm);
 
         //! [**taint api**] - Taints RegisterMemory with assignment. Returns true if the regDst is tainted.
-        TRITON_EXPORT bool taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
         //! [**taint api**] - Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
-        TRITON_EXPORT bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
     };
 
 /*! @} End of triton namespace */

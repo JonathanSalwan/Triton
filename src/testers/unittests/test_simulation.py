@@ -111,7 +111,7 @@ class DefCamp2015(object):
 
         # Symbolize user inputs (30 bytes)
         for index in range(30):
-            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+            self.Triton.symbolizeMemory(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
         # Emulate from the verification function
         solution = self.emulate(0x4006FD)
@@ -154,8 +154,8 @@ class SeedCoverage(object):
         self.Triton.concretizeAllMemory()
         for address, value in list(seed.items()):
             self.Triton.setConcreteMemoryValue(address, value)
-            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
-            self.Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
+            self.Triton.symbolizeMemory(MemoryAccess(address, CPUSIZE.BYTE))
+            self.Triton.symbolizeMemory(MemoryAccess(address+1, CPUSIZE.BYTE))
 
     def seed_emulate(self, ip):
         """Emulate one run of the function with already self.Triton.setup memory."""
