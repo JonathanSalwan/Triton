@@ -1112,7 +1112,7 @@ namespace triton {
       }
 
 
-      const triton::uint512& SymbolicEngine::getConcreteVariableValue(const SharedSymbolicVariable& symVar) const {
+      triton::uint512 SymbolicEngine::getConcreteVariableValue(const SharedSymbolicVariable& symVar) const {
         return this->astCtxt->getVariableValue(symVar->getName());
       }
 

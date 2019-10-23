@@ -479,7 +479,7 @@ namespace triton {
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Gets the concrete value of a symbolic variable.
-        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
+        TRITON_EXPORT triton::uint512 getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
 
         //! [**symbolic api**] - Sets the concrete value of a symbolic variable.
         TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const triton::uint512& value);
