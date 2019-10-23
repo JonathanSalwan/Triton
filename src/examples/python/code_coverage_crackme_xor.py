@@ -160,7 +160,7 @@ def getNewInput():
                     seed   = dict()
                     for k, v in list(models.items()):
                         # Get the symbolic variable assigned to the model
-                        symVar = Triton.getSymbolicVariableFromId(k)
+                        symVar = Triton.getSymbolicVariable(k)
                         # Save the new input as seed.
                         seed.update({symVar.getOrigin(): v.getValue()})
                     if seed:
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     ENTRY = 0x40056d

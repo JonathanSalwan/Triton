@@ -300,7 +300,7 @@ namespace triton {
         TRITON_EXPORT void checkModes(void) const;
 
         //! [**modes api**] - Enables or disables a specific mode.
-        TRITON_EXPORT void enableMode(triton::modes::mode_e mode, bool flag);
+        TRITON_EXPORT void setMode(triton::modes::mode_e mode, bool flag);
 
         //! [**modes api**] - Returns true if the mode is enabled.
         TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
@@ -409,10 +409,10 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariable(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;

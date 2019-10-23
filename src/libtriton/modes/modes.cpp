@@ -13,7 +13,7 @@ namespace triton {
   namespace modes {
 
     Modes::Modes() {
-      this->enableMode(triton::modes::PC_TRACKING_SYMBOLIC, true); /* This mode is enabled by default */
+      this->setMode(triton::modes::PC_TRACKING_SYMBOLIC, true); /* This mode is enabled by default */
     }
 
 
@@ -34,7 +34,7 @@ namespace triton {
     }
 
 
-    void Modes::enableMode(triton::modes::mode_e mode, bool flag) {
+    void Modes::setMode(triton::modes::mode_e mode, bool flag) {
       if (flag == true)
         this->enabledModes.insert(mode);
       else

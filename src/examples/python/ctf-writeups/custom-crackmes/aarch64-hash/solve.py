@@ -347,8 +347,8 @@ def main():
     ctx.setArchitecture(ARCH.AARCH64)
 
     # Set optimization
-    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
-    ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Parse the binary
     binary = lief.parse(TARGET)

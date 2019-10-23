@@ -59,7 +59,7 @@ if __name__ == '__main__':
     ctx.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Define the Python syntax
     ctx.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)

@@ -102,7 +102,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('main')
 
     # Align the memory
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Only perform the symbolic execution on the target binary
     setupImageWhitelist(['crackme_xor'])

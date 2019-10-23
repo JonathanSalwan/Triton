@@ -265,8 +265,8 @@ def initialize():
     Triton.setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-    Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Define internal callbacks.
     Triton.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)

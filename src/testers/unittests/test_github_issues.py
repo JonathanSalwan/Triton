@@ -16,7 +16,7 @@ class TestIssue656(unittest.TestCase):
     def sym_exec_gadget(gadget):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+        ctx.setMode(MODE.ALIGNED_MEMORY, True)
 
         r = ctx.registers
         gprs = (
@@ -179,7 +179,7 @@ class TestIssue789(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-        self.ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.ctx.setMode(MODE.ALIGNED_MEMORY, True)
 
         self.mem_symvars = []
         self.reg_symvars = []

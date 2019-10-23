@@ -80,7 +80,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     ENTRY = 0x40056d

@@ -647,8 +647,8 @@ namespace triton {
 
   /* Modes API======================================================================================= */
 
-  void API::enableMode(triton::modes::mode_e mode, bool flag) {
-    this->modes->enableMode(mode, flag);
+  void API::setMode(triton::modes::mode_e mode, bool flag) {
+    this->modes->setMode(mode, flag);
   }
 
 
@@ -874,15 +874,15 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariableFromId(triton::usize symVarId) const {
+  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariable(triton::usize symVarId) const {
     this->checkSymbolic();
-    return this->symbolic->getSymbolicVariableFromId(symVarId);
+    return this->symbolic->getSymbolicVariable(symVarId);
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariableFromName(const std::string& symVarName) const {
+  triton::engines::symbolic::SharedSymbolicVariable API::getSymbolicVariable(const std::string& symVarName) const {
     this->checkSymbolic();
-    return this->symbolic->getSymbolicVariableFromName(symVarName);
+    return this->symbolic->getSymbolicVariable(symVarName);
   }
 
 

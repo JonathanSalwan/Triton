@@ -203,20 +203,20 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise raises an exception */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariableFromId(triton::usize symVarId) const {
+      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(triton::usize symVarId) const {
         auto it = this->symbolicVariables.find(symVarId);
         if (it == this->symbolicVariables.end())
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromId(): Unregistred symbolic variable.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): Unregistred symbolic variable.");
 
         if (auto node = it->second.lock())
           return node;
         else
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromId(): This symbolic variable is dead.");
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): This symbolic variable is dead.");
       }
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariableFromName(const std::string& symVarName) const {
+      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(const std::string& symVarName) const {
         /*
          * FIXME: When there is a ton of symvar, this loop takes a while to go through.
          *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
@@ -228,7 +228,7 @@ namespace triton {
             }
           }
         }
-        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariableFromName(): Unregistred or dead symbolic variable.");
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): Unregistred or dead symbolic variable.");
       }
 
 

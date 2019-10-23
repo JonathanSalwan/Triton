@@ -472,7 +472,7 @@ class TestTaint(unittest.TestCase):
     def test_taint_through_pointers(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
@@ -487,7 +487,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
@@ -502,7 +502,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
@@ -517,7 +517,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
@@ -532,7 +532,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
@@ -547,7 +547,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
@@ -562,7 +562,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintMemory(0)
         inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
@@ -575,7 +575,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintMemory(0)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
@@ -588,7 +588,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rax)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
@@ -601,7 +601,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, True)
 
         ctx.taintRegister(ctx.registers.rbx)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
@@ -614,7 +614,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rax)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rax))
@@ -629,7 +629,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rbx)
         self.assertTrue(ctx.isRegisterTainted(ctx.registers.rbx))
@@ -644,7 +644,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintMemory(0)
         inst = Instruction(b"\x48\x31\x18") # xor [rax], rbx
@@ -657,7 +657,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintMemory(0)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
@@ -670,7 +670,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rax)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]
@@ -683,7 +683,7 @@ class TestTaint(unittest.TestCase):
 
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.TAINT_THROUGH_POINTERS, False)
+        ctx.setMode(MODE.TAINT_THROUGH_POINTERS, False)
 
         ctx.taintRegister(ctx.registers.rbx)
         inst = Instruction(b"\x48\x33\x18") # xor rbx, [rax]

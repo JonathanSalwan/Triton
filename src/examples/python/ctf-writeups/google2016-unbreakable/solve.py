@@ -207,14 +207,14 @@ def exitHandler(ctx):
     # Ask for a new model which set all symbolic variables to ascii printable characters
     mod = ctx.getModel(ast.land(
             [pco] +
-            [ast.variable(ctx.getSymbolicVariableFromId(0))  == ord('C')] +
-            [ast.variable(ctx.getSymbolicVariableFromId(1))  == ord('T')] +
-            [ast.variable(ctx.getSymbolicVariableFromId(2))  == ord('F')] +
-            [ast.variable(ctx.getSymbolicVariableFromId(3))  == ord('{')] +
-            [ast.variable(ctx.getSymbolicVariableFromId(50)) == ord('}')] +
-            [ast.variable(ctx.getSymbolicVariableFromId(x))  >= 0x20 for x in range(4, 49)] +
-            [ast.variable(ctx.getSymbolicVariableFromId(x))  <= 0x7e for x in range(4, 49)] +
-            [ast.variable(ctx.getSymbolicVariableFromId(x))  != 0x00 for x in range(4, 49)]
+            [ast.variable(ctx.getSymbolicVariable(0))  == ord('C')] +
+            [ast.variable(ctx.getSymbolicVariable(1))  == ord('T')] +
+            [ast.variable(ctx.getSymbolicVariable(2))  == ord('F')] +
+            [ast.variable(ctx.getSymbolicVariable(3))  == ord('{')] +
+            [ast.variable(ctx.getSymbolicVariable(50)) == ord('}')] +
+            [ast.variable(ctx.getSymbolicVariable(x))  >= 0x20 for x in range(4, 49)] +
+            [ast.variable(ctx.getSymbolicVariable(x))  <= 0x7e for x in range(4, 49)] +
+            [ast.variable(ctx.getSymbolicVariable(x))  != 0x00 for x in range(4, 49)]
           ))
 
     flag = str()
@@ -341,7 +341,7 @@ def emulate(ctx, pc):
             pco = ctx.getPathPredicate()
             mod = ctx.getModel(ast.land([pco, zf == 1]))
             for k,v in list(mod.items()):
-                ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(v.getId()), v.getValue())
+                ctx.setConcreteVariableValue(ctx.getSymbolicVariable(v.getId()), v.getValue())
 
         # Next
         pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
@@ -412,8 +412,8 @@ def main():
     ctx.setArchitecture(ARCH.X86_64)
 
     # Set optimization
-    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
-    ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # AST representation as Python syntax
     ctx.setAstRepresentationMode(AST_REPRESENTATION.SMT)

@@ -179,10 +179,10 @@ namespace triton {
           TRITON_EXPORT SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
-          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
-          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(const std::string& symVarName) const;
 
           //! Returns the symbolic expression corresponding to an id.
           TRITON_EXPORT SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;

@@ -79,7 +79,7 @@ class DefCamp2015(object):
                 for k, v in list(model.items()):
                     value = v.getValue()
                     solution += chr(value)
-                    self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariableFromId(k), value)
+                    self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariable(k), value)
 
             # Next
             pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
@@ -266,7 +266,7 @@ class SeedCoverage(object):
                         seed = dict()
                         for k, v in list(models.items()):
                             # Get the symbolic variable assigned to the model
-                            symVar = self.Triton.getSymbolicVariableFromId(k)
+                            symVar = self.Triton.getSymbolicVariable(k)
                             # Save the new input as seed.
                             seed.update({symVar.getOrigin(): v.getValue()})
                         if seed:
@@ -399,7 +399,7 @@ class TestSymbolicEngineAligned(BaseTestSimulation, unittest.TestCase):
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.setMode(MODE.ALIGNED_MEMORY, True)
         super(TestSymbolicEngineAligned, self).setUp()
 
 
@@ -411,8 +411,8 @@ class TestSymbolicEngineAlignedAndTaintPtr(BaseTestSimulation, unittest.TestCase
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.TAINT_THROUGH_POINTERS, True)
+        self.Triton.setMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.setMode(MODE.TAINT_THROUGH_POINTERS, True)
         super(TestSymbolicEngineAlignedAndTaintPtr, self).setUp()
 
 
@@ -424,7 +424,7 @@ class TestSymbolicEngineOnlySymbolized(BaseTestSimulation, unittest.TestCase):
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         super(TestSymbolicEngineOnlySymbolized, self).setUp()
 
 
@@ -436,8 +436,8 @@ class TestSymbolicEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestC
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         super(TestSymbolicEngineAlignedOnlySymbolized, self).setUp()
 
 
@@ -469,7 +469,7 @@ class TestSymbolicEngineSymOpti(BaseTestSimulation, unittest.TestCase):
         """Define the arch."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
         super(TestSymbolicEngineSymOpti, self).setUp()
 
 
@@ -481,8 +481,8 @@ class TestSymbolicEngineAlignedSymOpti(BaseTestSimulation, unittest.TestCase):
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        self.Triton.setMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
         super(TestSymbolicEngineAlignedSymOpti, self).setUp()
 
 
@@ -494,7 +494,7 @@ class TestSymbolicEngineAlignedOnlySymbolizedSymOpti(BaseTestSimulation, unittes
         """Define the arch and modes."""
         self.Triton = TritonContext()
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        self.Triton.setMode(MODE.ALIGNED_MEMORY, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
         super(TestSymbolicEngineAlignedOnlySymbolizedSymOpti, self).setUp()

@@ -96,9 +96,6 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
-- <b>void enableMode(\ref py_MODE_page mode, bool flag)</b><br>
-Enables or disables a specific mode.
-
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
 
@@ -201,10 +198,10 @@ Returns the \ref py_SymbolicExpression_page corresponding to the parent register
 - <b>integer getSymbolicRegisterValue(\ref py_Register_page reg)</b><br>
 Returns the symbolic register value.
 
-- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromId(integer symVarId)</b><br>
+- <b>\ref py_SymbolicVariable_page getSymbolicVariable(integer symVarId)</b><br>
 Returns the symbolic variable corresponding to a symbolic variable id.
 
-- <b>\ref py_SymbolicVariable_page getSymbolicVariableFromName(string symVarName)</b><br>
+- <b>\ref py_SymbolicVariable_page getSymbolicVariable(string symVarName)</b><br>
 Returns the symbolic variable corresponding to a symbolic variable name.
 
 - <b>dict getSymbolicVariables(void)</b><br>
@@ -319,6 +316,9 @@ the symbolic state (if it exists). You should probably use the concretize functi
 
 - <b>void setConcreteVariableValue(\ref py_SymbolicVariable_page symVar, integer value)</b><br>
 Sets the concrete value of a symbolic variable.
+
+- <b>void setMode(\ref py_MODE_page mode, bool flag)</b><br>
+Enables or disables a specific mode.
 
 - <b>bool setTaintMemory(\ref py_MemoryAccess_page mem, bool flag)</b><br>
 Sets the targeted memory as tainted or not. Returns true if the memory is still tainted.
@@ -1114,36 +1114,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_enableMode(PyObject* self, PyObject* args) {
-        PyObject* mode = nullptr;
-        PyObject* flag = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mode, &flag) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::enableMode(): Invalid number of arguments");
-        }
-
-        if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::enableMode(): Expects a MODE as argument.");
-
-        if (flag == nullptr || !PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::enableMode(): Expects an boolean flag as second argument.");
-
-        try {
-          PyTritonContext_AsTritonContext(self)->enableMode(static_cast<triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* TritonContext_enableSymbolicEngine(PyObject* self, PyObject* flag) {
         if (!PyBool_Check(flag))
           return PyErr_Format(PyExc_TypeError, "TritonContext::enableSymbolicEngine(): Expects an boolean as argument.");
@@ -1736,29 +1706,16 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getSymbolicVariableFromId(PyObject* self, PyObject* symVarId) {
-        if (!PyLong_Check(symVarId) && !PyInt_Check(symVarId))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getSymbolicVariableFromId(): Expects an integer as argument.");
-
+      static PyObject* TritonContext_getSymbolicVariable(PyObject* self, PyObject* arg) {
         try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariableFromId(PyLong_AsUsize(symVarId)));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
+          if (PyLong_Check(arg) || PyInt_Check(arg))
+            return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariable(PyLong_AsUsize(arg)));
 
+          else if (PyStr_Check(arg))
+            return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariable(PyStr_AsString(arg)));
 
-      static PyObject* TritonContext_getSymbolicVariableFromName(PyObject* self, PyObject* symVarName) {
-        if (!PyStr_Check(symVarName))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getSymbolicVariableFromName(): Expects a string as argument.");
-
-        try {
-          std::string arg = PyStr_AsString(symVarName);
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->getSymbolicVariableFromName(arg));
+          else
+            return PyErr_Format(PyExc_TypeError, "TritonContext::getSymbolicVariable(): Expects an integer or a string as argument.");
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2584,6 +2541,36 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_setMode(PyObject* self, PyObject* args) {
+        PyObject* mode = nullptr;
+        PyObject* flag = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &mode, &flag) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setMode(): Invalid number of arguments");
+        }
+
+        if (mode == nullptr || (!PyLong_Check(mode) && !PyInt_Check(mode)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setMode(): Expects a MODE as argument.");
+
+        if (flag == nullptr || !PyBool_Check(flag))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setMode(): Expects an boolean flag as second argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->setMode(static_cast<triton::modes::mode_e>(PyLong_AsUint32(mode)), PyLong_AsBool(flag));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_setTaintMemory(PyObject* self, PyObject* args) {
         PyObject* mem  = nullptr;
         PyObject* flag = nullptr;
@@ -3184,7 +3171,6 @@ namespace triton {
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
         {"disassembly",                         (PyCFunction)TritonContext_disassembly,                            METH_O,             ""},
-        {"enableMode",                          (PyCFunction)TritonContext_enableMode,                             METH_VARARGS,       ""},
         {"enableSymbolicEngine",                (PyCFunction)TritonContext_enableSymbolicEngine,                   METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)TritonContext_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)TritonContext_evaluateAstViaZ3,                       METH_O,             ""},
@@ -3216,8 +3202,7 @@ namespace triton {
         {"getSymbolicRegister",                 (PyCFunction)TritonContext_getSymbolicRegister,                    METH_O,             ""},
         {"getSymbolicRegisterValue",            (PyCFunction)TritonContext_getSymbolicRegisterValue,               METH_O,             ""},
         {"getSymbolicRegisters",                (PyCFunction)TritonContext_getSymbolicRegisters,                   METH_NOARGS,        ""},
-        {"getSymbolicVariableFromId",           (PyCFunction)TritonContext_getSymbolicVariableFromId,              METH_O,             ""},
-        {"getSymbolicVariableFromName",         (PyCFunction)TritonContext_getSymbolicVariableFromName,            METH_O,             ""},
+        {"getSymbolicVariable",                 (PyCFunction)TritonContext_getSymbolicVariable,                    METH_O,             ""},
         {"getSymbolicVariables",                (PyCFunction)TritonContext_getSymbolicVariables,                   METH_NOARGS,        ""},
         {"getTaintedMemory",                    (PyCFunction)TritonContext_getTaintedMemory,                       METH_NOARGS,        ""},
         {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                    METH_NOARGS,        ""},
@@ -3250,6 +3235,7 @@ namespace triton {
         {"setConcreteMemoryValue",              (PyCFunction)TritonContext_setConcreteMemoryValue,                 METH_VARARGS,       ""},
         {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,               METH_VARARGS,       ""},
         {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,               METH_VARARGS,       ""},
+        {"setMode",                             (PyCFunction)TritonContext_setMode,                                METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},
         {"simplify",                            (PyCFunction)TritonContext_simplify,                               METH_VARARGS,       ""},

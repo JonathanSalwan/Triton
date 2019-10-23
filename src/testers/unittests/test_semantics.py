@@ -99,7 +99,7 @@ class TestIR(unittest.TestCase):
         self.Triton = TritonContext()
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
@@ -117,8 +117,8 @@ class TestIR(unittest.TestCase):
         self.Triton = TritonContext()
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
-        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
@@ -278,7 +278,7 @@ class TestIRQemu(unittest.TestCase):
         self.Triton = TritonContext()
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -298,8 +298,8 @@ class TestIRQemu(unittest.TestCase):
         self.Triton = TritonContext()
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -319,9 +319,9 @@ class TestIRQemu(unittest.TestCase):
         self.Triton = TritonContext()
         # Set arch
         self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
-        self.Triton.enableMode(MODE.AST_OPTIMIZATIONS, True)
+        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
