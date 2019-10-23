@@ -244,17 +244,41 @@ namespace triton {
   }
 
 
+  inline void API::checkArchitecture(void) const {
+    if (!this->isArchitectureValid())
+      throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
+  }
+
+
+  inline void API::checkIrBuilder(void) const {
+    if (!this->irBuilder)
+      throw triton::exceptions::API("API::checkIrBuilder(): IR builder is undefined, you should define an architecture first.");
+  }
+
+
+  inline void API::checkSymbolic(void) const {
+    if (!this->symbolic)
+      throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined, you should define an architecture first.");
+  }
+
+
+  inline void API::checkSolver(void) const {
+    if (!this->solver)
+      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined, you should define an architecture first.");
+  }
+
+
+  inline void API::checkTaint(void) const {
+    if (!this->taint)
+      throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined, you should define an architecture first.");
+  }
+
+
 
   /* Architecture API ============================================================================== */
 
   bool API::isArchitectureValid(void) const {
     return this->arch.isValid();
-  }
-
-
-  void API::checkArchitecture(void) const {
-    if (!this->isArchitectureValid())
-      throw triton::exceptions::API("API::checkArchitecture(): You must define an architecture.");
   }
 
 
@@ -537,12 +561,6 @@ namespace triton {
 
   /* IR builder API ================================================================================= */
 
-  void API::checkIrBuilder(void) const {
-    if (!this->irBuilder)
-      throw triton::exceptions::API("API::checkIrBuilder(): IR builder is undefined, you should define an architecture first.");
-  }
-
-
   bool API::buildSemantics(triton::arch::Instruction& inst) {
     this->checkIrBuilder();
     return this->irBuilder->buildSemantics(inst);
@@ -659,12 +677,6 @@ namespace triton {
 
 
   /* Symbolic engine API ============================================================================ */
-
-  void API::checkSymbolic(void) const {
-    if (!this->symbolic)
-      throw triton::exceptions::API("API::checkSymbolic(): Symbolic engine is undefined, you should define an architecture first.");
-  }
-
 
   triton::engines::symbolic::SymbolicEngine* API::getSymbolicEngine(void) {
     this->checkSymbolic();
@@ -1015,12 +1027,6 @@ namespace triton {
 
   /* Solver engine API ============================================================================= */
 
-  void API::checkSolver(void) const {
-    if (!this->solver)
-      throw triton::exceptions::API("API::checkSolver(): Solver engine is undefined, you should define an architecture first.");
-  }
-
-
   triton::engines::solver::solver_e API::getSolver(void) const {
     this->checkSolver();
     return this->solver->getSolver();
@@ -1093,12 +1099,6 @@ namespace triton {
 
 
   /* Taint engine API ============================================================================== */
-
-  void API::checkTaint(void) const {
-    if (!this->taint)
-      throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined, you should define an architecture first.");
-  }
-
 
   triton::engines::taint::TaintEngine* API::getTaintEngine(void) {
     this->checkTaint();

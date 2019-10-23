@@ -235,11 +235,11 @@ def emulate(ctx, pc):
             print('[+] Please wait, calculating hash collisions...')
             x1 = ctx.getSymbolicRegister(ctx.registers.x1)
 
-            SymVar_0 = ctx.getSymbolicVariableFromName('SymVar_0')
-            SymVar_1 = ctx.getSymbolicVariableFromName('SymVar_1')
-            SymVar_2 = ctx.getSymbolicVariableFromName('SymVar_2')
-            SymVar_3 = ctx.getSymbolicVariableFromName('SymVar_3')
-            SymVar_4 = ctx.getSymbolicVariableFromName('SymVar_4')
+            SymVar_0 = ctx.getSymbolicVariable('SymVar_0')
+            SymVar_1 = ctx.getSymbolicVariable('SymVar_1')
+            SymVar_2 = ctx.getSymbolicVariable('SymVar_2')
+            SymVar_3 = ctx.getSymbolicVariable('SymVar_3')
+            SymVar_4 = ctx.getSymbolicVariable('SymVar_4')
 
             astCtxt = ctx.getAstContext()
 

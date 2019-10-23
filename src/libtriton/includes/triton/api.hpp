@@ -39,6 +39,23 @@ namespace triton {
     /*! \class API
      *  \brief This is used as C++ API. */
     class API {
+      private:
+        //! Raises an exception if the architecture is not initialized.
+        inline void checkArchitecture(void) const;
+
+        //! Raises an exception if the IR builder is not initialized.
+        inline void checkIrBuilder(void) const;
+
+        //! Raises an exception if the symbolic engine is not initialized.
+        inline void checkSymbolic(void) const;
+
+        //! Raises an exception if the solver engine is not initialized.
+        inline void checkSolver(void) const;
+
+        //! Raises an exception if the taint engine is not initialized.
+        inline void checkTaint(void) const;
+
+
       protected:
         //! The Callbacks interface.
         triton::callbacks::Callbacks callbacks;
@@ -69,7 +86,6 @@ namespace triton {
         //! A shortcut to access to a Register class from a register name.
         triton::arch::ShortcutRegister registers;
 
-
         //! Constructor of the API.
         TRITON_EXPORT API();
 
@@ -78,6 +94,7 @@ namespace triton {
 
         //! Destructor of the API.
         TRITON_EXPORT ~API();
+
 
 
         /* Architecture API ============================================================================== */
@@ -90,9 +107,6 @@ namespace triton {
 
         //! [**architecture api**] - Returns the endianness as triton::arch::endianness_e.
         TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
-
-        //! [**architecture api**] - Raises an exception if the architecture is not initialized.
-        TRITON_EXPORT void checkArchitecture(void) const;
 
         //! [**architecture api**] - Returns the instance of the current CPU used.
         TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
@@ -226,15 +240,11 @@ namespace triton {
 
         /* IR API ======================================================================================== */
 
-        //! [**IR builder api**] - Raises an exception if the IR builder is not initialized.
-        TRITON_EXPORT void checkIrBuilder(void) const;
-
         //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
         TRITON_EXPORT triton::ast::SharedAstContext getAstContext(void);
-
 
 
 
@@ -296,9 +306,6 @@ namespace triton {
 
         /* Modes API====================================================================================== */
 
-        //! [**modes api**] - Raises an exception if modes interface is not initialized.
-        TRITON_EXPORT void checkModes(void) const;
-
         //! [**modes api**] - Enables or disables a specific mode.
         TRITON_EXPORT void setMode(triton::modes::mode_e mode, bool flag);
 
@@ -308,9 +315,6 @@ namespace triton {
 
 
         /* Symbolic engine API =========================================================================== */
-
-        //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
-        TRITON_EXPORT void checkSymbolic(void) const;
 
         //! [**symbolic api**] - Returns the instance of the symbolic engine.
         TRITON_EXPORT triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
@@ -487,9 +491,6 @@ namespace triton {
 
         /* Solver engine API ============================================================================= */
 
-        //! [**solver api**] - Raises an exception if the solver engine is not initialized.
-        TRITON_EXPORT void checkSolver(void) const;
-
         /*!
          * \brief [**solver api**] - Computes and returns a model from a symbolic constraint.
          *
@@ -535,9 +536,6 @@ namespace triton {
 
 
         /* Taint engine API ============================================================================== */
-
-        //! [**taint api**] - Raises an exception if the taint engine is not initialized.
-        TRITON_EXPORT void checkTaint(void) const;
 
         //! [**taint api**] - Returns the instance of the taint engine.
         TRITON_EXPORT triton::engines::taint::TaintEngine* getTaintEngine(void);

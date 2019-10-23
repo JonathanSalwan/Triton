@@ -59,11 +59,11 @@ def cafter(instruction):
         print('[+] Please wait, computing in progress...')
         rax = Triton.getSymbolicRegister(Triton.registers.rax)
 
-        SymVar_0 = Triton.getSymbolicVariableFromName('SymVar_0')
-        SymVar_1 = Triton.getSymbolicVariableFromName('SymVar_1')
-        SymVar_2 = Triton.getSymbolicVariableFromName('SymVar_2')
-        SymVar_3 = Triton.getSymbolicVariableFromName('SymVar_3')
-        SymVar_4 = Triton.getSymbolicVariableFromName('SymVar_4')
+        SymVar_0 = Triton.getSymbolicVariable('SymVar_0')
+        SymVar_1 = Triton.getSymbolicVariable('SymVar_1')
+        SymVar_2 = Triton.getSymbolicVariable('SymVar_2')
+        SymVar_3 = Triton.getSymbolicVariable('SymVar_3')
+        SymVar_4 = Triton.getSymbolicVariable('SymVar_4')
 
         astCtxt = Triton.getAstContext()
 
