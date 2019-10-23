@@ -421,8 +421,8 @@ namespace triton {
 
 
       /* Returns a list which contains all tainted expressions */
-      std::list<SharedSymbolicExpression> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
-        std::list<SharedSymbolicExpression> taintedExprs;
+      std::vector<SharedSymbolicExpression> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
+        std::vector<SharedSymbolicExpression> taintedExprs;
         std::vector<triton::usize> invalidSymExpr;
 
         for (auto it = this->symbolicExpressions.begin(); it != this->symbolicExpressions.end(); it++) {
@@ -678,7 +678,7 @@ namespace triton {
 
       /* Returns the AST corresponding to the memory */
       triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::MemoryAccess& mem) {
-        std::list<triton::ast::SharedAbstractNode> opVec;
+        std::vector<triton::ast::SharedAbstractNode> opVec;
 
         triton::ast::SharedAbstractNode tmp       = nullptr;
         triton::uint64 address                    = mem.getAddress();
@@ -803,7 +803,7 @@ namespace triton {
 
       /* Returns the new symbolic memory expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
-        std::list<triton::ast::SharedAbstractNode> ret;
+        std::vector<triton::ast::SharedAbstractNode> ret;
         triton::ast::SharedAbstractNode tmp = nullptr;
         SharedSymbolicExpression se         = nullptr;
         triton::uint64 address              = mem.getAddress();

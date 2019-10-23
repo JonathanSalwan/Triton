@@ -248,7 +248,7 @@ namespace triton {
           TRITON_EXPORT std::map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
 
           //! Returns the list of the tainted symbolic expressions.
-          TRITON_EXPORT std::list<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
+          TRITON_EXPORT std::vector<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
           //! Returns all symbolic expressions.
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> getSymbolicExpressions(void) const;

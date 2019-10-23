@@ -1575,7 +1575,7 @@ namespace triton {
     /* ====== bv */
 
 
-    BvNode::BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
+    BvNode::BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
       this->addChild(this->ctxt->integer(value));
       this->addChild(this->ctxt->integer(size));
     }
@@ -1930,7 +1930,7 @@ namespace triton {
     /* ====== Integer node */
 
 
-    IntegerNode::IntegerNode(triton::uint512 value, const SharedAstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
+    IntegerNode::IntegerNode(const triton::uint512& value, const SharedAstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
       this->value = value;
     }
 
@@ -2470,7 +2470,7 @@ namespace triton {
     }
 
 
-    triton::uint512 rotl(triton::uint512 value, triton::uint32 shift) {
+    triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift) {
       if ((shift &= 511) == 0)
         return value;
       return ((value << shift) | (value >> (512 - shift)));

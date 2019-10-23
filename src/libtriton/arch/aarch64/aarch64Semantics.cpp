@@ -1110,7 +1110,8 @@ namespace triton {
         auto opDst = this->symbolicEngine->getOperandAst(inst, dst);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> chunks;
+        std::vector<triton::ast::SharedAbstractNode> chunks;
+        chunks.reserve(3);
 
         if (lsb + width < dst.getBitSize()) {
           chunks.push_back(this->astCtxt->extract(dst.getBitSize() - 1, lsb + width, /* src */ opDst));
@@ -2543,7 +2544,8 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> bits;
+        std::vector<triton::ast::SharedAbstractNode> bits;
+        bits.reserve(10);
 
         switch (pos) {
           case 0:
@@ -2785,7 +2787,8 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> bits;
+        std::vector<triton::ast::SharedAbstractNode> bits;
+        bits.reserve(src.getBitSize());
 
         for (triton::uint32 index = 0; index < src.getBitSize(); index++) {
           bits.push_back(this->astCtxt->extract(index, index, op));
@@ -2867,7 +2870,8 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> bits;
+        std::vector<triton::ast::SharedAbstractNode> bits;
+        bits.reserve(8);
 
         switch(src.getSize()) {
           case QWORD_SIZE:
@@ -2907,7 +2911,8 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> bits;
+        std::vector<triton::ast::SharedAbstractNode> bits;
+        bits.reserve(8);
 
         bits.push_back(this->astCtxt->extract(39, 32, op));
         bits.push_back(this->astCtxt->extract(47, 40, op));
@@ -3689,7 +3694,8 @@ namespace triton {
         auto op = this->symbolicEngine->getOperandAst(inst, src1);
 
         /* Create the semantics */
-        std::list<triton::ast::SharedAbstractNode> bits;
+        std::vector<triton::ast::SharedAbstractNode> bits;
+        bits.reserve(3);
 
         if (lsb + width < dst.getBitSize()) {
           bits.push_back(this->astCtxt->bv(0, dst.getBitSize() - (lsb + width)));

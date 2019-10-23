@@ -438,7 +438,7 @@ namespace triton {
     //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt);
+        TRITON_EXPORT BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -524,7 +524,7 @@ namespace triton {
         triton::uint512 value;
 
       public:
-        TRITON_EXPORT IntegerNode(triton::uint512 value, const SharedAstContext& ctxt);
+        TRITON_EXPORT IntegerNode(const triton::uint512& value, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT triton::uint512 getInteger(void);
@@ -664,7 +664,7 @@ namespace triton {
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
 
     //! Custom rotate left function for hash routine.
-    triton::uint512 rotl(triton::uint512 value, triton::uint32 shift);
+    triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift);
 
     //! Custom modular sign extend for bitwise operation.
     triton::sint512 modularSignExtend(AbstractNode* node);

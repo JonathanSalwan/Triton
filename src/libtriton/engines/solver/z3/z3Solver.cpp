@@ -39,8 +39,8 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
-        std::list<std::map<triton::uint32, SolverModel>> ret;
+      std::vector<std::map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+        std::vector<std::map<triton::uint32, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
         triton::ast::TritonToZ3Ast z3Ast{false};
 
@@ -150,7 +150,7 @@ namespace triton {
 
       std::map<triton::uint32, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node) const {
         std::map<triton::uint32, SolverModel> ret;
-        std::list<std::map<triton::uint32, SolverModel>> allModels;
+        std::vector<std::map<triton::uint32, SolverModel>> allModels;
 
         allModels = this->getModels(node, 1);
         if (allModels.size() > 0)

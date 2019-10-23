@@ -470,7 +470,7 @@ namespace triton {
         TRITON_EXPORT std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
-        TRITON_EXPORT std::list<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
+        TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic expressions as a map of <SymExprId : SymExpr>
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicExpressions(void) const;
@@ -504,7 +504,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        TRITON_EXPORT std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+        TRITON_EXPORT std::vector<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;

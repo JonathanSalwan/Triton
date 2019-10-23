@@ -71,7 +71,7 @@ namespace triton {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_AND must contain at least two arguments.");
 
-          std::list<SharedAbstractNode> args;
+          std::vector<SharedAbstractNode> args;
           for (triton::uint32 i = 0; i < expr.num_args(); i++) {
             args.push_back(this->convert(expr.arg(i)));
           }
@@ -84,7 +84,7 @@ namespace triton {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_OR must contain at least two arguments.");
 
-          std::list<SharedAbstractNode> args;
+          std::vector<SharedAbstractNode> args;
           for (triton::uint32 i = 0; i < expr.num_args(); i++) {
             args.push_back(this->convert(expr.arg(i)));
           }
@@ -335,7 +335,7 @@ namespace triton {
           if (expr.num_args() < 2)
             throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Z3_OP_CONCAT must contain at least two arguments.");
 
-          std::list<SharedAbstractNode> args;
+          std::vector<SharedAbstractNode> args;
           for (triton::uint32 i = 0; i < expr.num_args(); i++) {
             args.push_back(this->convert(expr.arg(i)));
           }

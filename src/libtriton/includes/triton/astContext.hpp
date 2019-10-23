@@ -76,7 +76,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
         //! AST C++ API - bv node builder
-        TRITON_EXPORT SharedAbstractNode bv(triton::uint512 value, triton::uint32 size);
+        TRITON_EXPORT SharedAbstractNode bv(const triton::uint512& value, triton::uint32 size);
 
         //! AST C++ API - bvadd node builder
         TRITON_EXPORT SharedAbstractNode bvadd(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
@@ -214,7 +214,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - integer node builder
-        TRITON_EXPORT SharedAbstractNode integer(triton::uint512 value);
+        TRITON_EXPORT SharedAbstractNode integer(const triton::uint512& value);
 
         //! AST C++ API - ite node builder
         TRITON_EXPORT SharedAbstractNode ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);

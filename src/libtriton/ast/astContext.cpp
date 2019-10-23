@@ -56,7 +56,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bv(triton::uint512 value, triton::uint32 size) {
+    SharedAbstractNode AstContext::bv(const triton::uint512& value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bv(): Not enough memory.");
@@ -621,7 +621,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::integer(triton::uint512 value) {
+    SharedAbstractNode AstContext::integer(const triton::uint512& value) {
       SharedAbstractNode node = std::make_shared<IntegerNode>(value, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::integer(): Not enough memory.");

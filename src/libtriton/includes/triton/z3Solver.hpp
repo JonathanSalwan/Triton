@@ -64,7 +64,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::list<std::map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+          TRITON_EXPORT std::vector<std::map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
