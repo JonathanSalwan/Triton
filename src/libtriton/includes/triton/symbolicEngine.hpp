@@ -139,7 +139,7 @@ namespace triton {
           void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds a symbolic memory reference.
-          void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
+          inline void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
           //! Returns the AST corresponding to the shift operation. Mainly used for AArch64 operands.
           triton::ast::SharedAbstractNode getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node);

@@ -933,7 +933,7 @@ namespace triton {
 
 
       /* Adds and assign a new memory reference */
-      void SymbolicEngine::addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr) {
+      inline void SymbolicEngine::addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr) {
         this->memoryReference[mem] = expr;
       }
 
@@ -998,6 +998,9 @@ namespace triton {
           /* continue */
           writeSize--;
         }
+
+        /* Synchronize the concrete state */
+        this->architecture->setConcreteMemoryValue(mem, node->evaluate());
       }
 
 
