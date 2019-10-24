@@ -875,11 +875,11 @@ namespace triton {
       triton::ast::SharedAbstractNode SymbolicEngine::insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign) {
         const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
         triton::ast::SharedAbstractNode finalExpr = nullptr;
-        triton::ast::SharedAbstractNode origReg   = this->getRegisterAst(parentReg);
         triton::uint32 regSize                    = reg.getSize();
 
         switch (regSize) {
-          case BYTE_SIZE:
+          case BYTE_SIZE: {
+            auto origReg = this->getRegisterAst(parentReg);
             /* Mainly used for x86 */
             if (reg.getLow() == 0) {
               finalExpr = this->astCtxt->concat(
@@ -897,13 +897,16 @@ namespace triton {
                           );
             }
             break;
-          case WORD_SIZE:
+          }
+          case WORD_SIZE: {
+            auto origReg = this->getRegisterAst(parentReg);
             /* Mainly used for x86 */
             finalExpr = this->astCtxt->concat(
                           this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg),
                           node
                         );
             break;
+          }
           case DWORD_SIZE:
           case QWORD_SIZE:
           case DQWORD_SIZE:
@@ -911,6 +914,7 @@ namespace triton {
           case DQQWORD_SIZE: {
             if (zxForAssign == false) {
               if (parentReg.getBitSize() > reg.getBitSize()) {
+                auto origReg = this->getRegisterAst(parentReg);
                 finalExpr = this->astCtxt->concat(
                               this->astCtxt->extract((parentReg.getBitSize() - 1), reg.getHigh() + 1, origReg),
                               node
