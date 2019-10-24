@@ -485,9 +485,9 @@ namespace triton {
 
       /* The memory size is used to define the symbolic variable's size. */
       SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
-        triton::uint64 memAddr          = mem.getAddress();
-        triton::uint32 symVarSize       = mem.getSize();
-        triton::uint512 cv              = this->architecture->getConcreteMemoryValue(mem);
+        triton::uint64 memAddr    = mem.getAddress();
+        triton::uint32 symVarSize = mem.getSize();
+        triton::uint512 cv        = this->architecture->getConcreteMemoryValue(mem);
 
         /* First we create a symbolic variable */
         const SharedSymbolicVariable& symVar = this->newSymbolicVariable(MEMORY_VARIABLE, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
@@ -545,10 +545,10 @@ namespace triton {
         const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);
 
         /* Create the symbolic variable */
-        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(REGISTER_VARIABLE, parent.getId(), symVarSize, symVarComment);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(REGISTER_VARIABLE, reg.getId(), symVarSize, symVarComment);
 
         /* Create the AST node */
-        const triton::ast::SharedAbstractNode& tmp = this->astCtxt->zx(parent.getBitSize() - symVarSize, this->astCtxt->variable(symVar));
+        const triton::ast::SharedAbstractNode& tmp = this->insertSubRegisterInParent(reg, this->astCtxt->variable(symVar), false);
 
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteVariableValue(symVar, cv);
@@ -556,8 +556,7 @@ namespace triton {
         if (expression == nullptr) {
           /* Create the symbolic expression */
           const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, REGISTER_EXPRESSION);
-          se->setOriginRegister(reg);
-          this->symbolicReg[parent.getId()] = se;
+          this->assignSymbolicExpressionToRegister(se, parent);
         } else {
           /* Set the AST node */
           expression->setAst(tmp);
@@ -872,54 +871,81 @@ namespace triton {
       }
 
 
-      /* Returns the new symbolic register expression */
-      const SharedSymbolicExpression& SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment) {
+      /* Returns the parent AST after inserting the subregister (node) in its AST. */
+      triton::ast::SharedAbstractNode SymbolicEngine::insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign) {
         const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
         triton::ast::SharedAbstractNode finalExpr = nullptr;
-        triton::ast::SharedAbstractNode origReg   = nullptr;
+        triton::ast::SharedAbstractNode origReg   = this->getRegisterAst(parentReg);
         triton::uint32 regSize                    = reg.getSize();
 
-        /* Check if the register is a flag */
-        if (this->architecture->isFlag(reg)) {
-          const SharedSymbolicExpression& se = this->newSymbolicExpression(node, REGISTER_EXPRESSION, comment);
-          this->assignSymbolicExpressionToRegister(se, reg);
-          inst.setWrittenRegister(reg, node);
-          return inst.addSymbolicExpression(se);
-        }
-
-        if (regSize == BYTE_SIZE || regSize == WORD_SIZE)
-          origReg = this->getRegisterAst(parentReg);
-
         switch (regSize) {
-          // FIXME: A bit ugly since AArch64 is in the game
-          /* ======================== Mainly for X86 ========================*/
           case BYTE_SIZE:
+            /* Mainly used for x86 */
             if (reg.getLow() == 0) {
-              finalExpr = this->astCtxt->concat(this->astCtxt->extract((this->architecture->gprBitSize() - 1), BYTE_SIZE_BIT, origReg), node);
+              finalExpr = this->astCtxt->concat(
+                            this->astCtxt->extract((parentReg.getBitSize() - 1), BYTE_SIZE_BIT, origReg),
+                            node
+                          );
             }
             else {
               finalExpr = this->astCtxt->concat(
-                            this->astCtxt->extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg),
-                            this->astCtxt->concat(node, this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, origReg))
+                            this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg),
+                            this->astCtxt->concat(
+                              node,
+                              this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, origReg)
+                            )
                           );
             }
             break;
           case WORD_SIZE:
-            finalExpr = this->astCtxt->concat(this->astCtxt->extract((this->architecture->gprBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            /* Mainly used for x86 */
+            finalExpr = this->astCtxt->concat(
+                          this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg),
+                          node
+                        );
             break;
-          /* ======================== Mainly for X86 ========================*/
-
           case DWORD_SIZE:
           case QWORD_SIZE:
           case DQWORD_SIZE:
           case QQWORD_SIZE:
-          case DQQWORD_SIZE:
-            finalExpr = this->astCtxt->zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+          case DQQWORD_SIZE: {
+            if (zxForAssign == false) {
+              if (parentReg.getBitSize() > reg.getBitSize()) {
+                finalExpr = this->astCtxt->concat(
+                              this->astCtxt->extract((parentReg.getBitSize() - 1), reg.getHigh() + 1, origReg),
+                              node
+                            );
+              }
+              else {
+                finalExpr = node;
+              }
+            }
+            /* zxForAssign == true */
+            else {
+              finalExpr = this->astCtxt->zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+            }
             break;
+          }
         }
 
-        const SharedSymbolicExpression& se = this->newSymbolicExpression(finalExpr, REGISTER_EXPRESSION, comment);
-        this->assignSymbolicExpressionToRegister(se, parentReg);
+        return finalExpr;
+      }
+
+
+      /* Returns the new symbolic register expression */
+      const SharedSymbolicExpression& SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment) {
+        SharedSymbolicExpression se = nullptr;
+
+        /* Check if the register is a flag */
+        if (this->architecture->isFlag(reg)) {
+          se = this->newSymbolicExpression(node, REGISTER_EXPRESSION, comment);
+          this->assignSymbolicExpressionToRegister(se, reg);
+        }
+        else {
+          se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, comment);
+          this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
+        }
+
         inst.setWrittenRegister(reg, node);
         return inst.addSymbolicExpression(se);
       }

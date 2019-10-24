@@ -47,9 +47,7 @@ The symbolic expression (`symExpr`) must be aligned to the memory access.
 
 - <b>void assignSymbolicExpressionToRegister(\ref py_SymbolicExpression_page symExpr, \ref py_Register_page reg)</b><br>
 Assigns a \ref py_SymbolicExpression_page to a \ref py_Register_page. **Be careful**, use this function only if you know what you are doing.
-The symbolic expression (`symExpr`) must be aligned to the targeted size register. E.g: for SSE registers, the expression must be aligned
-to 128 bits. Otherwise, you will probably get a sort mismatch error when you solve the expression. If you want to assign an
-expression to a sub-register like `AX`, `AH` or `AL`, please, craft your expression with the `concat()` and `extract()` AST functions.
+The symbolic expression (`symExpr`) must be aligned to the targeted size register. The register must be a parent register.
 
 - <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.

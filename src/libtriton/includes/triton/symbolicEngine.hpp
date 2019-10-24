@@ -147,6 +147,9 @@ namespace triton {
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
           triton::ast::SharedAbstractNode getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node);
 
+          //! Returns the parent AST after inserting the subregister (node) in its AST.
+          triton::ast::SharedAbstractNode insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign=true);
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
