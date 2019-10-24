@@ -129,8 +129,8 @@ namespace tracer {
       PyObject*                          callbackSyscallExit        = nullptr;
       bool                               startAnalysisFromEntry     = false;
       char*                              startAnalysisFromSymbol    = nullptr;
-      std::list<const char*>             imageBlacklist;
-      std::list<const char*>             imageWhitelist;
+      std::vector<const char*>           imageBlacklist;
+      std::vector<const char*>           imageWhitelist;
       std::map<const char*, PyObject*>   callbackRoutineEntry;
       std::map<const char*, PyObject*>   callbackRoutineExit;
       std::set<triton::__uint>           startAnalysisFromAddress;

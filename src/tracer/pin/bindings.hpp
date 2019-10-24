@@ -15,7 +15,7 @@
 
 #include <map>
 #include <set>
-#include <list>
+#include <vector>
 
 #include <pin.H>
 
@@ -134,10 +134,10 @@ namespace tracer {
       extern std::map<const char*, PyObject*> callbackRoutineExit;
 
       //! An image white list.
-      extern std::list<const char*> imageWhitelist;
+      extern std::vector<const char*> imageWhitelist;
 
       //! An image black list.
-      extern std::list<const char*> imageBlacklist;
+      extern std::vector<const char*> imageBlacklist;
 
       //! TID focused during the JIT
       extern triton::uint32 targetThreadId;
