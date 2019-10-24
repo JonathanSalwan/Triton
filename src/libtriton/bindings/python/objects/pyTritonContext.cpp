@@ -2129,15 +2129,6 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        /*
-         * FIXME: Add a unique_pointer with a deleter that calls Py_DECREF in the lambda capture.
-         * See unittest: test_method_callback_removal
-         *
-         *
-         * if (PyMethod_Check(function))
-         *   Py_DECREF(cb);
-         */
-
         Py_INCREF(Py_None);
         return Py_None;
       }
