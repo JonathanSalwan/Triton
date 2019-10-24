@@ -139,17 +139,23 @@ namespace triton {
 
 
       /* Gets an aligned entry. */
-      const SharedSymbolicExpression& SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        if (this->isAlignedMemory(address, size))
-          return this->alignedMemoryReference[std::make_pair(address, size)];
-        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getAlignedMemory(): memory not found");
+      inline SharedSymbolicExpression SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
+        return this->alignedMemoryReference[std::make_pair(address, size)].lock();
       }
 
 
       /* Checks if the aligned memory is recored. */
       bool SymbolicEngine::isAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end())
-          return true;
+        if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end()) {
+          /* Also check if the symbolic expression is alive */
+          if (this->alignedMemoryReference[std::make_pair(address, size)].lock()) {
+            return true;
+          }
+          /* Also check if the symbolic expression is alive */
+          else {
+            this->removeAlignedMemory(address, size);
+          }
+        }
         return false;
       }
 

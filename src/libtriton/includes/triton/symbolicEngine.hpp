@@ -88,6 +88,14 @@ namespace triton {
            */
           mutable std::unordered_map<triton::usize, WeakSymbolicExpression> symbolicExpressions;
 
+          /*! \brief map of <address:size> -> symbolic expression.
+           *
+           * \details
+           * **item1**: <addr:size><br>
+           * **item2**: shared symbolic expression
+           */
+          std::map<std::pair<triton::uint64, triton::uint32>, WeakSymbolicExpression> alignedMemoryReference;
+
           /*! \brief map of address -> symbolic expression
            *
            * \details
@@ -95,14 +103,6 @@ namespace triton {
            * **item2**: shared symbolic expression
            */
           std::map<triton::uint64, SharedSymbolicExpression> memoryReference;
-
-          /*! \brief map of <address:size> -> symbolic expression.
-           *
-           * \details
-           * **item1**: <addr:size><br>
-           * **item2**: shared symbolic expression
-           */
-          std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedMemoryReference;
 
           //! Symbolic register state.
           std::vector<SharedSymbolicExpression> symbolicReg;
@@ -127,7 +127,7 @@ namespace triton {
           triton::usize getUniqueSymVarId(void);
 
           //! Gets an aligned entry.
-          const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);
+          inline SharedSymbolicExpression getAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds an aligned entry.
           void addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr);
