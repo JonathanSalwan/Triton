@@ -24,6 +24,7 @@
 
 namespace triton {
   namespace ast {
+
     /* ====== Abstract node */
 
     AbstractNode::AbstractNode(triton::ast::ast_e type, const SharedAstContext& ctxt) {
@@ -119,8 +120,9 @@ namespace triton {
 
     void AbstractNode::initParents(void) {
       auto ancestors = parentsExtraction(this->shared_from_this(), false);
-      for (auto& sp : ancestors)
+      for (auto& sp : ancestors) {
         sp->init();
+      }
     }
 
 
@@ -2353,7 +2355,8 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
+    /* Returns a new instance of a given node. */
+    static SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
@@ -2431,28 +2434,37 @@ namespace triton {
           newNode->removeParent(p.get());
         }
       }
+
       return newNode;
     }
 
+
     SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
-      std::map<AbstractNode *, SharedAbstractNode> exprs;
+      std::map<AbstractNode*, SharedAbstractNode> exprs;
       auto nodes = childrenExtraction(node->shared_from_this(), unroll, true);
 
       for (auto&& n : nodes) {
+        /* Do a copy of all children */
         auto newNode = shallowCopy(n.get(), unroll);
         exprs[n.get()] = newNode;
+
+        /* For each child, set its parent */
         auto& children = newNode->getChildren();
         for (auto& child : children) {
           child = exprs[child.get()];
           child->setParent(newNode.get());
         }
       }
+
+      /* Return the root node */
       return exprs.at(node);
     }
+
 
     SharedAbstractNode unroll(const triton::ast::SharedAbstractNode& node) {
       return triton::ast::newInstance(node.get(), true);
     }
+
 
     /* Returns a vector of unique AST-nodes sorted topologically
      *
@@ -2466,7 +2478,7 @@ namespace triton {
      */
     static std::vector<SharedAbstractNode> nodesExtraction(const SharedAbstractNode& node, bool unroll, bool revert, bool descend) {
       std::vector<SharedAbstractNode> result;
-      std::set<AbstractNode *> visited;
+      std::set<AbstractNode*> visited;
       std::stack<std::pair<SharedAbstractNode, bool>> worklist;
 
       if (node == nullptr)
@@ -2490,11 +2502,13 @@ namespace triton {
           continue;
         }
 
-        if (!visited.insert(ast.get()).second)
+        if (!visited.insert(ast.get()).second) {
           continue;
+        }
+
         worklist.push({ast, true});
 
-        const auto &relatives = descend ? ast->getChildren() : ast->getParents();
+        const auto& relatives = descend ? ast->getChildren() : ast->getParents();
 
         /* Proceed relatives */
         for (const auto& r : relatives) {
@@ -2513,19 +2527,23 @@ namespace triton {
       }
 
       /* The result is in reversed topological sort meaning that children go before parents */
-      if (!revert)
+      if (!revert) {
         std::reverse(result.begin(), result.end());
+      }
 
       return result;
     }
+
 
     std::vector<SharedAbstractNode> childrenExtraction(const SharedAbstractNode& node, bool unroll, bool revert) {
       return nodesExtraction(node, unroll, revert, true);
     }
 
+
     std::vector<SharedAbstractNode> parentsExtraction(const SharedAbstractNode& node, bool revert) {
       return nodesExtraction(node, false, revert, false);
     }
+
 
     std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match) {
       std::stack<triton::ast::AbstractNode*>      worklist;
@@ -2548,9 +2566,11 @@ namespace triton {
 
         if (current->getType() == REFERENCE_NODE) {
           worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
-        } else {
-          for (const auto &child : current->getChildren())
+        }
+        else {
+          for (const auto &child : current->getChildren()) {
             worklist.push(child.get());
+          }
         }
       }
 
