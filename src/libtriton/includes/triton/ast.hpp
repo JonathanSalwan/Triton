@@ -663,8 +663,11 @@ namespace triton {
     //! AST C++ API - Unrolls the SSA form of a given AST.
     TRITON_EXPORT SharedAbstractNode unrollAst(const SharedAbstractNode& node);
 
-    //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
-    TRITON_EXPORT std::vector<SharedAbstractNode> nodesExtraction(const SharedAbstractNode& node, bool unroll, bool revert);
+    //! Returns node and all its children of an AST sorted topologically. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
+    TRITON_EXPORT std::vector<SharedAbstractNode> childrenExtraction(const SharedAbstractNode& node, bool unroll, bool revert);
+
+    //! Returns node and all its parents of an AST sorted topologically. If `revert` is true, oldest parents are on top of list.
+    TRITON_EXPORT std::vector<SharedAbstractNode> parentsExtraction(const SharedAbstractNode& node, bool revert);
 
     //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
     TRITON_EXPORT std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);

@@ -405,7 +405,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
 
         exprs[expr->getId()] = expr;
-        auto worklist = triton::ast::nodesExtraction(expr->getAst(), true /* unroll */, false /* revert */);
+        auto worklist = triton::ast::childrenExtraction(expr->getAst(), true /* unroll */, false /* revert */);
 
         for (auto&& n : worklist) {
           if (n->getType() == triton::ast::REFERENCE_NODE) {
