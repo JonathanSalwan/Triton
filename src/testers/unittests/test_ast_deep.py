@@ -1,17 +1,10 @@
-#!/usr/bin/env python2
-# coding: utf-8
-"""Test deep AST."""
-
 import unittest
 from triton import *
 
 DEPTH = 10000
 
 
-
 class TestDeep(unittest.TestCase):
-
-    """Test deep AST."""
 
     def setUp(self):
         """Define the arch."""
@@ -19,15 +12,15 @@ class TestDeep(unittest.TestCase):
         self.triton.setArchitecture(ARCH.X86_64)
         self.ctx = self.triton.getAstContext()
 
-        self.sym_var = self.ctx.variable(self.triton.symbolizeRegister(self.triton.registers.rax))
+        self.sym_var = self.ctx.variable(self.triton.convertRegisterToSymbolicVariable(self.triton.registers.rax))
         self.triton.setConcreteRegisterValue(self.triton.registers.rbx, 0)
 
         add_inst = Instruction()
         add_inst.setAddress(0x100)
-        add_inst.setOpcode(b"\x48\x01\xC3")      # add   rbx, rax
+        add_inst.setOpcode("\x48\x01\xC3")      # add   rbx, rax
 
         sub_inst = Instruction()
-        sub_inst.setOpcode(b"\x48\x29\xC3")      # sub   rbx, rax
+        sub_inst.setOpcode("\x48\x29\xC3")      # sub   rbx, rax
 
         # We subtract and add the same symbolic value from rbx N times
         for _ in range(DEPTH):

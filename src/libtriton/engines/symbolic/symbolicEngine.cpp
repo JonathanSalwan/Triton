@@ -415,8 +415,8 @@ namespace triton {
 
         for (auto&& n : worklist) {
           if (n->getType() == triton::ast::REFERENCE_NODE) {
-            auto expr  = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
-            auto eid   = expr->getId();
+            auto expr = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
+            auto eid  = expr->getId();
             exprs[eid] = expr;
           }
         }
