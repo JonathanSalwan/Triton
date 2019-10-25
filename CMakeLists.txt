@@ -40,7 +40,7 @@ if(PYTHON_BINDINGS)
     endif()
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     add_custom_target(test-python
-        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
+        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests -v
         DEPENDS python-triton
     )
 else()

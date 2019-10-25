@@ -391,6 +391,18 @@ class TestSymbolicEngineNoOptim(BaseTestSimulation, unittest.TestCase):
         super(TestSymbolicEngineNoOptim, self).setUp()
 
 
+class TestSymbolicEngineGC(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with iterative GC."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.setMode(MODE.ITERATIVE_GC, True)
+        super(TestSymbolicEngineGC, self).setUp()
+
+
 class TestSymbolicEngineAligned(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine with ALIGNED_MEMORY."""

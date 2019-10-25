@@ -9,7 +9,6 @@
 #define TRITON_AST_H
 
 #include <deque>
-#include <list>
 #include <map>
 #include <memory>
 #include <ostream>

@@ -259,3 +259,17 @@ class TestIssue803(unittest.TestCase):
 
         # Test
         self.assertFalse(ast1.equalTo(ast2))
+
+
+class TestIssue753(unittest.TestCase):
+
+    """Testing #753."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ctx.setMode(MODE.ITERATIVE_GC, True)
+
+    def test_issue(self):
+        for i in range(0x5000):
+            inst = Instruction(b"\x48\x01\xc0") # add rax, rax
+            self.ctx.processing(inst)

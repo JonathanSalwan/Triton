@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <list>
 
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>
@@ -50,27 +51,33 @@ namespace triton {
     /*! \brief AST Context - Used as AST builder. */
     class AstContext : public std::enable_shared_from_this<AstContext> {
       private:
-        //! Modes API
-        triton::modes::SharedModes modes;
-
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
-        //! Map a concrete value and ast node for a variable name.
+        //! Maps a concrete value and ast node for a variable name.
         std::map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
 
       public:
+        //! Modes API
+        triton::modes::SharedModes modes;
+
+        //! Garbage collected nodes.
+        std::list<SharedAbstractNode> gc;
+
+        //! Level of recursion during the shared_ptr destruction
+        triton::uint32 recursionLevel;
+
+        //! Clears nodes garbage collected
+        void clearGarbage(void);
+
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
-
-        //! Constructor by copy
-        TRITON_EXPORT AstContext(const AstContext& other);
 
         //! Destructor
         TRITON_EXPORT ~AstContext();
 
         //! Operator
-        TRITON_EXPORT AstContext& operator=(const AstContext& other);
+        TRITON_EXPORT AstContext& operator=(AstContext& other);
 
         //! AST C++ API - assert node builder
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
@@ -294,7 +301,7 @@ namespace triton {
         //! Gets the representations mode of this astContext
         TRITON_EXPORT triton::uint32 getRepresentationMode(void) const;
 
-        //! Print the given node with this context representation
+        //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
     };
 

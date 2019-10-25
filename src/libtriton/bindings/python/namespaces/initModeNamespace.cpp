@@ -40,6 +40,10 @@ Enabled, Triton will reduces the depth of the trees using classical arithmetic o
 - **MODE.CONCRETIZE_UNDEFINED_REGISTERS**<br>
 Enabled, Triton will concretize every register tagged as undefined (see #750).
 
+- **MODE.ITERATIVE_GC**<br>
+Enabled, Triton will use an iterative mechanism to release garbage collected nodes. This option
+may avoid stack overflow during the release of shared_ptr but impact (a little bit) the performance.
+
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
 Enabled, Triton will perform symbolic execution only on symbolized expressions.
 
@@ -66,6 +70,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "ALIGNED_MEMORY",                 PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
         xPyDict_SetItemString(modeDict, "AST_OPTIMIZATIONS",              PyLong_FromUint32(triton::modes::AST_OPTIMIZATIONS));
         xPyDict_SetItemString(modeDict, "CONCRETIZE_UNDEFINED_REGISTERS", PyLong_FromUint32(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS));
+        xPyDict_SetItemString(modeDict, "ITERATIVE_GC",                   PyLong_FromUint32(triton::modes::ITERATIVE_GC));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",             PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",                PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",           PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
