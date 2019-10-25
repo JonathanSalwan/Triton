@@ -775,7 +775,7 @@ namespace triton {
       if (it != this->valueMapping.end()) {
         if (auto node = it->second.first.lock()) {
           it->second.second = value;
-          node->init();
+          node->initParents();
         }
         else {
           throw triton::exceptions::Ast("AstContext::updateVariable(): This symbolic variable is dead.");
