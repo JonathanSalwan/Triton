@@ -52,11 +52,11 @@ namespace triton {
        * child of the vector and reset the level of recursion to 0.
        */
 
-      if (this->ctxt->modes->isModeEnabled(triton::modes::ITERATIVE_GC) == false) {
+      if (this->ctxt->isModeEnabled(triton::modes::ITERATIVE_GC) == false) {
         return;
       }
 
-      if (this->ctxt->recursionLevel > 20) {
+      if (this->ctxt->recursionLevel > 200) {
         for (auto&& n : this->getChildren()) {
           W.push_back(n);
         }

@@ -34,7 +34,7 @@ namespace triton {
     }
 
 
-    AstContext& AstContext::operator=(AstContext& other) {
+    AstContext& AstContext::operator=(const AstContext& other) {
       std::enable_shared_from_this<AstContext>::operator=(other);
 
       this->astRepresentation = other.astRepresentation;
@@ -42,9 +42,8 @@ namespace triton {
       this->valueMapping      = other.valueMapping;
       this->recursionLevel    = 0;
 
-      while (!this->gc.empty() && !other.gc.empty()) {
+      while (!this->gc.empty()) {
         this->clearGarbage();
-        other.clearGarbage();
       }
 
       return *this;
@@ -917,6 +916,11 @@ namespace triton {
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
       return this->astRepresentation.print(stream, node);
+    }
+
+
+    bool AstContext::isModeEnabled(triton::modes::mode_e mode) const {
+      return this->modes->isModeEnabled(mode);
     }
 
   }; /* ast namespace */
