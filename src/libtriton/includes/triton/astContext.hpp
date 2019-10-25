@@ -60,16 +60,7 @@ namespace triton {
         //! Maps a concrete value and ast node for a variable name.
         std::map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
 
-        //! Clears nodes garbage collected
-        void clearGarbage(void);
-
       public:
-        //! Garbage collected nodes.
-        std::list<SharedAbstractNode> gc;
-
-        //! Level of recursion during the shared_ptr destruction
-        triton::uint32 recursionLevel;
-
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
 
@@ -303,9 +294,6 @@ namespace triton {
 
         //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
-
-        //! Returns true if the mode is enabled.
-        TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
     };
 
     //! Shared AST context

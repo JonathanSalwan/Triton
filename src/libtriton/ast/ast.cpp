@@ -38,45 +38,6 @@ namespace triton {
 
 
     AbstractNode::~AbstractNode() {
-      std::vector<SharedAbstractNode> W;
-
-      /*
-       * Using shared_ptr on AST implies issues when the root node
-       * of a deep AST is freed and when children have only one
-       * reference. This scenario will cause a stack overflow due to
-       * the recursion of shared_ptr destruction. To avoid this scenario,
-       * we define a limit of recursion (here 200) and when this limit is
-       * reached, we switch in an iterative destructor mode by forwarding
-       * the last reference of a child into a vector (AstContext::gc).
-       * Then, the function AstContext::clearGarbage() releases (lifo) each
-       * child of the vector and reset the level of recursion to 0.
-       */
-
-      if (this->ctxt->isModeEnabled(triton::modes::ITERATIVE_GC) == false) {
-        return;
-      }
-
-      if (this->ctxt->recursionLevel > 200) {
-        for (auto&& n : this->getChildren()) {
-          W.push_back(n);
-        }
-
-        while (!W.empty()) {
-          auto& node = W.back();
-          W.pop_back();
-
-          for (auto&& n : node->getChildren()) {
-            W.push_back(n);
-          }
-
-          if (node.unique()) {
-            this->ctxt->gc.push_front(node);
-          }
-        }
-      }
-      else {
-        this->ctxt->recursionLevel += 1;
-      }
     }
 
 
