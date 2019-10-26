@@ -2068,9 +2068,6 @@ namespace triton {
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
