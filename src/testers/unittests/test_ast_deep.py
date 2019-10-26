@@ -5,7 +5,7 @@
 import unittest
 from triton import *
 
-DEPTH = 10000
+DEPTH = 1000
 
 
 
