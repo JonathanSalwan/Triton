@@ -15,7 +15,7 @@
 #include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

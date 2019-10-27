@@ -10,7 +10,7 @@
 
 #if defined(__unix__) || defined(__APPLE__)
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/syscalls.hpp>
 
 

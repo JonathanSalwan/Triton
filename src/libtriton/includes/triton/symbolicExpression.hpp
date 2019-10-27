@@ -12,7 +12,7 @@
 #include <memory>
 
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/symbolicEnums.hpp>

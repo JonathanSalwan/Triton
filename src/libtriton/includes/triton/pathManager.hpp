@@ -10,7 +10,7 @@
 
 #include <vector>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
 #include <triton/pathConstraint.hpp>

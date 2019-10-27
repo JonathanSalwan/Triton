@@ -10,7 +10,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/callbacks.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 
 
 

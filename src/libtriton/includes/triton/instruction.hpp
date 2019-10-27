@@ -17,7 +17,7 @@
 
 #include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/memoryAccess.hpp>
 #include <triton/operandWrapper.hpp>
 #include <triton/register.hpp>

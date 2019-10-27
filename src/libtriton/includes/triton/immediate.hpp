@@ -11,7 +11,7 @@
 #include <triton/aarch64OperandProperties.hpp>
 #include <triton/archEnums.hpp>
 #include <triton/bitsVector.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

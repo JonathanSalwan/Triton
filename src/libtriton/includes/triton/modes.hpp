@@ -11,7 +11,7 @@
 #include <set>
 #include <memory>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/modesEnums.hpp>
 
 

@@ -10,7 +10,7 @@
 
 #include <set>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/memoryAccess.hpp>
 #include <triton/modes.hpp>
 #include <triton/register.hpp>

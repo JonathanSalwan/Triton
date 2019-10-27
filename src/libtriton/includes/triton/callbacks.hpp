@@ -14,7 +14,7 @@
 #include <triton/ast.hpp>
 #include <triton/callbacksEnums.hpp>
 #include <triton/comparableFunctor.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>

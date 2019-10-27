@@ -11,7 +11,7 @@
 #include <exception>
 #include <string>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

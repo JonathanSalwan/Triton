@@ -15,7 +15,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/exceptions.hpp>
 #include <triton/modes.hpp>
 

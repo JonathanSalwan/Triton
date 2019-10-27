@@ -5,6 +5,10 @@ else()
     set(LIBTRITON_KIND_LINK SHARED)
 endif()
 
+# do not export any symbols by default
+set(CMAKE_CXX_VISIBILITY_PRESET hidden)
+set(CMAKE_VISIBILITY_INLINES_HIDDEN YES)
+
 # Default flags
 # To fix old python version bug http://bugs.python.org/issue21958
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
@@ -122,7 +126,6 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/coreUtils.hpp
     includes/triton/cpuInterface.hpp
     includes/triton/cpuSize.hpp
-    includes/triton/dllexport.hpp
     includes/triton/exceptions.hpp
     includes/triton/externalLibs.hpp
     includes/triton/immediate.hpp
@@ -315,6 +318,11 @@ add_library(
     ${LIBTRITON_PYTHON_SOURCE_FILES} ${LIBTRITON_PYTHON_HEADER_FILES}
 )
 add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
+# generate header to create macro for symbol export
+include(GenerateExportHeader)
+generate_export_header(${PROJECT_LIBTRITON}
+    EXPORT_FILE_NAME "${CMAKE_CURRENT_BINARY_DIR}/includes/triton/triton_export.h")
+
 target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/includes")
 target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/includes")
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)

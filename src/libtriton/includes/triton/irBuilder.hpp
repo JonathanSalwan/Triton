@@ -9,7 +9,7 @@
 #define TRITON_IRBUILDER_H
 
 #include <triton/architecture.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/instruction.hpp>
 #include <triton/modes.hpp>
 #include <triton/semanticsInterface.hpp>

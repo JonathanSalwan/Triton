@@ -15,7 +15,7 @@
 #include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
@@ -49,7 +49,7 @@ namespace triton {
 
       //! \class x8664Cpu
       /*! \brief This class is used to describe the x86 (64-bits) spec. */
-      class x8664Cpu : public CpuInterface, public x86Specifications {
+      class TRITON_EXPORT x8664Cpu : public CpuInterface, public x86Specifications {
 
         static const triton::arch::register_e pcId = triton::arch::ID_REG_X86_RIP;
         static const triton::arch::register_e spId = triton::arch::ID_REG_X86_RSP;
@@ -235,66 +235,66 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
+          x8664Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor
-          TRITON_EXPORT x8664Cpu(const x8664Cpu& other);
+          x8664Cpu(const x8664Cpu& other);
 
           //! Destructor.
-          TRITON_EXPORT virtual ~x8664Cpu();
+          virtual ~x8664Cpu();
 
           //! Copies a x8664Cpu class.
-          TRITON_EXPORT x8664Cpu& operator=(const x8664Cpu& other);
+          x8664Cpu& operator=(const x8664Cpu& other);
 
           //! Returns true if regId is a GRP.
-          TRITON_EXPORT bool isGPR(triton::arch::register_e regId) const;
+          bool isGPR(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a MMX register.
-          TRITON_EXPORT bool isMMX(triton::arch::register_e regId) const;
+          bool isMMX(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a SSE register.
-          TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
+          bool isSSE(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
-          TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;
+          bool isAVX256(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-512 (ZMM) register.
-          TRITON_EXPORT bool isAVX512(triton::arch::register_e regId) const;
+          bool isAVX512(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a control (cr) register.
-          TRITON_EXPORT bool isControl(triton::arch::register_e regId) const;
+          bool isControl(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a Segment.
-          TRITON_EXPORT bool isSegment(triton::arch::register_e regId) const;
+          bool isSegment(triton::arch::register_e regId) const;
 
           /* Virtual pure inheritance ================================================= */
-          TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
-          TRITON_EXPORT bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
-          TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
-          TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
-          TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
-          TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
-          TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
-          TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
-          TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
-          TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
-          TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
-          TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
-          TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
-          TRITON_EXPORT triton::uint32 gprBitSize(void) const;
-          TRITON_EXPORT triton::uint32 gprSize(void) const;
-          TRITON_EXPORT triton::uint32 numberOfRegisters(void) const;
-          TRITON_EXPORT triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
-          TRITON_EXPORT triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
-          TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
-          TRITON_EXPORT void clear(void);
-          TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
-          TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
-          TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
-          TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
-          TRITON_EXPORT void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
-          TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
-          TRITON_EXPORT void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
+          bool isFlag(triton::arch::register_e regId) const;
+          bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
+          bool isRegister(triton::arch::register_e regId) const;
+          bool isRegisterValid(triton::arch::register_e regId) const;
+          const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
+          const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
+          const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
+          const triton::arch::Register& getProgramCounter(void) const;
+          const triton::arch::Register& getRegister(triton::arch::register_e id) const;
+          const triton::arch::Register& getStackPointer(void) const;
+          std::set<const triton::arch::Register*> getParentRegisters(void) const;
+          std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;
+          triton::arch::endianness_e getEndianness(void) const;
+          triton::uint32 gprBitSize(void) const;
+          triton::uint32 gprSize(void) const;
+          triton::uint32 numberOfRegisters(void) const;
+          triton::uint512 getConcreteMemoryValue(const triton::arch::MemoryAccess& mem, bool execCallbacks=true) const;
+          triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
+          triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
+          void clear(void);
+          void disassembly(triton::arch::Instruction& inst) const;
+          void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
+          void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
+          void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
+          void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
+          void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
+          void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
           /* End of virtual pure inheritance ========================================== */
       };
 

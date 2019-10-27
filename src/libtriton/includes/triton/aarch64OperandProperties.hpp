@@ -9,7 +9,7 @@
 #define TRITON_AARCH64OPERANDPROPERTIES
 
 #include <triton/archEnums.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

@@ -10,7 +10,7 @@
 
 #include <string>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/symbolicVariable.hpp>
 #include <triton/tritonTypes.hpp>
 

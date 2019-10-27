@@ -14,7 +14,7 @@
 #include <memory>
 
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>

@@ -12,7 +12,7 @@
 
 #include <triton/astRepresentationInterface.hpp>
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 
 
 

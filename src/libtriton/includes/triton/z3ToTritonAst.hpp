@@ -11,7 +11,7 @@
 #include <z3++.h>
 
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

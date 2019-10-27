@@ -13,7 +13,7 @@
 #include <string>
 
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/tritonTypes.hpp>

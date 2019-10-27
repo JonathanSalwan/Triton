@@ -12,7 +12,7 @@
 #include <map>
 
 #include <triton/ast.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/solverModel.hpp>
 #include <triton/tritonTypes.hpp>
 

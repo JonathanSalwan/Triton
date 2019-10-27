@@ -9,6 +9,7 @@
 #ifndef TRITON_PYOBJECT_H
 #define TRITON_PYOBJECT_H
 
+#include <triton/triton_export.h>
 #include <triton/pythonBindings.hpp>
 
 #include <triton/archEnums.hpp>
@@ -51,52 +52,52 @@ namespace triton {
      */
 
       //! Creates the AstNode python class.
-      PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node);
+      TRITON_EXPORT PyObject* PyAstNode(const triton::ast::SharedAbstractNode& node);
 
       //! Creates the BitsVector python class.
-      template <typename T> PyObject* PyBitsVector(const T& op);
+      template <typename T> TRITON_EXPORT PyObject* PyBitsVector(const T& op);
 
       //! Creates the Immediate python class.
-      PyObject* PyImmediate(const triton::arch::Immediate& imm);
+      TRITON_EXPORT PyObject* PyImmediate(const triton::arch::Immediate& imm);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(void);
+      TRITON_EXPORT PyObject* PyInstruction(void);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(const triton::arch::Instruction& inst);
+      TRITON_EXPORT PyObject* PyInstruction(const triton::arch::Instruction& inst);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(const triton::uint8* opcodes, triton::uint32 opSize);
+      TRITON_EXPORT PyObject* PyInstruction(const triton::uint8* opcodes, triton::uint32 opSize);
 
       //! Creates the Memory python class.
-      PyObject* PyMemoryAccess(const triton::arch::MemoryAccess& mem);
+      TRITON_EXPORT PyObject* PyMemoryAccess(const triton::arch::MemoryAccess& mem);
 
       //! Creates the PathConstraint python class.
-      PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
+      TRITON_EXPORT PyObject* PyPathConstraint(const triton::engines::symbolic::PathConstraint& pc);
 
       //! Creates the new TritonContext python class.
-      PyObject* PyTritonContext(void);
+      TRITON_EXPORT PyObject* PyTritonContext(void);
 
       //! Creates the new TritonContext python class.
-      PyObject* PyTritonContext(triton::arch::architecture_e arch);
+      TRITON_EXPORT PyObject* PyTritonContext(triton::arch::architecture_e arch);
 
       //! Creates a TritonContext python class which is a reference to another Context.
-      PyObject* PyTritonContextRef(triton::API& api);
+      TRITON_EXPORT PyObject* PyTritonContextRef(triton::API& api);
 
       //! Creates an AstContext python class.
-      PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt);
+      TRITON_EXPORT PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt);
 
       //! Creates the Register python class.
-      PyObject* PyRegister(const triton::arch::Register& reg);
+      TRITON_EXPORT PyObject* PyRegister(const triton::arch::Register& reg);
 
       //! Creates the SolverModel python class.
-      PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
+      TRITON_EXPORT PyObject* PySolverModel(const triton::engines::solver::SolverModel& model);
 
       //! Creates the SymbolicExpression python class.
-      PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
+      TRITON_EXPORT PyObject* PySymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
       //! Creates the SymbolicVariable python class.
-      PyObject* PySymbolicVariable(const triton::engines::symbolic::SharedSymbolicVariable& symVar);
+      TRITON_EXPORT PyObject* PySymbolicVariable(const triton::engines::symbolic::SharedSymbolicVariable& symVar);
 
       /* AstNode ======================================================== */
 
@@ -107,7 +108,7 @@ namespace triton {
       } AstNode_Object;
 
       //! pyAstNode type.
-      extern PyTypeObject AstNode_Type;
+      TRITON_EXPORT extern PyTypeObject AstNode_Type;
 
       /* BitsVector ====================================================== */
 
@@ -118,7 +119,7 @@ namespace triton {
       } BitsVector_Object;
 
       //! pyBitsVector type.
-      extern PyTypeObject BitsVector_Type;
+      TRITON_EXPORT extern PyTypeObject BitsVector_Type;
 
       /* Immediate ====================================================== */
 
@@ -129,7 +130,7 @@ namespace triton {
       } Immediate_Object;
 
       //! pyImmediate type.
-      extern PyTypeObject Immediate_Type;
+      TRITON_EXPORT extern PyTypeObject Immediate_Type;
 
       /* Instruction ==================================================== */
 
@@ -140,7 +141,7 @@ namespace triton {
       } Instruction_Object;
 
       //! pyInstruction type.
-      extern PyTypeObject Instruction_Type;
+      TRITON_EXPORT extern PyTypeObject Instruction_Type;
 
       /* MemoryAccess =================================================== */
 
@@ -151,7 +152,7 @@ namespace triton {
       } MemoryAccess_Object;
 
       //! pyMemory type.
-      extern PyTypeObject MemoryAccess_Type;
+      TRITON_EXPORT extern PyTypeObject MemoryAccess_Type;
 
       /* PathConstraint ================================================= */
 
@@ -162,7 +163,7 @@ namespace triton {
       } PathConstraint_Object;
 
       //! pyPathConstraint type.
-      extern PyTypeObject PathConstraint_Type;
+      TRITON_EXPORT extern PyTypeObject PathConstraint_Type;
 
       /* Register ======================================================= */
 
@@ -173,7 +174,7 @@ namespace triton {
       } Register_Object;
 
       //! pyRegister type.
-      extern PyTypeObject Register_Type;
+      TRITON_EXPORT extern PyTypeObject Register_Type;
 
       /* TrytonContext ======================================================= */
 
@@ -186,7 +187,7 @@ namespace triton {
       } TritonContext_Object;
 
       //! pyRegister type.
-      extern PyTypeObject TritonContextObject_Type;
+      TRITON_EXPORT extern PyTypeObject TritonContextObject_Type;
 
       /* AstContext ======================================================= */
 
@@ -197,7 +198,7 @@ namespace triton {
       } AstContext_Object;
 
       //! pyRegister type.
-      extern PyTypeObject AstContextObject_Type;
+      TRITON_EXPORT extern PyTypeObject AstContextObject_Type;
 
       /* SolverModel ==================================================== */
 
@@ -208,7 +209,7 @@ namespace triton {
       } SolverModel_Object;
 
       //! pySolverModel type.
-      extern PyTypeObject SolverModel_Type;
+      TRITON_EXPORT extern PyTypeObject SolverModel_Type;
 
       /* SymbolicExpression ============================================= */
 
@@ -219,7 +220,7 @@ namespace triton {
       } SymbolicExpression_Object;
 
       //! pySymbolicExpression type.
-      extern PyTypeObject SymbolicExpression_Type;
+      TRITON_EXPORT extern PyTypeObject SymbolicExpression_Type;
 
       /* SymbolicVariable =============================================== */
 
@@ -230,7 +231,7 @@ namespace triton {
       } SymbolicVariable_Object;
 
       //! pySymbolicVariable type.
-      extern PyTypeObject SymbolicVariable_Type;
+      TRITON_EXPORT extern PyTypeObject SymbolicVariable_Type;
 
     /*! @} End of python namespace */
     };

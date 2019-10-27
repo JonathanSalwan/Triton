@@ -12,7 +12,7 @@
 
 #include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/register.hpp>
 
 

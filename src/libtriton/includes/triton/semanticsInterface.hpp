@@ -8,7 +8,7 @@
 #ifndef TRITON_SEMANTICSINTERFACE_HPP
 #define TRITON_SEMANTICSINTERFACE_HPP
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/instruction.hpp>
 
 

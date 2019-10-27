@@ -10,7 +10,7 @@
 
 #include <utility>
 
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/tritonTypes.hpp>
 
 

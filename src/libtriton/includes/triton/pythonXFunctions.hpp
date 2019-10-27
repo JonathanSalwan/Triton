@@ -36,25 +36,25 @@ namespace triton {
      */
 
       //! Creates a PyClass and raises an exception if it fails. __dict__ is copied in Py3 ! All references are decremented.
-      PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n);
+      TRITON_EXPORT PyObject* xPyClass_New(PyObject* b, PyObject* d, PyObject* n);
 
       //! Creates a PyDict and raises an exception if it fails.
-      PyObject* xPyDict_New(void);
+      TRITON_EXPORT PyObject* xPyDict_New(void);
 
       //! Creates a PyList and raises an exception if it fails.
-      PyObject* xPyList_New(Py_ssize_t len);
+      TRITON_EXPORT PyObject* xPyList_New(Py_ssize_t len);
 
       //! Creates a PyString and raises an exception if it fails.
-      PyObject* xPyString_FromString(const char *v);
+      TRITON_EXPORT PyObject* xPyString_FromString(const char *v);
 
       //! Creates a PyTuple and raises an exception if it fails.
-      PyObject* xPyTuple_New(Py_ssize_t len);
+      TRITON_EXPORT PyObject* xPyTuple_New(Py_ssize_t len);
 
       //! Same as PyDict_SetItemString but decrements reference on object
-      int xPyDict_SetItemString(PyObject *p, const char *key, PyObject *val);
+      TRITON_EXPORT int xPyDict_SetItemString(PyObject *p, const char *key, PyObject *val);
 
       //! Same as PyDict_SetItem but decrements reference on object and key
-      int xPyDict_SetItem(PyObject *p, PyObject* key, PyObject *val);
+      TRITON_EXPORT int xPyDict_SetItem(PyObject *p, PyObject* key, PyObject *val);
 
     /*! @} End of python namespace */
     };

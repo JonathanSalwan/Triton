@@ -17,7 +17,7 @@
 #include <triton/architecture.hpp>
 #include <triton/ast.hpp>
 #include <triton/callbacks.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/memoryAccess.hpp>
 #include <triton/modes.hpp>
 #include <triton/pathManager.hpp>

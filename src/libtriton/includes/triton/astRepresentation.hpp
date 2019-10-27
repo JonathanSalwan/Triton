@@ -16,7 +16,7 @@
 #include <triton/astPythonRepresentation.hpp>
 #include <triton/astRepresentationInterface.hpp>
 #include <triton/astSmtRepresentation.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 
 
 

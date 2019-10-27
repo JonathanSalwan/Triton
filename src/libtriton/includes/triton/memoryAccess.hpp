@@ -13,7 +13,7 @@
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/immediate.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>

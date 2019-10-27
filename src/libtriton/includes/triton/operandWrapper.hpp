@@ -9,7 +9,7 @@
 #define TRITON_OPERANDWRAPPER_HPP
 
 #include <triton/archEnums.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>

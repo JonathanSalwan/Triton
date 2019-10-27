@@ -15,7 +15,7 @@
 #include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>

@@ -13,7 +13,7 @@
 #include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
 #include <triton/callbacks.hpp>
-#include <triton/dllexport.hpp>
+#include <triton/triton_export.h>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
 #include <triton/irBuilder.hpp>
