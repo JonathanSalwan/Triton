@@ -209,6 +209,9 @@ namespace triton {
 
         /* Setup the child of the parent */
         this->children[index] = child;
+
+        /* Init parents */
+        child->initParents();
       }
     }
 

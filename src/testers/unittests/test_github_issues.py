@@ -259,3 +259,57 @@ class TestIssue803(unittest.TestCase):
 
         # Test
         self.assertFalse(ast1.equalTo(ast2))
+
+
+class TestIssue820(unittest.TestCase):
+
+    """Testing #820."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+
+
+    def test_issue1(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+        code = [
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+        ]
+
+        for op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(rax.getAst().evaluate(), 3)
+
+        # Testing initParents() when setting an AST on a old symbolic expression
+        ref0 = self.ctx.getSymbolicExpression(0)
+        ref0.setAst(self.ast.bv(10, 64))
+        self.assertEqual(rax.getAst().evaluate(), 12)
+
+
+    def test_issue2(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+        code = [
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+        ]
+
+        for op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(rax.getAst().evaluate(), 3)
+
+        # Testing initParents() when setting the child of an old AST
+        ref0 = self.ctx.getSymbolicExpression(0)
+        ref0.getAst().setChild(0, self.ast.bv(10, 64))
+        self.assertEqual(rax.getAst().evaluate(), 13)

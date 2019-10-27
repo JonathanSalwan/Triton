@@ -159,7 +159,7 @@ namespace triton {
           node->setParent(sp.get());
         }
         this->ast = node;
-        this->ast->init();
+        this->ast->initParents();
       }
 
 

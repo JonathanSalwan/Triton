@@ -361,7 +361,6 @@ namespace triton {
           src = PyAstNode_AsAstNode(node);
           dst = PyAstNode_AsAstNode(self);
           dst->setChild(idx, src);
-          dst->init();
 
           Py_RETURN_TRUE;
         }

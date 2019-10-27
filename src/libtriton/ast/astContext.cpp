@@ -728,7 +728,6 @@ namespace triton {
             throw triton::exceptions::Ast("AstContext::variable(): Missmatching variable size.");
           }
           // This node already exist, just return it
-          node->init();
           return node;
         }
         throw triton::exceptions::Ast("AstContext::variable(): This symbolic variable is dead.");
