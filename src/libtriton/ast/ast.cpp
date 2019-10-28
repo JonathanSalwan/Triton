@@ -105,6 +105,16 @@ namespace triton {
       return false;
     }
 
+    bool AbstractNode::hasSameConcreteValueAndTypeAs(const SharedAbstractNode& other) const {
+      return (this->evaluate() == other->evaluate()) &&
+             (this->getBitvectorSize() == other->getBitvectorSize()) &&
+             (this->isLogical() == other->isLogical());
+    }
+
+    bool AbstractNode::canReplaceNodeWithoutUpdate(const SharedAbstractNode& other) const {
+      return this->hasSameConcreteValueAndTypeAs(other) &&
+             (this->isSymbolized() == other->isSymbolized());
+    }
 
     bool AbstractNode::equalTo(const SharedAbstractNode& other) const {
       return (this->evaluate() == other->evaluate()) &&
