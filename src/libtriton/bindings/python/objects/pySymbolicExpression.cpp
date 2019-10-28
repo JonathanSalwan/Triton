@@ -55,8 +55,6 @@ True
 (define-fun ref!6 () (_ BitVec 64) (_ bv4194307 64)) ; Program Counter
 
 >>> expr_1 = inst.getSymbolicExpressions()[0]
->>> expr_1 # doctest: +ELLIPSIS
-<SymbolicExpression object at 0x...>
 >>> print(expr_1)
 (define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
 
@@ -64,8 +62,6 @@ True
 0
 
 >>> ast = expr_1.getAst()
->>> ast # doctest: +ELLIPSIS
-<AstNode object at 0x...>
 >>> print(ast)
 (bvxor (_ bv12345 64) (_ bv67890 64))
 
@@ -339,7 +335,7 @@ namespace triton {
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
-        0,                                          /* tp_repr */
+        (reprfunc)SymbolicExpression_str,           /* tp_repr */
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */

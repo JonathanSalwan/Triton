@@ -882,7 +882,7 @@ namespace triton {
         #else
         (cmpfunc)AstNode_cmp,                       /* tp_compare */
         #endif
-        0,                                          /* tp_repr */
+        (reprfunc)AstNode_str,                      /* tp_repr */
         &AstNode_NumberMethods,                     /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */

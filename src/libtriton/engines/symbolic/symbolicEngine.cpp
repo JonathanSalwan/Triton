@@ -506,6 +506,7 @@ namespace triton {
         /* Record the aligned symbolic variable for a symbolic optimization */
         if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           const SharedSymbolicExpression& se = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "aligned Byte reference");
+          se->setOriginMemory(mem);
           this->addAlignedMemory(memAddr, symVarSize, se);
         }
 
@@ -517,18 +518,12 @@ namespace triton {
           /* Isolate the good part of the symbolic variable */
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, symVarNode);
 
-          /* Check if the memory address is already defined */
-          SharedSymbolicExpression se = this->getSymbolicMemory(memAddr+index);
-          if (se == nullptr) {
-            se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
-            /* Add the new memory reference */
-            this->addMemoryReference(memAddr+index, se);
-          }
-          else {
-            se->setAst(tmp);
-          }
-          /* Defines the origin of the expression */
+          /* Create a new symbolic expression containing the symbolic variable */
+          const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
           se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, BYTE_SIZE));
+
+          /* Assign the symbolic expression to the memory cell */
+          this->addMemoryReference(memAddr+index, se);
         }
 
         return symVar;
@@ -546,9 +541,6 @@ namespace triton {
         if (reg.isMutable() == false)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::symbolizeRegister(): This register is immutable");
 
-        /* Get the symbolic expression */
-        const SharedSymbolicExpression& expression = this->getSymbolicRegister(reg);
-
         /* Create the symbolic variable */
         const SharedSymbolicVariable& symVar = this->newSymbolicVariable(REGISTER_VARIABLE, reg.getId(), symVarSize, symVarComment);
 
@@ -558,14 +550,11 @@ namespace triton {
         /* Setup the concrete value to the symbolic variable */
         this->setConcreteVariableValue(symVar, cv);
 
-        if (expression == nullptr) {
-          /* Create the symbolic expression */
-          const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, REGISTER_EXPRESSION);
-          this->assignSymbolicExpressionToRegister(se, parent);
-        } else {
-          /* Set the AST node */
-          expression->setAst(tmp);
-        }
+        /* Create a new symbolic expression containing the symbolic variable */
+        const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, REGISTER_EXPRESSION);
+
+        /* Assign the symbolic expression to the register */
+        this->assignSymbolicExpressionToRegister(se, parent);
 
         return symVar;
       }

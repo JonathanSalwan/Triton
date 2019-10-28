@@ -232,6 +232,7 @@ class TestIssue789(unittest.TestCase):
         self.assertEqual(str(ast.unroll(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
 
 
+
 class TestIssue803(unittest.TestCase):
 
     """Testing #803."""
@@ -259,6 +260,7 @@ class TestIssue803(unittest.TestCase):
 
         # Test
         self.assertFalse(ast1.equalTo(ast2))
+
 
 
 class TestIssue820(unittest.TestCase):
@@ -313,3 +315,35 @@ class TestIssue820(unittest.TestCase):
         ref0 = self.ctx.getSymbolicExpression(0)
         ref0.getAst().setChild(0, self.ast.bv(10, 64))
         self.assertEqual(rax.getAst().evaluate(), 13)
+
+
+
+class TestIssue818(unittest.TestCase):
+
+    """Testing #818."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+
+    def test_issue1(self):
+        var1 = self.ctx.symbolizeRegister(self.ctx.registers.al)
+        var2 = self.ctx.symbolizeRegister(self.ctx.registers.ah)
+        v1 = self.ast.variable(var1)
+        v2 = self.ast.variable(var2)
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(str(self.ast.unroll(rax.getAst())), '(concat ((_ extract 63 16) (concat ((_ extract 63 8) (_ bv0 64)) SymVar_0)) (concat SymVar_1 ((_ extract 7 0) (concat ((_ extract 63 8) (_ bv0 64)) SymVar_0))))')
+
+    def test_issue2(self):
+        var1 = self.ctx.symbolizeRegister(self.ctx.registers.al)
+        var2 = self.ctx.symbolizeRegister(self.ctx.registers.ah)
+
+        inst = Instruction(b"\xff\xc0") # inc rax
+        self.ctx.processing(inst)
+
+        ref1 = self.ctx.getSymbolicExpression(2) # res of 'inc rax'
+        m = self.ctx.getModel(ref1.getAst() == 0xdead)
+        self.assertEqual(m[0].getValue(), 0xac)
+        self.assertEqual(m[1].getValue(), 0xde)
