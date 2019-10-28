@@ -145,19 +145,19 @@ def symbolizeInputs(Triton):
     Triton.setConcreteMemoryValue(MemoryAccess(user_input+48, CPUSIZE.DWORD), variables[0x0c])
 
     # Create symbolic variables.
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+12, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+16, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+20, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+24, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+28, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+32, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+36, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+40, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+44, CPUSIZE.DWORD))
-    Triton.convertMemoryToSymbolicVariable(MemoryAccess(user_input+48, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+0,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+4,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+8,  CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+12, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+16, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+20, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+24, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+28, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+32, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+36, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+40, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+44, CPUSIZE.DWORD))
+    Triton.symbolizeMemory(MemoryAccess(user_input+48, CPUSIZE.DWORD))
 
     return
 
@@ -206,11 +206,11 @@ def emulate(Triton, pc):
             rax   = Triton.getSymbolicRegister(Triton.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
-            # Define constraint
-            cstr  = astCtxt.land([
-                        Triton.getPathConstraintsAst(),
-                        astCtxt.equal(eax, astCtxt.bv(goodBranches[pc], 32))
-                    ])
+            # Push a new constraint to the current path predicate
+            Triton.pushPathConstraint(eax == goodBranches[pc])
+
+            # Solve the path predicate
+            cstr = Triton.getPathPredicate()
 
             print('[+] Asking for a model, please wait...')
             model = Triton.getModel(cstr)
@@ -265,8 +265,8 @@ def initialize():
     Triton.setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-    Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Define internal callbacks.
     Triton.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)

@@ -71,13 +71,13 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(self.v3.getId(), 3)
 
     def test_model_with_alias(self):
-        var = self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.rax)
+        var = self.ctx.symbolizeRegister(self.ctx.registers.rax)
         var.setAlias("rax")
         inst = Instruction(b"\x48\x31\xd8")
         self.ctx.processing(inst)
 
         ast = self.ctx.getAstContext()
-        rax_ast = ast.unrollAst(self.ctx.getRegisterAst(self.ctx.registers.rax))
+        rax_ast = ast.unroll(self.ctx.getRegisterAst(self.ctx.registers.rax))
         model = self.ctx.getModel(rax_ast == 0x41)
         self.assertEqual(str(rax_ast), "(bvxor rax (_ bv0 64))")
         self.assertEqual(str(model[4]), "rax:64 = 0x41")
@@ -93,3 +93,45 @@ class TestSymbolicVariable(unittest.TestCase):
         self.assertEqual(str(model[4].getVariable().getName()), "SymVar_4")
         self.assertEqual(str(model[4].getVariable().getAlias()), "")
         self.assertEqual(model[4].getVariable().getId(), 4)
+
+    def test_concrete_value1(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1122334455667788)
+        ctx.symbolizeRegister(ctx.registers.ah)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rax), 0x1122334455667788)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.rax), 0x1122334455667788)
+
+    def test_concrete_value2(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1122334455667788)
+        ctx.symbolizeRegister(ctx.registers.al)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rax), 0x1122334455667788)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.rax), 0x1122334455667788)
+
+    def test_concrete_value3(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1122334455667788)
+        ctx.symbolizeRegister(ctx.registers.ax)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rax), 0x1122334455667788)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.rax), 0x1122334455667788)
+
+    def test_concrete_value4(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1122334455667788)
+        ctx.symbolizeRegister(ctx.registers.eax)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rax), 0x1122334455667788)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.rax), 0x1122334455667788)
+
+    def test_concrete_value5(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1122334455667788)
+        ctx.symbolizeRegister(ctx.registers.rax)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rax), 0x1122334455667788)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.rax), 0x1122334455667788)
+
+    def test_concrete_value6(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.xmm0, 0x11223344556677888877665544332211)
+        ctx.symbolizeRegister(ctx.registers.xmm0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.xmm0), 0x11223344556677888877665544332211)
+        self.assertEqual(ctx.getSymbolicRegisterValue(ctx.registers.xmm0), 0x11223344556677888877665544332211)

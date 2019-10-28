@@ -65,7 +65,7 @@ def tainting(threadId):
             Triton.taintMemory(argv + offset)
             concreteValue = getCurrentMemoryValue(argv + offset)
             Triton.setConcreteMemoryValue(argv + offset, concreteValue)
-            Triton.convertMemoryToSymbolicVariable(MemoryAccess(argv + offset, CPUSIZE.BYTE))
+            Triton.symbolizeMemory(MemoryAccess(argv + offset, CPUSIZE.BYTE))
             offset += 1
         print('[+] %02d bytes tainted from the argv[%d] (%#x) pointer' %(offset, rdi-1, argv))
         rdi -= 1
@@ -102,7 +102,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('main')
 
     # Align the memory
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Only perform the symbolic execution on the target binary
     setupImageWhitelist(['crackme_xor'])

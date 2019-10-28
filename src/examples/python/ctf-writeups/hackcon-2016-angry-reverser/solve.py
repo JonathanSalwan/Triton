@@ -182,7 +182,7 @@ def scanfHandler(ctx):
     debug('[+] symbolizing scanf buffer')
     for index in range(20):
         ctx.taintMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
-        var = ctx.convertMemoryToSymbolicVariable(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
+        var = ctx.symbolizeMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
 
     # Return value
     return 21
@@ -387,21 +387,21 @@ def emulate(ctx, pc):
         if pc in conditions:
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
             ast = ctx.getAstContext()
-            pco = ctx.getPathConstraintsAst()
+            pco = ctx.getPathPredicate()
             mod = myExternalSolver(ctx, zf == 1, pc)
             for k, v in list(mod.items()):
-                ctx.setConcreteVariableValue(ctx.getSymbolicVariableFromId(k), v)
+                ctx.setConcreteVariableValue(ctx.getSymbolicVariable(k), v)
 
         # End of the execution
         if pc == 0x405B00:
             debug('[+] Solving the last query to get the good serial...')
             ast = ctx.getAstContext()
-            pco = ctx.getPathConstraintsAst()
+            pco = ctx.getPathPredicate()
             mod = myExternalSolver(ctx, ast.land(
                     [pco] +
-                    [ast.variable(ctx.getSymbolicVariableFromId(x)) >= 0x20 for x in range(0, 20)] +
-                    [ast.variable(ctx.getSymbolicVariableFromId(x)) <= 0x7e for x in range(0, 20)] +
-                    [ast.variable(ctx.getSymbolicVariableFromId(x)) != 0x00 for x in range(0, 20)]
+                    [ast.variable(ctx.getSymbolicVariable(x)) >= 0x20 for x in range(0, 20)] +
+                    [ast.variable(ctx.getSymbolicVariable(x)) <= 0x7e for x in range(0, 20)] +
+                    [ast.variable(ctx.getSymbolicVariable(x)) != 0x00 for x in range(0, 20)]
                   ))
             serial = str()
             for k, v in sorted(mod.items()):
@@ -478,8 +478,8 @@ def main():
     ctx.setArchitecture(ARCH.X86_64)
 
     # Set optimization
-    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
-    ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # AST representation as Python syntax
     ctx.setAstRepresentationMode(AST_REPRESENTATION.SMT)

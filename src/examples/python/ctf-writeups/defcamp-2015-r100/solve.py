@@ -73,7 +73,7 @@ def emulate(pc):
 
             # Define constraint
             cstr  = astCtxt.land([
-                        Triton.getPathConstraintsAst(),
+                        Triton.getPathPredicate(),
                         astCtxt.equal(eax, astCtxt.bv(1, 32))
                     ])
 
@@ -81,7 +81,7 @@ def emulate(pc):
             model = Triton.getModel(cstr)
             for k, v in list(model.items()):
                 value = v.getValue()
-                Triton.setConcreteVariableValue(Triton.getSymbolicVariableFromId(k), value)
+                Triton.setConcreteVariableValue(Triton.getSymbolicVariable(k), value)
                 print('[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value)))
 
         # Next
@@ -109,8 +109,8 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     # Define symbolic optimizations
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
-    Triton.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Load the binary
     loadBinary(os.path.join(os.path.dirname(__file__), 'r100.bin'))
@@ -124,7 +124,7 @@ if __name__ == '__main__':
 
     # Symbolize user inputs (30 bytes)
     for index in range(30):
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
     # Emulate from the verification function
     emulate(0x4006FD)

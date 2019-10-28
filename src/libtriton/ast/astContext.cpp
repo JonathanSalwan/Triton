@@ -5,7 +5,9 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <list>
 #include <memory>
+#include <vector>
 
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
@@ -20,14 +22,6 @@ namespace triton {
 
     AstContext::AstContext(const triton::modes::SharedModes& modes)
       : modes(modes) {
-    }
-
-
-    AstContext::AstContext(const AstContext& other)
-      : std::enable_shared_from_this<AstContext>(other),
-        modes(other.modes),
-        astRepresentation(other.astRepresentation),
-        valueMapping(other.valueMapping) {
     }
 
 
@@ -56,7 +50,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::bv(triton::uint512 value, triton::uint32 size) {
+    SharedAbstractNode AstContext::bv(const triton::uint512& value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bv(): Not enough memory.");
@@ -603,10 +597,8 @@ namespace triton {
         return expr;
 
       SharedAbstractNode node = std::make_shared<ExtractNode>(high, low, expr);
-
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::extract(): Not enough memory.");
-
       node->init();
       return node;
     }
@@ -621,7 +613,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::integer(triton::uint512 value) {
+    SharedAbstractNode AstContext::integer(const triton::uint512& value) {
       SharedAbstractNode node = std::make_shared<IntegerNode>(value, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::integer(): Not enough memory.");
@@ -683,6 +675,19 @@ namespace triton {
     template TRITON_EXPORT SharedAbstractNode AstContext::lor(const std::list<SharedAbstractNode>& exprs);
 
 
+    SharedAbstractNode AstContext::lxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
+      SharedAbstractNode node = std::make_shared<LxorNode>(expr1, expr2);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::lxor(): Not enough memory");
+      node->init();
+      return node;
+    }
+
+
+    template TRITON_EXPORT SharedAbstractNode AstContext::lxor(const std::vector<SharedAbstractNode>& exprs);
+    template TRITON_EXPORT SharedAbstractNode AstContext::lxor(const std::list<SharedAbstractNode>& exprs);
+
+
     SharedAbstractNode AstContext::reference(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
       SharedAbstractNode node = std::make_shared<ReferenceNode>(expr);
       if (node == nullptr)
@@ -707,10 +712,8 @@ namespace triton {
         return expr;
 
       SharedAbstractNode node = std::make_shared<SxNode>(sizeExt, expr);
-
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::sx(): Not enough memory.");
-
       node->init();
       return node;
     }
@@ -725,7 +728,6 @@ namespace triton {
             throw triton::exceptions::Ast("AstContext::variable(): Missmatching variable size.");
           }
           // This node already exist, just return it
-          node->init();
           return node;
         }
         throw triton::exceptions::Ast("AstContext::variable(): This symbolic variable is dead.");
@@ -749,10 +751,8 @@ namespace triton {
         return expr;
 
       SharedAbstractNode node = std::make_shared<ZxNode>(sizeExt, expr);
-
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::zx(): Not enough memory.");
-
       node->init();
       return node;
     }
@@ -774,7 +774,7 @@ namespace triton {
       if (it != this->valueMapping.end()) {
         if (auto node = it->second.first.lock()) {
           it->second.second = value;
-          node->init();
+          node->initParents();
         }
         else {
           throw triton::exceptions::Ast("AstContext::updateVariable(): This symbolic variable is dead.");

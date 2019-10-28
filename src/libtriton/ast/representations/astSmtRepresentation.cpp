@@ -67,6 +67,7 @@ namespace triton {
           case LET_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LetNode*>(node)); break;
           case LNOT_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LnotNode*>(node)); break;
           case LOR_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LorNode*>(node)); break;
+          case LXOR_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LxorNode*>(node)); break;
           case REFERENCE_NODE:            return this->print(stream, reinterpret_cast<triton::ast::ReferenceNode*>(node)); break;
           case STRING_NODE:               return this->print(stream, reinterpret_cast<triton::ast::StringNode*>(node)); break;
           case SX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::SxNode*>(node)); break;
@@ -411,6 +412,19 @@ namespace triton {
         triton::usize size = node->getChildren().size();
 
         stream << "(or";
+        for (triton::usize index = 0; index < size; index++)
+          stream << " " << node->getChildren()[index];
+        stream << ")";
+
+        return stream;
+      }
+
+
+      /* lxor representation */
+      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LxorNode* node) {
+        triton::usize size = node->getChildren().size();
+
+        stream << "(xor";
         for (triton::usize index = 0; index < size; index++)
           stream << " " << node->getChildren()[index];
         stream << ")";

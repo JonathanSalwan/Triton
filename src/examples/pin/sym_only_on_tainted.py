@@ -27,7 +27,7 @@ if __name__ == '__main__':
     startAnalysisFromSymbol('check')
 
     # Perform symbolic execution only on tainted instructions
-    getTritonContext().enableMode(MODE.ONLY_ON_TAINTED, True)
+    getTritonContext().setMode(MODE.ONLY_ON_TAINTED, True)
 
     # Add callback
     insertCall(cb_ir,       INSERT_POINT.BEFORE_SYMPROC)

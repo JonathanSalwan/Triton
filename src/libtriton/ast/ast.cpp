@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <cmath>
+#include <list>
 #include <new>
 #include <stack>
 #include <unordered_map>
@@ -31,12 +32,12 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
+      this->logical     = false;
       this->type        = type;
     }
 
 
     AbstractNode::~AbstractNode() {
-      /* virtual */
     }
 
 
@@ -90,8 +91,10 @@ namespace triton {
         case LAND_NODE:
         case LNOT_NODE:
         case LOR_NODE:
+        case LXOR_NODE:
           return true;
 
+        case ITE_NODE:
         case REFERENCE_NODE:
           return this->logical;
 
@@ -126,8 +129,10 @@ namespace triton {
 
 
     void AbstractNode::initParents(void) {
-      for (auto& sp : this->getParents())
+      auto ancestors = parentsExtraction(this->shared_from_this(), false);
+      for (auto& sp : ancestors) {
         sp->init();
+      }
     }
 
 
@@ -178,11 +183,11 @@ namespace triton {
     void AbstractNode::removeParent(AbstractNode* p) {
       auto it = this->parents.find(p);
 
-      if(it == parents.end())
+      if (it == parents.end())
         return;
 
       it->second.first--;
-      if(it->second.first == 0)
+      if (it->second.first == 0)
         this->parents.erase(it);
     }
 
@@ -205,14 +210,19 @@ namespace triton {
       if (child == nullptr)
         throw triton::exceptions::Ast("AbstractNode::setChild(): child cannot be null.");
 
-      /* Remove the parent of the old child */
-      this->children[index]->removeParent(this);
+      if (this->children[index] != child) {
+        /* Remove the parent of the old child */
+        this->children[index]->removeParent(this);
 
-      /* Setup the parent of the child */
-      child->setParent(this);
+        /* Setup the parent of the child */
+        child->setParent(this);
 
-      /* Setup the child of the parent */
-      this->children[index] = child;
+        /* Setup the child of the parent */
+        this->children[index] = child;
+
+        /* Init parents */
+        child->initParents();
+      }
     }
 
 
@@ -248,15 +258,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -288,15 +296,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() + this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -328,15 +334,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() & this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -375,6 +379,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       /* Mask based on the sign */
       if (this->children[0]->isSigned()) {
@@ -407,9 +412,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -441,15 +443,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -481,15 +481,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() * this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -521,15 +519,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() & this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -557,15 +553,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -597,15 +591,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() | this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -633,15 +625,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~this->children[0]->evaluate() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -673,15 +663,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() | this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -724,15 +712,13 @@ namespace triton {
       this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -775,15 +761,13 @@ namespace triton {
       this->size = this->children[0]->getBitvectorSize();
       rot %= this->size;
       this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -821,6 +805,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (op2Signed == 0) {
         this->eval = (op1Signed < 0 ? 1 : -1);
@@ -834,9 +819,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -875,15 +857,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed >= op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -922,15 +902,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed > op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -962,15 +940,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1009,15 +985,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed <= op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1056,15 +1030,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (op1Signed < op2Signed);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1102,6 +1074,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1113,9 +1086,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1153,6 +1123,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1164,9 +1135,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1198,15 +1166,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = ((this->children[0]->evaluate() - this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1237,6 +1203,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = (-1 & this->getBitvectorMask());
@@ -1248,9 +1215,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1282,15 +1246,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() >= this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1322,15 +1284,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() > this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1362,15 +1322,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() <= this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1402,15 +1360,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() < this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1441,6 +1397,7 @@ namespace triton {
 
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
+      this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
@@ -1452,9 +1409,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1486,15 +1440,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (~(this->children[0]->evaluate() ^ this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1526,15 +1478,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = (this->children[0]->evaluate() ^ this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1550,7 +1500,7 @@ namespace triton {
     /* ====== bv */
 
 
-    BvNode::BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
+    BvNode::BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
       this->addChild(this->ctxt->integer(value));
       this->addChild(this->ctxt->integer(size));
     }
@@ -1578,15 +1528,13 @@ namespace triton {
       /* Init attributes */
       this->size = size;
       this->eval = (value & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1609,15 +1557,13 @@ namespace triton {
       /* Init attributes */
       this->size = 0;
       this->eval = 0;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1644,6 +1590,7 @@ namespace triton {
         throw triton::exceptions::Ast("ConcatNode::init(): Must take at least two children.");
 
       /* Init attributes */
+      this->symbolized = false;
       this->size = 0;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->size += this->children[index]->getBitvectorSize();
@@ -1661,9 +1608,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1694,15 +1638,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[0]->getBitvectorSize();
       this->eval = this->children[0]->evaluate();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1734,15 +1676,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() != this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1774,15 +1714,13 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = (this->children[0]->evaluate() == this->children[1]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1824,6 +1762,7 @@ namespace triton {
       /* Init attributes */
       this->size = ((high - low) + 1);
       this->eval = ((this->children[2]->evaluate() >> low) & this->getBitvectorMask());
+      this->symbolized = false;
 
       if (this->size > this->children[2]->getBitvectorSize() || high >= this->children[2]->getBitvectorSize())
         throw triton::exceptions::Ast("ExtractNode::init(): The size of the extraction is higher than the child expression.");
@@ -1833,9 +1772,6 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1873,15 +1809,13 @@ namespace triton {
 
       this->size = 1;
       this->eval = (P && Q) || (!P && !Q);
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1897,7 +1831,7 @@ namespace triton {
     /* ====== Integer node */
 
 
-    IntegerNode::IntegerNode(triton::uint512 value, const SharedAstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
+    IntegerNode::IntegerNode(const triton::uint512& value, const SharedAstContext& ctxt): AbstractNode(INTEGER_NODE, ctxt) {
       this->value = value;
     }
 
@@ -1907,9 +1841,6 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1944,18 +1875,20 @@ namespace triton {
       if (this->children[1]->getBitvectorSize() != this->children[2]->getBitvectorSize())
         throw triton::exceptions::Ast("IteNode::init(): Must take two nodes of same size as 'then' and 'else' branches.");
 
+      if (this->children[1]->isLogical() != this->children[2]->isLogical())
+        throw triton::exceptions::Ast("IteNode::init(): Must take either two logical nodes or two bv nodes as 'then' and 'else' branches.");
+
       /* Init attributes */
       this->size = this->children[1]->getBitvectorSize();
       this->eval = this->children[0]->evaluate() ? this->children[1]->evaluate() : this->children[2]->evaluate();
+      this->logical = this->children[1]->isLogical();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -1984,6 +1917,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = 1;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1994,9 +1928,6 @@ namespace triton {
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LandNode::init(): Must take logical nodes as arguments.");
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2029,15 +1960,13 @@ namespace triton {
       /* Init attributes */
       this->size = this->children[2]->getBitvectorSize();
       this->eval = this->children[2]->evaluate();
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2065,6 +1994,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = !(this->children[0]->evaluate());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2074,10 +2004,6 @@ namespace triton {
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
       }
-
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2106,6 +2032,7 @@ namespace triton {
       /* Init attributes */
       this->size = 1;
       this->eval = 0;
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -2116,9 +2043,6 @@ namespace triton {
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LorNode::init(): Must take logical nodes as arguments.");
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2127,6 +2051,44 @@ namespace triton {
       if (s) h = h * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++)
         h = h * this->children[index]->hash(deep+1);
+      return triton::ast::rotl(h, deep);
+    }
+
+
+    /* ====== Lxor */
+
+
+    LxorNode::LxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) : AbstractNode(LXOR_NODE, expr1->getContext()) {
+      this->addChild(expr1);
+      this->addChild(expr2);
+    }
+
+    void LxorNode::init(void) {
+      if (this->children.size() < 2)
+        throw triton::exceptions::Ast("LxorNode::init(): Must take at least two children.");
+
+      /* Init attributes */
+      this->size = 1;
+      this->eval = 0;
+      this->symbolized = false;
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+        this->eval = !this->eval != !this->children[index]->evaluate();
+
+        if (this->children[index]->isLogical() == false)
+          throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
+      }
+    }
+
+
+    triton::uint512 LxorNode::hash(triton::uint32 deep) const {
+      triton::uint512 h = this->type, s = this->children.size();
+      if (s) h = h * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++)
+        h = h * this->children[index]->hash(deep + 1);
       return triton::ast::rotl(h, deep);
     }
 
@@ -2148,9 +2110,6 @@ namespace triton {
       this->symbolized  = this->expr->getAst()->isSymbolized();
 
       this->expr->getAst()->setParent(this);
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2178,9 +2137,6 @@ namespace triton {
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2227,15 +2183,13 @@ namespace triton {
         throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = ((((this->children[1]->evaluate() >> (this->children[1]->getBitvectorSize()-1)) == 0) ? this->children[1]->evaluate() : (this->children[1]->evaluate() | ~(this->children[1]->getBitvectorMask()))) & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2261,9 +2215,6 @@ namespace triton {
       this->size        = this->symVar->getSize();
       this->eval        = this->ctxt->getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2311,15 +2262,13 @@ namespace triton {
         throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       this->eval = (this->children[1]->evaluate() & this->getBitvectorMask());
+      this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
-
-      /* Init parents */
-      this->initParents();
     }
 
 
@@ -2349,6 +2298,8 @@ namespace triton {
     template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LxorNode::LxorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT LxorNode::LxorNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
 
   }; /* ast namespace */
 }; /* triton namespace */
@@ -2383,7 +2334,7 @@ namespace triton {
     }
 
 
-    triton::uint512 rotl(triton::uint512 value, triton::uint32 shift) {
+    triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift) {
       if ((shift &= 511) == 0)
         return value;
       return ((value << shift) | (value >> (512 - shift)));
@@ -2414,7 +2365,8 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
+    /* Returns a new instance of a given node. */
+    static SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
@@ -2465,9 +2417,10 @@ namespace triton {
         case LET_NODE:                  newNode = std::make_shared<LetNode>(*reinterpret_cast<LetNode*>(node));           break;
         case LNOT_NODE:                 newNode = std::make_shared<LnotNode>(*reinterpret_cast<LnotNode*>(node));         break;
         case LOR_NODE:                  newNode = std::make_shared<LorNode>(*reinterpret_cast<LorNode*>(node));           break;
+        case LXOR_NODE:                 newNode = std::make_shared<LxorNode>(*reinterpret_cast<LxorNode*>(node));         break;
         case REFERENCE_NODE: {
           if (unroll)
-            return triton::ast::newInstance(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);
+            return triton::ast::shallowCopy(reinterpret_cast<ReferenceNode*>(node)->getSymbolicExpression()->getAst().get(), unroll);
           else
             newNode = std::make_shared<ReferenceNode>(*reinterpret_cast<ReferenceNode*>(node));
           break;
@@ -2477,11 +2430,11 @@ namespace triton {
         case VARIABLE_NODE:             newNode = node->shared_from_this(); /* Do not duplicate shared var (see #792) */  break;
         case ZX_NODE:                   newNode = std::make_shared<ZxNode>(*reinterpret_cast<ZxNode*>(node));             break;
         default:
-          throw triton::exceptions::Ast("triton::ast::newInstance(): Invalid type node.");
+          throw triton::exceptions::Ast("triton::ast::shallowCopy(): Invalid type node.");
       }
 
       if (newNode == nullptr)
-        throw triton::exceptions::Ast("triton::ast::newInstance(): Not enough memory.");
+        throw triton::exceptions::Ast("triton::ast::shallowCopy(): Not enough memory.");
 
       /* Remove parents as this is a new node which has no connections with original AST */
       if (node->getType() != VARIABLE_NODE) {
@@ -2492,26 +2445,51 @@ namespace triton {
         }
       }
 
-      /* Create new instances of children and set their new parents */
-      auto& children = newNode->getChildren();
-      for (triton::usize idx = 0; idx < children.size(); idx++) {
-        children[idx] = triton::ast::newInstance(children[idx].get(), unroll);
-        children[idx]->setParent(newNode.get());
-      }
-
       return newNode;
     }
 
 
-    SharedAbstractNode unrollAst(const triton::ast::SharedAbstractNode& node) {
+    SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
+      std::map<AbstractNode*, SharedAbstractNode> exprs;
+      auto nodes = childrenExtraction(node->shared_from_this(), unroll, true);
+
+      for (auto&& n : nodes) {
+        /* Do a copy of all children */
+        auto newNode = shallowCopy(n.get(), unroll);
+        exprs[n.get()] = newNode;
+
+        /* For each child, set its parent */
+        auto& children = newNode->getChildren();
+        for (auto& child : children) {
+          child = exprs[child.get()];
+          child->setParent(newNode.get());
+        }
+      }
+
+      /* Return the root node */
+      return exprs.at(node);
+    }
+
+
+    SharedAbstractNode unroll(const triton::ast::SharedAbstractNode& node) {
       return triton::ast::newInstance(node.get(), true);
     }
 
 
-    void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert) {
-      std::unordered_map<triton::usize, std::set<SharedAbstractNode>> sortedlist;
-      std::deque<std::pair<SharedAbstractNode,triton::usize>> worklist;
-      triton::usize depth = 0;
+    /* Returns a vector of unique AST-nodes sorted topologically
+     *
+     * Depending on @descent argument this function produces topologically sorted vector of nodes from DAG consisting of
+     * either parents or children of given @node. This helps to prevent exponential complexity when complex AST are
+     * parsed during z3 conversion, copying and parents reinitialization.
+     *
+     * @unroll - traverses through ReferenceNodes
+     * @revert - reverses the result
+     * @descent - if true we traverse through children of nodes, otherwise parents
+     */
+    static std::vector<SharedAbstractNode> nodesExtraction(const SharedAbstractNode& node, bool unroll, bool revert, bool descend) {
+      std::vector<SharedAbstractNode> result;
+      std::set<AbstractNode*> visited;
+      std::stack<std::pair<SharedAbstractNode, bool>> worklist;
 
       if (node == nullptr)
         throw triton::exceptions::Ast("triton::ast::nodesExtraction(): Node cannot be null.");
@@ -2520,46 +2498,64 @@ namespace triton {
        *  We use a worklist strategy to avoid recursive calls
        *  and so stack overflow when going through a big AST.
        */
-      worklist.push_back({node, 0});
-      while (worklist.empty() == false) {
-        auto ast = worklist.front().first;
-        auto lvl = worklist.front().second;
-        worklist.pop_front();
+      worklist.push({node, false});
 
-        /* Keep up-to-date the depth of the tree */
-        depth = std::max(depth, lvl);
+      while (!worklist.empty()) {
+        SharedAbstractNode ast;
+        bool postOrder;
+        std::tie(ast, postOrder) = worklist.top();
+        worklist.pop();
 
-        /* Proceed children */
-        for (const auto& child : ast->getChildren()) {
-          if (std::find(worklist.begin(), worklist.end(), std::make_pair(child, lvl + 1)) == worklist.end()) {
-            worklist.push_back({child, lvl + 1});
+        /* It means that we visited all children of this node and we can put it in the result */
+        if (postOrder) {
+          result.push_back(ast);
+          continue;
+        }
+
+        if (!visited.insert(ast.get()).second) {
+          continue;
+        }
+
+        worklist.push({ast, true});
+
+        const auto& relatives = descend ? ast->getChildren() : ast->getParents();
+
+        /* Proceed relatives */
+        for (const auto& r : relatives) {
+          if (visited.find(r.get()) == visited.end()) {
+            worklist.push({r, false});
           }
         }
 
         /* If unroll is true, we unroll all references */
-        if (unroll == true && ast->getType() == REFERENCE_NODE) {
+        if (unroll && ast->getType() == REFERENCE_NODE) {
           const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
-          if (std::find(worklist.begin(), worklist.end(), std::make_pair(ref, lvl + 1)) == worklist.end()) {
-            worklist.push_back({ref, lvl + 1});
-          }
-        }
-
-        sortedlist[lvl].insert(ast);
-      }
-
-      /* Sort nodes into the output list */
-      for (triton::usize index = 0; index <= depth; index++) {
-        auto& nodes = revert ? sortedlist[depth - index] : sortedlist[index];
-        for (auto&& n : nodes) {
-          if (std::find(output->begin(), output->end(), n) == output->end()) {
-            output->push_back(n);
+          if (visited.find(ref.get()) == visited.end()) {
+            worklist.push({ref, false});
           }
         }
       }
+
+      /* The result is in reversed topological sort meaning that children go before parents */
+      if (!revert) {
+        std::reverse(result.begin(), result.end());
+      }
+
+      return result;
     }
 
 
-    std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match) {
+    std::vector<SharedAbstractNode> childrenExtraction(const SharedAbstractNode& node, bool unroll, bool revert) {
+      return nodesExtraction(node, unroll, revert, true);
+    }
+
+
+    std::vector<SharedAbstractNode> parentsExtraction(const SharedAbstractNode& node, bool revert) {
+      return nodesExtraction(node, false, revert, false);
+    }
+
+
+    std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match) {
       std::stack<triton::ast::AbstractNode*>      worklist;
       std::deque<triton::ast::SharedAbstractNode> result;
       std::set<const triton::ast::AbstractNode*>  visited;
@@ -2580,9 +2576,11 @@ namespace triton {
 
         if (current->getType() == REFERENCE_NODE) {
           worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
-        } else {
-          for (const auto &child : current->getChildren())
+        }
+        else {
+          for (const auto &child : current->getChildren()) {
             worklist.push(child.get());
+          }
         }
       }
 

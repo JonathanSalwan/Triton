@@ -69,6 +69,7 @@ class TestAstDuplication(unittest.TestCase):
             self.astCtxt.let("alias", self.v1, self.v2),
             self.astCtxt.lnot(self.v1 == 0),
             self.astCtxt.lor([self.v1 >= 0, self.v2 <= 10]),
+            self.astCtxt.lxor([self.v1 >= 0, self.v2 <= 10]),
             self.astCtxt.reference(self.ref),
             self.astCtxt.string("test"),
             self.astCtxt.sx(8, self.v1),

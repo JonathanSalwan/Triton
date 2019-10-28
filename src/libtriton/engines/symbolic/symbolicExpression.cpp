@@ -166,11 +166,9 @@ namespace triton {
         }
 
         this->ast = node;
-
         if (!old || !old->canReplaceNodeWithoutUpdate(ast)) {
           this->ast->initParents();
         }
-
       }
 
 

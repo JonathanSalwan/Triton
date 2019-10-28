@@ -46,10 +46,11 @@ namespace triton {
         protected:
           /*!
            * \brief The branches constraints
-           * \details Vector of `<flag, source addr, dst addr, pc>`, `flag` is set to true if the branch is taken according the pc.
-           * The source address is the location of the branch instruction and the destination address is the destination of the jump.
+           * \details Vector of `<flag, source addr, dst addr, pc>`, `flag` is set to true if the branch is taken according the concrete
+           * execution. The source address is the location of the branch instruction and the destination address is the destination of the jump.
            * E.g: `"0x11223344: jne 0x55667788"`, 0x11223344 is the source address and 0x55667788 is the destination if and only if the
-           * branch is taken, otherwise the destination is the next instruction address.
+           * branch is taken, otherwise the destination is the next instruction address. The SharedAbstractNode is the expression which need to be
+           * true to take the branch.
            */
           std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::SharedAbstractNode>> branches;
 
@@ -72,8 +73,8 @@ namespace triton {
           //! Returns the address of the taken branch.
           TRITON_EXPORT triton::uint64 getTakenAddress(void) const;
 
-          //! Returns the path constraint AST of the taken branch.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getTakenPathConstraintAst(void) const;
+          //! Returns the predicate of the taken branch.
+          TRITON_EXPORT triton::ast::SharedAbstractNode getTakenPredicate(void) const;
 
           //! Returns true if it is not a direct jump.
           TRITON_EXPORT bool isMultipleBranches(void) const;

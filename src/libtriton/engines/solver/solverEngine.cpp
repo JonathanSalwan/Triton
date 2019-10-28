@@ -83,9 +83,9 @@ namespace triton {
       }
 
 
-      std::list<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+      std::vector<std::map<triton::uint32, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
         if (!this->solver)
-          return std::list<std::map<triton::uint32, SolverModel>>{};
+          return std::vector<std::map<triton::uint32, SolverModel>>{};
         return this->solver->getModels(node, limit);
       }
 

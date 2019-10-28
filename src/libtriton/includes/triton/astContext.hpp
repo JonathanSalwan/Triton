@@ -11,6 +11,7 @@
 #include <map>
 #include <memory>
 #include <vector>
+#include <list>
 
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>
@@ -56,15 +57,12 @@ namespace triton {
         //! String formater for ast
         triton::ast::representations::AstRepresentation astRepresentation;
 
-        //! Map a concrete value and ast node for a variable name.
+        //! Maps a concrete value and ast node for a variable name.
         std::map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
 
       public:
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
-
-        //! Constructor by copy
-        TRITON_EXPORT AstContext(const AstContext& other);
 
         //! Destructor
         TRITON_EXPORT ~AstContext();
@@ -76,7 +74,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
         //! AST C++ API - bv node builder
-        TRITON_EXPORT SharedAbstractNode bv(triton::uint512 value, triton::uint32 size);
+        TRITON_EXPORT SharedAbstractNode bv(const triton::uint512& value, triton::uint32 size);
 
         //! AST C++ API - bvadd node builder
         TRITON_EXPORT SharedAbstractNode bvadd(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
@@ -214,7 +212,7 @@ namespace triton {
         TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
         //! AST C++ API - integer node builder
-        TRITON_EXPORT SharedAbstractNode integer(triton::uint512 value);
+        TRITON_EXPORT SharedAbstractNode integer(const triton::uint512& value);
 
         //! AST C++ API - ite node builder
         TRITON_EXPORT SharedAbstractNode ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);
@@ -243,6 +241,18 @@ namespace triton {
         //! AST C++ API - lor node builder
         template <typename T> SharedAbstractNode lor(const T& exprs) {
           SharedAbstractNode node = std::make_shared<LorNode>(exprs, this->shared_from_this());
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
+
+        //! AST C++ API - lxor node builder
+        TRITON_EXPORT SharedAbstractNode lxor(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+
+        //! AST C++ API - lxor node builder
+        template <typename T> SharedAbstractNode lxor(const T& exprs) {
+          SharedAbstractNode node = std::make_shared<LxorNode>(exprs, this->shared_from_this());
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
@@ -282,7 +292,7 @@ namespace triton {
         //! Gets the representations mode of this astContext
         TRITON_EXPORT triton::uint32 getRepresentationMode(void) const;
 
-        //! Print the given node with this context representation
+        //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
     };
 

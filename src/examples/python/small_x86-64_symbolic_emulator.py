@@ -420,7 +420,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     # Set a symbolic optimization mode
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # AST representation as Python syntax
     #setAstRepresentationMode(AST_REPRESENTATION.PYTHON)

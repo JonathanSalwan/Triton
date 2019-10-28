@@ -25,7 +25,7 @@ The MODE namespace contains all kinds of modes.
 \subsection MODE_py_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> enableMode(MODE.ONLY_ON_TAINTED, True)
+>>> setMode(MODE.ONLY_ON_TAINTED, True)
 ~~~~~~~~~~~~~
 
 \section MODE_py_api Python API - Items of the MODE namespace

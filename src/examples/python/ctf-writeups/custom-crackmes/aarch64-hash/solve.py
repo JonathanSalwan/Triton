@@ -153,7 +153,7 @@ def libcMainHandler(ctx):
         if index == 1:
             # Only symbolized argv[1]
             for indexCell in range(len(argv)):
-                var = ctx.convertMemoryToSymbolicVariable(MemoryAccess(base+indexCell, CPUSIZE.BYTE))
+                var = ctx.symbolizeMemory(MemoryAccess(base+indexCell, CPUSIZE.BYTE))
                 var.setComment('argv[%d][%d]' %(index, indexCell))
         debug('[+] argv[%d] = %s' %(index, argv))
         base += len(argv)+1
@@ -235,11 +235,11 @@ def emulate(ctx, pc):
             print('[+] Please wait, calculating hash collisions...')
             x1 = ctx.getSymbolicRegister(ctx.registers.x1)
 
-            SymVar_0 = ctx.getSymbolicVariableFromName('SymVar_0')
-            SymVar_1 = ctx.getSymbolicVariableFromName('SymVar_1')
-            SymVar_2 = ctx.getSymbolicVariableFromName('SymVar_2')
-            SymVar_3 = ctx.getSymbolicVariableFromName('SymVar_3')
-            SymVar_4 = ctx.getSymbolicVariableFromName('SymVar_4')
+            SymVar_0 = ctx.getSymbolicVariable('SymVar_0')
+            SymVar_1 = ctx.getSymbolicVariable('SymVar_1')
+            SymVar_2 = ctx.getSymbolicVariable('SymVar_2')
+            SymVar_3 = ctx.getSymbolicVariable('SymVar_3')
+            SymVar_4 = ctx.getSymbolicVariable('SymVar_4')
 
             astCtxt = ctx.getAstContext()
 
@@ -347,8 +347,8 @@ def main():
     ctx.setArchitecture(ARCH.AARCH64)
 
     # Set optimization
-    ctx.enableMode(MODE.ALIGNED_MEMORY, True)
-    ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Parse the binary
     binary = lief.parse(TARGET)

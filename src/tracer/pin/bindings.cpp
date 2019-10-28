@@ -200,7 +200,9 @@ namespace tracer {
       PyObject* size  = nullptr;
 
       /* Extract arguments */
-      PyArg_ParseTuple(args, "|OO", &mem, &size);
+      if (PyArg_ParseTuple(args, "|OO", &mem, &size) == false) {
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::getCurrentMemoryValue(): Invalid number of arguments");
+      }
 
       if (mem != nullptr && (PyMemoryAccess_Check(mem) || PyInt_Check(mem) || PyLong_Check(mem))) {
 
@@ -262,7 +264,9 @@ namespace tracer {
       triton::__uint ret;
 
       /* Extract arguments */
-      PyArg_ParseTuple(args, "|OO", &std, &num);
+      if (PyArg_ParseTuple(args, "|OO", &std, &num) == false) {
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallArgument(): Invalid number of arguments");
+      }
 
       if (std == nullptr || (!PyLong_Check(std) && !PyInt_Check(std)))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::getSyscallArgument(): Expected an id (integer) as first argument.");
@@ -319,7 +323,9 @@ namespace tracer {
       PyObject* routine   = nullptr;
 
       /* Extract arguments */
-      PyArg_ParseTuple(args, "|OOO", &function, &flag, &routine);
+      if (PyArg_ParseTuple(args, "|OOO", &function, &flag, &routine) == false) {
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::insertCall(): Invalid number of arguments");
+      }
 
       if (function == nullptr || !PyCallable_Check(function))
         return PyErr_Format(PyExc_TypeError, "tracer::pintool::insertCall(): Expected a function callback as first argument.");
@@ -407,7 +413,9 @@ namespace tracer {
       PyObject* value = nullptr;
 
       /* Extract arguments */
-      PyArg_ParseTuple(args, "|OO", &mem, &value);
+      if (PyArg_ParseTuple(args, "|OO", &mem, &value) == false) {
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentMemoryValue(): Invalid number of arguments");
+      }
 
       if (mem != nullptr && (PyMemoryAccess_Check(mem) || PyInt_Check(mem) || PyLong_Check(mem))) {
 
@@ -440,7 +448,9 @@ namespace tracer {
       PyObject* value = nullptr;
 
       /* Extract arguments */
-      PyArg_ParseTuple(args, "|OO", &reg, &value);
+      if (PyArg_ParseTuple(args, "|OO", &reg, &value) == false) {
+        return PyErr_Format(PyExc_TypeError, "tracer::pintool::setCurrentRegisterValue(): Invalid number of arguments");
+      }
 
       if (reg != nullptr && PyRegister_Check(reg)) {
         if (value == nullptr || (!PyInt_Check(value) && !PyLong_Check(value)))

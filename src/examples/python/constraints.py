@@ -72,7 +72,7 @@ def test5():
     astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
-    Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
+    Triton.symbolizeRegister(Triton.registers.eax)
 
     # process instruction
     Triton.processing(Instruction(b"\x83\xc0\x07")) # add eax, 0x7
@@ -95,7 +95,7 @@ def test6():
     astCtxt = Triton.getAstContext()
 
     # rax is now symbolic
-    var = Triton.convertRegisterToSymbolicVariable(Triton.registers.eax)
+    var = Triton.symbolizeRegister(Triton.registers.eax)
     var.setAlias("eax")
 
     # process instruction

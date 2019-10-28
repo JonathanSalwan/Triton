@@ -347,7 +347,9 @@ namespace triton {
           triton::uint32 idx;
           triton::ast::SharedAbstractNode dst, src;
 
-          PyArg_ParseTuple(args, "|OO", &index, &node);
+          if (PyArg_ParseTuple(args, "|OO", &index, &node) == false) {
+          return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Invalid number of arguments");
+        }
 
           if (index == nullptr || (!PyLong_Check(index) && !PyInt_Check(index)))
             return PyErr_Format(PyExc_TypeError, "AstNode::setChild(): Expected an index (integer) as first argument.");
@@ -359,7 +361,6 @@ namespace triton {
           src = PyAstNode_AsAstNode(node);
           dst = PyAstNode_AsAstNode(self);
           dst->setChild(idx, src);
-          dst->init();
 
           Py_RETURN_TRUE;
         }
@@ -881,7 +882,7 @@ namespace triton {
         #else
         (cmpfunc)AstNode_cmp,                       /* tp_compare */
         #endif
-        0,                                          /* tp_repr */
+        (reprfunc)AstNode_str,                      /* tp_repr */
         &AstNode_NumberMethods,                     /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */

@@ -39,6 +39,23 @@ namespace triton {
     /*! \class API
      *  \brief This is used as C++ API. */
     class API {
+      private:
+        //! Raises an exception if the architecture is not initialized.
+        inline void checkArchitecture(void) const;
+
+        //! Raises an exception if the IR builder is not initialized.
+        inline void checkIrBuilder(void) const;
+
+        //! Raises an exception if the symbolic engine is not initialized.
+        inline void checkSymbolic(void) const;
+
+        //! Raises an exception if the solver engine is not initialized.
+        inline void checkSolver(void) const;
+
+        //! Raises an exception if the taint engine is not initialized.
+        inline void checkTaint(void) const;
+
+
       protected:
         //! The Callbacks interface.
         triton::callbacks::Callbacks callbacks;
@@ -69,12 +86,15 @@ namespace triton {
         //! A shortcut to access to a Register class from a register name.
         triton::arch::ShortcutRegister registers;
 
-
         //! Constructor of the API.
         TRITON_EXPORT API();
 
+        //! Constructor of the API.
+        TRITON_EXPORT API(triton::arch::architecture_e arch);
+
         //! Destructor of the API.
         TRITON_EXPORT ~API();
+
 
 
         /* Architecture API ============================================================================== */
@@ -87,9 +107,6 @@ namespace triton {
 
         //! [**architecture api**] - Returns the endianness as triton::arch::endianness_e.
         TRITON_EXPORT triton::arch::endianness_e getEndianness(void) const;
-
-        //! [**architecture api**] - Raises an exception if the architecture is not initialized.
-        TRITON_EXPORT void checkArchitecture(void) const;
 
         //! [**architecture api**] - Returns the instance of the current CPU used.
         TRITON_EXPORT triton::arch::CpuInterface* getCpuInstance(void);
@@ -223,15 +240,11 @@ namespace triton {
 
         /* IR API ======================================================================================== */
 
-        //! [**IR builder api**] - Raises an exception if the IR builder is not initialized.
-        TRITON_EXPORT void checkIrBuilder(void) const;
-
         //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
         TRITON_EXPORT triton::ast::SharedAstContext getAstContext(void);
-
 
 
 
@@ -293,11 +306,8 @@ namespace triton {
 
         /* Modes API====================================================================================== */
 
-        //! [**modes api**] - Raises an exception if modes interface is not initialized.
-        TRITON_EXPORT void checkModes(void) const;
-
         //! [**modes api**] - Enables or disables a specific mode.
-        TRITON_EXPORT void enableMode(triton::modes::mode_e mode, bool flag);
+        TRITON_EXPORT void setMode(triton::modes::mode_e mode, bool flag);
 
         //! [**modes api**] - Returns true if the mode is enabled.
         TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
@@ -305,9 +315,6 @@ namespace triton {
 
 
         /* Symbolic engine API =========================================================================== */
-
-        //! [**symbolic api**] - Raises an exception if the symbolic engine is not initialized.
-        TRITON_EXPORT void checkSymbolic(void) const;
 
         //! [**symbolic api**] - Returns the instance of the symbolic engine.
         TRITON_EXPORT triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
@@ -335,15 +342,6 @@ namespace triton {
 
         //! [**symbolic api**] - Returns the symbolic register value.
         TRITON_EXPORT triton::uint512 getSymbolicRegisterValue(const triton::arch::Register& reg);
-
-        //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertExpressionToSymbolicVariable(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
-
-        //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertMemoryToSymbolicVariable(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
-
-        //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable convertRegisterToSymbolicVariable(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Returns the AST corresponding to the operand.
         TRITON_EXPORT triton::ast::SharedAbstractNode getOperandAst(const triton::arch::OperandWrapper& op);
@@ -387,9 +385,6 @@ namespace triton {
         //! [**symbolic api**] - Returns the new shared symbolic register expression and links this expression to the instruction.
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment="");
 
-        //! [**symbolic api**] - Returns the new shared symbolic flag expression and links this expression to the instruction.
-        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicFlagExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& flag, const std::string& comment="");
-
         //! [**symbolic api**] - Returns the new shared symbolic volatile expression and links this expression to the instruction.
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
@@ -403,24 +398,30 @@ namespace triton {
         TRITON_EXPORT triton::ast::SharedAbstractNode processSimplification(const triton::ast::SharedAbstractNode& node, bool z3=false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpressionFromId(triton::usize symExprId) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable id.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariableFromId(triton::usize symVarId) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
 
         //! [**symbolic api**] - Returns the symbolic variable corresponding to the symbolic variable name.
-        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariableFromName(const std::string& symVarName) const;
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariable(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
-        //! [**symbolic api**] - Returns the logical conjunction AST of path constraints.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getPathConstraintsAst(void);
+        //! [**symbolic api**] - Returns the current path predicate as an AST of logical conjunction of each taken branch.
+        TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void);
 
-        //! [**symbolic api**] - Adds a path constraint.
-        TRITON_EXPORT void addPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+        //! [**symbolic api**] - Returns path predicates which may reach the targeted address.
+        TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr);
 
-        //! [**symbolic api**] - Clears the logical conjunction vector of path constraints.
+        //! [**symbolic api**] - Pushs constraints to the current path predicate.
+        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
+
+        //! [**symbolic api**] - Pops the last constraints added to the path predicate.
+        TRITON_EXPORT void popPathConstraint(void);
+
+        //! [**symbolic api**] - Clears the current path predicate.
         TRITON_EXPORT void clearPathConstraints(void);
 
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
@@ -430,7 +431,7 @@ namespace triton {
         TRITON_EXPORT bool isSymbolicEngineEnabled(void) const;
 
         //! [**symbolic api**] - Returns true if the symbolic expression ID exists.
-        TRITON_EXPORT bool isSymbolicExpressionIdExists(triton::usize symExprId) const;
+        TRITON_EXPORT bool isSymbolicExpressionExists(triton::usize symExprId) const;
 
         //! [**symbolic api**] - Returns true if memory cell expressions contain symbolic variables.
         TRITON_EXPORT bool isMemorySymbolized(const triton::arch::MemoryAccess& mem) const;
@@ -440,6 +441,15 @@ namespace triton {
 
         //! [**symbolic api**] - Returns true if the register expression contains a symbolic variable.
         TRITON_EXPORT bool isRegisterSymbolized(const triton::arch::Register& reg) const;
+
+        //! [**symbolic api**] - Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+
+        //! [**symbolic api**] - Converts a symbolic memory expression to a symbolic variable.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+
+        //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
+        TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment="");
 
         //! [**symbolic api**] - Concretizes all symbolic memory references.
         TRITON_EXPORT void concretizeAllMemory(void);
@@ -460,7 +470,7 @@ namespace triton {
         TRITON_EXPORT std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
-        TRITON_EXPORT std::list<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
+        TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
         //! [**symbolic api**] - Returns all symbolic expressions as a map of <SymExprId : SymExpr>
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicExpressions(void) const;
@@ -469,7 +479,7 @@ namespace triton {
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> getSymbolicVariables(void) const;
 
         //! [**symbolic api**] - Gets the concrete value of a symbolic variable.
-        TRITON_EXPORT const triton::uint512& getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
+        TRITON_EXPORT triton::uint512 getConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar) const;
 
         //! [**symbolic api**] - Sets the concrete value of a symbolic variable.
         TRITON_EXPORT void setConcreteVariableValue(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const triton::uint512& value);
@@ -477,9 +487,6 @@ namespace triton {
 
 
         /* Solver engine API ============================================================================= */
-
-        //! [**solver api**] - Raises an exception if the solver engine is not initialized.
-        TRITON_EXPORT void checkSolver(void) const;
 
         /*!
          * \brief [**solver api**] - Computes and returns a model from a symbolic constraint.
@@ -497,7 +504,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        TRITON_EXPORT std::list<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+        TRITON_EXPORT std::vector<std::map<triton::uint32, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
         //! Returns true if an expression is satisfiable.
         TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
@@ -526,9 +533,6 @@ namespace triton {
 
 
         /* Taint engine API ============================================================================== */
-
-        //! [**taint api**] - Raises an exception if the taint engine is not initialized.
-        TRITON_EXPORT void checkTaint(void) const;
 
         //! [**taint api**] - Returns the instance of the taint engine.
         TRITON_EXPORT triton::engines::taint::TaintEngine* getTaintEngine(void);
@@ -587,44 +591,44 @@ namespace triton {
         //! [**taint api**] - Abstract union tainting.
         TRITON_EXPORT bool taintUnion(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
+        //! [**taint api**] - Taints MemoryImmediate with union. Returns true if the memDst is TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm);
+
+        //! [**taint api**] - Taints MemoryMemory with union. Returns true if the memDst or memSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
+
+        //! [**taint api**] - Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
+
+        //! [**taint api**] - Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::Immediate& imm);
+
+        //! [**taint api**] - Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
+
+        //! [**taint api**] - Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
+        TRITON_EXPORT bool taintUnion(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
+
         //! [**taint api**] - Abstract assignment tainting.
         TRITON_EXPORT bool taintAssignment(const triton::arch::OperandWrapper& op1, const triton::arch::OperandWrapper& op2);
 
-        //! [**taint api**] - Taints MemoryImmediate with union. Returns true if the memDst is TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryImmediate(const triton::arch::MemoryAccess& memDst);
-
-        //! [**taint api**] - Taints MemoryMemory with union. Returns true if the memDst or memSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
-
-        //! [**taint api**] - Taints MemoryRegister with union. Returns true if the memDst or regSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
-
-        //! [**taint api**] - Taints RegisterImmediate with union. Returns true if the regDst is TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterImmediate(const triton::arch::Register& regDst);
-
-        //! [**taint api**] - Taints RegisterMemory with union. Returns true if the regDst or memSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
-
-        //! [**taint api**] - Taints RegisterRegister with union. Returns true if the regDst or regSrc are TAINTED.
-        TRITON_EXPORT bool taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
-
         //! [**taint api**] - Taints MemoryImmediate with assignment. Returns always false.
-        TRITON_EXPORT bool taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm);
 
         //! [**taint api**] - Taints MemoryMemory with assignment. Returns true if the memDst is tainted.
-        TRITON_EXPORT bool taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc);
 
         //! [**taint api**] - Taints MemoryRegister with assignment. Returns true if the memDst is tainted.
-        TRITON_EXPORT bool taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc);
 
         //! [**taint api**] - Taints RegisterImmediate with assignment. Returns always false.
-        TRITON_EXPORT bool taintAssignmentRegisterImmediate(const triton::arch::Register& regDst);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::Immediate& imm);
 
         //! [**taint api**] - Taints RegisterMemory with assignment. Returns true if the regDst is tainted.
-        TRITON_EXPORT bool taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc);
 
         //! [**taint api**] - Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
-        TRITON_EXPORT bool taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
+        TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
     };
 
 /*! @} End of triton namespace */

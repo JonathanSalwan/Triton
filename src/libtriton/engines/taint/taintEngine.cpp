@@ -245,22 +245,22 @@ namespace triton {
         triton::uint32 t2 = op2.getType();
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-          return this->taintUnionMemoryImmediate(op1.getConstMemory());
+          return this->taintUnion(op1.getConstMemory(), op2.getConstImmediate());
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-          return this->taintUnionMemoryMemory(op1.getConstMemory(), op2.getConstMemory());
+          return this->taintUnion(op1.getConstMemory(), op2.getConstMemory());
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-          return this->taintUnionMemoryRegister(op1.getConstMemory(), op2.getConstRegister());
+          return this->taintUnion(op1.getConstMemory(), op2.getConstRegister());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-          return this->taintUnionRegisterImmediate(op1.getConstRegister());
+          return this->taintUnion(op1.getConstRegister(), op2.getConstImmediate());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-          return this->taintUnionRegisterMemory(op1.getConstRegister(), op2.getConstMemory());
+          return this->taintUnion(op1.getConstRegister(), op2.getConstMemory());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-          return this->taintUnionRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
+          return this->taintUnion(op1.getConstRegister(), op2.getConstRegister());
 
         throw triton::exceptions::TaintEngine("TaintEngine::taintUnion(): Invalid operands.");
       }
@@ -272,28 +272,28 @@ namespace triton {
         triton::uint32 t2 = op2.getType();
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_IMM)
-          return this->taintAssignmentMemoryImmediate(op1.getConstMemory());
+          return this->taintAssignment(op1.getConstMemory(), op2.getConstImmediate());
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_MEM)
-          return this->taintAssignmentMemoryMemory(op1.getConstMemory(), op2.getConstMemory());
+          return this->taintAssignment(op1.getConstMemory(), op2.getConstMemory());
 
         if (t1 == triton::arch::OP_MEM && t2 == triton::arch::OP_REG)
-          return this->taintAssignmentMemoryRegister(op1.getConstMemory(), op2.getConstRegister());
+          return this->taintAssignment(op1.getConstMemory(), op2.getConstRegister());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_IMM)
-          return this->taintAssignmentRegisterImmediate(op1.getConstRegister());
+          return this->taintAssignment(op1.getConstRegister(), op2.getConstImmediate());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_MEM)
-          return this->taintAssignmentRegisterMemory(op1.getConstRegister(), op2.getConstMemory());
+          return this->taintAssignment(op1.getConstRegister(), op2.getConstMemory());
 
         if (t1 == triton::arch::OP_REG && t2 == triton::arch::OP_REG)
-          return this->taintAssignmentRegisterRegister(op1.getConstRegister(), op2.getConstRegister());
+          return this->taintAssignment(op1.getConstRegister(), op2.getConstRegister());
 
         throw triton::exceptions::TaintEngine("TaintEngine::taintAssignment(): Invalid operands.");
       }
 
 
-      bool TaintEngine::taintUnionMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
+      bool TaintEngine::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -312,7 +312,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintUnionMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint64 memAddrSrc = memSrc.getAddress();
@@ -332,7 +332,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintUnionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
+      bool TaintEngine::taintUnion(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -351,22 +351,22 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintUnionRegisterImmediate(const triton::arch::Register& regDst) {
+      bool TaintEngine::taintUnion(const triton::arch::Register& regDst, const triton::arch::Immediate& imm) {
         return this->unionRegisterImmediate(regDst);
       }
 
 
-      bool TaintEngine::taintUnionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintUnion(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         return this->unionRegisterMemory(regDst, memSrc);
       }
 
 
-      bool TaintEngine::taintUnionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
+      bool TaintEngine::taintUnion(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         return this->unionRegisterRegister(regDst, regSrc);
       }
 
 
-      bool TaintEngine::taintAssignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
+      bool TaintEngine::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Immediate& imm) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -385,7 +385,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintAssignmentMemoryMemory(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::MemoryAccess& memSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint64 memAddrSrc = memSrc.getAddress();
@@ -405,7 +405,7 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintAssignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
+      bool TaintEngine::taintAssignment(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
         bool flag = triton::engines::taint::UNTAINTED;
         triton::uint64 memAddrDst = memDst.getAddress();
         triton::uint32 writeSize  = memDst.getSize();
@@ -424,17 +424,17 @@ namespace triton {
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterImmediate(const triton::arch::Register& regDst) {
+      bool TaintEngine::taintAssignment(const triton::arch::Register& regDst, const triton::arch::Immediate& imm) {
         return this->assignmentRegisterImmediate(regDst);
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
+      bool TaintEngine::taintAssignment(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
         return this->assignmentRegisterMemory(regDst, memSrc);
       }
 
 
-      bool TaintEngine::taintAssignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
+      bool TaintEngine::taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
         return this->assignmentRegisterRegister(regDst, regSrc);
       }
 

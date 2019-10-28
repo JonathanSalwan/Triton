@@ -12,11 +12,16 @@ class TestArchitecture(unittest.TestCase):
 
     """Testing the architectures."""
 
-    def test_modify_arch(self):
+    def test_modify_arch1(self):
         """Check we can change arch at anytime."""
         self.ctx = TritonContext()
         for _ in range(10):
             self.ctx.setArchitecture(random.choice((ARCH.X86_64, ARCH.X86, ARCH.AARCH64)))
+
+    def test_modify_arch2(self):
+        """Check we can change arch at anytime."""
+        for _ in range(10):
+            self.ctx = TritonContext(random.choice((ARCH.X86_64, ARCH.X86, ARCH.AARCH64)))
 
 
 class TestX86Arch(unittest.TestCase):

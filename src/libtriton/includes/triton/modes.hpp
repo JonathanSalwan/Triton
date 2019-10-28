@@ -53,7 +53,7 @@ namespace triton {
         TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
 
         //! Enables or disables a specific mode.
-        TRITON_EXPORT void enableMode(triton::modes::mode_e mode, bool flag);
+        TRITON_EXPORT void setMode(triton::modes::mode_e mode, bool flag);
 
         //! Copies a Modes.
         TRITON_EXPORT Modes& operator=(const Modes& other);

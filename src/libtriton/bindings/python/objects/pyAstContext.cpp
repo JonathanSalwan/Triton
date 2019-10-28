@@ -47,8 +47,8 @@ True
 \section ast_description Description
 <hr>
 
-Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representation. The class is used
-to build your own AST nodes.
+Triton converts the x86, x86-64 and AArch64 instruction set architecture into an AST representation.
+This class is used to build your own AST nodes.
 
 \anchor ast
 \section AstContext_py_api Python API - Methods of the AstContext class
@@ -219,6 +219,10 @@ e.g: `(not expr)`.
 Creates a logical `OR` on several nodes.
 e.g: `(or expr1 expr2 expr3 expr4)`.
 
+- <b>\ref py_AstNode_page lxor([\ref py_AstNode_page, ...])</b><br>
+Creates a logical `XOR` on several nodes.
+e.g: `(xor expr1 expr2 expr3 expr4)`.
+
 - <b>\ref py_AstNode_page reference(\ref py_SymbolicExpression_page expr)</b><br>
 Creates a reference node (SSA-based).<br>
 e.g: `ref!123`.
@@ -244,13 +248,13 @@ e.g: `((_ zero_extend sizeExt) expr1)`.
 - <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
-- <b>[\ref py_AstNode_page, ...] lookingForNodes(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
+- <b>[\ref py_AstNode_page, ...] search(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
 Returns a list of collected matched nodes via a depth-first pre order traversal.
 
 - <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
 Convert a Triton AST to a Z3 AST.
 
-- <b>\ref py_AstNode_page unrollAst(\ref py_AstNode_page node)</b><br>
+- <b>\ref py_AstNode_page unroll(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
 
 
@@ -346,7 +350,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bv(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "bv(): expected an integer as first argument");
@@ -368,7 +374,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvadd(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvadd(): expected a AstNode as first argument");
@@ -390,7 +398,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvand(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvand(): expected a AstNode as first argument");
@@ -412,7 +422,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvashr(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvashr(): expected a AstNode as first argument");
@@ -454,7 +466,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvlshr(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvlshr(): expected a AstNode as first argument");
@@ -476,7 +490,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvmul(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvmul(): expected a AstNode as first argument");
@@ -498,7 +514,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvnand(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvnand(): expected a AstNode as first argument");
@@ -533,7 +551,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvnor(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvnor(): expected a AstNode as first argument");
@@ -568,7 +588,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvor(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvor(): expected a AstNode as first argument");
@@ -590,7 +612,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvror(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvror(): expected a AstNode as first argument");
@@ -612,7 +636,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvrol(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvrol(): expected a AstNode as first argument");
@@ -634,7 +660,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsdiv(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsdiv(): expected a AstNode as first argument");
@@ -656,7 +684,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsge(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsge(): expected a AstNode as first argument");
@@ -678,7 +708,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsgt(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsgt(): expected a AstNode as first argument");
@@ -700,7 +732,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvshl(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvshl(): expected a AstNode as first argument");
@@ -722,7 +756,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsle(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsle(): expected a AstNode as first argument");
@@ -744,7 +780,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvslt(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvslt(): expected a AstNode as first argument");
@@ -766,7 +804,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsmod(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsmod(): expected a AstNode as first argument");
@@ -788,7 +828,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsrem(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsrem(): expected a AstNode as first argument");
@@ -810,7 +852,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvsub(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvsub(): expected a AstNode as first argument");
@@ -832,7 +876,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvudiv(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvudiv(): expected a AstNode as first argument");
@@ -854,7 +900,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvuge(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvuge(): expected a AstNode as first argument");
@@ -876,7 +924,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvugt(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvugt(): expected a AstNode as first argument");
@@ -898,7 +948,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvule(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvule(): expected a AstNode as first argument");
@@ -920,7 +972,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvult(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvult(): expected a AstNode as first argument");
@@ -942,7 +996,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvurem(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvurem(): expected a AstNode as first argument");
@@ -964,7 +1020,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvxnor(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvxnor(): expected a AstNode as first argument");
@@ -986,7 +1044,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "bvxor(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "bvxor(): expected a AstNode as first argument");
@@ -1021,7 +1081,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "distinct(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "distinct(): expected a AstNode as first argument");
@@ -1106,7 +1168,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "equal(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "equal(): expected a AstNode as first argument");
@@ -1129,7 +1193,9 @@ namespace triton {
         PyObject* op3 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
+        if (PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3) == false) {
+          return PyErr_Format(PyExc_TypeError, "extract(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "extract(): expected an integer as first argument");
@@ -1154,7 +1220,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "iff(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "iff(): expected a AstNode as first argument");
@@ -1177,7 +1245,9 @@ namespace triton {
         PyObject* op3 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
+        if (PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3) == false) {
+          return PyErr_Format(PyExc_TypeError, "ite(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
           return PyErr_Format(PyExc_TypeError, "ite(): expected a AstNode as first argument");
@@ -1228,7 +1298,9 @@ namespace triton {
         PyObject* op3 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3);
+        if (PyArg_ParseTuple(args, "|OOO", &op1, &op2, &op3) == false) {
+          return PyErr_Format(PyExc_TypeError, "let(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyStr_Check(op1))
           return PyErr_Format(PyExc_TypeError, "let(): expected a string as first argument");
@@ -1261,22 +1333,24 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_lookingForNodes(PyObject* self, PyObject* args) {
+      static PyObject* AstContext_search(PyObject* self, PyObject* args) {
         PyObject* ret = nullptr;
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "search(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || !PyAstNode_Check(op1))
-          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AstNode object as first argument");
+          return PyErr_Format(PyExc_TypeError, "search(): expected a AstNode object as first argument");
 
         if (op2 == nullptr || (!PyLong_Check(op2) && !PyInt_Check(op2)))
-          return PyErr_Format(PyExc_TypeError, "lookingForNodes(): expected a AST_NODE enum as second argument");
+          return PyErr_Format(PyExc_TypeError, "search(): expected a AST_NODE enum as second argument");
 
         try {
-          auto nodes = triton::ast::lookingForNodes(PyAstNode_AsAstNode(op1), static_cast<triton::ast::ast_e>(PyLong_AsUint32(op2)));
+          auto nodes = triton::ast::search(PyAstNode_AsAstNode(op1), static_cast<triton::ast::ast_e>(PyLong_AsUint32(op2)));
           ret = xPyList_New(nodes.size());
 
           triton::uint32 index = 0;
@@ -1316,6 +1390,31 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_lxor(PyObject* self, PyObject* exprsList) {
+        std::vector<triton::ast::SharedAbstractNode> exprs;
+
+        if (exprsList == nullptr || !PyList_Check(exprsList))
+          return PyErr_Format(PyExc_TypeError, "lxor(): expected a list of AstNodes as first argument");
+
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(exprsList); i++){
+          PyObject* item = PyList_GetItem(exprsList, i);
+
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "lxor(): Each element from the list must be a AstNode");
+
+          exprs.push_back(PyAstNode_AsAstNode(item));
+        }
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->lxor(exprs));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_reference(PyObject* self, PyObject* symExpr) {
         if (!PySymbolicExpression_Check(symExpr))
           return PyErr_Format(PyExc_TypeError, "reference(): expected a symbolic expression as argument");
@@ -1347,7 +1446,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "sx(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "sx(): expected an integer as first argument");
@@ -1364,12 +1465,12 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_unrollAst(PyObject* self, PyObject* node) {
+      static PyObject* AstContext_unroll(PyObject* self, PyObject* node) {
         if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "unrollAst(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "unroll(): Expects a AstNode as argument.");
 
         try {
-          return PyAstNode(triton::ast::unrollAst(PyAstNode_AsAstNode(node)));
+          return PyAstNode(triton::ast::unroll(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1395,7 +1496,9 @@ namespace triton {
         PyObject* op2 = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &op1, &op2);
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "zx(): Invalid number of arguments");
+        }
 
         if (op1 == nullptr || (!PyLong_Check(op1) && !PyInt_Check(op1)))
           return PyErr_Format(PyExc_TypeError, "zx(): expected an integer as first argument");
@@ -1523,12 +1626,13 @@ namespace triton {
         {"land",            AstContext_land,            METH_O,           ""},
         {"let",             AstContext_let,             METH_VARARGS,     ""},
         {"lnot",            AstContext_lnot,            METH_O,           ""},
-        {"lookingForNodes", AstContext_lookingForNodes, METH_VARARGS,     ""},
         {"lor",             AstContext_lor,             METH_O,           ""},
+        {"lxor",            AstContext_lxor,            METH_O,           ""},
         {"reference",       AstContext_reference,       METH_O,           ""},
+        {"search",          AstContext_search,          METH_VARARGS,     ""},
         {"string",          AstContext_string,          METH_O,           ""},
         {"sx",              AstContext_sx,              METH_VARARGS,     ""},
-        {"unrollAst",       AstContext_unrollAst,       METH_O,           ""},
+        {"unroll",          AstContext_unroll,          METH_O,           ""},
         {"variable",        AstContext_variable,        METH_O,           ""},
         {"zx",              AstContext_zx,              METH_VARARGS,     ""},
         #ifdef Z3_INTERFACE

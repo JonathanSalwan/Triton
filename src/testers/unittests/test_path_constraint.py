@@ -24,16 +24,16 @@ class TestPathConstraint(unittest.TestCase):
             b"\x0F\x84\x55\x00\x00\x00",  # je 0x55
         ]
 
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.eax)
-        self.ctx.convertRegisterToSymbolicVariable(self.ctx.registers.ebx)
+        self.ctx.symbolizeRegister(self.ctx.registers.eax)
+        self.ctx.symbolizeRegister(self.ctx.registers.ebx)
 
         for opcodes in trace:
             self.ctx.processing(Instruction(opcodes))
 
-    def test_getPathConstraintsAst(self):
-        """Test getPathConstraintsAst"""
+    def test_getPathPredicate(self):
+        """Test getPathPredicate"""
         astCtx = self.ctx.getAstContext()
-        crst = self.ctx.getPathConstraintsAst()
+        crst = self.ctx.getPathPredicate()
         self.assertNotEqual(len(self.ctx.getModel(crst)), 0)
         self.assertNotEqual(len(self.ctx.getModel(astCtx.lnot(crst))), 0)
 
@@ -46,9 +46,9 @@ class TestPathConstraint(unittest.TestCase):
         pc = self.ctx.getPathConstraints()[0]
         self.assertTrue(pc.isMultipleBranches())
 
-    def test_getTakenPathConstraintAst(self):
+    def test_getTakenPredicate(self):
         pc = self.ctx.getPathConstraints()[0]
-        self.assertEqual(pc.getTakenPathConstraintAst().evaluate(), 1)
+        self.assertEqual(pc.getTakenPredicate().evaluate(), 1)
 
     def test_getTakenAddress(self):
         pc = self.ctx.getPathConstraints()[0]
@@ -64,3 +64,40 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['dstAddr'], 91)
         self.assertEqual(pc[1]['dstAddr'], 23)
+
+    def test_pushpop(self):
+        ast = self.ctx.getAstContext()
+        pc  = self.ctx.getPathPredicate()
+        opc = pc
+
+        self.assertEqual(str(pc), "(and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32)))")
+        self.ctx.pushPathConstraint(ast.equal(ast.bvtrue(), ast.bvtrue()))
+
+        pc  = self.ctx.getPathPredicate()
+        self.assertEqual(str(pc), "(and (and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32))) (= (_ bv1 1) (_ bv1 1)))")
+
+        self.ctx.popPathConstraint()
+        pc  = self.ctx.getPathPredicate()
+        self.assertEqual(str(pc), str(opc))
+
+    def test_reachingBB(self):
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(91)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(23)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(20)), 0)
+
+    def test_reachingBB2(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86)
+
+        trace = [
+            b"\x40",        # inc eax
+            b"\xff\xe0",    # jmp eax
+        ]
+
+        ctx.symbolizeRegister(ctx.registers.eax)
+        ctx.symbolizeRegister(ctx.registers.ebx)
+
+        for opcodes in trace:
+            ctx.processing(Instruction(opcodes))
+
+        self.assertEqual(ctx.getModel(ctx.getPredicatesToReachAddress(0x1337)[0])[0].getValue(), 0x1336)

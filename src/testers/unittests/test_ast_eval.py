@@ -618,9 +618,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
         ]
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
         self.check_ast(tests)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_ror(self):
@@ -657,9 +657,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
         ]
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
         self.check_ast(tests)
-        self.Triton.enableMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_smod(self):
@@ -815,6 +815,26 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8)), self.astCtxt.equal(self.astCtxt.bv(2, 8), self.astCtxt.bv(1, 8))),
             self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(2, 8)), self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(1, 8))),
             self.astCtxt.iff(self.astCtxt.equal(self.astCtxt.bv(1, 8), self.astCtxt.bv(2, 8)), self.astCtxt.equal(self.astCtxt.bv(2, 8), self.astCtxt.bv(1, 8))),
+        ]
+        self.check_ast(tests)
+
+    def test_logical(self):
+        """Check logical operations."""
+        T = self.astCtxt.bvtrue()
+        F = self.astCtxt.bvfalse()
+        tests = [
+            self.astCtxt.land([T == T, F == F]),
+            self.astCtxt.land([F == F, T == F]),
+            self.astCtxt.land([T == F, F == T]),
+            self.astCtxt.land([F == T, T == T]),
+            self.astCtxt.lor([T == T, F == F]),
+            self.astCtxt.lor([F == F, T == F]),
+            self.astCtxt.lor([T == F, F == T]),
+            self.astCtxt.lor([F == T, T == T]),
+            self.astCtxt.lxor([T == T, F == F]),
+            self.astCtxt.lxor([F == F, T == F]),
+            self.astCtxt.lxor([T == F, F == T]),
+            self.astCtxt.lxor([F == T, T == T]),
         ]
         self.check_ast(tests)
 

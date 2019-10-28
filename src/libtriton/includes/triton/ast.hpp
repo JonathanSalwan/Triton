@@ -9,7 +9,6 @@
 #define TRITON_AST_H
 
 #include <deque>
-#include <list>
 #include <map>
 #include <memory>
 #include <ostream>
@@ -444,7 +443,7 @@ namespace triton {
     //! `(_ bv<value> <size>)` node
     class BvNode : public AbstractNode {
       public:
-        TRITON_EXPORT BvNode(triton::uint512 value, triton::uint32 size, const SharedAstContext& ctxt);
+        TRITON_EXPORT BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
@@ -530,7 +529,7 @@ namespace triton {
         triton::uint512 value;
 
       public:
-        TRITON_EXPORT IntegerNode(triton::uint512 value, const SharedAstContext& ctxt);
+        TRITON_EXPORT IntegerNode(const triton::uint512& value, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT triton::uint512 getInteger(void);
@@ -591,6 +590,21 @@ namespace triton {
         TRITON_EXPORT LorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
         TRITON_EXPORT void init(void);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
+    };
+
+
+    //! `(xor <expr1> <expr2>)`
+    class LxorNode : public AbstractNode {
+    public:
+      template <typename T> LxorNode(const T& exprs, const SharedAstContext& ctxt)
+        : AbstractNode(LXOR_NODE, ctxt) {
+        for (auto expr : exprs)
+          this->addChild(expr);
+      }
+
+      TRITON_EXPORT LxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
+      TRITON_EXPORT void init(void);
+      TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
 
@@ -655,7 +669,7 @@ namespace triton {
     triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
 
     //! Custom rotate left function for hash routine.
-    triton::uint512 rotl(triton::uint512 value, triton::uint32 shift);
+    triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift);
 
     //! Custom modular sign extend for bitwise operation.
     triton::sint512 modularSignExtend(AbstractNode* node);
@@ -667,13 +681,16 @@ namespace triton {
     TRITON_EXPORT SharedAbstractNode newInstance(AbstractNode* node, bool unroll=false);
 
     //! AST C++ API - Unrolls the SSA form of a given AST.
-    TRITON_EXPORT SharedAbstractNode unrollAst(const SharedAbstractNode& node);
+    TRITON_EXPORT SharedAbstractNode unroll(const SharedAbstractNode& node);
 
-    //! Returns all nodes of an AST. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
-    TRITON_EXPORT void nodesExtraction(std::deque<SharedAbstractNode>* output, const SharedAbstractNode& node, bool unroll, bool revert);
+    //! Returns node and all its children of an AST sorted topologically. If `unroll` is true, references are unrolled. If `revert` is true, children are on top of list.
+    TRITON_EXPORT std::vector<SharedAbstractNode> childrenExtraction(const SharedAbstractNode& node, bool unroll, bool revert);
+
+    //! Returns node and all its parents of an AST sorted topologically. If `revert` is true, oldest parents are on top of list.
+    TRITON_EXPORT std::vector<SharedAbstractNode> parentsExtraction(const SharedAbstractNode& node, bool revert);
 
     //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
-    TRITON_EXPORT std::deque<SharedAbstractNode> lookingForNodes(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
+    TRITON_EXPORT std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
   /*! @} End of ast namespace */
   };

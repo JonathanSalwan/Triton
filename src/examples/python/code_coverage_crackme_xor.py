@@ -160,14 +160,14 @@ def getNewInput():
                     seed   = dict()
                     for k, v in list(models.items()):
                         # Get the symbolic variable assigned to the model
-                        symVar = Triton.getSymbolicVariableFromId(k)
+                        symVar = Triton.getSymbolicVariable(k)
                         # Save the new input as seed.
                         seed.update({symVar.getOrigin(): v.getValue()})
                     if seed:
                         inputs.append(seed)
 
         # Update the previous constraints with true branch to keep a good path.
-        previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPathConstraintAst()])
+        previousConstraints = astCtxt.land([previousConstraints, pc.getTakenPredicate()])
 
     # Clear the path constraints to be clean at the next execution.
     Triton.clearPathConstraints()
@@ -181,8 +181,8 @@ def symbolizeInputs(seed):
     Triton.concretizeAllMemory()
     for address, value in list(seed.items()):
         Triton.setConcreteMemoryValue(address, value)
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address, CPUSIZE.BYTE))
-        Triton.convertMemoryToSymbolicVariable(MemoryAccess(address+1, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(address, CPUSIZE.BYTE))
+        Triton.symbolizeMemory(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
 
 
@@ -192,7 +192,7 @@ if __name__ == '__main__':
     Triton.setArchitecture(ARCH.X86_64)
 
     # Symbolic optimization
-    Triton.enableMode(MODE.ALIGNED_MEMORY, True)
+    Triton.setMode(MODE.ALIGNED_MEMORY, True)
 
     # Define entry point
     ENTRY = 0x40056d

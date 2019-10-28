@@ -44,7 +44,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_1(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, False)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, False)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
@@ -53,7 +53,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         self.assertEqual(len(inst.getReadRegisters()), 1)
         self.assertEqual(len(inst.getWrittenRegisters()), 2)
 
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
         self.assertTrue(ctx.processing(inst))
         self.assertTrue(checkAstIntegrity(inst))
@@ -66,8 +66,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_2(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
         self.assertTrue(ctx.processing(inst))
@@ -94,8 +94,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_4(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -109,8 +109,8 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_5(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -124,9 +124,9 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_6(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.symbolizeRegister(ctx.registers.rax)
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))
@@ -140,7 +140,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_7(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
@@ -153,10 +153,10 @@ class TestOnlySymbolizedMode(unittest.TestCase):
     def test_8(self):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
-        ctx.convertRegisterToSymbolicVariable(ctx.registers.rax)
-        ctx.convertMemoryToSymbolicVariable(MemoryAccess(0, CPUSIZE.QWORD))
+        ctx.symbolizeRegister(ctx.registers.rax)
+        ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
         self.assertTrue(ctx.processing(inst))

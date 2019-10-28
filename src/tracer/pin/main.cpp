@@ -571,9 +571,8 @@ namespace tracer {
 
     /* Check if the instruction is blacklisted */
     static bool instructionBlacklisted(triton::__uint address) {
-      std::list<const char *>::iterator it;
-      for (it = tracer::pintool::options::imageBlacklist.begin(); it != tracer::pintool::options::imageBlacklist.end(); it++) {
-        if (strstr(tracer::pintool::getImageName(address).c_str(), *it))
+      for (const char* name: tracer::pintool::options::imageBlacklist) {
+        if (strstr(tracer::pintool::getImageName(address).c_str(), name))
           return true;
       }
       return false;
@@ -582,14 +581,12 @@ namespace tracer {
 
     /* Check if the instruction is whitelisted */
     static bool instructionWhitelisted(triton::__uint address) {
-      std::list<const char *>::iterator it;
-
       /* If there is no whitelist -> jit everything */
       if (tracer::pintool::options::imageWhitelist.empty())
         return true;
 
-      for (it = tracer::pintool::options::imageWhitelist.begin(); it != tracer::pintool::options::imageWhitelist.end(); it++) {
-        if (strstr(tracer::pintool::getImageName(address).c_str(), *it))
+      for (const char* name: tracer::pintool::options::imageWhitelist) {
+        if (strstr(tracer::pintool::getImageName(address).c_str(), name))
           return true;
       }
 

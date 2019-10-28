@@ -50,12 +50,12 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode PathConstraint::getTakenPathConstraintAst(void) const {
+      triton::ast::SharedAbstractNode PathConstraint::getTakenPredicate(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
             return std::get<3>(*it);
         }
-        throw triton::exceptions::PathConstraint("PathConstraint::getTakenPathConstraintAst(): Something wrong, no branch taken.");
+        throw triton::exceptions::PathConstraint("PathConstraint::getTakenPredicate(): Something wrong, no branch taken.");
       }
 
 

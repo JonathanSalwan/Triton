@@ -32,7 +32,7 @@ This object is used to represent a model for an SMT solver.
 >>> inst = Instruction()
 >>> inst.setOpcode(b"\x48\x35\x44\x33\x22\x11") # xor rax, 0x11223344
 
->>> symvar = ctxt.convertRegisterToSymbolicVariable(ctxt.registers.rax)
+>>> symvar = ctxt.symbolizeRegister(ctxt.registers.rax)
 >>> print(symvar)
 SymVar_0:64
 
@@ -42,7 +42,7 @@ True
 0x0: xor rax, 0x11223344
 
 >>> ast = ctxt.getAstContext()
->>> raxAst = ast.unrollAst(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
+>>> raxAst = ast.unroll(ctxt.getSymbolicRegister(ctxt.registers.rax).getAst())
 >>> print(raxAst)
 (bvxor SymVar_0 (_ bv287454020 64))
 
@@ -53,7 +53,7 @@ True
 
 >>> model = ctxt.getModel(constraint)
 >>> print(model) #doctest: +ELLIPSIS
-{0: <SolverModel object at 0x...>}
+{0: SymVar_0:64 = 0x11223344}
 
 >>> symvarModel =  model[symvar.getId()] # Model from the symvar's id
 >>> print(symvarModel)
@@ -158,7 +158,7 @@ namespace triton {
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
-        0,                                          /* tp_repr */
+        (reprfunc)SolverModel_str,                  /* tp_repr */
         0,                                          /* tp_as_number */
         0,                                          /* tp_as_sequence */
         0,                                          /* tp_as_mapping */

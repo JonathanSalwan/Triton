@@ -44,9 +44,8 @@ namespace triton {
 
     z3::expr TritonToZ3Ast::convert(const triton::ast::SharedAbstractNode& node) {
       std::unordered_map<triton::ast::SharedAbstractNode, z3::expr> results;
-      std::deque<triton::ast::SharedAbstractNode> nodes;
 
-      triton::ast::nodesExtraction(&nodes, node, true /* unroll*/, true /* revert */);
+      auto nodes = triton::ast::childrenExtraction(node, true /* unroll*/, true /* revert */);
 
       for (auto&& n : nodes) {
         results.insert(std::make_pair(n, this->do_convert(n, &results)));
@@ -266,6 +265,24 @@ namespace triton {
             }
             Z3_ast ops[] = {currentValue, nextValue};
             currentValue = to_expr(this->context, Z3_mk_or(this->context, 2, ops));
+          }
+
+          return currentValue;
+        }
+
+        case LXOR_NODE: {
+          z3::expr currentValue = children[0];
+          if (!currentValue.get_sort().is_bool()) {
+            throw triton::exceptions::AstTranslations("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+          }
+          z3::expr nextValue(this->context);
+
+          for (triton::uint32 idx = 1; idx < children.size(); idx++) {
+            nextValue = children[idx];
+            if (!nextValue.get_sort().is_bool()) {
+              throw triton::exceptions::AstTranslations("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+            }
+            currentValue = to_expr(this->context, Z3_mk_xor(this->context, currentValue, nextValue));
           }
 
           return currentValue;

@@ -78,6 +78,7 @@ class TestAstRepresentation(unittest.TestCase):
             (self.astCtxt.let("alias", self.v1, self.v2),        "(let ((alias SymVar_0)) SymVar_1)",                            "SymVar_1"),
             (self.astCtxt.lnot(self.v1 == 0),                    "(not (= SymVar_0 (_ bv0 8)))",                                 "not (SymVar_0 == 0x0)"),
             (self.astCtxt.lor([self.v1 >= 0, self.v2 <= 10]),    "(or (bvuge SymVar_0 (_ bv0 8)) (bvule SymVar_1 (_ bv10 8)))",  "((SymVar_0 >= 0x0) or (SymVar_1 <= 0xA))"),
+            (self.astCtxt.lxor([self.v1 >= 0, self.v2 <= 10]),   "(xor (bvuge SymVar_0 (_ bv0 8)) (bvule SymVar_1 (_ bv10 8)))", "(bool((SymVar_0 >= 0x0)) != bool((SymVar_1 <= 0xA)))"),
             (self.astCtxt.reference(self.ref),                   "ref!0",                                                        "ref_0"),
             (self.astCtxt.string("test"),                        "test",                                                         "test"),
             (self.astCtxt.sx(8, self.v1),                        "((_ sign_extend 8) SymVar_0)",                                 "sx(0x8, SymVar_0)"),

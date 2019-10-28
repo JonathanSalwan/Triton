@@ -76,7 +76,9 @@ namespace triton {
         PyObject* size  = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &value, &size);
+        if (PyArg_ParseTuple(args, "|OO", &value, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "Immediate(): Invalid constructor.");
+        }
 
         /* Check if the first arg is a integer */
         if (value == nullptr || (!PyLong_Check(value) && !PyInt_Check(value)))
@@ -100,7 +102,9 @@ namespace triton {
         PyObject* opcodes = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|O", &opcodes);
+        if (PyArg_ParseTuple(args, "|O", &opcodes) == false) {
+          return PyErr_Format(PyExc_TypeError, "Instruction(): Invalid constructor.");
+        }
 
         if (opcodes == nullptr)
           return PyInstruction();
@@ -124,7 +128,9 @@ namespace triton {
         PyObject* size          = nullptr;
 
         /* Extract arguments */
-        PyArg_ParseTuple(args, "|OO", &address, &size);
+        if (PyArg_ParseTuple(args, "|OO", &address, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "MemoryAccess(): Invalid constructor.");
+        }
 
         /* Check if the first arg is a integer */
         if (address == nullptr || (!PyLong_Check(address) && !PyInt_Check(address)))
@@ -145,8 +151,21 @@ namespace triton {
 
 
       static PyObject* triton_TritonContext(PyObject* self, PyObject* args) {
+        PyObject* arch = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|O", &arch) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext(): Invalid constructor.");
+        }
+
         try {
-          return PyTritonContext();
+          if (arch == nullptr) {
+            return PyTritonContext();
+          }
+          if (arch == nullptr && (!PyLong_Check(arch) && !PyInt_Check(arch))) {
+            return PyErr_Format(PyExc_TypeError, "TritonContext(): Invalid type of argument.");
+          }
+          return PyTritonContext(static_cast<triton::arch::architecture_e>(PyLong_AsUint32(arch)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -165,4 +184,3 @@ namespace triton {
     }; /* python namespace */
   }; /* bindings namespace */
 }; /* triton namespace */
-

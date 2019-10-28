@@ -16,7 +16,7 @@ class TestIssue656(unittest.TestCase):
     def sym_exec_gadget(gadget):
         ctx = TritonContext()
         ctx.setArchitecture(ARCH.X86_64)
-        ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+        ctx.setMode(MODE.ALIGNED_MEMORY, True)
 
         r = ctx.registers
         gprs = (
@@ -27,7 +27,7 @@ class TestIssue656(unittest.TestCase):
         )
 
         for gpr in gprs:
-            ctx.convertRegisterToSymbolicVariable(gpr)
+            ctx.symbolizeRegister(gpr)
 
         for assembly in gadget:
             i = Instruction()
@@ -114,7 +114,7 @@ class TestIssue792(unittest.TestCase):
 
         ast_original  = ac.bvadd(ac.variable(var1), ac.variable(var2))
         ast_duplicate = ac.duplicate(ast_original)
-        ast_unrolled  = ac.unrollAst(ast_original)
+        ast_unrolled  = ac.unroll(ast_original)
 
         self.ctx.setConcreteVariableValue(var1, 4)
         self.ctx.setConcreteVariableValue(var2, 2)
@@ -179,7 +179,7 @@ class TestIssue789(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-        self.ctx.enableMode(MODE.ALIGNED_MEMORY, True)
+        self.ctx.setMode(MODE.ALIGNED_MEMORY, True)
 
         self.mem_symvars = []
         self.reg_symvars = []
@@ -199,7 +199,7 @@ class TestIssue789(unittest.TestCase):
 
         # Create symbolic var
         comment = "mem_{:#x}".format(ma.getAddress())
-        symvar = ctx.convertMemoryToSymbolicVariable(ma,comment)
+        symvar = ctx.symbolizeMemory(ma,comment)
         self.mem_symvars.append(symvar)
 
 
@@ -211,7 +211,7 @@ class TestIssue789(unittest.TestCase):
 
         # Create symbolic var
         comment = "sym_reg_{}".format(reg.getName())
-        symvar = ctx.convertRegisterToSymbolicVariable(reg, comment)
+        symvar = ctx.symbolizeRegister(reg, comment)
         self.reg_symvars.append(symvar)
 
 
@@ -229,7 +229,8 @@ class TestIssue789(unittest.TestCase):
         self.emulate(0x400000)
         ast = self.ctx.getAstContext()
         rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
-        self.assertEqual(str(ast.unrollAst(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
+        self.assertEqual(str(ast.unroll(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
+
 
 
 class TestIssue803(unittest.TestCase):
@@ -259,3 +260,90 @@ class TestIssue803(unittest.TestCase):
 
         # Test
         self.assertFalse(ast1.equalTo(ast2))
+
+
+
+class TestIssue820(unittest.TestCase):
+
+    """Testing #820."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+
+
+    def test_issue1(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+        code = [
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+        ]
+
+        for op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(rax.getAst().evaluate(), 3)
+
+        # Testing initParents() when setting an AST on a old symbolic expression
+        ref0 = self.ctx.getSymbolicExpression(0)
+        ref0.setAst(self.ast.bv(10, 64))
+        self.assertEqual(rax.getAst().evaluate(), 12)
+
+
+    def test_issue2(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+        code = [
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+            b"\x48\xff\xc0", # inc rax
+        ]
+
+        for op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(rax.getAst().evaluate(), 3)
+
+        # Testing initParents() when setting the child of an old AST
+        ref0 = self.ctx.getSymbolicExpression(0)
+        ref0.getAst().setChild(0, self.ast.bv(10, 64))
+        self.assertEqual(rax.getAst().evaluate(), 13)
+
+
+
+class TestIssue818(unittest.TestCase):
+
+    """Testing #818."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+
+    def test_issue1(self):
+        var1 = self.ctx.symbolizeRegister(self.ctx.registers.al)
+        var2 = self.ctx.symbolizeRegister(self.ctx.registers.ah)
+        v1 = self.ast.variable(var1)
+        v2 = self.ast.variable(var2)
+        rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
+        self.assertEqual(str(self.ast.unroll(rax.getAst())), '(concat ((_ extract 63 16) (concat ((_ extract 63 8) (_ bv0 64)) SymVar_0)) (concat SymVar_1 ((_ extract 7 0) (concat ((_ extract 63 8) (_ bv0 64)) SymVar_0))))')
+
+    def test_issue2(self):
+        var1 = self.ctx.symbolizeRegister(self.ctx.registers.al)
+        var2 = self.ctx.symbolizeRegister(self.ctx.registers.ah)
+
+        inst = Instruction(b"\xff\xc0") # inc rax
+        self.ctx.processing(inst)
+
+        ref1 = self.ctx.getSymbolicExpression(2) # res of 'inc rax'
+        m = self.ctx.getModel(ref1.getAst() == 0xdead)
+        self.assertEqual(m[0].getValue(), 0xac)
+        self.assertEqual(m[1].getValue(), 0xde)
