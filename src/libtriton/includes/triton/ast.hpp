@@ -119,13 +119,13 @@ namespace triton {
         TRITON_EXPORT bool isLogical(void) const;
 
         //! Returns true if the node's concrete value and value type match those of the second one.
-        TRITON_EXPORT bool hasSameConcreteValueAndTypeAs(const SharedAbstractNode&) const;
+        TRITON_EXPORT bool hasSameConcreteValueAndTypeAs(const SharedAbstractNode& other) const;
 
         //! Returns true if the node's value, value type and properties match those of the second one.
-        TRITON_EXPORT bool canReplaceNodeWithoutUpdate(const SharedAbstractNode&) const;
+        TRITON_EXPORT bool canReplaceNodeWithoutUpdate(const SharedAbstractNode& other) const;
 
         //! Returns true if the current tree is equal to the second one.
-        TRITON_EXPORT bool equalTo(const SharedAbstractNode&) const;
+        TRITON_EXPORT bool equalTo(const SharedAbstractNode& other) const;
 
         //! Evaluates the tree.
         TRITON_EXPORT virtual triton::uint512 evaluate(void) const;
@@ -160,8 +160,8 @@ namespace triton {
         //! Returns the string representation of the node.
         TRITON_EXPORT std::string str(void) const;
 
-        //! Init stuffs like size and eval.
-        TRITON_EXPORT virtual void init(void) = 0;
+        //! Init properties of the node. If withParents is true, init also properties of parents
+        TRITON_EXPORT virtual void init(bool withParents=false) = 0;
 
         //! Returns the has of the tree. The hash is computed recursively on the whole tree.
         TRITON_EXPORT virtual triton::uint512 hash(triton::uint32 deep) const = 0;
@@ -172,7 +172,7 @@ namespace triton {
     class AssertNode : public AbstractNode {
       public:
         TRITON_EXPORT AssertNode(const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -181,7 +181,7 @@ namespace triton {
     class BvaddNode : public AbstractNode {
       public:
         TRITON_EXPORT BvaddNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -190,7 +190,7 @@ namespace triton {
     class BvandNode : public AbstractNode {
       public:
         TRITON_EXPORT BvandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -199,7 +199,7 @@ namespace triton {
     class BvashrNode : public AbstractNode {
       public:
         TRITON_EXPORT BvashrNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -208,7 +208,7 @@ namespace triton {
     class BvlshrNode : public AbstractNode {
       public:
         TRITON_EXPORT BvlshrNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -217,7 +217,7 @@ namespace triton {
     class BvmulNode : public AbstractNode {
       public:
         TRITON_EXPORT BvmulNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -226,7 +226,7 @@ namespace triton {
     class BvnandNode : public AbstractNode {
       public:
         TRITON_EXPORT BvnandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -235,7 +235,7 @@ namespace triton {
     class BvnegNode : public AbstractNode {
       public:
         TRITON_EXPORT BvnegNode(const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -244,7 +244,7 @@ namespace triton {
     class BvnorNode : public AbstractNode {
       public:
         TRITON_EXPORT BvnorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -253,7 +253,7 @@ namespace triton {
     class BvnotNode : public AbstractNode {
       public:
         TRITON_EXPORT BvnotNode(const SharedAbstractNode& expr1);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -262,7 +262,7 @@ namespace triton {
     class BvorNode : public AbstractNode {
       public:
         TRITON_EXPORT BvorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -272,7 +272,7 @@ namespace triton {
       public:
         TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, triton::uint32 rot);
         TRITON_EXPORT BvrolNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -282,7 +282,7 @@ namespace triton {
       public:
         TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, triton::uint32 rot);
         TRITON_EXPORT BvrorNode(const SharedAbstractNode& expr, const SharedAbstractNode& rot);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -291,7 +291,7 @@ namespace triton {
     class BvsdivNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsdivNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -300,7 +300,7 @@ namespace triton {
     class BvsgeNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsgeNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -309,7 +309,7 @@ namespace triton {
     class BvsgtNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsgtNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -318,7 +318,7 @@ namespace triton {
     class BvshlNode : public AbstractNode {
       public:
         TRITON_EXPORT BvshlNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -327,7 +327,7 @@ namespace triton {
     class BvsleNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsleNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -336,7 +336,7 @@ namespace triton {
     class BvsltNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsltNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -345,7 +345,7 @@ namespace triton {
     class BvsmodNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsmodNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -354,7 +354,7 @@ namespace triton {
     class BvsremNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsremNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -363,7 +363,7 @@ namespace triton {
     class BvsubNode : public AbstractNode {
       public:
         TRITON_EXPORT BvsubNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -372,7 +372,7 @@ namespace triton {
     class BvudivNode : public AbstractNode {
       public:
         TRITON_EXPORT BvudivNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -381,7 +381,7 @@ namespace triton {
     class BvugeNode : public AbstractNode {
       public:
         TRITON_EXPORT BvugeNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -390,7 +390,7 @@ namespace triton {
     class BvugtNode : public AbstractNode {
       public:
         TRITON_EXPORT BvugtNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -399,7 +399,7 @@ namespace triton {
     class BvuleNode : public AbstractNode {
       public:
         TRITON_EXPORT BvuleNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -408,7 +408,7 @@ namespace triton {
     class BvultNode : public AbstractNode {
       public:
         TRITON_EXPORT BvultNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -417,7 +417,7 @@ namespace triton {
     class BvuremNode : public AbstractNode {
       public:
         TRITON_EXPORT BvuremNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -426,7 +426,7 @@ namespace triton {
     class BvxnorNode : public AbstractNode {
       public:
         TRITON_EXPORT BvxnorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -435,7 +435,7 @@ namespace triton {
     class BvxorNode : public AbstractNode {
       public:
         TRITON_EXPORT BvxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -444,7 +444,7 @@ namespace triton {
     class BvNode : public AbstractNode {
       public:
         TRITON_EXPORT BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -458,7 +458,7 @@ namespace triton {
             this->addChild(expr);
         }
 
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -473,7 +473,7 @@ namespace triton {
         }
 
         TRITON_EXPORT ConcatNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -482,7 +482,7 @@ namespace triton {
     class DeclareNode : public AbstractNode {
       public:
         TRITON_EXPORT DeclareNode(const SharedAbstractNode& var);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -491,7 +491,7 @@ namespace triton {
     class DistinctNode : public AbstractNode {
       public:
         TRITON_EXPORT DistinctNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -500,7 +500,7 @@ namespace triton {
     class EqualNode : public AbstractNode {
       public:
         TRITON_EXPORT EqualNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -509,7 +509,7 @@ namespace triton {
     class ExtractNode : public AbstractNode {
       public:
         TRITON_EXPORT ExtractNode(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -518,7 +518,7 @@ namespace triton {
     class IffNode : public AbstractNode {
       public:
         TRITON_EXPORT IffNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -530,7 +530,7 @@ namespace triton {
 
       public:
         TRITON_EXPORT IntegerNode(const triton::uint512& value, const SharedAstContext& ctxt);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT triton::uint512 getInteger(void);
     };
@@ -540,7 +540,7 @@ namespace triton {
     class IteNode : public AbstractNode {
       public:
         TRITON_EXPORT IteNode(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -555,7 +555,7 @@ namespace triton {
         }
 
         TRITON_EXPORT LandNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -564,7 +564,7 @@ namespace triton {
     class LetNode : public AbstractNode {
       public:
         TRITON_EXPORT LetNode(std::string alias, const SharedAbstractNode& expr2, const SharedAbstractNode& expr3);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -573,7 +573,7 @@ namespace triton {
     class LnotNode : public AbstractNode {
       public:
         TRITON_EXPORT LnotNode(const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -588,7 +588,7 @@ namespace triton {
         }
 
         TRITON_EXPORT LorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -603,7 +603,7 @@ namespace triton {
       }
 
       TRITON_EXPORT LxorNode(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
-      TRITON_EXPORT void init(void);
+      TRITON_EXPORT void init(bool withParents=false);
       TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -615,7 +615,7 @@ namespace triton {
 
       public:
         TRITON_EXPORT ReferenceNode(const triton::engines::symbolic::SharedSymbolicExpression& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& getSymbolicExpression(void) const;
     };
@@ -628,7 +628,7 @@ namespace triton {
 
       public:
         TRITON_EXPORT StringNode(std::string value, const SharedAstContext& ctxt);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT std::string getString(void);
     };
@@ -638,7 +638,7 @@ namespace triton {
     class SxNode : public AbstractNode {
       public:
         TRITON_EXPORT SxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 
@@ -650,7 +650,7 @@ namespace triton {
 
       public:
         TRITON_EXPORT VariableNode(const triton::engines::symbolic::SharedSymbolicVariable& symVar, const SharedAstContext& ctxt);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicVariable& getSymbolicVariable(void);
     };
@@ -661,7 +661,7 @@ namespace triton {
       public:
         //! Create a zero extend of expr to sizeExt bits
         TRITON_EXPORT ZxNode(triton::uint32 sizeExt, const SharedAbstractNode& expr);
-        TRITON_EXPORT void init(void);
+        TRITON_EXPORT void init(bool withParents=false);
         TRITON_EXPORT triton::uint512 hash(triton::uint32 deep) const;
     };
 

@@ -155,17 +155,23 @@ namespace triton {
 
 
       void SymbolicExpression::setAst(const triton::ast::SharedAbstractNode& node) {
-        auto old = this->ast;
+        triton::ast::SharedAbstractNode old = this->ast;
+
+        /* If node is the same as the old one, just do not set the ast. */
         if (node == old)
           return;
 
         if (old) {
+          /* Link old parents with the new node */
           for (auto sp : old->getParents()) {
             node->setParent(sp.get());
           }
         }
 
+        /* Set the new ast */
         this->ast = node;
+
+        /* Do not init parents if the new node has same properties that the old one */
         if (!old || !old->canReplaceNodeWithoutUpdate(ast)) {
           this->ast->initParents();
         }

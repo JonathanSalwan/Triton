@@ -105,16 +105,19 @@ namespace triton {
       return false;
     }
 
+
     bool AbstractNode::hasSameConcreteValueAndTypeAs(const SharedAbstractNode& other) const {
       return (this->evaluate() == other->evaluate()) &&
              (this->getBitvectorSize() == other->getBitvectorSize()) &&
              (this->isLogical() == other->isLogical());
     }
 
+
     bool AbstractNode::canReplaceNodeWithoutUpdate(const SharedAbstractNode& other) const {
-      return this->hasSameConcreteValueAndTypeAs(other) &&
+      return (this->hasSameConcreteValueAndTypeAs(other)) &&
              (this->isSymbolized() == other->isSymbolized());
     }
+
 
     bool AbstractNode::equalTo(const SharedAbstractNode& other) const {
       return (this->evaluate() == other->evaluate()) &&
@@ -248,7 +251,7 @@ namespace triton {
     }
 
 
-    void AssertNode::init(void) {
+    void AssertNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("AssertNode::init(): Must take at least one child.");
 
@@ -264,6 +267,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -286,7 +294,7 @@ namespace triton {
     }
 
 
-    void BvaddNode::init(void) {
+    void BvaddNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvaddNode::init(): Must take at least two children.");
 
@@ -302,6 +310,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -324,7 +337,7 @@ namespace triton {
     }
 
 
-    void BvandNode::init(void) {
+    void BvandNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvandNode::init(): Must take at least two children.");
 
@@ -340,6 +353,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -363,7 +381,7 @@ namespace triton {
     }
 
 
-    void BvashrNode::init(void) {
+    void BvashrNode::init(bool withParents) {
       triton::uint32 shift  = 0;
       triton::uint512 mask  = 0;
       triton::uint512 value = 0;
@@ -412,6 +430,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -433,7 +456,7 @@ namespace triton {
     }
 
 
-    void BvlshrNode::init(void) {
+    void BvlshrNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvlshrNode::init(): Must take at least two children.");
 
@@ -449,6 +472,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -471,7 +499,7 @@ namespace triton {
     }
 
 
-    void BvmulNode::init(void) {
+    void BvmulNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvmulNode::init(): Must take at least two children.");
 
@@ -487,6 +515,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -509,7 +542,7 @@ namespace triton {
     }
 
 
-    void BvnandNode::init(void) {
+    void BvnandNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvnandNode::init(): Must take at least two children.");
 
@@ -525,6 +558,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -546,7 +584,7 @@ namespace triton {
     }
 
 
-    void BvnegNode::init(void) {
+    void BvnegNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("BvnegNode::init(): Must take at least one child.");
 
@@ -559,6 +597,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -581,7 +624,7 @@ namespace triton {
     }
 
 
-    void BvnorNode::init(void) {
+    void BvnorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvnorNode::init(): Must take at least two children.");
 
@@ -597,6 +640,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -618,7 +666,7 @@ namespace triton {
     }
 
 
-    void BvnotNode::init(void) {
+    void BvnotNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("BvnotNode::init(): Must take at least one child.");
 
@@ -631,6 +679,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -653,7 +706,7 @@ namespace triton {
     }
 
 
-    void BvorNode::init(void) {
+    void BvorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvorNode::init(): Must take at least two children.");
 
@@ -669,6 +722,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -695,7 +753,7 @@ namespace triton {
     }
 
 
-    void BvrolNode::init(void) {
+    void BvrolNode::init(bool withParents) {
       triton::uint32 rot    = 0;
       triton::uint512 value = 0;
 
@@ -718,6 +776,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -744,7 +807,7 @@ namespace triton {
     }
 
 
-    void BvrorNode::init(void) {
+    void BvrorNode::init(bool withParents) {
       triton::uint32 rot    = 0;
       triton::uint512 value = 0;
 
@@ -768,6 +831,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -789,7 +857,7 @@ namespace triton {
     }
 
 
-    void BvsdivNode::init(void) {
+    void BvsdivNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -819,6 +887,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -840,7 +913,7 @@ namespace triton {
     }
 
 
-    void BvsgeNode::init(void) {
+    void BvsgeNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -864,6 +937,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -885,7 +963,7 @@ namespace triton {
     }
 
 
-    void BvsgtNode::init(void) {
+    void BvsgtNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -909,6 +987,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -930,7 +1013,7 @@ namespace triton {
     }
 
 
-    void BvshlNode::init(void) {
+    void BvshlNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvshlNode::init(): Must take at least two children.");
 
@@ -946,6 +1029,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -968,7 +1056,7 @@ namespace triton {
     }
 
 
-    void BvsleNode::init(void) {
+    void BvsleNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -992,6 +1080,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1013,7 +1106,7 @@ namespace triton {
     }
 
 
-    void BvsltNode::init(void) {
+    void BvsltNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -1037,6 +1130,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1058,7 +1156,7 @@ namespace triton {
     }
 
 
-    void BvsmodNode::init(void) {
+    void BvsmodNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -1086,6 +1184,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1107,7 +1210,7 @@ namespace triton {
     }
 
 
-    void BvsremNode::init(void) {
+    void BvsremNode::init(bool withParents) {
       triton::sint512 op1Signed = 0;
       triton::sint512 op2Signed = 0;
 
@@ -1135,6 +1238,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1156,7 +1264,7 @@ namespace triton {
     }
 
 
-    void BvsubNode::init(void) {
+    void BvsubNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvsubNode::init(): Must take at least two children.");
 
@@ -1172,6 +1280,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1194,7 +1307,7 @@ namespace triton {
     }
 
 
-    void BvudivNode::init(void) {
+    void BvudivNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvudivNode::init(): Must take at least two children.");
 
@@ -1214,6 +1327,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1236,7 +1354,7 @@ namespace triton {
     }
 
 
-    void BvugeNode::init(void) {
+    void BvugeNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvugeNode::init(): Must take at least two children.");
 
@@ -1252,6 +1370,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1274,7 +1397,7 @@ namespace triton {
     }
 
 
-    void BvugtNode::init(void) {
+    void BvugtNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvugtNode::init(): Must take at least two children.");
 
@@ -1290,6 +1413,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1312,7 +1440,7 @@ namespace triton {
     }
 
 
-    void BvuleNode::init(void) {
+    void BvuleNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvuleNode::init(): Must take at least two children.");
 
@@ -1328,6 +1456,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1350,7 +1483,7 @@ namespace triton {
     }
 
 
-    void BvultNode::init(void) {
+    void BvultNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvultNode::init(): Must take at least two children.");
 
@@ -1366,6 +1499,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1388,7 +1526,7 @@ namespace triton {
     }
 
 
-    void BvuremNode::init(void) {
+    void BvuremNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvuremNode::init(): Must take at least two children.");
 
@@ -1408,6 +1546,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1430,7 +1573,7 @@ namespace triton {
     }
 
 
-    void BvxnorNode::init(void) {
+    void BvxnorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvxnorNode::init(): Must take at least two children.");
 
@@ -1446,6 +1589,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1468,7 +1616,7 @@ namespace triton {
     }
 
 
-    void BvxorNode::init(void) {
+    void BvxorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvxorNode::init(): Must take at least two children.");
 
@@ -1484,6 +1632,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1506,7 +1659,7 @@ namespace triton {
     }
 
 
-    void BvNode::init(void) {
+    void BvNode::init(bool withParents) {
       triton::uint512 value = 0;
       triton::uint32 size   = 0;
 
@@ -1535,6 +1688,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1550,7 +1708,7 @@ namespace triton {
     /* ====== compound */
 
 
-    void CompoundNode::init(void) {
+    void CompoundNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
 
@@ -1563,6 +1721,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1585,7 +1748,7 @@ namespace triton {
     }
 
 
-    void ConcatNode::init(void) {
+    void ConcatNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("ConcatNode::init(): Must take at least two children.");
 
@@ -1608,6 +1771,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1628,7 +1796,7 @@ namespace triton {
     }
 
 
-    void DeclareNode::init(void) {
+    void DeclareNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("DeclareNode::init(): Must take at least one child.");
 
@@ -1644,6 +1812,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1666,7 +1839,7 @@ namespace triton {
     }
 
 
-    void DistinctNode::init(void) {
+    void DistinctNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("DistinctNode::init(): Must take at least two children.");
 
@@ -1682,6 +1855,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1704,7 +1882,7 @@ namespace triton {
     }
 
 
-    void EqualNode::init(void) {
+    void EqualNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("EqualNode::init(): Must take at least two children.");
 
@@ -1720,6 +1898,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1743,7 +1926,7 @@ namespace triton {
     }
 
 
-    void ExtractNode::init(void) {
+    void ExtractNode::init(bool withParents) {
       triton::uint32 high = 0;
       triton::uint32 low  = 0;
 
@@ -1772,6 +1955,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1793,7 +1981,7 @@ namespace triton {
     }
 
 
-    void IffNode::init(void) {
+    void IffNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("IffNode::init(): Must take at least two children.");
 
@@ -1816,6 +2004,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1836,11 +2029,16 @@ namespace triton {
     }
 
 
-    void IntegerNode::init(void) {
+    void IntegerNode::init(bool withParents) {
       /* Init attributes */
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1865,7 +2063,7 @@ namespace triton {
     }
 
 
-    void IteNode::init(void) {
+    void IteNode::init(bool withParents) {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("IteNode::init(): Must take at least three children.");
 
@@ -1889,6 +2087,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -1910,7 +2113,7 @@ namespace triton {
     }
 
 
-    void LandNode::init(void) {
+    void LandNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two children.");
 
@@ -1927,6 +2130,11 @@ namespace triton {
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LandNode::init(): Must take logical nodes as arguments.");
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1950,7 +2158,7 @@ namespace triton {
     }
 
 
-    void LetNode::init(void) {
+    void LetNode::init(bool withParents) {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("LetNode::init(): Must take at least three children.");
 
@@ -1966,6 +2174,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -1987,7 +2200,7 @@ namespace triton {
     }
 
 
-    void LnotNode::init(void) {
+    void LnotNode::init(bool withParents) {
       if (this->children.size() < 1)
         throw triton::exceptions::Ast("LnotNode::init(): Must take at least one child.");
 
@@ -2003,6 +2216,11 @@ namespace triton {
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -2025,7 +2243,7 @@ namespace triton {
     }
 
 
-    void LorNode::init(void) {
+    void LorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LorNode::init(): Must take at least two children.");
 
@@ -2042,6 +2260,11 @@ namespace triton {
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LorNode::init(): Must take logical nodes as arguments.");
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -2063,7 +2286,8 @@ namespace triton {
       this->addChild(expr2);
     }
 
-    void LxorNode::init(void) {
+
+    void LxorNode::init(bool withParents) {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("LxorNode::init(): Must take at least two children.");
 
@@ -2080,6 +2304,11 @@ namespace triton {
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 
@@ -2102,7 +2331,7 @@ namespace triton {
     }
 
 
-    void ReferenceNode::init(void) {
+    void ReferenceNode::init(bool withParents) {
       /* Init attributes */
       this->eval        = this->expr->getAst()->evaluate();
       this->logical     = this->expr->getAst()->isLogical();
@@ -2110,6 +2339,11 @@ namespace triton {
       this->symbolized  = this->expr->getAst()->isSymbolized();
 
       this->expr->getAst()->setParent(this);
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -2132,11 +2366,16 @@ namespace triton {
     }
 
 
-    void StringNode::init(void) {
+    void StringNode::init(bool withParents) {
       /* Init attributes */
       this->eval        = 0;
       this->size        = 0;
       this->symbolized  = false;
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -2166,7 +2405,7 @@ namespace triton {
     }
 
 
-    void SxNode::init(void) {
+    void SxNode::init(bool withParents) {
       triton::uint32 sizeExt = 0;
 
       if (this->children.size() < 2)
@@ -2190,6 +2429,11 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
       }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -2211,10 +2455,15 @@ namespace triton {
     }
 
 
-    void VariableNode::init(void) {
+    void VariableNode::init(bool withParents) {
       this->size        = this->symVar->getSize();
       this->eval        = this->ctxt->getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
     }
 
 
@@ -2245,7 +2494,7 @@ namespace triton {
     }
 
 
-    void ZxNode::init(void) {
+    void ZxNode::init(bool withParents) {
       triton::uint32 sizeExt = 0;
 
       if (this->children.size() < 2)
@@ -2268,6 +2517,11 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
       }
     }
 

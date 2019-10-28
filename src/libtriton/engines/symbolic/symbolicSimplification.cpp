@@ -200,8 +200,9 @@ namespace triton {
                 worklist.push_back(schild);
               }
             }
-            if (needs_update)
-              ast->init();
+            if (needs_update) {
+              ast->init(true);
+            }
           }
         }
 
