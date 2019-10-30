@@ -1145,7 +1145,30 @@ namespace triton {
 
 
       void SymbolicEngine::setConcreteVariableValue(const SharedSymbolicVariable& symVar, const triton::uint512& value) {
+        triton::uint512 max = -1;
+
+        /* Check if the value is too big */
+        max = max >> (512 - symVar->getSize());
+        if (value > max) {
+          throw triton::exceptions::SymbolicEngine("SymbolicEngine::setConcreteVariableValue(): Can not set this value (too big) to this symbolic variable.");
+        }
+
+        /* Update the symbolic variable value */
         this->astCtxt->updateVariable(symVar->getName(), value);
+
+        /* Synchronize concrete state */
+        if (symVar->getType() == REGISTER_VARIABLE) {
+          const triton::arch::Register& reg = this->architecture->getRegister(static_cast<triton::arch::register_e>(symVar->getOrigin()));
+          this->architecture->setConcreteRegisterValue(reg, value);
+        }
+
+        else if (symVar->getType() == MEMORY_VARIABLE && symVar->getSize() && !(symVar->getSize() % BYTE_SIZE_BIT)) {
+          triton::uint64 addr            = symVar->getOrigin();
+          triton::uint32 size            = symVar->getSize() / BYTE_SIZE_BIT;
+          triton::arch::MemoryAccess mem = triton::arch::MemoryAccess(addr, size);
+
+          this->architecture->setConcreteMemoryValue(mem, value);
+        }
       }
 
     }; /* symbolic namespace */

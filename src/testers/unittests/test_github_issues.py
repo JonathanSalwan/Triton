@@ -347,3 +347,40 @@ class TestIssue818(unittest.TestCase):
         m = self.ctx.getModel(ref1.getAst() == 0xdead)
         self.assertEqual(m[0].getValue(), 0xac)
         self.assertEqual(m[1].getValue(), 0xde)
+
+
+class TestIssue823(unittest.TestCase):
+
+    """Testing #823."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_reg(self):
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, 0x1)
+        var = self.ctx.symbolizeRegister(self.ctx.registers.rax)
+
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rax), 0x1)
+        self.assertEqual(self.ctx.getSymbolicRegisterValue(self.ctx.registers.rax), 0x1)
+        self.assertEqual(self.ctx.getConcreteVariableValue(var), 0x1)
+
+        self.ctx.setConcreteVariableValue(var, 0x2)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rax), 0x2)
+        self.assertEqual(self.ctx.getSymbolicRegisterValue(self.ctx.registers.rax), 0x2)
+        self.assertEqual(self.ctx.getConcreteVariableValue(var), 0x2)
+
+    def test_mem(self):
+        mem = MemoryAccess(0x100, 4)
+        self.ctx.setConcreteMemoryValue(mem, 0x11223344)
+        var = self.ctx.symbolizeMemory(mem)
+
+        self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0x11223344)
+        self.assertEqual(self.ctx.getSymbolicMemoryValue(mem), 0x11223344)
+        self.assertEqual(self.ctx.getConcreteVariableValue(var), 0x11223344)
+
+        self.ctx.setConcreteVariableValue(var, 0x55667788)
+        self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0x55667788)
+        self.assertEqual(self.ctx.getSymbolicMemoryValue(mem), 0x55667788)
+        self.assertEqual(self.ctx.getConcreteVariableValue(var), 0x55667788)
