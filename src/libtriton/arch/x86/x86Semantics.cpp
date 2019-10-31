@@ -13405,7 +13405,7 @@ namespace triton {
 
         /* Spread taint */
         /* clear taint if the registers are the same */
-        if (src.getRegister() == dst.getRegister())
+        if (dst.getType() == OP_REG && src.getRegister() == dst.getRegister())
           this->taintEngine->setTaint(src, false);
         else
           expr->isTainted = this->taintEngine->taintUnion(dst, src);
