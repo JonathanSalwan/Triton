@@ -78,6 +78,8 @@ namespace triton {
       this->disassembly.str(other.disassembly.str());
     }
 
+    Instruction::~Instruction() {
+    }
 
     triton::uint32 Instruction::getThreadId(void) const {
       return this->tid;
