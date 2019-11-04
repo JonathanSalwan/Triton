@@ -384,3 +384,21 @@ class TestIssue823(unittest.TestCase):
         self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0x55667788)
         self.assertEqual(self.ctx.getSymbolicMemoryValue(mem), 0x55667788)
         self.assertEqual(self.ctx.getConcreteVariableValue(var), 0x55667788)
+
+
+class TestIssue825(unittest.TestCase):
+    """Testing #825."""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+    
+    def test_issue(self):
+        # taint eax
+        self.ctx.setTaintRegister(self.ctx.registers.eax, True)
+        # xor eax, eax
+        inst = Instruction(b"\x31\xc0")
+        self.ctx.processing(inst)
+        # after execution eax should not longer be tainted
+        self.assertFalse(self.ctx.isRegisterTainted(self.ctx.registers.eax))
+

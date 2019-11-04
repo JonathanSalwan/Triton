@@ -13404,7 +13404,11 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XOR operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        /* clear taint if the registers are the same */
+        if (dst.getType() == OP_REG && src.getRegister() == dst.getRegister())
+          this->taintEngine->setTaint(src, false);
+        else
+          expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update symbolic flags */
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
