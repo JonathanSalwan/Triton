@@ -160,6 +160,9 @@ namespace triton {
           //! Constructor by copy.
           TRITON_EXPORT SymbolicEngine(const SymbolicEngine& other);
 
+          //! Destructor.
+          TRITON_EXPORT ~SymbolicEngine();
+
           //! Copies a SymbolicEngine.
           TRITON_EXPORT SymbolicEngine& operator=(const SymbolicEngine& other);
 

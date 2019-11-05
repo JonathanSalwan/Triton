@@ -62,6 +62,9 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT TritonToZ3Ast(bool eval=true);
 
+        //! Destructor.
+        TRITON_EXPORT ~TritonToZ3Ast();
+
         //! Converts to Z3's AST
         TRITON_EXPORT z3::expr convert(const triton::ast::SharedAbstractNode& node);
     };

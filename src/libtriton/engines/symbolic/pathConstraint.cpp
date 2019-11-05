@@ -23,6 +23,12 @@ namespace triton {
       }
 
 
+      PathConstraint::~PathConstraint() {
+        /* See #828: Release ownership before calling container destructor */
+        this->branches.clear();
+      }
+
+
       PathConstraint& PathConstraint::operator=(const PathConstraint &other) {
         this->branches = other.branches;
         return *this;

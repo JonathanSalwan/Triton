@@ -24,6 +24,13 @@ namespace triton {
     }
 
 
+    TritonToZ3Ast::~TritonToZ3Ast() {
+      /* See #828: Release ownership before calling container destructor */
+      this->symbols.clear();
+      this->variables.clear();
+    }
+
+
     triton::__uint TritonToZ3Ast::getUintValue(const z3::expr& expr) {
       if (!expr.is_int())
         throw triton::exceptions::Exception("TritonToZ3Ast::getUintValue(): The ast is not a numerical value.");

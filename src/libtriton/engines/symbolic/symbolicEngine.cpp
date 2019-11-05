@@ -62,6 +62,13 @@ namespace triton {
       }
 
 
+      SymbolicEngine::~SymbolicEngine() {
+        /* See #828: Release ownership before calling container destructor */
+        this->memoryReference.clear();
+        this->symbolicReg.clear();
+      }
+
+
       SymbolicEngine& SymbolicEngine::operator=(const SymbolicEngine& other) {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);

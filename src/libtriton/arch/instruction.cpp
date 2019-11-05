@@ -44,6 +44,17 @@ namespace triton {
     }
 
 
+    Instruction::~Instruction() {
+      /* See #828: Release ownership before calling container destructor */
+      this->loadAccess.clear();
+      this->readImmediates.clear();
+      this->readRegisters.clear();
+      this->storeAccess.clear();
+      this->symbolicExpressions.clear();
+      this->writtenRegisters.clear();
+    }
+
+
     Instruction& Instruction::operator=(const Instruction& other) {
       this->copy(other);
       return *this;
@@ -78,8 +89,6 @@ namespace triton {
       this->disassembly.str(other.disassembly.str());
     }
 
-    Instruction::~Instruction() {
-    }
 
     triton::uint32 Instruction::getThreadId(void) const {
       return this->tid;

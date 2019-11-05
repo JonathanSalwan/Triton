@@ -38,6 +38,8 @@ namespace triton {
 
 
     AbstractNode::~AbstractNode() {
+      /* See #828: Release ownership before calling container destructor */
+      this->children.clear();
     }
 
 
