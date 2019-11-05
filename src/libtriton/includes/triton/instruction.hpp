@@ -128,6 +128,9 @@ namespace triton {
 
         //! Copies an Instruction.
         TRITON_EXPORT Instruction& operator=(const Instruction& other);
+        
+        //! Destructor.
+        TRITON_EXPORT ~Instruction();
 
         //! Returns the thread id of the instruction.
         TRITON_EXPORT triton::uint32 getThreadId(void) const;
