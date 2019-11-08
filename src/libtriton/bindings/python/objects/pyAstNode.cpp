@@ -210,7 +210,7 @@ namespace triton {
 
       static PyObject* AstNode_getHash(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint512(PyAstNode_AsAstNode(self)->hash(1));
+          return PyLong_FromUint512(PyAstNode_AsAstNode(self)->getHash());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -386,8 +386,8 @@ namespace triton {
             b->ob_type->tp_name);
           return -1;
         }
-        auto ha = PyAstNode_AsAstNode(a)->hash(1);
-        auto hb = PyAstNode_AsAstNode(b)->hash(1);
+        auto ha = PyAstNode_AsAstNode(a)->getHash();
+        auto hb = PyAstNode_AsAstNode(b)->getHash();
         return (ha == hb ? 0 : (ha > hb ? 1 : -1));
       }
       #endif

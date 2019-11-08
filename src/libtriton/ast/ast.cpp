@@ -30,9 +30,11 @@ namespace triton {
     AbstractNode::AbstractNode(triton::ast::ast_e type, const SharedAstContext& ctxt) {
       this->ctxt        = ctxt;
       this->eval        = 0;
+      this->hash        = 0;
+      this->logical     = false;
+      this->level       = 1;
       this->size        = 0;
       this->symbolized  = false;
-      this->logical     = false;
       this->type        = type;
     }
 
@@ -124,12 +126,23 @@ namespace triton {
     bool AbstractNode::equalTo(const SharedAbstractNode& other) const {
       return (this->evaluate() == other->evaluate()) &&
              (this->getBitvectorSize() == other->getBitvectorSize()) &&
-             (this->hash(1) == other->hash(1));
+             (this->getHash() == other->getHash()) &&
+             (this->getLevel() == other->getLevel());
     }
 
 
     triton::uint512 AbstractNode::evaluate(void) const {
       return this->eval;
+    }
+
+
+    triton::uint512 AbstractNode::getHash(void) const {
+      return this->hash;
+    }
+
+
+    triton::uint32 AbstractNode::getLevel(void) const {
+      return this->level;
     }
 
 
@@ -261,29 +274,37 @@ namespace triton {
         throw triton::exceptions::Ast("AssertNode::init(): Must take a logical node as argument.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((this->children[0]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((this->children[0]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 AssertNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void AssertNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -304,29 +325,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvaddNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((this->children[0]->evaluate() + this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((this->children[0]->evaluate() + this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvaddNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvaddNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -347,31 +376,38 @@ namespace triton {
         throw triton::exceptions::Ast("BvandNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (this->children[0]->evaluate() & this->children[1]->evaluate());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (this->children[0]->evaluate() & this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
-    }
+    void BvandNode::initHash(void) {
+      triton::uint512 s = this->children.size();
 
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
+    }
 
 
     /* ====== bvashr (shift with sign extension fill) */
@@ -398,7 +434,8 @@ namespace triton {
       shift = this->children[1]->evaluate().convert_to<triton::uint32>();
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       /* Mask based on the sign */
@@ -431,21 +468,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvashrNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvashrNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -466,29 +510,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvlshrNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvlshrNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvlshrNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -509,29 +561,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvmulNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((this->children[0]->evaluate() * this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((this->children[0]->evaluate() * this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvmulNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvmulNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -552,29 +612,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvnandNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (~(this->children[0]->evaluate() & this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (~(this->children[0]->evaluate() & this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvnandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvnandNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -591,29 +659,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvnegNode::init(): Must take at least one child.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvnegNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvnegNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -634,29 +710,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvnorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (~(this->children[0]->evaluate() | this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (~(this->children[0]->evaluate() | this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvnorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvnorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -673,29 +757,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvnotNode::init(): Must take at least one child.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (~this->children[0]->evaluate() & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (~this->children[0]->evaluate() & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvnotNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvnotNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -716,29 +808,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (this->children[0]->evaluate() | this->children[1]->evaluate());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (this->children[0]->evaluate() | this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -769,30 +869,38 @@ namespace triton {
       value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      rot %= this->size;
-      this->eval = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      rot             %= this->size;
+      this->eval       = (((value << rot) | (value >> (this->size - rot))) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvrolNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvrolNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -823,30 +931,38 @@ namespace triton {
       value = this->children[0]->evaluate();
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      rot %= this->size;
-      this->eval = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      rot             %= this->size;
+      this->eval       = (((value >> rot) | (value << (this->size - rot))) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvrorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvrorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -874,7 +990,8 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       if (op2Signed == 0) {
@@ -888,21 +1005,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsdivNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsdivNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -930,29 +1054,37 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (op1Signed >= op2Signed);
+      this->size       = 1;
+      this->eval       = (op1Signed >= op2Signed);
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsgeNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsgeNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -980,29 +1112,37 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (op1Signed > op2Signed);
+      this->size       = 1;
+      this->eval       = (op1Signed > op2Signed);
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsgtNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsgtNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1023,29 +1163,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvshlNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvshlNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvshlNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1073,29 +1221,37 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (op1Signed <= op2Signed);
+      this->size       = 1;
+      this->eval       = (op1Signed <= op2Signed);
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsleNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsleNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1123,29 +1279,37 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (op1Signed < op2Signed);
+      this->size       = 1;
+      this->eval       = (op1Signed < op2Signed);
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsltNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsltNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1173,7 +1337,8 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
@@ -1185,21 +1350,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsmodNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsmodNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1227,7 +1399,8 @@ namespace triton {
       op2Signed = triton::ast::modularSignExtend(this->children[1].get());
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
@@ -1239,21 +1412,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsremNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsremNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1274,29 +1454,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvsubNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = ((this->children[0]->evaluate() - this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = ((this->children[0]->evaluate() - this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvsubNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvsubNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1317,7 +1505,8 @@ namespace triton {
         throw triton::exceptions::Ast("BvudivNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
@@ -1329,21 +1518,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvudivNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvudivNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1364,29 +1560,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvugeNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() >= this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() >= this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvugeNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvugeNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1407,29 +1611,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvugtNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() > this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() > this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvugtNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvugtNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1450,29 +1662,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvuleNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() <= this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() <= this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvuleNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvuleNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1493,29 +1713,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvultNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() < this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() < this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvultNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvultNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1536,7 +1764,8 @@ namespace triton {
         throw triton::exceptions::Ast("BvuremNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->level      = 1;
       this->symbolized = false;
 
       if (this->children[1]->evaluate() == 0)
@@ -1548,21 +1777,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvuremNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvuremNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1583,29 +1819,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvxnorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (~(this->children[0]->evaluate() ^ this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (~(this->children[0]->evaluate() ^ this->children[1]->evaluate()) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvxnorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvxnorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1626,29 +1870,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvxorNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = (this->children[0]->evaluate() ^ this->children[1]->evaluate());
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = (this->children[0]->evaluate() ^ this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvxorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void BvxorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1681,29 +1933,37 @@ namespace triton {
         throw triton::exceptions::Ast("BvNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
       /* Init attributes */
-      this->size = size;
-      this->eval = (value & this->getBitvectorMask());
+      this->size       = size;
+      this->eval       = (value & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 BvNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void BvNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1715,29 +1975,37 @@ namespace triton {
         throw triton::exceptions::Ast("CompoundNode::init(): Must take at least one child.");
 
       /* Init attributes */
-      this->size = 0;
-      this->eval = 0;
+      this->eval       = 0;
+      this->size       = 0;
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 CompoundNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void CompoundNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1755,8 +2023,9 @@ namespace triton {
         throw triton::exceptions::Ast("ConcatNode::init(): Must take at least two children.");
 
       /* Init attributes */
+      this->level      = 1;
       this->symbolized = false;
-      this->size = 0;
+      this->size       = 0;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->size += this->children[index]->getBitvectorSize();
       }
@@ -1772,21 +2041,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 ConcatNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void ConcatNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1806,29 +2082,37 @@ namespace triton {
         throw triton::exceptions::Ast("DeclareNode::init(): The child node must be a VARIABLE_NODE.");
 
       /* Init attributes */
-      this->size = this->children[0]->getBitvectorSize();
-      this->eval = this->children[0]->evaluate();
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = this->children[0]->evaluate();
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 DeclareNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void DeclareNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1849,29 +2133,37 @@ namespace triton {
         throw triton::exceptions::Ast("DistinctNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() != this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() != this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 DistinctNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void DistinctNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1892,29 +2184,37 @@ namespace triton {
         throw triton::exceptions::Ast("EqualNode::init(): Must take two nodes of same size.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = (this->children[0]->evaluate() == this->children[1]->evaluate());
+      this->size       = 1;
+      this->eval       = (this->children[0]->evaluate() == this->children[1]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 EqualNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void EqualNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1945,8 +2245,9 @@ namespace triton {
         throw triton::exceptions::Ast("ExtractNode::init(): The high bit must be greater than the low bit.");
 
       /* Init attributes */
-      this->size = ((high - low) + 1);
-      this->eval = ((this->children[2]->evaluate() >> low) & this->getBitvectorMask());
+      this->size       = ((high - low) + 1);
+      this->eval       = ((this->children[2]->evaluate() >> low) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       if (this->size > this->children[2]->getBitvectorSize() || high >= this->children[2]->getBitvectorSize())
@@ -1956,21 +2257,28 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 ExtractNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void ExtractNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -1997,29 +2305,37 @@ namespace triton {
       triton::uint512 P = this->children[0]->evaluate();
       triton::uint512 Q = this->children[1]->evaluate();
 
-      this->size = 1;
-      this->eval = (P && Q) || (!P && !Q);
+      this->size       = 1;
+      this->eval       = (P && Q) || (!P && !Q);
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 IffNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void IffNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2035,12 +2351,15 @@ namespace triton {
       /* Init attributes */
       this->eval        = 0;
       this->size        = 0;
+      this->level       = 1;
       this->symbolized  = false;
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
@@ -2049,9 +2368,8 @@ namespace triton {
     }
 
 
-    triton::uint512 IntegerNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->type ^ this->value;
-      return hash;
+    void IntegerNode::initHash(void) {
+      this->hash = this->type ^ this->value;
     }
 
 
@@ -2079,30 +2397,38 @@ namespace triton {
         throw triton::exceptions::Ast("IteNode::init(): Must take either two logical nodes or two bv nodes as 'then' and 'else' branches.");
 
       /* Init attributes */
-      this->size = this->children[1]->getBitvectorSize();
-      this->eval = this->children[0]->evaluate() ? this->children[1]->evaluate() : this->children[2]->evaluate();
-      this->logical = this->children[1]->isLogical();
+      this->size       = this->children[1]->getBitvectorSize();
+      this->eval       = this->children[0]->evaluate() ? this->children[1]->evaluate() : this->children[2]->evaluate();
+      this->logical    = this->children[1]->isLogical();
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 IteNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void IteNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2120,8 +2446,9 @@ namespace triton {
         throw triton::exceptions::Ast("LandNode::init(): Must take at least two children.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = 1;
+      this->size       = 1;
+      this->eval       = 1;
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
@@ -2129,6 +2456,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval && this->children[index]->evaluate();
+        this->level += this->children[index]->getLevel();
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LandNode::init(): Must take logical nodes as arguments.");
@@ -2138,15 +2466,21 @@ namespace triton {
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 LandNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void LandNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2168,29 +2502,37 @@ namespace triton {
         throw triton::exceptions::Ast("LetNode::init(): The alias node must be a STRING_NODE.");
 
       /* Init attributes */
-      this->size = this->children[2]->getBitvectorSize();
-      this->eval = this->children[2]->evaluate();
+      this->size       = this->children[2]->getBitvectorSize();
+      this->eval       = this->children[2]->evaluate();
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 LetNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void LetNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2207,14 +2549,16 @@ namespace triton {
         throw triton::exceptions::Ast("LnotNode::init(): Must take at least one child.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = !(this->children[0]->evaluate());
+      this->size       = 1;
+      this->eval       = !(this->children[0]->evaluate());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
@@ -2224,15 +2568,21 @@ namespace triton {
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 LnotNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void LnotNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2250,8 +2600,9 @@ namespace triton {
         throw triton::exceptions::Ast("LorNode::init(): Must take at least two children.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = 0;
+      this->size       = 1;
+      this->eval       = 0;
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
@@ -2259,6 +2610,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval || this->children[index]->evaluate();
+        this->level += this->children[index]->getLevel();
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LorNode::init(): Must take logical nodes as arguments.");
@@ -2268,15 +2620,21 @@ namespace triton {
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 LorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep+1);
-      return triton::ast::rotl(h, deep);
+    void LorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2294,8 +2652,9 @@ namespace triton {
         throw triton::exceptions::Ast("LxorNode::init(): Must take at least two children.");
 
       /* Init attributes */
-      this->size = 1;
-      this->eval = 0;
+      this->size       = 1;
+      this->eval       = 0;
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
@@ -2303,6 +2662,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = !this->eval != !this->children[index]->evaluate();
+        this->level += this->children[index]->getLevel();
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
@@ -2312,15 +2672,21 @@ namespace triton {
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 LxorNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * this->children[index]->hash(deep + 1);
-      return triton::ast::rotl(h, deep);
+    void LxorNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2339,6 +2705,7 @@ namespace triton {
       this->logical     = this->expr->getAst()->isLogical();
       this->size        = this->expr->getAst()->getBitvectorSize();
       this->symbolized  = this->expr->getAst()->isSymbolized();
+      this->level       = 1 + this->expr->getAst()->getLevel();
 
       this->expr->getAst()->setParent(this);
 
@@ -2346,12 +2713,13 @@ namespace triton {
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 ReferenceNode::hash(triton::uint32 deep) const {
-      triton::uint512 hash = this->type ^ this->expr->getId();
-      return hash;
+    void ReferenceNode::initHash(void) {
+      this->hash = this->expr->getAst()->getHash();
     }
 
 
@@ -2372,12 +2740,15 @@ namespace triton {
       /* Init attributes */
       this->eval        = 0;
       this->size        = 0;
+      this->level       = 1;
       this->symbolized  = false;
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
@@ -2386,15 +2757,15 @@ namespace triton {
     }
 
 
-    triton::uint512 StringNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type;
+    void StringNode::initHash(void) {
       triton::uint32 index = 1;
 
+      this->hash = this->type;
       for (std::string::const_iterator it=this->value.cbegin(); it != this->value.cend(); it++) {
-        h = triton::ast::rotl(*it ^ h ^ triton::ast::hash2n(h, index++), *it);
+        this->hash = triton::ast::rotl(*it ^ this->hash ^ triton::ast::hash2n(this->hash, index++), *it);
       }
 
-      return triton::ast::rotl(h, deep);
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2423,28 +2794,37 @@ namespace triton {
       if (size > MAX_BITS_SUPPORTED)
         throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
-      this->eval = ((((this->children[1]->evaluate() >> (this->children[1]->getBitvectorSize()-1)) == 0) ? this->children[1]->evaluate() : (this->children[1]->evaluate() | ~(this->children[1]->getBitvectorMask()))) & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
+      this->eval       = ((((this->children[1]->evaluate() >> (this->children[1]->getBitvectorSize()-1)) == 0) ?
+                          this->children[1]->evaluate() : (this->children[1]->evaluate() | ~(this->children[1]->getBitvectorMask()))) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 SxNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void SxNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2461,11 +2841,14 @@ namespace triton {
       this->size        = this->symVar->getSize();
       this->eval        = this->ctxt->getVariableValue(this->symVar->getName()) & this->getBitvectorMask();
       this->symbolized  = true;
+      this->level       = 1;
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
@@ -2474,16 +2857,16 @@ namespace triton {
     }
 
 
-    triton::uint512 VariableNode::hash(triton::uint32 deep) const {
-      triton::uint512 h    = this->type;
+    void VariableNode::initHash(void) {
       triton::uint32 index = 1;
       triton::usize  id    = this->symVar->getId();
 
+      this->hash = this->type;
       for (char c : this->symVar->getName()) {
-        h = triton::ast::rotl(c ^ h ^ triton::ast::hash2n(h, index++), id);
+        this->hash = triton::ast::rotl(c ^ this->hash ^ triton::ast::hash2n(this->hash, index++), id);
       }
 
-      return triton::ast::rotl(h, deep);
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
 
@@ -2512,28 +2895,36 @@ namespace triton {
       if (size > MAX_BITS_SUPPORTED)
         throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
 
-      this->eval = (this->children[1]->evaluate() & this->getBitvectorMask());
+      this->eval       = (this->children[1]->evaluate() & this->getBitvectorMask());
+      this->level      = 1;
       this->symbolized = false;
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
       }
 
       /* Init parents if needed */
       if (withParents) {
         this->initParents();
       }
+
+      this->initHash();
     }
 
 
-    triton::uint512 ZxNode::hash(triton::uint32 deep) const {
-      triton::uint512 h = this->type, s = this->children.size();
-      if (s) h = h * s;
-      for (triton::uint32 index = 0; index < this->children.size(); index++)
-        h = h * triton::ast::hash2n(this->children[index]->hash(deep+1), index+1);
-      return triton::ast::rotl(h, deep);
+    void ZxNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
     }
 
   }; /* ast namespace */
