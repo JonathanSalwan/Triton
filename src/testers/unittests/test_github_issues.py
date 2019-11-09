@@ -392,7 +392,7 @@ class TestIssue825(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-    
+
     def test_issue(self):
         # taint eax
         self.ctx.setTaintRegister(self.ctx.registers.eax, True)
@@ -401,4 +401,3 @@ class TestIssue825(unittest.TestCase):
         self.ctx.processing(inst)
         # after execution eax should not longer be tainted
         self.assertFalse(self.ctx.isRegisterTainted(self.ctx.registers.eax))
-
