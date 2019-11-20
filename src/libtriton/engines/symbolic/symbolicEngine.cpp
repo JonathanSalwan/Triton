@@ -610,27 +610,81 @@ namespace triton {
           case triton::arch::arm::ID_SHIFT_ROR:
             return this->astCtxt->bvror(node, this->astCtxt->bv(imm, node->getBitvectorSize()));
 
-          /* TODO (cnheitman): Add ID_SHIFT_RRX. */
+          case triton::arch::arm::ID_SHIFT_RRX: /* Arm32 only. */
+            return this->astCtxt->extract(
+                      node->getBitvectorSize(),
+                      1,
+                      this->astCtxt->bvror(
+                        this->astCtxt->concat(
+                          node,
+                          this->getOperandAst(this->architecture->getRegister(triton::arch::ID_REG_ARM32_C))
+                        ),
+                        1
+                      )
+                    );
 
-          case triton::arch::arm::ID_SHIFT_ASR_REG:
-            return this->astCtxt->bvashr(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+          case triton::arch::arm::ID_SHIFT_ASR_REG: /* Arm32 only. */
+            return this->astCtxt->bvashr(
+                      node,
+                      this->astCtxt->zx(
+                        this->architecture->getRegister(reg).getBitSize() - 8,
+                        this->astCtxt->extract(
+                          7,
+                          0,
+                          this->getRegisterAst(this->architecture->getRegister(reg))
+                        )
+                      )
+                    );
 
-          case triton::arch::arm::ID_SHIFT_LSL_REG:
-            return this->astCtxt->bvshl(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+          case triton::arch::arm::ID_SHIFT_LSL_REG: /* Arm32 only. */
+            return this->astCtxt->bvshl(
+                      node,
+                      this->astCtxt->zx(
+                        this->architecture->getRegister(reg).getBitSize() - 8,
+                        this->astCtxt->extract(
+                          7,
+                          0,
+                          this->getRegisterAst(this->architecture->getRegister(reg))
+                        )
+                      )
+                    );
 
-          case triton::arch::arm::ID_SHIFT_LSR_REG:
-            return this->astCtxt->bvlshr(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+          case triton::arch::arm::ID_SHIFT_LSR_REG: /* Arm32 only. */
+            return this->astCtxt->bvlshr(
+                      node,
+                      this->astCtxt->zx(
+                        this->architecture->getRegister(reg).getBitSize() - 8,
+                        this->astCtxt->extract(
+                          7,
+                          0,
+                          this->getRegisterAst(this->architecture->getRegister(reg))
+                        )
+                      )
+                    );
 
-          case triton::arch::arm::ID_SHIFT_ROR_REG:
-            return this->astCtxt->bvror(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+          case triton::arch::arm::ID_SHIFT_ROR_REG: /* Arm32 only. */
+            return this->astCtxt->bvror(
+                      node,
+                      this->astCtxt->zx(
+                        this->architecture->getRegister(reg).getBitSize() - 8,
+                        this->astCtxt->extract(
+                          7,
+                          0,
+                          this->getRegisterAst(this->architecture->getRegister(reg))
+                        )
+                      )
+                    );
 
-          /* TODO (cnheitman): Add ID_SHIFT_RRX_REG. */
+          case triton::arch::arm::ID_SHIFT_RRX_REG:
+            /* NOTE: Capstone considers this as a viable shift operand but
+             * according to the ARM manual this is not possible.
+             */
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
         }
       }
-
 
 
       triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) {
