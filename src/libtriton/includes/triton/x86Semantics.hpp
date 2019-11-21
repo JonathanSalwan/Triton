@@ -614,6 +614,12 @@ namespace triton {
           //! The DIV semantics.
           void div_s(triton::arch::Instruction& inst);
 
+          //! The ENDBR32 semantics.
+          void endbr32_s(triton::arch::Instruction& inst);
+
+          //! The ENDBR64 semantics.
+          void endbr64_s(triton::arch::Instruction& inst);
+
           //! The EXTRACTPS semantics.
           void extractps_s(triton::arch::Instruction& inst);
 

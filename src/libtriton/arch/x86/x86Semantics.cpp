@@ -92,6 +92,8 @@ CWD                          |            | Convert word (ax) to dword (dx:ax)
 CWDE                         |            | Convert word (ax) to dword (eax)
 DEC                          |            | Decrement by 1
 DIV                          |            | Unsigned Divide
+ENDBR32                      |            | No Operation
+ENDBR64                      |            | No Operation
 EXTRACTPS                    | sse4.1     | Extract Packed Single Precision Floating-Point Value
 IDIV                         |            | Signed Divide
 IMUL                         |            | Signed Multiply
@@ -416,6 +418,8 @@ namespace triton {
           case ID_INS_CWDE:           this->cwde_s(inst);         break;
           case ID_INS_DEC:            this->dec_s(inst);          break;
           case ID_INS_DIV:            this->div_s(inst);          break;
+          case ID_INS_ENDBR32:        this->endbr32_s(inst);      break;
+          case ID_INS_ENDBR64:        this->endbr64_s(inst);      break;
           case ID_INS_EXTRACTPS:      this->extractps_s(inst);    break;
           case ID_INS_IDIV:           this->idiv_s(inst);         break;
           case ID_INS_IMUL:           this->imul_s(inst);         break;
@@ -5071,6 +5075,18 @@ namespace triton {
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
 
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::endbr32_s(triton::arch::Instruction& inst) {
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::endbr64_s(triton::arch::Instruction& inst) {
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
