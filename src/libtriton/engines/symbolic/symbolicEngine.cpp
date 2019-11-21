@@ -365,6 +365,7 @@ namespace triton {
           }
 
           /* Concretize the memory if it exists */
+          // Important FIXME: When there is a ton of symmem, this loop takes a while to go through...
           for (auto it = this->memoryReference.begin(); it != memoryReference.end(); it++) {
             if (it->second && it->second->getId() == symExprId) {
               this->concretizeMemory(it->first);
