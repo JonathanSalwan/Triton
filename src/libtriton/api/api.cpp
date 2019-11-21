@@ -131,11 +131,11 @@ an <b>SMT solver</b> interface and, the last but not least, <b>Python bindings</
 To be able to compile Triton, you must install these libraries before:
 
  lib name                                                                      | version
--------------------------------------------------------------------------------|---------
- [libboost](http://www.boost.org/)                                             | >= 1.55
- [libpython](https://www.python.org/)                                          | == 2.7.x
+-------------------------------------------------------------------------------|------------------
+ [libboost](http://www.boost.org/)                                             | >= 1.68
+ [libpython](https://www.python.org/)                                          | == 2.7.x or 3.6.x
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
- [libcapstone](http://www.capstone-engine.org/)                                | >= 3.0.5
+ [libcapstone](http://www.capstone-engine.org/)                                | >= 4.0.x
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
 <hr>
