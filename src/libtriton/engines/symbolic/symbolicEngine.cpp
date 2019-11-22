@@ -344,34 +344,22 @@ namespace triton {
 
 
       /* Removes the symbolic expression corresponding to the id */
-      void SymbolicEngine::removeSymbolicExpression(triton::usize symExprId) {
-        if (this->symbolicExpressions.find(symExprId) != this->symbolicExpressions.end()) {
-          /* Remove aligned memory */
-          auto expr = this->getSymbolicExpression(symExprId);
+      void SymbolicEngine::removeSymbolicExpression(const SharedSymbolicExpression& expr) {
+        if (this->symbolicExpressions.find(expr->getId()) != this->symbolicExpressions.end()) {
+          /* Concretize memory */
           if (expr->getType() == MEMORY_EXPRESSION) {
             auto mem = expr->getOriginMemory();
-            this->removeAlignedMemory(mem.getAddress(), mem.getSize());
+            this->concretizeMemory(mem);
+          }
+
+          /* Concretize register */
+          else if (expr->getType() == REGISTER_EXPRESSION) {
+            auto reg = expr->getOriginRegister();
+            this->concretizeRegister(reg);
           }
 
           /* Delete and remove the pointer */
-          this->symbolicExpressions.erase(symExprId);
-
-          /* Concretize the register if it exists */
-          for (triton::uint32 i = 0; i < this->numberOfRegisters; i++) {
-            if (this->symbolicReg[i] != nullptr && this->symbolicReg[i]->getId() == symExprId) {
-              this->symbolicReg[i] = nullptr;
-              return;
-            }
-          }
-
-          /* Concretize the memory if it exists */
-          // Important FIXME: When there is a ton of symmem, this loop takes a while to go through...
-          for (auto it = this->memoryReference.begin(); it != memoryReference.end(); it++) {
-            if (it->second && it->second->getId() == symExprId) {
-              this->concretizeMemory(it->first);
-              return;
-            }
-          }
+          this->symbolicExpressions.erase(expr->getId());
         }
       }
 

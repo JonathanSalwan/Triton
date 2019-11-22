@@ -183,7 +183,7 @@ namespace triton {
         /* Clear symbolic expressions */
         for (const auto& se : inst.symbolicExpressions) {
           if (se->isSymbolized() == false) {
-            this->symbolicEngine->removeSymbolicExpression(se->getId());
+            this->symbolicEngine->removeSymbolicExpression(se);
           }
           else
             newVector.push_back(se);
@@ -225,7 +225,7 @@ namespace triton {
 
     void IrBuilder::removeSymbolicExpressions(triton::arch::Instruction& inst) {
       for (const auto& se : inst.symbolicExpressions) {
-        this->symbolicEngine->removeSymbolicExpression(se->getId());
+        this->symbolicEngine->removeSymbolicExpression(se);
       }
       inst.symbolicExpressions.clear();
     }

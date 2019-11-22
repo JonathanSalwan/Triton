@@ -762,9 +762,9 @@ namespace triton {
   }
 
 
-  void API::removeSymbolicExpression(triton::usize symExprId) {
+  void API::removeSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
     this->checkSymbolic();
-    return this->symbolic->removeSymbolicExpression(symExprId);
+    return this->symbolic->removeSymbolicExpression(expr);
   }
 
 

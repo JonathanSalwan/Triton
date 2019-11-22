@@ -170,7 +170,7 @@ namespace triton {
           TRITON_EXPORT SharedSymbolicExpression newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment="");
 
           //! Removes the symbolic expression corresponding to the id.
-          TRITON_EXPORT void removeSymbolicExpression(triton::usize symExprId);
+          TRITON_EXPORT void removeSymbolicExpression(const SharedSymbolicExpression& expr);
 
           //! Adds a symbolic variable.
           TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
