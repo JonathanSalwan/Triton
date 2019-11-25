@@ -8,8 +8,8 @@
 #ifndef TRITON_MODES_H
 #define TRITON_MODES_H
 
-#include <set>
 #include <memory>
+#include <unordered_set>
 
 #include <triton/dllexport.hpp>
 #include <triton/modesEnums.hpp>
@@ -40,7 +40,7 @@ namespace triton {
 
       protected:
         //! The set of enabled modes
-        std::set<triton::modes::mode_e> enabledModes;
+        std::unordered_set<triton::modes::mode_e> enabledModes;
 
       public:
         //! Constructor.

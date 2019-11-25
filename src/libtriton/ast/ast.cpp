@@ -11,6 +11,7 @@
 #include <new>
 #include <stack>
 #include <unordered_map>
+#include <unordered_set>
 #include <utility>
 
 #include <triton/ast.hpp>
@@ -3135,7 +3136,7 @@ namespace triton {
      */
     static std::vector<SharedAbstractNode> nodesExtraction(const SharedAbstractNode& node, bool unroll, bool revert, bool descend) {
       std::vector<SharedAbstractNode> result;
-      std::set<AbstractNode*> visited;
+      std::unordered_set<AbstractNode*> visited;
       std::stack<std::pair<SharedAbstractNode, bool>> worklist;
 
       if (node == nullptr)
@@ -3203,9 +3204,9 @@ namespace triton {
 
 
     std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match) {
-      std::stack<triton::ast::AbstractNode*>      worklist;
-      std::deque<triton::ast::SharedAbstractNode> result;
-      std::set<const triton::ast::AbstractNode*>  visited;
+      std::stack<AbstractNode*>                worklist;
+      std::deque<SharedAbstractNode>           result;
+      std::unordered_set<const AbstractNode*>  visited;
 
       worklist.push(node.get());
       while (!worklist.empty()) {
