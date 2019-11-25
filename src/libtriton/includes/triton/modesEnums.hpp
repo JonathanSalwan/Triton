@@ -42,4 +42,10 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
+namespace std {
+  //! Define the hash function for mode_e to be use in stl containers like unordered_set
+  template <> struct hash<triton::modes::mode_e> : public hash<uint64_t> {
+  };
+};
+
 #endif /* TRITON_MODES_HPP */
