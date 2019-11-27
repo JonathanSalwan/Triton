@@ -8,6 +8,7 @@
 #include <new>
 
 #include <triton/aarch64Semantics.hpp>
+#include <triton/arm32Semantics.hpp>
 #include <triton/astContext.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/irBuilder.hpp>
@@ -42,6 +43,7 @@ namespace triton {
       this->symbolicEngine            = symbolicEngine;
       this->taintEngine               = taintEngine;
       this->aarch64Isa                = new(std::nothrow) triton::arch::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
+      this->arm32Isa                  = new(std::nothrow) triton::arch::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
       this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
 
       if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->backupSymbolicEngine == nullptr)
@@ -76,6 +78,10 @@ namespace triton {
       switch (this->architecture->getArchitecture()) {
         case triton::arch::ARCH_AARCH64:
           ret = this->aarch64Isa->buildSemantics(inst);
+          break;
+
+        case triton::arch::ARCH_ARM32:
+          ret = this->arm32Isa->buildSemantics(inst);
           break;
 
         case triton::arch::ARCH_X86:

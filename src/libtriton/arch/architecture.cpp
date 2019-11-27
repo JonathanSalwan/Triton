@@ -9,6 +9,7 @@
 
 #include <triton/aarch64Cpu.hpp>
 #include <triton/architecture.hpp>
+#include <triton/arm32Cpu.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
@@ -63,6 +64,13 @@ namespace triton {
         case triton::arch::ARCH_AARCH64:
           /* init the new instance */
           this->cpu.reset(new(std::nothrow) triton::arch::aarch64::AArch64Cpu(this->callbacks));
+          if (this->cpu == nullptr)
+            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
+          break;
+
+        case triton::arch::ARCH_ARM32:
+          /* init the new instance */
+          this->cpu.reset(new(std::nothrow) triton::arch::arm32::Arm32Cpu(this->callbacks));
           if (this->cpu == nullptr)
             throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
           break;

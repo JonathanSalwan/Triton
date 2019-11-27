@@ -69,7 +69,7 @@ namespace triton {
         triton::arch::x86::prefix_e prefix;
 
         //! The code condition of the instruction. This field is set at the disassembly level. Mainly used for AArch64.
-        triton::arch::aarch64::condition_e codeCondition;
+        triton::arch::arm::condition_e codeCondition;
 
         //! Implicit and explicit load access (read). This field is set at the semantics level.
         std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> loadAccess;
@@ -164,7 +164,7 @@ namespace triton {
         TRITON_EXPORT triton::arch::x86::prefix_e getPrefix(void) const;
 
         //! Returns the code codition of the instruction (mainly for AArch64).
-        TRITON_EXPORT triton::arch::aarch64::condition_e getCodeCondition(void) const;
+        TRITON_EXPORT triton::arch::arm::condition_e getCodeCondition(void) const;
 
         //! Returns the list of all implicit and explicit load access
         TRITON_EXPORT std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>>& getLoadAccess(void);
@@ -236,7 +236,7 @@ namespace triton {
         TRITON_EXPORT void setPrefix(triton::arch::x86::prefix_e prefix);
 
         //! Sets the code condition of the instruction (mainly for AArch64).
-        TRITON_EXPORT void setCodeCondition(triton::arch::aarch64::condition_e codeCondition);
+        TRITON_EXPORT void setCodeCondition(triton::arch::arm::condition_e codeCondition);
 
         //! Sets the disassembly of the instruction.
         TRITON_EXPORT void setDisassembly(const std::string& str);

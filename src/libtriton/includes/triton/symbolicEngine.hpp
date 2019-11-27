@@ -15,6 +15,7 @@
 #include <vector>
 
 #include <triton/architecture.hpp>
+#include <triton/armOperandProperties.hpp>
 #include <triton/ast.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/dllexport.hpp>
@@ -141,11 +142,11 @@ namespace triton {
           //! Adds a symbolic memory reference.
           inline void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
-          //! Returns the AST corresponding to the shift operation. Mainly used for AArch64 operands.
-          triton::ast::SharedAbstractNode getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node);
+          //! Returns the AST corresponding to the shift operation. Mainly used for Arm32 operands.
+          triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node);
 
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
-          triton::ast::SharedAbstractNode getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node);
+          triton::ast::SharedAbstractNode getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node);
 
           //! Returns the parent AST after inserting the subregister (node) in its AST.
           triton::ast::SharedAbstractNode insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign=true);

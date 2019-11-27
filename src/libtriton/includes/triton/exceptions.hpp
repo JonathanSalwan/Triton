@@ -288,6 +288,18 @@ namespace triton {
     };
 
 
+    /*! \class ArmOperandProperties
+     *  \brief The exception class used by shift mode. */
+    class ArmOperandProperties : public triton::exceptions::Architecture {
+      public:
+        //! Constructor.
+        TRITON_EXPORT ArmOperandProperties(const char* message) : triton::exceptions::Architecture(message) {};
+
+        //! Constructor.
+        TRITON_EXPORT ArmOperandProperties(const std::string& message) : triton::exceptions::Architecture(message) {};
+    };
+
+
     /*! \class AArch64OperandProperties
      *  \brief The exception class used by shift mode. */
     class AArch64OperandProperties : public triton::exceptions::Architecture {

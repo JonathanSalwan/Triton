@@ -74,6 +74,9 @@ namespace triton {
         //! AArch64 ISA builder.
         triton::arch::SemanticsInterface* aarch64Isa;
 
+        //! ARM32 ISA builder.
+        triton::arch::SemanticsInterface* arm32Isa;
+
         //! x86 ISA builder.
         triton::arch::SemanticsInterface* x86Isa;
 

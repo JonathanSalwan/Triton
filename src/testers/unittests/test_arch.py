@@ -109,3 +109,27 @@ class TestAArch64(unittest.TestCase):
     def test_register_size(self):
         """Check GPR register size."""
         self.assertEqual(self.ctx.getGprSize(), 8)
+
+class TestArm32(unittest.TestCase):
+
+    """Testing the Arm32 Architecture."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.assertFalse(self.ctx.isArchitectureValid())
+        self.ctx.setArchitecture(ARCH.ARM32)
+        self.assertTrue(self.ctx.isArchitectureValid())
+
+    def test_registers(self):
+        """Check Arm32 specific registers exists."""
+        self.assertEqual(self.ctx.registers.r0.getName(), "r0")
+        self.assertEqual(self.ctx.getParentRegister(self.ctx.registers.r0).getName(), "r0")
+
+    def test_register_bit_size(self):
+        """Check GPR register bit size."""
+        self.assertEqual(self.ctx.getGprBitSize(), 32)
+
+    def test_register_size(self):
+        """Check GPR register size."""
+        self.assertEqual(self.ctx.getGprSize(), 4)

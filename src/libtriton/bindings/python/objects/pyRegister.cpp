@@ -93,7 +93,7 @@ e.g: `16`
 
 - <b>\ref py_EXTEND_page getExtendType(void)</b><br>
 Returns the extend type of the operand. Mainly used for AArch64.<br>
-e.g: `EXTEND.AARCH64.UXTW`
+e.g: `EXTEND.ARM.UXTW`
 
 - <b>\ref py_REG_page getId(void)</b><br>
 Returns the enum of the register.<br>
@@ -105,7 +105,7 @@ e.g: `rbx`
 
 - <b>\ref py_SHIFT_page getShiftType(void)</b><br>
 Returns the shift type of the operand. Mainly used for AArch64.<br>
-e.g: `SHIFT.AARCH64.LSL`
+e.g: `SHIFT.ARM.LSL`
 
 - <b>integer getShiftValue(void)</b><br>
 Returns the shift value of the operand. Mainly used for AArch64.<br>
@@ -210,9 +210,19 @@ namespace triton {
       }
 
 
-      static PyObject* Register_getShiftValue(PyObject* self, PyObject* noarg) {
+      static PyObject* Register_getShiftImmediate(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyRegister_AsRegister(self)->getShiftValue());
+          return PyLong_FromUint64(PyRegister_AsRegister(self)->getShiftImmediate());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Register_getShiftRegister(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyRegister_AsRegister(self)->getShiftRegister());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -335,19 +345,20 @@ namespace triton {
 
       //! Register methods.
       PyMethodDef Register_callbacks[] = {
-        {"getBitSize",        Register_getBitSize,       METH_NOARGS,    ""},
-        {"getBitvector",      Register_getBitvector,     METH_NOARGS,    ""},
-        {"getExtendSize",     Register_getExtendSize,    METH_NOARGS,    ""},
-        {"getExtendType",     Register_getExtendType,    METH_NOARGS,    ""},
-        {"getId",             Register_getId,            METH_NOARGS,    ""},
-        {"getName",           Register_getName,          METH_NOARGS,    ""},
-        {"getShiftType",      Register_getShiftType,     METH_NOARGS,    ""},
-        {"getShiftValue",     Register_getShiftValue,    METH_NOARGS,    ""},
-        {"getSize",           Register_getSize,          METH_NOARGS,    ""},
-        {"getType",           Register_getType,          METH_NOARGS,    ""},
-        {"isMutable",         Register_isMutable,        METH_NOARGS,    ""},
-        {"isOverlapWith",     Register_isOverlapWith,    METH_O,         ""},
-        {nullptr,             nullptr,                   0,              nullptr}
+        {"getBitSize",        Register_getBitSize,        METH_NOARGS,    ""},
+        {"getBitvector",      Register_getBitvector,      METH_NOARGS,    ""},
+        {"getExtendSize",     Register_getExtendSize,     METH_NOARGS,    ""},
+        {"getExtendType",     Register_getExtendType,     METH_NOARGS,    ""},
+        {"getId",             Register_getId,             METH_NOARGS,    ""},
+        {"getName",           Register_getName,           METH_NOARGS,    ""},
+        {"getShiftType",      Register_getShiftType,      METH_NOARGS,    ""},
+        {"getShiftImmediate", Register_getShiftImmediate, METH_NOARGS,    ""},
+        {"getShiftRegister",  Register_getShiftRegister,  METH_NOARGS,    ""},
+        {"getSize",           Register_getSize,           METH_NOARGS,    ""},
+        {"getType",           Register_getType,           METH_NOARGS,    ""},
+        {"isMutable",         Register_isMutable,         METH_NOARGS,    ""},
+        {"isOverlapWith",     Register_isOverlapWith,     METH_O,         ""},
+        {nullptr,             nullptr,                    0,              nullptr}
       };
 
 

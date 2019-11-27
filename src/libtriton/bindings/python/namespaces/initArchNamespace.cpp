@@ -26,6 +26,7 @@ The ARCH namespace contains all kinds of architecture supported by Triton.
 <hr>
 
 - **ARCH.AARCH64**
+- **ARCH.ARM32**
 - **ARCH.X86**
 - **ARCH.X86_64**
 
@@ -39,6 +40,7 @@ namespace triton {
 
       void initArchNamespace(PyObject* archDict) {
         xPyDict_SetItemString(archDict, "AARCH64", PyLong_FromUint32(triton::arch::ARCH_AARCH64));
+        xPyDict_SetItemString(archDict, "ARM32",   PyLong_FromUint32(triton::arch::ARCH_ARM32));
         xPyDict_SetItemString(archDict, "X86",     PyLong_FromUint32(triton::arch::ARCH_X86));
         xPyDict_SetItemString(archDict, "X86_64",  PyLong_FromUint32(triton::arch::ARCH_X86_64));
       }
