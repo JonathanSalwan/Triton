@@ -8,7 +8,6 @@
 #ifndef TRITON_MEMORYACCESS_HPP
 #define TRITON_MEMORYACCESS_HPP
 
-#include <triton/aarch64OperandProperties.hpp>
 #include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
 #include <triton/bitsVector.hpp>

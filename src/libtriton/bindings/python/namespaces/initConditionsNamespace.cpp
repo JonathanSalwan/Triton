@@ -25,52 +25,52 @@ The CONDITION namespace contains all kinds of instruction conditions for AArch64
 \section CONDITION_py_api Python API - Items of the CONDITION namespace
 <hr>
 
-- **CONDITION.AARCH64.INVALID**<br>
+- **CONDITION.ARM.INVALID**<br>
 Invalid code condition.
 
-- **CONDITION.AARCH64.AL**<br>
+- **CONDITION.ARM.AL**<br>
 Always. Any flags. This suffix is normally omitted.
 
-- **CONDITION.AARCH64.EQ**<br>
+- **CONDITION.ARM.EQ**<br>
 Equal. Z set.
 
-- **CONDITION.AARCH64.GE**<br>
+- **CONDITION.ARM.GE**<br>
 Signed >=. N and V the same.
 
-- **CONDITION.AARCH64.GT**<br>
+- **CONDITION.ARM.GT**<br>
 Signed >. Z clear, N and V the same.
 
-- **CONDITION.AARCH64.HI**<br>
+- **CONDITION.ARM.HI**<br>
 Higher (unsigned >). C set and Z clear.
 
-- **CONDITION.AARCH64.HS**<br>
+- **CONDITION.ARM.HS**<br>
 Higher or same (unsigned >=). C set.
 
-- **CONDITION.AARCH64.LE**<br>
+- **CONDITION.ARM.LE**<br>
 Signed <=. Z set, N and V differ.
 
-- **CONDITION.AARCH64.LO**<br>
+- **CONDITION.ARM.LO**<br>
 Lower (unsigned <). C clear.
 
-- **CONDITION.AARCH64.LS**<br>
+- **CONDITION.ARM.LS**<br>
 Lower or same (unsigned <=). C clear or Z set.
 
-- **CONDITION.AARCH64.LT**<br>
+- **CONDITION.ARM.LT**<br>
 Signed <. N and V differ.
 
-- **CONDITION.AARCH64.MI**<br>
+- **CONDITION.ARM.MI**<br>
 Negative. N set.
 
-- **CONDITION.AARCH64.NE**<br>
+- **CONDITION.ARM.NE**<br>
 Not equal. Z clear.
 
-- **CONDITION.AARCH64.PL**<br>
+- **CONDITION.ARM.PL**<br>
 Positive or zero. N clear.
 
-- **CONDITION.AARCH64.VC**<br>
+- **CONDITION.ARM.VC**<br>
 No overflow. V clear.
 
-- **CONDITION.AARCH64.VS**<br>
+- **CONDITION.ARM.VS**<br>
 Overflow. V set.
 
 */
@@ -84,27 +84,27 @@ namespace triton {
       void initConditionsNamespace(PyObject* conditionsDict) {
         PyDict_Clear(conditionsDict);
 
-        PyObject* aarch64ConditionsDict = xPyDict_New();
+        PyObject* armConditionsDict = xPyDict_New();
 
-        xPyDict_SetItemString(aarch64ConditionsDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_INVALID));
-        xPyDict_SetItemString(aarch64ConditionsDict, "AL",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_AL));
-        xPyDict_SetItemString(aarch64ConditionsDict, "EQ",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_EQ));
-        xPyDict_SetItemString(aarch64ConditionsDict, "GE",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_GE));
-        xPyDict_SetItemString(aarch64ConditionsDict, "GT",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_GT));
-        xPyDict_SetItemString(aarch64ConditionsDict, "HI",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_HI));
-        xPyDict_SetItemString(aarch64ConditionsDict, "HS",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_HS));
-        xPyDict_SetItemString(aarch64ConditionsDict, "LE",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_LE));
-        xPyDict_SetItemString(aarch64ConditionsDict, "LO",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_LO));
-        xPyDict_SetItemString(aarch64ConditionsDict, "LS",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_LS));
-        xPyDict_SetItemString(aarch64ConditionsDict, "LT",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_LT));
-        xPyDict_SetItemString(aarch64ConditionsDict, "MI",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_MI));
-        xPyDict_SetItemString(aarch64ConditionsDict, "NE",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_NE));
-        xPyDict_SetItemString(aarch64ConditionsDict, "PL",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_PL));
-        xPyDict_SetItemString(aarch64ConditionsDict, "VC",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_VC));
-        xPyDict_SetItemString(aarch64ConditionsDict, "VS",      PyLong_FromUint32(triton::arch::aarch64::ID_CONDITION_VS));
+        xPyDict_SetItemString(armConditionsDict, "INVALID", PyLong_FromUint32(triton::arch::arm::ID_CONDITION_INVALID));
+        xPyDict_SetItemString(armConditionsDict, "AL",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_AL));
+        xPyDict_SetItemString(armConditionsDict, "EQ",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_EQ));
+        xPyDict_SetItemString(armConditionsDict, "GE",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_GE));
+        xPyDict_SetItemString(armConditionsDict, "GT",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_GT));
+        xPyDict_SetItemString(armConditionsDict, "HI",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_HI));
+        xPyDict_SetItemString(armConditionsDict, "HS",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_HS));
+        xPyDict_SetItemString(armConditionsDict, "LE",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_LE));
+        xPyDict_SetItemString(armConditionsDict, "LO",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_LO));
+        xPyDict_SetItemString(armConditionsDict, "LS",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_LS));
+        xPyDict_SetItemString(armConditionsDict, "LT",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_LT));
+        xPyDict_SetItemString(armConditionsDict, "MI",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_MI));
+        xPyDict_SetItemString(armConditionsDict, "NE",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_NE));
+        xPyDict_SetItemString(armConditionsDict, "PL",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_PL));
+        xPyDict_SetItemString(armConditionsDict, "VC",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_VC));
+        xPyDict_SetItemString(armConditionsDict, "VS",      PyLong_FromUint32(triton::arch::arm::ID_CONDITION_VS));
 
-        PyObject* aarch64ConditionsDictClass = xPyClass_New(nullptr, aarch64ConditionsDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(conditionsDict, "AARCH64", aarch64ConditionsDictClass);
+        PyObject* armConditionsDictClass = xPyClass_New(nullptr, armConditionsDict, xPyString_FromString("ARM"));
+        xPyDict_SetItemString(conditionsDict, "ARM", armConditionsDictClass);
       }
 
     }; /* python namespace */

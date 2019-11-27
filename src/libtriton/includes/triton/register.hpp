@@ -11,8 +11,8 @@
 #include <string>
 #include <ostream>
 
-#include <triton/aarch64OperandProperties.hpp>
 #include <triton/archEnums.hpp>
+#include <triton/armOperandProperties.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
@@ -41,7 +41,7 @@ namespace triton {
     /*! \class Register
      *  \brief This class is used when an instruction has a register operand.
      */
-    class Register : public BitsVector, public AArch64OperandProperties {
+    class Register : public BitsVector, public arm::ArmOperandProperties {
       protected:
         //! The name of the register.
         std::string name;

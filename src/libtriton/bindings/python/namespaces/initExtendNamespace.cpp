@@ -25,31 +25,31 @@ The EXTEND namespace contains all kinds of extend operands for AArch64.
 \section EXTEND_py_api Python API - Items of the EXTEND namespace
 <hr>
 
-- **EXTEND.AARCH64.INVALID**<br>
+- **EXTEND.ARM.INVALID**<br>
 Invalid extend operand
 
-- **EXTEND.AARCH64.UXTB**<br>
+- **EXTEND.ARM.UXTB**<br>
 Extracts a byte (8-bit) value from a register and zero extends it to the size of the register
 
-- **EXTEND.AARCH64.UXTH**<br>
+- **EXTEND.ARM.UXTH**<br>
 Extracts a halfword (16-bit) value from a register and zero extends it to the size of the register
 
-- **EXTEND.AARCH64.UXTW**<br>
+- **EXTEND.ARM.UXTW**<br>
 Extracts a word (32-bit) value from a register and zero extends it to the size of the register
 
-- **EXTEND.AARCH64.UXTX**<br>
+- **EXTEND.ARM.UXTX**<br>
 Use the whole 64-bit register
 
-- **EXTEND.AARCH64.SXTB**<br>
+- **EXTEND.ARM.SXTB**<br>
 Extracts a byte (8-bit) value from a register and sign extends it to the size of the register
 
-- **EXTEND.AARCH64.SXTH**<br>
+- **EXTEND.ARM.SXTH**<br>
 Extracts a halfword (16-bit) value from a register and sign extends it to the size of the register
 
-- **EXTEND.AARCH64.SXTW**<br>
+- **EXTEND.ARM.SXTW**<br>
 Extracts a word (32-bit) value from a register and sign extends it to the size of the register
 
-- **EXTEND.AARCH64.SXTX**<br>
+- **EXTEND.ARM.SXTX**<br>
 Use the whole 64-bit register
 
 */
@@ -63,20 +63,20 @@ namespace triton {
       void initExtendNamespace(PyObject* extendDict) {
         PyDict_Clear(extendDict);
 
-        PyObject* aarch64ExtendDict = xPyDict_New();
+        PyObject* armExtendDict = xPyDict_New();
 
-        xPyDict_SetItemString(aarch64ExtendDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_INVALID));
-        xPyDict_SetItemString(aarch64ExtendDict, "UXTB",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTB));
-        xPyDict_SetItemString(aarch64ExtendDict, "UXTH",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTH));
-        xPyDict_SetItemString(aarch64ExtendDict, "UXTW",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTW));
-        xPyDict_SetItemString(aarch64ExtendDict, "UXTX",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_UXTX));
-        xPyDict_SetItemString(aarch64ExtendDict, "SXTB",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTB));
-        xPyDict_SetItemString(aarch64ExtendDict, "SXTH",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTH));
-        xPyDict_SetItemString(aarch64ExtendDict, "SXTW",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTW));
-        xPyDict_SetItemString(aarch64ExtendDict, "SXTX",    PyLong_FromUint32(triton::arch::aarch64::ID_EXTEND_SXTX));
+        xPyDict_SetItemString(armExtendDict, "INVALID", PyLong_FromUint32(triton::arch::arm::ID_EXTEND_INVALID));
+        xPyDict_SetItemString(armExtendDict, "UXTB",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_UXTB));
+        xPyDict_SetItemString(armExtendDict, "UXTH",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_UXTH));
+        xPyDict_SetItemString(armExtendDict, "UXTW",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_UXTW));
+        xPyDict_SetItemString(armExtendDict, "UXTX",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_UXTX));
+        xPyDict_SetItemString(armExtendDict, "SXTB",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_SXTB));
+        xPyDict_SetItemString(armExtendDict, "SXTH",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_SXTH));
+        xPyDict_SetItemString(armExtendDict, "SXTW",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_SXTW));
+        xPyDict_SetItemString(armExtendDict, "SXTX",    PyLong_FromUint32(triton::arch::arm::ID_EXTEND_SXTX));
 
-        PyObject* aarch64ExtendDictClass = xPyClass_New(nullptr, aarch64ExtendDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(extendDict, "AARCH64", aarch64ExtendDictClass);
+        PyObject* armExtendDictClass = xPyClass_New(nullptr, armExtendDict, xPyString_FromString("ARM"));
+        xPyDict_SetItemString(extendDict, "ARM", armExtendDictClass);
       }
 
     }; /* python namespace */

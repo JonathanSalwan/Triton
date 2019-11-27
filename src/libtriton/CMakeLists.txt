@@ -63,11 +63,14 @@ include_directories("${CMAKE_CURRENT_BINARY_DIR}/includes")
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
     api/api.cpp
-    arch/aarch64/aarch64Cpu.cpp
-    arch/aarch64/aarch64OperandProperties.cpp
-    arch/aarch64/aarch64Semantics.cpp
-    arch/aarch64/aarch64Specifications.cpp
     arch/architecture.cpp
+    arch/arm/aarch64/aarch64Cpu.cpp
+    arch/arm/aarch64/aarch64Semantics.cpp
+    arch/arm/aarch64/aarch64Specifications.cpp
+    arch/arm/arm32/arm32Cpu.cpp
+    arch/arm/arm32/arm32Semantics.cpp
+    arch/arm/arm32/arm32Specifications.cpp
+    arch/arm/armOperandProperties.cpp
     arch/bitsVector.cpp
     arch/immediate.cpp
     arch/instruction.cpp
@@ -102,12 +105,15 @@ set(LIBTRITON_SOURCE_FILES
 # Define all header files
 set(LIBTRITON_HEADER_FILES
     includes/triton/aarch64Cpu.hpp
-    includes/triton/aarch64OperandProperties.hpp
     includes/triton/aarch64Semantics.hpp
     includes/triton/aarch64Specifications.hpp
     includes/triton/api.hpp
     includes/triton/archEnums.hpp
     includes/triton/architecture.hpp
+    includes/triton/arm32Cpu.hpp
+    includes/triton/arm32Semantics.hpp
+    includes/triton/arm32Specifications.hpp
+    includes/triton/armOperandProperties.hpp
     includes/triton/ast.hpp
     includes/triton/astContext.hpp
     includes/triton/astEnums.hpp
@@ -162,6 +168,7 @@ set(LIBTRITON_HEADER_FILES
 # Define all resource files
 set(LIBTRITON_RESOURCE_FILES
     includes/triton/aarch64.spec
+    includes/triton/arm32.spec
     includes/triton/x86.spec
     includes/triton/version.hpp.in
 )

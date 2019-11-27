@@ -19,7 +19,7 @@ namespace triton {
     Instruction::Instruction() {
       this->address         = 0;
       this->branch          = false;
-      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->codeCondition   = triton::arch::arm::ID_CONDITION_INVALID;
       this->conditionTaken  = 0;
       this->controlFlow     = false;
       this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
@@ -148,7 +148,7 @@ namespace triton {
     }
 
 
-    triton::arch::aarch64::condition_e Instruction::getCodeCondition(void) const {
+    triton::arch::arm::condition_e Instruction::getCodeCondition(void) const {
       return this->codeCondition;
     }
 
@@ -303,7 +303,7 @@ namespace triton {
     }
 
 
-    void Instruction::setCodeCondition(triton::arch::aarch64::condition_e codeCondition) {
+    void Instruction::setCodeCondition(triton::arch::arm::condition_e codeCondition) {
       this->codeCondition = codeCondition;
     }
 
@@ -487,7 +487,7 @@ namespace triton {
     void Instruction::clear(void) {
       this->address         = 0;
       this->branch          = false;
-      this->codeCondition   = triton::arch::aarch64::ID_CONDITION_INVALID;
+      this->codeCondition   = triton::arch::arm::ID_CONDITION_INVALID;
       this->conditionTaken  = 0;
       this->controlFlow     = false;
       this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
