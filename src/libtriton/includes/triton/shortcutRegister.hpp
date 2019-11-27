@@ -43,6 +43,11 @@ namespace triton {
         #define REG_SPEC_NO_CAPSTONE REG_SPEC
         #include "triton/aarch64.spec"
 
+        #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
+        triton::arch::Register arm32_##LOWER_NAME;
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/arm32.spec"
+
         /*! Constructor */
         ShortcutRegister() {};
 
@@ -57,6 +62,11 @@ namespace triton {
           this->aarch64_##LOWER_NAME = triton::arch::Register();
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/aarch64.spec"
+
+          #define REG_SPEC(_0, LOWER_NAME, _2, _3, _4, _5) \
+          this->arm32_##LOWER_NAME = triton::arch::Register();
+          #define REG_SPEC_NO_CAPSTONE REG_SPEC
+          #include "triton/arm32.spec"
         };
 
         /*! Inits the shortcut */
@@ -74,6 +84,19 @@ namespace triton {
                                                                   MUTABLE);
               #define REG_SPEC_NO_CAPSTONE REG_SPEC
               #include "triton/aarch64.spec"
+              }
+              break;
+
+            case triton::arch::ARCH_ARM32: {
+              #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARM32_UPPER, ARM32_LOWER, ARM32_PARENT, MUTABLE)    \
+              this->arm32_##LOWER_NAME = triton::arch::Register(triton::arch::ID_REG_ARM32_##UPPER_NAME,   \
+                                                                #LOWER_NAME,                               \
+                                                                triton::arch::ID_REG_ARM32_##ARM32_PARENT, \
+                                                                ARM32_UPPER,                               \
+                                                                ARM32_LOWER,                               \
+                                                                MUTABLE);
+              #define REG_SPEC_NO_CAPSTONE REG_SPEC
+              #include "triton/arm32.spec"
               }
               break;
 

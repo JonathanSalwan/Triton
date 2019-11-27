@@ -593,19 +593,38 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node) {
-        switch (type) {
-          case triton::arch::aarch64::ID_SHIFT_ASR:
-            return this->astCtxt->bvashr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+      triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node) {
+        auto imm = shift.getShiftImmediate();
+        auto reg = shift.getShiftRegister();
 
-          case triton::arch::aarch64::ID_SHIFT_LSL:
-            return this->astCtxt->bvshl(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+        switch (shift.getShiftType()) {
+          case triton::arch::arm::ID_SHIFT_ASR:
+            return this->astCtxt->bvashr(node, this->astCtxt->bv(imm, node->getBitvectorSize()));
 
-          case triton::arch::aarch64::ID_SHIFT_LSR:
-            return this->astCtxt->bvlshr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+          case triton::arch::arm::ID_SHIFT_LSL:
+            return this->astCtxt->bvshl(node, this->astCtxt->bv(imm, node->getBitvectorSize()));
 
-          case triton::arch::aarch64::ID_SHIFT_ROR:
-            return this->astCtxt->bvror(node, value);
+          case triton::arch::arm::ID_SHIFT_LSR:
+            return this->astCtxt->bvlshr(node, this->astCtxt->bv(imm, node->getBitvectorSize()));
+
+          case triton::arch::arm::ID_SHIFT_ROR:
+            return this->astCtxt->bvror(node, this->astCtxt->bv(imm, node->getBitvectorSize()));
+
+          /* TODO (cnheitman): Add ID_SHIFT_RRX. */
+
+          case triton::arch::arm::ID_SHIFT_ASR_REG:
+            return this->astCtxt->bvashr(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+
+          case triton::arch::arm::ID_SHIFT_LSL_REG:
+            return this->astCtxt->bvshl(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+
+          case triton::arch::arm::ID_SHIFT_LSR_REG:
+            return this->astCtxt->bvlshr(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+
+          case triton::arch::arm::ID_SHIFT_ROR_REG:
+            return this->astCtxt->bvror(node, this->getRegisterAst(this->architecture->getRegister(reg)));
+
+          /* TODO (cnheitman): Add ID_SHIFT_RRX_REG. */
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
@@ -613,30 +632,33 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node) {
-        switch (type) {
-          case triton::arch::aarch64::ID_EXTEND_UXTB:
+
+      triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node) {
+        triton::uint32 size = extend.getExtendSize();
+
+        switch (extend.getExtendType()) {
+          case triton::arch::arm::ID_EXTEND_UXTB:
             return this->astCtxt->zx(size, this->astCtxt->extract(7, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_UXTH:
+          case triton::arch::arm::ID_EXTEND_UXTH:
             return this->astCtxt->zx(size, this->astCtxt->extract(15, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_UXTW:
+          case triton::arch::arm::ID_EXTEND_UXTW:
             return this->astCtxt->zx(size, this->astCtxt->extract(31, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_UXTX:
+          case triton::arch::arm::ID_EXTEND_UXTX:
             return this->astCtxt->zx(size, this->astCtxt->extract(63, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_SXTB:
+          case triton::arch::arm::ID_EXTEND_SXTB:
             return this->astCtxt->sx(size, this->astCtxt->extract(7, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_SXTH:
+          case triton::arch::arm::ID_EXTEND_SXTH:
             return this->astCtxt->sx(size, this->astCtxt->extract(15, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_SXTW:
+          case triton::arch::arm::ID_EXTEND_SXTW:
             return this->astCtxt->sx(size, this->astCtxt->extract(31, 0, node));
 
-          case triton::arch::aarch64::ID_EXTEND_SXTX:
+          case triton::arch::arm::ID_EXTEND_SXTX:
             return this->astCtxt->sx(size, this->astCtxt->extract(63, 0, node));
 
           default:
@@ -650,8 +672,9 @@ namespace triton {
         triton::ast::SharedAbstractNode node = this->astCtxt->bv(imm.getValue(), imm.getBitSize());
 
         /* Shift AST if it's a shift operand */
-        if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
-          return this->getShiftAst(imm.getShiftType(), imm.getShiftValue(), node);
+        if (imm.getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+          return this->getShiftAst(static_cast<const triton::arch::arm::ArmOperandProperties>(imm), node);
+        }
 
         return node;
       }
@@ -758,12 +781,14 @@ namespace triton {
         }
 
         /* extend AST if it's a extend operand (mainly used for AArch64) */
-        if (reg.getExtendType() != triton::arch::aarch64::ID_EXTEND_INVALID)
-          return this->getExtendAst(reg.getExtendType(), reg.getExtendSize(), node);
+        if (reg.getExtendType() != triton::arch::arm::ID_EXTEND_INVALID) {
+          return this->getExtendAst(static_cast<const triton::arch::arm::ArmOperandProperties>(reg), node);
+        }
 
-        /* Shift AST if it's a shift operand (mainly used for AArch64) */
-        if (reg.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
-          return this->getShiftAst(reg.getShiftType(), reg.getShiftValue(), node);
+        /* Shift AST if it's a shift operand (mainly used for Arm) */
+        if (reg.getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+          return this->getShiftAst(static_cast<const triton::arch::arm::ArmOperandProperties>(reg), node);
+        }
 
         return node;
       }

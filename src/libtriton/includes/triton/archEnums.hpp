@@ -32,6 +32,7 @@ namespace triton {
     enum architecture_e {
       ARCH_INVALID = 0, /*!< Invalid architecture.   */
       ARCH_AARCH64,     /*!< AArch64 architecture.   */
+      ARCH_ARM32,       /*!< ARM32 architecture.     */
       ARCH_X86,         /*!< X86 architecture.       */
       ARCH_X86_64,      /*!< X86_64 architecture.    */
     };
@@ -63,6 +64,11 @@ namespace triton {
       ID_REG_AARCH64_##UPPER_NAME,
       #define REG_SPEC_NO_CAPSTONE REG_SPEC
       #include "triton/aarch64.spec"
+
+      #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
+      ID_REG_ARM32_##UPPER_NAME,
+      #define REG_SPEC_NO_CAPSTONE REG_SPEC
+      #include "triton/arm32.spec"
 
       /* Must be the last item */
       ID_REG_LAST_ITEM //!< must be the last item
@@ -96,21 +102,27 @@ namespace triton {
     /*! @} End of x86 namespace */
     };
 
-    //! The AArch64 namespace
-    namespace aarch64 {
+    //! The Arm namespace
+    namespace arm {
     /*!
      *  \ingroup arch
-     *  \addtogroup aarch64
+     *  \addtogroup arm
      *  @{
      */
 
       //! Types of shift
       enum shift_e {
         ID_SHIFT_INVALID = 0, //!< invalid
-        ID_SHIFT_ASR,         //!< Arithmetic Shift Right
-        ID_SHIFT_LSL,         //!< Logical Shift Left
-        ID_SHIFT_LSR,         //!< Logical Shift Right
-        ID_SHIFT_ROR,         //!< Rotate Right
+        ID_SHIFT_ASR,         //!< Arithmetic Shift Right (immediate)
+        ID_SHIFT_LSL,         //!< Logical Shift Left (immediate)
+        ID_SHIFT_LSR,         //!< Logical Shift Right (immediate)
+        ID_SHIFT_ROR,         //!< Rotate Right (immediate)
+        ID_SHIFT_RRX,         //!< Rotate Right with Extend (immediate)
+        ID_SHIFT_ASR_REG,     //!< Arithmetic Shift Right (register)
+        ID_SHIFT_LSL_REG,     //!< Logical Shift Left (register)
+        ID_SHIFT_LSR_REG,     //!< Logical Shift Right (register)
+        ID_SHIFT_ROR_REG,     //!< Rotate Right (register)
+        ID_SHIFT_RRX_REG,     //!< Rotate Right with Extend (register)
         ID_SHIFT_LAST_ITEM,   //!< Must be the last item
       };
 
@@ -149,7 +161,7 @@ namespace triton {
         ID_CONDITION_LAST_ITEM,   //!< must be the last item.
       };
 
-    /*! @} End of aarch64 namespace */
+    /*! @} End of arm namespace */
     };
   /*! @} End of arch namespace */
   };

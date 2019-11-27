@@ -25,20 +25,38 @@ The SHIFT namespace contains all kinds of shift operands for AArch64.
 \section SHIFT_py_api Python API - Items of the SHIFT namespace
 <hr>
 
-- **SHIFT.AARCH64.INVALID**<br>
+- **SHIFT.ARM.INVALID**<br>
 Invalid shift operand.
 
-- **SHIFT.AARCH64.ASR**<br>
+- **SHIFT.ARM.ASR**<br>
 Arithmetic Shift Right operand.
 
-- **SHIFT.AARCH64.LSL**<br>
+- **SHIFT.ARM.LSL**<br>
 Logical Shift Left operand.
 
-- **SHIFT.AARCH64.LSR**<br>
+- **SHIFT.ARM.LSR**<br>
 Logical Shift Right operand.
 
-- **SHIFT.AARCH64.ROR**<br>
+- **SHIFT.ARM.ROR**<br>
 Rotate Right operand.
+
+- **SHIFT.ARM.RRX**<br>
+Rotate Right with Extend operand.
+
+- **SHIFT.ARM.ASR_REG**<br>
+Arithmetic Shift Right operand.
+
+- **SHIFT.ARM.LSL_REG**<br>
+Logical Shift Left operand.
+
+- **SHIFT.ARM.LSR_REG**<br>
+Logical Shift Right operand.
+
+- **SHIFT.ARM.ROR_REG**<br>
+Rotate Right operand.
+
+- **SHIFT.ARM.RRX_REG**<br>
+Rotate Right with Extend operand.
 
 */
 
@@ -51,16 +69,22 @@ namespace triton {
       void initShiftsNamespace(PyObject* shiftsDict) {
         PyDict_Clear(shiftsDict);
 
-        PyObject* aarch64ShiftsDict = xPyDict_New();
+        PyObject* armShiftsDict = xPyDict_New();
 
-        xPyDict_SetItemString(aarch64ShiftsDict, "INVALID", PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_INVALID));
-        xPyDict_SetItemString(aarch64ShiftsDict, "ASR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_ASR));
-        xPyDict_SetItemString(aarch64ShiftsDict, "LSL",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_LSL));
-        xPyDict_SetItemString(aarch64ShiftsDict, "LSR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_LSR));
-        xPyDict_SetItemString(aarch64ShiftsDict, "ROR",     PyLong_FromUint32(triton::arch::aarch64::ID_SHIFT_ROR));
+        xPyDict_SetItemString(armShiftsDict, "INVALID", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_INVALID));
+        xPyDict_SetItemString(armShiftsDict, "ASR",     PyLong_FromUint32(triton::arch::arm::ID_SHIFT_ASR));
+        xPyDict_SetItemString(armShiftsDict, "LSL",     PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSL));
+        xPyDict_SetItemString(armShiftsDict, "LSR",     PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSR));
+        xPyDict_SetItemString(armShiftsDict, "ROR",     PyLong_FromUint32(triton::arch::arm::ID_SHIFT_ROR));
+        xPyDict_SetItemString(armShiftsDict, "RRX",     PyLong_FromUint32(triton::arch::arm::ID_SHIFT_RRX));
+        xPyDict_SetItemString(armShiftsDict, "ASR_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_ASR_REG));
+        xPyDict_SetItemString(armShiftsDict, "LSL_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSL_REG));
+        xPyDict_SetItemString(armShiftsDict, "LSR_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_LSR_REG));
+        xPyDict_SetItemString(armShiftsDict, "ROR_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_ROR_REG));
+        xPyDict_SetItemString(armShiftsDict, "RRX_REG", PyLong_FromUint32(triton::arch::arm::ID_SHIFT_RRX_REG));
 
-        PyObject* aarch64ShiftsDictClass = xPyClass_New(nullptr, aarch64ShiftsDict, xPyString_FromString("AARCH64"));
-        xPyDict_SetItemString(shiftsDict, "AARCH64", aarch64ShiftsDictClass);
+        PyObject* armShiftsDictClass = xPyClass_New(nullptr, armShiftsDict, xPyString_FromString("ARM"));
+        xPyDict_SetItemString(shiftsDict, "ARM", armShiftsDictClass);
       }
 
     }; /* python namespace */

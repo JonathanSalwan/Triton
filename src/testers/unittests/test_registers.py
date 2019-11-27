@@ -190,3 +190,41 @@ class TestAArch64Registers(unittest.TestCase):
             self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
             self.ctx.setConcreteRegisterValue(reg, 0)
             self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+
+
+class TestArm32Registers(unittest.TestCase):
+    """Test Arm32 registers"""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.ARM32)
+
+    def test_set_concrete_value(self):
+        """Check register value modification."""
+        for reg in self.ctx.getParentRegisters():
+            if reg.isMutable() == False:
+                continue
+            i = random.randrange(0, 0xffffffffffffffff) & reg.getBitvector().getMaxValue()
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+            self.ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
+            self.ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+
+        regs = [
+            self.ctx.registers.r0, self.ctx.registers.r1, self.ctx.registers.r2,
+            self.ctx.registers.r3, self.ctx.registers.r4, self.ctx.registers.r5,
+            self.ctx.registers.r6, self.ctx.registers.r7, self.ctx.registers.r8,
+            self.ctx.registers.r9, self.ctx.registers.r10, self.ctx.registers.r11,
+            self.ctx.registers.r12, self.ctx.registers.sp, self.ctx.registers.r14,
+            self.ctx.registers.pc,
+            self.ctx.registers.apsr,
+        ]
+
+        for reg in regs:
+            i = random.randrange(0, 0xffffffff) & reg.getBitvector().getMaxValue()
+            self.ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i)
+            self.ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)

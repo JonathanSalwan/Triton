@@ -35,7 +35,7 @@ class TestImmediate8(unittest.TestCase):
 
     def test_shift(self):
         """Check immadiate shift type."""
-        self.assertEqual(self.imm.getShiftType(), SHIFT.AARCH64.INVALID)
+        self.assertEqual(self.imm.getShiftType(), SHIFT.ARM.INVALID)
 
 
 class TestImmediate16(unittest.TestCase):

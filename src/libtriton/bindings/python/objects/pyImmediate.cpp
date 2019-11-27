@@ -83,7 +83,7 @@ Returns the bit vector.
 
 - <b>\ref py_SHIFT_page getShiftType(void)</b><br>
 Returns the shift type of the operand. Mainly used for AArch64.<br>
-e.g: `SHIFT.AARCH64.LSL`
+e.g: `SHIFT.ARM.LSL`
 
 - <b>integer getShiftValue(void)</b><br>
 Returns the shift value of the operand. Mainly used for AArch64.<br>
@@ -148,9 +148,19 @@ namespace triton {
       }
 
 
-      static PyObject* Immediate_getShiftValue(PyObject* self, PyObject* noarg) {
+      static PyObject* Immediate_getShiftImmediate(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint64(PyImmediate_AsImmediate(self)->getShiftValue());
+          return PyLong_FromUint64(PyImmediate_AsImmediate(self)->getShiftImmediate());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* Immediate_getShiftRegister(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint64(PyImmediate_AsImmediate(self)->getShiftRegister());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -234,15 +244,16 @@ namespace triton {
 
       //! Immediate methods.
       PyMethodDef Immediate_callbacks[] = {
-        {"getBitSize",    Immediate_getBitSize,     METH_NOARGS,     ""},
-        {"getBitvector",  Immediate_getBitvector,   METH_NOARGS,     ""},
-        {"getShiftType",  Immediate_getShiftType,   METH_NOARGS,     ""},
-        {"getShiftValue", Immediate_getShiftValue,  METH_NOARGS,     ""},
-        {"getSize",       Immediate_getSize,        METH_NOARGS,     ""},
-        {"getType",       Immediate_getType,        METH_NOARGS,     ""},
-        {"getValue",      Immediate_getValue,       METH_NOARGS,     ""},
-        {"setValue",      Immediate_setValue,       METH_VARARGS,    ""},
-        {nullptr,         nullptr,                  0,               nullptr}
+        {"getBitSize",        Immediate_getBitSize,        METH_NOARGS,  ""},
+        {"getBitvector",      Immediate_getBitvector,      METH_NOARGS,  ""},
+        {"getShiftType",      Immediate_getShiftType,      METH_NOARGS,  ""},
+        {"getShiftImmediate", Immediate_getShiftImmediate, METH_NOARGS,  ""},
+        {"getShiftRegister",  Immediate_getShiftRegister,  METH_NOARGS,  ""},
+        {"getSize",           Immediate_getSize,           METH_NOARGS,  ""},
+        {"getType",           Immediate_getType,           METH_NOARGS,  ""},
+        {"getValue",          Immediate_getValue,          METH_NOARGS,  ""},
+        {"setValue",          Immediate_setValue,          METH_VARARGS, ""},
+        {nullptr,             nullptr,                     0,            nullptr}
       };
 
 
