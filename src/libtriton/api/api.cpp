@@ -24,7 +24,7 @@
 
 <b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
 like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
-of the <b>x86</b>, <b>x86-64</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
+of the <b>x86</b>, <b>x86-64</b>, <b>ARM32</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
 an <b>SMT solver</b> interface and, the last but not least, <b>Python bindings</b>.
 
 
