@@ -14,6 +14,21 @@
 
 
 
+/*! \page SMT_arm32_Semantics_Supported_page ARM32 SMT semantics supported
+    \brief [**internal**] List of the supported semantics for the ARM32 architecture.
+
+
+Mnemonic                      | Description
+------------------------------|------------
+ADC                           | Add with Carry
+ADCS                          | Add with Carry, setting flags
+ADD                           | Add
+ADDS                          | Add, setting flags
+
+*/
+
+
+
 namespace triton {
   namespace arch {
     namespace arm32 {

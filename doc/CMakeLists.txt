@@ -18,10 +18,17 @@ add_custom_target(gen_aarch64_doc_from_spec
     DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/aarch64.spec
 )
 
+add_custom_target(gen_arm32_doc_from_spec
+    COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py ${TRITON_ROOT}/src/libtriton/includes/triton/arm32.spec "${CMAKE_CURRENT_BINARY_DIR}"
+    DEPENDS ${CMAKE_CURRENT_SOURCE_DIR}/extract_doc.py
+    DEPENDS ${TRITON_ROOT}/src/libtriton/includes/triton/arm32.spec
+)
+
 add_custom_target(doc
     COMMAND doxygen ${CMAKE_CURRENT_BINARY_DIR}/Doxyfile
     DEPENDS gen_x86_doc_from_spec
     DEPENDS gen_aarch64_doc_from_spec
+    DEPENDS gen_arm32_doc_from_spec
 )
 
 if(PYTHON_BINDINGS_AUTOCOMPLETE)
@@ -29,6 +36,7 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
         COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/autocomplete/generate_autocomplete.py "${CMAKE_CURRENT_BINARY_DIR}"
         DEPENDS gen_x86_doc_from_spec
         DEPENDS gen_aarch64_doc_from_spec
+        DEPENDS gen_arm32_doc_from_spec
     )
     # replace backlsash with forwardslash to not generate an error on windows
     execute_process(

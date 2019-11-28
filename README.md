@@ -1,7 +1,7 @@
 <p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
 
 **Triton** is a dynamic binary analysis (DBA) framework. It provides internal components like a **Dynamic Symbolic Execution** (DSE) engine,
-a **dynamic taint** engine, **AST representations** of the **x86**, **x86-64** and **AArch64** Instructions Set Architecture (ISA),
+a **dynamic taint** engine, **AST representations** of the **x86**, **x86-64**, **ARM32** and **AArch64** Instructions Set Architecture (ISA),
 **SMT simplification** passes, an **SMT solver** interface and, the last but not least, **Python bindings**. Based on these components,
 you are able to build program analysis tools, automate reverse engineering and perform software verification.
 
