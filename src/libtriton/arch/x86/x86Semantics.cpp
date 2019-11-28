@@ -17,6 +17,7 @@
     \brief [**internal**] All information about the supported semantics.
 
 - \ref SMT_aarch64_Semantics_Supported_page
+- \ref SMT_arm32_Semantics_Supported_page
 - \ref SMT_x86_Semantics_Supported_page
 
 */

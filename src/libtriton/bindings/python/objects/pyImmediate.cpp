@@ -85,9 +85,13 @@ Returns the bit vector.
 Returns the shift type of the operand. Mainly used for AArch64.<br>
 e.g: `SHIFT.ARM.LSL`
 
-- <b>integer getShiftValue(void)</b><br>
-Returns the shift value of the operand. Mainly used for AArch64.<br>
+- <b>integer getShiftImmediate(void)</b><br>
+Returns the shift immediate value of the operand. Mainly used for AArch64 and ARM32.<br>
 e.g: `2`
+
+- <b>\ref py_REG_page getShiftRegister(void)</b><br>
+Returns the shift register of the operand. Mainly used for ARM32.<br>
+e.g: `REG.ARM32.R0`
 
 - <b>integer getSize(void)</b><br>
 Returns the size (in bytes) of the immediate.<br>
