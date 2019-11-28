@@ -42,8 +42,8 @@ namespace triton {
       this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, astCtxt, nullptr);
       this->symbolicEngine            = symbolicEngine;
       this->taintEngine               = taintEngine;
-      this->aarch64Isa                = new(std::nothrow) triton::arch::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
-      this->arm32Isa                  = new(std::nothrow) triton::arch::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
+      this->aarch64Isa                = new(std::nothrow) triton::arch::arm::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
+      this->arm32Isa                  = new(std::nothrow) triton::arch::arm::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
       this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
 
       if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->backupSymbolicEngine == nullptr)
