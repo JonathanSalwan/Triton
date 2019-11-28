@@ -641,7 +641,7 @@ namespace triton {
                       this->astCtxt->bvror(
                         this->astCtxt->concat(
                           node,
-                          this->getOperandAst(this->architecture->getRegister(triton::arch::ID_REG_ARM32_C))
+                          this->getRegisterAst(this->architecture->getRegister(triton::arch::ID_REG_ARM32_C))
                         ),
                         1
                       )
@@ -703,7 +703,7 @@ namespace triton {
             /* NOTE: Capstone considers this as a viable shift operand but
              * according to the ARM manual this is not possible.
              */
-            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
+            throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): ID_SHIFT_RRX_REG is an invalid shift operand.");
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
