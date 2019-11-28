@@ -240,7 +240,7 @@ namespace triton {
               /* Set True if the instruction udpate flags */
               inst.setUpdateFlag(detail->arm.update_flags);
 
-              /* NOTE: Quick (and super ugly) hack. Capstone is reporting
+              /* FIXME: Quick (and super ugly) hack. Capstone is reporting
                * update_flags equals true for ADC instruction when it shouldn't
                * (it should only report true for ADCS).
                */
