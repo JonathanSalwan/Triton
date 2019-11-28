@@ -117,6 +117,19 @@ namespace triton {
 
         PyObject* aarch64RegistersDictClass = xPyClass_New(nullptr, aarch64RegistersDict, xPyString_FromString("AARCH64"));
         xPyDict_SetItemString(registersDict, "AARCH64", aarch64RegistersDictClass);
+
+        // Create ARM32 REG namespace
+
+        PyObject* arm32RegistersDict = xPyDict_New();
+
+        #define REG_SPEC(UPPER_NAME, _1, _2, _3, _4, _5) \
+          xPyDict_SetItemString(arm32RegistersDict, #UPPER_NAME, PyLong_FromUint32(triton::arch::ID_REG_ARM32_##UPPER_NAME));
+        // Use REG not available in capstone as normal register
+        #define REG_SPEC_NO_CAPSTONE REG_SPEC
+        #include "triton/arm32.spec"
+
+        PyObject* arm32RegistersDictClass = xPyClass_New(nullptr, arm32RegistersDict, xPyString_FromString("ARM32"));
+        xPyDict_SetItemString(registersDict, "ARM32", arm32RegistersDictClass);
       }
 
     }; /* python namespace */

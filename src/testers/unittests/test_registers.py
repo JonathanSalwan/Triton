@@ -127,7 +127,6 @@ class TestRegisterValues(unittest.TestCase):
             reg = self.ctx.getRegister(reg)
             self.ctx.setConcreteRegisterValue(reg, 0xff)
             # Not OK
-            # TODO : Be more specific on the raise exception type
             with self.assertRaises(Exception):
                 self.ctx.setConcreteRegisterValue(reg, 0xff+1)
 
