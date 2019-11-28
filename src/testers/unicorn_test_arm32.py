@@ -1046,7 +1046,7 @@ if __name__ == '__main__':
         uc_state['pc'] = tt_state['pc']     # FIXME: Check why UC does not update PC.
 
         if uc_state != tt_state:
-            print('[KO] %s %s' %(" ".join(["%02x" % ord(b) for b in opcode]), disassembly))
+            print('[KO] %s %s' %(" ".join(["%02x" % b for b in opcode]), disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
