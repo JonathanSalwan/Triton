@@ -245,5 +245,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-
-#endif  /* !X86CPU_HPP */
+#endif /* TRITON_X86CPU_HPP */
