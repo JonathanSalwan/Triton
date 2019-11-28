@@ -9,6 +9,7 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/aarch64Specifications.hpp>
+#include <triton/arm32Specifications.hpp>
 #include <triton/x86Specifications.hpp>
 
 
@@ -1323,6 +1324,441 @@ According to the CPU architecture, the OPCODE namespace contains all kinds of op
 - **OPCODE.X86.XSHA256**<br>
 - **OPCODE.X86.XSTORE**<br>
 - **OPCODE.X86.XTEST**<br>
+
+\subsection OPCODE_arm32_py_api ARM32
+
+- **OPCODE.ARM32.ADC**<br>
+- **OPCODE.ARM32.ADD**<br>
+- **OPCODE.ARM32.ADR**<br>
+- **OPCODE.ARM32.AESD**<br>
+- **OPCODE.ARM32.AESE**<br>
+- **OPCODE.ARM32.AESIMC**<br>
+- **OPCODE.ARM32.AESMC**<br>
+- **OPCODE.ARM32.AND**<br>
+- **OPCODE.ARM32.BFC**<br>
+- **OPCODE.ARM32.BFI**<br>
+- **OPCODE.ARM32.BIC**<br>
+- **OPCODE.ARM32.BKPT**<br>
+- **OPCODE.ARM32.BL**<br>
+- **OPCODE.ARM32.BLX**<br>
+- **OPCODE.ARM32.BX**<br>
+- **OPCODE.ARM32.BXJ**<br>
+- **OPCODE.ARM32.B**<br>
+- **OPCODE.ARM32.CDP**<br>
+- **OPCODE.ARM32.CDP2**<br>
+- **OPCODE.ARM32.CLREX**<br>
+- **OPCODE.ARM32.CLZ**<br>
+- **OPCODE.ARM32.CMN**<br>
+- **OPCODE.ARM32.CMP**<br>
+- **OPCODE.ARM32.CPS**<br>
+- **OPCODE.ARM32.CRC32B**<br>
+- **OPCODE.ARM32.CRC32CB**<br>
+- **OPCODE.ARM32.CRC32CH**<br>
+- **OPCODE.ARM32.CRC32CW**<br>
+- **OPCODE.ARM32.CRC32H**<br>
+- **OPCODE.ARM32.CRC32W**<br>
+- **OPCODE.ARM32.DBG**<br>
+- **OPCODE.ARM32.DMB**<br>
+- **OPCODE.ARM32.DSB**<br>
+- **OPCODE.ARM32.EOR**<br>
+- **OPCODE.ARM32.ERET**<br>
+- **OPCODE.ARM32.VMOV**<br>
+- **OPCODE.ARM32.FLDMDBX**<br>
+- **OPCODE.ARM32.FLDMIAX**<br>
+- **OPCODE.ARM32.VMRS**<br>
+- **OPCODE.ARM32.FSTMDBX**<br>
+- **OPCODE.ARM32.FSTMIAX**<br>
+- **OPCODE.ARM32.HINT**<br>
+- **OPCODE.ARM32.HLT**<br>
+- **OPCODE.ARM32.HVC**<br>
+- **OPCODE.ARM32.ISB**<br>
+- **OPCODE.ARM32.LDA**<br>
+- **OPCODE.ARM32.LDAB**<br>
+- **OPCODE.ARM32.LDAEX**<br>
+- **OPCODE.ARM32.LDAEXB**<br>
+- **OPCODE.ARM32.LDAEXD**<br>
+- **OPCODE.ARM32.LDAEXH**<br>
+- **OPCODE.ARM32.LDAH**<br>
+- **OPCODE.ARM32.LDC2L**<br>
+- **OPCODE.ARM32.LDC2**<br>
+- **OPCODE.ARM32.LDCL**<br>
+- **OPCODE.ARM32.LDC**<br>
+- **OPCODE.ARM32.LDMDA**<br>
+- **OPCODE.ARM32.LDMDB**<br>
+- **OPCODE.ARM32.LDM**<br>
+- **OPCODE.ARM32.LDMIB**<br>
+- **OPCODE.ARM32.LDRBT**<br>
+- **OPCODE.ARM32.LDRB**<br>
+- **OPCODE.ARM32.LDRD**<br>
+- **OPCODE.ARM32.LDREX**<br>
+- **OPCODE.ARM32.LDREXB**<br>
+- **OPCODE.ARM32.LDREXD**<br>
+- **OPCODE.ARM32.LDREXH**<br>
+- **OPCODE.ARM32.LDRH**<br>
+- **OPCODE.ARM32.LDRHT**<br>
+- **OPCODE.ARM32.LDRSB**<br>
+- **OPCODE.ARM32.LDRSBT**<br>
+- **OPCODE.ARM32.LDRSH**<br>
+- **OPCODE.ARM32.LDRSHT**<br>
+- **OPCODE.ARM32.LDRT**<br>
+- **OPCODE.ARM32.LDR**<br>
+- **OPCODE.ARM32.MCR**<br>
+- **OPCODE.ARM32.MCR2**<br>
+- **OPCODE.ARM32.MCRR**<br>
+- **OPCODE.ARM32.MCRR2**<br>
+- **OPCODE.ARM32.MLA**<br>
+- **OPCODE.ARM32.MLS**<br>
+- **OPCODE.ARM32.MOV**<br>
+- **OPCODE.ARM32.MOVT**<br>
+- **OPCODE.ARM32.MOVW**<br>
+- **OPCODE.ARM32.MRC**<br>
+- **OPCODE.ARM32.MRC2**<br>
+- **OPCODE.ARM32.MRRC**<br>
+- **OPCODE.ARM32.MRRC2**<br>
+- **OPCODE.ARM32.MRS**<br>
+- **OPCODE.ARM32.MSR**<br>
+- **OPCODE.ARM32.MUL**<br>
+- **OPCODE.ARM32.MVN**<br>
+- **OPCODE.ARM32.ORR**<br>
+- **OPCODE.ARM32.PKHBT**<br>
+- **OPCODE.ARM32.PKHTB**<br>
+- **OPCODE.ARM32.PLDW**<br>
+- **OPCODE.ARM32.PLD**<br>
+- **OPCODE.ARM32.PLI**<br>
+- **OPCODE.ARM32.QADD**<br>
+- **OPCODE.ARM32.QADD16**<br>
+- **OPCODE.ARM32.QADD8**<br>
+- **OPCODE.ARM32.QASX**<br>
+- **OPCODE.ARM32.QDADD**<br>
+- **OPCODE.ARM32.QDSUB**<br>
+- **OPCODE.ARM32.QSAX**<br>
+- **OPCODE.ARM32.QSUB**<br>
+- **OPCODE.ARM32.QSUB16**<br>
+- **OPCODE.ARM32.QSUB8**<br>
+- **OPCODE.ARM32.RBIT**<br>
+- **OPCODE.ARM32.REV**<br>
+- **OPCODE.ARM32.REV16**<br>
+- **OPCODE.ARM32.REVSH**<br>
+- **OPCODE.ARM32.RFEDA**<br>
+- **OPCODE.ARM32.RFEDB**<br>
+- **OPCODE.ARM32.RFEIA**<br>
+- **OPCODE.ARM32.RFEIB**<br>
+- **OPCODE.ARM32.RSB**<br>
+- **OPCODE.ARM32.RSC**<br>
+- **OPCODE.ARM32.SADD16**<br>
+- **OPCODE.ARM32.SADD8**<br>
+- **OPCODE.ARM32.SASX**<br>
+- **OPCODE.ARM32.SBC**<br>
+- **OPCODE.ARM32.SBFX**<br>
+- **OPCODE.ARM32.SDIV**<br>
+- **OPCODE.ARM32.SEL**<br>
+- **OPCODE.ARM32.SETEND**<br>
+- **OPCODE.ARM32.SHA1C**<br>
+- **OPCODE.ARM32.SHA1H**<br>
+- **OPCODE.ARM32.SHA1M**<br>
+- **OPCODE.ARM32.SHA1P**<br>
+- **OPCODE.ARM32.SHA1SU0**<br>
+- **OPCODE.ARM32.SHA1SU1**<br>
+- **OPCODE.ARM32.SHA256H**<br>
+- **OPCODE.ARM32.SHA256H2**<br>
+- **OPCODE.ARM32.SHA256SU0**<br>
+- **OPCODE.ARM32.SHA256SU1**<br>
+- **OPCODE.ARM32.SHADD16**<br>
+- **OPCODE.ARM32.SHADD8**<br>
+- **OPCODE.ARM32.SHASX**<br>
+- **OPCODE.ARM32.SHSAX**<br>
+- **OPCODE.ARM32.SHSUB16**<br>
+- **OPCODE.ARM32.SHSUB8**<br>
+- **OPCODE.ARM32.SMC**<br>
+- **OPCODE.ARM32.SMLABB**<br>
+- **OPCODE.ARM32.SMLABT**<br>
+- **OPCODE.ARM32.SMLAD**<br>
+- **OPCODE.ARM32.SMLADX**<br>
+- **OPCODE.ARM32.SMLAL**<br>
+- **OPCODE.ARM32.SMLALBB**<br>
+- **OPCODE.ARM32.SMLALBT**<br>
+- **OPCODE.ARM32.SMLALD**<br>
+- **OPCODE.ARM32.SMLALDX**<br>
+- **OPCODE.ARM32.SMLALTB**<br>
+- **OPCODE.ARM32.SMLALTT**<br>
+- **OPCODE.ARM32.SMLATB**<br>
+- **OPCODE.ARM32.SMLATT**<br>
+- **OPCODE.ARM32.SMLAWB**<br>
+- **OPCODE.ARM32.SMLAWT**<br>
+- **OPCODE.ARM32.SMLSD**<br>
+- **OPCODE.ARM32.SMLSDX**<br>
+- **OPCODE.ARM32.SMLSLD**<br>
+- **OPCODE.ARM32.SMLSLDX**<br>
+- **OPCODE.ARM32.SMMLA**<br>
+- **OPCODE.ARM32.SMMLAR**<br>
+- **OPCODE.ARM32.SMMLS**<br>
+- **OPCODE.ARM32.SMMLSR**<br>
+- **OPCODE.ARM32.SMMUL**<br>
+- **OPCODE.ARM32.SMMULR**<br>
+- **OPCODE.ARM32.SMUAD**<br>
+- **OPCODE.ARM32.SMUADX**<br>
+- **OPCODE.ARM32.SMULBB**<br>
+- **OPCODE.ARM32.SMULBT**<br>
+- **OPCODE.ARM32.SMULL**<br>
+- **OPCODE.ARM32.SMULTB**<br>
+- **OPCODE.ARM32.SMULTT**<br>
+- **OPCODE.ARM32.SMULWB**<br>
+- **OPCODE.ARM32.SMULWT**<br>
+- **OPCODE.ARM32.SMUSD**<br>
+- **OPCODE.ARM32.SMUSDX**<br>
+- **OPCODE.ARM32.SRSDA**<br>
+- **OPCODE.ARM32.SRSDB**<br>
+- **OPCODE.ARM32.SRSIA**<br>
+- **OPCODE.ARM32.SRSIB**<br>
+- **OPCODE.ARM32.SSAT**<br>
+- **OPCODE.ARM32.SSAT16**<br>
+- **OPCODE.ARM32.SSAX**<br>
+- **OPCODE.ARM32.SSUB16**<br>
+- **OPCODE.ARM32.SSUB8**<br>
+- **OPCODE.ARM32.STC2L**<br>
+- **OPCODE.ARM32.STC2**<br>
+- **OPCODE.ARM32.STCL**<br>
+- **OPCODE.ARM32.STC**<br>
+- **OPCODE.ARM32.STL**<br>
+- **OPCODE.ARM32.STLB**<br>
+- **OPCODE.ARM32.STLEX**<br>
+- **OPCODE.ARM32.STLEXB**<br>
+- **OPCODE.ARM32.STLEXD**<br>
+- **OPCODE.ARM32.STLEXH**<br>
+- **OPCODE.ARM32.STLH**<br>
+- **OPCODE.ARM32.STMDA**<br>
+- **OPCODE.ARM32.STMDB**<br>
+- **OPCODE.ARM32.STM**<br>
+- **OPCODE.ARM32.STMIB**<br>
+- **OPCODE.ARM32.STRBT**<br>
+- **OPCODE.ARM32.STRB**<br>
+- **OPCODE.ARM32.STRD**<br>
+- **OPCODE.ARM32.STREX**<br>
+- **OPCODE.ARM32.STREXB**<br>
+- **OPCODE.ARM32.STREXD**<br>
+- **OPCODE.ARM32.STREXH**<br>
+- **OPCODE.ARM32.STRH**<br>
+- **OPCODE.ARM32.STRHT**<br>
+- **OPCODE.ARM32.STRT**<br>
+- **OPCODE.ARM32.STR**<br>
+- **OPCODE.ARM32.SUB**<br>
+- **OPCODE.ARM32.SVC**<br>
+- **OPCODE.ARM32.SWP**<br>
+- **OPCODE.ARM32.SWPB**<br>
+- **OPCODE.ARM32.SXTAB**<br>
+- **OPCODE.ARM32.SXTAB16**<br>
+- **OPCODE.ARM32.SXTAH**<br>
+- **OPCODE.ARM32.SXTB**<br>
+- **OPCODE.ARM32.SXTB16**<br>
+- **OPCODE.ARM32.SXTH**<br>
+- **OPCODE.ARM32.TEQ**<br>
+- **OPCODE.ARM32.TRAP**<br>
+- **OPCODE.ARM32.TST**<br>
+- **OPCODE.ARM32.UADD16**<br>
+- **OPCODE.ARM32.UADD8**<br>
+- **OPCODE.ARM32.UASX**<br>
+- **OPCODE.ARM32.UBFX**<br>
+- **OPCODE.ARM32.UDF**<br>
+- **OPCODE.ARM32.UDIV**<br>
+- **OPCODE.ARM32.UHADD16**<br>
+- **OPCODE.ARM32.UHADD8**<br>
+- **OPCODE.ARM32.UHASX**<br>
+- **OPCODE.ARM32.UHSAX**<br>
+- **OPCODE.ARM32.UHSUB16**<br>
+- **OPCODE.ARM32.UHSUB8**<br>
+- **OPCODE.ARM32.UMAAL**<br>
+- **OPCODE.ARM32.UMLAL**<br>
+- **OPCODE.ARM32.UMULL**<br>
+- **OPCODE.ARM32.UQADD16**<br>
+- **OPCODE.ARM32.UQADD8**<br>
+- **OPCODE.ARM32.UQASX**<br>
+- **OPCODE.ARM32.UQSAX**<br>
+- **OPCODE.ARM32.UQSUB16**<br>
+- **OPCODE.ARM32.UQSUB8**<br>
+- **OPCODE.ARM32.USAD8**<br>
+- **OPCODE.ARM32.USADA8**<br>
+- **OPCODE.ARM32.USAT**<br>
+- **OPCODE.ARM32.USAT16**<br>
+- **OPCODE.ARM32.USAX**<br>
+- **OPCODE.ARM32.USUB16**<br>
+- **OPCODE.ARM32.USUB8**<br>
+- **OPCODE.ARM32.UXTAB**<br>
+- **OPCODE.ARM32.UXTAB16**<br>
+- **OPCODE.ARM32.UXTAH**<br>
+- **OPCODE.ARM32.UXTB**<br>
+- **OPCODE.ARM32.UXTB16**<br>
+- **OPCODE.ARM32.UXTH**<br>
+- **OPCODE.ARM32.VABAL**<br>
+- **OPCODE.ARM32.VABA**<br>
+- **OPCODE.ARM32.VABDL**<br>
+- **OPCODE.ARM32.VABD**<br>
+- **OPCODE.ARM32.VABS**<br>
+- **OPCODE.ARM32.VACGE**<br>
+- **OPCODE.ARM32.VACGT**<br>
+- **OPCODE.ARM32.VADD**<br>
+- **OPCODE.ARM32.VADDHN**<br>
+- **OPCODE.ARM32.VADDL**<br>
+- **OPCODE.ARM32.VADDW**<br>
+- **OPCODE.ARM32.VAND**<br>
+- **OPCODE.ARM32.VBIC**<br>
+- **OPCODE.ARM32.VBIF**<br>
+- **OPCODE.ARM32.VBIT**<br>
+- **OPCODE.ARM32.VBSL**<br>
+- **OPCODE.ARM32.VCEQ**<br>
+- **OPCODE.ARM32.VCGE**<br>
+- **OPCODE.ARM32.VCGT**<br>
+- **OPCODE.ARM32.VCLE**<br>
+- **OPCODE.ARM32.VCLS**<br>
+- **OPCODE.ARM32.VCLT**<br>
+- **OPCODE.ARM32.VCLZ**<br>
+- **OPCODE.ARM32.VCMP**<br>
+- **OPCODE.ARM32.VCMPE**<br>
+- **OPCODE.ARM32.VCNT**<br>
+- **OPCODE.ARM32.VCVTA**<br>
+- **OPCODE.ARM32.VCVTB**<br>
+- **OPCODE.ARM32.VCVT**<br>
+- **OPCODE.ARM32.VCVTM**<br>
+- **OPCODE.ARM32.VCVTN**<br>
+- **OPCODE.ARM32.VCVTP**<br>
+- **OPCODE.ARM32.VCVTT**<br>
+- **OPCODE.ARM32.VDIV**<br>
+- **OPCODE.ARM32.VDUP**<br>
+- **OPCODE.ARM32.VEOR**<br>
+- **OPCODE.ARM32.VEXT**<br>
+- **OPCODE.ARM32.VFMA**<br>
+- **OPCODE.ARM32.VFMS**<br>
+- **OPCODE.ARM32.VFNMA**<br>
+- **OPCODE.ARM32.VFNMS**<br>
+- **OPCODE.ARM32.VHADD**<br>
+- **OPCODE.ARM32.VHSUB**<br>
+- **OPCODE.ARM32.VLD1**<br>
+- **OPCODE.ARM32.VLD2**<br>
+- **OPCODE.ARM32.VLD3**<br>
+- **OPCODE.ARM32.VLD4**<br>
+- **OPCODE.ARM32.VLDMDB**<br>
+- **OPCODE.ARM32.VLDMIA**<br>
+- **OPCODE.ARM32.VLDR**<br>
+- **OPCODE.ARM32.VMAXNM**<br>
+- **OPCODE.ARM32.VMAX**<br>
+- **OPCODE.ARM32.VMINNM**<br>
+- **OPCODE.ARM32.VMIN**<br>
+- **OPCODE.ARM32.VMLA**<br>
+- **OPCODE.ARM32.VMLAL**<br>
+- **OPCODE.ARM32.VMLS**<br>
+- **OPCODE.ARM32.VMLSL**<br>
+- **OPCODE.ARM32.VMOVL**<br>
+- **OPCODE.ARM32.VMOVN**<br>
+- **OPCODE.ARM32.VMSR**<br>
+- **OPCODE.ARM32.VMUL**<br>
+- **OPCODE.ARM32.VMULL**<br>
+- **OPCODE.ARM32.VMVN**<br>
+- **OPCODE.ARM32.VNEG**<br>
+- **OPCODE.ARM32.VNMLA**<br>
+- **OPCODE.ARM32.VNMLS**<br>
+- **OPCODE.ARM32.VNMUL**<br>
+- **OPCODE.ARM32.VORN**<br>
+- **OPCODE.ARM32.VORR**<br>
+- **OPCODE.ARM32.VPADAL**<br>
+- **OPCODE.ARM32.VPADDL**<br>
+- **OPCODE.ARM32.VPADD**<br>
+- **OPCODE.ARM32.VPMAX**<br>
+- **OPCODE.ARM32.VPMIN**<br>
+- **OPCODE.ARM32.VQABS**<br>
+- **OPCODE.ARM32.VQADD**<br>
+- **OPCODE.ARM32.VQDMLAL**<br>
+- **OPCODE.ARM32.VQDMLSL**<br>
+- **OPCODE.ARM32.VQDMULH**<br>
+- **OPCODE.ARM32.VQDMULL**<br>
+- **OPCODE.ARM32.VQMOVUN**<br>
+- **OPCODE.ARM32.VQMOVN**<br>
+- **OPCODE.ARM32.VQNEG**<br>
+- **OPCODE.ARM32.VQRDMULH**<br>
+- **OPCODE.ARM32.VQRSHL**<br>
+- **OPCODE.ARM32.VQRSHRN**<br>
+- **OPCODE.ARM32.VQRSHRUN**<br>
+- **OPCODE.ARM32.VQSHL**<br>
+- **OPCODE.ARM32.VQSHLU**<br>
+- **OPCODE.ARM32.VQSHRN**<br>
+- **OPCODE.ARM32.VQSHRUN**<br>
+- **OPCODE.ARM32.VQSUB**<br>
+- **OPCODE.ARM32.VRADDHN**<br>
+- **OPCODE.ARM32.VRECPE**<br>
+- **OPCODE.ARM32.VRECPS**<br>
+- **OPCODE.ARM32.VREV16**<br>
+- **OPCODE.ARM32.VREV32**<br>
+- **OPCODE.ARM32.VREV64**<br>
+- **OPCODE.ARM32.VRHADD**<br>
+- **OPCODE.ARM32.VRINTA**<br>
+- **OPCODE.ARM32.VRINTM**<br>
+- **OPCODE.ARM32.VRINTN**<br>
+- **OPCODE.ARM32.VRINTP**<br>
+- **OPCODE.ARM32.VRINTR**<br>
+- **OPCODE.ARM32.VRINTX**<br>
+- **OPCODE.ARM32.VRINTZ**<br>
+- **OPCODE.ARM32.VRSHL**<br>
+- **OPCODE.ARM32.VRSHRN**<br>
+- **OPCODE.ARM32.VRSHR**<br>
+- **OPCODE.ARM32.VRSQRTE**<br>
+- **OPCODE.ARM32.VRSQRTS**<br>
+- **OPCODE.ARM32.VRSRA**<br>
+- **OPCODE.ARM32.VRSUBHN**<br>
+- **OPCODE.ARM32.VSELEQ**<br>
+- **OPCODE.ARM32.VSELGE**<br>
+- **OPCODE.ARM32.VSELGT**<br>
+- **OPCODE.ARM32.VSELVS**<br>
+- **OPCODE.ARM32.VSHLL**<br>
+- **OPCODE.ARM32.VSHL**<br>
+- **OPCODE.ARM32.VSHRN**<br>
+- **OPCODE.ARM32.VSHR**<br>
+- **OPCODE.ARM32.VSLI**<br>
+- **OPCODE.ARM32.VSQRT**<br>
+- **OPCODE.ARM32.VSRA**<br>
+- **OPCODE.ARM32.VSRI**<br>
+- **OPCODE.ARM32.VST1**<br>
+- **OPCODE.ARM32.VST2**<br>
+- **OPCODE.ARM32.VST3**<br>
+- **OPCODE.ARM32.VST4**<br>
+- **OPCODE.ARM32.VSTMDB**<br>
+- **OPCODE.ARM32.VSTMIA**<br>
+- **OPCODE.ARM32.VSTR**<br>
+- **OPCODE.ARM32.VSUB**<br>
+- **OPCODE.ARM32.VSUBHN**<br>
+- **OPCODE.ARM32.VSUBL**<br>
+- **OPCODE.ARM32.VSUBW**<br>
+- **OPCODE.ARM32.VSWP**<br>
+- **OPCODE.ARM32.VTBL**<br>
+- **OPCODE.ARM32.VTBX**<br>
+- **OPCODE.ARM32.VCVTR**<br>
+- **OPCODE.ARM32.VTRN**<br>
+- **OPCODE.ARM32.VTST**<br>
+- **OPCODE.ARM32.VUZP**<br>
+- **OPCODE.ARM32.VZIP**<br>
+- **OPCODE.ARM32.ADDW**<br>
+- **OPCODE.ARM32.ASR**<br>
+- **OPCODE.ARM32.DCPS1**<br>
+- **OPCODE.ARM32.DCPS2**<br>
+- **OPCODE.ARM32.DCPS3**<br>
+- **OPCODE.ARM32.IT**<br>
+- **OPCODE.ARM32.LSL**<br>
+- **OPCODE.ARM32.LSR**<br>
+- **OPCODE.ARM32.ORN**<br>
+- **OPCODE.ARM32.ROR**<br>
+- **OPCODE.ARM32.RRX**<br>
+- **OPCODE.ARM32.SUBW**<br>
+- **OPCODE.ARM32.TBB**<br>
+- **OPCODE.ARM32.TBH**<br>
+- **OPCODE.ARM32.CBNZ**<br>
+- **OPCODE.ARM32.CBZ**<br>
+- **OPCODE.ARM32.POP**<br>
+- **OPCODE.ARM32.PUSH**<br>
+- **OPCODE.ARM32.NOP**<br>
+- **OPCODE.ARM32.YIELD**<br>
+- **OPCODE.ARM32.WFE**<br>
+- **OPCODE.ARM32.WFI**<br>
+- **OPCODE.ARM32.SEV**<br>
+- **OPCODE.ARM32.SEVL**<br>
+- **OPCODE.ARM32.VPUSH**<br>
+- **OPCODE.ARM32.VPOP**<br>
 
 \subsection OPCODE_aarch64_py_api AArch64
 
@@ -3475,6 +3911,445 @@ namespace triton {
 
         PyObject* Aarch64OpcodesDictClass = xPyClass_New(nullptr, Aarch64OpcodesDict, xPyString_FromString("AARCH64"));
         xPyDict_SetItemString(opcodesDict, "AARCH64", Aarch64OpcodesDictClass);
+
+        PyObject* arm32OpcodesDict = xPyDict_New();
+
+        xPyDict_SetItemString(arm32OpcodesDict, "ADC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ADC));
+        xPyDict_SetItemString(arm32OpcodesDict, "ADC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ADC));
+        xPyDict_SetItemString(arm32OpcodesDict, "ADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "ADR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ADR));
+        xPyDict_SetItemString(arm32OpcodesDict, "AESD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_AESD));
+        xPyDict_SetItemString(arm32OpcodesDict, "AESE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_AESE));
+        xPyDict_SetItemString(arm32OpcodesDict, "AESIMC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_AESIMC));
+        xPyDict_SetItemString(arm32OpcodesDict, "AESMC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_AESMC));
+        xPyDict_SetItemString(arm32OpcodesDict, "AND", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_AND));
+        xPyDict_SetItemString(arm32OpcodesDict, "BFC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BFC));
+        xPyDict_SetItemString(arm32OpcodesDict, "BFI", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BFI));
+        xPyDict_SetItemString(arm32OpcodesDict, "BIC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BIC));
+        xPyDict_SetItemString(arm32OpcodesDict, "BKPT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BKPT));
+        xPyDict_SetItemString(arm32OpcodesDict, "BL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BL));
+        xPyDict_SetItemString(arm32OpcodesDict, "BLX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BLX));
+        xPyDict_SetItemString(arm32OpcodesDict, "BX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BX));
+        xPyDict_SetItemString(arm32OpcodesDict, "BXJ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_BXJ));
+        xPyDict_SetItemString(arm32OpcodesDict, "B", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_B));
+        xPyDict_SetItemString(arm32OpcodesDict, "CDP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CDP));
+        xPyDict_SetItemString(arm32OpcodesDict, "CDP2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CDP2));
+        xPyDict_SetItemString(arm32OpcodesDict, "CLREX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CLREX));
+        xPyDict_SetItemString(arm32OpcodesDict, "CLZ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CLZ));
+        xPyDict_SetItemString(arm32OpcodesDict, "CMN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CMN));
+        xPyDict_SetItemString(arm32OpcodesDict, "CMP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CMP));
+        xPyDict_SetItemString(arm32OpcodesDict, "CPS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CPS));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32B", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32B));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32CB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32CB));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32CH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32CH));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32CW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32CW));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32H", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32H));
+        xPyDict_SetItemString(arm32OpcodesDict, "CRC32W", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CRC32W));
+        xPyDict_SetItemString(arm32OpcodesDict, "DBG", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DBG));
+        xPyDict_SetItemString(arm32OpcodesDict, "DMB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DMB));
+        xPyDict_SetItemString(arm32OpcodesDict, "DSB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DSB));
+        xPyDict_SetItemString(arm32OpcodesDict, "EOR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_EOR));
+        xPyDict_SetItemString(arm32OpcodesDict, "ERET", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ERET));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMOV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMOV));
+        xPyDict_SetItemString(arm32OpcodesDict, "FLDMDBX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_FLDMDBX));
+        xPyDict_SetItemString(arm32OpcodesDict, "FLDMIAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_FLDMIAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMRS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMRS));
+        xPyDict_SetItemString(arm32OpcodesDict, "FSTMDBX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_FSTMDBX));
+        xPyDict_SetItemString(arm32OpcodesDict, "FSTMIAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_FSTMIAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "HINT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_HINT));
+        xPyDict_SetItemString(arm32OpcodesDict, "HLT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_HLT));
+        xPyDict_SetItemString(arm32OpcodesDict, "HVC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_HVC));
+        xPyDict_SetItemString(arm32OpcodesDict, "ISB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ISB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDA));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAEX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAEX));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAEXB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAEXB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAEXD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAEXD));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAEXH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAEXH));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDAH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDAH));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDC2L", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDC2L));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDC2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDC2));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDCL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDCL));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDC));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDMDA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDMDA));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDMDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDMDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDM));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDMIB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDMIB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRD));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDREX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDREX));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDREXB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDREXB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDREXD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDREXD));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDREXH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDREXH));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRH));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRHT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRHT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRSB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRSB));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRSBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRSBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRSH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRSH));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRSHT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRSHT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDRT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDRT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LDR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LDR));
+        xPyDict_SetItemString(arm32OpcodesDict, "MCR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MCR));
+        xPyDict_SetItemString(arm32OpcodesDict, "MCR2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MCR2));
+        xPyDict_SetItemString(arm32OpcodesDict, "MCRR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MCRR));
+        xPyDict_SetItemString(arm32OpcodesDict, "MCRR2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MCRR2));
+        xPyDict_SetItemString(arm32OpcodesDict, "MLA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MLA));
+        xPyDict_SetItemString(arm32OpcodesDict, "MLS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MLS));
+        xPyDict_SetItemString(arm32OpcodesDict, "MOV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MOV));
+        xPyDict_SetItemString(arm32OpcodesDict, "MOVT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MOVT));
+        xPyDict_SetItemString(arm32OpcodesDict, "MOVW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MOVW));
+        xPyDict_SetItemString(arm32OpcodesDict, "MRC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MRC));
+        xPyDict_SetItemString(arm32OpcodesDict, "MRC2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MRC2));
+        xPyDict_SetItemString(arm32OpcodesDict, "MRRC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MRRC));
+        xPyDict_SetItemString(arm32OpcodesDict, "MRRC2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MRRC2));
+        xPyDict_SetItemString(arm32OpcodesDict, "MRS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MRS));
+        xPyDict_SetItemString(arm32OpcodesDict, "MSR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MSR));
+        xPyDict_SetItemString(arm32OpcodesDict, "MUL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MUL));
+        xPyDict_SetItemString(arm32OpcodesDict, "MVN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_MVN));
+        xPyDict_SetItemString(arm32OpcodesDict, "ORR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ORR));
+        xPyDict_SetItemString(arm32OpcodesDict, "PKHBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PKHBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "PKHTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PKHTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "PLDW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PLDW));
+        xPyDict_SetItemString(arm32OpcodesDict, "PLD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PLD));
+        xPyDict_SetItemString(arm32OpcodesDict, "PLI", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PLI));
+        xPyDict_SetItemString(arm32OpcodesDict, "QADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "QADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "QADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "QASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "QDADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QDADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "QDSUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QDSUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "QSAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QSAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "QSUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QSUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "QSUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QSUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "QSUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_QSUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "RBIT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RBIT));
+        xPyDict_SetItemString(arm32OpcodesDict, "REV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_REV));
+        xPyDict_SetItemString(arm32OpcodesDict, "REV16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_REV16));
+        xPyDict_SetItemString(arm32OpcodesDict, "REVSH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_REVSH));
+        xPyDict_SetItemString(arm32OpcodesDict, "RFEDA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RFEDA));
+        xPyDict_SetItemString(arm32OpcodesDict, "RFEDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RFEDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "RFEIA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RFEIA));
+        xPyDict_SetItemString(arm32OpcodesDict, "RFEIB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RFEIB));
+        xPyDict_SetItemString(arm32OpcodesDict, "RSB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RSB));
+        xPyDict_SetItemString(arm32OpcodesDict, "RSC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RSC));
+        xPyDict_SetItemString(arm32OpcodesDict, "SADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "SASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SBC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SBC));
+        xPyDict_SetItemString(arm32OpcodesDict, "SBFX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SBFX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SDIV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SDIV));
+        xPyDict_SetItemString(arm32OpcodesDict, "SEL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SEL));
+        xPyDict_SetItemString(arm32OpcodesDict, "SETEND", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SETEND));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1C", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1C));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1H", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1H));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1M", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1M));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1P", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1P));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1SU0", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1SU0));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA1SU1", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA1SU1));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA256H", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA256H));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA256H2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA256H2));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA256SU0", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA256SU0));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHA256SU1", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHA256SU1));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHSAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHSAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHSUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHSUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SHSUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SHSUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMC));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLABB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLABB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLABT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLABT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLAD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLAD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLADX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLADX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALBB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALBB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALDX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALDX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLALTT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLALTT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLATB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLATB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLATT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLATT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLAWB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLAWB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLAWT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLAWT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLSD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLSD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLSDX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLSDX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLSLD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLSLD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMLSLDX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMLSLDX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMLA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMLA));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMLAR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMLAR));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMLS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMLS));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMLSR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMLSR));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMUL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMUL));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMMULR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMMULR));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMUAD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMUAD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMUADX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMUADX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULBB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULBB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULL));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULTT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULTT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULWB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULWB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMULWT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMULWT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMUSD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMUSD));
+        xPyDict_SetItemString(arm32OpcodesDict, "SMUSDX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SMUSDX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SRSDA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SRSDA));
+        xPyDict_SetItemString(arm32OpcodesDict, "SRSDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SRSDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SRSIA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SRSIA));
+        xPyDict_SetItemString(arm32OpcodesDict, "SRSIB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SRSIB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SSAT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SSAT));
+        xPyDict_SetItemString(arm32OpcodesDict, "SSAT16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SSAT16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SSAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SSAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SSUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SSUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SSUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SSUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "STC2L", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STC2L));
+        xPyDict_SetItemString(arm32OpcodesDict, "STC2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STC2));
+        xPyDict_SetItemString(arm32OpcodesDict, "STCL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STCL));
+        xPyDict_SetItemString(arm32OpcodesDict, "STC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STC));
+        xPyDict_SetItemString(arm32OpcodesDict, "STL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STL));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLEX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLEX));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLEXB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLEXB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLEXD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLEXD));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLEXH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLEXH));
+        xPyDict_SetItemString(arm32OpcodesDict, "STLH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STLH));
+        xPyDict_SetItemString(arm32OpcodesDict, "STMDA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STMDA));
+        xPyDict_SetItemString(arm32OpcodesDict, "STMDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STMDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STM));
+        xPyDict_SetItemString(arm32OpcodesDict, "STMIB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STMIB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRBT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRBT));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRD));
+        xPyDict_SetItemString(arm32OpcodesDict, "STREX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STREX));
+        xPyDict_SetItemString(arm32OpcodesDict, "STREXB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STREXB));
+        xPyDict_SetItemString(arm32OpcodesDict, "STREXD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STREXD));
+        xPyDict_SetItemString(arm32OpcodesDict, "STREXH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STREXH));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRH));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRHT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRHT));
+        xPyDict_SetItemString(arm32OpcodesDict, "STRT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STRT));
+        xPyDict_SetItemString(arm32OpcodesDict, "STR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_STR));
+        xPyDict_SetItemString(arm32OpcodesDict, "SUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SVC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SVC));
+        xPyDict_SetItemString(arm32OpcodesDict, "SWP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SWP));
+        xPyDict_SetItemString(arm32OpcodesDict, "SWPB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SWPB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTAB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTAB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTAB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTAB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTAH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTAH));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "SXTH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SXTH));
+        xPyDict_SetItemString(arm32OpcodesDict, "TEQ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_TEQ));
+        xPyDict_SetItemString(arm32OpcodesDict, "TRAP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_TRAP));
+        xPyDict_SetItemString(arm32OpcodesDict, "TST", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_TST));
+        xPyDict_SetItemString(arm32OpcodesDict, "UADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "UASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UBFX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UBFX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UDF", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UDF));
+        xPyDict_SetItemString(arm32OpcodesDict, "UDIV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UDIV));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHSAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHSAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHSUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHSUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UHSUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UHSUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "UMAAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UMAAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "UMLAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UMLAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "UMULL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UMULL));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQADD16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQADD16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQADD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQADD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQASX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQASX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQSAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQSAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQSUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQSUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UQSUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UQSUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "USAD8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USAD8));
+        xPyDict_SetItemString(arm32OpcodesDict, "USADA8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USADA8));
+        xPyDict_SetItemString(arm32OpcodesDict, "USAT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USAT));
+        xPyDict_SetItemString(arm32OpcodesDict, "USAT16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USAT16));
+        xPyDict_SetItemString(arm32OpcodesDict, "USAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "USUB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USUB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "USUB8", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_USUB8));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTAB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTAB));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTAB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTAB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTAH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTAH));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTB16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTB16));
+        xPyDict_SetItemString(arm32OpcodesDict, "UXTH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_UXTH));
+        xPyDict_SetItemString(arm32OpcodesDict, "VABAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VABAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VABA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VABA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VABDL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VABDL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VABD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VABD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VABS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VABS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VACGE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VACGE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VACGT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VACGT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VADDHN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VADDHN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VADDL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VADDL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VADDW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VADDW));
+        xPyDict_SetItemString(arm32OpcodesDict, "VAND", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VAND));
+        xPyDict_SetItemString(arm32OpcodesDict, "VBIC", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VBIC));
+        xPyDict_SetItemString(arm32OpcodesDict, "VBIF", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VBIF));
+        xPyDict_SetItemString(arm32OpcodesDict, "VBIT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VBIT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VBSL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VBSL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCEQ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCEQ));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCGE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCGE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCGT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCGT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCLE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCLE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCLS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCLS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCLT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCLT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCLZ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCLZ));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCMP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCMP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCMPE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCMPE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCNT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCNT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTM));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VDIV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VDIV));
+        xPyDict_SetItemString(arm32OpcodesDict, "VDUP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VDUP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VEOR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VEOR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VEXT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VEXT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VFMA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VFMA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VFMS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VFMS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VFNMA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VFNMA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VFNMS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VFNMS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VHADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VHADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VHSUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VHSUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLD1", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLD1));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLD2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLD2));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLD3", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLD3));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLD4", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLD4));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLDMDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLDMDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLDMIA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLDMIA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VLDR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VLDR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMAXNM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMAXNM));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMINNM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMINNM));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMIN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMIN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMLA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMLA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMLAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMLAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMLS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMLS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMLSL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMLSL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMOVL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMOVL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMOVN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMOVN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMSR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMSR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMUL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMUL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMULL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMULL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VMVN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VMVN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VNEG", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VNEG));
+        xPyDict_SetItemString(arm32OpcodesDict, "VNMLA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VNMLA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VNMLS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VNMLS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VNMUL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VNMUL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VORN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VORN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VORR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VORR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPADAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPADAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPADDL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPADDL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPMAX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPMAX));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPMIN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPMIN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQABS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQABS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQDMLAL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQDMLAL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQDMLSL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQDMLSL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQDMULH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQDMULH));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQDMULL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQDMULL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQMOVUN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQMOVUN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQMOVN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQMOVN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQNEG", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQNEG));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQRDMULH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQRDMULH));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQRSHL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQRSHL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQRSHRN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQRSHRN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQRSHRUN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQRSHRUN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQSHL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQSHL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQSHLU", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQSHLU));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQSHRN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQSHRN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQSHRUN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQSHRUN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VQSUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VQSUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRADDHN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRADDHN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRECPE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRECPE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRECPS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRECPS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VREV16", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VREV16));
+        xPyDict_SetItemString(arm32OpcodesDict, "VREV32", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VREV32));
+        xPyDict_SetItemString(arm32OpcodesDict, "VREV64", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VREV64));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRHADD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRHADD));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTM", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTM));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTX));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRINTZ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRINTZ));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSHL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSHL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSHRN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSHRN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSHR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSHR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSQRTE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSQRTE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSQRTS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSQRTS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSRA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSRA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VRSUBHN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VRSUBHN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSELEQ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSELEQ));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSELGE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSELGE));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSELGT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSELGT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSELVS", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSELVS));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSHLL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSHLL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSHL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSHL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSHRN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSHRN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSHR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSHR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSLI", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSLI));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSQRT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSQRT));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSRA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSRA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSRI", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSRI));
+        xPyDict_SetItemString(arm32OpcodesDict, "VST1", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VST1));
+        xPyDict_SetItemString(arm32OpcodesDict, "VST2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VST2));
+        xPyDict_SetItemString(arm32OpcodesDict, "VST3", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VST3));
+        xPyDict_SetItemString(arm32OpcodesDict, "VST4", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VST4));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSTMDB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSTMDB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSTMIA", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSTMIA));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSTR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSTR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSUB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSUB));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSUBHN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSUBHN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSUBL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSUBL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSUBW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSUBW));
+        xPyDict_SetItemString(arm32OpcodesDict, "VSWP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VSWP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VTBL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VTBL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VTBX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VTBX));
+        xPyDict_SetItemString(arm32OpcodesDict, "VCVTR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VCVTR));
+        xPyDict_SetItemString(arm32OpcodesDict, "VTRN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VTRN));
+        xPyDict_SetItemString(arm32OpcodesDict, "VTST", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VTST));
+        xPyDict_SetItemString(arm32OpcodesDict, "VUZP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VUZP));
+        xPyDict_SetItemString(arm32OpcodesDict, "VZIP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VZIP));
+        xPyDict_SetItemString(arm32OpcodesDict, "ADDW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ADDW));
+        xPyDict_SetItemString(arm32OpcodesDict, "ASR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ASR));
+        xPyDict_SetItemString(arm32OpcodesDict, "DCPS1", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DCPS1));
+        xPyDict_SetItemString(arm32OpcodesDict, "DCPS2", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DCPS2));
+        xPyDict_SetItemString(arm32OpcodesDict, "DCPS3", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_DCPS3));
+        xPyDict_SetItemString(arm32OpcodesDict, "IT", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_IT));
+        xPyDict_SetItemString(arm32OpcodesDict, "LSL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LSL));
+        xPyDict_SetItemString(arm32OpcodesDict, "LSR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_LSR));
+        xPyDict_SetItemString(arm32OpcodesDict, "ORN", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ORN));
+        xPyDict_SetItemString(arm32OpcodesDict, "ROR", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_ROR));
+        xPyDict_SetItemString(arm32OpcodesDict, "RRX", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_RRX));
+        xPyDict_SetItemString(arm32OpcodesDict, "SUBW", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SUBW));
+        xPyDict_SetItemString(arm32OpcodesDict, "TBB", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_TBB));
+        xPyDict_SetItemString(arm32OpcodesDict, "TBH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_TBH));
+        xPyDict_SetItemString(arm32OpcodesDict, "CBNZ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CBNZ));
+        xPyDict_SetItemString(arm32OpcodesDict, "CBZ", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_CBZ));
+        xPyDict_SetItemString(arm32OpcodesDict, "POP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_POP));
+        xPyDict_SetItemString(arm32OpcodesDict, "PUSH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_PUSH));
+        xPyDict_SetItemString(arm32OpcodesDict, "NOP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_NOP));
+        xPyDict_SetItemString(arm32OpcodesDict, "YIELD", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_YIELD));
+        xPyDict_SetItemString(arm32OpcodesDict, "WFE", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_WFE));
+        xPyDict_SetItemString(arm32OpcodesDict, "WFI", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_WFI));
+        xPyDict_SetItemString(arm32OpcodesDict, "SEV", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SEV));
+        xPyDict_SetItemString(arm32OpcodesDict, "SEVL", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_SEVL));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPUSH", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPUSH));
+        xPyDict_SetItemString(arm32OpcodesDict, "VPOP", PyLong_FromUint32(triton::arch::arm::arm32::ID_INS_VPOP));
+
+        PyObject* arm32OpcodesDictClass = xPyClass_New(nullptr, arm32OpcodesDict, xPyString_FromString("ARM32"));
+        xPyDict_SetItemString(opcodesDict, "ARM32", arm32OpcodesDictClass);
       }
 
     }; /* python namespace */
