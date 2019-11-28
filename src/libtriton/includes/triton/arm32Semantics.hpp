@@ -32,99 +32,109 @@ namespace triton {
    *  @{
    */
 
-    //! The arm32 namespace
-    namespace arm32 {
+    //! The ARM namespace
+    namespace arm {
     /*!
      *  \ingroup arch
-     *  \addtogroup arm32
+     *  \addtogroup arm
      *  @{
      */
 
-      /*! \class Arm32Semantics
-          \brief The Arm32 ISA semantics. */
-      class Arm32Semantics : public SemanticsInterface {
-        private:
-          //! Architecture API
-          triton::arch::Architecture* architecture;
+      //! The arm32 namespace
+      namespace arm32 {
+      /*!
+       *  \ingroup arm
+       *  \addtogroup arm32
+       *  @{
+       */
 
-          //! Symbolic Engine API
-          triton::engines::symbolic::SymbolicEngine* symbolicEngine;
+        /*! \class Arm32Semantics
+            \brief The Arm32 ISA semantics. */
+        class Arm32Semantics : public SemanticsInterface {
+          private:
+            //! Architecture API
+            triton::arch::Architecture* architecture;
 
-          //! Taint Engine API
-          triton::engines::taint::TaintEngine* taintEngine;
+            //! Symbolic Engine API
+            triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
-          //! The AST Context API
-          triton::ast::SharedAstContext astCtxt;
+            //! Taint Engine API
+            triton::engines::taint::TaintEngine* taintEngine;
 
-        public:
-          //! Constructor.
-          TRITON_EXPORT Arm32Semantics(triton::arch::Architecture* architecture,
-                                       triton::engines::symbolic::SymbolicEngine* symbolicEngine,
-                                       triton::engines::taint::TaintEngine* taintEngine,
-                                       const triton::ast::SharedAstContext& astCtxt);
+            //! The AST Context API
+            triton::ast::SharedAstContext astCtxt;
 
-          //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-          TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
+          public:
+            //! Constructor.
+            TRITON_EXPORT Arm32Semantics(triton::arch::Architecture* architecture,
+                                         triton::engines::symbolic::SymbolicEngine* symbolicEngine,
+                                         triton::engines::taint::TaintEngine* taintEngine,
+                                         const triton::ast::SharedAstContext& astCtxt);
 
-        private:
-          //! Control flow semantics. Used to represent PC.
-          void controlFlow_s(triton::arch::Instruction& inst);
+            //! Builds the semantics of the instruction. Returns true if the instruction is supported.
+            TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
-          //! Creates a conditional node.
-          triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
+          private:
+            //! Control flow semantics. Used to represent PC.
+            void controlFlow_s(triton::arch::Instruction& inst);
 
-          //! Gets the taint state (based on flags) of a conditional instruction.
-          bool getCodeConditionTaintState(const triton::arch::Instruction& inst);
+            //! Creates a conditional node.
+            triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
 
-          //! Spreads taint based considering conditional execution.
-          void spreadTaint(triton::arch::Instruction& inst,
-                           const triton::ast::SharedAbstractNode& cond,
-                           const triton::engines::symbolic::SharedSymbolicExpression& expr,
-                           triton::arch::OperandWrapper& operand,
-                           bool taint);
+            //! Gets the taint state (based on flags) of a conditional instruction.
+            bool getCodeConditionTaintState(const triton::arch::Instruction& inst);
 
-          /* Generic flags computation ------------------------------------- */
+            //! Spreads taint based considering conditional execution.
+            void spreadTaint(triton::arch::Instruction& inst,
+                             const triton::ast::SharedAbstractNode& cond,
+                             const triton::engines::symbolic::SharedSymbolicExpression& expr,
+                             triton::arch::OperandWrapper& operand,
+                             bool taint);
 
-          //! The NF semantics.
-          void nf_s(triton::arch::Instruction& inst,
-                    const triton::ast::SharedAbstractNode& cond,
-                    const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                    triton::arch::OperandWrapper& dst);
+            /* Generic flags computation ------------------------------------- */
 
-          //! The ZF semantics.
-          void zf_s(triton::arch::Instruction& inst,
-                    const triton::ast::SharedAbstractNode& cond,
-                    const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                    triton::arch::OperandWrapper& dst);
+            //! The NF semantics.
+            void nf_s(triton::arch::Instruction& inst,
+                      const triton::ast::SharedAbstractNode& cond,
+                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                      triton::arch::OperandWrapper& dst);
 
-          /* Specific flags computation ------------------------------------ */
+            //! The ZF semantics.
+            void zf_s(triton::arch::Instruction& inst,
+                      const triton::ast::SharedAbstractNode& cond,
+                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                      triton::arch::OperandWrapper& dst);
 
-          //! The CF semantics for the ADDS operation.
-          void cfAdd_s(triton::arch::Instruction& inst,
-                       const triton::ast::SharedAbstractNode& cond,
-                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2);
+            /* Specific flags computation ------------------------------------ */
 
-          //! The VF semantics for the ADDS operation.
-          void vfAdd_s(triton::arch::Instruction& inst,
-                       const triton::ast::SharedAbstractNode& cond,
-                       const triton::engines::symbolic::SharedSymbolicExpression& parent,
-                       triton::arch::OperandWrapper& dst,
-                       triton::ast::SharedAbstractNode& op1,
-                       triton::ast::SharedAbstractNode& op2);
+            //! The CF semantics for the ADDS operation.
+            void cfAdd_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& dst,
+                         triton::ast::SharedAbstractNode& op1,
+                         triton::ast::SharedAbstractNode& op2);
 
-          /* Instruction semantics ----------------------------------------- */
+            //! The VF semantics for the ADDS operation.
+            void vfAdd_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& dst,
+                         triton::ast::SharedAbstractNode& op1,
+                         triton::ast::SharedAbstractNode& op2);
 
-          //! The ADC semantics.
-          void adc_s(triton::arch::Instruction& inst);
+            /* Instruction semantics ----------------------------------------- */
 
-          //! The ADD semantics.
-          void add_s(triton::arch::Instruction& inst);
+            //! The ADC semantics.
+            void adc_s(triton::arch::Instruction& inst);
+
+            //! The ADD semantics.
+            void add_s(triton::arch::Instruction& inst);
+        };
+
+      /*! @} End of arm32 namespace */
       };
-
-    /*! @} End of arm32 namespace */
+    /*! @} End of arm namespace */
     };
   /*! @} End of arch namespace */
   };

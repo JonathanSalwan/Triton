@@ -420,7 +420,7 @@ int test_7(void) {
 
 
 int test_8(void) {
-  triton::arch::aarch64::AArch64Cpu cpy;
+  triton::arch::arm::aarch64::AArch64Cpu cpy;
   triton::API api;
 
   api.setArchitecture(triton::arch::ARCH_AARCH64);
@@ -429,7 +429,7 @@ int test_8(void) {
   if (api.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345)
     return 1;
 
-  cpy = *reinterpret_cast<triton::arch::aarch64::AArch64Cpu*>(api.getCpuInstance());
+  cpy = *reinterpret_cast<triton::arch::arm::aarch64::AArch64Cpu*>(api.getCpuInstance());
   if (cpy.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345) {
     std::cerr << "test_8: KO (cpy context != api context)" << std::endl;
     return 1;
