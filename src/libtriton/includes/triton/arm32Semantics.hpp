@@ -78,6 +78,11 @@ namespace triton {
             //! Control flow semantics. Used to represent PC.
             void controlFlow_s(triton::arch::Instruction& inst);
 
+            //! Control flow semantics. Used to represent PC.
+            void controlFlow_s(triton::arch::Instruction& inst,
+                               const triton::ast::SharedAbstractNode& cond,
+                               triton::arch::OperandWrapper& dst);
+
             //! Creates a conditional node.
             triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
 
