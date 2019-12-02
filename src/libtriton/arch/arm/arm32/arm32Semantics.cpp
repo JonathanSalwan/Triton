@@ -80,6 +80,28 @@ namespace triton {
         }
 
 
+        void Arm32Semantics::controlFlow_s(triton::arch::Instruction& inst,
+                                           const triton::ast::SharedAbstractNode& cond,
+                                           triton::arch::OperandWrapper& dst) {
+          auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
+
+          triton::ast::SharedAbstractNode node;
+
+          /* Create the semantics */
+          if (cond->evaluate() == true && inst.isUpdateFlag() == false && dst.getRegister().getId() == ID_REG_ARM32_PC) {
+            node = this->symbolicEngine->getOperandAst(inst, pc);
+          } else {
+            node = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
+          }
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, this->architecture->getParentRegister(ID_REG_ARM32_PC), "Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getParentRegister(ID_REG_ARM32_PC), triton::engines::taint::UNTAINTED);
+        }
+
+
         triton::ast::SharedAbstractNode Arm32Semantics::getCodeConditionAst(triton::arch::Instruction& inst) {
 
           switch (inst.getCodeCondition()) {
@@ -459,7 +481,8 @@ namespace triton {
           }
 
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
+          /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
+          this->controlFlow_s(inst, cond, dst);
         }
 
 
@@ -500,7 +523,8 @@ namespace triton {
           }
 
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
+          /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
+          this->controlFlow_s(inst, cond, dst);
         }
 
       }; /* arm32 namespace */
