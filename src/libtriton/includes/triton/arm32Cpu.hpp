@@ -113,6 +113,9 @@ namespace triton {
             // //! Concrete value of apsr
             triton::uint8 apsr[DWORD_SIZE];
 
+            //! Thumb mode flag
+            bool thumb;
+
           public:
             //! Constructor.
             TRITON_EXPORT Arm32Cpu(triton::callbacks::Callbacks* callbacks=nullptr);
@@ -128,6 +131,12 @@ namespace triton {
 
             //! Returns true if regId is a GRP.
             TRITON_EXPORT bool isGPR(triton::arch::register_e regId) const;
+
+            //! Returns true if CPU is in Thumb mode.
+            TRITON_EXPORT bool isThumb(void) const;
+
+            //! Sets CPU state to Thumb mode.
+            TRITON_EXPORT void setThumb(bool state);
 
             /* Virtual pure inheritance ================================================= */
             TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;

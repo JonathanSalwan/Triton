@@ -25,6 +25,7 @@ namespace triton {
       this->prefix          = triton::arch::x86::ID_PREFIX_INVALID;
       this->size            = 0;
       this->tainted         = false;
+      this->thumb           = false;
       this->tid             = 0;
       this->type            = 0;
       this->updateFlag      = false;
@@ -308,6 +309,11 @@ namespace triton {
     }
 
 
+    void Instruction::setThumb(bool state) {
+      this->thumb = state;
+    }
+
+
     void Instruction::setDisassembly(const std::string& str) {
       this->disassembly.clear();
       this->disassembly.str(str);
@@ -466,6 +472,11 @@ namespace triton {
 
     bool Instruction::isUpdateFlag(void) const {
       return this->updateFlag;
+    }
+
+
+    bool Instruction::isThumb(void) const {
+      return this->thumb;
     }
 
 

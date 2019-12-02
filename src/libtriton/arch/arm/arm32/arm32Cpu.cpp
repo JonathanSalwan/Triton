@@ -24,6 +24,7 @@ namespace triton {
 
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
           this->callbacks = callbacks;
+          this->thumb = false;
           this->clear();
         }
 
@@ -189,6 +190,7 @@ namespace triton {
 
         void Arm32Cpu::disassembly(triton::arch::Instruction& inst) const {
           triton::extlibs::capstone::csh       handle;
+          triton::extlibs::capstone::cs_mode   mode;
           triton::extlibs::capstone::cs_insn*  insn;
           triton::usize                        count = 0;
           triton::uint32                       size = 0;
@@ -198,7 +200,9 @@ namespace triton {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
           /* Open capstone */
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &handle) != triton::extlibs::capstone::CS_ERR_OK)
+          mode = this->thumb ? triton::extlibs::capstone::CS_MODE_THUMB : triton::extlibs::capstone::CS_MODE_ARM;
+
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, mode, &handle) != triton::extlibs::capstone::CS_ERR_OK)
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Cannot open capstone.");
 
           /* Init capstone's options */
@@ -247,6 +251,9 @@ namespace triton {
               if (inst.getDisassembly().find("adc") == 0 && inst.getDisassembly().at(3) != 's') {
                 inst.setUpdateFlag(false);
               }
+
+              /* Set thumb mode */
+              inst.setThumb(thumb);
 
               /* Init operands */
               for (triton::uint32 n = 0; n < detail->arm.op_count; n++) {
@@ -361,6 +368,28 @@ namespace triton {
                     throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid operand.");
                 } // switch
               } // for operand
+
+              /* NOTE: For some instructions the destination operand is
+               * optional (in which case the first source operand is used as
+               * destination). Capstone returns always all three operands of
+               * ARM instruction (i.e. make the destination operand explicit).
+               * However, it does not do the same for Thumb instruction. Here
+               * we make the destination operand explicit (in order to simplify
+               * the semantics implementation).
+               */
+              /* TODO (cnheitman): Discuss. Should we deal with this here or
+               * in the impementation of the semantic of each instruction?
+               * (The list of instructions will probably grow.)
+               */
+              /* Make implicit destination operand explicit. */
+              if (inst.isThumb() && inst.operands.size() == 2) {
+                if (inst.getDisassembly().find("adc") == 0 ||
+                    inst.getDisassembly().find("add") == 0 ||
+                    inst.getDisassembly().find("sub") == 0) {
+                  triton::arch::OperandWrapper op(inst.operands[0]);
+                  inst.operands.insert(inst.operands.begin(), op);
+                }
+              }
             } // for instruction
 
             /* Set branch */
@@ -528,7 +557,21 @@ namespace triton {
             case triton::arch::ID_REG_ARM32_R12:  (*((triton::uint32*)(this->r12)))  = value.convert_to<triton::uint32>(); break;
             case triton::arch::ID_REG_ARM32_SP:   (*((triton::uint32*)(this->sp)))   = value.convert_to<triton::uint32>(); break;
             case triton::arch::ID_REG_ARM32_R14:  (*((triton::uint32*)(this->r14)))  = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_PC:   (*((triton::uint32*)(this->pc)))   = value.convert_to<triton::uint32>(); break;
+            case triton::arch::ID_REG_ARM32_PC: {
+              /* NOTE: Once in Thumb mode only switch to ARM through a Branch
+               * and Exchange instruction. The reason for this is that after
+               * switching to Thumb the ISB (instruction set selection bit) is
+               * cleared. Therefore, if we allow to switch back to ARM through
+               * these mechanism we would have a problem processing Thumb
+               * instructions.
+               */
+              auto pc = value.convert_to<triton::uint32>();
+              if (this->isThumb() == false && (pc & 0x1) == 0x1) {
+                this->setThumb(true);
+              }
+              (*((triton::uint32*)(this->pc))) = pc & ~0x1;
+              break;
+            }
             case triton::arch::ID_REG_ARM32_APSR: (*((triton::uint32*)(this->apsr))) = value.convert_to<triton::uint32>(); break;
             case triton::arch::ID_REG_ARM32_N: {
               triton::uint32 b = (*((triton::uint32*)(this->apsr)));
@@ -570,6 +613,16 @@ namespace triton {
             if (this->memory.find(baseAddr + index) != this->memory.end())
               this->memory.erase(baseAddr + index);
           }
+        }
+
+
+        bool Arm32Cpu::isThumb(void) const {
+          return this->thumb;
+        }
+
+
+        void Arm32Cpu::setThumb(bool state) {
+          this->thumb = state;
         }
 
       }; /* arm32 namespace */
