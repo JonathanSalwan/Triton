@@ -107,6 +107,9 @@ namespace triton {
         //! True if this instruction updartes flags. Mainly used for AArch64 instruction like ADDS.
         bool updateFlag;
 
+        //! True if this is a Thumb instruction.
+        bool thumb;
+
     private:
         //! Copies an Instruction
         void copy(const Instruction& other);
@@ -250,6 +253,9 @@ namespace triton {
         //! Sets the updateFlag of the instruction.
         TRITON_EXPORT void setUpdateFlag(bool state);
 
+        //! Sets the Thumb mode of the instruction.
+        TRITON_EXPORT void setThumb(bool state);
+
         //! Adds a symbolic expression
         TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
@@ -288,6 +294,9 @@ namespace triton {
 
         //! Returns true if the instruction updates flags. Mainly used for AArch64 instructions like ADDS.
         TRITON_EXPORT bool isUpdateFlag(void) const;
+
+        //! Returns true if it is a Thumb instruction.
+        TRITON_EXPORT bool isThumb(void) const;
 
         //! Sets flag to define this instruction as branch or not.
         TRITON_EXPORT void setBranch(bool flag);
