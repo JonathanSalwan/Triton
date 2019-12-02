@@ -15,6 +15,16 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
+    # # ADD|S with PC as operand ----------------------------------------------- #
+    # (b"\x0f\x00\x81\xe0", "add r0, r1, pc"),
+    # (b"\x02\x00\x8f\xe0", "add r0, pc, r2"),
+
+    # NOTE: When PC gets updated UC does a memory fetch and generates an error (Invalid memory fetch (UC_ERR_FETCH_UNMAPPED))
+    # TODO (cnheitman): Test better (make sure PC points to a valid memory region).
+    # (b"\x02\xf0\x81\xe0", "add pc, r1, r2"),
+    # (b"\x02\xf0\x81\x10", "addne pc, r1, r2"),
+    # (b"\x02\xf0\x91\xe0", "adds pc, r1, r2")    # TODO (cnheitman): The manual says that flags are not updated when PC is the destination register. Test.
+
     # ADC -------------------------------------------------------------------- #
     (b"\x02\x00\xa1\xe2", "adc r0, r1, #2"),
     (b"\x02\x00\xa1\x02", "adceq r0, r1, #2"),
