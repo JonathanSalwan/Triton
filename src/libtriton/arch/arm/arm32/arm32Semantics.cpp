@@ -27,6 +27,7 @@ ADC                           | Add with Carry
 ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
+B                             | Branch
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
@@ -65,6 +66,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_B:         this->b_s(inst);             break;
             case ID_INS_BL:        this->bl_s(inst);            break;
             case ID_INS_BLX:       this->blx_s(inst);           break;
             case ID_INS_BX:        this->bx_s(inst);            break;
@@ -534,6 +536,35 @@ namespace triton {
           /* Update the symbolic control flow */
           /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::b_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
+          auto& src = inst.operands[0];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, dst);
+          auto op3 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(cond, op1, op3);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "B operation - Program Counter");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
 
