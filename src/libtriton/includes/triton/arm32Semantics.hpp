@@ -136,6 +136,9 @@ namespace triton {
             //! The ADD semantics.
             void add_s(triton::arch::Instruction& inst);
 
+            //! The BL semantics.
+            void bl_s(triton::arch::Instruction& inst);
+
             //! The BLX semantics.
             void blx_s(triton::arch::Instruction& inst);
 
