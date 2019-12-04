@@ -254,7 +254,7 @@ namespace triton {
                 switch(op->type) {
 
                   case triton::extlibs::capstone::ARM_OP_IMM: {
-                    triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
+                    triton::arch::Immediate imm(op->imm, size ? size : DWORD_SIZE);
 
                     /*
                      * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
