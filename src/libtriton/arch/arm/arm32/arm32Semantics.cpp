@@ -27,6 +27,7 @@ ADC                           | Add with Carry
 ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
+BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 
@@ -64,6 +65,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_BL:        this->bl_s(inst);            break;
             case ID_INS_BLX:       this->blx_s(inst);           break;
             case ID_INS_BX:        this->bx_s(inst);            break;
             default:
@@ -532,6 +534,58 @@ namespace triton {
           /* Update the symbolic control flow */
           /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::bl_s(triton::arch::Instruction& inst) {
+          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
+
+          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_R14));
+          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
+          auto& src = inst.operands[0];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, dst1);
+          auto op3 = this->symbolicEngine->getOperandAst(inst, dst2);
+          auto op4 = this->astCtxt->bv(inst.getNextAddress(), dst2.getBitSize());
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(cond,
+                          this->astCtxt->bvor(
+                            this->astCtxt->bvadd(
+                              op3,
+                              this->astCtxt->bv(inst.getSize(), dst2.getBitSize())
+                            ),
+                            this->astCtxt->bv(thumb ? 1 : 0, dst2.getBitSize())
+                          ),
+                          op2
+                        );                                                          /* Link register. */
+          auto node2 = this->astCtxt->ite(
+                          cond,
+                          this->astCtxt->bvand(
+                            op1,
+                            this->astCtxt->bv(op1->getBitvectorMask()-1, src.getBitSize())
+                          ),                                                        /* Set instruction set selection bit to 0. */
+                          op4
+                        );                                                          /* Program counter. */
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BL operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BL operation - Program Counter");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr1, dst1, this->getCodeConditionTaintState(inst));
+          this->spreadTaint(inst, cond, expr2, dst2, this->getCodeConditionTaintState(inst));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr2);
         }
 
 
