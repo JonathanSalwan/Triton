@@ -211,7 +211,7 @@ namespace triton {
     }
 
 
-    void AbstractNode::setParent(std::set<AbstractNode*>& p) {
+    void AbstractNode::setParent(std::unordered_set<AbstractNode*>& p) {
       for (auto ptr : p)
         this->setParent(ptr);
     }

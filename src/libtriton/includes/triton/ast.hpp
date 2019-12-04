@@ -12,9 +12,9 @@
 #include <map>
 #include <memory>
 #include <ostream>
-#include <set>
 #include <stdexcept>
 #include <string>
+#include <unordered_set>
 #include <vector>
 
 #include <triton/astEnums.hpp>
@@ -162,7 +162,7 @@ namespace triton {
         TRITON_EXPORT void setParent(AbstractNode* p);
 
         //! Sets the parent nodes.
-        TRITON_EXPORT void setParent(std::set<AbstractNode*>& p);
+        TRITON_EXPORT void setParent(std::unordered_set<AbstractNode*>& p);
 
         //! Sets the size of the node.
         TRITON_EXPORT void setBitvectorSize(triton::uint32 size);

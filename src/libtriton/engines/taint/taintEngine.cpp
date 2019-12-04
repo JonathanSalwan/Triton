@@ -57,14 +57,14 @@ namespace triton {
 
 
       /* Returns the tainted addresses */
-      const std::set<triton::uint64>& TaintEngine::getTaintedMemory(void) const {
+      const std::unordered_set<triton::uint64>& TaintEngine::getTaintedMemory(void) const {
         return this->taintedMemory;
       }
 
 
       /* Returns the tainted registers */
-      std::set<const triton::arch::Register*> TaintEngine::getTaintedRegisters(void) const {
-        std::set<const triton::arch::Register*> res;
+      std::unordered_set<const triton::arch::Register*> TaintEngine::getTaintedRegisters(void) const {
+        std::unordered_set<const triton::arch::Register*> res;
 
         for (auto id : this->taintedRegisters)
           res.insert(&this->cpu.getRegister(id));

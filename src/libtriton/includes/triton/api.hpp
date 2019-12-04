@@ -538,10 +538,10 @@ namespace triton {
         TRITON_EXPORT triton::engines::taint::TaintEngine* getTaintEngine(void);
 
         //! [**taint api**] - Returns the tainted addresses.
-        TRITON_EXPORT const std::set<triton::uint64>& getTaintedMemory(void) const;
+        TRITON_EXPORT const std::unordered_set<triton::uint64>& getTaintedMemory(void) const;
 
         //! [**taint api**] - Returns the tainted registers.
-        TRITON_EXPORT std::set<const triton::arch::Register*> getTaintedRegisters(void) const;
+        TRITON_EXPORT std::unordered_set<const triton::arch::Register*> getTaintedRegisters(void) const;
 
         //! [**taint api**] - Enables or disables the taint engine.
         TRITON_EXPORT void enableTaintEngine(bool flag);

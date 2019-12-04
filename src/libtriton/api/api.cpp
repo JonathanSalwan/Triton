@@ -1100,13 +1100,13 @@ namespace triton {
   }
 
 
-  const std::set<triton::uint64>& API::getTaintedMemory(void) const {
+  const std::unordered_set<triton::uint64>& API::getTaintedMemory(void) const {
     this->checkTaint();
     return this->taint->getTaintedMemory();
   }
 
 
-  std::set<const triton::arch::Register*> API::getTaintedRegisters(void) const {
+  std::unordered_set<const triton::arch::Register*> API::getTaintedRegisters(void) const {
     this->checkTaint();
     return this->taint->getTaintedRegisters();
   }

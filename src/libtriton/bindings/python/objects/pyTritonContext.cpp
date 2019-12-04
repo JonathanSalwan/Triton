@@ -1607,7 +1607,7 @@ namespace triton {
         triton::usize size = 0, index = 0;
 
         try {
-          std::set<triton::uint64> addresses = PyTritonContext_AsTritonContext(self)->getTaintedMemory();
+          std::unordered_set<triton::uint64> addresses = PyTritonContext_AsTritonContext(self)->getTaintedMemory();
 
           size = addresses.size();
           ret = xPyList_New(size);
@@ -1632,7 +1632,7 @@ namespace triton {
         triton::usize size = 0, index = 0;
 
         try {
-          std::set<const triton::arch::Register*> registers = PyTritonContext_AsTritonContext(self)->getTaintedRegisters();
+          std::unordered_set<const triton::arch::Register*> registers = PyTritonContext_AsTritonContext(self)->getTaintedRegisters();
 
           size = registers.size();
           ret = xPyList_New(size);

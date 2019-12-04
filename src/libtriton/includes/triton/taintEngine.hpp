@@ -8,7 +8,7 @@
 #ifndef TRITON_TAINTENGINE_H
 #define TRITON_TAINTENGINE_H
 
-#include <set>
+#include <unordered_set>
 
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
@@ -66,10 +66,10 @@ namespace triton {
           bool enableFlag;
 
           //! The set of tainted addresses.
-          std::set<triton::uint64> taintedMemory;
+          std::unordered_set<triton::uint64> taintedMemory;
 
           //! The set of tainted registers. Currently it is an over approximation of the taint.
-          std::set<triton::arch::register_e> taintedRegisters;
+          std::unordered_set<triton::arch::register_e> taintedRegisters;
 
         public:
           //! Constructor.
@@ -85,10 +85,10 @@ namespace triton {
           TRITON_EXPORT void enable(bool flag);
 
           //! Returns the tainted addresses.
-          TRITON_EXPORT const std::set<triton::uint64>& getTaintedMemory(void) const;
+          TRITON_EXPORT const std::unordered_set<triton::uint64>& getTaintedMemory(void) const;
 
           //! Returns the tainted registers.
-          TRITON_EXPORT std::set<const triton::arch::Register*> getTaintedRegisters(void) const;
+          TRITON_EXPORT std::unordered_set<const triton::arch::Register*> getTaintedRegisters(void) const;
 
           //! Returns true if the taint engine is enabled.
           TRITON_EXPORT bool isEnabled(void) const;
