@@ -11,6 +11,7 @@
 #include <list>
 #include <map>
 #include <ostream>
+#include <set>
 #include <sstream>
 #include <utility>
 #include <vector>
