@@ -30,6 +30,7 @@ namespace triton {
       ALIGNED_MEMORY,                 //!< [symbolic] Keep a map of aligned memory.
       AST_OPTIMIZATIONS,              //!< [AST] Classical arithmetic optimisations to reduce the depth of the trees.
       CONCRETIZE_UNDEFINED_REGISTERS, //!< [symbolic] Concretize every registers tagged as undefined (see #750).
+      CONSTANT_FOLDING,               //!< [symbolic] Perform a constant folding optimization of sub ASTs which do not contain symbolic variables.
       ONLY_ON_SYMBOLIZED,             //!< [symbolic] Perform symbolic execution only on symbolized expressions.
       ONLY_ON_TAINTED,                //!< [symbolic] Perform symbolic execution only on tainted instructions.
       PC_TRACKING_SYMBOLIC,           //!< [symbolic] Track path constraints only if they are symbolized.

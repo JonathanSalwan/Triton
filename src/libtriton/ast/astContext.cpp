@@ -75,6 +75,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvadd(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -107,6 +113,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvand(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -126,6 +138,12 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvashr(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
 
       return node;
     }
@@ -160,6 +178,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvlshr(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -180,6 +204,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvmul(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -189,6 +219,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvnand(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -198,6 +235,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvneg(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -207,6 +251,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvnor(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -216,6 +267,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvnot(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -248,6 +306,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvor(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -257,6 +321,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvrol(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -285,6 +356,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvrol(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -294,6 +371,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvror(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -322,6 +406,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvror(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -337,6 +427,12 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvsdiv(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
 
       return node;
     }
@@ -380,6 +476,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvshl(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -407,6 +509,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvsmod(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -416,6 +525,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvsrem(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -439,6 +555,12 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvsub(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
 
       return node;
     }
@@ -464,6 +586,12 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvudiv(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
 
       return node;
     }
@@ -510,6 +638,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvurem(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -519,6 +654,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::bvxnor(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -543,6 +685,12 @@ namespace triton {
         throw triton::exceptions::Ast("AstContext::bvxor(): Not enough memory.");
       node->init();
 
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -556,6 +704,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::concat(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -600,6 +755,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::extract(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -627,6 +789,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::ite(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false && node->isLogical() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -715,6 +884,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::sx(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 
@@ -754,6 +930,13 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::zx(): Not enough memory.");
       node->init();
+
+      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        if (node->isSymbolized() == false) {
+          return this->bv(node->evaluate(), node->getBitvectorSize());
+        }
+      }
+
       return node;
     }
 

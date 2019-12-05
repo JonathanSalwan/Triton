@@ -498,3 +498,15 @@ class TestSymbolicEngineAlignedOnlySymbolizedSymOpti(BaseTestSimulation, unittes
         self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
         super(TestSymbolicEngineAlignedOnlySymbolizedSymOpti, self).setUp()
+
+
+class TestSymbolicEngineConstantFolding(BaseTestSimulation, unittest.TestCase):
+
+    """Testing the symbolic emulation engine with CONSTANT_FOLDING."""
+
+    def setUp(self):
+        """Define the arch and modes."""
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        self.Triton.setMode(MODE.CONSTANT_FOLDING, True)
+        super(TestSymbolicEngineConstantFolding, self).setUp()

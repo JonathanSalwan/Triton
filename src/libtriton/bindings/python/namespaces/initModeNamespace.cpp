@@ -40,6 +40,9 @@ Enabled, Triton will reduces the depth of the trees using classical arithmetic o
 - **MODE.CONCRETIZE_UNDEFINED_REGISTERS**<br>
 Enabled, Triton will concretize every register tagged as undefined (see #750).
 
+- **MODE.CONSTANT_FOLDING**<br>
+Enabled, Triton will perform a constant folding optimization of sub ASTs which do not contain symbolic variables.
+
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
 Enabled, Triton will perform symbolic execution only on symbolized expressions.
 
@@ -66,6 +69,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "ALIGNED_MEMORY",                 PyLong_FromUint32(triton::modes::ALIGNED_MEMORY));
         xPyDict_SetItemString(modeDict, "AST_OPTIMIZATIONS",              PyLong_FromUint32(triton::modes::AST_OPTIMIZATIONS));
         xPyDict_SetItemString(modeDict, "CONCRETIZE_UNDEFINED_REGISTERS", PyLong_FromUint32(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS));
+        xPyDict_SetItemString(modeDict, "CONSTANT_FOLDING",               PyLong_FromUint32(triton::modes::CONSTANT_FOLDING));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",             PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",                PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",           PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
