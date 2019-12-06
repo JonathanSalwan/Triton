@@ -17,6 +17,7 @@ STACK = 0x100000
 HEAP  = 0x200000
 SIZE  = 5 * 1024 * 1024
 
+# NOTE Switchs from ARM to Thumb and back.
 CODE = [
 # 00000000 <thumb_code>:
     (0x00, b"\x1c\x1d",         "adds    r4, r3, #4"),
@@ -160,6 +161,8 @@ def emu_with_triton(start, stop, istate):
 
     addr = start
     while addr != stop:
+        # print("[TT] Fetching instruction at address: {:08x}".format(addr))
+
         opcode, disasm = code[addr]
 
         print("[TT] Processing: {:08x}: {}".format(addr, disasm))
@@ -225,8 +228,8 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 
 if __name__ == '__main__':
-    start = 0x14    # Address of _start function.
-    stop  = 0x24    # Address of the last instruction of _start function.
+    start = 0x14        # Address of _start function.
+    stop  = 0x24        # Address of the last instruction of _start function.
 
     # initial state
     state = {
@@ -259,7 +262,7 @@ if __name__ == '__main__':
         print("~" * 80)
         tt_state = emu_with_triton(start, stop, state)
     except Exception as e:
-        print('\t%s' %(e))
+        print('[EE] \t%s' %(e))
         sys.exit(-1)
 
     if uc_state != tt_state:
