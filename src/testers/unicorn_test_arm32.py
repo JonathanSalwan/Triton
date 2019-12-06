@@ -15,15 +15,81 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # # ADD|S with PC as operand ----------------------------------------------- #
-    # (b"\x0f\x00\x81\xe0", "add r0, r1, pc"),
-    # (b"\x02\x00\x8f\xe0", "add r0, pc, r2"),
+    # ADC(S) with PC as operand ---------------------------------------------- #
+    (b"\x0f\x00\xa1\xe0", "adc r0, r1, pc"),
+    (b"\x02\x00\xaf\xe0", "adc r0, pc, r2"),
 
-    # NOTE: When PC gets updated UC does a memory fetch and generates an error (Invalid memory fetch (UC_ERR_FETCH_UNMAPPED))
-    # TODO (cnheitman): Test better (make sure PC points to a valid memory region).
-    # (b"\x02\xf0\x81\xe0", "add pc, r1, r2"),
-    # (b"\x02\xf0\x81\x10", "addne pc, r1, r2"),
-    # (b"\x02\xf0\x91\xe0", "adds pc, r1, r2")    # TODO (cnheitman): The manual says that flags are not updated when PC is the destination register. Test.
+    (b"\x4f\x01\xa1\xe0", "adc r0, r1, pc, asr #2"),
+    (b"\x42\x01\xaf\xe0", "adc r0, pc, r2, asr #2"),
+    (b"\x0f\x01\xa1\xe0", "adc r0, r1, pc, lsl #2"),
+    (b"\x02\x01\xaf\xe0", "adc r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\xa1\xe0", "adc r0, r1, pc, lsr #2"),
+    (b"\x22\x01\xaf\xe0", "adc r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\xa1\xe0", "adc r0, r1, pc, ror #2"),
+    (b"\x62\x01\xaf\xe0", "adc r0, pc, r2, ror #2"),
+    (b"\x6f\x00\xa1\xe0", "adc r0, r1, pc, rrx"),
+    (b"\x62\x00\xaf\xe0", "adc r0, pc, r2, rrx"),
+    (b"\x5f\x03\xa1\xe0", "adc r0, r1, pc, asr r3"),
+    (b"\x1f\x03\xa1\xe0", "adc r0, r1, pc, lsl r3"),
+    (b"\x3f\x03\xa1\xe0", "adc r0, r1, pc, lsr r3"),
+    (b"\x7f\x03\xa1\xe0", "adc r0, r1, pc, ror r3"),
+
+    (b"\x4f\x01\xb1\xe0", "adcs r0, r1, pc, asr #2"),
+    (b"\x42\x01\xbf\xe0", "adcs r0, pc, r2, asr #2"),
+    (b"\x0f\x01\xb1\xe0", "adcs r0, r1, pc, lsl #2"),
+    (b"\x02\x01\xbf\xe0", "adcs r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\xb1\xe0", "adcs r0, r1, pc, lsr #2"),
+    (b"\x22\x01\xbf\xe0", "adcs r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\xb1\xe0", "adcs r0, r1, pc, ror #2"),
+    (b"\x62\x01\xbf\xe0", "adcs r0, pc, r2, ror #2"),
+    (b"\x6f\x00\xb1\xe0", "adcs r0, r1, pc, rrx"),
+    (b"\x62\x00\xbf\xe0", "adcs r0, pc, r2, rrx"),
+    (b"\x5f\x03\xb1\xe0", "adcs r0, r1, pc, asr r3"),
+    (b"\x1f\x03\xb1\xe0", "adcs r0, r1, pc, lsl r3"),
+    (b"\x3f\x03\xb1\xe0", "adcs r0, r1, pc, lsr r3"),
+    (b"\x7f\x03\xb1\xe0", "adcs r0, r1, pc, ror r3"),
+
+    # ADD(S) with PC as operand ---------------------------------------------- #
+    (b"\x0f\x00\x81\xe0", "add r0, r1, pc"),
+    (b"\x02\x00\x8f\xe0", "add r0, pc, r2"),
+
+    (b"\x4f\x01\x81\xe0", "add r0, r1, pc, asr #2"),
+    (b"\x42\x01\x8f\xe0", "add r0, pc, r2, asr #2"),
+    (b"\x0f\x01\x81\xe0", "add r0, r1, pc, lsl #2"),
+    (b"\x02\x01\x8f\xe0", "add r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\x81\xe0", "add r0, r1, pc, lsr #2"),
+    (b"\x22\x01\x8f\xe0", "add r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\x81\xe0", "add r0, r1, pc, ror #2"),
+    (b"\x62\x01\x8f\xe0", "add r0, pc, r2, ror #2"),
+    (b"\x6f\x00\x81\xe0", "add r0, r1, pc, rrx"),
+    (b"\x62\x00\x8f\xe0", "add r0, pc, r2, rrx"),
+    (b"\x5f\x03\x81\xe0", "add r0, r1, pc, asr r3"),
+    (b"\x52\x03\x8f\xe0", "add r0, pc, r2, asr r3"),
+    (b"\x1f\x03\x81\xe0", "add r0, r1, pc, lsl r3"),
+    (b"\x12\x03\x8f\xe0", "add r0, pc, r2, lsl r3"),
+    (b"\x3f\x03\x81\xe0", "add r0, r1, pc, lsr r3"),
+    (b"\x32\x03\x8f\xe0", "add r0, pc, r2, lsr r3"),
+    (b"\x7f\x03\x81\xe0", "add r0, r1, pc, ror r3"),
+    (b"\x72\x03\x8f\xe0", "add r0, pc, r2, ror r3"),
+
+    (b"\x4f\x01\x91\xe0", "adds r0, r1, pc, asr #2"),
+    (b"\x42\x01\x9f\xe0", "adds r0, pc, r2, asr #2"),
+    (b"\x0f\x01\x91\xe0", "adds r0, r1, pc, lsl #2"),
+    (b"\x02\x01\x9f\xe0", "adds r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\x91\xe0", "adds r0, r1, pc, lsr #2"),
+    (b"\x22\x01\x9f\xe0", "adds r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\x91\xe0", "adds r0, r1, pc, ror #2"),
+    (b"\x62\x01\x9f\xe0", "adds r0, pc, r2, ror #2"),
+    (b"\x6f\x00\x91\xe0", "adds r0, r1, pc, rrx"),
+    (b"\x62\x00\x9f\xe0", "adds r0, pc, r2, rrx"),
+    (b"\x5f\x03\x91\xe0", "adds r0, r1, pc, asr r3"),
+    (b"\x52\x03\x9f\xe0", "adds r0, pc, r2, asr r3"),
+    (b"\x1f\x03\x91\xe0", "adds r0, r1, pc, lsl r3"),
+    (b"\x12\x03\x9f\xe0", "adds r0, pc, r2, lsl r3"),
+    (b"\x3f\x03\x91\xe0", "adds r0, r1, pc, lsr r3"),
+    (b"\x32\x03\x9f\xe0", "adds r0, pc, r2, lsr r3"),
+    (b"\x7f\x03\x91\xe0", "adds r0, r1, pc, ror r3"),
+    (b"\x72\x03\x9f\xe0", "adds r0, pc, r2, ror r3"),
 
     # ADC -------------------------------------------------------------------- #
     (b"\x02\x00\xa1\xe2", "adc r0, r1, #2"),
@@ -393,7 +459,7 @@ CODE  = [
     (b"\x62\x00\xb1\xd0", "adcsle r0, r1, r2, rrx"),
     (b"\x62\x00\xb1\xe0", "adcsal r0, r1, r2, rrx"),
 
-    # ADC|S - Misc
+    # ADC(S) - Misc
     (b"\x01\x00\xa2\xe0", "adc r0, r2, r1"),
     (b"\x01\x00\xa1\xe0", "adc r0, r1, r1"),
     (b"\x01\x10\xa1\xe0", "adc r1, r1, r1"),
@@ -405,8 +471,6 @@ CODE  = [
     (b"\xa1\x1f\xa1\xe0", "adc r1, r1, r1, lsr #31"),
     (b"\xe1\x1f\xa1\xe0", "adc r1, r1, r1, ror #31"),
 
-    # TODO (cnheitman): Test also with PC as a source and as destination
-    # operand.
     # ADD -------------------------------------------------------------------- #
     (b"\x02\x00\x81\xe2", "add r0, r1, #2"),
     (b"\x02\x00\x81\x02", "addeq r0, r1, #2"),
@@ -775,7 +839,7 @@ CODE  = [
     (b"\x62\x00\x91\xd0", "addsle r0, r1, r2, rrx"),
     (b"\x62\x00\x91\xe0", "addsal r0, r1, r2, rrx"),
 
-    # ADD|S misc
+    # ADD(S) misc
     (b"\x01\x00\x82\xe0", "add r0, r2, r1"),
     (b"\x01\x00\x81\xe0", "add r0, r1, r1"),
     (b"\x01\x10\x81\xe0", "add r1, r1, r1"),
@@ -787,7 +851,7 @@ CODE  = [
     (b"\xa1\x1f\x81\xe0", "add r1, r1, r1, lsr #31"),
     (b"\xe1\x1f\x81\xe0", "add r1, r1, r1, ror #31"),
 
-    # ADD|S  with SP --------------------------------------------------------- #
+    # ADD(S) with SP --------------------------------------------------------- #
     (b"\x02\x00\x9d\xe2", "adds r0, sp, #2"),
     (b"\x02\x00\x9d\x02", "addseq r0, sp, #2"),
     (b"\x02\x00\x9d\x12", "addsne r0, sp, #2"),
@@ -1045,6 +1109,10 @@ if __name__ == '__main__':
     }
 
     for opcode, disassembly in CODE:
+        print("-" * 80)
+
+        print("[is] pc: {0:x} ({0:d})".format(state['pc']))
+
         try:
             uc_state = emu_with_unicorn(opcode, state)
             tt_state = emu_with_triton(opcode, state)
@@ -1052,6 +1120,9 @@ if __name__ == '__main__':
             print('[KO] %s' %(disassembly))
             print('\t%s' %(e))
             sys.exit(-1)
+
+        print("[uc] pc: {0:x} ({0:d})".format(uc_state['pc']))
+        print("[tt] pc: {0:x} ({0:d})".format(tt_state['pc']))
 
         uc_state['pc'] = tt_state['pc']     # FIXME: Check why UC does not update PC.
 
