@@ -306,8 +306,8 @@ namespace triton {
                   mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
 
                   /* LEA if exists */
-                  const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                  const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+                  triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
+                  triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
                   triton::uint32 immsize = (
                                             this->isRegisterValid(base.getId()) ? base.getSize() :
@@ -322,14 +322,20 @@ namespace triton {
                   if (base.getId() == this->pcId)
                     mem.setPcRelative(inst.getNextAddress());
 
+                  /* Set extend type and size */
+                  index.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
+                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
+                    index.setExtendedSize(base.getBitSize());
+
                   /* Note that in ARM64 there is no segment register and scale value */
                   mem.setBaseRegister(base);
                   mem.setIndexRegister(index);
                   mem.setDisplacement(disp);
 
                   /* If there is an index register available, set scale to 1 to perform this following computation (base) + (index * scale) */
-                  if (this->isRegisterValid(index.getId()))
-                    mem.setScale(triton::arch::Immediate(1, index.getSize()));
+                  if (this->isRegisterValid(index.getId())) {
+                    mem.setScale(triton::arch::Immediate(1, immsize));
+                  }
 
                   inst.operands.push_back(triton::arch::OperandWrapper(mem));
                   break;

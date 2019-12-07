@@ -320,6 +320,10 @@ CODE  = [
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
     (b"\x3f\x10\x00\x91", "add sp, x1, #4"),
     (b"\xeb\x03\x40\x39", "ldrb w11, [sp]"),
+    (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
+    (b"\x02\x02\x80\xd2", "movz x2, #0x90"),
+    (b"\x2d\x48\x62\x38", "ldrb w13, [x1, w2, uxtw]"),
+    (b"\x2d\xc8\x62\x78", "ldrh w13, [x1, w2, sxtw]"),
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x02\x02\x80\xd2", "movz x2, #16"),

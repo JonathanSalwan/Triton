@@ -1092,8 +1092,8 @@ namespace triton {
           triton::uint64 segmentValue         = (this->architecture->isRegisterValid(seg) ? this->architecture->getConcreteRegisterValue(seg).convert_to<triton::uint64>() : 0);
           triton::uint64 scaleValue           = mem.getConstScale().getValue();
           triton::uint64 dispValue            = mem.getConstDisplacement().getValue();
-          triton::uint32 bitSize              = (this->architecture->isRegisterValid(index) ? index.getBitSize() :
-                                                  (this->architecture->isRegisterValid(base) ? base.getBitSize() :
+          triton::uint32 bitSize              = (this->architecture->isRegisterValid(base) ? base.getBitSize() :
+                                                  (this->architecture->isRegisterValid(index) ? index.getBitSize() :
                                                     (mem.getConstDisplacement().getBitSize() ? mem.getConstDisplacement().getBitSize() :
                                                       this->architecture->gprBitSize()
                                                     )
