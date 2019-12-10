@@ -67,13 +67,110 @@ namespace triton {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
-            case ID_INS_BL:        this->bl_s(inst);            break;
-            case ID_INS_BLX:       this->blx_s(inst);           break;
+            case ID_INS_BL:        this->bl_s(inst, false);     break;
+            case ID_INS_BLX:       this->bl_s(inst, true);      break;
             case ID_INS_BX:        this->bx_s(inst);            break;
             default:
               return false;
           }
           return true;
+        }
+
+
+        inline triton::ast::SharedAbstractNode Arm32Semantics::buildConditionalSemantics(triton::arch::Instruction& inst,
+                                                                                         triton::arch::OperandWrapper& dst,
+                                                                                         const triton::ast::SharedAbstractNode& opNode) {
+          /* IMPORTANT NOTE The condition node should be built first, before
+           * any other node that may use the flags. The reason for this is that
+           * the condition node require the original values of the flags,
+           * otherwise the result would not be as the expected.
+           */
+          auto condNode = this->getCodeConditionAst(inst);
+          auto thenNode = opNode;
+          auto elseNode = this->symbolicEngine->getOperandAst(inst, dst);
+
+          if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+            thenNode = this->clearISSB(opNode);
+          }
+
+          return this->astCtxt->ite(condNode, thenNode, elseNode);
+        }
+
+
+        inline void Arm32Semantics::updateExecutionState(triton::arch::OperandWrapper& dst,
+                                                         const triton::ast::SharedAbstractNode& node) {
+          /* NOTE: In case the PC register is used as the destination operand,
+           * check whether there is a mode switch.
+           */
+          if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+            this->exchangeInstructionSet(dst, node);
+          }
+        }
+
+
+        inline void Arm32Semantics::exchangeInstructionSet(triton::arch::OperandWrapper& op,
+                                                           const triton::ast::SharedAbstractNode& node) {
+          /* NOTE: There are two possibilities, depending on the operand. If it
+           * is an immediate, there is a mode switch (that is, if it is currently
+           * in ARM mode it switches to Thumb and the other way around). In
+           * case the operand is a register, it switches mode according to the
+           * instruction set selection bit (LSB) of the register.
+           */
+          auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
+          bool state;
+
+          switch (op.getType()) {
+            case triton::arch::OP_IMM:
+              state = !cpu->isThumb();
+              break;
+            case triton::arch::OP_REG:
+              state = (node->evaluate() & 0x1) == 0x1;
+              break;
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::Arm32Semantics(): Invalid operand type.");
+          }
+
+          cpu->setThumb(state);
+        }
+
+
+        inline triton::ast::SharedAbstractNode Arm32Semantics::adjustISSB(const triton::ast::SharedAbstractNode& node) {
+          /* Set instruction set selection bit (LSB) according to the current
+           * execution mode.
+           */
+          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
+
+          return this->astCtxt->bvor(node, this->astCtxt->bv(thumb ? 1 : 0, node->getBitvectorSize()));
+        }
+
+
+        inline triton::ast::SharedAbstractNode Arm32Semantics::clearISSB(const triton::ast::SharedAbstractNode& node) {
+          /* Clear instruction set selection bit (LSB). */
+          auto mask = this->astCtxt->bv(node->getBitvectorMask()-1, node->getBitvectorSize());
+
+          return this->astCtxt->bvand(node, mask);
+        }
+
+
+        inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceOperandAst(triton::arch::Instruction& inst,
+                                                                                        triton::arch::OperandWrapper& op) {
+          auto thumb  = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
+          auto offset = thumb ? 4 : 8;
+          auto node   = this->symbolicEngine->getOperandAst(inst, op);
+
+          if (op.getType() == triton::arch::OP_REG && op.getRegister().getId() == ID_REG_ARM32_PC) {
+            node = this->astCtxt->bv(inst.getAddress() + offset, op.getBitSize());
+
+            /* Shift AST if it's a shift operand */
+            /* TODO: Clean this and check if we can use the pcRelative thing
+             * used for x86.
+             */
+            if (op.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+              node = this->symbolicEngine->getShiftAst(static_cast<const triton::arch::arm::ArmOperandProperties>(op.getRegister()), node);
+            }
+          }
+
+          return node;
         }
 
 
@@ -453,49 +550,37 @@ namespace triton {
 
 
         void Arm32Semantics::adc_s(triton::arch::Instruction& inst) {
-          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
-
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
-          auto increment = thumb ? 4 : 8;
-
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-          auto op2 = src1.getRegister().getId() == ID_REG_ARM32_PC ?
-                      this->astCtxt->bv(inst.getAddress() + increment, src1.getBitSize()) :
-                      this->symbolicEngine->getOperandAst(inst, src1);
-          auto op3 = src1.getRegister().getId() == ID_REG_ARM32_PC ?
-                      this->astCtxt->bv(inst.getAddress() + increment, src1.getBitSize()) :
-                      this->symbolicEngine->getOperandAst(inst, src2);
-          auto op4 = this->symbolicEngine->getOperandAst(inst, cf);
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, cf);
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
           auto node1 = this->astCtxt->bvadd(
-                          this->astCtxt->bvadd(op2, op3),
-                          this->astCtxt->zx(dst.getBitSize()-1, op4)
+                          this->astCtxt->bvadd(op1, op2),
+                          this->astCtxt->zx(dst.getBitSize()-1, op3)
                         );
-          auto node2 = this->astCtxt->ite(cond, node1, op1);
-          auto node3 = this->astCtxt->bvand(
-                          node1,
-                          this->astCtxt->bv(op1->getBitvectorMask()-1, dst.getBitSize())
-                        );  /* Clean ISB from PC. */
-          auto node4 = dst.getRegister().getId() == ID_REG_ARM32_PC ? node3 : node2;
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node4, dst, "ADC(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADC(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            this->cfAdd_s(inst, cond, expr, dst, op2, op3);
+            this->cfAdd_s(inst, cond, expr, dst, op1, op2);
             this->nf_s(inst, cond, expr, dst);
-            this->vfAdd_s(inst, cond, expr, dst, op2, op3);
+            this->vfAdd_s(inst, cond, expr, dst, op1, op2);
             this->zf_s(inst, cond, expr, dst);
           }
 
@@ -503,62 +588,42 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* In case the PC register is used as the destination operand,
-             * check whether there is a mode switch.
-             */
-            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
-              /* Check instruction set selection bit and set mode accordingly. */
-              auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
-              auto isb = node1->evaluate() & 0x1;
-              cpu->setThumb(isb == 0x1);
-            }
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
           this->controlFlow_s(inst, cond, dst);
         }
 
 
         void Arm32Semantics::add_s(triton::arch::Instruction& inst) {
-          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
-
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
-          auto increment = thumb ? 4 : 8;
-
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-          auto op2 = src1.getRegister().getId() == ID_REG_ARM32_PC ?
-                      this->astCtxt->bv(inst.getAddress() + increment, src1.getBitSize()) :
-                      this->symbolicEngine->getOperandAst(inst, src1);
-          auto op3 = src2.getRegister().getId() == ID_REG_ARM32_PC ?
-                      this->astCtxt->bv(inst.getAddress() + increment, src2.getBitSize()) :
-                      this->symbolicEngine->getOperandAst(inst, src2);
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
-          auto node1 = this->astCtxt->bvadd(op2, op3);
-          auto node2 = this->astCtxt->ite(cond, node1, op1);
-          auto node3 = this->astCtxt->bvand(
-                          node1,
-                          this->astCtxt->bv(op1->getBitvectorMask()-1, dst.getBitSize())
-                        );   /* Clean ISB from PC. */
-          auto node4 = dst.getRegister().getId() == ID_REG_ARM32_PC ? node3 : node2;
+          auto node1 = this->astCtxt->bvadd(op1, op2);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node4, dst, "ADD(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADD(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            this->cfAdd_s(inst, cond, expr, dst, op2, op3);
+            this->cfAdd_s(inst, cond, expr, dst, op1, op2);
             this->nf_s(inst, cond, expr, dst);
-            this->vfAdd_s(inst, cond, expr, dst, op2, op3);
+            this->vfAdd_s(inst, cond, expr, dst, op1, op2);
             this->zf_s(inst, cond, expr, dst);
           }
 
@@ -566,19 +631,11 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* In case the PC register is used as the destination operand,
-             * check whether there is a mode switch.
-             */
-            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
-              /* Check instruction set selection bit and set mode accordingly. */
-              auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
-              auto isb = node1->evaluate() & 0x1;
-              cpu->setThumb(isb == 0x1);
-            }
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
           this->controlFlow_s(inst, cond, dst);
         }
 
@@ -588,16 +645,15 @@ namespace triton {
           auto& src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
-          auto op2 = this->symbolicEngine->getOperandAst(inst, dst);
-          auto op3 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op2 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
-          auto node1 = this->astCtxt->ite(cond, op1, op3);
+          auto cond   = this->getCodeConditionAst(inst);
+          auto pcNode = this->astCtxt->ite(cond, op1, op2);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "B operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, pcNode, dst, "B operation - Program Counter");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
@@ -612,95 +668,41 @@ namespace triton {
         }
 
 
-        void Arm32Semantics::bl_s(triton::arch::Instruction& inst) {
-          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
-
+        void Arm32Semantics::bl_s(triton::arch::Instruction& inst, bool exchange) {
           auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_R14));
           auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
           auto& src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
           auto op2 = this->symbolicEngine->getOperandAst(inst, dst1);
           auto op3 = this->symbolicEngine->getOperandAst(inst, dst2);
           auto op4 = this->astCtxt->bv(inst.getNextAddress(), dst2.getBitSize());
 
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
-          auto node1 = this->astCtxt->ite(cond,
-                          this->astCtxt->bvor(
-                            this->astCtxt->bvadd(
-                              op3,
-                              this->astCtxt->bv(inst.getSize(), dst2.getBitSize())
-                            ),
-                            this->astCtxt->bv(thumb ? 1 : 0, dst2.getBitSize())
-                          ),
-                          op2
-                        );                                                          /* Link register. */
-          auto node2 = this->astCtxt->ite(
-                          cond,
-                          this->astCtxt->bvand(
-                            op1,
-                            this->astCtxt->bv(op1->getBitvectorMask()-1, src.getBitSize())
-                          ),                                                        /* Set instruction set selection bit to 0. */
-                          op4
-                        );                                                          /* Program counter. */
+
+          /* Create semantics for the Link register */
+          /* If the condition holds, the value of LR is equal to PC plus the
+           * size of the current instruction (i.e. the address of the next
+           * instruction). Additionally, the instruction set selection bit
+           * (LSB) is set accordindly. If the condition does not hold, the value
+           * of LR remains the same.
+           */
+          auto instSize = this->astCtxt->bv(inst.getSize(), dst2.getBitSize());
+          auto lrNode   = this->astCtxt->ite(cond, this->adjustISSB(this->astCtxt->bvadd(op3, instSize)), op2);
+
+          /* Create semantics for the Program Counter register */
+          /* If the conditions holds, the value of PC is equal to the operand
+           * of the instruction. Also, clear the instruction set selection bit
+           * (LSB). If the condition does not hold, the value of PC is equal to
+           * the next instruction.
+           */
+          auto pcNode = this->astCtxt->ite(cond, this->clearISSB(op1), op4);
 
           /* Create symbolic expression */
-          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BL operation - Link Register");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BL operation - Program Counter");
-
-          /* Spread taint */
-          this->spreadTaint(inst, cond, expr1, dst1, this->getCodeConditionTaintState(inst));
-          this->spreadTaint(inst, cond, expr2, dst2, this->getCodeConditionTaintState(inst));
-
-          /* Update condition flag */
-          if (cond->evaluate() == true) {
-            inst.setConditionTaken(true);
-          }
-
-          /* Create the path constraint */
-          this->symbolicEngine->pushPathConstraint(inst, expr2);
-        }
-
-
-        void Arm32Semantics::blx_s(triton::arch::Instruction& inst) {
-          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
-
-          auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_R14));
-          auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
-          auto& src = inst.operands[0];
-
-          /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
-          auto op2 = this->symbolicEngine->getOperandAst(inst, dst1);
-          auto op3 = this->symbolicEngine->getOperandAst(inst, dst2);
-          auto op4 = this->astCtxt->bv(inst.getNextAddress(), dst2.getBitSize());
-
-          /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
-          auto node1 = this->astCtxt->ite(cond,
-                          this->astCtxt->bvor(
-                            this->astCtxt->bvadd(
-                              op3,
-                              this->astCtxt->bv(inst.getSize(), dst2.getBitSize())
-                            ),
-                            this->astCtxt->bv(thumb ? 1 : 0, dst2.getBitSize())
-                          ),
-                          op2
-                        );                                                          /* Link register. */
-          auto node2 = this->astCtxt->ite(
-                          cond,
-                          this->astCtxt->bvand(
-                            op1,
-                            this->astCtxt->bv(op1->getBitvectorMask()-1, src.getBitSize())
-                          ),                                                        /* Set instruction set selection bit to 0. */
-                          op4
-                        );                                                          /* Program counter. */
-
-          /* Create symbolic expression */
-          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "BLX operation - Link Register");
-          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "BLX operation - Program Counter");
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, lrNode, dst1, "BL(X) operation - Link Register");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, pcNode, dst2, "BL(X) operation - Program Counter");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr1, dst1, this->getCodeConditionTaintState(inst));
@@ -710,22 +712,8 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* NOTE: There are two possibilities at this point, depending on
-             * the type of the operand. If it is an immediate there is a mode
-             * switch (that is, it is currently in ARM mode it switches to
-             * Thumb and the other way around). In case the operand is a
-             * register it switches mode according to the LSB of the register
-             * (instruction set selection bit).
-             */
-            auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
-
-            if (src.getType() == triton::arch::OP_IMM) {
-              /* Swtich modes. */
-              cpu->setThumb(!cpu->isThumb());
-            } else {
-              /* Check instruction set selection bit and set mode accordingly. */
-              auto isb = op1->evaluate() & 0x1;
-              cpu->setThumb(isb == 0x1);
+            if (exchange) {
+              this->exchangeInstructionSet(src, op1);
             }
           }
 
@@ -739,22 +727,21 @@ namespace triton {
           auto& src = inst.operands[0];
 
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
           auto op2 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
 
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
-          auto node1 = this->astCtxt->ite(
-                          cond,
-                          this->astCtxt->bvand(
-                            op1,
-                            this->astCtxt->bv(op1->getBitvectorMask()-1, src.getBitSize())
-                          ),  /* Set instruction set selection bit to 0. */
-                          op2
-                        );
+
+          /* If the conditions holds, the value of PC is equal to the operand
+           * of the instruction. Also, clear the instruction set selection bit
+           * (LSB). If the condition does not hold, the value of PC is equal to
+           * the next instruction.
+           */
+          auto node = this->astCtxt->ite(cond, this->clearISSB(op1), op2);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "BX operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "BX operation - Program Counter");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
@@ -763,10 +750,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Check instruction set selection bit and set mode accordingly. */
-            auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
-            auto isb = op1->evaluate() & 0x1;
-            cpu->setThumb(isb == 0x1);
+            this->exchangeInstructionSet(src, op1);
           }
 
           /* Create the path constraint */

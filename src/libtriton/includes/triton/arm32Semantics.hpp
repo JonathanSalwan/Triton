@@ -75,6 +75,29 @@ namespace triton {
             TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
           private:
+            //! Builds the semantics of a conditional instruction.
+            triton::ast::SharedAbstractNode buildConditionalSemantics(triton::arch::Instruction& inst,
+                                                                      triton::arch::OperandWrapper& dst,
+                                                                      const triton::ast::SharedAbstractNode& opNode);
+
+            //! Execution state update semantics.
+            void updateExecutionState(triton::arch::OperandWrapper& dst,
+                                      const triton::ast::SharedAbstractNode& node);
+
+            //! Exchanges instrution set according to provide operand.
+            void exchangeInstructionSet(triton::arch::OperandWrapper& op,
+                                        const triton::ast::SharedAbstractNode& node);
+
+            //! Returns the AST corresponding to the adjustment of the LSB of the provided node.
+            triton::ast::SharedAbstractNode adjustISSB(const triton::ast::SharedAbstractNode& node);
+
+            //! Returns the AST corresponding to the clearing of the LSB of the provided node.
+            triton::ast::SharedAbstractNode clearISSB(const triton::ast::SharedAbstractNode& node);
+
+            //! Returns the AST corresponding to the Arm32 source operand.
+            triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst,
+                                                                     triton::arch::OperandWrapper& op);
+
             //! Control flow semantics. Used to represent PC.
             void controlFlow_s(triton::arch::Instruction& inst);
 
@@ -139,11 +162,8 @@ namespace triton {
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
 
-            //! The BL semantics.
-            void bl_s(triton::arch::Instruction& inst);
-
-            //! The BLX semantics.
-            void blx_s(triton::arch::Instruction& inst);
+            //! The BL(X) semantics.
+            void bl_s(triton::arch::Instruction& inst, bool exchange);
 
             //! The BX semantics.
             void bx_s(triton::arch::Instruction& inst);
