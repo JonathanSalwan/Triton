@@ -142,9 +142,6 @@ namespace triton {
           //! Adds a symbolic memory reference.
           inline void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
-          //! Returns the AST corresponding to the shift operation. Mainly used for Arm32 operands.
-          triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node);
-
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
           triton::ast::SharedAbstractNode getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node);
 
@@ -232,6 +229,9 @@ namespace triton {
 
           //! Returns the AST corresponding to the register and defines the register as input of the instruction.
           TRITON_EXPORT triton::ast::SharedAbstractNode getRegisterAst(triton::arch::Instruction& inst, const triton::arch::Register& reg);
+
+          //! Returns the AST corresponding to the shift operation. Mainly used for Arm32 operands.
+          triton::ast::SharedAbstractNode getShiftAst(const triton::arch::arm::ArmOperandProperties& shift, const triton::ast::SharedAbstractNode& node);
 
           //! Returns the new shared symbolic abstract expression and links this expression to the instruction.
           TRITON_EXPORT const SharedSymbolicExpression& createSymbolicExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::OperandWrapper& dst, const std::string& comment="");
