@@ -19,158 +19,31 @@ SIZE  = 10 * 1024 * 1024
 TARGET = 0x200000
 
 CODE2 = [
-    # (b"\x00\xf0\x20\xe3", "nop"), # ARM
-    (b"\x00\xbf", "nop"),           # Thumb
+    (b"\x00\xf0\x20\xe3", "nop"),   # ARM
 ]
 
 CODE  = [
     # B ---------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\x0a", "beq #0x200001"),
-    (b"\xfe\xff\x07\x1a", "bne #0x200001"),
-    (b"\xfe\xff\x07\x2a", "bcs #0x200001"),
-    (b"\xfe\xff\x07\x3a", "bcc #0x200001"),
-    (b"\xfe\xff\x07\x4a", "bmi #0x200001"),
-    (b"\xfe\xff\x07\x5a", "bpl #0x200001"),
-    (b"\xfe\xff\x07\x6a", "bvs #0x200001"),
-    (b"\xfe\xff\x07\x7a", "bvc #0x200001"),
-    (b"\xfe\xff\x07\x8a", "bhi #0x200001"),
-    (b"\xfe\xff\x07\x9a", "bls #0x200001"),
-    (b"\xfe\xff\x07\xaa", "bge #0x200001"),
-    (b"\xfe\xff\x07\xba", "blt #0x200001"),
-    (b"\xfe\xff\x07\xca", "bgt #0x200001"),
-    (b"\xfe\xff\x07\xda", "ble #0x200001"),
-    (b"\xfe\xff\x07\xea", "bal #0x200001"),
+    (b"\xff\xf1\xfe\xbf", "b #0x200000"),
 
     # BL --------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\x0b", "bleq #0x200001"),
-    (b"\xfe\xff\x07\x1b", "blne #0x200001"),
-    (b"\xfe\xff\x07\x2b", "blcs #0x200001"),
-    (b"\xfe\xff\x07\x3b", "blcc #0x200001"),
-    (b"\xfe\xff\x07\x4b", "blmi #0x200001"),
-    (b"\xfe\xff\x07\x5b", "blpl #0x200001"),
-    (b"\xfe\xff\x07\x6b", "blvs #0x200001"),
-    (b"\xfe\xff\x07\x7b", "blvc #0x200001"),
-    (b"\xfe\xff\x07\x8b", "blhi #0x200001"),
-    (b"\xfe\xff\x07\x9b", "blls #0x200001"),
-    (b"\xfe\xff\x07\xab", "blge #0x200001"),
-    (b"\xfe\xff\x07\xbb", "bllt #0x200001"),
-    (b"\xfe\xff\x07\xcb", "blgt #0x200001"),
-    (b"\xfe\xff\x07\xdb", "blle #0x200001"),
-    (b"\xfe\xff\x07\xeb", "blal #0x200001"),
+    (b"\xff\xf1\xfe\xff", "bl #0x200000"),
 
     # BLX -------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\xfa", "blxeq #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxne #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxcs #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxcc #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxmi #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxpl #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxvs #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxvc #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxhi #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxls #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxge #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxlt #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxgt #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxle #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxal #0x200001"),
+    (b"\xff\xf1\xfe\xef", "blx #0x200000"),
 
-    (b"\x30\xff\x2f\x01", "blxeq r0"),
-    (b"\x30\xff\x2f\x11", "blxne r0"),
-    (b"\x30\xff\x2f\x21", "blxcs r0"),
-    (b"\x30\xff\x2f\x31", "blxcc r0"),
-    (b"\x30\xff\x2f\x41", "blxmi r0"),
-    (b"\x30\xff\x2f\x51", "blxpl r0"),
-    (b"\x30\xff\x2f\x61", "blxvs r0"),
-    (b"\x30\xff\x2f\x71", "blxvc r0"),
-    (b"\x30\xff\x2f\x81", "blxhi r0"),
-    (b"\x30\xff\x2f\x91", "blxls r0"),
-    (b"\x30\xff\x2f\xa1", "blxge r0"),
-    (b"\x30\xff\x2f\xb1", "blxlt r0"),
-    (b"\x30\xff\x2f\xc1", "blxgt r0"),
-    (b"\x30\xff\x2f\xd1", "blxle r0"),
-    (b"\x30\xff\x2f\xe1", "blxal r0"),
+    (b"\x80\x47", "blx r0"),
 
-    (b"\x3d\xff\x2f\x01", "blxeq sp"),
-    (b"\x3d\xff\x2f\x11", "blxne sp"),
-    (b"\x3d\xff\x2f\x21", "blxcs sp"),
-    (b"\x3d\xff\x2f\x31", "blxcc sp"),
-    (b"\x3d\xff\x2f\x41", "blxmi sp"),
-    (b"\x3d\xff\x2f\x51", "blxpl sp"),
-    (b"\x3d\xff\x2f\x61", "blxvs sp"),
-    (b"\x3d\xff\x2f\x71", "blxvc sp"),
-    (b"\x3d\xff\x2f\x81", "blxhi sp"),
-    (b"\x3d\xff\x2f\x91", "blxls sp"),
-    (b"\x3d\xff\x2f\xa1", "blxge sp"),
-    (b"\x3d\xff\x2f\xb1", "blxlt sp"),
-    (b"\x3d\xff\x2f\xc1", "blxgt sp"),
-    (b"\x3d\xff\x2f\xd1", "blxle sp"),
-    (b"\x3d\xff\x2f\xe1", "blxal sp"),
+    (b"\xe8\x47", "blx sp"),
 
-    (b"\x3f\xff\x2f\x01", "blxeq pc"),
-    (b"\x3f\xff\x2f\x11", "blxne pc"),
-    (b"\x3f\xff\x2f\x21", "blxcs pc"),
-    (b"\x3f\xff\x2f\x31", "blxcc pc"),
-    (b"\x3f\xff\x2f\x41", "blxmi pc"),
-    (b"\x3f\xff\x2f\x51", "blxpl pc"),
-    (b"\x3f\xff\x2f\x61", "blxvs pc"),
-    (b"\x3f\xff\x2f\x71", "blxvc pc"),
-    (b"\x3f\xff\x2f\x81", "blxhi pc"),
-    (b"\x3f\xff\x2f\x91", "blxls pc"),
-    (b"\x3f\xff\x2f\xa1", "blxge pc"),
-    (b"\x3f\xff\x2f\xb1", "blxlt pc"),
-    (b"\x3f\xff\x2f\xc1", "blxgt pc"),
-    (b"\x3f\xff\x2f\xd1", "blxle pc"),
-    (b"\x3f\xff\x2f\xe1", "blxal pc"),
+    (b"\xf8\x47", "blx pc"),
 
     # BX --------------------------------------------------------------------- #
-    (b"\x10\xff\x2f\x01", "bxeq r0"),
-    (b"\x10\xff\x2f\x11", "bxne r0"),
-    (b"\x10\xff\x2f\x21", "bxcs r0"),
-    (b"\x10\xff\x2f\x31", "bxcc r0"),
-    (b"\x10\xff\x2f\x41", "bxmi r0"),
-    (b"\x10\xff\x2f\x51", "bxpl r0"),
-    (b"\x10\xff\x2f\x61", "bxvs r0"),
-    (b"\x10\xff\x2f\x71", "bxvc r0"),
-    (b"\x10\xff\x2f\x81", "bxhi r0"),
-    (b"\x10\xff\x2f\x91", "bxls r0"),
-    (b"\x10\xff\x2f\xa1", "bxge r0"),
-    (b"\x10\xff\x2f\xb1", "bxlt r0"),
-    (b"\x10\xff\x2f\xc1", "bxgt r0"),
-    (b"\x10\xff\x2f\xd1", "bxle r0"),
-    (b"\x10\xff\x2f\xe1", "bxal r0"),
+    (b"\x00\x47", "bx r0"),
 
-    (b"\x1d\xff\x2f\x01", "bxeq sp"),
-    (b"\x1d\xff\x2f\x11", "bxne sp"),
-    (b"\x1d\xff\x2f\x21", "bxcs sp"),
-    (b"\x1d\xff\x2f\x31", "bxcc sp"),
-    (b"\x1d\xff\x2f\x41", "bxmi sp"),
-    (b"\x1d\xff\x2f\x51", "bxpl sp"),
-    (b"\x1d\xff\x2f\x61", "bxvs sp"),
-    (b"\x1d\xff\x2f\x71", "bxvc sp"),
-    (b"\x1d\xff\x2f\x81", "bxhi sp"),
-    (b"\x1d\xff\x2f\x91", "bxls sp"),
-    (b"\x1d\xff\x2f\xa1", "bxge sp"),
-    (b"\x1d\xff\x2f\xb1", "bxlt sp"),
-    (b"\x1d\xff\x2f\xc1", "bxgt sp"),
-    (b"\x1d\xff\x2f\xd1", "bxle sp"),
-    (b"\x1d\xff\x2f\xe1", "bxal sp"),
+    (b"\x68\x47", "bx sp"),
 
-    (b"\x1f\xff\x2f\x01", "bxeq pc"),
-    (b"\x1f\xff\x2f\x11", "bxne pc"),
-    (b"\x1f\xff\x2f\x21", "bxcs pc"),
-    (b"\x1f\xff\x2f\x31", "bxcc pc"),
-    (b"\x1f\xff\x2f\x41", "bxmi pc"),
-    (b"\x1f\xff\x2f\x51", "bxpl pc"),
-    (b"\x1f\xff\x2f\x61", "bxvs pc"),
-    (b"\x1f\xff\x2f\x71", "bxvc pc"),
-    (b"\x1f\xff\x2f\x81", "bxhi pc"),
-    (b"\x1f\xff\x2f\x91", "bxls pc"),
-    (b"\x1f\xff\x2f\xa1", "bxge pc"),
-    (b"\x1f\xff\x2f\xb1", "bxlt pc"),
-    (b"\x1f\xff\x2f\xc1", "bxgt pc"),
-    (b"\x1f\xff\x2f\xd1", "bxle pc"),
-    (b"\x1f\xff\x2f\xe1", "bxal pc"),
+    (b"\x78\x47", "bx pc"),
 ]
 
 
@@ -210,7 +83,7 @@ def emu_with_unicorn(opcode, istate):
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # map memory for this emulation
-    print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
+    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
@@ -249,11 +122,11 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
     # tracing all instructions with customized callback
-    mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
-    print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
-    mu.emu_start(istate['pc'], istate['pc'] + len(opcode), count=1)
+    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode), count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -305,7 +178,7 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.r12, istate['r12'])
     ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
     ctx.setConcreteRegisterValue(ctx.registers.r14, istate['r14'])
-    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
+    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'] | 1) # NOTE: Enable Thumb mode by setting lsb of PC.
     ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
     ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
     ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
@@ -368,7 +241,7 @@ if __name__ == '__main__':
     state = {
         "stack": b"".join([bytes(255 - i) for i in range(256)]),
         "heap":  b"".join([bytes(i) for i in range(256)]),
-        "r0":    TARGET | 0x1,
+        "r0":    TARGET | 1,
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
@@ -390,14 +263,12 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # NOTE: Keep track of PC and reset it after testing each instr.
+    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:
-        print("-" * 80)
-
-        print("[is] pc: {0:x} ({0:d})".format(state['pc']))
-
         try:
+            state['pc'] = pc
             uc_state = emu_with_unicorn(opcode, state)
             tt_state = emu_with_triton(opcode, state)
             pc += len(opcode)
@@ -406,27 +277,12 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
-        print("[UC] pc: {0:x} ({0:d})".format(uc_state['pc']))
-        print("[TT] pc: {0:x} ({0:d})".format(tt_state['pc']))
-
-        if (uc_state['pc'] != (tt_state['pc'] & ~0x1)):     # NOTE: Avoid comparing Thumb flag for now (apparently, UC set it to zero after doing the branch).
-            print("[--] PC differs!")
-            print_state(state, uc_state, tt_state)
-            sys.exit(-1)
-
-        print("[++] pc: {0:x} ({0:d})".format(pc))
-
-        # Reset PC.
-        tt_state['pc'] = pc
-        uc_state['pc'] = pc
-
         if uc_state != tt_state:
-            print('[KO] %s %s' %(" ".join(["%02x" % ord(b) for b in opcode]), disassembly))
+            print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
 
         print('[OK] %s' %(disassembly))
-        state = tt_state
 
     sys.exit(0)

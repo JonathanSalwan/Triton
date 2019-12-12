@@ -934,6 +934,37 @@ CODE  = [
     (b"\x7d\xdd\x9d\xe0", "adds sp, sp, sp, ror sp"),
 ]
 
+
+def hook_code(mu, address, size, istate):
+    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
+
+    ostate = {
+        "stack": mu.mem_read(STACK, 0x100),
+        "heap":  mu.mem_read(HEAP, 0x100),
+        "r0":    mu.reg_read(UC_ARM_REG_R0),
+        "r1":    mu.reg_read(UC_ARM_REG_R1),
+        "r2":    mu.reg_read(UC_ARM_REG_R2),
+        "r3":    mu.reg_read(UC_ARM_REG_R3),
+        "r4":    mu.reg_read(UC_ARM_REG_R4),
+        "r5":    mu.reg_read(UC_ARM_REG_R5),
+        "r6":    mu.reg_read(UC_ARM_REG_R6),
+        "r7":    mu.reg_read(UC_ARM_REG_R7),
+        "r8":    mu.reg_read(UC_ARM_REG_R8),
+        "r9":    mu.reg_read(UC_ARM_REG_R9),
+        "r10":   mu.reg_read(UC_ARM_REG_R10),
+        "r11":   mu.reg_read(UC_ARM_REG_R11),
+        "r12":   mu.reg_read(UC_ARM_REG_R12),
+        "sp":    mu.reg_read(UC_ARM_REG_SP),
+        "r14":   mu.reg_read(UC_ARM_REG_R14),
+        "pc":    mu.reg_read(UC_ARM_REG_PC),
+        "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
+        "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
+        "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
+        "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
+    }
+
+    # print_state(istate, istate, ostate)
+
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
@@ -970,8 +1001,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
+    # # tracing all instructions with customized callback
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+
     # emulate code in infinite time & unlimited instructions
-    mu.emu_start(istate['pc'], istate['pc'] + len(opcode))
+    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    # NOTE: The +4 and count=1 is a trick so UC updates PC.
+    mu.emu_start(istate['pc'], istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -1108,31 +1144,26 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
+    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # PC and resets the initial state after testing each instruction.
+    pc = ADDR
     for opcode, disassembly in CODE:
-        print("-" * 80)
-
-        print("[is] pc: {0:x} ({0:d})".format(state['pc']))
-
         try:
+            state['pc'] = pc
             uc_state = emu_with_unicorn(opcode, state)
             tt_state = emu_with_triton(opcode, state)
+            pc += len(opcode)
         except Exception as e:
             print('[KO] %s' %(disassembly))
             print('\t%s' %(e))
             sys.exit(-1)
 
-        print("[uc] pc: {0:x} ({0:d})".format(uc_state['pc']))
-        print("[tt] pc: {0:x} ({0:d})".format(tt_state['pc']))
-
-        uc_state['pc'] = tt_state['pc']     # FIXME: Check why UC does not update PC.
-
         if uc_state != tt_state:
-            print('[KO] %s %s' %(" ".join(["%02x" % b for b in opcode]), disassembly))
+            print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
 
         print('[OK] %s' %(disassembly))
-        state = tt_state
 
     sys.exit(0)
