@@ -17,7 +17,7 @@ STACK = 0x100000
 HEAP  = 0x200000
 SIZE  = 5 * 1024 * 1024
 
-# Switchs from Thumb to ARM and back.
+# NOTE Switchs from ARM to Thumb and back.
 CODE = [
 # 00000000 <thumb_code>:
     (0x00, b"\x1c\x1d",         "adds    r4, r3, #4"),
@@ -31,12 +31,11 @@ CODE = [
     (0x10, b"\x3e\xff\x2f\xe1", "blx     lr"),
 
 # 00000014 <_start>:
-    (0x14, b"\x88\x1c",         "adds    r0, r1, #2"),
-    (0x16, b"\x43\x41",         "adcs    r3, r0"),
-    (0x18, b"\xff\xf7\xf6\xef", "blx     8 <arm_code>"),
-    (0x1c, b"\xff\xf7\xf0\xff", "bl      0 <thumb_code>"),
-    (0x20, b"\x00\xbe",         "bkpt    0x0000"),
-    (0x22, b"\xc0\x46",         "nop                     ; (mov r8, r8)"),
+    (0x14, b"\x02\x00\x81\xe2", "add     r0, r1, #2"),
+    (0x18, b"\x02\x30\xa0\xe0", "adc     r3, r0, r2"),
+    (0x1c, b"\xf7\xff\xff\xfa", "blx     0 <thumb_code>"),
+    (0x20, b"\xf8\xff\xff\xeb", "bl      8 <arm_code>"),
+    (0x24, b"\x70\x00\x20\xe1", "bkpt    0x0000"),
 ]
 
 
@@ -97,7 +96,7 @@ def emu_with_unicorn(start, stop, istate):
     mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(start & ~0x1, stop))
+    # print("[UC] Executing from {:#x} to {:#x}".format(start, stop))
     try:
         mu.emu_start(start, stop)
     except UcError as e:
@@ -160,7 +159,7 @@ def emu_with_triton(start, stop, istate):
     for addr, opcode, disasm in CODE:
         code[addr] = (opcode, disasm)
 
-    addr = start & ~0x1
+    addr = start
     while addr != stop:
         # print("[TT] Fetching instruction at address: {:08x}".format(addr))
 
@@ -229,8 +228,8 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 
 if __name__ == '__main__':
-    start = 0x14 | 1    # Address of _start function.
-    stop  = 0x20        # Address of the last instruction of _start function.
+    start = 0x14        # Address of _start function.
+    stop  = 0x24        # Address of the last instruction of _start function.
 
     # initial state
     state = {
@@ -271,6 +270,6 @@ if __name__ == '__main__':
         print_state(state, uc_state, tt_state)
         sys.exit(-1)
 
-    print("[OK] Interworking Thumb -> ARM -> Thumb")
+    print("[OK] Interworking ARM -> Thumb -> ARM")
 
     sys.exit(0)

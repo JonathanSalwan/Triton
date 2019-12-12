@@ -9,54 +9,105 @@ from capstone            import *
 from capstone.arm_const  import *
 
 import sys
+import pprint
 import random
 
+ADDR  = 0x100000
+ADDR2 = 0x300000
+STACK = 0x500000
+HEAP  = 0x600000
+SIZE  = 10 * 1024 * 1024
 
-ADDR  = 0x000000
-STACK = 0x100000
-HEAP  = 0x200000
-SIZE  = 5 * 1024 * 1024
+TARGET = 0x200000
 
-# Switchs from Thumb to ARM and back.
-CODE = [
-# 00000000 <thumb_code>:
-    (0x00, b"\x1c\x1d",         "adds    r4, r3, #4"),
-    (0x02, b"\x5c\x41",         "adcs    r4, r3"),
-    (0x04, b"\xf0\x47",         "blx     lr"),
-    (0x06, b"\x00\x00",         ".short  0x0000"),
+CODE2 = [
+    (b"\x00\xbf", "nop"),           # Thumb
+]
 
-# 00000008 <arm_code>:
-    (0x08, b"\x04\x40\x83\xe2", "add     r4, r3, #4"),
-    (0x0c, b"\x04\x40\xa3\xe2", "adc     r4, r3, #4"),
-    (0x10, b"\x3e\xff\x2f\xe1", "blx     lr"),
+CODE  = [
+    (b"\x01\xf0\x80\x00", "addeq pc, r0, r1"),
+    (b"\x01\xf0\x80\x10", "addne pc, r0, r1"),
+    (b"\x01\xf0\x80\x20", "addcs pc, r0, r1"),
+    (b"\x01\xf0\x80\x30", "addcc pc, r0, r1"),
+    (b"\x01\xf0\x80\x40", "addmi pc, r0, r1"),
+    (b"\x01\xf0\x80\x50", "addpl pc, r0, r1"),
+    (b"\x01\xf0\x80\x60", "addvs pc, r0, r1"),
+    (b"\x01\xf0\x80\x70", "addvc pc, r0, r1"),
+    (b"\x01\xf0\x80\x80", "addhi pc, r0, r1"),
+    (b"\x01\xf0\x80\x90", "addls pc, r0, r1"),
+    (b"\x01\xf0\x80\xa0", "addge pc, r0, r1"),
+    (b"\x01\xf0\x80\xb0", "addlt pc, r0, r1"),
+    (b"\x01\xf0\x80\xc0", "addgt pc, r0, r1"),
+    (b"\x01\xf0\x80\xd0", "addle pc, r0, r1"),
+    (b"\x01\xf0\x80\xe0", "addal pc, r0, r1"),
 
-# 00000014 <_start>:
-    (0x14, b"\x88\x1c",         "adds    r0, r1, #2"),
-    (0x16, b"\x43\x41",         "adcs    r3, r0"),
-    (0x18, b"\xff\xf7\xf6\xef", "blx     8 <arm_code>"),
-    (0x1c, b"\xff\xf7\xf0\xff", "bl      0 <thumb_code>"),
-    (0x20, b"\x00\xbe",         "bkpt    0x0000"),
-    (0x22, b"\xc0\x46",         "nop                     ; (mov r8, r8)"),
+    (b"\x01\xf0\xa0\x00", "adceq pc, r0, r1"),
+    (b"\x01\xf0\xa0\x10", "adcne pc, r0, r1"),
+    (b"\x01\xf0\xa0\x20", "adccs pc, r0, r1"),
+    (b"\x01\xf0\xa0\x30", "adccc pc, r0, r1"),
+    (b"\x01\xf0\xa0\x40", "adcmi pc, r0, r1"),
+    (b"\x01\xf0\xa0\x50", "adcpl pc, r0, r1"),
+    (b"\x01\xf0\xa0\x60", "adcvs pc, r0, r1"),
+    (b"\x01\xf0\xa0\x70", "adcvc pc, r0, r1"),
+    (b"\x01\xf0\xa0\x80", "adchi pc, r0, r1"),
+    (b"\x01\xf0\xa0\x90", "adcls pc, r0, r1"),
+    (b"\x01\xf0\xa0\xa0", "adcge pc, r0, r1"),
+    (b"\x01\xf0\xa0\xb0", "adclt pc, r0, r1"),
+    (b"\x01\xf0\xa0\xc0", "adcgt pc, r0, r1"),
+    (b"\x01\xf0\xa0\xd0", "adcle pc, r0, r1"),
+    (b"\x01\xf0\xa0\xe0", "adcal pc, r0, r1"),
 ]
 
 
 def hook_code(mu, address, size, istate):
+    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
+
     opcode = mu.mem_read(address, size)
     cpsr = mu.reg_read(ARM_REG_CPSR)
     thumb = (cpsr >> 5) & 0x1
 
     # print("[UC] CPSR[T]: {:x}".format(thumb))
 
+    # ostate = {
+    #     "stack": mu.mem_read(STACK, 0x100),
+    #     "heap":  mu.mem_read(HEAP, 0x100),
+    #     "r0":    mu.reg_read(UC_ARM_REG_R0),
+    #     "r1":    mu.reg_read(UC_ARM_REG_R1),
+    #     "r2":    mu.reg_read(UC_ARM_REG_R2),
+    #     "r3":    mu.reg_read(UC_ARM_REG_R3),
+    #     "r4":    mu.reg_read(UC_ARM_REG_R4),
+    #     "r5":    mu.reg_read(UC_ARM_REG_R5),
+    #     "r6":    mu.reg_read(UC_ARM_REG_R6),
+    #     "r7":    mu.reg_read(UC_ARM_REG_R7),
+    #     "r8":    mu.reg_read(UC_ARM_REG_R8),
+    #     "r9":    mu.reg_read(UC_ARM_REG_R9),
+    #     "r10":   mu.reg_read(UC_ARM_REG_R10),
+    #     "r11":   mu.reg_read(UC_ARM_REG_R11),
+    #     "r12":   mu.reg_read(UC_ARM_REG_R12),
+    #     "sp":    mu.reg_read(UC_ARM_REG_SP),
+    #     "r14":   mu.reg_read(UC_ARM_REG_R14),
+    #     "pc":    mu.reg_read(UC_ARM_REG_PC),
+    #     "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
+    #     "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
+    #     "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
+    #     "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
+    # }
+    # print_state(istate, istate, ostate)
+
+    # if thumb == 1:
+    #     print("[EE] Error!")
+    #     # sys.exit(-1)
+
     md = Cs(CS_ARCH_ARM, CS_MODE_THUMB if thumb else CS_MODE_ARM)
     md.detail = True
     i = list(md.disasm(opcode, address))[0]
     disasm = "{} {}".format(i.mnemonic, i.op_str)
+    opcode_str = " ".join(["%02x" % b for b in opcode])
 
-    # print("[UC] Processing: {:08x}: {}".format(address, disasm))
+    print("[UC] Processing: {}\t{:08x}: {}".format(opcode_str, address, disasm))
 
-    # print("-" * 80)
 
-def emu_with_unicorn(start, stop, istate):
+def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
@@ -66,8 +117,14 @@ def emu_with_unicorn(start, stop, istate):
 
     # write machine code to be emulated to memory
     index = 0
-    for _, op, _ in CODE:
+    for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
+        index += len(op)
+
+    # Valid memory region to land when testing branches.
+    index = 0
+    for op, _ in CODE2:
+        mu.mem_write(ADDR2+index, op)
         index += len(op)
 
     apsr = mu.reg_read(UC_ARM_REG_APSR)
@@ -94,14 +151,11 @@ def emu_with_unicorn(start, stop, istate):
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
     # tracing all instructions with customized callback
-    mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(start & ~0x1, stop))
-    try:
-        mu.emu_start(start, stop)
-    except UcError as e:
-        print("[UC] Error: {}".format(e))
+    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    mu.emu_start(istate['pc'], istate['pc'] + len(opcode), count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -129,9 +183,12 @@ def emu_with_unicorn(start, stop, istate):
     }
     return ostate
 
-def emu_with_triton(start, stop, istate):
+def emu_with_triton(opcode, istate):
     ctx = TritonContext()
     ctx.setArchitecture(ARCH.ARM32)
+
+    inst = Instruction(opcode)
+    inst.setAddress(istate['pc'])
 
     ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
@@ -156,33 +213,13 @@ def emu_with_triton(start, stop, istate):
     ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
     ctx.setConcreteRegisterValue(ctx.registers.v,   istate['v'])
 
-    code = {}
-    for addr, opcode, disasm in CODE:
-        code[addr] = (opcode, disasm)
+    ctx.processing(inst)
 
-    addr = start & ~0x1
-    while addr != stop:
-        # print("[TT] Fetching instruction at address: {:08x}".format(addr))
-
-        opcode, disasm = code[addr]
-
-        # print("[TT] Processing: {:08x}: {}".format(addr, disasm))
-
-        inst = Instruction(opcode)
-
-        inst.setAddress(addr)
-
-        ctx.processing(inst)
-
-        # print()
-        # print(inst)
-        # for x in inst.getSymbolicExpressions():
-        #    print(x)
-        # print()
-
-        addr = ctx.getSymbolicRegisterValue(ctx.registers.pc)
-
-        # print("-" * 80)
+    # print()
+    # print(inst)
+    # for x in inst.getSymbolicExpressions():
+    #    print(x)
+    # print()
 
     ostate = {
         "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
@@ -229,15 +266,12 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 
 if __name__ == '__main__':
-    start = 0x14 | 1    # Address of _start function.
-    stop  = 0x20        # Address of the last instruction of _start function.
-
     # initial state
     state = {
         "stack": b"".join([bytes(255 - i) for i in range(256)]),
         "heap":  b"".join([bytes(i) for i in range(256)]),
-        "r0":    random.randint(0x0, 0xffffffff),
-        "r1":    random.randint(0x0, 0xffffffff),
+        "r0":    0x100000,
+        "r1":    0x200000,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
@@ -251,26 +285,33 @@ if __name__ == '__main__':
         "r12":   random.randint(0x0, 0xffffffff),
         "sp":    STACK,
         "r14":   random.randint(0x0, 0xffffffff),
-        "pc":    start,
+        "pc":    ADDR,
         "n":     random.randint(0x0, 0x1),
         "z":     random.randint(0x0, 0x1),
-        "c":     random.randint(0x0, 0x1),
+        "c":     0, # NOTE: Set on 0 for testing ADC instructions.
         "v":     random.randint(0x0, 0x1),
     }
 
-    try:
-        uc_state = emu_with_unicorn(start, stop, state)
-        tt_state = emu_with_triton(start, stop, state)
-    except Exception as e:
-        print('[EE] \t%s' %(e))
-        sys.exit(-1)
+    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # PC and resets the initial state after testing each instruction.
+    pc = ADDR
+    for opcode, disassembly in CODE:
+        try:
+            state['pc'] = pc
+            uc_state = emu_with_unicorn(opcode, state)
+            tt_state = emu_with_triton(opcode, state)
+            pc += len(opcode)
+        except Exception as e:
+            print('[KO] %s' %(disassembly))
+            print('\t%s' %(e))
+            sys.exit(-1)
 
-    if uc_state != tt_state:
-        print("[EE] Execution differs!")
-        diff_state(uc_state, tt_state)
-        print_state(state, uc_state, tt_state)
-        sys.exit(-1)
+        if uc_state != tt_state:
+            print('[KO] %s' %(disassembly))
+            diff_state(uc_state, tt_state)
+            print_state(state, uc_state, tt_state)
+            sys.exit(-1)
 
-    print("[OK] Interworking Thumb -> ARM -> Thumb")
+        print('[OK] %s' %(disassembly))
 
     sys.exit(0)
