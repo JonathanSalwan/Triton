@@ -19,8 +19,7 @@ SIZE  = 10 * 1024 * 1024
 TARGET = 0x200000
 
 CODE2 = [
-    (b"\x00\xf0\x20\xe3", "nop"), # ARM
-    # (b"\x00\xbf", "nop"),           # Thumb
+    (b"\x00\xf0\x20\xe3", "nop"),   # ARM
 ]
 
 CODE  = [
@@ -210,7 +209,7 @@ def emu_with_unicorn(opcode, istate):
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # map memory for this emulation
-    print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
+    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
@@ -249,10 +248,10 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
     # tracing all instructions with customized callback
-    mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
-    print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
     mu.emu_start(istate['pc'], istate['pc'] + len(opcode), count=1)
 
     ostate = {
@@ -390,14 +389,12 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # NOTE: Keep track of PC and reset it after testing each instr.
+    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:
-        print("-" * 80)
-
-        print("[is] pc: {0:x} ({0:d})".format(state['pc']))
-
         try:
+            state['pc'] = pc
             uc_state = emu_with_unicorn(opcode, state)
             tt_state = emu_with_triton(opcode, state)
             pc += len(opcode)
@@ -406,27 +403,12 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
-        print("[UC] pc: {0:x} ({0:d})".format(uc_state['pc']))
-        print("[TT] pc: {0:x} ({0:d})".format(tt_state['pc']))
-
-        if (uc_state['pc'] != (tt_state['pc'] & ~0x1)):     # NOTE: Avoid comparing Thumb flag for now (apparently, UC set it to zero after doing the branch).
-            print("[--] PC differs!")
-            print_state(state, uc_state, tt_state)
-            sys.exit(-1)
-
-        print("[++] pc: {0:x} ({0:d})".format(pc))
-
-        # Reset PC.
-        tt_state['pc'] = pc
-        uc_state['pc'] = pc
-
         if uc_state != tt_state:
-            print('[KO] %s %s' %(" ".join(["%02x" % ord(b) for b in opcode]), disassembly))
+            print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
 
         print('[OK] %s' %(disassembly))
-        state = tt_state
 
     sys.exit(0)
