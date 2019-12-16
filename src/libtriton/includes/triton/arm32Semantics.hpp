@@ -167,6 +167,9 @@ namespace triton {
 
             //! The BX semantics.
             void bx_s(triton::arch::Instruction& inst);
+
+            //! The LDR semantics.
+            void ldr_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of arm32 namespace */
