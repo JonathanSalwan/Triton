@@ -170,6 +170,9 @@ namespace triton {
 
             //! The LDR semantics.
             void ldr_s(triton::arch::Instruction& inst);
+
+            //! The STR semantics.
+            void str_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of arm32 namespace */
