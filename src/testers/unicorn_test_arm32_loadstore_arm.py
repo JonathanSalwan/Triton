@@ -15,7 +15,7 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # Offset addressing.
+    # LDR - Offset addressing.
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
     (b"\x00\x00\x91\x15", "ldrne r0, [r1]"),
@@ -67,7 +67,7 @@ CODE  = [
     (b"\x04\x00\x11\xd5", "ldrle r0, [r1, #-0x4]"),
     (b"\x04\x00\x11\xe5", "ldral r0, [r1, #-0x4]"),
 
-    # Pre-indexed addressing.
+    # LDR - Pre-indexed addressing.
     (b"\x00\x00\xb1\xe5", "ldr r0, [r1]!"),
     (b"\x00\x00\xb1\x05", "ldreq r0, [r1]!"),
     (b"\x00\x00\xb1\x15", "ldrne r0, [r1]!"),
@@ -119,7 +119,7 @@ CODE  = [
     (b"\x04\x00\x31\xd5", "ldrle r0, [r1, #-0x4]!"),
     (b"\x04\x00\x31\xe5", "ldral r0, [r1, #-0x4]!"),
 
-    # Post-indexed addressing.
+    # LDR - Post-indexed addressing.
     (b"\x04\x00\x91\xe4", "ldr r0, [r1], #0x4"),
     (b"\x04\x00\x91\x04", "ldreq r0, [r1], #0x4"),
     (b"\x04\x00\x91\x14", "ldrne r0, [r1], #0x4"),
@@ -154,6 +154,146 @@ CODE  = [
     # (b"\x04\x00\x11\xc4", "ldrgt r0, [r1], #-0x4"),
     # (b"\x04\x00\x11\xd4", "ldrle r0, [r1], #-0x4"),
     # (b"\x04\x00\x11\xe4", "ldral r0, [r1], #-0x4"),
+
+    # STR - Offset addressing.
+    (b"\x00\x00\x81\xe5", "str r0, [r1]"),
+    (b"\x00\x00\x81\x05", "streq r0, [r1]"),
+    (b"\x00\x00\x81\x15", "strne r0, [r1]"),
+    (b"\x00\x00\x81\x25", "strcs r0, [r1]"),
+    (b"\x00\x00\x81\x35", "strcc r0, [r1]"),
+    (b"\x00\x00\x81\x45", "strmi r0, [r1]"),
+    (b"\x00\x00\x81\x55", "strpl r0, [r1]"),
+    (b"\x00\x00\x81\x65", "strvs r0, [r1]"),
+    (b"\x00\x00\x81\x75", "strvc r0, [r1]"),
+    (b"\x00\x00\x81\x85", "strhi r0, [r1]"),
+    (b"\x00\x00\x81\x95", "strls r0, [r1]"),
+    (b"\x00\x00\x81\xa5", "strge r0, [r1]"),
+    (b"\x00\x00\x81\xb5", "strlt r0, [r1]"),
+    (b"\x00\x00\x81\xc5", "strgt r0, [r1]"),
+    (b"\x00\x00\x81\xd5", "strle r0, [r1]"),
+    (b"\x00\x00\x81\xe5", "stral r0, [r1]"),
+
+    (b"\x04\x00\x81\xe5", "str r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x05", "streq r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x15", "strne r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x25", "strcs r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x35", "strcc r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x45", "strmi r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x55", "strpl r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x65", "strvs r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x75", "strvc r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x85", "strhi r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\x95", "strls r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\xa5", "strge r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\xb5", "strlt r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\xc5", "strgt r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\xd5", "strle r0, [r1, #0x4]"),
+    (b"\x04\x00\x81\xe5", "stral r0, [r1, #0x4]"),
+
+    (b"\x04\x00\x01\xe5", "str r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x05", "streq r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x15", "strne r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x25", "strcs r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x35", "strcc r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x45", "strmi r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x55", "strpl r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x65", "strvs r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x75", "strvc r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x85", "strhi r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\x95", "strls r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\xa5", "strge r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\xb5", "strlt r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\xc5", "strgt r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\xd5", "strle r0, [r1, #-0x4]"),
+    (b"\x04\x00\x01\xe5", "stral r0, [r1, #-0x4]"),
+
+    # STR - Pre-indexed addressing.
+    (b"\x00\x00\xa1\xe5", "str r0, [r1]!"),
+    (b"\x00\x00\xa1\x05", "streq r0, [r1]!"),
+    (b"\x00\x00\xa1\x15", "strne r0, [r1]!"),
+    (b"\x00\x00\xa1\x25", "strcs r0, [r1]!"),
+    (b"\x00\x00\xa1\x35", "strcc r0, [r1]!"),
+    (b"\x00\x00\xa1\x45", "strmi r0, [r1]!"),
+    (b"\x00\x00\xa1\x55", "strpl r0, [r1]!"),
+    (b"\x00\x00\xa1\x65", "strvs r0, [r1]!"),
+    (b"\x00\x00\xa1\x75", "strvc r0, [r1]!"),
+    (b"\x00\x00\xa1\x85", "strhi r0, [r1]!"),
+    (b"\x00\x00\xa1\x95", "strls r0, [r1]!"),
+    (b"\x00\x00\xa1\xa5", "strge r0, [r1]!"),
+    (b"\x00\x00\xa1\xb5", "strlt r0, [r1]!"),
+    (b"\x00\x00\xa1\xc5", "strgt r0, [r1]!"),
+    (b"\x00\x00\xa1\xd5", "strle r0, [r1]!"),
+    (b"\x00\x00\xa1\xe5", "stral r0, [r1]!"),
+
+    (b"\x04\x00\xa1\xe5", "str r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x05", "streq r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x15", "strne r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x25", "strcs r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x35", "strcc r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x45", "strmi r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x55", "strpl r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x65", "strvs r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x75", "strvc r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x85", "strhi r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\x95", "strls r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\xa5", "strge r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\xb5", "strlt r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\xc5", "strgt r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\xd5", "strle r0, [r1, #0x4]!"),
+    (b"\x04\x00\xa1\xe5", "stral r0, [r1, #0x4]!"),
+
+    (b"\x04\x00\x21\xe5", "str r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x05", "streq r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x15", "strne r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x25", "strcs r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x35", "strcc r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x45", "strmi r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x55", "strpl r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x65", "strvs r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x75", "strvc r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x85", "strhi r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\x95", "strls r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\xa5", "strge r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\xb5", "strlt r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\xc5", "strgt r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\xd5", "strle r0, [r1, #-0x4]!"),
+    (b"\x04\x00\x21\xe5", "stral r0, [r1, #-0x4]!"),
+
+    # STR - Post-indexed addressing.
+    (b"\x04\x00\x81\xe4", "str r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x04", "streq r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x14", "strne r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x24", "strcs r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x34", "strcc r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x44", "strmi r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x54", "strpl r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x64", "strvs r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x74", "strvc r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x84", "strhi r0, [r1], #0x4"),
+    (b"\x04\x00\x81\x94", "strls r0, [r1], #0x4"),
+    (b"\x04\x00\x81\xa4", "strge r0, [r1], #0x4"),
+    (b"\x04\x00\x81\xb4", "strlt r0, [r1], #0x4"),
+    (b"\x04\x00\x81\xc4", "strgt r0, [r1], #0x4"),
+    (b"\x04\x00\x81\xd4", "strle r0, [r1], #0x4"),
+    (b"\x04\x00\x81\xe4", "stral r0, [r1], #0x4"),
+
+    # TODO: Test when the bug in Capstone gets fixed.
+    # (b"\x04\x00\x01\xe4", "str r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x04", "streq r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x14", "strne r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x24", "strcs r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x34", "strcc r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x44", "strmi r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x54", "strpl r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x64", "strvs r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x74", "strvc r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x84", "strhi r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\x94", "strls r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\xa4", "strge r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\xb4", "strlt r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\xc4", "strgt r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\xd4", "strle r0, [r1], #-0x4"),
+    # (b"\x04\x00\x01\xe4", "stral r0, [r1], #-0x4"),
 ]
 
 
@@ -296,8 +436,8 @@ def emu_with_triton(opcode, istate):
     print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -338,13 +478,18 @@ def print_state(istate, uc_ostate, tt_ostate):
 
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
+def print_heap(istate, uc_ostate, tt_ostate):
+    for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
+        if ord(a) != b or a != c:
+            print("{:02x}|{:02x}|{:02x}".format(a, b, c), sep=" ")
+
 
 if __name__ == '__main__':
     # initial state
     state = {
         "stack": b"".join([bytes(255 - i) for i in range(256)]),
         "heap":  b"".join([bytes(i) for i in range(256)]),
-        "r0":    random.randint(0x0, 0xffffffff),
+        "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
@@ -380,11 +525,21 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
+        print(type(uc_state['heap']))
+        print(type(tt_state['heap']))
+
+        for a, b in zip(uc_state['heap'], tt_state['heap']):
+            if a != b:
+                sys.exit(-1)
+
         if uc_state != tt_state:
             print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
+
+        # print_state(state, uc_state, tt_state)
+        # print_heap(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 
