@@ -33,6 +33,7 @@ BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 LDR                           | Load Register
 STR                           | Store Register
+POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
 
 */
@@ -75,6 +76,7 @@ namespace triton {
             case ID_INS_BX:        this->bx_s(inst);            break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_STR:       this->str_s(inst);           break;
+            case ID_INS_POP:       this->pop_s(inst);           break;
             case ID_INS_PUSH:      this->push_s(inst);          break;
             default:
               return false;
@@ -180,6 +182,34 @@ namespace triton {
         }
 
 
+        triton::uint64 Arm32Semantics::alignAddStack_s(triton::arch::Instruction& inst,
+                                                       const triton::ast::SharedAbstractNode& cond,
+                                                       triton::uint32 delta) {
+          auto dst = triton::arch::OperandWrapper(this->architecture->getStackPointer());
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+          auto op2 = this->astCtxt->bv(delta, dst.getBitSize());
+
+          /* Create the semantics */
+          auto node = this->astCtxt->ite(
+                        cond,
+                        this->astCtxt->bvadd(op1, op2),
+                        op1
+                      );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "Stack alignment");
+
+          /* Spread taint */
+          /* TODO: Consider conditional execution. */
+          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+          /* Return the new stack value */
+          return node->evaluate().convert_to<triton::uint64>();
+        }
+
+
         triton::uint64 Arm32Semantics::alignSubStack_s(triton::arch::Instruction& inst,
                                                        const triton::ast::SharedAbstractNode& cond,
                                                        triton::uint32 delta) {
@@ -200,6 +230,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "Stack alignment");
 
           /* Spread taint */
+          /* TODO: Consider conditional execution. */
           expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
           /* Return the new stack value */
@@ -950,6 +981,40 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::pop_s(triton::arch::Instruction& inst) {
+          auto stack          = this->architecture->getStackPointer();
+          triton::uint32 size = stack.getSize();
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (unsigned int i = 0; i < inst.operands.size(); i++) {
+            auto& dst       = inst.operands[i];
+            auto stack      = this->architecture->getStackPointer();
+            auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+            auto src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+
+            /* Create symbolic operands */
+            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op2, op1);
+
+            /* Create symbolic expression */
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation - Pop register");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+            alignAddStack_s(inst, cond, size);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
 

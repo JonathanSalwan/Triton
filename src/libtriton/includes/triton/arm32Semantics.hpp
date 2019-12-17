@@ -98,6 +98,11 @@ namespace triton {
             triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                      triton::arch::OperandWrapper& op);
 
+            //! Aligns the stack (add). Returns the new stack value.
+            triton::uint64 alignAddStack_s(triton::arch::Instruction& inst,
+                                           const triton::ast::SharedAbstractNode& cond,
+                                           triton::uint32 delta);
+
             //! Aligns the stack (sub). Returns the new stack value.
             triton::uint64 alignSubStack_s(triton::arch::Instruction& inst,
                                            const triton::ast::SharedAbstractNode& cond,
@@ -178,6 +183,9 @@ namespace triton {
 
             //! The STR semantics.
             void str_s(triton::arch::Instruction& inst);
+
+            //! The POP semantics.
+            void pop_s(triton::arch::Instruction& inst);
 
             //! The PUSH semantics.
             void push_s(triton::arch::Instruction& inst);
