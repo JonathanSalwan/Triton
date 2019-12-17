@@ -15,74 +15,64 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # ADC -------------------------------------------------------------------- #
-    (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),
-    (b"\x41\xeb\x02\x00", "adc r0, r1, r2"),
+    (b"\x03\x00\x2d\xe9", "push {r0, r1}"),
+    (b"\x01\x01\x2d\xe9", "push {r0, r8}"),
+    (b"\xff\x01\x2d\xe9", "push {r0 - r8}"),
 
-    # ADCS ------------------------------------------------------------------- #
-    (b"\x51\xf1\x02\x00", "adcs r0, r1, #2"),
-    (b"\x51\xeb\x02\x00", "adcs r0, r1, r2"),
+    (b"\x04\x20\x2d\x05", "pusheq {r2}"),
+    (b"\x0c\x00\x2d\x09", "pusheq {r2, r3}"),
 
-    # ADD -------------------------------------------------------------------- #
-    (b"\x00\xf1\x02\x00", "add r0, #2"),
-    (b"\x00\xf1\x02\x00", "add r0, r0, #2"),
-    (b"\x01\xf1\x02\x00", "add r0, r1, #2"),
-    (b"\x01\xeb\x02\x00", "add r0, r1, r2"),
-    (b"\x01\xeb\xa2\x00", "add r0, r1, r2, asr #2"),
-    (b"\x01\xeb\x82\x00", "add r0, r1, r2, lsl #2"),
-    (b"\x01\xeb\x92\x00", "add r0, r1, r2, lsr #2"),
-    (b"\x01\xeb\xb2\x00", "add r0, r1, r2, ror #2"),
-    (b"\x01\xeb\x32\x00", "add r0, r1, r2, rrx"),
-
-    # ADDS ------------------------------------------------------------------- #
-    (b"\x02\x30",         "adds r0, #2"),
-    (b"\x80\x1c",         "adds r0, r0, #2"),
-    (b"\x88\x1c",         "adds r0, r1, #2"),
-    (b"\x88\x18",         "adds r0, r1, r2"),
-    (b"\x11\xeb\xa2\x00", "adds r0, r1, r2, asr #2"),
-    (b"\x11\xeb\x82\x00", "adds r0, r1, r2, lsl #2"),
-    (b"\x11\xeb\x92\x00", "adds r0, r1, r2, lsr #2"),
-    (b"\x11\xeb\xb2\x00", "adds r0, r1, r2, ror #2"),
-    (b"\x11\xeb\x32\x00", "adds r0, r1, r2, rrx"),
-
-    # MOV -------------------------------------------------------------------- #
-    (b"\x4f\xf0\x02\x00", "mov r0, #2"),
-    (b"\x11\x46",         "mov r1, r2"),
-
-    # MOVS ------------------------------------------------------------------- #
-    (b"\x02\x20",         "movs r0, #2"),
-    (b"\x11\x00",         "movs r1, r2"),
-
-    # MOV(S) with SP as operand ---------------------------------------------- #
-    (b"\x85\x46",         "mov sp, r0"),
-    (b"\x5f\xea\x00\x0d", "movs sp, r0"),
-
-    # SUB -------------------------------------------------------------------- #
-    (b"\xa0\xf1\x02\x00", "sub r0, #2"),
-    (b"\xa0\xf1\x02\x00", "sub r0, r0, #2"),
-    (b"\xa1\xf1\x02\x00", "sub r0, r1, #2"),
-    (b"\xa1\xeb\x02\x00", "sub r0, r1, r2"),
-    (b"\xa1\xeb\xa2\x00", "sub r0, r1, r2, asr #2"),
-    (b"\xa1\xeb\x82\x00", "sub r0, r1, r2, lsl #2"),
-    (b"\xa1\xeb\x92\x00", "sub r0, r1, r2, lsr #2"),
-    (b"\xa1\xeb\xb2\x00", "sub r0, r1, r2, ror #2"),
-    (b"\xa1\xeb\x32\x00", "sub r0, r1, r2, rrx"),
-
-    # SUBS ------------------------------------------------------------------- #
-    (b"\x02\x38",         "subs r0, #2"),
-    (b"\x80\x1e",         "subs r0, r0, #2"),
-    (b"\x88\x1e",         "subs r0, r1, #2"),
-    (b"\x88\x1a",         "subs r0, r1, r2"),
-    (b"\xb1\xeb\xa2\x00", "subs r0, r1, r2, asr #2"),
-    (b"\xb1\xeb\x82\x00", "subs r0, r1, r2, lsl #2"),
-    (b"\xb1\xeb\x92\x00", "subs r0, r1, r2, lsr #2"),
-    (b"\xb1\xeb\xb2\x00", "subs r0, r1, r2, ror #2"),
-    (b"\xb1\xeb\x32\x00", "subs r0, r1, r2, rrx"),
+    (b"\x3c\x01\x2d\x09", "pusheq {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x19", "pushne {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x29", "pushcs {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x39", "pushcc {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x49", "pushmi {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x59", "pushpl {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x69", "pushvs {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x79", "pushvc {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x89", "pushhi {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x99", "pushls {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xa9", "pushge {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xb9", "pushlt {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xc9", "pushgt {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xd9", "pushle {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xe9", "pushal {r2 - r5, r8}"),
 ]
+
+
+def hook_code(mu, address, size, istate):
+    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
+
+    ostate = {
+        "stack": mu.mem_read(STACK, 0x100),
+        "heap":  mu.mem_read(HEAP, 0x100),
+        "r0":    mu.reg_read(UC_ARM_REG_R0),
+        "r1":    mu.reg_read(UC_ARM_REG_R1),
+        "r2":    mu.reg_read(UC_ARM_REG_R2),
+        "r3":    mu.reg_read(UC_ARM_REG_R3),
+        "r4":    mu.reg_read(UC_ARM_REG_R4),
+        "r5":    mu.reg_read(UC_ARM_REG_R5),
+        "r6":    mu.reg_read(UC_ARM_REG_R6),
+        "r7":    mu.reg_read(UC_ARM_REG_R7),
+        "r8":    mu.reg_read(UC_ARM_REG_R8),
+        "r9":    mu.reg_read(UC_ARM_REG_R9),
+        "r10":   mu.reg_read(UC_ARM_REG_R10),
+        "r11":   mu.reg_read(UC_ARM_REG_R11),
+        "r12":   mu.reg_read(UC_ARM_REG_R12),
+        "sp":    mu.reg_read(UC_ARM_REG_SP),
+        "r14":   mu.reg_read(UC_ARM_REG_R14),
+        "pc":    mu.reg_read(UC_ARM_REG_PC),
+        "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
+        "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
+        "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
+        "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
+    }
+
+    # print_state(istate, istate, ostate)
 
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
-    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
+    mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # map memory for this emulation
     mu.mem_map(ADDR, SIZE)
@@ -96,7 +86,7 @@ def emu_with_unicorn(opcode, istate):
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
-    mu.mem_write(STACK,                bytes(istate['stack']))
+    mu.mem_write(STACK,                istate['stack'])
     mu.mem_write(HEAP,                 bytes(istate['heap']))
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
@@ -116,8 +106,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
+    # # tracing all instructions with customized callback
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+
     # emulate code in infinite time & unlimited instructions
-    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode) + 2, count=1)
+    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    # NOTE: The +4 and count=1 is a trick so UC updates PC.
+    mu.emu_start(istate['pc'], istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -152,7 +147,7 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
-    ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
+    ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
     ctx.setConcreteRegisterValue(ctx.registers.r1,  istate['r1'])
@@ -169,7 +164,7 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.r12, istate['r12'])
     ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
     ctx.setConcreteRegisterValue(ctx.registers.r14, istate['r14'])
-    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'] | 1) # NOTE: Enable Thumb mode by setting lsb of PC.
+    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
     ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
     ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
     ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
@@ -184,8 +179,8 @@ def emu_with_triton(opcode, istate):
     # print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -226,14 +221,26 @@ def print_state(istate, uc_ostate, tt_ostate):
 
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
+def print_heap(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
+def print_stack(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
 
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
+        "stack": bytes(bytearray([b for b in range(255, -1, -1)])),
         "heap":  b"".join([bytes(i) for i in range(256)]),
-        "r0":    random.randint(0x0, 0xffffffff),
-        "r1":    random.randint(0x0, 0xffffffff),
+        "r0":    0xdeadbeef,
+        "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
@@ -245,7 +252,7 @@ if __name__ == '__main__':
         "r10":   random.randint(0x0, 0xffffffff),
         "r11":   random.randint(0x0, 0xffffffff),
         "r12":   random.randint(0x0, 0xffffffff),
-        "sp":    STACK,
+        "sp":    STACK + 64 * 4,
         "r14":   random.randint(0x0, 0xffffffff),
         "pc":    ADDR,
         "n":     random.randint(0x0, 0x1),
@@ -253,6 +260,12 @@ if __name__ == '__main__':
         "c":     random.randint(0x0, 0x1),
         "v":     random.randint(0x0, 0x1),
     }
+
+    # for i, b in enumerate(state["stack"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
+    # for i, b in enumerate(state["heap"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
 
     # NOTE: This tests each instruction separatly. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
@@ -268,11 +281,32 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
+        # print(type(uc_state['heap']))
+        # print(type(tt_state['heap']))
+
+        for a, b in zip(uc_state['heap'], tt_state['heap']):
+            if a != b:
+                print('[KO] %s (heap differs!)' %(disassembly))
+                print_heap(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+        for a, b in zip(uc_state['stack'], tt_state['stack']):
+            if a != b:
+                print('[KO] %s (stack differs!)' %(disassembly))
+                print_stack(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
         if uc_state != tt_state:
             print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
+
+        # print_state(state, uc_state, tt_state)
+        # print_heap(state, uc_state, tt_state)
+        # print_stack(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 
