@@ -15,6 +15,8 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
+    # TODO: Test with PC and SP (both LDR and STR).
+
     # LDR - Offset addressing.
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
@@ -343,7 +345,7 @@ def emu_with_unicorn(opcode, istate):
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
-    mu.mem_write(STACK,                bytes(istate['stack']))
+    mu.mem_write(STACK,                istate['stack'])
     mu.mem_write(HEAP,                 bytes(istate['heap']))
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
@@ -404,7 +406,7 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
-    ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
+    ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
     ctx.setConcreteRegisterValue(ctx.registers.r1,  istate['r1'])
@@ -429,11 +431,11 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    print()
-    print(inst)
-    for x in inst.getSymbolicExpressions():
-       print(x)
-    print()
+    # print()
+    # print(inst)
+    # for x in inst.getSymbolicExpressions():
+    #    print(x)
+    # print()
 
     ostate = {
         "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
@@ -479,15 +481,22 @@ def print_state(istate, uc_ostate, tt_ostate):
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
 def print_heap(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
     for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
-        if ord(a) != b or a != c:
-            print("{:02x}|{:02x}|{:02x}".format(a, b, c), sep=" ")
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
+def print_stack(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
 
 
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
+        "stack": bytes(bytearray([b for b in range(255, -1, -1)])),
         "heap":  b"".join([bytes(i) for i in range(256)]),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
@@ -511,6 +520,12 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
+    # for i, b in enumerate(state["stack"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
+    # for i, b in enumerate(state["heap"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
     # NOTE: This tests each instruction separatly. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
@@ -525,11 +540,21 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
-        print(type(uc_state['heap']))
-        print(type(tt_state['heap']))
+        # print(type(uc_state['heap']))
+        # print(type(tt_state['heap']))
 
         for a, b in zip(uc_state['heap'], tt_state['heap']):
             if a != b:
+                print('[KO] %s (heap differs!)' %(disassembly))
+                print_heap(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+        for a, b in zip(uc_state['stack'], tt_state['stack']):
+            if a != b:
+                print('[KO] %s (stack differs!)' %(disassembly))
+                print_stack(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
                 sys.exit(-1)
 
         if uc_state != tt_state:
@@ -540,6 +565,7 @@ if __name__ == '__main__':
 
         # print_state(state, uc_state, tt_state)
         # print_heap(state, uc_state, tt_state)
+        # print_stack(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 

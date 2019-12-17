@@ -1,22 +1,27 @@
 #! /usr/bin/env bash
 
-echo "[+] Testing data instruction (ARM)..." && \
+echo "[+] Testing data instructions (ARM)..." && \
 python unicorn_test_arm32_data_arm.py && \
 
-echo "[+] Testing data instruction (Thumb)..."  && \
+echo "[+] Testing data instructions (Thumb)..."  && \
 python unicorn_test_arm32_data_thumb.py && \
 
-echo "[+] Testing branch instruction (ARM)..."  && \
+echo "[+] Testing branch instructions (ARM)..."  && \
 python unicorn_test_arm32_branch_arm_1.py && \
 python unicorn_test_arm32_branch_arm_2.py && \
 
-echo "[+] Testing branch instruction (Thumb)..."  && \
+echo "[+] Testing branch instructions (Thumb)..."  && \
 python unicorn_test_arm32_branch_thumb_1.py && \
 python unicorn_test_arm32_branch_thumb_2.py && \
 
-echo "[+] Testing branch (via PC manipulation) instruction (ARM)..."  && \
+echo "[+] Testing branch (via PC manipulation) instructions (ARM)..."  && \
 python unicorn_test_arm32_branch_pc_arm_1.py && \
 python unicorn_test_arm32_branch_pc_arm_2.py
+
+echo "[+] Testing load/store instructions (ARM)..."  && \
+python unicorn_test_arm32_loadstore_arm_1.py && \
+python unicorn_test_arm32_loadstore_arm_2.py && \
+python unicorn_test_arm32_loadstore_arm_3.py && \
 
 echo "[+] Testing interworking (ARM -> Thumb -> ARM)..."  && \
 python unicorn_test_arm32_interworking_arm.py && \
