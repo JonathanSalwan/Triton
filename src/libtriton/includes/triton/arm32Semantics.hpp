@@ -98,6 +98,11 @@ namespace triton {
             triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                      triton::arch::OperandWrapper& op);
 
+            //! Aligns the stack (sub). Returns the new stack value.
+            triton::uint64 alignSubStack_s(triton::arch::Instruction& inst,
+                                           const triton::ast::SharedAbstractNode& cond,
+                                           triton::uint32 delta);
+
             //! Control flow semantics. Used to represent PC.
             void controlFlow_s(triton::arch::Instruction& inst);
 
@@ -173,6 +178,9 @@ namespace triton {
 
             //! The STR semantics.
             void str_s(triton::arch::Instruction& inst);
+
+            //! The PUSH semantics.
+            void push_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of arm32 namespace */

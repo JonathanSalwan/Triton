@@ -33,6 +33,7 @@ BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 LDR                           | Load Register
 STR                           | Store Register
+PUSH                          | Push Multiple Registers
 
 */
 
@@ -74,6 +75,7 @@ namespace triton {
             case ID_INS_BX:        this->bx_s(inst);            break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_STR:       this->str_s(inst);           break;
+            case ID_INS_PUSH:      this->push_s(inst);          break;
             default:
               return false;
           }
@@ -175,6 +177,33 @@ namespace triton {
           }
 
           return node;
+        }
+
+
+        triton::uint64 Arm32Semantics::alignSubStack_s(triton::arch::Instruction& inst,
+                                                       const triton::ast::SharedAbstractNode& cond,
+                                                       triton::uint32 delta) {
+          auto dst = triton::arch::OperandWrapper(this->architecture->getStackPointer());
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+          auto op2 = this->astCtxt->bv(delta, dst.getBitSize());
+
+          /* Create the semantics */
+          auto node = this->astCtxt->ite(
+                        cond,
+                        this->astCtxt->bvsub(op1, op2),
+                        op1
+                      );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "Stack alignment");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+
+          /* Return the new stack value */
+          return node->evaluate().convert_to<triton::uint64>();
         }
 
 
@@ -921,6 +950,38 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::push_s(triton::arch::Instruction& inst) {
+          auto stack          = this->architecture->getStackPointer();
+          triton::uint32 size = stack.getSize();
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (int i = inst.operands.size()-1; i >= 0; i--) {
+            auto& src = inst.operands[i];
+
+            /* Create symbolic operands */
+            auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+            /* Create the semantics - side effect */
+            auto stackValue = alignSubStack_s(inst, cond, size);
+            auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op, this->astCtxt->bv(stackValue, op->getBitvectorSize()));
+
+            /* Create symbolic expression */
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUSH operation - Push register");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
       }; /* arm32 namespace */
