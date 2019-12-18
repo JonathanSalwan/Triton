@@ -31,6 +31,7 @@ B                             | Branch
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
+MOV                           | Move Register
 LDR                           | Load Register
 STR                           | Store Register
 SUB                           | Substract
@@ -75,6 +76,7 @@ namespace triton {
             case ID_INS_BL:        this->bl_s(inst, false);     break;
             case ID_INS_BLX:       this->bl_s(inst, true);      break;
             case ID_INS_BX:        this->bx_s(inst);            break;
+            case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -893,6 +895,67 @@ namespace triton {
 
           /* Create the path constraint */
           this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void Arm32Semantics::mov_s(triton::arch::Instruction& inst) {
+          /* NOTE: According to the manual the instruction has only to operands,
+           * source and destination (second and first, respectively). However,
+           * Capstone is exposing two operands for the ARM version of the
+           * instruction ("MOV Rd, Rm", as expected) and three for the Thumb
+           * version ("MOV Rd, Rd, Rm").
+           */
+          /* TODO: Improve. */
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          switch (inst.operands.size()) {
+            case 2:
+              /* Arm */
+              dst = inst.operands[0];
+              src = inst.operands[1];
+              break;
+            case 3:
+              /* Thumb */
+              dst = inst.operands[1];
+              src = inst.operands[2];
+              break;
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::mov_s(): Invalid number of operands.");
+          }
+
+          /* Create the semantics */
+          auto node1 = this->getArm32SourceOperandAst(inst, src);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
+
+            /* TODO: Carry for imm?? Check manual. */
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* TODO: Fix. */
+            /* Update swtich mode accordingly. */
+            // this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
         }
 
 
