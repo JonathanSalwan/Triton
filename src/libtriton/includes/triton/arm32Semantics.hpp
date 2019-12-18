@@ -153,8 +153,24 @@ namespace triton {
                          triton::ast::SharedAbstractNode& op1,
                          triton::ast::SharedAbstractNode& op2);
 
+            //! The CF semantics for the SUBS operation.
+            void cfSub_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& dst,
+                         triton::ast::SharedAbstractNode& op1,
+                         triton::ast::SharedAbstractNode& op2);
+
             //! The VF semantics for the ADDS operation.
             void vfAdd_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& dst,
+                         triton::ast::SharedAbstractNode& op1,
+                         triton::ast::SharedAbstractNode& op2);
+
+            //! The VF semantics for the SUBS operation.
+            void vfSub_s(triton::arch::Instruction& inst,
                          const triton::ast::SharedAbstractNode& cond,
                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
                          triton::arch::OperandWrapper& dst,
@@ -183,6 +199,9 @@ namespace triton {
 
             //! The STR semantics.
             void str_s(triton::arch::Instruction& inst);
+
+            //! The SUB semantics.
+            void sub_s(triton::arch::Instruction& inst);
 
             //! The POP semantics.
             void pop_s(triton::arch::Instruction& inst);
