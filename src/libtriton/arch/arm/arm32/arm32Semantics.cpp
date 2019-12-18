@@ -33,6 +33,7 @@ BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 LDR                           | Load Register
 STR                           | Store Register
+SUB                           | Substract
 POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
 
@@ -76,6 +77,7 @@ namespace triton {
             case ID_INS_BX:        this->bx_s(inst);            break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_STR:       this->str_s(inst);           break;
+            case ID_INS_SUB:       this->sub_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
             case ID_INS_PUSH:      this->push_s(inst);          break;
             default:
@@ -580,6 +582,45 @@ namespace triton {
         }
 
 
+        void Arm32Semantics::cfSub_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
+
+          auto cf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+          auto bvSize = dst.getBitSize();
+          auto low    = dst.getLow();
+          auto high   = dst.getHigh();
+
+          /*
+           * Create the semantic.
+           * cf = (MSB(((op1 ^ op2 ^ result) ^ ((op1 ^ result) & (op1 ^ op2))))) ^ 1
+           */
+          auto node1 = this->astCtxt->bvxor(
+                        this->astCtxt->extract(bvSize-1, bvSize-1,
+                          this->astCtxt->bvxor(
+                            this->astCtxt->bvxor(op1, this->astCtxt->bvxor(op2, this->astCtxt->extract(high, low, this->astCtxt->reference(parent)))),
+                            this->astCtxt->bvand(
+                              this->astCtxt->bvxor(op1, this->astCtxt->extract(high, low, this->astCtxt->reference(parent))),
+                              this->astCtxt->bvxor(op1, op2)
+                            )
+                          )
+                        ),
+                        this->astCtxt->bvtrue()
+                      );
+          auto node2 = this->symbolicEngine->getOperandAst(cf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create the symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, cf, "Carry flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, cf, parent->isTainted);
+        }
+
+
         void Arm32Semantics::vfAdd_s(triton::arch::Instruction& inst,
                                      const triton::ast::SharedAbstractNode& cond,
                                      const triton::engines::symbolic::SharedSymbolicExpression& parent,
@@ -599,6 +640,39 @@ namespace triton {
           auto node1 = this->astCtxt->extract(bvSize-1, bvSize-1,
                         this->astCtxt->bvand(
                           this->astCtxt->bvxor(op1, this->astCtxt->bvnot(op2)),
+                          this->astCtxt->bvxor(op1, this->astCtxt->extract(high, low, this->astCtxt->reference(parent)))
+                        )
+                      );
+          auto node2 = this->symbolicEngine->getOperandAst(vf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create the symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, vf, "Overflow flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, vf, parent->isTainted);
+        }
+
+
+        void Arm32Semantics::vfSub_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     triton::arch::OperandWrapper& dst,
+                                     triton::ast::SharedAbstractNode& op1,
+                                     triton::ast::SharedAbstractNode& op2) {
+
+          auto vf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_V));
+          auto bvSize = dst.getBitSize();
+          auto low    = dst.getLow();
+          auto high   = dst.getHigh();
+
+          /*
+           * Create the semantic.
+           * vf = MSB((op1 ^ op2) & (op1 ^ result))
+           */
+          auto node1 = this->astCtxt->extract(bvSize-1, bvSize-1,
+                        this->astCtxt->bvand(
+                          this->astCtxt->bvxor(op1, op2),
                           this->astCtxt->bvxor(op1, this->astCtxt->extract(high, low, this->astCtxt->reference(parent)))
                         )
                       );
@@ -977,6 +1051,49 @@ namespace triton {
             /* TODO: Fix.*/
             /* Update swtich mode accordingly. */
             // this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::sub_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvsub(op1, op2);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADD(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfSub_s(inst, cond, expr, dst, op1, op2);
+            this->nf_s(inst, cond, expr, dst);
+            this->vfSub_s(inst, cond, expr, dst, op1, op2);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
