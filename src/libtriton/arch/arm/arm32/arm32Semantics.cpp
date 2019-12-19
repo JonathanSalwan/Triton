@@ -31,12 +31,12 @@ B                             | Branch
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
-MOV                           | Move Register
 LDR                           | Load Register
-STR                           | Store Register
-SUB                           | Substract
+MOV                           | Move Register
 POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
+STR                           | Store Register
+SUB                           | Substract
 
 */
 
@@ -76,12 +76,12 @@ namespace triton {
             case ID_INS_BL:        this->bl_s(inst, false);     break;
             case ID_INS_BLX:       this->bl_s(inst, true);      break;
             case ID_INS_BX:        this->bx_s(inst);            break;
-            case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
-            case ID_INS_STR:       this->str_s(inst);           break;
-            case ID_INS_SUB:       this->sub_s(inst);           break;
+            case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
             case ID_INS_PUSH:      this->push_s(inst);          break;
+            case ID_INS_STR:       this->str_s(inst);           break;
+            case ID_INS_SUB:       this->sub_s(inst);           break;
             default:
               return false;
           }
@@ -898,67 +898,6 @@ namespace triton {
         }
 
 
-        void Arm32Semantics::mov_s(triton::arch::Instruction& inst) {
-          /* NOTE: According to the manual the instruction has only to operands,
-           * source and destination (second and first, respectively). However,
-           * Capstone is exposing two operands for the ARM version of the
-           * instruction ("MOV Rd, Rm", as expected) and three for the Thumb
-           * version ("MOV Rd, Rd, Rm").
-           */
-          /* TODO: Improve. */
-          auto& dst = inst.operands[0];
-          auto& src = inst.operands[1];
-
-          switch (inst.operands.size()) {
-            case 2:
-              /* Arm */
-              dst = inst.operands[0];
-              src = inst.operands[1];
-              break;
-            case 3:
-              /* Thumb */
-              dst = inst.operands[1];
-              src = inst.operands[2];
-              break;
-            default:
-              throw triton::exceptions::Semantics("Arm32Semantics::mov_s(): Invalid number of operands.");
-          }
-
-          /* Create the semantics */
-          auto node1 = this->getArm32SourceOperandAst(inst, src);
-          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
-
-          /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV operation");
-
-          /* Get condition code node */
-          auto cond = node2->getChildren()[0];
-
-          /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
-
-          /* Update symbolic flags */
-          if (inst.isUpdateFlag() == true) {
-            this->nf_s(inst, cond, expr, dst);
-            this->zf_s(inst, cond, expr, dst);
-
-            /* TODO: Carry for imm?? Check manual. */
-          }
-
-          /* Update condition flag */
-          if (cond->evaluate() == true) {
-            inst.setConditionTaken(true);
-
-            /* TODO: Fix. */
-            /* Update swtich mode accordingly. */
-            // this->updateExecutionState(dst, node1);
-          }
-
-          /* Update the symbolic control flow */
-          this->controlFlow_s(inst, cond, dst);
-        }
-
-
         void Arm32Semantics::ldr_s(triton::arch::Instruction& inst) {
           auto& dst  = inst.operands[0];
           auto& src = inst.operands[1];
@@ -1037,6 +976,133 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::mov_s(triton::arch::Instruction& inst) {
+          /* NOTE: According to the manual the instruction has only to operands,
+           * source and destination (second and first, respectively). However,
+           * Capstone is exposing two operands for the ARM version of the
+           * instruction ("MOV Rd, Rm", as expected) and three for the Thumb
+           * version ("MOV Rd, Rd, Rm").
+           */
+          /* TODO: Improve. */
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          switch (inst.operands.size()) {
+            case 2:
+              /* Arm */
+              dst = inst.operands[0];
+              src = inst.operands[1];
+              break;
+            case 3:
+              /* Thumb */
+              dst = inst.operands[1];
+              src = inst.operands[2];
+              break;
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::mov_s(): Invalid number of operands.");
+          }
+
+          /* Create the semantics */
+          auto node1 = this->getArm32SourceOperandAst(inst, src);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
+
+            /* TODO: Carry for imm?? Check manual. */
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* TODO: Fix. */
+            /* Update swtich mode accordingly. */
+            // this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::pop_s(triton::arch::Instruction& inst) {
+          auto stack          = this->architecture->getStackPointer();
+          triton::uint32 size = stack.getSize();
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (unsigned int i = 0; i < inst.operands.size(); i++) {
+            auto& dst       = inst.operands[i];
+            auto stack      = this->architecture->getStackPointer();
+            auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+            auto src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+
+            /* Create symbolic operands */
+            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op2, op1);
+
+            /* Create symbolic expression */
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation - Pop register");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+            alignAddStack_s(inst, cond, size);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::push_s(triton::arch::Instruction& inst) {
+          auto stack          = this->architecture->getStackPointer();
+          triton::uint32 size = stack.getSize();
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (int i = inst.operands.size()-1; i >= 0; i--) {
+            auto& src = inst.operands[i];
+
+            /* Create symbolic operands */
+            auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+            /* Create the semantics - side effect */
+            auto stackValue = alignSubStack_s(inst, cond, size);
+            auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op, this->astCtxt->bv(stackValue, op->getBitvectorSize()));
+
+            /* Create symbolic expression */
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUSH operation - Push register");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
 
@@ -1161,72 +1227,6 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
-        }
-
-
-        void Arm32Semantics::pop_s(triton::arch::Instruction& inst) {
-          auto stack          = this->architecture->getStackPointer();
-          triton::uint32 size = stack.getSize();
-
-          /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
-
-          for (unsigned int i = 0; i < inst.operands.size(); i++) {
-            auto& dst       = inst.operands[i];
-            auto stack      = this->architecture->getStackPointer();
-            auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-            auto src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
-
-            /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-
-            /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op2, op1);
-
-            /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation - Pop register");
-
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
-
-            alignAddStack_s(inst, cond, size);
-          }
-
-          /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
-        }
-
-
-        void Arm32Semantics::push_s(triton::arch::Instruction& inst) {
-          auto stack          = this->architecture->getStackPointer();
-          triton::uint32 size = stack.getSize();
-
-          /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
-
-          for (int i = inst.operands.size()-1; i >= 0; i--) {
-            auto& src = inst.operands[i];
-
-            /* Create symbolic operands */
-            auto op = this->symbolicEngine->getOperandAst(inst, src);
-
-            /* Create the semantics - side effect */
-            auto stackValue = alignSubStack_s(inst, cond, size);
-            auto dst        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
-
-            /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op, this->astCtxt->bv(stackValue, op->getBitvectorSize()));
-
-            /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUSH operation - Push register");
-
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
-          }
-
-          /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
         }
 
       }; /* arm32 namespace */
