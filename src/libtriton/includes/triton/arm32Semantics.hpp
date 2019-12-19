@@ -194,23 +194,23 @@ namespace triton {
             //! The BX semantics.
             void bx_s(triton::arch::Instruction& inst);
 
-            //! The MOV semantics.
-            void mov_s(triton::arch::Instruction& inst);
-
             //! The LDR semantics.
             void ldr_s(triton::arch::Instruction& inst);
 
-            //! The STR semantics.
-            void str_s(triton::arch::Instruction& inst);
-
-            //! The SUB semantics.
-            void sub_s(triton::arch::Instruction& inst);
+            //! The MOV semantics.
+            void mov_s(triton::arch::Instruction& inst);
 
             //! The POP semantics.
             void pop_s(triton::arch::Instruction& inst);
 
             //! The PUSH semantics.
             void push_s(triton::arch::Instruction& inst);
+
+            //! The STR semantics.
+            void str_s(triton::arch::Instruction& inst);
+
+            //! The SUB semantics.
+            void sub_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of arm32 namespace */
