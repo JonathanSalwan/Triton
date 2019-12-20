@@ -6,12 +6,15 @@
 */
 
 #include <utility>
+#include <triton/arm32Cpu.hpp>
 #include <triton/arm32Semantics.hpp>
 #include <triton/arm32Specifications.hpp>
 #include <triton/astContext.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 
+
+#include <iostream>
 
 
 /*! \page SMT_arm32_Semantics_Supported_page ARM32 SMT semantics supported
@@ -24,6 +27,7 @@ ADC                           | Add with Carry
 ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
+BX                            | Branch and Exchange
 
 */
 
@@ -59,6 +63,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_BX:        this->bx_s(inst);            break;
             default:
               return false;
           }
@@ -525,6 +530,46 @@ namespace triton {
           /* Update the symbolic control flow */
           /* TODO (cnheitman): Not clear what to do when S == 1 and Rd == PC. Test. */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::bx_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
+          auto& src = inst.operands[0];
+
+          /* Create symbolic operands */
+          auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+          auto op2 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(
+                          cond,
+                          this->astCtxt->bvand(
+                            op1,
+                            this->astCtxt->bv(op1->getBitvectorMask()-1, src.getBitSize())
+                          ),  /* Set instruction set selection bit to 0. */
+                          op2
+                        );
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "BX operation - Program Counter");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Check instruction set selection bit and set mode accordingly. */
+            auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
+            auto isb = op1->evaluate() & 0x1;
+            cpu->setThumb(isb == 0x1);
+          }
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
       }; /* arm32 namespace */
