@@ -980,30 +980,8 @@ namespace triton {
 
 
         void Arm32Semantics::mov_s(triton::arch::Instruction& inst) {
-          /* NOTE: According to the manual the instruction has only to operands,
-           * source and destination (second and first, respectively). However,
-           * Capstone is exposing two operands for the ARM version of the
-           * instruction ("MOV Rd, Rm", as expected) and three for the Thumb
-           * version ("MOV Rd, Rd, Rm").
-           */
-          /* TODO: Improve. */
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
-
-          switch (inst.operands.size()) {
-            case 2:
-              /* Arm */
-              dst = inst.operands[0];
-              src = inst.operands[1];
-              break;
-            case 3:
-              /* Thumb */
-              dst = inst.operands[1];
-              src = inst.operands[2];
-              break;
-            default:
-              throw triton::exceptions::Semantics("Arm32Semantics::mov_s(): Invalid number of operands.");
-          }
 
           /* Create the semantics */
           auto node1 = this->getArm32SourceOperandAst(inst, src);
@@ -1022,17 +1000,14 @@ namespace triton {
           if (inst.isUpdateFlag() == true) {
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
-
-            /* TODO: Carry for imm?? Check manual. */
           }
 
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* TODO: Fix. */
             /* Update swtich mode accordingly. */
-            // this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
