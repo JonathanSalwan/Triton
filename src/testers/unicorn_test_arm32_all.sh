@@ -16,7 +16,7 @@ python unicorn_test_arm32_branch_thumb_2.py && \
 
 echo "[+] Testing branch (via PC manipulation) instructions (ARM)..."  && \
 python unicorn_test_arm32_branch_pc_arm_1.py && \
-python unicorn_test_arm32_branch_pc_arm_2.py
+python unicorn_test_arm32_branch_pc_arm_2.py && \
 
 echo "[+] Testing load/store instructions (ARM)..."  && \
 python unicorn_test_arm32_loadstore_arm_1.py && \
