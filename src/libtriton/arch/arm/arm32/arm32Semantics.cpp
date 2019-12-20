@@ -969,9 +969,8 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* TODO: Fix.*/
             /* Update swtich mode accordingly. */
-            // this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
