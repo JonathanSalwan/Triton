@@ -15,8 +15,6 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # TODO: Test with PC and SP (both LDR and STR).
-
     # LDR - Offset addressing.
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
@@ -157,6 +155,41 @@ CODE  = [
     # (b"\x04\x00\x11\xd4", "ldrle r0, [r1], #-0x4"),
     # (b"\x04\x00\x11\xe4", "ldral r0, [r1], #-0x4"),
 
+    # LDR with SP as operand
+    (b"\x00\xd0\x91\xe5", "ldr sp, [r1]"),
+    (b"\x00\xd0\x91\x05", "ldreq sp, [r1]"),
+    (b"\x00\xd0\x91\x15", "ldrne sp, [r1]"),
+    (b"\x00\xd0\x91\x25", "ldrcs sp, [r1]"),
+    (b"\x00\xd0\x91\x35", "ldrcc sp, [r1]"),
+    (b"\x00\xd0\x91\x45", "ldrmi sp, [r1]"),
+    (b"\x00\xd0\x91\x55", "ldrpl sp, [r1]"),
+    (b"\x00\xd0\x91\x65", "ldrvs sp, [r1]"),
+    (b"\x00\xd0\x91\x75", "ldrvc sp, [r1]"),
+    (b"\x00\xd0\x91\x85", "ldrhi sp, [r1]"),
+    (b"\x00\xd0\x91\x95", "ldrls sp, [r1]"),
+    (b"\x00\xd0\x91\xa5", "ldrge sp, [r1]"),
+    (b"\x00\xd0\x91\xb5", "ldrlt sp, [r1]"),
+    (b"\x00\xd0\x91\xc5", "ldrgt sp, [r1]"),
+    (b"\x00\xd0\x91\xd5", "ldrle sp, [r1]"),
+    (b"\x00\xd0\x91\xe5", "ldral sp, [r1]"),
+
+    (b"\x00\x00\x9d\xe5", "ldr r0, [sp]"),
+    (b"\x00\x00\x9d\x05", "ldreq r0, [sp]"),
+    (b"\x00\x00\x9d\x15", "ldrne r0, [sp]"),
+    (b"\x00\x00\x9d\x25", "ldrcs r0, [sp]"),
+    (b"\x00\x00\x9d\x35", "ldrcc r0, [sp]"),
+    (b"\x00\x00\x9d\x45", "ldrmi r0, [sp]"),
+    (b"\x00\x00\x9d\x55", "ldrpl r0, [sp]"),
+    (b"\x00\x00\x9d\x65", "ldrvs r0, [sp]"),
+    (b"\x00\x00\x9d\x75", "ldrvc r0, [sp]"),
+    (b"\x00\x00\x9d\x85", "ldrhi r0, [sp]"),
+    (b"\x00\x00\x9d\x95", "ldrls r0, [sp]"),
+    (b"\x00\x00\x9d\xa5", "ldrge r0, [sp]"),
+    (b"\x00\x00\x9d\xb5", "ldrlt r0, [sp]"),
+    (b"\x00\x00\x9d\xc5", "ldrgt r0, [sp]"),
+    (b"\x00\x00\x9d\xd5", "ldrle r0, [sp]"),
+    (b"\x00\x00\x9d\xe5", "ldral r0, [sp]"),
+
     # STR - Offset addressing.
     (b"\x00\x00\x81\xe5", "str r0, [r1]"),
     (b"\x00\x00\x81\x05", "streq r0, [r1]"),
@@ -296,6 +329,43 @@ CODE  = [
     # (b"\x04\x00\x01\xc4", "strgt r0, [r1], #-0x4"),
     # (b"\x04\x00\x01\xd4", "strle r0, [r1], #-0x4"),
     # (b"\x04\x00\x01\xe4", "stral r0, [r1], #-0x4"),
+
+    # STR with SP as operand
+    (b"\x00\xd0\x81\xe5", "str sp, [r1]"),
+    (b"\x00\xd0\x81\x05", "streq sp, [r1]"),
+    (b"\x00\xd0\x81\x15", "strne sp, [r1]"),
+    (b"\x00\xd0\x81\x25", "strcs sp, [r1]"),
+    (b"\x00\xd0\x81\x35", "strcc sp, [r1]"),
+    (b"\x00\xd0\x81\x45", "strmi sp, [r1]"),
+    (b"\x00\xd0\x81\x55", "strpl sp, [r1]"),
+    (b"\x00\xd0\x81\x65", "strvs sp, [r1]"),
+    (b"\x00\xd0\x81\x75", "strvc sp, [r1]"),
+    (b"\x00\xd0\x81\x85", "strhi sp, [r1]"),
+    (b"\x00\xd0\x81\x95", "strls sp, [r1]"),
+    (b"\x00\xd0\x81\xa5", "strge sp, [r1]"),
+    (b"\x00\xd0\x81\xb5", "strlt sp, [r1]"),
+    (b"\x00\xd0\x81\xc5", "strgt sp, [r1]"),
+    (b"\x00\xd0\x81\xd5", "strle sp, [r1]"),
+    (b"\x00\xd0\x81\xe5", "stral sp, [r1]"),
+
+    (b"\x00\x00\x8d\xe5", "str r0, [sp]"),
+    (b"\x00\x00\x8d\x05", "streq r0, [sp]"),
+    (b"\x00\x00\x8d\x15", "strne r0, [sp]"),
+    (b"\x00\x00\x8d\x25", "strcs r0, [sp]"),
+    (b"\x00\x00\x8d\x35", "strcc r0, [sp]"),
+    (b"\x00\x00\x8d\x45", "strmi r0, [sp]"),
+    (b"\x00\x00\x8d\x55", "strpl r0, [sp]"),
+    (b"\x00\x00\x8d\x65", "strvs r0, [sp]"),
+    (b"\x00\x00\x8d\x75", "strvc r0, [sp]"),
+    (b"\x00\x00\x8d\x85", "strhi r0, [sp]"),
+    (b"\x00\x00\x8d\x95", "strls r0, [sp]"),
+    (b"\x00\x00\x8d\xa5", "strge r0, [sp]"),
+    (b"\x00\x00\x8d\xb5", "strlt r0, [sp]"),
+    (b"\x00\x00\x8d\xc5", "strgt r0, [sp]"),
+    (b"\x00\x00\x8d\xd5", "strle r0, [sp]"),
+    (b"\x00\x00\x8d\xe5", "stral r0, [sp]"),
+
+    # TODO: Test with PC as source register.
 ]
 
 

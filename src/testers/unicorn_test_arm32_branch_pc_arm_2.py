@@ -11,6 +11,7 @@ from capstone.arm_const  import *
 import sys
 import pprint
 import random
+import struct
 
 ADDR  = 0x100000
 ADDR2 = 0x300000
@@ -90,6 +91,24 @@ CODE  = [
     (b"\x01\xf0\x90\xc0", "addsgt pc, r0, r1"),
     (b"\x01\xf0\x90\xd0", "addsle pc, r0, r1"),
     (b"\x01\xf0\x90\xe0", "addsal pc, r0, r1"),
+
+    # LDR -------------------------------------------------------------------- #
+    (b"\x00\xf0\x95\xe5", "ldr pc, [r5]"),
+    (b"\x00\xf0\x95\x05", "ldreq pc, [r5]"),
+    (b"\x00\xf0\x95\x15", "ldrne pc, [r5]"),
+    (b"\x00\xf0\x95\x25", "ldrcs pc, [r5]"),
+    (b"\x00\xf0\x95\x35", "ldrcc pc, [r5]"),
+    (b"\x00\xf0\x95\x45", "ldrmi pc, [r5]"),
+    (b"\x00\xf0\x95\x55", "ldrpl pc, [r5]"),
+    (b"\x00\xf0\x95\x65", "ldrvs pc, [r5]"),
+    (b"\x00\xf0\x95\x75", "ldrvc pc, [r5]"),
+    (b"\x00\xf0\x95\x85", "ldrhi pc, [r5]"),
+    (b"\x00\xf0\x95\x95", "ldrls pc, [r5]"),
+    (b"\x00\xf0\x95\xa5", "ldrge pc, [r5]"),
+    (b"\x00\xf0\x95\xb5", "ldrlt pc, [r5]"),
+    (b"\x00\xf0\x95\xc5", "ldrgt pc, [r5]"),
+    (b"\x00\xf0\x95\xd5", "ldrle pc, [r5]"),
+    (b"\x00\xf0\x95\xe5", "ldral pc, [r5]"),
 
     # MOV(S) ----------------------------------------------------------------- #
     (b"\x04\xf0\xa0\x01", "moveq pc, r4"),
@@ -371,13 +390,13 @@ if __name__ == '__main__':
     # initial state
     state = {
         "stack": b"".join([bytes(255 - i) for i in range(256)]),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "heap":  bytearray([b for b in range(255)]),
         "r0":    0x100000 | 0x1,
         "r1":    0x200000,
         "r2":    0x400000 | 0x1,
         "r3":    0x100000,
         "r4":    0x300000 | 0x1,
-        "r5":    random.randint(0x0, 0xffffffff),
+        "r5":    HEAP + 5 * 0x4,
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),
         "r8":    random.randint(0x0, 0xffffffff),
@@ -393,6 +412,12 @@ if __name__ == '__main__':
         "c":     0, # NOTE: Set on 0 for testing ADC instructions.
         "v":     random.randint(0x0, 0x1),
     }
+
+    # Set TARGET value to test LDR instructions.
+    state["heap"][5*0x4:5*0x4*3] = struct.pack("<I", 0x300000 | 0x1)
+
+    # for i, b in enumerate(state["heap"]):
+    #     print("{:02x}: {:02x}".format(i, b))
 
     # NOTE: This tests each instruction separatly. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
