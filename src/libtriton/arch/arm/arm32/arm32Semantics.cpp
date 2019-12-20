@@ -233,8 +233,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "Stack alignment");
 
           /* Spread taint */
-          /* TODO: Consider conditional execution. */
-          expr->isTainted = this->taintEngine->taintUnion(dst, dst);
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->taintUnion(dst, dst));
 
           /* Return the new stack value */
           return node->evaluate().convert_to<triton::uint64>();
