@@ -1121,7 +1121,7 @@ namespace triton {
 
             /* TODO: Fix.*/
             /* Spread taint */
-            // expr2->isTainted = this->taintEngine->isTainted(base);
+            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Optional behavior. Pre-indexed computation of the base register. */
@@ -1144,16 +1144,15 @@ namespace triton {
 
             /* TODO: Fix.*/
             /* Spread taint */
-            // expr3->isTainted = this->taintEngine->isTainted(base);
+            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* TODO: Fix.*/
             /* Update swtich mode accordingly. */
-            // this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
