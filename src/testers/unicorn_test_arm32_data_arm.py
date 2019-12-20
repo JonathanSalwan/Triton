@@ -15,82 +15,6 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # ADC(S) with PC as operand ---------------------------------------------- #
-    (b"\x0f\x00\xa1\xe0", "adc r0, r1, pc"),
-    (b"\x02\x00\xaf\xe0", "adc r0, pc, r2"),
-
-    (b"\x4f\x01\xa1\xe0", "adc r0, r1, pc, asr #2"),
-    (b"\x42\x01\xaf\xe0", "adc r0, pc, r2, asr #2"),
-    (b"\x0f\x01\xa1\xe0", "adc r0, r1, pc, lsl #2"),
-    (b"\x02\x01\xaf\xe0", "adc r0, pc, r2, lsl #2"),
-    (b"\x2f\x01\xa1\xe0", "adc r0, r1, pc, lsr #2"),
-    (b"\x22\x01\xaf\xe0", "adc r0, pc, r2, lsr #2"),
-    (b"\x6f\x01\xa1\xe0", "adc r0, r1, pc, ror #2"),
-    (b"\x62\x01\xaf\xe0", "adc r0, pc, r2, ror #2"),
-    (b"\x6f\x00\xa1\xe0", "adc r0, r1, pc, rrx"),
-    (b"\x62\x00\xaf\xe0", "adc r0, pc, r2, rrx"),
-    (b"\x5f\x03\xa1\xe0", "adc r0, r1, pc, asr r3"),
-    (b"\x1f\x03\xa1\xe0", "adc r0, r1, pc, lsl r3"),
-    (b"\x3f\x03\xa1\xe0", "adc r0, r1, pc, lsr r3"),
-    (b"\x7f\x03\xa1\xe0", "adc r0, r1, pc, ror r3"),
-
-    (b"\x4f\x01\xb1\xe0", "adcs r0, r1, pc, asr #2"),
-    (b"\x42\x01\xbf\xe0", "adcs r0, pc, r2, asr #2"),
-    (b"\x0f\x01\xb1\xe0", "adcs r0, r1, pc, lsl #2"),
-    (b"\x02\x01\xbf\xe0", "adcs r0, pc, r2, lsl #2"),
-    (b"\x2f\x01\xb1\xe0", "adcs r0, r1, pc, lsr #2"),
-    (b"\x22\x01\xbf\xe0", "adcs r0, pc, r2, lsr #2"),
-    (b"\x6f\x01\xb1\xe0", "adcs r0, r1, pc, ror #2"),
-    (b"\x62\x01\xbf\xe0", "adcs r0, pc, r2, ror #2"),
-    (b"\x6f\x00\xb1\xe0", "adcs r0, r1, pc, rrx"),
-    (b"\x62\x00\xbf\xe0", "adcs r0, pc, r2, rrx"),
-    (b"\x5f\x03\xb1\xe0", "adcs r0, r1, pc, asr r3"),
-    (b"\x1f\x03\xb1\xe0", "adcs r0, r1, pc, lsl r3"),
-    (b"\x3f\x03\xb1\xe0", "adcs r0, r1, pc, lsr r3"),
-    (b"\x7f\x03\xb1\xe0", "adcs r0, r1, pc, ror r3"),
-
-    # ADD(S) with PC as operand ---------------------------------------------- #
-    (b"\x0f\x00\x81\xe0", "add r0, r1, pc"),
-    (b"\x02\x00\x8f\xe0", "add r0, pc, r2"),
-
-    (b"\x4f\x01\x81\xe0", "add r0, r1, pc, asr #2"),
-    (b"\x42\x01\x8f\xe0", "add r0, pc, r2, asr #2"),
-    (b"\x0f\x01\x81\xe0", "add r0, r1, pc, lsl #2"),
-    (b"\x02\x01\x8f\xe0", "add r0, pc, r2, lsl #2"),
-    (b"\x2f\x01\x81\xe0", "add r0, r1, pc, lsr #2"),
-    (b"\x22\x01\x8f\xe0", "add r0, pc, r2, lsr #2"),
-    (b"\x6f\x01\x81\xe0", "add r0, r1, pc, ror #2"),
-    (b"\x62\x01\x8f\xe0", "add r0, pc, r2, ror #2"),
-    (b"\x6f\x00\x81\xe0", "add r0, r1, pc, rrx"),
-    (b"\x62\x00\x8f\xe0", "add r0, pc, r2, rrx"),
-    (b"\x5f\x03\x81\xe0", "add r0, r1, pc, asr r3"),
-    (b"\x52\x03\x8f\xe0", "add r0, pc, r2, asr r3"),
-    (b"\x1f\x03\x81\xe0", "add r0, r1, pc, lsl r3"),
-    (b"\x12\x03\x8f\xe0", "add r0, pc, r2, lsl r3"),
-    (b"\x3f\x03\x81\xe0", "add r0, r1, pc, lsr r3"),
-    (b"\x32\x03\x8f\xe0", "add r0, pc, r2, lsr r3"),
-    (b"\x7f\x03\x81\xe0", "add r0, r1, pc, ror r3"),
-    (b"\x72\x03\x8f\xe0", "add r0, pc, r2, ror r3"),
-
-    (b"\x4f\x01\x91\xe0", "adds r0, r1, pc, asr #2"),
-    (b"\x42\x01\x9f\xe0", "adds r0, pc, r2, asr #2"),
-    (b"\x0f\x01\x91\xe0", "adds r0, r1, pc, lsl #2"),
-    (b"\x02\x01\x9f\xe0", "adds r0, pc, r2, lsl #2"),
-    (b"\x2f\x01\x91\xe0", "adds r0, r1, pc, lsr #2"),
-    (b"\x22\x01\x9f\xe0", "adds r0, pc, r2, lsr #2"),
-    (b"\x6f\x01\x91\xe0", "adds r0, r1, pc, ror #2"),
-    (b"\x62\x01\x9f\xe0", "adds r0, pc, r2, ror #2"),
-    (b"\x6f\x00\x91\xe0", "adds r0, r1, pc, rrx"),
-    (b"\x62\x00\x9f\xe0", "adds r0, pc, r2, rrx"),
-    (b"\x5f\x03\x91\xe0", "adds r0, r1, pc, asr r3"),
-    (b"\x52\x03\x9f\xe0", "adds r0, pc, r2, asr r3"),
-    (b"\x1f\x03\x91\xe0", "adds r0, r1, pc, lsl r3"),
-    (b"\x12\x03\x9f\xe0", "adds r0, pc, r2, lsl r3"),
-    (b"\x3f\x03\x91\xe0", "adds r0, r1, pc, lsr r3"),
-    (b"\x32\x03\x9f\xe0", "adds r0, pc, r2, lsr r3"),
-    (b"\x7f\x03\x91\xe0", "adds r0, r1, pc, ror r3"),
-    (b"\x72\x03\x9f\xe0", "adds r0, pc, r2, ror r3"),
-
     # ADC -------------------------------------------------------------------- #
     (b"\x02\x00\xa1\xe2", "adc r0, r1, #2"),
     (b"\x02\x00\xa1\x02", "adceq r0, r1, #2"),
@@ -470,6 +394,43 @@ CODE  = [
     (b"\x81\x1f\xa1\xe0", "adc r1, r1, r1, lsl #31"),
     (b"\xa1\x1f\xa1\xe0", "adc r1, r1, r1, lsr #31"),
     (b"\xe1\x1f\xa1\xe0", "adc r1, r1, r1, ror #31"),
+
+    # ADC(S) with PC as operand ---------------------------------------------- #
+    (b"\x0f\x00\xa1\xe0", "adc r0, r1, pc"),
+    (b"\x02\x00\xaf\xe0", "adc r0, pc, r2"),
+
+    (b"\x4f\x01\xa1\xe0", "adc r0, r1, pc, asr #2"),
+    (b"\x42\x01\xaf\xe0", "adc r0, pc, r2, asr #2"),
+    (b"\x0f\x01\xa1\xe0", "adc r0, r1, pc, lsl #2"),
+    (b"\x02\x01\xaf\xe0", "adc r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\xa1\xe0", "adc r0, r1, pc, lsr #2"),
+    (b"\x22\x01\xaf\xe0", "adc r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\xa1\xe0", "adc r0, r1, pc, ror #2"),
+    (b"\x62\x01\xaf\xe0", "adc r0, pc, r2, ror #2"),
+    (b"\x6f\x00\xa1\xe0", "adc r0, r1, pc, rrx"),
+    (b"\x62\x00\xaf\xe0", "adc r0, pc, r2, rrx"),
+    (b"\x5f\x03\xa1\xe0", "adc r0, r1, pc, asr r3"),
+    (b"\x1f\x03\xa1\xe0", "adc r0, r1, pc, lsl r3"),
+    (b"\x3f\x03\xa1\xe0", "adc r0, r1, pc, lsr r3"),
+    (b"\x7f\x03\xa1\xe0", "adc r0, r1, pc, ror r3"),
+
+    (b"\x4f\x01\xb1\xe0", "adcs r0, r1, pc, asr #2"),
+    (b"\x42\x01\xbf\xe0", "adcs r0, pc, r2, asr #2"),
+    (b"\x0f\x01\xb1\xe0", "adcs r0, r1, pc, lsl #2"),
+    (b"\x02\x01\xbf\xe0", "adcs r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\xb1\xe0", "adcs r0, r1, pc, lsr #2"),
+    (b"\x22\x01\xbf\xe0", "adcs r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\xb1\xe0", "adcs r0, r1, pc, ror #2"),
+    (b"\x62\x01\xbf\xe0", "adcs r0, pc, r2, ror #2"),
+    (b"\x6f\x00\xb1\xe0", "adcs r0, r1, pc, rrx"),
+    (b"\x62\x00\xbf\xe0", "adcs r0, pc, r2, rrx"),
+    (b"\x5f\x03\xb1\xe0", "adcs r0, r1, pc, asr r3"),
+    (b"\x1f\x03\xb1\xe0", "adcs r0, r1, pc, lsl r3"),
+    (b"\x3f\x03\xb1\xe0", "adcs r0, r1, pc, lsr r3"),
+    (b"\x7f\x03\xb1\xe0", "adcs r0, r1, pc, ror r3"),
+
+    # ADC(S) with SP as operand ---------------------------------------------- #
+    # TODO: Test ADC(S) with SP as operand.
 
     # ADD -------------------------------------------------------------------- #
     (b"\x02\x00\x81\xe2", "add r0, r1, #2"),
@@ -851,7 +812,49 @@ CODE  = [
     (b"\xa1\x1f\x81\xe0", "add r1, r1, r1, lsr #31"),
     (b"\xe1\x1f\x81\xe0", "add r1, r1, r1, ror #31"),
 
-    # ADD(S) with SP --------------------------------------------------------- #
+    # ADD(S) with PC as operand ---------------------------------------------- #
+    (b"\x0f\x00\x81\xe0", "add r0, r1, pc"),
+    (b"\x02\x00\x8f\xe0", "add r0, pc, r2"),
+
+    (b"\x4f\x01\x81\xe0", "add r0, r1, pc, asr #2"),
+    (b"\x42\x01\x8f\xe0", "add r0, pc, r2, asr #2"),
+    (b"\x0f\x01\x81\xe0", "add r0, r1, pc, lsl #2"),
+    (b"\x02\x01\x8f\xe0", "add r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\x81\xe0", "add r0, r1, pc, lsr #2"),
+    (b"\x22\x01\x8f\xe0", "add r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\x81\xe0", "add r0, r1, pc, ror #2"),
+    (b"\x62\x01\x8f\xe0", "add r0, pc, r2, ror #2"),
+    (b"\x6f\x00\x81\xe0", "add r0, r1, pc, rrx"),
+    (b"\x62\x00\x8f\xe0", "add r0, pc, r2, rrx"),
+    (b"\x5f\x03\x81\xe0", "add r0, r1, pc, asr r3"),
+    (b"\x52\x03\x8f\xe0", "add r0, pc, r2, asr r3"),
+    (b"\x1f\x03\x81\xe0", "add r0, r1, pc, lsl r3"),
+    (b"\x12\x03\x8f\xe0", "add r0, pc, r2, lsl r3"),
+    (b"\x3f\x03\x81\xe0", "add r0, r1, pc, lsr r3"),
+    (b"\x32\x03\x8f\xe0", "add r0, pc, r2, lsr r3"),
+    (b"\x7f\x03\x81\xe0", "add r0, r1, pc, ror r3"),
+    (b"\x72\x03\x8f\xe0", "add r0, pc, r2, ror r3"),
+
+    (b"\x4f\x01\x91\xe0", "adds r0, r1, pc, asr #2"),
+    (b"\x42\x01\x9f\xe0", "adds r0, pc, r2, asr #2"),
+    (b"\x0f\x01\x91\xe0", "adds r0, r1, pc, lsl #2"),
+    (b"\x02\x01\x9f\xe0", "adds r0, pc, r2, lsl #2"),
+    (b"\x2f\x01\x91\xe0", "adds r0, r1, pc, lsr #2"),
+    (b"\x22\x01\x9f\xe0", "adds r0, pc, r2, lsr #2"),
+    (b"\x6f\x01\x91\xe0", "adds r0, r1, pc, ror #2"),
+    (b"\x62\x01\x9f\xe0", "adds r0, pc, r2, ror #2"),
+    (b"\x6f\x00\x91\xe0", "adds r0, r1, pc, rrx"),
+    (b"\x62\x00\x9f\xe0", "adds r0, pc, r2, rrx"),
+    (b"\x5f\x03\x91\xe0", "adds r0, r1, pc, asr r3"),
+    (b"\x52\x03\x9f\xe0", "adds r0, pc, r2, asr r3"),
+    (b"\x1f\x03\x91\xe0", "adds r0, r1, pc, lsl r3"),
+    (b"\x12\x03\x9f\xe0", "adds r0, pc, r2, lsl r3"),
+    (b"\x3f\x03\x91\xe0", "adds r0, r1, pc, lsr r3"),
+    (b"\x32\x03\x9f\xe0", "adds r0, pc, r2, lsr r3"),
+    (b"\x7f\x03\x91\xe0", "adds r0, r1, pc, ror r3"),
+    (b"\x72\x03\x9f\xe0", "adds r0, pc, r2, ror r3"),
+
+    # ADD(S) with SP as operand ---------------------------------------------- #
     (b"\x02\x00\x9d\xe2", "adds r0, sp, #2"),
     (b"\x02\x00\x9d\x02", "addseq r0, sp, #2"),
     (b"\x02\x00\x9d\x12", "addsne r0, sp, #2"),
@@ -1415,8 +1418,9 @@ CODE  = [
     (b"\x7d\xdd\x4d\xe0", "sub sp, sp, sp, ror sp"),
     (b"\x7d\xdd\x5d\xe0", "subs sp, sp, sp, ror sp"),
 
-    # TODO: Test with PC and SP.
-    # NOTE: MOV (shifted register) is a pseudo-instruction for ASR, LSL, LSR, ROR, and RRX.
+    # TODO: Test with PC and SP as operands (both destination and source).
+    # NOTE: MOV (shifted register) is a pseudo-instruction for ASR, LSL, LSR,
+    # ROR, and RRX.
     # MOV -------------------------------------------------------------------- #
     (b"\x02\x00\xa0\xe3", "mov r0, #2"),
     (b"\x02\x00\xa0\x03", "moveq r0, #2"),
