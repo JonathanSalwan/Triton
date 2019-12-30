@@ -264,7 +264,7 @@ namespace triton {
           triton::ast::SharedAbstractNode node;
 
           /* Create the semantics */
-          if (cond->evaluate() == true && inst.isUpdateFlag() == false && dst.getRegister().getId() == ID_REG_ARM32_PC) {
+          if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
             node = this->symbolicEngine->getOperandAst(inst, pc);
           } else {
             node = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
