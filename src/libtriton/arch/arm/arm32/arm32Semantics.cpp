@@ -521,24 +521,35 @@ namespace triton {
 
 
         void Arm32Semantics::add_s(triton::arch::Instruction& inst) {
-          /* TODO (cnheitman): In ARM mode, PC can be used as the destination register. Implement. */
+          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
 
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
+          auto increment = thumb ? 4 : 8;
+
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-          auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
-          auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+          auto op2 = src1.getRegister().getId() == ID_REG_ARM32_PC ?
+                      this->astCtxt->bv(inst.getAddress() + increment, src1.getBitSize()) :
+                      this->symbolicEngine->getOperandAst(inst, src1);
+          auto op3 = src2.getRegister().getId() == ID_REG_ARM32_PC ?
+                      this->astCtxt->bv(inst.getAddress() + increment, src2.getBitSize()) :
+                      this->symbolicEngine->getOperandAst(inst, src2);
 
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
           auto node1 = this->astCtxt->bvadd(op2, op3);
           auto node2 = this->astCtxt->ite(cond, node1, op1);
+          auto node3 = this->astCtxt->bvand(
+                          node1,
+                          this->astCtxt->bv(op1->getBitvectorMask()-1, dst.getBitSize())
+                        );   /* Clean ISB from PC. */
+          auto node4 = dst.getRegister().getId() == ID_REG_ARM32_PC ? node3 : node2;
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADD(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node4, dst, "ADD(S) operation");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -554,6 +565,16 @@ namespace triton {
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
+
+            /* In case the PC register is used as the destination operand,
+             * check whether there is a mode switch.
+             */
+            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              /* Check instruction set selection bit and set mode accordingly. */
+              auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
+              auto isb = node1->evaluate() & 0x1;
+              cpu->setThumb(isb == 0x1);
+            }
           }
 
           /* Update the symbolic control flow */
