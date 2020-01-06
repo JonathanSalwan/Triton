@@ -215,6 +215,9 @@ namespace triton {
             //! The LDRB semantics.
             void ldrb_s(triton::arch::Instruction& inst);
 
+            //! The LSL semantics.
+            void lsl_s(triton::arch::Instruction& inst);
+
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 
