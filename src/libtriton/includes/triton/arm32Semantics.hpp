@@ -200,6 +200,9 @@ namespace triton {
             //! The CMP semantics.
             void cmp_s(triton::arch::Instruction& inst);
 
+            //! The EOR semantics.
+            void eor_s(triton::arch::Instruction& inst);
+
             //! The LDR semantics.
             void ldr_s(triton::arch::Instruction& inst);
 
