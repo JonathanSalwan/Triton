@@ -297,9 +297,9 @@ namespace triton {
                     triton::arch::Immediate disp(op->mem.disp, immsize);
 
                     /* Specify that LEA contains a PC relative */
-                    /* FIXME: Valid in ARM32 ? */
                     if (base.getId() == this->pcId)
-                      mem.setPcRelative(inst.getNextAddress());
+                      /* TODO (cnheitman): Improve this. Better test. Check Thumb. */
+                      mem.setPcRelative(inst.getNextAddress() + 4);
 
                     /* Note that in ARM32 there is no segment register and scale value */
                     mem.setBaseRegister(base);
