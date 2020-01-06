@@ -33,6 +33,7 @@ BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 CMP                           | Compare
+EOR                           | Bitwise Exclusive OR
 LDR                           | Load Register
 MOV                           | Move Register
 POP                           | Pop Multiple Registers
@@ -80,6 +81,7 @@ namespace triton {
             case ID_INS_BLX:       this->bl_s(inst, true);      break;
             case ID_INS_BX:        this->bx_s(inst);            break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
+            case ID_INS_EOR:       this->eor_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
@@ -975,6 +977,52 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::eor_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvxor(op1, op2);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "EOR(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            /* TODO (cnheitman): There is an issue here. The manual says that
+             * the carry flag should be updated but when we test it against
+             * Unicorn it is not update. Bug in UC? Disabling it for now.
+             */
+            // this->cfAdd_s(inst, cond, expr, dst, op1, op2);
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
         }
 
 
