@@ -172,6 +172,14 @@ namespace triton {
         }
 
 
+        uint32_t Arm32Semantics::ror(uint32_t value, unsigned int count) {
+          const unsigned int mask = 8 * sizeof(value) - 1;
+          unsigned int sr_count = count & mask;
+          unsigned int sl_count = (-count) & mask;
+          return (value >> sr_count) | (value << sl_count);
+        }
+
+
         inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                                         triton::arch::OperandWrapper& op) {
           auto thumb  = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
@@ -747,6 +755,16 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* TODO (cnheitman): Apply this to ADC and SUB. */
+          if (inst.operands.size() == 4) {
+            auto size  = src2.getSize();
+            auto value = src2.getImmediate().getValue();
+            auto shift = inst.operands[3].getImmediate().getValue();
+
+            src2 = triton::arch::Immediate(this->ror(value, shift), size);
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
