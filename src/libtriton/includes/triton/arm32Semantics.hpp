@@ -185,6 +185,9 @@ namespace triton {
             //! The ADD semantics.
             void add_s(triton::arch::Instruction& inst);
 
+            //! The AND semantics.
+            void and_s(triton::arch::Instruction& inst);
+
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
 
