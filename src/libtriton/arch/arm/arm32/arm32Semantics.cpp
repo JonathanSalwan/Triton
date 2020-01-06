@@ -1151,6 +1151,8 @@ namespace triton {
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
 
+          bool updateControlFlow = true;
+
           for (unsigned int i = 0; i < inst.operands.size(); i++) {
             auto& dst       = inst.operands[i];
             auto stack      = this->architecture->getStackPointer();
@@ -1171,10 +1173,18 @@ namespace triton {
             this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
             alignAddStack_s(inst, cond, size);
+
+            /* In case we are poping the PC register do not update the control flow at the end. */
+            /* TODO (cnheitman): Better test this. */ 
+            if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              updateControlFlow = false;
+            }
           }
 
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
+          if (updateControlFlow) {
+            this->controlFlow_s(inst);
+          }
         }
 
 
