@@ -38,6 +38,7 @@ LDR                           | Load Register
 MOV                           | Move Register
 POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
+SMULL                         | Signed Multiply Long
 STR                           | Store Register
 SUB                           | Substract
 
@@ -86,6 +87,7 @@ namespace triton {
             case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
             case ID_INS_PUSH:      this->push_s(inst);          break;
+            case ID_INS_SMULL:     this->smull_s(inst);         break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
             default:
@@ -1205,6 +1207,59 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::smull_s(triton::arch::Instruction& inst) {
+          auto& dst1 = inst.operands[0];
+          auto& dst2 = inst.operands[1];
+          auto& src1 = inst.operands[2];
+          auto& src2 = inst.operands[3];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+          auto mul   = this->astCtxt->bvmul(
+                          this->astCtxt->sx(QWORD_SIZE_BIT, op1),
+                          this->astCtxt->sx(QWORD_SIZE_BIT, op2)
+                        );
+          auto lower = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, mul);
+          auto upper = this->astCtxt->extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, mul);
+          auto node1 = this->astCtxt->ite(cond, lower, this->symbolicEngine->getOperandAst(inst, dst1));
+          auto node2 = this->astCtxt->ite(cond, upper, this->symbolicEngine->getOperandAst(inst, dst2));
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "SMULL(S) operation - Lower 32 bits of the result.");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "SMULL(S) operation - Upper 32 bits of the result.");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr1, dst1, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            /* TODO (cnheitman): Implement new version of nf_s and zf_s for this case. */
+            // this->nf_s(inst, cond, expr1, dst1);
+            // this->zf_s(inst, cond, expr1, dst1);
+            /* TODO (cnheitman): Are we check the arch version to update C and V? */
+            // this->cfAdd_s(inst, cond, expr1, dst1, op1, op2);
+            // this->vfAdd_s(inst, cond, expr1, dst1, op1, op2);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          /* TODO (cnheitman):
+           *  1. Check PC cannot be as destination register.
+           *  2. Refactor controlFlow_s so it doesn't need the dst1 parameter.
+           */
+          this->controlFlow_s(inst, cond, dst1);
         }
 
 
