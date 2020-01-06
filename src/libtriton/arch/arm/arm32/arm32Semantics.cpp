@@ -28,6 +28,7 @@ ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
 AND                           | Bitwise AND
+ASR                           | Arithmetic Shift Right
 B                             | Branch
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
@@ -77,6 +78,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_ASR:       this->asr_s(inst);           break;
             case ID_INS_AND:       this->and_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
             case ID_INS_BL:        this->bl_s(inst, false);     break;
@@ -837,6 +839,63 @@ namespace triton {
             // this->cfAdd_s(inst, cond, expr, dst, op1, op2);
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::asr_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+
+          auto node1 = this->buildConditionalSemantics(inst, dst, op1);
+
+          if (inst.operands.size() == 3) {
+            auto& src2 = inst.operands[2];
+
+            auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+            auto node = this->astCtxt->bvashr(
+                          op1,
+                          this->astCtxt->zx(
+                            DWORD_SIZE_BIT-8,
+                            this->astCtxt->extract(7, 0, op2)
+                          )
+                        );
+            node1 = this->buildConditionalSemantics(inst, dst, node);
+          }
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "ASR(S) operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          if (inst.operands.size() == 2) {
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
+          } else {
+            auto& src2 = inst.operands[2];
+
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          }
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            /* TODO (cnheitman): Implement. */
           }
 
           /* Update condition flag */
