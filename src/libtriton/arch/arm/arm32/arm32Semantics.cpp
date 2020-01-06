@@ -1394,7 +1394,7 @@ namespace triton {
             alignAddStack_s(inst, cond, size);
 
             /* In case we are poping the PC register do not update the control flow at the end. */
-            /* TODO (cnheitman): Better test this. */ 
+            /* TODO (cnheitman): Better test this. */
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
             }
