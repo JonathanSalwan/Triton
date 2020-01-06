@@ -27,6 +27,7 @@ ADC                           | Add with Carry
 ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
+AND                           | Bitwise AND
 B                             | Branch
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
@@ -73,6 +74,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_AND:       this->and_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
             case ID_INS_BL:        this->bl_s(inst, false);     break;
             case ID_INS_BLX:       this->bl_s(inst, true);      break;
@@ -764,6 +766,52 @@ namespace triton {
             this->cfAdd_s(inst, cond, expr, dst, op1, op2);
             this->nf_s(inst, cond, expr, dst);
             this->vfAdd_s(inst, cond, expr, dst, op1, op2);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::and_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvand(op1, op2);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "AND(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            /* TODO (cnheitman): There is an issue here. The manual says that
+             * the carry flag should be updated but when we test it against
+             * Unicorn it is not update. Bug in UC? Disabling it for now.
+             */
+            // this->cfAdd_s(inst, cond, expr, dst, op1, op2);
+            this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
           }
 
