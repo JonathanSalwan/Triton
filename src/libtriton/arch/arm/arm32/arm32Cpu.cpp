@@ -278,7 +278,7 @@ namespace triton {
                     break;
                   }
 
-                  case triton::extlibs::capstone::ARM64_OP_MEM: {
+                  case triton::extlibs::capstone::ARM_OP_MEM: {
                     triton::arch::MemoryAccess mem;
 
                     /* Set the size of the memory access */
