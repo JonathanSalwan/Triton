@@ -392,6 +392,7 @@ namespace triton {
               if (inst.isThumb() && inst.operands.size() == 2) {
                 if (inst.getDisassembly().find("adc") == 0 ||
                     inst.getDisassembly().find("add") == 0 ||
+                    inst.getDisassembly().find("eor") == 0 ||
                     inst.getDisassembly().find("sub") == 0) {
                   triton::arch::OperandWrapper op(inst.operands[0]);
                   inst.operands.insert(inst.operands.begin(), op);
