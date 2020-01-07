@@ -227,6 +227,9 @@ namespace triton {
             //! The PUSH semantics.
             void push_s(triton::arch::Instruction& inst);
 
+            //! The RSB semantics.
+            void rsb_s(triton::arch::Instruction& inst);
+
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
 
