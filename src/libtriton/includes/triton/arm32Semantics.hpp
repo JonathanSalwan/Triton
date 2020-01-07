@@ -221,6 +221,9 @@ namespace triton {
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 
+            //! The ORR semantics.
+            void orr_s(triton::arch::Instruction& inst);
+
             //! The POP semantics.
             void pop_s(triton::arch::Instruction& inst);
 
