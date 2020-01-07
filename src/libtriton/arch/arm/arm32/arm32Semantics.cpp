@@ -38,6 +38,7 @@ EOR                           | Bitwise Exclusive OR
 LDR                           | Load Register
 LDRB                          | Load Register Byte
 LSL                           | Logical Shift Left
+LSR                           | Logical Shift Right
 MOV                           | Move Register
 MUL                           | Multiply
 ORR                           | Bitwise OR
@@ -93,6 +94,7 @@ namespace triton {
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
             case ID_INS_LSL:       this->lsl_s(inst);           break;
+            case ID_INS_LSR:       this->lsr_s(inst);           break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_MUL:       this->mul_s(inst);           break;
             case ID_INS_ORR:       this->orr_s(inst);           break;
@@ -1302,6 +1304,63 @@ namespace triton {
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LSL(S) operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          if (inst.operands.size() == 2) {
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
+          } else {
+            auto& src2 = inst.operands[2];
+
+            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          }
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            /* TODO (cnheitman): Implement. */
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::lsr_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+
+          auto node1 = this->buildConditionalSemantics(inst, dst, op1);
+
+          if (inst.operands.size() == 3) {
+            auto& src2 = inst.operands[2];
+
+            auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+            auto node = this->astCtxt->bvlshr(
+                          op1,
+                          this->astCtxt->zx(
+                            DWORD_SIZE_BIT-8,
+                            this->astCtxt->extract(7, 0, op2)
+                          )
+                        );
+            node1 = this->buildConditionalSemantics(inst, dst, node);
+          }
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LSR(S) operation");
 
           /* Get condition code node */
           auto cond = node1->getChildren()[0];
