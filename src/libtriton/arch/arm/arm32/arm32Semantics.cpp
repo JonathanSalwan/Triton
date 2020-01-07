@@ -48,6 +48,7 @@ RSB                           | Reverse Subtract
 SMULL                         | Signed Multiply Long
 STR                           | Store Register
 SUB                           | Substract
+TST                           | Test
 
 */
 
@@ -104,6 +105,7 @@ namespace triton {
             case ID_INS_SMULL:     this->smull_s(inst);         break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
+            case ID_INS_TST:       this->tst_s(inst);           break;
             default:
               return false;
           }
@@ -1811,6 +1813,37 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::tst_s(triton::arch::Instruction& inst) {
+          auto& src1 = inst.operands[0];
+          auto& src2 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+
+          /* Create the semantics */
+          auto cond = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->bvand(op1, op2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "TST operation");
+
+          /* Update symbolic flags */
+          /* TODO (cnheitman): UC is not updating the C flag? What is the correct behavior. */
+          // this->cfAdd_s(inst, cond, expr, src1, op1, op2
+          this->nf_s(inst, cond, expr, src1);
+          this->zf_s(inst, cond, expr, src1);
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
       }; /* arm32 namespace */
