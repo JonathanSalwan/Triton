@@ -15,6 +15,9 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
+    # FIXME
+    # (b"\x04\xe0\x9f\xe5", "ldr lr, [pc, #4]"),
+
     # LDR - Offset addressing.
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
@@ -366,6 +369,24 @@ CODE  = [
     (b"\x00\x00\x8d\xe5", "stral r0, [sp]"),
 
     # TODO: Test with PC as source register.
+
+    # LDRB
+    (b"\x00\x00\xd1\xe5", "ldrb r0, [r1]"),
+    (b"\x00\x00\xd1\x05", "ldrbeq r0, [r1]"),
+    (b"\x00\x00\xd1\x15", "ldrbne r0, [r1]"),
+    (b"\x00\x00\xd1\x25", "ldrbcs r0, [r1]"),
+    (b"\x00\x00\xd1\x35", "ldrbcc r0, [r1]"),
+    (b"\x00\x00\xd1\x45", "ldrbmi r0, [r1]"),
+    (b"\x00\x00\xd1\x55", "ldrbpl r0, [r1]"),
+    (b"\x00\x00\xd1\x65", "ldrbvs r0, [r1]"),
+    (b"\x00\x00\xd1\x75", "ldrbvc r0, [r1]"),
+    (b"\x00\x00\xd1\x85", "ldrbhi r0, [r1]"),
+    (b"\x00\x00\xd1\x95", "ldrbls r0, [r1]"),
+    (b"\x00\x00\xd1\xa5", "ldrbge r0, [r1]"),
+    (b"\x00\x00\xd1\xb5", "ldrblt r0, [r1]"),
+    (b"\x00\x00\xd1\xc5", "ldrbgt r0, [r1]"),
+    (b"\x00\x00\xd1\xd5", "ldrble r0, [r1]"),
+    (b"\x00\x00\xd1\xe5", "ldrbal r0, [r1]"),
 ]
 
 
@@ -416,7 +437,7 @@ def emu_with_unicorn(opcode, istate):
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
     mu.mem_write(STACK,                istate['stack'])
-    mu.mem_write(HEAP,                 bytes(istate['heap']))
+    mu.mem_write(HEAP,                 istate['heap'])
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
     mu.reg_write(UC_ARM_REG_R2,        istate['r2'])
@@ -477,7 +498,7 @@ def emu_with_triton(opcode, istate):
     inst.setAddress(istate['pc'])
 
     ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
-    ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
+    ctx.setConcreteMemoryAreaValue(HEAP,            istate['heap'])
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
     ctx.setConcreteRegisterValue(ctx.registers.r1,  istate['r1'])
     ctx.setConcreteRegisterValue(ctx.registers.r2,  istate['r2'])
@@ -567,7 +588,7 @@ if __name__ == '__main__':
     # initial state
     state = {
         "stack": bytes(bytearray([b for b in range(255, -1, -1)])),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "heap":  bytes(bytearray([b for b in range(255)])),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
