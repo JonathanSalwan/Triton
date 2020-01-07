@@ -247,6 +247,9 @@ namespace triton {
 
             //! The SUB semantics.
             void sub_s(triton::arch::Instruction& inst);
+
+            //! The TST semantics.
+            void tst_s(triton::arch::Instruction& inst);
         };
 
       /*! @} End of arm32 namespace */
