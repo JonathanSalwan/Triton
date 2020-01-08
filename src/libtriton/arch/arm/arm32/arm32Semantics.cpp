@@ -1606,6 +1606,11 @@ namespace triton {
             auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
+            /* TODO (cnheitman): Improve (refactor?). */
+            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              op1 = this->clearISSB(op1);
+            }
+
             /* Create the semantics */
             auto node = this->astCtxt->ite(cond, op2, op1);
 
@@ -1621,6 +1626,9 @@ namespace triton {
             /* TODO (cnheitman): Better test this. */
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
+
+              /* Update swtich mode accordingly. */
+              this->updateExecutionState(dst, node);
             }
           }
 
