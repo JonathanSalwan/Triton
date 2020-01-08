@@ -34,6 +34,10 @@ CODE  = [
 
     (b"\x00\x98",         "ldr r0, [sp]"),
 
+    # LDRB
+    # TODO: Add missing instructions.
+    (b"\x08\x78",         "ldrb r0, [r1, #0]"),
+
     # STR - Offset addressing.
     (b"\x08\x60",         "str r0, [r1]"),
     (b"\x48\x60",         "str r0, [r1, #0x4]"),
