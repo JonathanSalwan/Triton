@@ -127,6 +127,7 @@ LODSB                        |            | Load byte at address
 LODSD                        |            | Load doubleword at address
 LODSQ                        |            | Load quadword at address
 LODSW                        |            | Load word at address
+LOOP                         |            | Loop According to ECX Counter
 MFENCE                       | sse2       | Memory Fence
 MOV                          |            | Move
 MOVABS                       |            | Move
@@ -453,6 +454,7 @@ namespace triton {
           case ID_INS_LODSD:          this->lodsd_s(inst);        break;
           case ID_INS_LODSQ:          this->lodsq_s(inst);        break;
           case ID_INS_LODSW:          this->lodsw_s(inst);        break;
+          case ID_INS_LOOP:           this->loop_s(inst);         break;
           case ID_INS_MFENCE:         this->mfence_s(inst);       break;
           case ID_INS_MOV:            this->mov_s(inst);          break;
           case ID_INS_MOVABS:         this->movabs_s(inst);       break;
@@ -6266,6 +6268,46 @@ namespace triton {
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::loop_s(triton::arch::Instruction& inst) {
+        auto  count = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
+        auto  pc    = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto& src   = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, count);
+
+        /* Create the semantics */
+        auto node1 = this->astCtxt->ite(
+                       this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
+                       this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize()),
+                       op1
+                     );
+
+        /* Create symbolic expression */
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (op2->evaluate()) {
+          inst.setConditionTaken(true);
+          /* Spread taint */
+          expr1->isTainted = this->taintEngine->taintAssignment(pc, count);
+        }
+        else {
+          expr1->isTainted = this->taintEngine->taintAssignment(pc, src);
+        }
+
+        /* Create the semantics */
+        auto node2 = this->astCtxt->bvsub(op2, this->astCtxt->bv(1, op2->getBitvectorSize()));
+
+        /* Create symbolic expression */
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, count, "LOOP counter operation");
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr1);
       }
 
 

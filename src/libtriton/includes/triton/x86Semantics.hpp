@@ -719,6 +719,9 @@ namespace triton {
           //! The LODSW semantics.
           void lodsw_s(triton::arch::Instruction& inst);
 
+          //! The LOOP semantics.
+          void loop_s(triton::arch::Instruction& inst);
+
           //! The MFENCE semantics.
           void mfence_s(triton::arch::Instruction& inst);
 
