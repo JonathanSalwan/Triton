@@ -1190,7 +1190,8 @@ namespace triton {
           auto& src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op = this->getArm32SourceOperandAst(inst, src);
+          // auto op = this->getArm32SourceOperandAst(inst, src);
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
           auto node1 = this->buildConditionalSemantics(inst, dst, op);
