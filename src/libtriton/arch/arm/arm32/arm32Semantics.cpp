@@ -41,6 +41,7 @@ LDRB                          | Load Register Byte
 LSL                           | Logical Shift Left
 LSR                           | Logical Shift Right
 MOV                           | Move Register
+MOVW                          | Move Register
 MUL                           | Multiply
 ORR                           | Bitwise OR
 POP                           | Pop Multiple Registers
@@ -99,6 +100,7 @@ namespace triton {
             case ID_INS_LSL:       this->lsl_s(inst);           break;
             case ID_INS_LSR:       this->lsr_s(inst);           break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
+            case ID_INS_MOVW:      this->mov_s(inst);           break;
             case ID_INS_MUL:       this->mul_s(inst);           break;
             case ID_INS_ORR:       this->orr_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
