@@ -119,6 +119,12 @@ namespace triton {
                                const triton::ast::SharedAbstractNode& cond,
                                triton::arch::OperandWrapper& dst);
 
+            //! Control flow semantics. Used to represent PC.
+            void controlFlow_s(triton::arch::Instruction& inst,
+                               const triton::ast::SharedAbstractNode& cond,
+                               triton::arch::OperandWrapper& dst1,
+                               triton::arch::OperandWrapper& dst2);
+
             //! Creates a conditional node.
             triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
 
@@ -163,6 +169,22 @@ namespace triton {
                          triton::arch::OperandWrapper& dst,
                          triton::ast::SharedAbstractNode& op1,
                          triton::ast::SharedAbstractNode& op2);
+
+            //! The NF semantics for the SMULL operation.
+            void nfSmull_s(triton::arch::Instruction& inst,
+                           const triton::ast::SharedAbstractNode& cond,
+                           const triton::engines::symbolic::SharedSymbolicExpression& parent1,
+                           const triton::engines::symbolic::SharedSymbolicExpression& parent2,
+                           triton::arch::OperandWrapper& dst1,
+                           triton::arch::OperandWrapper& dst2);
+
+            //! The ZF semantics for the SMULL operation.
+            void zfSmull_s(triton::arch::Instruction& inst,
+                           const triton::ast::SharedAbstractNode& cond,
+                           const triton::engines::symbolic::SharedSymbolicExpression& parent1,
+                           const triton::engines::symbolic::SharedSymbolicExpression& parent2,
+                           triton::arch::OperandWrapper& dst1,
+                           triton::arch::OperandWrapper& dst2);
 
             //! The VF semantics for the ADDS operation.
             void vfAdd_s(triton::arch::Instruction& inst,

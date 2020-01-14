@@ -336,6 +336,29 @@ namespace triton {
         }
 
 
+        void Arm32Semantics::controlFlow_s(triton::arch::Instruction& inst,
+                                           const triton::ast::SharedAbstractNode& cond,
+                                           triton::arch::OperandWrapper& dst1,
+                                           triton::arch::OperandWrapper& dst2) {
+          auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
+
+          triton::ast::SharedAbstractNode node;
+
+          /* Create the semantics */
+          if (cond->evaluate() == true && (dst1.getRegister().getId() == ID_REG_ARM32_PC || dst2.getRegister().getId() == ID_REG_ARM32_PC)) {
+            node = this->symbolicEngine->getOperandAst(inst, pc);
+          } else {
+            node = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
+          }
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicRegisterExpression(inst, node, this->architecture->getParentRegister(ID_REG_ARM32_PC), "Program Counter");
+
+          /* Spread taint */
+          expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getParentRegister(ID_REG_ARM32_PC), triton::engines::taint::UNTAINTED);
+        }
+
+
         triton::ast::SharedAbstractNode Arm32Semantics::getCodeConditionAst(triton::arch::Instruction& inst) {
 
           switch (inst.getCodeCondition()) {
@@ -678,6 +701,73 @@ namespace triton {
 
           /* Spread the taint from the parent to the child */
           this->spreadTaint(inst, cond, expr, cf, parent->isTainted);
+        }
+
+
+        void Arm32Semantics::nfSmull_s(triton::arch::Instruction& inst,
+                                       const triton::ast::SharedAbstractNode& cond,
+                                       const triton::engines::symbolic::SharedSymbolicExpression& parent1,
+                                       const triton::engines::symbolic::SharedSymbolicExpression& parent2,
+                                       triton::arch::OperandWrapper& dst1,
+                                       triton::arch::OperandWrapper& dst2) {
+
+          auto nf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_N));
+          auto high = dst2.getHigh();
+
+          /*
+           * Create the semantic, considering conditional execution.
+           * nf = MSB(result)
+           */
+          auto node1 = this->astCtxt->extract(high, high, this->astCtxt->reference(parent2));
+          auto node2 = this->symbolicEngine->getOperandAst(nf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create the symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, nf, "Negative flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, nf, parent1->isTainted | parent2->isTainted);
+        }
+
+
+        void Arm32Semantics::zfSmull_s(triton::arch::Instruction& inst,
+                                       const triton::ast::SharedAbstractNode& cond,
+                                       const triton::engines::symbolic::SharedSymbolicExpression& parent1,
+                                       const triton::engines::symbolic::SharedSymbolicExpression& parent2,
+                                       triton::arch::OperandWrapper& dst1,
+                                       triton::arch::OperandWrapper& dst2) {
+
+          auto zf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_Z));
+          auto bvSize = dst1.getBitSize();
+          auto low    = dst1.getLow();
+          auto high   = dst1.getHigh();
+
+          /*
+           * Create the semantic, considering conditional execution.
+           * zf = 0 == result
+           */
+          auto node1 = this->astCtxt->ite(
+                        this->astCtxt->land(
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, this->astCtxt->reference(parent1)),
+                            this->astCtxt->bv(0, bvSize)
+                          ),
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, this->astCtxt->reference(parent2)),
+                            this->astCtxt->bv(0, bvSize)
+                          )
+                        ),
+                        this->astCtxt->bv(1, 1),
+                        this->astCtxt->bv(0, 1)
+                      );
+          auto node2 = this->symbolicEngine->getOperandAst(zf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create the symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, zf, "Zero flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, zf, parent1->isTainted | parent2->isTainted);
         }
 
 
@@ -2115,12 +2205,8 @@ namespace triton {
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            /* TODO (cnheitman): Implement new version of nf_s and zf_s for this case. */
-            // this->nf_s(inst, cond, expr1, dst1);
-            // this->zf_s(inst, cond, expr1, dst1);
-            /* TODO (cnheitman): Are we check the arch version to update C and V? */
-            // this->cfAdd_s(inst, cond, expr1, dst1, op1, op2);
-            // this->vfAdd_s(inst, cond, expr1, dst1, op1, op2);
+            this->nfSmull_s(inst, cond, expr1, expr2, dst1, dst2);
+            this->zfSmull_s(inst, cond, expr1, expr2, dst1, dst2);
           }
 
           /* Update condition flag */
@@ -2129,11 +2215,7 @@ namespace triton {
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman):
-           *  1. Check PC cannot be as destination register.
-           *  2. Refactor controlFlow_s so it doesn't need the dst1 parameter.
-           */
-          this->controlFlow_s(inst, cond, dst1);
+          this->controlFlow_s(inst, cond, dst1, dst2);
         }
 
 
