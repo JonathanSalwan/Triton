@@ -274,6 +274,9 @@ namespace triton {
                       imm.setValue(op->imm, 0); /* By setting 0 as size, we automatically identify the size of the value */
                     }
 
+                    if (op->subtracted)
+                      imm.setSubtracted(true);
+
                     inst.operands.push_back(triton::arch::OperandWrapper(imm));
                     break;
                   }
@@ -370,6 +373,9 @@ namespace triton {
                     /* Define a base address for next operand */
                     if (!size)
                       size = reg.getSize();
+
+                    if (op->subtracted)
+                      reg.setSubtracted(true);
 
                     inst.operands.push_back(triton::arch::OperandWrapper(reg));
                     break;
