@@ -20,6 +20,7 @@ namespace triton {
         this->shiftType           = triton::arch::arm::ID_SHIFT_INVALID;
         this->shiftValueImmediate = 0;
         this->shiftValueRegister  = triton::arch::ID_REG_INVALID;
+        this->subtracted          = false;
       }
 
 
@@ -29,6 +30,7 @@ namespace triton {
         this->shiftType           = other.shiftType;
         this->shiftValueImmediate = other.shiftValueImmediate;
         this->shiftValueRegister  = other.shiftValueRegister;
+        this->subtracted          = other.subtracted;
       }
 
 
@@ -38,6 +40,7 @@ namespace triton {
         this->shiftType           = other.shiftType;
         this->shiftValueImmediate = other.shiftValueImmediate;
         this->shiftValueRegister  = other.shiftValueRegister;
+        this->subtracted          = other.subtracted;
         return *this;
       }
 
@@ -64,6 +67,11 @@ namespace triton {
 
       triton::uint32 ArmOperandProperties::getExtendSize(void) const {
         return this->extendSize;
+      }
+
+
+      bool ArmOperandProperties::getSubtracted(void) const {
+        return this->subtracted;
       }
 
 
@@ -122,6 +130,11 @@ namespace triton {
 
         if (dstSize != 8 && dstSize != 16 && dstSize != 32 && dstSize != 64)
           throw triton::exceptions::ArmOperandProperties("ArmOperandProperties::setExtendedSize(): size must be 8, 16, 32 or 64.");
+      }
+
+
+      void ArmOperandProperties::setSubtracted(bool value) {
+        this->subtracted = value;
       }
 
     }; /* arm namespace */
