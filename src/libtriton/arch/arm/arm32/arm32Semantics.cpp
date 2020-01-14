@@ -50,6 +50,7 @@ MVN                           | Bitwise NOT
 ORR                           | Bitwise OR
 POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
+REV                           | Byte-Reverse Word
 RSB                           | Reverse Subtract
 SMULL                         | Signed Multiply Long
 STR                           | Store Register
@@ -113,6 +114,7 @@ namespace triton {
             case ID_INS_ORR:       this->orr_s(inst);           break;
             case ID_INS_POP:       this->pop_s(inst);           break;
             case ID_INS_PUSH:      this->push_s(inst);          break;
+            case ID_INS_REV:       this->rev_s(inst);           break;
             case ID_INS_RSB:       this->rsb_s(inst);           break;
             case ID_INS_SMULL:     this->smull_s(inst);         break;
             case ID_INS_STR:       this->str_s(inst);           break;
@@ -1821,6 +1823,46 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::rev_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          std::list<triton::ast::SharedAbstractNode> bits;
+
+          bits.push_front(this->astCtxt->extract(31, 24, op));
+          bits.push_front(this->astCtxt->extract(23, 16, op));
+          bits.push_front(this->astCtxt->extract(15, 8,  op));
+          bits.push_front(this->astCtxt->extract(7,  0,  op));
+
+          auto node1 = this->astCtxt->concat(bits);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "REV operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
         }
 
 
