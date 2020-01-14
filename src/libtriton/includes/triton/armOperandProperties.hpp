@@ -57,6 +57,8 @@ namespace triton {
           //! The extend size (in bits).
           triton::uint32 extendSize;
 
+          //! Subtracted flag.
+          bool subtracted;
         public:
           //! Constructor.
           TRITON_EXPORT ArmOperandProperties();
@@ -79,6 +81,9 @@ namespace triton {
           //! Returns the size (in bits) of the extend.
           TRITON_EXPORT triton::uint32 getExtendSize(void) const;
 
+          //! Gets subtracted flag.
+          TRITON_EXPORT bool getSubtracted(void) const;
+
           //! Sets the type of the shift.
           TRITON_EXPORT void setShiftType(triton::arch::arm::shift_e type);
 
@@ -93,6 +98,9 @@ namespace triton {
 
           //! Sets the extended size (in bits) after extension.
           TRITON_EXPORT void setExtendedSize(triton::uint32 dstSize);
+
+          //! Sets subtracted flag.
+          TRITON_EXPORT void setSubtracted(bool value);
 
           //! Copy an ArmOperandProperties.
           TRITON_EXPORT ArmOperandProperties& operator=(const ArmOperandProperties& other);
