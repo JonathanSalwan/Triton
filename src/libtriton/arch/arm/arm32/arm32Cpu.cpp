@@ -285,14 +285,7 @@ namespace triton {
                     triton::arch::MemoryAccess mem;
 
                     /* Set the size of the memory access */
-                    /* TODO (cnheitman): Find a cleaner way to do this (if
-                     * possible).
-                     */
-                    if (inst.getDisassembly().find("ldrb") == 0) {
-                      mem.setPair(std::make_pair(((1 * BYTE_SIZE_BIT) - 1), 0));
-                    } else {
-                      mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
-                    }
+                    mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
 
                     /* LEA if exists */
                     const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
