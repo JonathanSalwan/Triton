@@ -1399,8 +1399,10 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src = inst.operands[1];
 
+          /* Special behavior: Define that the size of the memory access is 8 bits */
+          src.getMemory().setPair(std::make_pair(7, 0));
+
           /* Create symbolic operands */
-          // auto op = this->getArm32SourceOperandAst(inst, src);
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Create the semantics */
@@ -1434,7 +1436,7 @@ namespace triton {
                           );
 
             /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
 
             /* TODO: Fix.*/
             /* Spread taint */
@@ -1457,7 +1459,7 @@ namespace triton {
                           );
 
             /* Create symbolic expression */
-            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDR operation - Pre-indexed base register computation");
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRB operation - Pre-indexed base register computation");
 
             /* TODO: Fix.*/
             /* Spread taint */
