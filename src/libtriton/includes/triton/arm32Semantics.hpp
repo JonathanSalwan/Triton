@@ -269,6 +269,9 @@ namespace triton {
             //! The STM semantics.
             void stm_s(triton::arch::Instruction& inst);
 
+            //! The STMIB semantics.
+            void stmib_s(triton::arch::Instruction& inst);
+
             //! The STR semantics.
             void str_s(triton::arch::Instruction& inst);
 
