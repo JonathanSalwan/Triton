@@ -2274,7 +2274,7 @@ namespace triton {
           /* Optional behavior. Post-indexed computation of the base register. */
           /* STR <Rt>, [<Rn], #<simm> */
           if (inst.operands.size() == 3) {
-            auto& imm = inst.operands[2].getImmediate();
+            auto& imm  = inst.operands[2].getImmediate();
             auto& base = dst.getMemory().getBaseRegister();
 
             /* Create symbolic operands of the post computation */
@@ -2282,9 +2282,15 @@ namespace triton {
             auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
             /* Create the semantics of the base register */
+            auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+            if (imm.getSubtracted() == true) {
+              thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+            }
+
             auto node2 = this->astCtxt->ite(
                             cond,
-                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
+                            thenNode,
                             baseNode
                             );
 
