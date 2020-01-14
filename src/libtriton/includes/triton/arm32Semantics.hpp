@@ -197,6 +197,9 @@ namespace triton {
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
 
+            //! The BIC semantics.
+            void bic_s(triton::arch::Instruction& inst);
+
             //! The BL(X) semantics.
             void bl_s(triton::arch::Instruction& inst, bool exchange);
 
