@@ -215,6 +215,9 @@ namespace triton {
             //! The EOR semantics.
             void eor_s(triton::arch::Instruction& inst);
 
+            //! The LDM semantics.
+            void ldm_s(triton::arch::Instruction& inst);
+
             //! The LDR semantics.
             void ldr_s(triton::arch::Instruction& inst);
 
