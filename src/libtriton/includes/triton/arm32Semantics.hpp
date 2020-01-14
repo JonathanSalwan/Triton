@@ -260,6 +260,9 @@ namespace triton {
             //! The RSC semantics.
             void rsc_s(triton::arch::Instruction& inst);
 
+            //! The SBC semantics.
+            void sbc_s(triton::arch::Instruction& inst);
+
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
 

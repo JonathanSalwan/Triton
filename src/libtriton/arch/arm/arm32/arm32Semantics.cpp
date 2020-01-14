@@ -54,6 +54,7 @@ REV                           | Byte-Reverse Word
 ROR                           | Rotate Right
 RSB                           | Reverse Subtract
 RSC                           | Reverse Subtract with Carry
+SBC                           | Subtract with Carry
 SMULL                         | Signed Multiply Long
 STR                           | Store Register
 SUB                           | Substract
@@ -120,6 +121,7 @@ namespace triton {
             case ID_INS_ROR:       this->ror_s(inst);           break;
             case ID_INS_RSB:       this->rsb_s(inst);           break;
             case ID_INS_RSC:       this->rsc_s(inst);           break;
+            case ID_INS_SBC:       this->sbc_s(inst);           break;
             case ID_INS_SMULL:     this->smull_s(inst);         break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
@@ -2005,6 +2007,54 @@ namespace triton {
             this->cfSub_s(inst, cond, expr, dst, op2, op1);
             this->nf_s(inst, cond, expr, dst);
             this->vfSub_s(inst, cond, expr, dst, op2, op1);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::sbc_s(triton::arch::Instruction& inst) {
+          auto& dst  = inst.operands[0];
+          auto& src1 = inst.operands[1];
+          auto& src2 = inst.operands[2];
+          auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, cf);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvadd(
+                          this->astCtxt->bvadd(op1, this->astCtxt->bvnot(op2)),
+                          this->astCtxt->zx(dst.getBitSize()-1, op3)
+                        );
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SBC(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfSub_s(inst, cond, expr, dst, op1, op2);
+            this->nf_s(inst, cond, expr, dst);
+            this->vfSub_s(inst, cond, expr, dst, op1, op2);
             this->zf_s(inst, cond, expr, dst);
           }
 
