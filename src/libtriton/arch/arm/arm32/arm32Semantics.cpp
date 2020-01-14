@@ -1657,7 +1657,8 @@ namespace triton {
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            /* TODO (cnheitman): Implement. */
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
           }
 
           /* Update condition flag */
@@ -1666,10 +1667,6 @@ namespace triton {
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman):
-           *  1. Check PC cannot be as destination register.
-           *  2. Refactor controlFlow_s so it doesn't need the dst parameter.
-           */
           this->controlFlow_s(inst, cond, dst);
         }
 
