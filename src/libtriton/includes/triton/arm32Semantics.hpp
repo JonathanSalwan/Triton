@@ -251,6 +251,9 @@ namespace triton {
             //! The REV semantics.
             void rev_s(triton::arch::Instruction& inst);
 
+            //! The ROR semantics.
+            void ror_s(triton::arch::Instruction& inst);
+
             //! The RSB semantics.
             void rsb_s(triton::arch::Instruction& inst);
 
