@@ -275,6 +275,9 @@ namespace triton {
             //! The STR semantics.
             void str_s(triton::arch::Instruction& inst);
 
+            //! The STRB semantics.
+            void strb_s(triton::arch::Instruction& inst);
+
             //! The SUB semantics.
             void sub_s(triton::arch::Instruction& inst);
 
