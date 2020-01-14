@@ -236,6 +236,9 @@ namespace triton {
             //! The MUL semantics.
             void mul_s(triton::arch::Instruction& inst);
 
+            //! The MVN semantics.
+            void mvn_s(triton::arch::Instruction& inst);
+
             //! The ORR semantics.
             void orr_s(triton::arch::Instruction& inst);
 
