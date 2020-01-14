@@ -38,6 +38,7 @@ BX                            | Branch and Exchange
 CLZ                           | Count Leading Zeros
 CMP                           | Compare
 EOR                           | Bitwise Exclusive OR
+LDM                           | Load Multiple Registers
 LDR                           | Load Register
 LDRB                          | Load Register Byte
 LSL                           | Logical Shift Left
@@ -99,6 +100,7 @@ namespace triton {
             case ID_INS_CLZ:       this->clz_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
+            case ID_INS_LDM:       this->ldm_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
             case ID_INS_LSL:       this->lsl_s(inst);           break;
@@ -1230,6 +1232,61 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::ldm_s(triton::arch::Instruction& inst) {
+          auto& base          = inst.operands[0];
+          triton::uint32 size = DWORD_SIZE;
+
+          /* Create symbolic operands */
+          auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (unsigned int i = 1; i < inst.operands.size(); i++) {
+            auto& dst = inst.operands[i];
+
+            /* Compute memory address */
+            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
+            auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
+            auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
+
+            /* Create symbolic operands */
+            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op2, op3);
+
+            /* Create symbolic expression */
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDM operation - LOAD access");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
+          }
+
+          if (inst.isWriteBack() == true) {
+            /* Create the semantics of the base register */
+            auto node1 = this->astCtxt->ite(
+                            cond,
+                            this->astCtxt->bvadd(
+                              baseNode,
+                              this->astCtxt->bv((inst.operands.size() - 1) * size, base.getBitSize())
+                            ),
+                            baseNode
+                          );
+
+            /* Create symbolic expression */
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node1, base, "STM operation - Base register computation");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
 
