@@ -245,10 +245,13 @@ namespace triton {
               inst.setUpdateFlag(detail->arm.update_flags);
 
               /* FIXME: Quick (and super ugly) hack. Capstone is reporting
-               * update_flags equals true for ADC instruction when it shouldn't
-               * (it should only report true for ADCS).
+               * update_flags equals true for ADC, RSC and SBC instruction when
+               * it shouldn't (it should only report true when the S suffix is
+               * present).
                */
-              if (inst.getDisassembly().find("adc") == 0 && inst.getDisassembly().at(3) != 's') {
+              if ((inst.getDisassembly().find("adc") == 0 && inst.getDisassembly().at(3) != 's') ||
+                  (inst.getDisassembly().find("rsc") == 0 && inst.getDisassembly().at(3) != 's') ||
+                  (inst.getDisassembly().find("sbc") == 0 && inst.getDisassembly().at(3) != 's')) {
                 inst.setUpdateFlag(false);
               }
 
