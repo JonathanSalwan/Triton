@@ -27,6 +27,7 @@ ADC                           | Add with Carry
 ADCS                          | Add with Carry, setting flags
 ADD                           | Add
 ADDS                          | Add, setting flags
+ADDW                          | Add
 AND                           | Bitwise AND
 ASR                           | Arithmetic Shift Right
 B                             | Branch
@@ -86,6 +87,7 @@ namespace triton {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
+            case ID_INS_ADDW:      this->add_s(inst);           break;
             case ID_INS_ASR:       this->asr_s(inst);           break;
             case ID_INS_AND:       this->and_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
