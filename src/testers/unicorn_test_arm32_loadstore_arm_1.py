@@ -10,15 +10,26 @@ import sys
 import pprint
 import random
 
+# DEBUG = True
+DEBUG = False
 ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    # FIXME
-    # (b"\x04\xe0\x9f\xe5", "ldr lr, [pc, #4]"),
+    # MISC ------------------------------------------------------------------- #
+    (b"\x04\x10\x41\xe5", "strb r1, [r1, #-4]"),
+    (b"\xb4\x00\x41\x00", "strheq r0, [r1], #-4"),
+    (b"\x03\x00\x8d\xe9", "stmib sp, {r0, r1}"),
+    (b"\xb3\x00\x01\x00", "strheq r0, [r1], -r3"),
+    (b"\x00\x00\xc1\xe5", "strb r0, [r1]"),
+    (b"\x03\x10\xc1\xe7", "strb r1, [r1, r3]"),
+    (b"\x08\x00\xa1\xe8", "stm r1!, {r3}"),
+    (b"\x18\x50\xa1\xe8", "stm r1!, {r3, r4, ip, lr}"),
+    (b"\x18\x50\xb1\xe8", "ldm r1!, {r3, r4, ip, lr}"),
+    (b"\x04\xe0\x9f\xe5", "ldr lr, [pc, #4]"),
 
-    # LDR - Offset addressing.
+    # LDR - Offset addressing -----------------------------------------------  #
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
     (b"\x00\x00\x91\x15", "ldrne r0, [r1]"),
@@ -70,7 +81,7 @@ CODE  = [
     (b"\x04\x00\x11\xd5", "ldrle r0, [r1, #-0x4]"),
     (b"\x04\x00\x11\xe5", "ldral r0, [r1, #-0x4]"),
 
-    # LDR - Pre-indexed addressing.
+    # LDR - Pre-indexed addressing ------------------------------------------- #
     (b"\x00\x00\xb1\xe5", "ldr r0, [r1]!"),
     (b"\x00\x00\xb1\x05", "ldreq r0, [r1]!"),
     (b"\x00\x00\xb1\x15", "ldrne r0, [r1]!"),
@@ -122,7 +133,7 @@ CODE  = [
     (b"\x04\x00\x31\xd5", "ldrle r0, [r1, #-0x4]!"),
     (b"\x04\x00\x31\xe5", "ldral r0, [r1, #-0x4]!"),
 
-    # LDR - Post-indexed addressing.
+    # LDR - Post-indexed addressing ------------------------------------------ #
     (b"\x04\x00\x91\xe4", "ldr r0, [r1], #0x4"),
     (b"\x04\x00\x91\x04", "ldreq r0, [r1], #0x4"),
     (b"\x04\x00\x91\x14", "ldrne r0, [r1], #0x4"),
@@ -140,25 +151,24 @@ CODE  = [
     (b"\x04\x00\x91\xd4", "ldrle r0, [r1], #0x4"),
     (b"\x04\x00\x91\xe4", "ldral r0, [r1], #0x4"),
 
-    # TODO: Test when the bug in Capstone gets fixed.
-    # (b"\x04\x00\x11\xe4", "ldr r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x04", "ldreq r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x14", "ldrne r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x24", "ldrcs r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x34", "ldrcc r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x44", "ldrmi r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x54", "ldrpl r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x64", "ldrvs r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x74", "ldrvc r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x84", "ldrhi r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\x94", "ldrls r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\xa4", "ldrge r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\xb4", "ldrlt r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\xc4", "ldrgt r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\xd4", "ldrle r0, [r1], #-0x4"),
-    # (b"\x04\x00\x11\xe4", "ldral r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xe4", "ldr r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x04", "ldreq r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x14", "ldrne r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x24", "ldrcs r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x34", "ldrcc r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x44", "ldrmi r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x54", "ldrpl r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x64", "ldrvs r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x74", "ldrvc r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x84", "ldrhi r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\x94", "ldrls r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xa4", "ldrge r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xb4", "ldrlt r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xc4", "ldrgt r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xd4", "ldrle r0, [r1], #-0x4"),
+    (b"\x04\x00\x11\xe4", "ldral r0, [r1], #-0x4"),
 
-    # LDR with SP as operand
+    # LDR with SP as operand ------------------------------------------------- #
     (b"\x00\xd0\x91\xe5", "ldr sp, [r1]"),
     (b"\x00\xd0\x91\x05", "ldreq sp, [r1]"),
     (b"\x00\xd0\x91\x15", "ldrne sp, [r1]"),
@@ -193,7 +203,7 @@ CODE  = [
     (b"\x00\x00\x9d\xd5", "ldrle r0, [sp]"),
     (b"\x00\x00\x9d\xe5", "ldral r0, [sp]"),
 
-    # STR - Offset addressing.
+    # STR - Offset addressing ------------------------------------------------ #
     (b"\x00\x00\x81\xe5", "str r0, [r1]"),
     (b"\x00\x00\x81\x05", "streq r0, [r1]"),
     (b"\x00\x00\x81\x15", "strne r0, [r1]"),
@@ -245,7 +255,7 @@ CODE  = [
     (b"\x04\x00\x01\xd5", "strle r0, [r1, #-0x4]"),
     (b"\x04\x00\x01\xe5", "stral r0, [r1, #-0x4]"),
 
-    # STR - Pre-indexed addressing.
+    # STR - Pre-indexed addressing ------------------------------------------- #
     (b"\x00\x00\xa1\xe5", "str r0, [r1]!"),
     (b"\x00\x00\xa1\x05", "streq r0, [r1]!"),
     (b"\x00\x00\xa1\x15", "strne r0, [r1]!"),
@@ -297,7 +307,7 @@ CODE  = [
     (b"\x04\x00\x21\xd5", "strle r0, [r1, #-0x4]!"),
     (b"\x04\x00\x21\xe5", "stral r0, [r1, #-0x4]!"),
 
-    # STR - Post-indexed addressing.
+    # STR - Post-indexed addressing ------------------------------------------ #
     (b"\x04\x00\x81\xe4", "str r0, [r1], #0x4"),
     (b"\x04\x00\x81\x04", "streq r0, [r1], #0x4"),
     (b"\x04\x00\x81\x14", "strne r0, [r1], #0x4"),
@@ -315,25 +325,24 @@ CODE  = [
     (b"\x04\x00\x81\xd4", "strle r0, [r1], #0x4"),
     (b"\x04\x00\x81\xe4", "stral r0, [r1], #0x4"),
 
-    # TODO: Test when the bug in Capstone gets fixed.
-    # (b"\x04\x00\x01\xe4", "str r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x04", "streq r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x14", "strne r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x24", "strcs r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x34", "strcc r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x44", "strmi r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x54", "strpl r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x64", "strvs r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x74", "strvc r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x84", "strhi r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\x94", "strls r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\xa4", "strge r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\xb4", "strlt r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\xc4", "strgt r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\xd4", "strle r0, [r1], #-0x4"),
-    # (b"\x04\x00\x01\xe4", "stral r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xe4", "str r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x04", "streq r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x14", "strne r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x24", "strcs r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x34", "strcc r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x44", "strmi r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x54", "strpl r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x64", "strvs r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x74", "strvc r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x84", "strhi r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\x94", "strls r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xa4", "strge r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xb4", "strlt r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xc4", "strgt r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xd4", "strle r0, [r1], #-0x4"),
+    (b"\x04\x00\x01\xe4", "stral r0, [r1], #-0x4"),
 
-    # STR with SP as operand
+    # STR with SP as operand ------------------------------------------------- #
     (b"\x00\xd0\x81\xe5", "str sp, [r1]"),
     (b"\x00\xd0\x81\x05", "streq sp, [r1]"),
     (b"\x00\xd0\x81\x15", "strne sp, [r1]"),
@@ -370,7 +379,7 @@ CODE  = [
 
     # TODO: Test with PC as source register.
 
-    # LDRB
+    # LDRB ------------------------------------------------------------------- #
     (b"\x00\x00\xd1\xe5", "ldrb r0, [r1]"),
     (b"\x00\x00\xd1\x05", "ldrbeq r0, [r1]"),
     (b"\x00\x00\xd1\x15", "ldrbne r0, [r1]"),
@@ -497,6 +506,12 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
+    # write machine code to be emulated to memory
+    index = 0
+    for op, _ in CODE:
+        ctx.setConcreteMemoryAreaValue(ADDR+index, op)
+        index += len(op)
+
     ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
     ctx.setConcreteMemoryAreaValue(HEAP,            istate['heap'])
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
@@ -522,11 +537,12 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    # print()
-    # print(inst)
-    # for x in inst.getSymbolicExpressions():
-    #    print(x)
-    # print()
+    if DEBUG:
+        print()
+        print(inst)
+        for x in inst.getSymbolicExpressions():
+           print(x)
+        print()
 
     ostate = {
         "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
@@ -579,9 +595,11 @@ def print_heap(istate, uc_ostate, tt_ostate):
 
 def print_stack(istate, uc_ostate, tt_ostate):
     print("IN|UC|TT")
+    sp = istate["sp"]
     for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
         if ord(a) != b or ord(a) != c:
-            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+            print("{:x}: {:02x}|{:02x}|{:02x}".format(sp, ord(a), b, c), sep=" ")
+        sp += 1
 
 
 if __name__ == '__main__':
@@ -592,7 +610,7 @@ if __name__ == '__main__':
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
-        "r3":    random.randint(0x0, 0xffffffff),
+        "r3":    4, # random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
         "r5":    random.randint(0x0, 0xffffffff),
         "r6":    random.randint(0x0, 0xffffffff),
