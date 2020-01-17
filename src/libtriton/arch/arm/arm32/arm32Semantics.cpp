@@ -2059,9 +2059,9 @@ namespace triton {
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            this->cfSub_s(inst, cond, expr, dst, op1, op2);
+            this->cfSub_s(inst, cond, expr, dst, op2, op1);
             this->nf_s(inst, cond, expr, dst);
-            this->vfSub_s(inst, cond, expr, dst, op1, op2);
+            this->vfSub_s(inst, cond, expr, dst, op2, op1);
             this->zf_s(inst, cond, expr, dst);
           }
 
