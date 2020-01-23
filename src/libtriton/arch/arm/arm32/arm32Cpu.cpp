@@ -439,8 +439,13 @@ namespace triton {
                 if (inst.getDisassembly().find("adc") == 0 ||
                     inst.getDisassembly().find("add") == 0 ||
                     inst.getDisassembly().find("and") == 0 ||
+                    inst.getDisassembly().find("asr") == 0 ||
                     inst.getDisassembly().find("bic") == 0 ||
                     inst.getDisassembly().find("eor") == 0 ||
+                    inst.getDisassembly().find("lsl") == 0 ||
+                    inst.getDisassembly().find("lsr") == 0 ||
+                    inst.getDisassembly().find("orr") == 0 ||
+                    inst.getDisassembly().find("ror") == 0 ||
                     inst.getDisassembly().find("sbc") == 0 ||
                     inst.getDisassembly().find("sub") == 0) {
                   triton::arch::OperandWrapper op(inst.operands[0]);
