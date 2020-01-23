@@ -292,7 +292,46 @@ namespace triton {
 
                     /* LEA if exists */
                     const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                    const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+                    triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+
+                    /* TODO (cnheitman): Refactor (duplicated code). */
+                    /* Set Shift type and value */
+                    triton::arch::arm::shift_e shiftType = this->capstoneShiftToTritonShift(op->shift.type);
+
+                    index.setShiftType(shiftType);
+
+                    switch(shiftType) {
+                      case triton::arch::arm::ID_SHIFT_INVALID:
+                        break;
+                      case triton::arch::arm::ID_SHIFT_ASR:
+                      case triton::arch::arm::ID_SHIFT_LSL:
+                      case triton::arch::arm::ID_SHIFT_LSR:
+                      case triton::arch::arm::ID_SHIFT_ROR:
+                        index.setShiftValue(op->shift.value);
+                        break;
+                      case triton::arch::arm::ID_SHIFT_RRX:
+                        /* NOTE: According to the manual RRX there is no
+                         * immediate associated with this shift type. However,
+                         * from the description of the instruction it can be
+                         * deduced that a value of one is used.
+                         */
+                        index.setShiftValue(1);
+                        break;
+                      case triton::arch::arm::ID_SHIFT_ASR_REG:
+                      case triton::arch::arm::ID_SHIFT_LSL_REG:
+                      case triton::arch::arm::ID_SHIFT_LSR_REG:
+                      case triton::arch::arm::ID_SHIFT_ROR_REG:
+                        index.setShiftValue(this->capstoneRegisterToTritonRegister(op->shift.value));
+                        break;
+                      case triton::arch::arm::ID_SHIFT_RRX_REG:
+                        /* NOTE: Capstone considers this as a viable shift operand
+                         * but according to the ARM manual this is not possible.
+                         */
+                        throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
+                        break;
+                      default:
+                        throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
+                    }
 
                     triton::uint32 immsize = (
                                               this->isRegisterValid(base.getId()) ? base.getSize() :
