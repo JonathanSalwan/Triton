@@ -15,6 +15,8 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
+    (b"\x04\xf0\x2d\xe5", "push {pc}"),
+
     (b"\x03\x00\x2d\xe9", "push {r0, r1}"),
     (b"\x01\x01\x2d\xe9", "push {r0, r8}"),
     (b"\xff\x01\x2d\xe9", "push {r0 - r8}"),
