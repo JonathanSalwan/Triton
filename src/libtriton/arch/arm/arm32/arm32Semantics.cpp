@@ -899,13 +899,23 @@ namespace triton {
           auto& src2 = inst.operands[2];
 
           /* Process modified immediate constants (expand immediate) */
-          /* TODO (cnheitman): Apply this to ADC and SUB. */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "adc ip, ip, #16, #20".
+           */
           if (inst.operands.size() == 4) {
-            auto size  = src2.getSize();
-            auto value = src2.getImmediate().getValue();
-            auto shift = inst.operands[3].getImmediate().getValue();
+            auto src3 = inst.operands[3];
 
-            src2 = triton::arch::Immediate(this->ror(value, shift), size);
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::add_s(): Invalid operand type.");
+            }
           }
 
           /* Create symbolic operands */
@@ -1509,7 +1519,6 @@ namespace triton {
             /* Create symbolic expression */
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
             // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
@@ -1593,7 +1602,6 @@ namespace triton {
             /* Create symbolic expression */
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
             // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
@@ -1880,7 +1888,6 @@ namespace triton {
             auto& src = inst.operands.size() == 2 ? inst.operands[1] : inst.operands[2];
 
             this->cfLsr_s(inst, cond, expr, op1base, src);
-
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
           }
