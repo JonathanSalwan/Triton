@@ -2763,15 +2763,14 @@ namespace triton {
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
 
           /* Create the semantics */
-          auto cond = this->getCodeConditionAst(inst);
+          auto cond  = this->getCodeConditionAst(inst);
           auto node1 = this->astCtxt->bvand(op1, op2);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "TST operation");
 
           /* Update symbolic flags */
-          /* TODO (cnheitman): UC is not updating the C flag? What is the correct behavior. */
-          // this->cfAdd_s(inst, cond, expr, src1, op1, op2
+          this->cfBitwise_s(inst, cond, expr, src2);
           this->nf_s(inst, cond, expr, src1);
           this->zf_s(inst, cond, expr, src1);
 
