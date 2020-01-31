@@ -1253,8 +1253,7 @@ namespace triton {
           auto op3 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
 
           /* Create the semantics */
-          auto cond   = this->getCodeConditionAst(inst);
-          auto node   = this->astCtxt->ite(
+          auto pcNode = this->astCtxt->ite(
                           this->astCtxt->equal(
                             op1,
                             this->astCtxt->bv(0, op1->getBitvectorSize())
@@ -1262,16 +1261,15 @@ namespace triton {
                           op2,
                           op3
                         );
-          auto pcNode = this->astCtxt->ite(cond, node, op3);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, pcNode, dst, "B operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, pcNode, dst, "CBZ operation - Program Counter");
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
+          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
-          /* Update condition flag */
-          if (cond->evaluate() == true) {
+          /* Set condition flag */
+          if (op1->evaluate() == 0) {
             inst.setConditionTaken(true);
           }
 
