@@ -304,6 +304,9 @@ namespace triton {
             //! The BX semantics.
             void bx_s(triton::arch::Instruction& inst);
 
+            //! The CBZ semantics.
+            void cbz_s(triton::arch::Instruction& inst);
+
             //! The CLZ semantics.
             void clz_s(triton::arch::Instruction& inst);
 

@@ -37,6 +37,7 @@ BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
 CLZ                           | Count Leading Zeros
 CMP                           | Compare
+CBZ                           | Compare and Branch on Zero
 EOR                           | Bitwise Exclusive OR
 LDM                           | Load Multiple Registers
 LDR                           | Load Register
@@ -107,6 +108,7 @@ namespace triton {
             case ID_INS_BL:        this->bl_s(inst, false);     break;
             case ID_INS_BLX:       this->bl_s(inst, true);      break;
             case ID_INS_BX:        this->bx_s(inst);            break;
+            case ID_INS_CBZ:       this->cbz_s(inst);           break;
             case ID_INS_CLZ:       this->clz_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
@@ -1219,6 +1221,44 @@ namespace triton {
             inst.setConditionTaken(true);
 
             this->exchangeInstructionSet(src, op1);
+          }
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
+        }
+
+
+        void Arm32Semantics::cbz_s(triton::arch::Instruction& inst) {
+          auto  dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
+          auto& src1 = inst.operands[0];
+          auto& src2 = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
+
+          /* Create the semantics */
+          auto cond   = this->getCodeConditionAst(inst);
+          auto node   = this->astCtxt->ite(
+                          this->astCtxt->equal(
+                            op1,
+                            this->astCtxt->bv(0, op1->getBitvectorSize())
+                          ),
+                          op2,
+                          op3
+                        );
+          auto pcNode = this->astCtxt->ite(cond, node, op3);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, pcNode, dst, "B operation - Program Counter");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->getCodeConditionTaintState(inst));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
           }
 
           /* Create the path constraint */
