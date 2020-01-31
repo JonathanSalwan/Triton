@@ -562,7 +562,7 @@ namespace triton {
         void Arm32Semantics::spreadTaint(triton::arch::Instruction& inst,
                                          const triton::ast::SharedAbstractNode& cond,
                                          const triton::engines::symbolic::SharedSymbolicExpression& expr,
-                                         triton::arch::OperandWrapper& operand,
+                                         const triton::arch::OperandWrapper& operand,
                                          bool taint) {
 
           if (this->getCodeConditionTaintState(inst) == true) {
@@ -1501,12 +1501,11 @@ namespace triton {
 
 
         void Arm32Semantics::ldr_s(triton::arch::Instruction& inst) {
-          auto& dst  = inst.operands[0];
+          auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
 
           /* Create symbolic operands */
-          // auto op = this->getArm32SourceOperandAst(inst, src);
-          auto op = this->symbolicEngine->getOperandAst(inst, src);
+          auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Create the semantics */
           auto node1 = this->buildConditionalSemantics(inst, dst, op);
@@ -1520,10 +1519,11 @@ namespace triton {
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
+          /* TODO: Add Offset addressing. */
           /* Optional behavior. Post-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn], #<simm> */
+          /* LDR <Rt>, [<Rn>], #+/-<imm> */
           if (inst.operands.size() == 3) {
-            auto& imm = inst.operands[2].getImmediate();
+            auto& imm  = inst.operands[2].getImmediate();
             auto& base = src.getMemory().getBaseRegister();
 
             /* Create symbolic operands of the post computation */
@@ -1537,21 +1537,17 @@ namespace triton {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
-            auto node2 = this->astCtxt->ite(
-                            cond,
-                            thenNode,
-                            baseNode
-                          );
+            auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
             /* Create symbolic expression */
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
 
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Optional behavior. Pre-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn>, #<simm>]! */
+          /* LDR <Rt>, [<Rn>, #+/-<imm>]! */
           else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
             auto& base = src.getMemory().getBaseRegister();
 
@@ -1559,18 +1555,13 @@ namespace triton {
             auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
 
             /* Create the semantics of the base register */
-            auto node3 = this->astCtxt->ite(
-                            cond,
-                            src.getMemory().getLeaAst(),
-                            baseNode
-                          );
+            auto node3 = this->astCtxt->ite(cond, src.getMemory().getLeaAst(), baseNode);
 
             /* Create symbolic expression */
             auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDR operation - Pre-indexed base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
           }
 
           /* Update condition flag */
