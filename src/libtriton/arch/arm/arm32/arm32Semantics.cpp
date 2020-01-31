@@ -63,6 +63,7 @@ STM                           | Store Multiple Registers
 STMIB                         | Store Multiple Increment Before
 STR                           | Store Register
 STRB                          | Store Register Byte
+STRD                          | Store Register Dual
 STRH                          | Store Register Halfword
 SUB                           | Substract
 TST                           | Test
@@ -137,6 +138,7 @@ namespace triton {
             case ID_INS_STMIB:     this->stmib_s(inst);         break;
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_STRB:      this->strb_s(inst);          break;
+            case ID_INS_STRD:      this->strd_s(inst);          break;
             case ID_INS_STRH:      this->strh_s(inst);          break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
             case ID_INS_TST:       this->tst_s(inst);           break;
@@ -2788,6 +2790,102 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::strd_s(triton::arch::Instruction& inst) {
+          auto& base          = inst.operands[2];
+          triton::uint32 size = DWORD_SIZE;
+
+          /* Create the semantics */
+          auto cond = this->getCodeConditionAst(inst);
+
+          for (unsigned int i = 0; i < 2; i++) {
+            auto& src = inst.operands[i];
+
+            /* Compute memory address */
+            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
+            auto addr = base.getMemory().getAddress() + size * i;
+            auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
+
+            /* Create symbolic operands */
+            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+            /* TODO (cnheitman): Make op3 the value of current memory location. */
+            auto op3 = this->symbolicEngine->getOperandAst(inst, src);
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op2, op3);
+
+            /* Create symbolic expression */
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STRD operation - STORE access");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
+          }
+
+          /* Optional behavior. Post-indexed computation of the base register. */
+          /* STRD <Rt>, <Rt2>, [<Rn], #<simm> */
+          if (inst.operands.size() == 4) {
+            auto& dst  = inst.operands[2]; // FIXME
+
+            auto& imm  = inst.operands[3].getImmediate();
+            auto& base = dst.getMemory().getBaseRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+            /* Create the semantics of the base register */
+            auto node2 = this->astCtxt->ite(
+                            cond,
+                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
+                            baseNode
+                            );
+
+            /* Create symbolic expression */
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STR operation - Base register computation");
+
+            /* TODO: Fix.*/
+            /* Spread taint */
+            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Optional behavior. Pre-indexed computation of the base register. */
+          /* STR <Rt>, <Rt2>, [<Rn>, #<simm>]! */
+          else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
+            auto& dst  = inst.operands[2]; // FIXME
+
+            auto& base = dst.getMemory().getBaseRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+
+            /* Create the semantics of the base register */
+            auto node3 = this->astCtxt->ite(
+                            cond,
+                            dst.getMemory().getLeaAst(),
+                            baseNode
+                          );
+
+            /* Create symbolic expression */
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STR operation - Base register computation");
+
+            /* TODO: Fix.*/
+            /* Spread taint */
+            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            // this->updateExecutionState(dst, node1);
+          }
+
+          /* Update the symbolic control flow */
+          // this->controlFlow_s(inst, cond, dst);
+          this->controlFlow_s(inst);
         }
 
 
