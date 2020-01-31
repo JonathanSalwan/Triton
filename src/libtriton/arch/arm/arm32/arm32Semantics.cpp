@@ -2611,8 +2611,7 @@ namespace triton {
 
             /* Create symbolic operands */
             auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-            /* TODO (cnheitman): Make op3 the value of current memory location. */
-            auto op3 = this->symbolicEngine->getOperandAst(inst, src);
+            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
 
             /* Create the semantics */
             auto node = this->astCtxt->ite(cond, op2, op3);
@@ -2640,6 +2639,11 @@ namespace triton {
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
           }
 
           /* Update the symbolic control flow */
