@@ -193,7 +193,6 @@ namespace triton {
           triton::extlibs::capstone::cs_mode   mode;
           triton::extlibs::capstone::cs_insn*  insn;
           triton::usize                        count = 0;
-          triton::uint32                       size = 0;
 
           /* Check if the opcode and opcode' size are defined */
           if (inst.getOpcode() == nullptr || inst.getSize() == 0)
@@ -264,18 +263,7 @@ namespace triton {
                 switch(op->type) {
 
                   case triton::extlibs::capstone::ARM_OP_IMM: {
-                    triton::arch::Immediate imm(op->imm, size ? size : DWORD_SIZE);
-
-                    /*
-                     * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
-                     * So, if Triton truncates the value by setting a size less than
-                     * the original one, we redefine the size automatically.
-                     */
-                    /* FIXME: Valid in ARM32 ? */
-                    if (static_cast<triton::uint64>(op->imm) > imm.getValue()) {
-                      imm = Immediate();
-                      imm.setValue(op->imm, 0); /* By setting 0 as size, we automatically identify the size of the value */
-                    }
+                    triton::arch::Immediate imm(op->imm, DWORD_SIZE);
 
                     if (op->subtracted)
                       imm.setSubtracted(true);
@@ -288,13 +276,12 @@ namespace triton {
                     triton::arch::MemoryAccess mem;
 
                     /* Set the size of the memory access */
-                    mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
+                    mem.setPair(std::make_pair(DWORD_SIZE_BIT-1, 0));
 
                     /* LEA if exists */
                     const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
                     triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
-                    /* TODO (cnheitman): Refactor (duplicated code). */
                     /* Set Shift type and value */
                     triton::arch::arm::shift_e shiftType = this->capstoneShiftToTritonShift(op->shift.type);
 
@@ -343,8 +330,11 @@ namespace triton {
 
                     /* Specify that LEA contains a PC relative */
                     if (base.getId() == this->pcId) {
-                      /* TODO (cnheitman): Check if this works fine with STR
-                       * and a PC-relative memory operand.
+                      /* NOTE: PC always points to the address to the current
+                       * instruction plus: a) 8 in case of ARM mode, or b) 4 in
+                       * case of Thumb. It is also aligned to 4 bytes. For more
+                       * information, refer to section "Use of labels in UAL
+                       * instruction syntax" of the reference manual.
                        */
                       auto offset = this->thumb ? 4 : 8;
                       auto address = (inst.getAddress() + offset) & 0xfffffffc;
@@ -404,10 +394,6 @@ namespace triton {
                       default:
                         throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
                     }
-
-                    /* Define a base address for next operand */
-                    if (!size)
-                      size = reg.getSize();
 
                     if (op->subtracted)
                       reg.setSubtracted(true);
