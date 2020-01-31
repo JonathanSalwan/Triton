@@ -2739,7 +2739,7 @@ namespace triton {
           auto node1 = this->buildConditionalSemantics(inst, dst, node);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STR operation - STORE access");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRB operation - STORE access");
 
           /* Get condition code node */
           auto cond = node1->getChildren()[0];
@@ -2748,7 +2748,7 @@ namespace triton {
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
           /* Optional behavior. Post-indexed computation of the base register. */
-          /* STR <Rt>, [<Rn], #<simm> */
+          /* STRB <Rt>, [<Rn>], #+/-<imm> */
           if (inst.operands.size() == 3) {
             auto& imm  = inst.operands[2].getImmediate();
             auto& base = dst.getMemory().getBaseRegister();
@@ -2758,22 +2758,23 @@ namespace triton {
             auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
             /* Create the semantics of the base register */
-            auto node2 = this->astCtxt->ite(
-                            cond,
-                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
-                            baseNode
-                            );
+            auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+
+            if (imm.getSubtracted() == true) {
+              thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+            }
+
+            auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
             /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STR operation - Base register computation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRB operation - Base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Optional behavior. Pre-indexed computation of the base register. */
-          /* STR <Rt>, [<Rn>, #<simm>]! */
+          /* STRB <Rt>, [<Rn>, #+/-<imm>]! */
           else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
             auto& base = dst.getMemory().getBaseRegister();
 
@@ -2781,30 +2782,22 @@ namespace triton {
             auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
 
             /* Create the semantics of the base register */
-            auto node3 = this->astCtxt->ite(
-                            cond,
-                            dst.getMemory().getLeaAst(),
-                            baseNode
-                          );
+            auto node3 = this->astCtxt->ite(cond, dst.getMemory().getLeaAst(), baseNode);
 
             /* Create symbolic expression */
-            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STR operation - Base register computation");
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STRB operation - Base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
           }
 
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
-
-            /* Update swtich mode accordingly. */
-            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst, cond, dst);
+          this->controlFlow_s(inst);
         }
 
 
