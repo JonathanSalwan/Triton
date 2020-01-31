@@ -17,10 +17,6 @@ STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
-    (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
-    (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
-    (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
-
     # MISC ------------------------------------------------------------------- #
     (b"\x0d\xf2\x24\x42", "addw r2, sp, #1060"),
     (b"\x80\x1a",         "subs r0, r0, r2"),
@@ -55,6 +51,17 @@ CODE  = [
     (b"\x11\xfa\x03\xf0", "lsls r0, r1, r3"),
     (b"\x5f\xea\xb1\x00", "rors r0, r1, #2"),
     (b"\x71\xfa\x03\xf0", "rors r0, r1, r3"),
+    (b"\x33\x43",         "orrs r3, r6"),
+    (b"\x08\xea\x0e\x03", "and.w r3, r8, lr"),
+    (b"\x08\x41",         "asrs r0, r1"),
+    (b"\x88\x40",         "lsls r0, r1"),
+    (b"\xc8\x40",         "lsrs r0, r1"),
+    (b"\xc8\x41",         "rors r0, r1"),
+    (b"\x5f\xea\x31\x00", "rrxs r0, r1"),
+    (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
+    (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
+    (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
+
 
     # ADC -------------------------------------------------------------------- #
     (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),

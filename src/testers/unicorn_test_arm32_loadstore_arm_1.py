@@ -18,6 +18,10 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
     # MISC ------------------------------------------------------------------- #
+    (b"\xf4\x00\xcd\xe1", "strd r0, r1, [sp, #4]"),
+
+    (b"\x03\x01\x91\xe7", "ldr r0, [r1, r3, lsl #2]"),
+
     (b"\xf0\x00\xa1\xe8", "stmia r1!, {r4, r5, r6, r7}"),
 
     (b"\x04\xb0\x0d\xe5", "str fp, [sp, #-4]"),
@@ -435,6 +439,14 @@ def hook_code(mu, address, size, istate):
 
     # print_state(istate, istate, ostate)
 
+def hook_mem_access(uc, access, address, size, value, user_data):
+    if access == UC_MEM_WRITE:
+        print(">>> Memory is being WRITE at 0x%x, data size = %u, data value = 0x%x" \
+                %(address, size, value))
+    else:   # READ
+        print(">>> Memory is being READ at 0x%x, data size = %u" \
+                %(address, size))
+
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
@@ -473,6 +485,9 @@ def emu_with_unicorn(opcode, istate):
 
     # # tracing all instructions with customized callback
     # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+
+    # mu.hook_add(UC_HOOK_MEM_WRITE, hook_mem_access)
+    # mu.hook_add(UC_HOOK_MEM_READ, hook_mem_access)
 
     # emulate code in infinite time & unlimited instructions
     # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
