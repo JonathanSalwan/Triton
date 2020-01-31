@@ -256,9 +256,11 @@ namespace triton {
                                                          const triton::arch::arm::shift_e type,
                                                          const triton::ast::SharedAbstractNode& shiftAmount);
 
-            //! The CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode getShiftCAst(const triton::ast::SharedAbstractNode& node,
-                                                         const triton::arch::arm::ArmOperandProperties& shift);
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::arch::arm::shift_e getShiftCBaseType(const triton::arch::arm::ArmOperandProperties& shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode getShiftCAmountAst(const triton::arch::arm::ArmOperandProperties& shift);
 
             //! Auxiliary function for the CF semantics for bitwise and shift operations.
             triton::ast::SharedAbstractNode lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
