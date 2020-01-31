@@ -2894,22 +2894,22 @@ namespace triton {
           dst.getMemory().setPair(std::make_pair(15, 0));
 
           /* Create the semantics */
-          auto node  = this->astCtxt->extract(15, 0, op);
-          auto node1 = this->buildConditionalSemantics(inst, dst, node);
+          auto node1 = this->astCtxt->extract(15, 0, op);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRH operation - STORE access");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "STRH operation - STORE access");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
           /* Optional behavior. Post-indexed computation of the base register. */
-          /* STR <Rt>, [<Rn], #<simm> */
+          /* STRH <Rt>, [<Rn>], #+/-<imm>; STRH <Rt>, [<Rn>], +/-<Rm>*/
           if (inst.operands.size() == 3) {
-            /* TODO (cnheitman): Refactor this code. */
+            /* TODO (cnheitman): Refactor. */
             if (inst.operands[2].getType() == OP_IMM) {
               auto& imm  = inst.operands[2].getImmediate();
               auto& base = dst.getMemory().getBaseRegister();
@@ -2925,18 +2925,13 @@ namespace triton {
                 thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
               }
 
-              auto node2 = this->astCtxt->ite(
-                              cond,
-                              thenNode,
-                              baseNode
-                              );
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
               auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRH operation - Base register computation");
 
-              /* TODO: Fix.*/
               /* Spread taint */
-              // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
             } else {
               auto& reg  = inst.operands[2].getRegister();
               auto& base = dst.getMemory().getBaseRegister();
@@ -2952,23 +2947,18 @@ namespace triton {
                 thenNode = this->astCtxt->bvsub(baseNode, regNode);
               }
 
-              auto node2 = this->astCtxt->ite(
-                              cond,
-                              thenNode,
-                              baseNode
-                            );
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
               auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRH operation - Base register computation");
 
-              /* TODO: Fix.*/
               /* Spread taint */
-              // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(reg));
             }
           }
 
           /* Optional behavior. Pre-indexed computation of the base register. */
-          /* STR <Rt>, [<Rn>, #<simm>]! */
+          /* STRH <Rt>, [<Rn>, #+/-<imm>]! */
           else if (inst.operands.size() == 2 && inst.isWriteBack() == true) {
             auto& base = dst.getMemory().getBaseRegister();
 
@@ -2976,26 +2966,18 @@ namespace triton {
             auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
 
             /* Create the semantics of the base register */
-            auto node3 = this->astCtxt->ite(
-                            cond,
-                            dst.getMemory().getLeaAst(),
-                            baseNode
-                          );
+            auto node3 = this->astCtxt->ite(cond, dst.getMemory().getLeaAst(), baseNode);
 
             /* Create symbolic expression */
             auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "STRH operation - Base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
           }
 
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
-
-            /* Update swtich mode accordingly. */
-            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
