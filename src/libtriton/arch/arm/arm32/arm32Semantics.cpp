@@ -1593,43 +1593,70 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
+          /* NOTE: This is a hacky way to obtain the ast of the operand
+           * without the shift. This has to be done before building the
+           * semantics (the current value is needed, not the new one).
+           */
+          /* TODO (cnheitman): Improve this code. */
+          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
+          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
+          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
+
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
 
-          auto node1 = this->buildConditionalSemantics(inst, dst, op1);
+          /* Create the semantics */
+          triton::ast::SharedAbstractNode node1;
 
-          if (inst.operands.size() == 3) {
+          /* Two-operand version: LSL {<Rd>,} <Rm>, #<imm>. Here #<imm> is
+           * interpreted as a shift value for <Rm>, which is handled directly
+           * by the getArm32SourceOperandAst function. */
+          if (inst.operands.size() == 2) {
+            node1 = op1;
+          }
+          /* Three-operand version: LSL {<Rd>,} <Rn>, <Rm>. Here <Rm> is a
+           * regular register and holds the value to shift the <Rn> register.
+           * The operation must be explicitly done here.
+           */
+          else {
             auto& src2 = inst.operands[2];
 
             auto op2 = this->getArm32SourceOperandAst(inst, src2);
 
-            auto node = this->astCtxt->bvshl(
-                          op1,
-                          this->astCtxt->zx(
-                            DWORD_SIZE_BIT-8,
-                            this->astCtxt->extract(7, 0, op2)
-                          )
-                        );
-            node1 = this->buildConditionalSemantics(inst, dst, node);
+            node1 = this->astCtxt->bvshl(
+                      op1,
+                      this->astCtxt->zx(
+                        DWORD_SIZE_BIT-8,
+                        this->astCtxt->extract(7, 0, op2)
+                      )
+                    );
           }
+
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LSL(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LSL(S) operation");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
-          if (inst.operands.size() == 2) {
-            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
-          } else {
+          auto taint = this->taintEngine->isTainted(src1);
+
+          if (inst.operands.size() == 3) {
             auto& src2 = inst.operands[2];
 
-            this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+            taint |= this->taintEngine->isTainted(src2);
           }
+
+          this->spreadTaint(inst, cond, expr, dst, taint);
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            /* TODO (cnheitman): Implement. */
+            auto& src = inst.operands.size() == 2 ? inst.operands[1] : inst.operands[2];
+
+            this->cfLsl_s(inst, cond, expr, op1base, src);
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
           }
 
           /* Update condition flag */
@@ -1637,7 +1664,7 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update swtich mode accordingly. */
-            this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, node2);
           }
 
           /* Update the symbolic control flow */
