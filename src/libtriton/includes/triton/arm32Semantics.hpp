@@ -202,6 +202,82 @@ namespace triton {
                          triton::ast::SharedAbstractNode& op1,
                          triton::ast::SharedAbstractNode& op2);
 
+            //! The CF semantics for bitwise operations (AND, BIC, EOR, MVN, ORR, ORN and TST).
+            void cfBitwise_s(triton::arch::Instruction& inst,
+                             const triton::ast::SharedAbstractNode& cond,
+                             const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                             triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for shift operations (ASR, LSL, LSR, ROR and RRX).
+            void cfShift_s(triton::arch::Instruction& inst,
+                           const triton::ast::SharedAbstractNode& cond,
+                           const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                           const triton::ast::SharedAbstractNode& op1,
+                           triton::arch::OperandWrapper& src,
+                           const triton::arch::arm::shift_e type);
+
+            //! The CF semantics for the ASR operation.
+            void cfAsr_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         const triton::ast::SharedAbstractNode& op1,
+                         triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for the LSL operation.
+            void cfLsl_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         const triton::ast::SharedAbstractNode& op1,
+                         triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for the LSR operation.
+            void cfLsr_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         const triton::ast::SharedAbstractNode& op1,
+                         triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for the ROR operation.
+            void cfRor_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         const triton::ast::SharedAbstractNode& op1,
+                         triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for the RRX operation.
+            void cfRrx_s(triton::arch::Instruction& inst,
+                         const triton::ast::SharedAbstractNode& cond,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         const triton::ast::SharedAbstractNode& op1,
+                         triton::arch::OperandWrapper& src);
+
+            //! The CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode getShiftCAst(const triton::ast::SharedAbstractNode& node,
+                                                         const triton::arch::arm::shift_e type,
+                                                         const triton::ast::SharedAbstractNode& shiftAmount);
+
+            //! The CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode getShiftCAst(const triton::ast::SharedAbstractNode& node,
+                                                         const triton::arch::arm::ArmOperandProperties& shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode lsl(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode lsr_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode lsr(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode ror_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
+            //! Auxiliary function for the CF semantics for bitwise and shift operations.
+            triton::ast::SharedAbstractNode ror(const triton::ast::SharedAbstractNode& node, uint32 shift);
+
             /* Instruction semantics ----------------------------------------- */
 
             //! The ADC semantics.
@@ -275,6 +351,9 @@ namespace triton {
 
             //! The ROR semantics.
             void ror_s(triton::arch::Instruction& inst);
+
+            //! The RRX semantics.
+            void rrx_s(triton::arch::Instruction& inst);
 
             //! The RSB semantics.
             void rsb_s(triton::arch::Instruction& inst);

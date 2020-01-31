@@ -2694,6 +2694,404 @@ namespace triton {
           this->controlFlow_s(inst);
         }
 
+
+        void Arm32Semantics::cfBitwise_s(triton::arch::Instruction& inst,
+                                         const triton::ast::SharedAbstractNode& cond,
+                                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                         triton::arch::OperandWrapper& src) {
+
+          /* TODO (cnheitman): Refactor. */
+
+          auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
+
+          /* Create the semantics */
+          triton::ast::SharedAbstractNode node1 = nullptr;
+
+          switch (src.getType()) {
+            case triton::arch::OP_IMM: {
+              /* From ARMExpandImm_C():
+               *    unrotated_value = ZeroExtend(imm12<7:0>, 32);
+               *    (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
+               */
+
+              /* Create the semantics */
+              auto unrotated_value = this->astCtxt->zx(32 - 8, this->astCtxt->extract(7, 0, op1));
+              auto amount = this->astCtxt->bv(
+                              2 * (src.getImmediate().getValue() & 0x00000f00),
+                              unrotated_value->getBitvectorSize()
+                            );
+
+              node1 = this->getShiftCAst(unrotated_value, triton::arch::arm::ID_SHIFT_ROR, amount);
+              break;
+            }
+
+            case triton::arch::OP_REG: {
+              if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+                /* Create symbolic operands */
+                /* NOTE: This is a hacky way to obtain the ast of the operand
+                 * without the shift. This has to be done before building the
+                 * semantics (the current value is needed, not the new one).
+                 */
+                /* TODO (cnheitman): Improve this code. */
+                auto srcBase = triton::arch::OperandWrapper(src.getRegister());
+                srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
+
+                auto op1 = this->symbolicEngine->getOperandAst(inst, srcBase);
+
+                /* Create the semantics */
+                node1 = this->getShiftCAst(op1, static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister()));
+              } else {
+                /* From the instruction decoding:
+                 *    (shift_t, shift_n) = (SRType_LSL, 0);
+                 */
+
+                /* Create the semantics */
+                auto amount = this->astCtxt->bv(0, op1->getBitvectorSize());
+
+                node1 = this->getShiftCAst(op1, triton::arch::arm::ID_SHIFT_LSL, amount);
+              }
+              break;
+            }
+
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::cfBitwise_s(): Invalid operand type.");
+          }
+
+          /* Create the semantics */
+          auto node2 = this->symbolicEngine->getOperandAst(cf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, cf, "Carry flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, cf, parent->isTainted);
+        }
+
+
+        void Arm32Semantics::cfShift_s(triton::arch::Instruction& inst,
+                                        const triton::ast::SharedAbstractNode& cond,
+                                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                        const triton::ast::SharedAbstractNode& op1,
+                                        triton::arch::OperandWrapper& src,
+                                        const triton::arch::arm::shift_e type) {
+          /* TODO (cnheitman): Refactor. */
+
+          /* NOTE: We asume that op1 is a register without its shift. */
+
+          auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Create the semantics */
+          triton::ast::SharedAbstractNode node1 = nullptr;
+
+          switch (src.getType()) {
+            case triton::arch::OP_IMM: {
+              /* Create the semantics */
+              auto amount = this->astCtxt->bv(
+                              src.getImmediate().getValue(),
+                              op1->getBitvectorSize()
+                            );
+
+              node1 = this->getShiftCAst(op1, type, amount);
+              break;
+            }
+
+            case triton::arch::OP_REG: {
+              if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+                /* Create the semantics */
+                node1 = this->getShiftCAst(op1, static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister()));
+              } else {
+                // (result, carry) = Shift_C(R[m], SRType_XXX, shift_n, APSR.C);
+
+                /* Create symbolic operands */
+                auto op2 = this->getArm32SourceOperandAst(inst, src);
+
+                /* Create the semantics */
+                auto amount = this->astCtxt->zx(
+                                DWORD_SIZE_BIT-8,
+                                this->astCtxt->extract(7, 0, op2)
+                              );
+
+                /* Special case for instruction RRX. */
+                if (type == triton::arch::arm::ID_SHIFT_RRX) {
+                  amount = this->astCtxt->bv(1, op1->getBitvectorSize());
+                }
+
+                node1 = this->getShiftCAst(op1, type, amount);
+              }
+              break;
+            }
+
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::cfShift_s(): Invalid operand type.");
+          }
+
+          /* Create the semantics */
+          auto node2 = this->symbolicEngine->getOperandAst(cf);
+          auto node3 = this->astCtxt->ite(cond, node1, node2);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, cf, "Carry flag");
+
+          /* Spread the taint from the parent to the child */
+          this->spreadTaint(inst, cond, expr, cf, parent->isTainted);
+        }
+
+
+        void Arm32Semantics::cfAsr_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     const triton::ast::SharedAbstractNode& op1,
+                                     triton::arch::OperandWrapper& src) {
+
+          this->cfShift_s(inst, cond, parent, op1, src, triton::arch::arm::ID_SHIFT_ASR);
+        }
+
+
+        void Arm32Semantics::cfLsl_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     const triton::ast::SharedAbstractNode& op1,
+                                     triton::arch::OperandWrapper& src) {
+
+          this->cfShift_s(inst, cond, parent, op1, src, triton::arch::arm::ID_SHIFT_LSL);
+        }
+
+
+        void Arm32Semantics::cfLsr_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     const triton::ast::SharedAbstractNode& op1,
+                                     triton::arch::OperandWrapper& src) {
+
+          this->cfShift_s(inst, cond, parent, op1, src, triton::arch::arm::ID_SHIFT_LSR);
+        }
+
+
+        void Arm32Semantics::cfRor_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     const triton::ast::SharedAbstractNode& op1,
+                                     triton::arch::OperandWrapper& src) {
+
+          this->cfShift_s(inst, cond, parent, op1, src, triton::arch::arm::ID_SHIFT_ROR);
+        }
+
+
+        void Arm32Semantics::cfRrx_s(triton::arch::Instruction& inst,
+                                     const triton::ast::SharedAbstractNode& cond,
+                                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                     const triton::ast::SharedAbstractNode& op1,
+                                     triton::arch::OperandWrapper& src) {
+
+          this->cfShift_s(inst, cond, parent, op1, src, triton::arch::arm::ID_SHIFT_RRX);
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::getShiftCAst(const triton::ast::SharedAbstractNode& node,
+                                                                     const triton::arch::arm::shift_e type,
+                                                                     const triton::ast::SharedAbstractNode& shifAmount) {
+
+          /* NOTE This function implements the Shift_C function from the
+           * reference manual:
+           *
+           * (bits(N), bit) Shift_C(bits(N) value, SRType type, integer amount, bit carry_in)
+           *
+           * However, it only returns the carry out. Check the reference manual
+           * for more information.
+           */
+
+          auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Set carry out node to the current value of the carry (carry in). */
+          triton::ast::SharedAbstractNode carryOutNode = this->symbolicEngine->getOperandAst(cf);
+
+          /* TODO (cnheitman): Make amount symbolic. */
+          uint32 amount = shifAmount->evaluate().convert_to<triton::uint32>();
+
+          if (amount == 0)
+            return carryOutNode;
+
+          switch (type) {
+            case triton::arch::arm::ID_SHIFT_ASR: {
+              auto extendedX = this->astCtxt->sx(amount, node);
+              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              break;
+            }
+
+            case triton::arch::arm::ID_SHIFT_LSL: {
+              auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, amount));
+              carryOutNode = this->astCtxt->extract(32, 32, extendedX);
+              break;
+            }
+
+            case triton::arch::arm::ID_SHIFT_LSR: {
+              auto extendedX = this->astCtxt->zx(amount, node);
+              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              break;
+            }
+
+            case triton::arch::arm::ID_SHIFT_ROR: {
+              auto result = this->ror_c(node, amount);
+              carryOutNode = this->astCtxt->extract(32-1, 32-1, result);
+              break;
+            }
+
+            case triton::arch::arm::ID_SHIFT_RRX: {
+              carryOutNode = this->astCtxt->extract(0, 0, node);
+              break;
+            }
+
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::getShiftCAst(): Invalid shift operand.");
+          }
+
+          return carryOutNode;
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::getShiftCAst(const triton::ast::SharedAbstractNode& node,
+                                                                     const triton::arch::arm::ArmOperandProperties& shift) {
+
+          triton::arch::arm::shift_e type;
+
+          auto imm = shift.getShiftImmediate();
+          auto reg = shift.getShiftRegister();
+
+          triton::ast::SharedAbstractNode amount;
+          triton::ast::SharedAbstractNode immShiftAmount = this->astCtxt->bv(imm, node->getBitvectorSize());
+          triton::ast::SharedAbstractNode regShiftAmount = nullptr;
+
+          if (reg != triton::arch::ID_REG_INVALID) {
+            auto op = this->symbolicEngine->getRegisterAst(this->architecture->getRegister(reg));
+
+            regShiftAmount = this->astCtxt->zx(
+                                this->architecture->getRegister(reg).getBitSize() - 8,
+                                this->astCtxt->extract(7, 0, op)
+                              );
+          }
+
+          switch (shift.getShiftType()) {
+            case triton::arch::arm::ID_SHIFT_ASR:
+              type = triton::arch::arm::ID_SHIFT_ASR;
+              amount = immShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_LSL:
+              type = triton::arch::arm::ID_SHIFT_LSL;
+              amount = immShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_LSR:
+              type = triton::arch::arm::ID_SHIFT_LSR;
+              amount = immShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_ROR:
+              type = triton::arch::arm::ID_SHIFT_ROR;
+              amount = immShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_RRX:
+              type = triton::arch::arm::ID_SHIFT_RRX;
+              amount = immShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_ASR_REG:
+              type = triton::arch::arm::ID_SHIFT_ASR;
+              amount = regShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_LSL_REG:
+              type = triton::arch::arm::ID_SHIFT_LSL;
+              amount = regShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_LSR_REG:
+              type = triton::arch::arm::ID_SHIFT_LSR;
+              amount = regShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_ROR_REG:
+              type = triton::arch::arm::ID_SHIFT_ROR;
+              amount = regShiftAmount;
+              break;
+
+            case triton::arch::arm::ID_SHIFT_RRX_REG:
+              /* NOTE: Capstone considers this as a viable shift operand but
+               * according to the ARM manual this is not possible.
+               */
+              throw triton::exceptions::Semantics("Arm32Semantics::getShiftCAst(): ID_SHIFT_RRX_REG is an invalid shift operand.");
+
+            default:
+              throw triton::exceptions::Semantics("Arm32Semantics::getShiftCAst(): Invalid shift operand.");
+          }
+
+          return this->getShiftCAst(node, type, amount);
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift > 0) {
+            auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, shift));
+            auto result = this->astCtxt->extract(31, 0, extendedX);
+            return result;
+          } else {
+            return nullptr;
+          }
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::lsl(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift == 0) {
+            return node;
+          } else {
+            return this->lsl_c(node, shift);
+          }
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::lsr_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift > 0) {
+            auto extendedX = this->astCtxt->zx(shift, node);
+            auto result = this->astCtxt->extract(shift+32-1, shift, extendedX);
+            return result;
+          } else {
+            return nullptr;
+          }
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::lsr(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift == 0) {
+            return node;
+          } else {
+            return this->lsr_c(node, shift);
+          }
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::ror_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift == 0) {
+            return nullptr;
+          } else {
+            auto m = shift % 32;
+            auto result = this->astCtxt->bvor(this->lsr(node, m), this->lsl(node, 32-m));
+            return result;
+          }
+        }
+
+
+        triton::ast::SharedAbstractNode Arm32Semantics::ror(const triton::ast::SharedAbstractNode& node, uint32 shift) {
+          if (shift == 0) {
+            return node;
+          } else {
+            return this->ror_c(node, shift);
+          }
+        }
       }; /* arm32 namespace */
     }; /* arm namespace */
   }; /* arch namespace */
