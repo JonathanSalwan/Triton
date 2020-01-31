@@ -1426,6 +1426,8 @@ namespace triton {
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
 
+          bool updateControlFlow = true;
+
           for (unsigned int i = 1; i < inst.operands.size(); i++) {
             auto& dst = inst.operands[i];
 
@@ -1435,17 +1437,37 @@ namespace triton {
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
             /* Create symbolic operands */
-            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto op2 = this->getArm32SourceOperandAst(inst, src);
+            auto op3 = this->getArm32SourceOperandAst(inst, dst);
 
             /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op2, op3);
+            auto node1 = op2;
+
+            /* In case PC is one of the destination registers, clear ISSB
+             * (instruction set selection bit) from the value that will be
+             * assigned to it.
+             */
+            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              node1 = this->clearISSB(op2);
+            }
+
+            auto node2 = this->astCtxt->ite(cond, node1, op3);
 
             /* Create symbolic expression */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDM operation - LOAD access");
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDM operation - LOAD access");
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
+
+            /* If PC was modified, do not update the control flow at the end of
+             * the function.
+             */
+            if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              updateControlFlow = false;
+
+              /* Update swtich mode accordingly. */
+              this->updateExecutionState(dst, op2);
+            }
           }
 
           if (inst.isWriteBack() == true) {
@@ -1460,14 +1482,21 @@ namespace triton {
                           );
 
             /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node1, base, "STM operation - Base register computation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node1, base, "LDM operation - Base register computation");
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
+          if (updateControlFlow) {
+            this->controlFlow_s(inst);
+          }
         }
 
 
