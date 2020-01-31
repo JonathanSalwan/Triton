@@ -1344,11 +1344,7 @@ namespace triton {
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            /* TODO (cnheitman): There is an issue here. The manual says that
-             * the carry flag should be updated but when we test it against
-             * Unicorn it is not update. Bug in UC? Disabling it for now.
-             */
-            // this->cfAdd_s(inst, cond, expr, dst, op1, op2);
+            this->cfBitwise_s(inst, cond, expr, src2);
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
           }
