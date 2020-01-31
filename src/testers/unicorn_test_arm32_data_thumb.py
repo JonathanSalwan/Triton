@@ -10,11 +10,17 @@ import sys
 import pprint
 import random
 
+# DEBUG = True
+DEBUG = False
 ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 CODE  = [
+    (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
+    (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
+    (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
+
     # MISC ------------------------------------------------------------------- #
     (b"\x0d\xf2\x24\x42", "addw r2, sp, #1060"),
     (b"\x80\x1a",         "subs r0, r0, r2"),
@@ -33,6 +39,22 @@ CODE  = [
     (b"\x20\xea\x01\x00", "bic r0, r0, r1"),
     (b"\x61\xfa\x02\xf1", "ror r1, r1, r2"),
     (b"\x00\xba",         "rev r0, r0"),
+    (b"\x4f\xea\xa1\x00", "asr r0, r1, #2"),
+    (b"\x41\xfa\x03\xf0", "asr r0, r1, r3"),
+    (b"\x4f\xea\x91\x00", "lsr r0, r1, #2"),
+    (b"\x21\xfa\x03\xf0", "lsr r0, r1, r3"),
+    (b"\x4f\xea\x81\x00", "lsl r0, r1, #2"),
+    (b"\x01\xfa\x03\xf0", "lsl r0, r1, r3"),
+    (b"\x4f\xea\xb1\x00", "ror r0, r1, #2"),
+    (b"\x61\xfa\x03\xf0", "ror r0, r1, r3"),
+    (b"\x88\x10",         "asrs r0, r1, #2"),
+    (b"\x51\xfa\x03\xf0", "asrs r0, r1, r3"),
+    (b"\x88\x08",         "lsrs r0, r1, #2"),
+    (b"\x31\xfa\x03\xf0", "lsrs r0, r1, r3"),
+    (b"\x88\x00",         "lsls r0, r1, #2"),
+    (b"\x11\xfa\x03\xf0", "lsls r0, r1, r3"),
+    (b"\x5f\xea\xb1\x00", "rors r0, r1, #2"),
+    (b"\x71\xfa\x03\xf0", "rors r0, r1, r3"),
 
     # ADC -------------------------------------------------------------------- #
     (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),
@@ -208,11 +230,12 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    # print()
-    # print(inst)
-    # for x in inst.getSymbolicExpressions():
-    #    print(x)
-    # print()
+    if DEBUG:
+        print()
+        print(inst)
+        for x in inst.getSymbolicExpressions():
+           print(x)
+        print()
 
     ostate = {
         "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
