@@ -2080,39 +2080,46 @@ namespace triton {
 
           bool updateControlFlow = true;
 
-          for (unsigned int i = 0; i < inst.operands.size(); i++) {
-            auto& dst       = inst.operands[i];
-            auto stack      = this->architecture->getStackPointer();
-            auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
-            auto src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
+          for (uint8_t i = 0; i < inst.operands.size(); i++) {
+            auto& dst        = inst.operands[i];
+            auto  stack      = this->architecture->getStackPointer();
+            auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+            auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
 
             /* Create symbolic operands */
-            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-
-            /* TODO (cnheitman): Improve (refactor?). */
-            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
-              op1 = this->clearISSB(op1);
-            }
+            auto op1 = this->getArm32SourceOperandAst(inst, dst);
+            auto op2 = this->getArm32SourceOperandAst(inst, src);
 
             /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op2, op1);
+            auto node1 = op2;
+
+            /* In case PC is one of the destination registers, clear ISSB
+             * (instruction set selection bit) from the value that will be
+             * assigned to it.
+             */
+            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              node1 = this->clearISSB(op2);
+            }
+
+            auto node2 = this->astCtxt->ite(cond, node1, op1);
 
             /* Create symbolic expression */
-            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POP operation - Pop register");
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "POP operation - Pop register");
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
+            /* Align stack */
             alignAddStack_s(inst, cond, size);
 
-            /* In case we are poping the PC register do not update the control flow at the end. */
-            /* TODO (cnheitman): Better test this. */
+            /* If PC was modified, do not update the control flow at the end of
+             * the function.
+             */
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
 
               /* Update swtich mode accordingly. */
-              this->updateExecutionState(dst, node);
+              this->updateExecutionState(dst, op2);
             }
           }
 
