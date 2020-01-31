@@ -44,6 +44,9 @@ CODE  = [
     (b"\x68\x47", "bx sp"),
 
     (b"\x78\x47", "bx pc"),
+
+    # CBZ -------------------------------------------------------------------- #
+    (b"\xf5\xb3", "cbz r5, #0x200000"),
 ]
 
 
@@ -58,7 +61,7 @@ def hook_code(mu, address, size, istate):
         "r2":    mu.reg_read(UC_ARM_REG_R2),
         "r3":    mu.reg_read(UC_ARM_REG_R3),
         "r4":    mu.reg_read(UC_ARM_REG_R4),
-        "r5":    mu.reg_read(UC_ARM_REG_R5),
+        "r5":    0,
         "r6":    mu.reg_read(UC_ARM_REG_R6),
         "r7":    mu.reg_read(UC_ARM_REG_R7),
         "r8":    mu.reg_read(UC_ARM_REG_R8),
