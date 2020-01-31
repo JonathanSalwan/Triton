@@ -42,6 +42,7 @@ EOR                           | Bitwise Exclusive OR
 LDM                           | Load Multiple Registers
 LDR                           | Load Register
 LDRB                          | Load Register Byte
+LDRD                          | Load Register Dual
 LSL                           | Logical Shift Left
 LSR                           | Logical Shift Right
 MOV                           | Move Register
@@ -115,6 +116,7 @@ namespace triton {
             case ID_INS_LDM:       this->ldm_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
+            case ID_INS_LDRD:      this->ldrd_s(inst);          break;
             case ID_INS_LSL:       this->lsl_s(inst);           break;
             case ID_INS_LSR:       this->lsr_s(inst);           break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
@@ -1627,6 +1629,101 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::ldrd_s(triton::arch::Instruction& inst) {
+          auto& base          = inst.operands[2];
+          triton::uint32 size = DWORD_SIZE;
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+
+          for (unsigned int i = 0; i < 2; i++) {
+            auto& dst = inst.operands[i];
+
+            /* Compute memory address */
+            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
+            auto addr = base.getMemory().getAddress() + size * i;
+            auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
+
+            /* Create symbolic operands */
+            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
+
+            /* Create the semantics */
+            auto node = this->astCtxt->ite(cond, op2, op3);
+
+            /* Create symbolic expression */
+            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDRD operation - LOAD access");
+
+            /* Spread taint */
+            this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
+          }
+
+          /* Optional behavior. Post-indexed computation of the base register */
+          /* LDR <Rt>, [<Rn], #<simm> */
+          if (inst.operands.size() == 4) {
+            auto& src  = inst.operands[2]; // FIXME
+
+            auto& imm  = inst.operands[3].getImmediate();
+            auto& base = src.getMemory().getBaseRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+
+            /* Create the semantics of the base register */
+            auto node2 = this->astCtxt->ite(
+                            cond,
+                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
+                            baseNode
+                          );
+
+            /* Create symbolic expression */
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+
+            /* TODO: Fix.*/
+            /* Spread taint */
+            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Optional behavior. Pre-indexed computation of the base register */
+          /* LDR <Rt>, [<Rn>, #<simm>]! */
+          else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
+            auto& src  = inst.operands[2]; // FIXME
+
+            auto& base = src.getMemory().getBaseRegister();
+
+            /* Create symbolic operands of the post computation */
+            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+
+            /* Create the semantics of the base register */
+            auto node3 = this->astCtxt->ite(
+                            cond,
+                            src.getMemory().getLeaAst(),
+                            baseNode
+                          );
+
+            /* Create symbolic expression */
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRB operation - Pre-indexed base register computation");
+
+            /* TODO: Fix.*/
+            /* Spread taint */
+            // this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            // this->updateExecutionState(dst, node1); // FIXME
+          }
+
+          /* Update the symbolic control flow */
+          // this->controlFlow_s(inst, cond, dst); // FIXME
+          this->controlFlow_s(inst);
         }
 
 
