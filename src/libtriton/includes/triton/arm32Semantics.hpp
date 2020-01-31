@@ -135,7 +135,7 @@ namespace triton {
             void spreadTaint(triton::arch::Instruction& inst,
                              const triton::ast::SharedAbstractNode& cond,
                              const triton::engines::symbolic::SharedSymbolicExpression& expr,
-                             triton::arch::OperandWrapper& operand,
+                             const triton::arch::OperandWrapper& operand,
                              bool taint);
 
             /* Generic flags computation ------------------------------------- */
