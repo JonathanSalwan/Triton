@@ -2551,8 +2551,7 @@ namespace triton {
 
             /* Create symbolic operands */
             auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-            /* TODO (cnheitman): Make op3 the value of current memory location. */
-            auto op3 = this->symbolicEngine->getOperandAst(inst, src);
+            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
 
             /* Create the semantics */
             auto node = this->astCtxt->ite(cond, op2, op3);
@@ -2566,7 +2565,7 @@ namespace triton {
 
           if (inst.isWriteBack() == true) {
             /* Create the semantics of the base register */
-            auto node1 = this->astCtxt->ite(
+            auto node = this->astCtxt->ite(
                             cond,
                             this->astCtxt->bvadd(
                               baseNode,
@@ -2576,10 +2575,15 @@ namespace triton {
                           );
 
             /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node1, base, "STM operation - Base register computation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node, base, "STM operation - Base register computation");
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
           }
 
           /* Update the symbolic control flow */
