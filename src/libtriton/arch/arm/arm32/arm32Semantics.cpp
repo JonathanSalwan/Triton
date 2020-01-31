@@ -1673,8 +1673,8 @@ namespace triton {
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
             /* Create symbolic operands */
-            auto op2 = this->symbolicEngine->getOperandAst(inst, src);
-            auto op3 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto op2 = this->getArm32SourceOperandAst(inst, src);
+            auto op3 = this->getArm32SourceOperandAst(inst, dst);
 
             /* Create the semantics */
             auto node = this->astCtxt->ite(cond, op2, op3);
@@ -1687,12 +1687,10 @@ namespace triton {
           }
 
           /* Optional behavior. Post-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn], #<simm> */
+          /* LDRD <Rt>, [<Rn>], #+/-<imm> */
           if (inst.operands.size() == 4) {
-            auto& src  = inst.operands[2]; // FIXME
-
             auto& imm  = inst.operands[3].getImmediate();
-            auto& base = src.getMemory().getBaseRegister();
+            auto& base = inst.operands[2].getMemory().getBaseRegister();
 
             /* Create symbolic operands of the post computation */
             auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
@@ -1706,36 +1704,28 @@ namespace triton {
                           );
 
             /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRD operation - Post-indexed base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Optional behavior. Pre-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn>, #<simm>]! */
+          /* LDRD <Rt>, [<Rn>, #+/-<imm>]! */
           else if (inst.operands.size() == 3 && inst.isWriteBack() == true) {
-            auto& src  = inst.operands[2]; // FIXME
-
-            auto& base = src.getMemory().getBaseRegister();
+            auto& base = inst.operands[2].getMemory().getBaseRegister();
 
             /* Create symbolic operands of the post computation */
             auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
 
             /* Create the semantics of the base register */
-            auto node3 = this->astCtxt->ite(
-                            cond,
-                            src.getMemory().getLeaAst(),
-                            baseNode
-                          );
+            auto node3 = this->astCtxt->ite(cond, inst.operands[2].getMemory().getLeaAst(), baseNode);
 
             /* Create symbolic expression */
-            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRB operation - Pre-indexed base register computation");
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRD operation - Pre-indexed base register computation");
 
-            /* TODO: Fix.*/
             /* Spread taint */
-            // this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
+            this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
           }
 
           /* Update condition flag */
@@ -1743,11 +1733,12 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update swtich mode accordingly. */
-            // this->updateExecutionState(dst, node1); // FIXME
+            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
           }
 
           /* Update the symbolic control flow */
-          // this->controlFlow_s(inst, cond, dst); // FIXME
+          /* TODO (cnheitman): Fix. (Similar to SMULL). */
+          // this->controlFlow_s(inst, cond, dst1, dst2);
           this->controlFlow_s(inst);
         }
 
