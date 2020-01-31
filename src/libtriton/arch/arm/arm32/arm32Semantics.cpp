@@ -6,6 +6,7 @@
 */
 
 #include <utility>
+
 #include <triton/arm32Cpu.hpp>
 #include <triton/arm32Semantics.hpp>
 #include <triton/arm32Specifications.hpp>
@@ -13,8 +14,6 @@
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 
-
-#include <iostream>
 
 
 /*! \page SMT_arm32_Semantics_Supported_page ARM32 SMT semantics supported
@@ -24,9 +23,7 @@
 Mnemonic                      | Description
 ------------------------------|------------
 ADC                           | Add with Carry
-ADCS                          | Add with Carry, setting flags
 ADD                           | Add
-ADDS                          | Add, setting flags
 ADDW                          | Add
 AND                           | Bitwise AND
 ASR                           | Arithmetic Shift Right
@@ -35,9 +32,9 @@ BIC                           | Bitwise Bit Clear
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
+CBZ                           | Compare and Branch on Zero
 CLZ                           | Count Leading Zeros
 CMP                           | Compare
-CBZ                           | Compare and Branch on Zero
 EOR                           | Bitwise Exclusive OR
 LDM                           | Load Multiple Registers
 LDR                           | Load Register
@@ -103,8 +100,8 @@ namespace triton {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
             case ID_INS_ADDW:      this->add_s(inst);           break;
-            case ID_INS_ASR:       this->asr_s(inst);           break;
             case ID_INS_AND:       this->and_s(inst);           break;
+            case ID_INS_ASR:       this->asr_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
             case ID_INS_BIC:       this->bic_s(inst);           break;
             case ID_INS_BL:        this->bl_s(inst, false);     break;
@@ -234,6 +231,11 @@ namespace triton {
 
         inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                                         triton::arch::OperandWrapper& op) {
+          /* This function is a wrapper for the getOperandAst function. It makes
+           * sure to provide the correct value when reading the PC register. For
+           * more information, refer to "PC, the program counter" description
+           * within the "ARM core registers" section in the reference manual.
+           */
           auto thumb  = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
           auto offset = thumb ? 4 : 8;
           auto node   = this->symbolicEngine->getOperandAst(inst, op);
@@ -325,6 +327,11 @@ namespace triton {
         void Arm32Semantics::controlFlow_s(triton::arch::Instruction& inst,
                                            const triton::ast::SharedAbstractNode& cond,
                                            triton::arch::OperandWrapper& dst) {
+          /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
+           * used for instructions that use a destination register. In that case,
+           * it check whether the destination is the PC and acts accordingly.
+           * For example: ADD, SUB, etc.
+           */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
 
           triton::ast::SharedAbstractNode node;
@@ -348,6 +355,12 @@ namespace triton {
                                            const triton::ast::SharedAbstractNode& cond,
                                            triton::arch::OperandWrapper& dst1,
                                            triton::arch::OperandWrapper& dst2) {
+
+          /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
+           * used for instructions that use two destination registers. In that case,
+           * it check whether any of the destination register is the PC and acts accordingly.
+           * For example: SMULL.
+           */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
 
           triton::ast::SharedAbstractNode node;
@@ -1155,7 +1168,7 @@ namespace triton {
         void Arm32Semantics::bl_s(triton::arch::Instruction& inst, bool exchange) {
           auto  dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_R14));
           auto  dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
-          auto& src = inst.operands[0];
+          auto& src  = inst.operands[0];
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src);
@@ -1164,7 +1177,7 @@ namespace triton {
           auto op4 = this->astCtxt->bv(inst.getNextAddress(), dst2.getBitSize());
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Create semantics for the Link register */
           /* If the condition holds, the value of LR is equal to PC plus the
@@ -1215,7 +1228,7 @@ namespace triton {
           auto op2 = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
+          auto cond = this->getCodeConditionAst(inst);
 
           /* If the conditions holds, the value of PC is equal to the operand
            * of the instruction. Also, clear the instruction set selection bit
@@ -1353,7 +1366,6 @@ namespace triton {
           /* Create the semantics */
           auto cond = this->getCodeConditionAst(inst);
           auto node1 = this->astCtxt->bvsub(op1, op2);
-          // auto node2 = this->astCtxt->ite(cond, node1, this->astCtxt->bvtrue());
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
@@ -1920,7 +1932,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV(s) operation");
 
           /* Get condition code node */
           auto cond = node2->getChildren()[0];
@@ -1948,9 +1960,10 @@ namespace triton {
 
 
         void Arm32Semantics::mul_s(triton::arch::Instruction& inst) {
-          auto& dst  = inst.operands[0];
-          auto& src1 = inst.operands[1];
-          auto& src2 = inst.operands[2];
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto  bvSize = dst.getBitSize();
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -1958,10 +1971,10 @@ namespace triton {
 
           /* Create the semantics */
           auto mul   = this->astCtxt->bvmul(
-                          this->astCtxt->sx(QWORD_SIZE_BIT, op1),
-                          this->astCtxt->sx(QWORD_SIZE_BIT, op2)
+                          this->astCtxt->sx(2*bvSize, op1),
+                          this->astCtxt->sx(2*bvSize, op2)
                         );
-          auto lower = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, mul);
+          auto lower = this->astCtxt->extract(bvSize-1, 0, mul);
           auto node1 = this->buildConditionalSemantics(inst, dst, lower);
 
           /* Create symbolic expression */
@@ -1990,7 +2003,7 @@ namespace triton {
 
 
         void Arm32Semantics::mvn_s(triton::arch::Instruction& inst) {
-          auto& dst  = inst.operands[0];
+          auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
 
           /* Create symbolic operands */
@@ -2135,13 +2148,13 @@ namespace triton {
           triton::uint32 size = stack.getSize();
 
           /* Create the semantics */
-          auto cond  = this->getCodeConditionAst(inst);
+          auto cond = this->getCodeConditionAst(inst);
 
           for (int i = inst.operands.size()-1; i >= 0; i--) {
             auto& src = inst.operands[i];
 
             /* Create symbolic operands */
-            auto op = this->symbolicEngine->getOperandAst(inst, src);
+            auto op = this->getArm32SourceOperandAst(inst, src);
 
             /* Create the semantics - side effect */
             auto stackValue = alignSubStack_s(inst, cond, size);
@@ -2167,7 +2180,7 @@ namespace triton {
           auto& src = inst.operands[1];
 
           /* Create symbolic operands */
-          auto op = this->symbolicEngine->getOperandAst(inst, src);
+          auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Create the semantics */
           std::list<triton::ast::SharedAbstractNode> bits;
@@ -2309,17 +2322,14 @@ namespace triton {
                           op1->getBitvectorSize(),
                           1,
                           this->astCtxt->bvror(
-                            this->astCtxt->concat(
-                              op1,
-                              op2
-                            ),
+                            this->astCtxt->concat(op1, op2),
                             1
                           )
                         );
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ROR(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "RRX(S) operation");
 
           /* Get condition code node */
           auto cond = node2->getChildren()[0];
@@ -2415,7 +2425,7 @@ namespace triton {
           auto cond = node2->getChildren()[0];
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
@@ -2463,7 +2473,7 @@ namespace triton {
           auto cond = node2->getChildren()[0];
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
@@ -2524,6 +2534,9 @@ namespace triton {
           /* Update condition flag */
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
           }
 
           /* Update the symbolic control flow */
@@ -2532,7 +2545,7 @@ namespace triton {
 
 
         void Arm32Semantics::stm_s(triton::arch::Instruction& inst) {
-          auto& base           = inst.operands[0];
+          auto& base          = inst.operands[0];
           triton::uint32 size = DWORD_SIZE;
 
           /* Create symbolic operands */
