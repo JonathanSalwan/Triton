@@ -52,6 +52,7 @@ POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
 REV                           | Byte-Reverse Word
 ROR                           | Rotate Right
+RRX                           | Rotate Right with Extend
 RSB                           | Reverse Subtract
 RSC                           | Reverse Subtract with Carry
 SBC                           | Subtract with Carry
@@ -123,6 +124,7 @@ namespace triton {
             case ID_INS_PUSH:      this->push_s(inst);          break;
             case ID_INS_REV:       this->rev_s(inst);           break;
             case ID_INS_ROR:       this->ror_s(inst);           break;
+            case ID_INS_RRX:       this->rrx_s(inst);           break;
             case ID_INS_RSB:       this->rsb_s(inst);           break;
             case ID_INS_RSC:       this->rsc_s(inst);           break;
             case ID_INS_SBC:       this->sbc_s(inst);           break;
@@ -2108,6 +2110,67 @@ namespace triton {
             auto& src = inst.operands.size() == 2 ? inst.operands[1] : inst.operands[2];
 
             this->cfRor_s(inst, cond, expr, op1base, src);
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update swtich mode accordingly. */
+            this->updateExecutionState(dst, node2);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::rrx_s(triton::arch::Instruction& inst) {
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+          auto  cf  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Create symbolic operands */
+          /* NOTE: This is a hacky way to obtain the ast of the operand
+           * without the shift. This has to be done before building the
+           * semantics (the current value is needed, not the new one).
+           */
+          /* TODO (cnheitman): Improve this code. */
+          auto srcBase = triton::arch::OperandWrapper(src.getRegister());
+          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
+          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
+
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op2 = this->getArm32SourceOperandAst(inst, cf);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->extract(
+                          op1->getBitvectorSize(),
+                          1,
+                          this->astCtxt->bvror(
+                            this->astCtxt->concat(
+                              op1,
+                              op2
+                            ),
+                            1
+                          )
+                        );
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ROR(S) operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->cfRrx_s(inst, cond, expr, op1base, src);
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
           }
