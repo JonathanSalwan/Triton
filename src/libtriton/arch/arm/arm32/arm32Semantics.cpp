@@ -1444,7 +1444,6 @@ namespace triton {
             auto& dst = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -1680,7 +1679,6 @@ namespace triton {
             auto& dst = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = base.getMemory().getAddress() + size * i;
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2558,7 +2556,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2618,7 +2615,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * i;
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2825,7 +2821,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = base.getMemory().getAddress() + size * i;
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
