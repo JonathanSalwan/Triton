@@ -243,17 +243,6 @@ namespace triton {
               /* Set True if the instruction udpate flags */
               inst.setUpdateFlag(detail->arm.update_flags);
 
-              /* FIXME: Quick (and super ugly) hack. Capstone is reporting
-               * update_flags equals true for ADC, RSC and SBC instruction when
-               * it shouldn't (it should only report true when the S suffix is
-               * present).
-               */
-              if ((inst.getDisassembly().find("adc") == 0 && inst.getDisassembly().at(3) != 's') ||
-                  (inst.getDisassembly().find("rsc") == 0 && inst.getDisassembly().at(3) != 's') ||
-                  (inst.getDisassembly().find("sbc") == 0 && inst.getDisassembly().at(3) != 's')) {
-                inst.setUpdateFlag(false);
-              }
-
               /* Set thumb mode */
               inst.setThumb(thumb);
 
@@ -407,37 +396,6 @@ namespace triton {
                     throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid operand.");
                 } // switch
               } // for operand
-
-              /* NOTE: For some instructions the destination operand is
-               * optional (in which case the first source operand is used as
-               * destination). Capstone returns always all three operands of
-               * ARM instruction (i.e. make the destination operand explicit).
-               * However, it does not do the same for Thumb instruction. Here
-               * we make the destination operand explicit (in order to simplify
-               * the semantics implementation).
-               */
-              /* TODO (cnheitman): Discuss. Should we deal with this here or
-               * in the impementation of the semantic of each instruction?
-               * (The list of instructions will probably grow.)
-               */
-              /* Make implicit destination operand explicit. */
-              if (inst.isThumb() && inst.operands.size() == 2) {
-                if (inst.getDisassembly().find("adc") == 0 ||
-                    inst.getDisassembly().find("add") == 0 ||
-                    inst.getDisassembly().find("and") == 0 ||
-                    inst.getDisassembly().find("asr") == 0 ||
-                    inst.getDisassembly().find("bic") == 0 ||
-                    inst.getDisassembly().find("eor") == 0 ||
-                    inst.getDisassembly().find("lsl") == 0 ||
-                    inst.getDisassembly().find("lsr") == 0 ||
-                    inst.getDisassembly().find("orr") == 0 ||
-                    inst.getDisassembly().find("ror") == 0 ||
-                    inst.getDisassembly().find("sbc") == 0 ||
-                    inst.getDisassembly().find("sub") == 0) {
-                  triton::arch::OperandWrapper op(inst.operands[0]);
-                  inst.operands.insert(inst.operands.begin(), op);
-                }
-              }
             } // for instruction
 
             /* Set branch */
@@ -450,6 +408,9 @@ namespace triton {
               }
             }
 
+            /* Post process instruction */
+            this->postDisassembly(inst);
+
             /* Free capstone stuffs */
             triton::extlibs::capstone::cs_free(insn, count);
           }
@@ -458,6 +419,54 @@ namespace triton {
 
           triton::extlibs::capstone::cs_close(&handle);
           return;
+        }
+
+
+        void Arm32Cpu::postDisassembly(triton::arch::Instruction& inst) const {
+          /* Fix update flag */
+          /* FIXME: Quick (and super ugly) hack. Capstone is reporting
+           * update_flags equals true for ADC, RSC and SBC instruction when
+           * it shouldn't (it should only report true when the S suffix is
+           * present).
+           */
+          switch (inst.getType()) {
+            case ID_INS_ADC:
+            case ID_INS_RSC:
+            case ID_INS_SBC:
+              if (inst.getDisassembly().at(3) != 's')
+                inst.setUpdateFlag(false);
+              break;
+          }
+
+          /* Make implicit destination operand explicit */
+          /* NOTE: For some instructions the destination operand is
+           * optional (in which case the first source operand is used as
+           * destination). Capstone returns always all three operands for
+           * ARM instruction (i.e. make the destination operand explicit).
+           * However, it does not do the same for Thumb instructions. Here
+           * we make the destination operand explicit (in order to simplify
+           * the implementation of the semantics).
+           */
+          if (inst.isThumb() && inst.operands.size() == 2) {
+            triton::arch::OperandWrapper op(inst.operands[0]);
+
+            switch (inst.getType()) {
+              case ID_INS_ADC:
+              case ID_INS_ADD:
+              case ID_INS_AND:
+              case ID_INS_ASR:
+              case ID_INS_BIC:
+              case ID_INS_EOR:
+              case ID_INS_LSL:
+              case ID_INS_LSR:
+              case ID_INS_ORR:
+              case ID_INS_ROR:
+              case ID_INS_SBC:
+              case ID_INS_SUB:
+                inst.operands.insert(inst.operands.begin(), op);
+                break;
+            }
+          }
         }
 
 
