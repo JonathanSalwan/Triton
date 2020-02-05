@@ -2511,7 +2511,14 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
+            /* NOTE: The invocations are done in the order the manual says
+             * the instruction updates each register. Examples for this case
+             * could be:
+             *   - smull pc, r1, r2, r3
+             *   - smull pc, pc, r2, r3
+             */
+            this->updateExecutionState(dst2, upper);
+            this->updateExecutionState(dst1, lower);
           }
 
           /* Update the symbolic control flow */
