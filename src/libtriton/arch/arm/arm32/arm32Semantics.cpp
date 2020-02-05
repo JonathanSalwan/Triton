@@ -2823,28 +2823,56 @@ namespace triton {
           }
 
           /* Optional behavior. Post-indexed computation of the base register. */
-          /* STRD <Rt>, <Rt2>, [<Rn>], #+/-<imm>; STRD <Rt>, <Rt2>, [<Rn>], +/-<Rm>*/
+          /* NOTE: There are two possible cases here:
+           *   - STRD <Rt>, <Rt2>, [<Rn>], #+/-<imm>
+           *   - STRD <Rt>, <Rt2>, [<Rn>], +/-<Rm>
+           */
           if (inst.operands.size() == 4) {
-            /* TODO (cnheitman): Differenciate between imm and reg operand (as in STRH).*/
-            auto& imm  = inst.operands[3].getImmediate();
-            auto& base = inst.operands[2].getMemory().getBaseRegister();
+            if (inst.operands[2].getType() == OP_IMM) {
+              auto& imm  = inst.operands[3].getImmediate();
+              auto& base = inst.operands[2].getMemory().getBaseRegister();
 
-            /* Create symbolic operands of the post computation */
-            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
-            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
-            /* Create the semantics of the base register */
-            auto node2 = this->astCtxt->ite(
-                            cond,
-                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
-                            baseNode
-                            );
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+              if (imm.getSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              }
 
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            } else {
+              auto& reg  = inst.operands[3].getRegister();
+              auto& base = inst.operands[2].getMemory().getBaseRegister();
+
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto regNode  = this->symbolicEngine->getOperandAst(inst, reg);
+
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
+
+              if (reg.getSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, regNode);
+              }
+
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(reg));
+            }
           }
 
           /* Optional behavior. Pre-indexed computation of the base register. */
