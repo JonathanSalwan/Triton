@@ -228,6 +228,24 @@ namespace triton {
           return (value >> sr_count) | (value << sl_count);
         }
 
+        inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceBaseOperandAst(triton::arch::Instruction& inst,
+                                                                                            triton::arch::OperandWrapper& op) {
+          /* NOTE: This is a hacky way to obtain the ast of the operand
+           * without the shift. This has to be done before building the
+           * semantics (the current value is needed, not the new one).
+           */
+          /* TODO (cnheitman): Discuss. Should we deal with this here (and in
+           * this way) or move it to the Symbolic Engine. See also
+           * `getArm32SourceOperandAst` and its use of `getShiftAst`.
+           */
+          if (op.getType() == triton::arch::OP_REG) {
+            auto opBase = triton::arch::OperandWrapper(op.getRegister());
+            opBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
+            return this->symbolicEngine->getOperandAst(inst, opBase);
+          }
+
+          throw triton::exceptions::Semantics("Arm32Semantics::getArm32SourceBaseOperandAst(): Invalid operand type.");
+        }
 
         inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                                         triton::arch::OperandWrapper& op) {
@@ -1016,16 +1034,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -1758,16 +1768,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -1842,16 +1844,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -2218,15 +2212,7 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
@@ -2303,17 +2289,9 @@ namespace triton {
           auto  cf  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src);
-          auto op2 = this->getArm32SourceOperandAst(inst, cf);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src);
+          auto op1     = this->getArm32SourceOperandAst(inst, src);
+          auto op2     = this->getArm32SourceOperandAst(inst, cf);
 
           /* Create the semantics */
           auto node1 = this->astCtxt->extract(

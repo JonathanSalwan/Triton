@@ -97,6 +97,10 @@ namespace triton {
             //! Rotates right.
             uint32_t ror(uint32_t value, unsigned int count);
 
+            //! Returns the AST corresponding to the Arm32 source base operand (it does not include the shift).
+            triton::ast::SharedAbstractNode getArm32SourceBaseOperandAst(triton::arch::Instruction& inst,
+                                                                         triton::arch::OperandWrapper& op);
+
             //! Returns the AST corresponding to the Arm32 source operand.
             triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                      triton::arch::OperandWrapper& op);
