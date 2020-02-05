@@ -1669,8 +1669,7 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): Check. Here should it be node2 or node1? */
-            this->updateExecutionState(dst, node2);
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
