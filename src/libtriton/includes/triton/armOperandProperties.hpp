@@ -57,7 +57,7 @@ namespace triton {
           //! The extend size (in bits).
           triton::uint32 extendSize;
 
-          //! Subtracted flag.
+          //! The subtracted flag. Used in memory access operands and determines whether this operand has to be added or subtracted to the base register.
           bool subtracted;
         public:
           //! Constructor.
@@ -81,8 +81,8 @@ namespace triton {
           //! Returns the size (in bits) of the extend.
           TRITON_EXPORT triton::uint32 getExtendSize(void) const;
 
-          //! Gets subtracted flag.
-          TRITON_EXPORT bool getSubtracted(void) const;
+          //! Returns true if the operand has to be subtracted when computing a memory access.
+          TRITON_EXPORT bool isSubtracted(void) const;
 
           //! Sets the type of the shift.
           TRITON_EXPORT void setShiftType(triton::arch::arm::shift_e type);

@@ -1554,7 +1554,7 @@ namespace triton {
             /* Create the semantics of the base register */
             auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
+            if (imm.isSubtracted() == true) {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
@@ -2676,7 +2676,7 @@ namespace triton {
             /* Create the semantics of the base register */
             auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
+            if (imm.isSubtracted() == true) {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
@@ -2753,7 +2753,7 @@ namespace triton {
             /* Create the semantics of the base register */
             auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
+            if (imm.isSubtracted() == true) {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
@@ -2839,7 +2839,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-              if (imm.getSubtracted() == true) {
+              if (imm.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
               }
 
@@ -2861,7 +2861,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
 
-              if (reg.getSubtracted() == true) {
+              if (reg.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, regNode);
               }
 
@@ -2941,7 +2941,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-              if (imm.getSubtracted() == true) {
+              if (imm.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
               }
 
@@ -2963,7 +2963,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
 
-              if (reg.getSubtracted() == true) {
+              if (reg.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, regNode);
               }
 
