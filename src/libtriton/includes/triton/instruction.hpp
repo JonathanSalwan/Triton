@@ -107,7 +107,7 @@ namespace triton {
         //! True if this instruction updartes flags. Mainly used for AArch64 instruction like ADDS.
         bool updateFlag;
 
-        //! True if this is a Thumb instruction.
+        //! True if this is a Thumb instruction. (Note that isThumb() in Arm32Cpu is used to determine the current execution mode, while in Instruction it indicates whether the instruction itself is a Thumb instruction.)
         bool thumb;
 
     private:
