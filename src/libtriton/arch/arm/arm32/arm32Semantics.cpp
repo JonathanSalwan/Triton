@@ -3173,15 +3173,7 @@ namespace triton {
               if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
                 auto shift = static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister());
 
-                /* NOTE: This is a hacky way to obtain the ast of the operand
-                 * without the shift. This has to be done before building the
-                 * semantics (the current value is needed, not the new one).
-                 */
-                /* TODO (cnheitman): Improve this code. */
-                auto srcBase = triton::arch::OperandWrapper(src.getRegister());
-                srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-
-                node = this->symbolicEngine->getOperandAst(inst, srcBase);
+                node = this->getArm32SourceBaseOperandAst(inst, src);
                 shiftAmount = this->getShiftCAmountAst(shift);
                 shiftType = this->getShiftCBaseType(shift);
               } else {
