@@ -309,6 +309,9 @@ namespace triton {
                         throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
                     }
 
+                    if (op->subtracted)
+                      index.setSubtracted(true);
+
                     triton::uint32 immsize = (
                                               this->isRegisterValid(base.getId()) ? base.getSize() :
                                               this->isRegisterValid(index.getId()) ? index.getSize() :
