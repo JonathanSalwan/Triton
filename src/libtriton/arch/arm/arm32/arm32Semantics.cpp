@@ -2986,7 +2986,6 @@ namespace triton {
           /* Optional behavior. Post-indexed computation of the base register. */
           /* STRH <Rt>, [<Rn>], #+/-<imm>; STRH <Rt>, [<Rn>], +/-<Rm>*/
           if (inst.operands.size() == 3) {
-            /* TODO (cnheitman): Refactor. */
             if (inst.operands[2].getType() == OP_IMM) {
               auto& imm  = inst.operands[2].getImmediate();
               auto& base = dst.getMemory().getBaseRegister();
