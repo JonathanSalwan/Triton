@@ -1732,32 +1732,36 @@ namespace triton {
 
 
         void Arm32Semantics::ldrd_s(triton::arch::Instruction& inst) {
+          auto& dst1          = inst.operands[0];
+          auto& dst2          = inst.operands[1];
           auto& base          = inst.operands[2];
           triton::uint32 size = DWORD_SIZE;
 
+          /* Compute memory address */
+          auto addr1 = base.getMemory().getAddress() + size * 0;
+          auto src1  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr1, size));
+
+          auto addr2 = base.getMemory().getAddress() + size * 1;
+          auto src2  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr2, size));
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, dst1);
+          auto op3 = this->getArm32SourceOperandAst(inst, src2);
+          auto op4 = this->getArm32SourceOperandAst(inst, dst2);
+
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(cond, op1, op2);
+          auto node2 = this->astCtxt->ite(cond, op3, op4);
 
-          for (unsigned int i = 0; i < 2; i++) {
-            auto& dst = inst.operands[i];
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDRD operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDRD operation - LOAD access");
 
-            /* Compute memory address */
-            auto addr = base.getMemory().getAddress() + size * i;
-            auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
-
-            /* Create symbolic operands */
-            auto op2 = this->getArm32SourceOperandAst(inst, src);
-            auto op3 = this->getArm32SourceOperandAst(inst, dst);
-
-            /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op2, op3);
-
-            /* Create symbolic expression */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDRD operation - LOAD access");
-
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
-          }
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr1, dst1, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src1));
+          this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src2));
 
           /* Optional behavior. Post-indexed computation of the base register */
           /* LDRD <Rt>, [<Rn>], #+/-<imm> */
@@ -1806,13 +1810,12 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
+            this->updateExecutionState(dst1, op1);
+            this->updateExecutionState(dst2, op2);
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman): Fix. (Similar to SMULL). */
-          // this->controlFlow_s(inst, cond, dst1, dst2);
-          this->controlFlow_s(inst);
+          this->controlFlow_s(inst, cond, dst1, dst2);
         }
 
 
