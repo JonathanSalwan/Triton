@@ -7,16 +7,16 @@ RUN apt-get update && apt-get dist-upgrade -y && \
 
 # get and install the latest z3 relesae
 RUN cd /tmp && \
-    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.5.0.tar.gz && \
-    tar zxf z3.tgz && cd z3-z3-4.5.0 && \
+    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.6.0.tar.gz && \
+    tar zxf z3.tgz && cd z3-z3-4.6.0 && \
     CC=clang CXX=clang++ python scripts/mk_make.py && cd build && make \
-    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.5.0
+    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.6.0
 
 # Install capstone
 RUN cd /tmp && \
-    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/3.0.4.tar.gz && \
-    tar xvf cap.tgz && cd capstone-3.0.4/ && ./make.sh install && cd /tmp && \
-    rm -rf /tmp/capstone-3.0.4
+    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.1.tar.gz && \
+    tar xvf cap.tgz && cd capstone-4.0.1/ && ./make.sh && make install && cd /tmp && \
+    rm -rf /tmp/capstone-4.0.1
 
 
 # Install pintool
