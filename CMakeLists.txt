@@ -15,7 +15,7 @@ option(GCOV "Enable code coverage" OFF)
 option(INCBUILD "Increment the build number" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(PYTHON36 "Python 36" OFF)
+option(PYTHON36 "Python 36" ON)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
@@ -23,6 +23,10 @@ option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
 
 if(PINTOOL AND NOT PYTHON_BINDINGS)
     MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
+endif()
+
+if(PINTOOL AND PYTHON36)
+    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
 endif()
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
@@ -122,7 +126,7 @@ set(VERSION_BUILD ${BUILD_NUMBER})
 # Custom cmake search
 list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
 
-# Find Python 2.7
+# Find Python
 if(PYTHON_BINDINGS)
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     if(NOT PYTHON_INCLUDE_DIRS)

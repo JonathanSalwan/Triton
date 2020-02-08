@@ -1,167 +1,72 @@
 language: cpp
+os: linux
 
-matrix:
+notifications:
+  email: false
+
+cache:
+  - apt
+  - ccache
+
+jobs:
     include:
-        # Linux gcc 4.8
         - os: linux
-          dist: trusty
-          compiler: gcc
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['g++-4.8', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=g++-4.8, C_COMPILER=gcc-4.8, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux gcc 4.9
-        - os: linux
-          dist: trusty
-          compiler: gcc
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['g++-4.9', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=g++-4.9, C_COMPILER=gcc-4.9, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux gcc 5.0
-        - os: linux
+          name: "Linux Trusty with gcc 5.0, Python2.7 and the Pin tracer"
           dist: trusty
           compiler: gcc
           addons:
             apt:
               sources: ['ubuntu-toolchain-r-test']
               packages: ['g++-5', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
+          env: [ PINTOOL=ON, KERNEL4=ON, PYTHON36=OFF, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
 
-        # Linux gcc 5.0 with gcov
         - os: linux
-          dist: trusty
-          compiler: gcc
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['g++-5', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux gcc 5.0 with python 3.6
-        - os: linux
+          name: "Linux Trusty with gcc 5.0 and Python3.6"
           dist: trusty
           compiler: gcc
           addons:
             apt:
               sources: ['ubuntu-toolchain-r-test', 'deadsnakes']
               packages: ['g++-5', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'python3.6-dev']
-          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON36=on, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
+          env: [ CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON36=ON, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
-        # Linux clang 3.5
         - os: linux
+          name: "Linux Trusty with gcc 5.0, Python3.6 and GCOV"
           dist: trusty
-          compiler: clang
+          compiler: gcc
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['clang-3.5', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-3.5, C_COMPILER=clang-3.5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
+              sources: ['ubuntu-toolchain-r-test', 'deadsnakes']
+              packages: ['g++-5', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'python3.6-dev']
+          env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON36=ON, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
-        # Linux clang 3.6
         - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['clang-3.6', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-3.6, C_COMPILER=clang-3.6, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 3.7
-        - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-precise-3.7']
-              packages: ['clang-3.7', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-3.7, C_COMPILER=clang-3.7, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 3.8
-        - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['clang-3.8', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-3.8, C_COMPILER=clang-3.8, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 3.9
-        - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['clang-3.9', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-3.9, C_COMPILER=clang-3.9, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 4.0
-        - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-4.0']
-              packages: ['clang-4.0', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-4.0, C_COMPILER=clang-4.0, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 5.0
-        - os: linux
-          dist: trusty
-          compiler: clang
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0']
-              packages: ['clang-5.0', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ CXX_COMPILER=clang++-5.0, C_COMPILER=clang-5.0, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        # Linux clang 5.0 with python 3.6
-        - os: linux
+          name: "Linux Trusty with clang 5.0 and Python3.6"
           dist: trusty
           compiler: clang
           addons:
             apt:
               sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-trusty-5.0', 'deadsnakes']
               packages: ['clang-5.0', 'ccache', 'libboost1.55-all-dev', 'cmake', 'cmake-data', 'python3.6-dev']
-          env: [ CXX_COMPILER=clang++-5.0, C_COMPILER=clang-5.0, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON36=on, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
+          env: [ CXX_COMPILER=clang++-5.0, C_COMPILER=clang-5.0, Z3_PKG=z3-4.6.0-x64-ubuntu-14.04, PYTHON36=ON, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
-        # OSX xcode 10.0 (High Sierra)
         - os: osx
+          name: "OSX with xcode 10 and Python2.7"
           osx_image: xcode10
           compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, PYTHON_VERSION=2.7 ]
-
-notifications:
-  email: false
-
-sudo: required
-
-cache:
-  - apt
-  - ccache
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, Z3_PKG=z3-4.6.0-x64-osx-10.11.6, PYTHON36=OFF, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/local/bin/python2 ]
 
 before_install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install python-setuptools; fi
   - export CC="$C_COMPILER"
   - export CXX="$CXX_COMPILER"
   # Install pip
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py   ;fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ${PYTHON_BINARY} ./get-pip.py ;fi
-  # Install z3 on Linux
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/${Z3_PKG}.zip; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip ${Z3_PKG}.zip; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install python-setuptools; fi
-  # Install z3 on OSX
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export PREFIX="/usr/local"; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install z3 binutils; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export DYLD_LIBRARY_PATH=/usr/local/opt/capstone/lib/:$DYLD_LIBRARY_PATH; fi
+  - wget --no-check-certificate https://bootstrap.pypa.io/get-pip.py
+  - sudo ${PYTHON_BINARY} ./get-pip.py
+  # Install z3
+  - wget https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/${Z3_PKG}.zip
+  - unzip ${Z3_PKG}.zip
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cp ${Z3_PKG}/bin/libz3.dylib /usr/local/lib/; fi
   # Back to /home/travis/build/JonathanSalwan
   - cd ..
   # Install gcov
@@ -169,7 +74,8 @@ before_install:
   - if [[ "$GCOV" == "ON" ]]; then wget http://ftp.de.debian.org/debian/pool/main/l/lcov/lcov_1.13.orig.tar.gz; fi
   - if [[ "$GCOV" == "ON" ]]; then tar xf lcov_1.13.orig.tar.gz; fi
   - if [[ "$GCOV" == "ON" ]]; then sudo make -C lcov-1.13/ install; fi
-  # Install capstone. Same command lines for OSX and Linux
+  # Install capstone
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then export DYLD_LIBRARY_PATH=/usr/local/opt/capstone/lib/:$DYLD_LIBRARY_PATH; fi
   - wget https://github.com/aquynh/capstone/archive/4.0.1.tar.gz
   - tar -xf ./4.0.1.tar.gz
   - cd ./capstone-4.0.1
@@ -186,7 +92,7 @@ before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd ../../../; fi
   # Install LIEF
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ${PYTHON_BINARY} -m pip install https://github.com/lief-project/LIEF/releases/download/0.7.0/linux_lief-0.7.0_py${PYTHON_VERSION}.tar.gz; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo python -m pip install https://github.com/lief-project/LIEF/releases/download/0.7.0/osx_lief-0.7.0_py2.7.tar.gz; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then sudo ${PYTHON_BINARY} -m pip install https://github.com/lief-project/LIEF/releases/download/0.7.0/osx_lief-0.7.0_py${PYTHON_VERSION}.tar.gz; fi
   # Download pin
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then tar -xf pin-2.14-71313-gcc.4.4.7-linux.tar.gz; fi
@@ -207,8 +113,8 @@ script:
   # Needs for unittests
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo sh -c "echo 0 > /proc/sys/kernel/yama/ptrace_scope"; fi
   # Install
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DZ3_INCLUDE_DIRS=$PWD/../${Z3_PKG}/include -DZ3_LIBRARIES=$PWD/../${Z3_PKG}/bin/libz3.so -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DGCOV=${GCOV:OFF} -DPYTHON36=${PYTHON36:OFF} -DPINTOOL=on -DKERNEL4=on ..; fi
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | python) ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cmake -DZ3_INCLUDE_DIRS=$PWD/../${Z3_PKG}/include -DZ3_LIBRARIES=$PWD/../${Z3_PKG}/bin/libz3.so -DCMAKE_C_COMPILER=$C_COMPILER -DCMAKE_CXX_COMPILER=$CXX_COMPILER -DGCOV=${GCOV:OFF} -DPYTHON36=${PYTHON36:OFF} -DPINTOOL=${PINTOOL:OFF} -DKERNEL4=${KERNEL4:OFF} ..; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cmake -DZ3_INCLUDE_DIRS=$PWD/../${Z3_PKG}/include -DZ3_LIBRARIES=$PWD/../${Z3_PKG}/bin/libz3.dylib -DPYTHON36=${PYTHON36:OFF} $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | ${PYTHON_BINARY}) ..; fi
   - make -j2
   # Unittests
   - travis_wait 60 make check
