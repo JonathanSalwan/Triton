@@ -1,4 +1,4 @@
-version: 0.6.{build}
+version: 0.8.{build}
 
 branches:
   only:
@@ -7,8 +7,6 @@ branches:
 
 configuration:
   - Release
-# XXX: LNK1104: cannot open file 'python27_d.lib'
-  # - Debug
 
 clone_folder: c:\projects\triton
 
@@ -110,13 +108,14 @@ install:
 #   http://stackoverflow.com/questions/32418766/c-unresolved-external-symbol-sprintf-and-sscanf-in-visual-studio-2015
 # The switch /p:PlatformToolset allows you to override the toolset version specified in the solution/project files :-)
   - cmd: msbuild capstone-4.0.1\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
-  - cmd: echo Running cmake...
-  - cmd: cmake .. -G "%CMAKE_TEMPLATE%"
     # Install LIEF
   - cmd: echo Downloading LIEF...
   - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/0.7.0/%LIEF_ZIP%
   - cmd: echo Install LIEF...
   - cmd: python -m pip install %LIEF_ZIP%
+    # Running cmake for Triton
+  - cmd: echo Running cmake for Triton...
+  - cmd: cmake -DPYTHON36=OFF .. -G "%CMAKE_TEMPLATE%"
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python
@@ -125,7 +124,7 @@ install:
 #  project: c:\projects\triton\build\triton.sln
 
 build_script:
-  - cmd: msbuild c:\projects\triton\build\triton.sln  /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:python-triton /m:3
+  - cmd: msbuild c:\projects\triton\build\triton.sln /logger:"C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll" /t:python-triton /m:3
     #  - cmd: cmake --build . --config release
 
 test_script:
