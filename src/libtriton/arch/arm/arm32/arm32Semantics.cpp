@@ -3139,14 +3139,18 @@ namespace triton {
                                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                          triton::arch::OperandWrapper& src) {
 
-          /* TODO (cnheitman): Check if we can use the same prototype as the
-           * rest of the functions that process the CF.
+          /* NOTE: This function builds the semantics for updating the carry
+           * flag for all bitwise instructions: AND, BIC, EOR, MVN, ORN, ORR,
+           * and TST. The way the carry flag is updated depends on the type of
+           * operand (and in the case of a register operand, it even depends
+           * whether it is shifted or not). For more information refer to the
+           * manual to any of the aforementioned instructions.
            */
 
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Create symbolic operands */
-          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node = nullptr;
@@ -3154,15 +3158,18 @@ namespace triton {
           triton::ast::SharedAbstractNode shiftAmount = nullptr;
 
           switch (src.getType()) {
-            /* TODO (cnheitman): Comment each case. */
-
             case triton::arch::OP_IMM: {
-              /* From ARMExpandImm_C():
-               *    unrotated_value = ZeroExtend(imm12<7:0>, 32);
-               *    (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, #<const> */
+
+              /* From the instruction decoding:
+               *    - (imm32, carry) = ARMExpandImm_C(imm12, APSR.C);
+               *
+               * From ARMExpandImm_C():
+               *    - unrotated_value = ZeroExtend(imm12<7:0>, 32);
+               *    - (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
                */
 
-              node = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op1));
+              node = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op));
               shiftType = triton::arch::arm::ID_SHIFT_ROR;
               shiftAmount = this->astCtxt->bv(
                               2 * (src.getImmediate().getValue() & 0x00000f00),
@@ -3172,20 +3179,31 @@ namespace triton {
             }
 
             case triton::arch::OP_REG: {
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm>, <type> <Rs> */
               if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+                /* From the instruction operation:
+                 *    - shift_n = UInt(R[s]<7:0>);
+                 *    - (shifted, carry) = Shift_C(R[m], shift_t, shift_n, APSR.C);
+                 */
+
                 auto shift = static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister());
 
                 node = this->getArm32SourceBaseOperandAst(inst, src);
                 shiftAmount = this->getShiftCAmountAst(shift);
                 shiftType = this->getShiftCBaseType(shift);
-              } else {
+              }
+
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm> {, <shift>} */
+              else {
+
                 /* From the instruction decoding:
-                 *    (shift_t, shift_n) = (SRType_LSL, 0);
+                 *    - (shift_t, shift_n) = (SRType_LSL, 0);
+                 *    - (shifted, carry) = Shift_C(R[m], shift_t, shift_n, APSR.C);
                  */
 
-                node = op1;
+                node = op;
                 shiftType = triton::arch::arm::ID_SHIFT_LSL;
-                shiftAmount = this->astCtxt->bv(0, op1->getBitvectorSize());
+                shiftAmount = this->astCtxt->bv(0, op->getBitvectorSize());
               }
               break;
             }
