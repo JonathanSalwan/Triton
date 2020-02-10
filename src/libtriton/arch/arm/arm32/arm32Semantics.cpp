@@ -3231,11 +3231,16 @@ namespace triton {
                                         const triton::ast::SharedAbstractNode& op1,
                                         triton::arch::OperandWrapper& src,
                                         const triton::arch::arm::shift_e type) {
-          /* IMPORTANT: We asume that op1 is a register without its shift. */
 
-          /* TODO (cnheitman): Check if we can use the same prototype as the
-           * rest of the functions that process the CF.
+          /* NOTE: This function builds the semantics for updating the carry
+           * flag for all shift instructions: ASR, LSL, LSR, ROR, and RRX. The
+           * way the carry flag is updated depends on the type of operand (and
+           * in the case of a register operand, it even depends whether it is
+           * shifted or not). For more information refer to the manual to any
+           * of the aforementioned instructions.
            */
+
+          /* IMPORTANT: We assume that op1 is a register without its shift. */
 
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
@@ -3245,22 +3250,37 @@ namespace triton {
           triton::ast::SharedAbstractNode shiftAmount = nullptr;
 
           switch (src.getType()) {
-            /* TODO (cnheitman): Comment each case. */
-
             case triton::arch::OP_IMM: {
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rm>, #<imm> */
+
+              /* IMPORTANT: This case ONLY seems to apply to the Thumb version
+               * of the shift instructions. Empirically determined, the
+               * reference manual doesn't seem to provide information about
+               * this.
+               */
               shiftAmount = this->astCtxt->bv(src.getImmediate().getValue(), op1->getBitvectorSize());
               break;
             }
 
             case triton::arch::OP_REG: {
+              /* From the instruction operation:
+               *    - shift_n = UInt(R[m]<7:0>);
+               *    - (result, carry) = Shift_C(R[n], SRType_XXX, shift_n, APSR.C);
+               *
+               * where 'SRType_XXX' varies according to the instruction (for instance,
+               * SRType_ASR in case it is an ASR instruction).
+               */
+
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rm>, #<imm> */
               if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
                 auto shift = static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister());
 
                 shiftAmount = this->getShiftCAmountAst(shift);
                 shiftType = this->getShiftCBaseType(shift);
-              } else {
-                // (result, carry) = Shift_C(R[m], SRType_XXX, shift_n, APSR.C);
+              }
 
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm> */
+              else {
                 /* Create symbolic operands */
                 auto op2 = this->getArm32SourceOperandAst(inst, src);
 
