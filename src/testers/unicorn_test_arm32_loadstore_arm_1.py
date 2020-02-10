@@ -40,6 +40,24 @@ CODE  = [
     (b"\x18\x50\xb1\xe8", "ldm r1!, {r3, r4, ip, lr}"),
     (b"\x04\xe0\x9f\xe5", "ldr lr, [pc, #4]"),
 
+    (b"\x03\x00\x91\xe7", "ldr r0, [r1, r3]"),
+    (b"\x03\x00\x11\xe7", "ldr r0, [r1, -r3]"),
+    (b"\x03\x00\x91\xe6", "ldr r0, [r1], r3"),
+    (b"\x03\x00\x11\xe6", "ldr r0, [r1], -r3"),
+    (b"\x03\x01\x11\xe6", "ldr r0, [r1], -r3, lsl #2"),
+    (b"\x03\x01\x11\xe7", "ldr r0, [r1, -r3, lsl #2]"),
+    (b"\x03\x01\x31\xe7", "ldr r0, [r1, -r3, lsl #2]!"),
+    (b"\x04\x00\x11\xe4", "ldr r0, [r1], #-4"),
+
+    (b"\x03\x00\xd1\xe7", "ldrb r0, [r1, r3]"),
+    (b"\x03\x00\x51\xe7", "ldrb r0, [r1, -r3]"),
+    (b"\x03\x00\xd1\xe6", "ldrb r0, [r1], r3"),
+    (b"\x03\x00\x51\xe6", "ldrb r0, [r1], -r3"),
+    (b"\x03\x01\x51\xe6", "ldrb r0, [r1], -r3, lsl #2"),
+    (b"\x03\x01\x51\xe7", "ldrb r0, [r1, -r3, lsl #2]"),
+    (b"\x03\x01\x71\xe7", "ldrb r0, [r1, -r3, lsl #2]!"),
+    (b"\x04\x00\x51\xe4", "ldrb r0, [r1], #-4"),
+
     # LDR - Offset addressing -----------------------------------------------  #
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
     (b"\x00\x00\x91\x05", "ldreq r0, [r1]"),
