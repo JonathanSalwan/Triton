@@ -10787,7 +10787,10 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PXOR operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+        if (dst.getType() == OP_REG && src.getRegister() == dst.getRegister())
+          this->taintEngine->setTaint(src, false);
+        else
+          expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
