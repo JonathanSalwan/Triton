@@ -227,3 +227,36 @@ class TestProcessing(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
         inst = Instruction(b"\x00\xDC")  # add ah,bl
         self.Triton.processing(inst)
+
+
+class TestMemoryAccess(unittest.TestCase):
+
+    """Testing the memory access."""
+
+    def test_memory_access_1(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        inst = Instruction(b"\x88\x4f\x0d") # mov byte ptr [rdi + 0xd], cl
+        self.ctx.processing(inst)
+        self.assertEqual(len(inst.getReadRegisters()), 2)
+
+    def test_memory_access_2(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        inst = Instruction(b"\x48\x89\x4f\x0d") # mov [rdi + 0xd], rcx
+        self.ctx.processing(inst)
+        self.assertEqual(len(inst.getReadRegisters()), 2)
+
+    def test_memory_access_3(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        inst = Instruction(b"\x48\x8b\x4f\x0d") # mov rcx, [rdi + 0xd]
+        self.ctx.processing(inst)
+        self.assertEqual(len(inst.getReadRegisters()), 1)
+
+    def test_memory_access_4(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        inst = Instruction(b"\x8a\x4f\x0d") # mov cl, byte ptr [rdi + 0xd]
+        self.ctx.processing(inst)
+        self.assertEqual(len(inst.getReadRegisters()), 1)

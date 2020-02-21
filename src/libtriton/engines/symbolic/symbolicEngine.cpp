@@ -266,6 +266,17 @@ namespace triton {
       }
 
 
+      void SymbolicEngine::setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
+        /* Set implicit read of the base register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
+          (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
+
+        /* Set implicit read of the index register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
+          (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
+      }
+
+
       /* Returns the shared symbolic expression corresponding to the register */
       const SharedSymbolicExpression& SymbolicEngine::getSymbolicRegister(const triton::arch::Register& reg) const {
         triton::arch::register_e parentId = reg.getParent();
@@ -728,13 +739,8 @@ namespace triton {
         /* Set load access */
         inst.setLoadAccess(mem, node);
 
-        /* Set implicit read of the base register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
-          (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
-
-        /* Set implicit read of the index register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
-          (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
+        /* Set implicit read of the base and index registers from an effective address */
+        this->setImplicitReadRegisterFromEffectiveAddress(inst, mem);
 
         return node;
       }
@@ -827,6 +833,9 @@ namespace triton {
           writeSize--;
         }
 
+        /* Set implicit read of the base and index registers from an effective address */
+        this->setImplicitReadRegisterFromEffectiveAddress(inst, mem);
+
         /* If there is only one reference, we return the symbolic expression */
         if (ret.size() == 1) {
           /* Synchronize the concrete state */
@@ -848,14 +857,6 @@ namespace triton {
 
         /* Set explicit write of the memory access */
         inst.setStoreAccess(mem, node);
-
-        /* Set implicit read of the base register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
-          (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
-
-        /* Set implicit read of the index register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
-          (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
 
         return inst.addSymbolicExpression(se);
       }

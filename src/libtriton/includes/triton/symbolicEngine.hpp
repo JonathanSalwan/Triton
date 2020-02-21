@@ -150,6 +150,9 @@ namespace triton {
           //! Returns the parent AST after inserting the subregister (node) in its AST.
           triton::ast::SharedAbstractNode insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign=true);
 
+          //! Sets implicit read registers (base and index) from an effective address.
+          void setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,
