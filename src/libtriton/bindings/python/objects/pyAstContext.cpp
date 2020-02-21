@@ -260,7 +260,7 @@ Convert a Triton AST to a Z3 AST.
 - <b>\ref py_AstNode_page unroll(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
 
-- <b>\ref py_AstNode_page tritonToZ3(z3::expr expr)</b><br>
+- <b>\ref py_AstNode_page z3ToTriton(z3::expr expr)</b><br>
 Convert a Z3 AST to a Triton AST.
 
 
