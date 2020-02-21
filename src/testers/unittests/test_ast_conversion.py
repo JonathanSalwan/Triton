@@ -80,7 +80,6 @@ class TestAstConversion(unittest.TestCase):
                 )
                 self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
                 self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
-                self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_unop(self):
         """
@@ -108,7 +107,6 @@ class TestAstConversion(unittest.TestCase):
                                                              cv1))
                 self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
                 self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
-                self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_smtbinop(self):
         """
@@ -178,7 +176,6 @@ class TestAstConversion(unittest.TestCase):
                     self.Triton.simplify(n, True).evaluate(),
                     "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.Triton.simplify(n, True).evaluate(), op, cv1, cv2)
                 )
-                self.assertEqual(n.evaluate(), self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n)).evaluate())
 
     def test_smt_unop(self):
         """
@@ -207,7 +204,6 @@ class TestAstConversion(unittest.TestCase):
                     n = op(self.v1)
                 self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
                 self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
-                self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_bvnode(self):
         """Check python bit vector declaration."""
@@ -216,7 +212,6 @@ class TestAstConversion(unittest.TestCase):
             n = self.astCtxt.bv(cv1, 8)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
-            self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_extract(self):
         """Check bit extraction from bitvector."""
@@ -233,7 +228,6 @@ class TestAstConversion(unittest.TestCase):
                                      "hi was : {}".format(ref, n.evaluate(), cv1, lo, hi))
                     self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
                     self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
-                    self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_ite(self):
         """Check ite node."""
@@ -245,7 +239,6 @@ class TestAstConversion(unittest.TestCase):
             n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
-            self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     @utils.xfail
     def test_integer(self):
@@ -254,7 +247,6 @@ class TestAstConversion(unittest.TestCase):
             n = self.astCtxt.integer(cv1)
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
-            self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     @utils.xfail
     def test_let(self):
@@ -267,7 +259,6 @@ class TestAstConversion(unittest.TestCase):
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
             self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
-            self.assertTrue(n.equalTo(self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n))))
 
     def test_fuzz(self):
         """
@@ -336,7 +327,6 @@ class TestAstConversion(unittest.TestCase):
                 self.Triton.setConcreteVariableValue(self.sv1, cv1)
                 self.Triton.setConcreteVariableValue(self.sv2, cv2)
                 self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-                self.assertEqual(n.evaluate(), self.astCtxt.z3ToTriton(self.astCtxt.tritonToZ3(n)).evaluate())
 
     def new_node(self, depth, possible):
         """Recursive function to create a random ast."""
