@@ -1909,7 +1909,8 @@ namespace triton {
 
 
     BvNode::BvNode(const triton::uint512& value, triton::uint32 size, const SharedAstContext& ctxt): AbstractNode(BV_NODE, ctxt) {
-      this->addChild(this->ctxt->integer(value));
+      this->size = size;
+      this->addChild(this->ctxt->integer(value & this->getBitvectorMask()));
       this->addChild(this->ctxt->integer(size));
     }
 

@@ -13,7 +13,10 @@
 #include <triton/register.hpp>
 #ifdef Z3_INTERFACE
   #include <triton/tritonToZ3Ast.hpp>
+  #include <triton/z3ToTritonAst.hpp>
 #endif
+
+#include <cstring>
 
 
 
@@ -58,146 +61,146 @@ This class is used to build your own AST nodes.
 Creates a `bv` node (bitvector). The `size` must be in bits.<br>
 e.g: `(_ bv<balue> size)`.
 
-- <b>\ref py_AstNode_page bvadd(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvadd(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvadd` node.<br>
-e.g: `(bvadd expr1 epxr2)`.
+e.g: `(bvadd node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvand(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvand(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvand` node.<br>
-e.g: `(bvand expr1 epxr2)`.
+e.g: `(bvand node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvashr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvashr(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvashr` node (arithmetic shift right).<br>
-e.g: `(bvashr expr1 epxr2)`.
+e.g: `(bvashr node1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvfalse(void)</b><br>
 This is an alias on the `(_ bv0 1)` ast expression.
 
-- <b>\ref py_AstNode_page bvlshr(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvlshr(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvlshr` node (logical shift right).<br>
-e.g: `(lshr expr1 epxr2)`.
+e.g: `(lshr node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvmul(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvmul(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvmul` node.<br>
-e.g: `(bvmul expr1 expr2)`.
+e.g: `(bvmul node1 node2)`.
 
-- <b>\ref py_AstNode_page bvnand(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvnand(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvnand` node.<br>
-e.g: `(bvnand expr1 expr2)`.
+e.g: `(bvnand node1 node2)`.
 
-- <b>\ref py_AstNode_page bvneg(\ref py_AstNode_page expr1)</b><br>
+- <b>\ref py_AstNode_page bvneg(\ref py_AstNode_page node1)</b><br>
 Creates a `bvneg` node.<br>
-e.g: `(bvneg expr1)`.
+e.g: `(bvneg node1)`.
 
-- <b>\ref py_AstNode_page bvnor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvnor(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvnor` node.<br>
-e.g: `(bvnor expr1 expr2)`.
+e.g: `(bvnor node1 node2)`.
 
-- <b>\ref py_AstNode_page bvnot(\ref py_AstNode_page expr1)</b><br>
+- <b>\ref py_AstNode_page bvnot(\ref py_AstNode_page node1)</b><br>
 Creates a `bvnot` node.<br>
-e.g: `(bvnot expr1)`.
+e.g: `(bvnot node1)`.
 
-- <b>\ref py_AstNode_page bvor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvor(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvor` node.<br>
-e.g: `(bvor expr1 expr2)`.
+e.g: `(bvor node1 node2)`.
 
-- <b>\ref py_AstNode_page bvror(\ref py_AstNode_page expr, \ref py_AstNode_page rot)</b><br>
+- <b>\ref py_AstNode_page bvror(\ref py_AstNode_page node, \ref py_AstNode_page rot)</b><br>
 Creates a `bvror` node (rotate right).<br>
-e.g: `((_ rotate_right rot) expr)`.
+e.g: `((_ rotate_right rot) node)`.
 
-- <b>\ref py_AstNode_page bvrol(\ref py_AstNode_page expr, \ref py_AstNode_page rot)</b><br>
+- <b>\ref py_AstNode_page bvrol(\ref py_AstNode_page node, \ref py_AstNode_page rot)</b><br>
 Creates a `bvrol` node (rotate left).<br>
-e.g: `((_ rotate_left rot) expr)`.
+e.g: `((_ rotate_left rot) node)`.
 
-- <b>\ref py_AstNode_page bvsdiv(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsdiv(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsdiv` node.<br>
-e.g: `(bvsdiv expr1 epxr2)`.
+e.g: `(bvsdiv node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvsge(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsge(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsge` node.<br>
-e.g: `(bvsge expr1 epxr2)`.
+e.g: `(bvsge node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvsgt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsgt(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsgt` node.<br>
-e.g: `(bvsgt expr1 epxr2)`.
+e.g: `(bvsgt node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvshl(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvshl(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a Bvshl node (shift left).<br>
-e.g: `(bvshl expr1 expr2)`.
+e.g: `(bvshl node1 node2)`.
 
-- <b>\ref py_AstNode_page bvsle(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsle(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsle` node.<br>
-e.g: `(bvsle expr1 epxr2)`.
+e.g: `(bvsle node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvslt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvslt(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvslt` node.<br>
-e.g: `(bvslt expr1 epxr2)`.
+e.g: `(bvslt node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvsmod(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsmod(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsmod` node (2's complement signed remainder, sign follows divisor).<br>
-e.g: `(bvsmod expr1 expr2)`.
+e.g: `(bvsmod node1 node2)`.
 
-- <b>\ref py_AstNode_page bvsrem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsrem(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsrem` node (2's complement signed remainder, sign follows dividend).<br>
-e.g: `(bvsrem expr1 expr2)`.
+e.g: `(bvsrem node1 node2)`.
 
-- <b>\ref py_AstNode_page bvsub(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvsub(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvsub` node.<br>
-e.g: `(bvsub expr1 epxr2)`.
+e.g: `(bvsub node1 epxr2)`.
 
 - <b>\ref py_AstNode_page bvtrue(void)</b><br>
 This is an alias on the `(_ bv1 1)` ast expression.<br>
 
-- <b>\ref py_AstNode_page bvudiv(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvudiv(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvudiv` node.<br>
-e.g: `(bvudiv expr1 epxr2)`.
+e.g: `(bvudiv node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvuge(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvuge(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvuge` node.<br>
-e.g: `(bvuge expr1 epxr2)`.
+e.g: `(bvuge node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvugt(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvugt(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvugt` node.<br>
-e.g: `(bvugt expr1 epxr2)`.
+e.g: `(bvugt node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvule(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvule(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvule` node.<br>
-e.g: `(bvule expr1 epxr2)`.
+e.g: `(bvule node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvult(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvult(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvult` node.<br>
-e.g: `(bvult expr1 epxr2)`.
+e.g: `(bvult node1 epxr2)`.
 
-- <b>\ref py_AstNode_page bvurem(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvurem(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvurem` node (unsigned remainder).<br>
-e.g: `(bvurem expr1 expr2)`.
+e.g: `(bvurem node1 node2)`.
 
-- <b>\ref py_AstNode_page bvxnor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvxnor(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvxnor` node.<br>
-e.g: `(bvxnor expr1 expr2)`.
+e.g: `(bvxnor node1 node2)`.
 
-- <b>\ref py_AstNode_page bvxor(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page bvxor(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `bvxor` node.<br>
-e.g: `(bvxor expr1 epxr2)`.
+e.g: `(bvxor node1 epxr2)`.
 
 - <b>\ref py_AstNode_page concat([\ref py_AstNode_page, ...])</b><br>
 Concatenates several nodes.
 
-- <b>\ref py_AstNode_page distinct(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page distinct(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates a `distinct` node.<br>
-e.g: `(distinct expr1 expr2)`
+e.g: `(distinct node1 node2)`
 
-- <b>\ref py_AstNode_page equal(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page equal(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates an `equal` node.<br>
-e.g: `(= expr1 epxr2)`.
+e.g: `(= node1 epxr2)`.
 
-- <b>\ref py_AstNode_page extract(integer high, integer low, \ref py_AstNode_page expr1)</b><br>
+- <b>\ref py_AstNode_page extract(integer high, integer low, \ref py_AstNode_page node1)</b><br>
 Creates an `extract` node. The `high` and `low` fields represent the bits position.<br>
-e.g: `((_ extract high low) expr1)`.
+e.g: `((_ extract high low) node1)`.
 
-- <b>\ref py_AstNode_page iff(\ref py_AstNode_page expr1, \ref py_AstNode_page expr2)</b><br>
+- <b>\ref py_AstNode_page iff(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates an `iff` node (if and only if).<br>
-e.g: `(iff expr1 expr2)`.
+e.g: `(iff node1 node2)`.
 
 - <b>\ref py_AstNode_page ite(\ref py_AstNode_page ifExpr, \ref py_AstNode_page thenExpr, \ref py_AstNode_page elseExpr)</b><br>
 Creates an `ite` node (if-then-else node).<br>
@@ -205,23 +208,23 @@ e.g: `(ite ifExpr thenExpr elseExpr)`.
 
 - <b>\ref py_AstNode_page land([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `AND` on several nodes.
-e.g: `(and expr1 expr2 expr3 expr4)`.
+e.g: `(and node1 node2 node3 node4)`.
 
-- <b>\ref py_AstNode_page let(string alias, \ref py_AstNode_page expr2, \ref py_AstNode_page expr3)</b><br>
+- <b>\ref py_AstNode_page let(string alias, \ref py_AstNode_page node2, \ref py_AstNode_page node3)</b><br>
 Creates a `let` node.<br>
-e.g: `(let ((alias expr2)) expr3)`.
+e.g: `(let ((alias node2)) node3)`.
 
-- <b>\ref py_AstNode_page lnot(\ref py_AstNode_page expr)</b><br>
+- <b>\ref py_AstNode_page lnot(\ref py_AstNode_page node)</b><br>
 Creates a `lnot` node (logical NOT).<br>
-e.g: `(not expr)`.
+e.g: `(not node)`.
 
 - <b>\ref py_AstNode_page lor([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `OR` on several nodes.
-e.g: `(or expr1 expr2 expr3 expr4)`.
+e.g: `(or node1 node2 node3 node4)`.
 
 - <b>\ref py_AstNode_page lxor([\ref py_AstNode_page, ...])</b><br>
 Creates a logical `XOR` on several nodes.
-e.g: `(xor expr1 expr2 expr3 expr4)`.
+e.g: `(xor node1 node2 node3 node4)`.
 
 - <b>\ref py_AstNode_page reference(\ref py_SymbolicExpression_page expr)</b><br>
 Creates a reference node (SSA-based).<br>
@@ -230,32 +233,35 @@ e.g: `ref!123`.
 - <b>\ref py_AstNode_page string(string s)</b><br>
 Creates a `string` node.
 
-- <b>\ref py_AstNode_page sx(integer sizeExt, \ref py_AstNode_page expr1)</b><br>
+- <b>\ref py_AstNode_page sx(integer sizeExt, \ref py_AstNode_page node1)</b><br>
 Creates a `sx` node (sign extend).<br>
-e.g: `((_ sign_extend sizeExt) expr1)`.
+e.g: `((_ sign_extend sizeExt) node1)`.
 
 - <b>\ref py_AstNode_page variable(\ref py_SymbolicVariable_page symVar)</b><br>
 Creates a `variable` node.
 
-- <b>\ref py_AstNode_page zx(integer sizeExt, \ref py_AstNode_page expr1)</b><br>
+- <b>\ref py_AstNode_page zx(integer sizeExt, \ref py_AstNode_page node1)</b><br>
 Creates a `zx` node (zero extend).<br>
-e.g: `((_ zero_extend sizeExt) expr1)`.
+e.g: `((_ zero_extend sizeExt) node1)`.
 
 
 \section AstContext_convert_py_api Python API - Utility methods of the AstContext class
 <hr>
 
-- <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page expr)</b><br>
+- <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page node)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
-- <b>[\ref py_AstNode_page, ...] search(\ref py_AstNode_page expr, \ref py_AST_NODE_page match)</b><br>
+- <b>[\ref py_AstNode_page, ...] search(\ref py_AstNode_page node, \ref py_AST_NODE_page match)</b><br>
 Returns a list of collected matched nodes via a depth-first pre order traversal.
 
-- <b>z3::expr tritonToZ3(\ref py_AstNode_page expr)</b><br>
+- <b>z3::expr tritonToZ3(\ref py_AstNode_page node)</b><br>
 Convert a Triton AST to a Z3 AST.
 
 - <b>\ref py_AstNode_page unroll(\ref py_AstNode_page node)</b><br>
 Unrolls the SSA form of a given AST.
+
+- <b>\ref py_AstNode_page tritonToZ3(z3::expr expr)</b><br>
+Convert a Z3 AST to a Triton AST.
 
 
 \section ast_py_examples_page_3 Python API - Operators
@@ -1100,12 +1106,12 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_duplicate(PyObject* self, PyObject* expr) {
-        if (!PyAstNode_Check(expr))
+      static PyObject* AstContext_duplicate(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(expr).get()));
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(node).get()));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1566,6 +1572,33 @@ namespace triton {
 
         return retExpr;
       }
+
+
+      static PyObject* AstContext_z3ToTriton(PyObject* self, PyObject* expr) {
+        triton::ast::Z3ToTritonAst  z3ToTritonAst{PyAstContext_AsAstContext(self)};
+        z3::context                 z3Ctx;
+
+        if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef"))
+          return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");
+
+        PyObject* z3AstPtr = PyObject_GetAttrString(expr, "ast");
+        if  (z3AstPtr == nullptr)
+          return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");
+
+        PyObject* z3AstPtrValue = PyObject_GetAttrString(z3AstPtr, "value");
+        if (z3AstPtrValue == nullptr)
+          return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");
+
+        try {
+          Z3_ast z3Ast    = reinterpret_cast<Z3_ast>(PyLong_AsVoidPtr(z3AstPtrValue));
+          z3::expr z3Expr = z3::to_expr(z3Ctx, z3Ast);
+
+          return PyAstNode(z3ToTritonAst.convert(z3Expr));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
       #endif
 
 
@@ -1637,6 +1670,7 @@ namespace triton {
         {"zx",              AstContext_zx,              METH_VARARGS,     ""},
         #ifdef Z3_INTERFACE
         {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
+        {"z3ToTriton",      AstContext_z3ToTriton,      METH_O,           ""},
         #endif
         {nullptr,           nullptr,                    0,                nullptr}
       };
