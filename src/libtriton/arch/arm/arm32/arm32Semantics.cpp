@@ -3364,7 +3364,7 @@ namespace triton {
 
         triton::ast::SharedAbstractNode Arm32Semantics::getShiftCAst(const triton::ast::SharedAbstractNode& node,
                                                                      const triton::arch::arm::shift_e type,
-                                                                     const triton::ast::SharedAbstractNode& shifAmount) {
+                                                                     const triton::ast::SharedAbstractNode& shiftAmount) {
 
           /* NOTE This function implements the Shift_C function from the
            * reference manual:
@@ -3375,39 +3375,71 @@ namespace triton {
            * for more information.
            */
 
+          /* NOTE This function slightly overlaps with SymbolicEngine::getShiftAst. */
+
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Set carry out node to the current value of the carry (carry in). */
           triton::ast::SharedAbstractNode carryOutNode = this->symbolicEngine->getOperandAst(cf);
 
-          /* TODO (cnheitman): Make amount symbolic. */
-          uint32 amount = shifAmount->evaluate().convert_to<triton::uint32>();
-
-          if (amount == 0)
+          if (shiftAmount->evaluate() == 0)
             return carryOutNode;
 
           switch (type) {
             case triton::arch::arm::ID_SHIFT_ASR: {
-              auto extendedX = this->astCtxt->sx(amount, node);
-              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                0,
+                                0,
+                                this->astCtxt->bvashr(
+                                  node,
+                                  this->astCtxt->bvsub(
+                                    shiftAmount,
+                                    this->astCtxt->bv(1, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_LSL: {
-              auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, amount));
-              carryOutNode = this->astCtxt->extract(DWORD_SIZE_BIT, DWORD_SIZE_BIT, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                DWORD_SIZE_BIT,
+                                DWORD_SIZE_BIT,
+                                this->astCtxt->bvshl(
+                                  this->astCtxt->zx(node->getBitvectorSize()+1, node),
+                                  this->astCtxt->zx(node->getBitvectorSize()+1, shiftAmount)
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_LSR: {
-              auto extendedX = this->astCtxt->zx(amount, node);
-              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                0,
+                                0,
+                                this->astCtxt->bvlshr(
+                                  node,
+                                  this->astCtxt->bvsub(
+                                    shiftAmount,
+                                    this->astCtxt->bv(1, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_ROR: {
-              auto result = this->ror_c(node, amount);
-              carryOutNode = this->astCtxt->extract(DWORD_SIZE_BIT-1, DWORD_SIZE_BIT-1, result);
+              carryOutNode = this->astCtxt->extract(
+                                DWORD_SIZE_BIT-1,
+                                DWORD_SIZE_BIT-1,
+                                this->astCtxt->bvror(
+                                  node,
+                                  this->astCtxt->bvurem(
+                                    shiftAmount,
+                                    this->astCtxt->bv(DWORD_SIZE_BIT, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
@@ -3510,66 +3542,6 @@ namespace triton {
           }
 
           return amount;
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift > 0) {
-            auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, shift));
-            auto result = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, extendedX);
-            return result;
-          } else {
-            return nullptr;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsl(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->lsl_c(node, shift);
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsr_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift > 0) {
-            auto extendedX = this->astCtxt->zx(shift, node);
-            auto result = this->astCtxt->extract(shift+DWORD_SIZE_BIT-1, shift, extendedX);
-            return result;
-          } else {
-            return nullptr;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsr(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->lsr_c(node, shift);
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::ror_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return nullptr;
-          } else {
-            auto m = shift % DWORD_SIZE_BIT;
-            auto result = this->astCtxt->bvor(this->lsr(node, m), this->lsl(node, DWORD_SIZE_BIT-m));
-            return result;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::ror(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->ror_c(node, shift);
-          }
         }
       }; /* arm32 namespace */
     }; /* arm namespace */

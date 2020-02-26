@@ -266,24 +266,6 @@ namespace triton {
             //! Auxiliary function for the CF semantics for bitwise and shift operations.
             triton::ast::SharedAbstractNode getShiftCAmountAst(const triton::arch::arm::ArmOperandProperties& shift);
 
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode lsl(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode lsr_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode lsr(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode ror_c(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
-            //! Auxiliary function for the CF semantics for bitwise and shift operations.
-            triton::ast::SharedAbstractNode ror(const triton::ast::SharedAbstractNode& node, uint32 shift);
-
             /* Instruction semantics ----------------------------------------- */
 
             //! The ADC semantics.
