@@ -1381,6 +1381,11 @@ namespace triton {
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
 
+          /* Spread taint */
+          if (cond->evaluate() == true) {
+            expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+          }
+
           /* Update symbolic flags */
           this->cfSub_s(inst, cond, expr, src1, op1, op2);
           this->nf_s(inst, cond, expr, src1);
