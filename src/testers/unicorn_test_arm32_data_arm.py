@@ -44,7 +44,8 @@ CODE  = [
     (b"\x51\x03\xa0\xe1", "mov r0, r1, asr r3"),    # -> asr r0, r1, r3
     (b"\x00\x00\xb0\xe1", "asrs r0, #0"),           # -> movs r0, r0
     (b"\xc0\x0f\xb0\xe1", "asrs r0, #31"),
-    (b"\xc1\x0f\xb0\xe1", "asrs r0, r1, #31"),
+    (b"\xc1\x0f\xb0\xe1", "asrs r0, r1, #31"),      # NOTE: The 2nd operand is interpreted as a register-shifted register (namely, 'r1, #31')
+    (b"\xc1\x1f\xb0\xe1", "asrs r1, r1, #31"),      # NOTE: Same as previous. However, in THUMB the 2nd operand is interpreted as a registera and the 3rd as an immediate (namely, 'r1' and '#31', respectively)
     (b"\x51\x02\xb0\xe1", "asrs r0, r1, r2"),
     (b"\x51\x03\xb0\xe1", "movs r0, r1, asr r3"),
 
@@ -93,9 +94,16 @@ CODE  = [
     (b"\x10\xc0\x8c\xe2", "add ip, ip, #16"),
     (b"\x10\xc0\x8c\xe2", "add ip, ip, #16, #0"),
 
+    (b"\x10\x0a\xa0\xe2", "adc r0, r0, #16, #20"),
     (b"\x10\x0a\x80\xe2", "add r0, r0, #16, #20"),
-    # (b"\x10\x0a\xa0\xe2", "adc r0, r0, #16, #20"), # FIXME
-    # (b"\x10\x0a\x40\xe2", "sub r0, r0, #16, #20"), # FIXME
+    (b"\x10\x0a\x00\xe2", "and r0, r0, #16, #20"),
+    (b"\x10\x0a\xc0\xe3", "bic r0, r0, #16, #20"),
+    (b"\x10\x0a\x20\xe2", "eor r0, r0, #16, #20"),
+    (b"\x10\x0a\x80\xe3", "orr r0, r0, #16, #20"),
+    (b"\x10\x0a\x60\xe2", "rsb r0, r0, #16, #20"),
+    (b"\x10\x0a\xe0\xe2", "rsc r0, r0, #16, #20"),
+    (b"\x10\x0a\xc0\xe2", "sbc r0, r0, #16, #20"),
+    (b"\x10\x0a\x40\xe2", "sub r0, r0, #16, #20"),
 
     # ADC -------------------------------------------------------------------- #
     (b"\x02\x00\xa1\xe2", "adc r0, r1, #2"),
