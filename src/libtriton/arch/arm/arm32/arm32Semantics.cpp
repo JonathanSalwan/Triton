@@ -259,6 +259,12 @@ namespace triton {
           auto node   = this->symbolicEngine->getOperandAst(inst, op);
 
           if (op.getType() == triton::arch::OP_REG && op.getRegister().getId() == ID_REG_ARM32_PC) {
+            /* NOTE: PC always points to the address to the current instruction
+             * plus: a) 8 in case of ARM mode, or b) 4 in case of Thumb. It is
+             * also aligned to 4 bytes. For more information, refer to section
+             * "Use of labels in UAL instruction syntax" of the reference
+             * manual.
+             */
             node = this->astCtxt->bv(inst.getAddress() + offset, op.getBitSize());
 
             /* Shift AST if it's a shift operand */
