@@ -915,7 +915,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -978,7 +978,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1020,7 +1020,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1096,7 +1096,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1166,7 +1166,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1429,7 +1429,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1486,7 +1486,7 @@ namespace triton {
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
 
-              /* Update swtich mode accordingly. */
+              /* Update execution mode accordingly. */
               this->updateExecutionState(dst, op2);
             }
           }
@@ -1615,7 +1615,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1722,7 +1722,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1809,7 +1809,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst1, op1);
             this->updateExecutionState(dst2, op2);
           }
@@ -1886,7 +1886,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1962,7 +1962,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1998,7 +1998,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2081,7 +2081,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2123,7 +2123,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2179,7 +2179,7 @@ namespace triton {
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
 
-              /* Update swtich mode accordingly. */
+              /* Update execution mode accordingly. */
               this->updateExecutionState(dst, op2);
             }
           }
@@ -2254,7 +2254,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2330,7 +2330,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -2380,7 +2380,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -2423,7 +2423,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2471,7 +2471,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2519,7 +2519,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2567,7 +2567,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             /* NOTE: The invocations are done in the order the manual says
              * the instruction updates each register. Examples for this case
              * could be:
@@ -3095,7 +3095,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
