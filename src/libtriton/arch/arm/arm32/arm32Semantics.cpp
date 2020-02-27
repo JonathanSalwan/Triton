@@ -347,7 +347,7 @@ namespace triton {
                                            triton::arch::OperandWrapper& dst) {
           /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
            * used for instructions that use a destination register. In that case,
-           * it check whether the destination is the PC and acts accordingly.
+           * it checks whether the destination is the PC and acts accordingly.
            * For example: ADD, SUB, etc.
            */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
@@ -375,8 +375,9 @@ namespace triton {
                                            triton::arch::OperandWrapper& dst2) {
 
           /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
-           * used for instructions that use two destination registers. In that case,
-           * it check whether any of the destination register is the PC and acts accordingly.
+           * used for instructions that use two destination registers. In that
+           * case, it checks whether any of the destination register is the PC
+           * and acts accordingly.
            * For example: SMULL.
            */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
