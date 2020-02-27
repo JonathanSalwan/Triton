@@ -9,6 +9,7 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/api.hpp>
+#include <triton/arm32Cpu.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
@@ -255,6 +256,9 @@ Returns true if the symbolic expression id exists.
 
 - <b>bool isTaintEngineEnabled(void)</b><br>
 Returns true if the taint engine is enabled.
+
+- <b>bool isThumb(void)</b><br>
+Returns true if execution mode is Thumb (only valid for ARM32).
 
 - <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
@@ -1986,6 +1990,20 @@ namespace triton {
         }
       }
 
+      static PyObject* TritonContext_isThumb(PyObject* self, PyObject* noarg) {
+        try {
+        auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(PyTritonContext_AsTritonContext(self)->getCpuInstance());
+          if (cpu->isThumb() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
       static PyObject* TritonContext_newSymbolicExpression(PyObject* self, PyObject* args) {
         PyObject* node          = nullptr;
@@ -2969,6 +2987,7 @@ namespace triton {
         {"isSymbolicEngineEnabled",             (PyCFunction)TritonContext_isSymbolicEngineEnabled,                METH_NOARGS,        ""},
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,             METH_O,             ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                   METH_NOARGS,        ""},
+        {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                    METH_VARARGS,       ""},
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                      METH_NOARGS,        ""},
