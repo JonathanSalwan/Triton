@@ -889,6 +889,26 @@ namespace triton {
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "adc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::adc_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
@@ -939,7 +959,7 @@ namespace triton {
           /* Process modified immediate constants (expand immediate) */
           /* For more information, look for "Modified immediate constants in ARM
            * instructions" in the reference manual. For example:
-           * "adc ip, ip, #16, #20".
+           * "add r0, r0, #16, #20".
            */
           if (inst.operands.size() == 4) {
             auto src3 = inst.operands[3];
@@ -998,6 +1018,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "and r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::and_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -1144,6 +1184,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "bic r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::bic_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
@@ -1412,6 +1472,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "eor r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::eor_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2107,6 +2187,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "orr r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::orr_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
@@ -2406,6 +2506,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "rsb r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::rsb_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
@@ -2449,6 +2569,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "rsc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::rsc_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2497,6 +2637,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "sbc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::sbc_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -3077,6 +3237,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "sub r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::sub_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
