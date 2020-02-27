@@ -185,9 +185,6 @@ def emulate(ctx, pc):
     global SERIAL
     global VALID
 
-    # TODO: Remove?
-    ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-
     count = 0
     while pc and count < MAX_INSTRS and not FINISH:
         # Fetch opcodes
