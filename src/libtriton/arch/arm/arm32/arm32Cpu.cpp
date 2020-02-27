@@ -228,6 +228,9 @@ namespace triton {
 
               inst.setDisassembly(str.str());
 
+              /* Refine the opcode */
+              inst.setOpcode(insn[j].bytes, insn[j].size);
+
               /* Refine the size */
               inst.setSize(insn[j].size);
 
