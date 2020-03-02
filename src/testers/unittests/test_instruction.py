@@ -227,3 +227,10 @@ class TestProcessing(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
         inst = Instruction(b"\x00\xDC")  # add ah,bl
         self.Triton.processing(inst)
+
+    def test_mov_byte_ptr_register(self):
+        self.Triton = TritonContext()
+        self.Triton.setArchitecture(ARCH.X86_64)
+        inst = Instruction(b"\x88\x4f\x0d")  # mov byte ptr [rdi + 0xd], cl
+        self.Triton.processing(inst)
+        self.assertEqual(len(inst.getReadRegisters()), 2, "inst read 2 registers (rdi and cl)")
