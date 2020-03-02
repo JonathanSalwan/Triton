@@ -833,6 +833,15 @@ namespace triton {
           this->architecture->setConcreteMemoryValue(mem, tmp->evaluate());
           /* Define the memory store */
           inst.setStoreAccess(mem, node);
+
+          /* Set implicit read of the base register (LEA) */
+          if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
+              (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
+
+          /* Set implicit read of the index register (LEA) */
+          if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
+              (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
+
           /* It will return se */
           return inst.symbolicExpressions.back();
         }
