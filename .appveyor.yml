@@ -12,79 +12,55 @@ clone_folder: c:\projects\triton
 
 environment:
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.1\include\capstone
+  PLATFORM_TOOLSET: v142
+  CMAKE_TEMPLATE: Visual Studio 16 2019
+  BOOST_ROOT: c:\Libraries\boost_1_71_0
 
   matrix:
     - platform: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-      BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 12 2013
-      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v120
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python27
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x86-win
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
+      LIEF_VERSION: 0.7.0
+      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.7-x86-win
+      PYTHON_3: OFF
 
     - platform: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      BOOST_ROOT: c:\Libraries\boost_1_62_0
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python36
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 14 2015
-      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v140
-      PYTHON: C:\Python27
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x86-win
-
-    - platform: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      BOOST_ROOT: c:\Libraries\boost_1_65_1
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 15 2017
-      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v141
-      PYTHON: C:\Python27
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x86-win
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp36-cp36m-win32.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.7-x86-win
+      PYTHON_3: ON
 
     - platform: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2013
-      BOOST_ROOT: c:\Libraries\boost_1_62_0
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 12 2013 Win64
-      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v120
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python27-x64
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x64-win
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.7.0
+      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.7-x64-win
+      PYTHON_3: OFF
 
     - platform: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2015
-      BOOST_ROOT: c:\Libraries\boost_1_62_0
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python36-x64
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 14 2015 Win64
-      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v140
-      PYTHON: C:\Python27-x64
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x64-win
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp36-cp36m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.7-x64-win
+      PYTHON_3: ON
 
-    - platform: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2017
-      BOOST_ROOT: c:\Libraries\boost_1_65_1
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
-      CMAKE_TEMPLATE: Visual Studio 15 2017 Win64
-      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      PLATFORM_TOOLSET: v141
-      PYTHON: C:\Python27-x64
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.6.0-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.6.0-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.6.0-x64-win
 
 install:
   - set PATH=%PYTHON%;%PATH%
@@ -92,7 +68,7 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.6.0/%Z3_PKG_NAME%.zip
+  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.8.7/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
     # Install z3 in the path
   - set PATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin;%PATH%
@@ -110,12 +86,12 @@ install:
   - cmd: msbuild capstone-4.0.1\msvc\capstone.sln /p:Configuration=%configuration% /p:Platform=%platform% /p:PlatformToolset=%PLATFORM_TOOLSET% /t:capstone_static /m
     # Install LIEF
   - cmd: echo Downloading LIEF...
-  - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/0.7.0/%LIEF_ZIP%
+  - cmd: appveyor DownloadFile https://github.com/lief-project/LIEF/releases/download/%LIEF_VERSION%/%LIEF_ZIP%
   - cmd: echo Install LIEF...
   - cmd: python -m pip install %LIEF_ZIP%
     # Running cmake for Triton
   - cmd: echo Running cmake for Triton...
-  - cmd: cmake -DPYTHON36=OFF .. -G "%CMAKE_TEMPLATE%"
+  - cmd: cmake -DPYTHON36=%PYTHON_3% .. -A %platform% -G "%CMAKE_TEMPLATE%"
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python
