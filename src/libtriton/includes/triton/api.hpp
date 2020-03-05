@@ -320,10 +320,10 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SymbolicEngine* getSymbolicEngine(void);
 
         //! [**symbolic api**] - Returns the map of symbolic registers defined.
-        TRITON_EXPORT std::map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicRegisters(void) const;
+        TRITON_EXPORT std::unordered_map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
         //! [**symbolic api**] - Returns the map (<Addr : SymExpr>) of symbolic memory defined.
-        TRITON_EXPORT std::map<triton::uint64, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicMemory(void) const;
+        TRITON_EXPORT std::unordered_map<triton::uint64, triton::engines::symbolic::SharedSymbolicExpression> getSymbolicMemory(void) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to the memory address.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicMemory(triton::uint64 addr) const;
@@ -467,7 +467,7 @@ namespace triton {
         TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Slices all expressions from a given one.
-        TRITON_EXPORT std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
+        TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;

@@ -102,7 +102,7 @@ namespace triton {
            * **item1**: memory address<br>
            * **item2**: shared symbolic expression
            */
-          std::map<triton::uint64, SharedSymbolicExpression> memoryReference;
+          std::unordered_map<triton::uint64, SharedSymbolicExpression> memoryReference;
 
           //! Symbolic register state.
           std::vector<SharedSymbolicExpression> symbolicReg;
@@ -191,13 +191,13 @@ namespace triton {
           TRITON_EXPORT SharedSymbolicExpression getSymbolicMemory(triton::uint64 addr) const;
 
           //! Returns the map (addr:expr) of all symbolic memory defined.
-          TRITON_EXPORT const std::map<triton::uint64, SharedSymbolicExpression>& getSymbolicMemory(void) const;
+          TRITON_EXPORT const std::unordered_map<triton::uint64, SharedSymbolicExpression>& getSymbolicMemory(void) const;
 
           //! Returns the shared symbolic expression corresponding to the parent register.
           TRITON_EXPORT const SharedSymbolicExpression& getSymbolicRegister(const triton::arch::Register& reg) const;
 
           //! Returns the map of symbolic registers defined.
-          TRITON_EXPORT std::map<triton::arch::register_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
+          TRITON_EXPORT std::unordered_map<triton::arch::register_e, SharedSymbolicExpression> getSymbolicRegisters(void) const;
 
           //! Returns the symbolic memory value.
           TRITON_EXPORT triton::uint8 getSymbolicMemoryValue(triton::uint64 address);
@@ -254,7 +254,7 @@ namespace triton {
           TRITON_EXPORT void assignSymbolicExpressionToMemory(const SharedSymbolicExpression& se, const triton::arch::MemoryAccess& mem);
 
           //! Slices all expressions from a given one.
-          TRITON_EXPORT std::map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
+          TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
 
           //! Returns the list of the tainted symbolic expressions.
           TRITON_EXPORT std::vector<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;

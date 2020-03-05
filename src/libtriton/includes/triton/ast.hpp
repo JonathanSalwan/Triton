@@ -9,11 +9,11 @@
 #define TRITON_AST_H
 
 #include <deque>
-#include <map>
 #include <memory>
 #include <ostream>
 #include <stdexcept>
 #include <string>
+#include <unordered_map>
 #include <unordered_set>
 #include <vector>
 
@@ -80,7 +80,7 @@ namespace triton {
 
         // This structure counter the number of use of a given parent as a node may have
         // multiple time the same parent: eg. xor rax rax
-        std::map<AbstractNode*, std::pair<triton::uint32, WeakAbstractNode>> parents;
+        std::unordered_map<AbstractNode*, std::pair<triton::uint32, WeakAbstractNode>> parents;
 
         //! The size of the node.
         triton::uint32 size;

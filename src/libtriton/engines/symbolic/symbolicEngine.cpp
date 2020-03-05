@@ -411,8 +411,8 @@ namespace triton {
 
 
       /* Slices all expressions from a given one */
-      std::map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
-        std::map<triton::usize, SharedSymbolicExpression> exprs;
+      std::unordered_map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
+        std::unordered_map<triton::usize, SharedSymbolicExpression> exprs;
 
         if (expr == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
@@ -455,8 +455,8 @@ namespace triton {
 
 
       /* Returns the map of symbolic registers defined */
-      std::map<triton::arch::register_e, SharedSymbolicExpression> SymbolicEngine::getSymbolicRegisters(void) const {
-        std::map<triton::arch::register_e, SharedSymbolicExpression> ret;
+      std::unordered_map<triton::arch::register_e, SharedSymbolicExpression> SymbolicEngine::getSymbolicRegisters(void) const {
+        std::unordered_map<triton::arch::register_e, SharedSymbolicExpression> ret;
 
         for (triton::uint32 it = 0; it < this->numberOfRegisters; it++) {
           if (this->symbolicReg[it] != nullptr) {
@@ -469,7 +469,7 @@ namespace triton {
 
 
       /* Returns the map of symbolic memory defined */
-      const std::map<triton::uint64, SharedSymbolicExpression>& SymbolicEngine::getSymbolicMemory(void) const {
+      const std::unordered_map<triton::uint64, SharedSymbolicExpression>& SymbolicEngine::getSymbolicMemory(void) const {
         return this->memoryReference;
       }
 

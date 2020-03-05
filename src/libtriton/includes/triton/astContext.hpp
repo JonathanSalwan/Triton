@@ -8,10 +8,10 @@
 #ifndef TRITON_AST_CONTEXT_H
 #define TRITON_AST_CONTEXT_H
 
-#include <map>
-#include <memory>
-#include <vector>
 #include <list>
+#include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include <triton/ast.hpp>
 #include <triton/astRepresentation.hpp>
@@ -58,7 +58,7 @@ namespace triton {
         triton::ast::representations::AstRepresentation astRepresentation;
 
         //! Maps a concrete value and ast node for a variable name.
-        std::map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
+        std::unordered_map<std::string, std::pair<triton::ast::WeakAbstractNode, triton::uint512>> valueMapping;
 
       public:
         //! Constructor

@@ -3099,7 +3099,7 @@ namespace triton {
 
 
     SharedAbstractNode newInstance(AbstractNode* node, bool unroll) {
-      std::map<AbstractNode*, SharedAbstractNode> exprs;
+      std::unordered_map<AbstractNode*, SharedAbstractNode> exprs;
       auto nodes = childrenExtraction(node->shared_from_this(), unroll, true);
 
       for (auto&& n : nodes) {

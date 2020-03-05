@@ -810,13 +810,13 @@ namespace triton {
   }
 
 
-  std::map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
+  std::unordered_map<triton::arch::register_e, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicRegisters(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicRegisters();
   }
 
 
-  std::map<triton::uint64, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicMemory(void) const {
+  std::unordered_map<triton::uint64, triton::engines::symbolic::SharedSymbolicExpression> API::getSymbolicMemory(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicMemory();
   }
@@ -994,7 +994,7 @@ namespace triton {
   }
 
 
-  std::map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> API::sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+  std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> API::sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
     this->checkSymbolic();
     return this->symbolic->sliceExpressions(expr);
   }
