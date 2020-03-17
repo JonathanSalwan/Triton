@@ -76,7 +76,7 @@ class DefCamp2015(object):
 
                 model = self.Triton.getModel(cstr)
                 solution = str()
-                for k, v in list(model.items()):
+                for k, v in list(sorted(model.items())):
                     value = v.getValue()
                     solution += chr(value)
                     self.Triton.setConcreteVariableValue(self.Triton.getSymbolicVariable(k), value)

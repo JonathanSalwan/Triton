@@ -265,7 +265,7 @@ def emulate(ctx, pc):
                 print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
 
             SERIAL = str()
-            for _, v in list(models[0].items()):
+            for _, v in list(sorted(models[0].items())):
                 SERIAL += "%c" % (v.getValue())
 
             print('[+] Pick up the first serial: %s' %(SERIAL))

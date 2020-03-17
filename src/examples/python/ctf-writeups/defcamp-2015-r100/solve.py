@@ -79,7 +79,7 @@ def emulate(pc):
 
             print('[+] Asking for a model, please wait...')
             model = Triton.getModel(cstr)
-            for k, v in list(model.items()):
+            for k, v in list(sorted(model.items())):
                 value = v.getValue()
                 Triton.setConcreteVariableValue(Triton.getSymbolicVariable(k), value)
                 print('[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value)))
