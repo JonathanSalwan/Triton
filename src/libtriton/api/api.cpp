@@ -1051,13 +1051,13 @@ namespace triton {
   }
 
 
-  std::map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node) const {
+  std::unordered_map<triton::uint32, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     return this->solver->getModel(node);
   }
 
 
-  std::vector<std::map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+  std::vector<std::unordered_map<triton::uint32, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
     this->checkSolver();
     return this->solver->getModels(node, limit);
   }

@@ -8,11 +8,11 @@
 #ifndef TRITON_SYMBOLICENGINE_H
 #define TRITON_SYMBOLICENGINE_H
 
-#include <list>
 #include <map>
 #include <memory>
 #include <string>
 #include <unordered_map>
+#include <vector>
 
 #include <triton/architecture.hpp>
 #include <triton/ast.hpp>
@@ -256,7 +256,7 @@ namespace triton {
           //! Slices all expressions from a given one.
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
 
-          //! Returns the list of the tainted symbolic expressions.
+          //! Returns the vector of the tainted symbolic expressions.
           TRITON_EXPORT std::vector<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
           //! Returns all symbolic expressions.

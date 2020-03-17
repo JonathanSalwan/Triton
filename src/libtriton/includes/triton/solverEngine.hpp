@@ -9,9 +9,9 @@
 #define TRITON_SOLVERENGINE_HPP
 
 #include <iostream>
-#include <list>
-#include <map>
 #include <memory>
+#include <unordered_map>
+#include <vector>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -82,16 +82,16 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::map<triton::uint32, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT std::unordered_map<triton::uint32, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const;
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
-          /*! \brief list of map of symbolic variable id -> model
+          /*! \brief vector of map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::vector<std::map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+          TRITON_EXPORT std::vector<std::unordered_map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
 
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
