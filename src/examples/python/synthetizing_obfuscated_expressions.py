@@ -1,13 +1,16 @@
 #!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 ##
-## Example for synthetizing obfuscated expressions.
+## Example of synthetizing obfuscated expressions.
 ##
 ## $ python synthetizing_obfuscated_expressions.py
 ## In: (bvsub (bvadd (bvor SymVar_0 SymVar_1) SymVar_1) (bvand (bvnot SymVar_0) SymVar_1))
 ## Out: (bvadd SymVar_0 SymVar_1)
 ##
 ## In: (bvadd (bvsub (bvor SymVar_0 SymVar_1) SymVar_1) (bvand (bvnot SymVar_0) SymVar_1))
+## Out: (bvxor SymVar_0 SymVar_1)
+##
+## In: (bvor (bvand SymVar_0 (bvnot SymVar_1)) (bvand (bvnot SymVar_0) SymVar_1))
 ## Out: (bvxor SymVar_0 SymVar_1)
 ##
 ## In: (bvsub (bvadd (bvxor SymVar_0 SymVar_1) SymVar_1) (bvand (bvnot SymVar_0) SymVar_1))
@@ -84,11 +87,12 @@ def main():
     y = ast.variable(ctx.newSymbolicVariable(8))
 
     # Some obfuscated expressions
-    obf_exprs = {
-        (x | y) + y - (ast.bvnot(x) & y), # x + y
-        (x | y) - y + (ast.bvnot(x) & y), # x ^ y
-        (x ^ y) + y - (ast.bvnot(x) & y), # x | y
-    }
+    obf_exprs = [
+        (x | y) + y - (~x & y), # x + y
+        (x | y) - y + (~x & y), # x ^ y
+        (x & ~y) | (~x & y),    # x ^ y
+        (x ^ y) + y - (~x & y), # x | y
+    ]
 
     for expr in obf_exprs:
         print('In: %s' %(expr))
