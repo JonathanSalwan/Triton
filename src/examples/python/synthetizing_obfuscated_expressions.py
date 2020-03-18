@@ -16,6 +16,9 @@
 ## In: (bvsub (bvadd (bvxor SymVar_0 SymVar_1) SymVar_1) (bvand (bvnot SymVar_0) SymVar_1))
 ## Out: (bvor SymVar_0 SymVar_1)
 ##
+## In: (bvadd (bvadd (bvneg (bvor SymVar_0 SymVar_1)) SymVar_1) SymVar_0)
+## Out: (bvand SymVar_1 SymVar_0)
+##
 
 import sys
 import ctypes
@@ -64,10 +67,10 @@ def synthetize(ctx, expr):
 
     for entry in oracles_table:
         OK = False
-        for O in entry['oracles']:
-            ctx.setConcreteVariableValue(x.getSymbolicVariable(), s[x.getBitvectorSize()](O[0]).value)
-            ctx.setConcreteVariableValue(y.getSymbolicVariable(), s[y.getBitvectorSize()](O[1]).value)
-            if expr.evaluate() != s[y.getBitvectorSize()](O[2]).value:
+        for oracle in entry['oracles']:
+            ctx.setConcreteVariableValue(x.getSymbolicVariable(), s[x.getBitvectorSize()](oracle[0]).value)
+            ctx.setConcreteVariableValue(y.getSymbolicVariable(), s[y.getBitvectorSize()](oracle[1]).value)
+            if expr.evaluate() != s[y.getBitvectorSize()](oracle[2]).value:
                 OK = False
                 break
             else:
@@ -92,6 +95,7 @@ def main():
         (x | y) - y + (~x & y), # x ^ y
         (x & ~y) | (~x & y),    # x ^ y
         (x ^ y) + y - (~x & y), # x | y
+        -(x | y) + y + x,       # x & y
     ]
 
     for expr in obf_exprs:
