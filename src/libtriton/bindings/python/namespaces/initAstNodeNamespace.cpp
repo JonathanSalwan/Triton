@@ -63,6 +63,7 @@ The AST_NODE namespace contains all kinds of nodes.
 - **AST_NODE.DISTINCT**
 - **AST_NODE.EQUAL**
 - **AST_NODE.EXTRACT**
+- **AST_NODE.FORALL**
 - **AST_NODE.IFF**
 - **AST_NODE.INTEGER**
 - **AST_NODE.INVALID**
@@ -124,6 +125,7 @@ namespace triton {
         xPyDict_SetItemString(astNodeDict, "DISTINCT",          PyLong_FromUint32(triton::ast::DISTINCT_NODE));
         xPyDict_SetItemString(astNodeDict, "EQUAL",             PyLong_FromUint32(triton::ast::EQUAL_NODE));
         xPyDict_SetItemString(astNodeDict, "EXTRACT",           PyLong_FromUint32(triton::ast::EXTRACT_NODE));
+        xPyDict_SetItemString(astNodeDict, "FORALL",            PyLong_FromUint32(triton::ast::FORALL_NODE));
         xPyDict_SetItemString(astNodeDict, "IFF",               PyLong_FromUint32(triton::ast::IFF_NODE));
         xPyDict_SetItemString(astNodeDict, "INTEGER",           PyLong_FromUint32(triton::ast::INTEGER_NODE));
         xPyDict_SetItemString(astNodeDict, "INVALID",           PyLong_FromUint32(triton::ast::INVALID_NODE));

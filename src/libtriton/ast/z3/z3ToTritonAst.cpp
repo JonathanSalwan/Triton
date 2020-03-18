@@ -24,7 +24,7 @@ namespace triton {
     SharedAbstractNode Z3ToTritonAst::convert(const z3::expr& expr) {
       SharedAbstractNode node = nullptr;
 
-      /* Currently, only support application node */
+      /* Currently, only support application node (TODO) */
       if (expr.is_quantifier())
         throw triton::exceptions::AstTranslations("Z3ToTritonAst::visit(): Quantifier not supported yet.");
 

@@ -204,6 +204,17 @@ namespace triton {
           return to_expr(this->context, Z3_mk_extract(this->context, hv, lv, value));
         }
 
+        case FORALL_NODE: {
+          triton::uint32 size = node->getChildren().size() - 1;
+          Z3_app vars[size];
+
+          for (triton::uint32 i = 0; i != size; i++) {
+            vars[i] = children[i];
+          }
+
+          return to_expr(this->context, Z3_mk_forall_const(this->context, 0, size, vars, 0, 0, children[size]));
+        }
+
         case IFF_NODE: {
           z3::expr op1 = children[0];
           z3::expr op2 = children[1];

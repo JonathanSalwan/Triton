@@ -60,6 +60,7 @@ namespace triton {
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
+          case FORALL_NODE:               return this->print(stream, reinterpret_cast<triton::ast::ForallNode*>(node)); break;
           case IFF_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IffNode*>(node)); break;
           case INTEGER_NODE:              return this->print(stream, reinterpret_cast<triton::ast::IntegerNode*>(node)); break;
           case ITE_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IteNode*>(node)); break;
@@ -355,6 +356,23 @@ namespace triton {
       /* extract representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
         stream << "((_ extract " << node->getChildren()[0] << " " << node->getChildren()[1] << ") " << node->getChildren()[2] << ")";
+        return stream;
+      }
+
+
+      /* forall representation */
+      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ForallNode* node) {
+        triton::uint32 size = node->getChildren().size() - 1;
+
+        stream << "(forall (";
+        for (triton::uint32 i = 0; i != size; i++) {
+          const auto& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[i].get())->getSymbolicVariable();
+          if (var->getAlias().empty())  stream << "(" << var->getName()  << " (_ BitVec " << var->getSize() << "))";
+          else                          stream << "(" << var->getAlias() << " (_ BitVec " << var->getSize() << "))";
+          if (i + 1 != size)            stream << " ";
+        }
+        stream << ") " << node->getChildren()[size] << ")";
+
         return stream;
       }
 

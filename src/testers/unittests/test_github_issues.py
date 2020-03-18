@@ -401,3 +401,22 @@ class TestIssue825(unittest.TestCase):
         self.ctx.processing(inst)
         # after execution eax should not longer be tainted
         self.assertFalse(self.ctx.isRegisterTainted(self.ctx.registers.eax))
+
+
+class TestIssue860(unittest.TestCase):
+    """Testing #860."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_issue(self):
+        x = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        c = self.ast.variable(self.ctx.newSymbolicVariable(32))
+
+        x.getSymbolicVariable().setAlias('x')
+        c.getSymbolicVariable().setAlias('C')
+
+        # ((x << 8) >> 16) << 8 == x & 0xffff00
+        m = self.ctx.getModel(self.ast.forall([x], ((x << 8) >> 16) << 8 == x & c))
+        self.assertEqual(m[1].getValue(), 0x00ffff00)

@@ -198,6 +198,10 @@ e.g: `(= node1 epxr2)`.
 Creates an `extract` node. The `high` and `low` fields represent the bits position.<br>
 e.g: `((_ extract high low) node1)`.
 
+- <b>\ref py_AstNode_page forall([\ref py_AstNode_page var, ...], \ref py_AstNode_page body)</b><br>
+Creates an `forall` node.<br>
+e.g: `(forall ((x (_ BitVec <size>)), ...) body)`.
+
 - <b>\ref py_AstNode_page iff(\ref py_AstNode_page node1, \ref py_AstNode_page node2)</b><br>
 Creates an `iff` node (if and only if).<br>
 e.g: `(iff node1 node2)`.
@@ -1221,6 +1225,41 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_forall(PyObject* self, PyObject* args) {
+        std::vector<triton::ast::SharedAbstractNode> vars;
+        PyObject* op1 = nullptr;
+        PyObject* op2 = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &op1, &op2) == false) {
+          return PyErr_Format(PyExc_TypeError, "forall(): Invalid number of arguments");
+        }
+
+        if (op1 == nullptr || !PyList_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "forall(): expected a list of AstNodes as first argument");
+
+        if (op2 == nullptr || !PyAstNode_Check(op2))
+          return PyErr_Format(PyExc_TypeError, "forall(): expected a AstNode as second argument");
+
+        /* Check if the list contains only PyAstNode */
+        for (Py_ssize_t i = 0; i < PyList_Size(op1); i++){
+          PyObject* item = PyList_GetItem(op1, i);
+
+          if (!PyAstNode_Check(item))
+            return PyErr_Format(PyExc_TypeError, "forall(): Each element from the list must be a AstNode");
+
+          vars.push_back(PyAstNode_AsAstNode(item));
+        }
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->forall(vars, PyAstNode_AsAstNode(op2)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_iff(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1654,6 +1693,7 @@ namespace triton {
         {"duplicate",       AstContext_duplicate,       METH_O,           ""},
         {"equal",           AstContext_equal,           METH_VARARGS,     ""},
         {"extract",         AstContext_extract,         METH_VARARGS,     ""},
+        {"forall",          AstContext_forall,          METH_VARARGS,     ""},
         {"iff",             AstContext_iff,             METH_VARARGS,     ""},
         {"ite",             AstContext_ite,             METH_VARARGS,     ""},
         {"land",            AstContext_land,            METH_O,           ""},

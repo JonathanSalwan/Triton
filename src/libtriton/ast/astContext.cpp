@@ -766,6 +766,10 @@ namespace triton {
     }
 
 
+    template TRITON_EXPORT SharedAbstractNode AstContext::forall(const std::vector<SharedAbstractNode>& exprs, const SharedAbstractNode& body);
+    template TRITON_EXPORT SharedAbstractNode AstContext::forall(const std::list<SharedAbstractNode>& exprs, const SharedAbstractNode& body);
+
+
     SharedAbstractNode AstContext::iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2) {
       SharedAbstractNode node = std::make_shared<IffNode>(expr1, expr2);
       if (node == nullptr)

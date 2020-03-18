@@ -83,6 +83,7 @@ class TestAstRepresentation(unittest.TestCase):
             (self.astCtxt.string("test"),                        "test",                                                         "test"),
             (self.astCtxt.sx(8, self.v1),                        "((_ sign_extend 8) SymVar_0)",                                 "sx(0x8, SymVar_0)"),
             (self.astCtxt.zx(8, self.v1),                        "((_ zero_extend 8) SymVar_0)",                                 "SymVar_0"),
+            (self.astCtxt.forall([self.v1], 1 == self.v1),       "(forall ((SymVar_0 (_ BitVec 8))) (= SymVar_0 (_ bv1 8)))",    "forall([symvar_0], (symvar_0 == 0x1))"),
         ]
 
     def test_smt_representation(self):

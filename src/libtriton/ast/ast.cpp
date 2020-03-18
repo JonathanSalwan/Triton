@@ -92,6 +92,7 @@ namespace triton {
         case BVULT_NODE:
         case DISTINCT_NODE:
         case EQUAL_NODE:
+        case FORALL_NODE:
         case IFF_NODE:
         case LAND_NODE:
         case LNOT_NODE:
@@ -2284,6 +2285,57 @@ namespace triton {
     }
 
 
+    /* ====== forall */
+
+
+    void ForallNode::init(bool withParents) {
+      triton::uint32 size = this->children.size();
+
+      if (size < 2)
+        throw triton::exceptions::Ast("ForallNode::init(): Must take at least two children.");
+
+      for (triton::uint32 i = 0; i != size - 1; i++) {
+        if (this->children[i]->getType() != VARIABLE_NODE)
+          throw triton::exceptions::Ast("ForallNode::init(): Must take a variable node as first arguments.");
+      }
+
+      if (this->children[size - 1]->isLogical() == false)
+        throw triton::exceptions::Ast("ForallNode::init(): Must take a logical node as body.");
+
+      this->size       = 1;
+      this->eval       = 0;
+      this->level      = 1;
+      this->symbolized = false;
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+        this->level += this->children[index]->getLevel();
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
+
+      this->initHash();
+    }
+
+
+    void ForallNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = this->type;
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
+    }
+
+
     /* ====== iff */
 
 
@@ -2943,6 +2995,8 @@ namespace triton {
     template TRITON_EXPORT CompoundNode::CompoundNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT ConcatNode::ConcatNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT ConcatNode::ConcatNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
+    template TRITON_EXPORT ForallNode::ForallNode(const std::list<SharedAbstractNode>& vars, const SharedAbstractNode& body);
+    template TRITON_EXPORT ForallNode::ForallNode(const std::vector<SharedAbstractNode>& vars, const SharedAbstractNode& body);
     template TRITON_EXPORT LandNode::LandNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LandNode::LandNode(const std::vector<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
     template TRITON_EXPORT LorNode::LorNode(const std::list<SharedAbstractNode>& exprs, const SharedAstContext& ctxt);
@@ -3059,6 +3113,7 @@ namespace triton {
         case DISTINCT_NODE:             newNode = std::make_shared<DistinctNode>(*reinterpret_cast<DistinctNode*>(node)); break;
         case EQUAL_NODE:                newNode = std::make_shared<EqualNode>(*reinterpret_cast<EqualNode*>(node));       break;
         case EXTRACT_NODE:              newNode = std::make_shared<ExtractNode>(*reinterpret_cast<ExtractNode*>(node));   break;
+        case FORALL_NODE:               newNode = std::make_shared<ForallNode>(*reinterpret_cast<ForallNode*>(node));     break;
         case IFF_NODE:                  newNode = std::make_shared<IffNode>(*reinterpret_cast<IffNode*>(node));           break;
         case INTEGER_NODE:              newNode = std::make_shared<IntegerNode>(*reinterpret_cast<IntegerNode*>(node));   break;
         case ITE_NODE:                  newNode = std::make_shared<IteNode>(*reinterpret_cast<IteNode*>(node));           break;

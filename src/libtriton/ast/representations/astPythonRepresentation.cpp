@@ -60,6 +60,7 @@ namespace triton {
           case DISTINCT_NODE:             return this->print(stream, reinterpret_cast<triton::ast::DistinctNode*>(node)); break;
           case EQUAL_NODE:                return this->print(stream, reinterpret_cast<triton::ast::EqualNode*>(node)); break;
           case EXTRACT_NODE:              return this->print(stream, reinterpret_cast<triton::ast::ExtractNode*>(node)); break;
+          case FORALL_NODE:               return this->print(stream, reinterpret_cast<triton::ast::ForallNode*>(node)); break;
           case IFF_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IffNode*>(node)); break;
           case INTEGER_NODE:              return this->print(stream, reinterpret_cast<triton::ast::IntegerNode*>(node)); break;
           case ITE_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::IteNode*>(node)); break;
@@ -358,6 +359,23 @@ namespace triton {
           stream << "(" << node->getChildren()[2] << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
         else
           stream << "((" << node->getChildren()[2] << " >> " << low << ")" << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
+
+        return stream;
+      }
+
+
+      /* forall representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ForallNode* node) {
+        triton::uint32 size = node->getChildren().size() - 1;
+
+        stream << "forall([";
+        for (triton::uint32 i = 0; i != size; i++) {
+          const auto& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[i].get())->getSymbolicVariable();
+          if (var->getAlias().empty())  stream << var->getName();
+          else                          stream << var->getAlias();
+          if (i + 1 != size)            stream << ", ";
+        }
+        stream << "], " << node->getChildren()[size] << ")";
 
         return stream;
       }

@@ -601,6 +601,23 @@ namespace triton {
     };
 
 
+    //! `(forall ((x (_ BitVec <size>)), ...) body)`
+    class ForallNode : public AbstractNode {
+      private:
+        void initHash(void);
+
+      public:
+        template <typename T> ForallNode(const T& vars, const SharedAbstractNode& body)
+          : AbstractNode(FORALL_NODE, body->getContext()) {
+          for (auto var : vars)
+            this->addChild(var);
+          this->addChild(body);
+        }
+
+        TRITON_EXPORT void init(bool withParents=false);
+    };
+
+
     //! `(iff <expr1> <expr2>)`
     class IffNode : public AbstractNode {
       private:

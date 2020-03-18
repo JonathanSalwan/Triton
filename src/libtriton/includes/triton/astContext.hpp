@@ -208,6 +208,15 @@ namespace triton {
         //! AST C++ API - extract node builder
         TRITON_EXPORT SharedAbstractNode extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
 
+        //! AST C++ API - forall node builder
+        template <typename T> SharedAbstractNode forall(const T& vars, const SharedAbstractNode& body) {
+          SharedAbstractNode node = std::make_shared<ForallNode>(vars, body);
+          if (node == nullptr)
+            throw triton::exceptions::Ast("Node builders - Not enough memory");
+          node->init();
+          return node;
+        }
+
         //! AST C++ API - iff node builder
         TRITON_EXPORT SharedAbstractNode iff(const SharedAbstractNode& expr1, const SharedAbstractNode& expr2);
 
