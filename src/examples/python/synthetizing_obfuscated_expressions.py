@@ -31,6 +31,8 @@
 ## python ./synthetizing_obfuscated_expressions.py  0.12s user 0.01s system 99% cpu 0.125 total
 ##
 
+from __future__ import print_function
+
 import sys
 import ctypes
 
