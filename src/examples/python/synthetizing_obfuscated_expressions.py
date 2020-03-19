@@ -19,6 +19,9 @@
 ## In: (bvadd (bvadd (bvneg (bvor SymVar_0 SymVar_1)) SymVar_1) SymVar_0)
 ## Out: (bvand SymVar_1 SymVar_0)
 ##
+## In: (bvshl (bvlshr (bvshl SymVar_2 (_ bv8 32)) (_ bv16 32)) (_ bv8 32))
+## Out: (bvand SymVar_2 (_ bv16776960 32))
+##
 
 import sys
 import ctypes
@@ -26,8 +29,13 @@ import ctypes
 from triton import *
 
 
-# Oracles table, each entry is structured as follow (x, y, result).
-# More entries there are, more precise is the result.
+# Oracles table, each entry is structured as follow (x value, y value, result).
+# More entries there are, more precise is the result for example checkout
+# this table [0] or generate your own table with [1].
+#
+# [0] http://shell-storm.org/repo/Notepad/synthesis_tables.py
+# [1] http://shell-storm.org/repo/Notepad/gen_synthesis_tables.py
+
 oracles_table = [
     {
         'oracles'   : [(0, 0, 0), (0, 1, 1), (1, 0, 1), (1, 1, 2)],
@@ -52,32 +60,71 @@ oracles_table = [
 ]
 
 
+sizes_table = {
+    8:  ctypes.c_uint8,
+    16: ctypes.c_uint16,
+    32: ctypes.c_uint32,
+    64: ctypes.c_uint64,
+}
+
+
+# Two vars synthetizing
+def two_vars_synthetizing(ctx, expr, x, y):
+    for entry in oracles_table:
+        valid = True
+
+        for oracle in entry['oracles']:
+            ctx.setConcreteVariableValue(x.getSymbolicVariable(), sizes_table[x.getBitvectorSize()](oracle[0]).value)
+            ctx.setConcreteVariableValue(y.getSymbolicVariable(), sizes_table[y.getBitvectorSize()](oracle[1]).value)
+            if expr.evaluate() != sizes_table[y.getBitvectorSize()](oracle[2]).value:
+                valid = False
+                break
+
+        if valid is True:
+            return eval(entry['synthesis'])
+
+    return expr
+
+
+# Constant synthetizing
+def constant_synthetizing(ctx, expr, x):
+    ast = ctx.getAstContext()
+    c   = ast.variable(ctx.newSymbolicVariable(x.getBitvectorSize()))
+
+    synth = [
+        (x & c, 'x & c'),
+        (x * c, 'x * c'),
+        (x ^ c, 'x ^ c'),
+        (x + c, 'x + c'),
+        (x - c, 'x - c'),
+        (c - x, 'c - x'),
+    ]
+
+    for op, s in synth:
+        m = ctx.getModel(ast.forall([x], expr == op))
+        if m:
+            c = m[c.getSymbolicVariable().getId()].getValue()
+            return eval(s)
+
+    return expr
+
+
 def synthetize(ctx, expr):
     ast       = ctx.getAstContext()
     variables = ast.search(expr, AST_NODE.VARIABLE)
 
-    x = variables[0]
-    y = variables[1]
-    s = {
-        8:  ctypes.c_uint8,
-        16: ctypes.c_uint16,
-        32: ctypes.c_uint32,
-        64: ctypes.c_uint64,
-    }
+    # There is no variable in the expression
+    if len(variables) == 0:
+        return expr
 
-    for entry in oracles_table:
-        OK = False
-        for oracle in entry['oracles']:
-            ctx.setConcreteVariableValue(x.getSymbolicVariable(), s[x.getBitvectorSize()](oracle[0]).value)
-            ctx.setConcreteVariableValue(y.getSymbolicVariable(), s[y.getBitvectorSize()](oracle[1]).value)
-            if expr.evaluate() != s[y.getBitvectorSize()](oracle[2]).value:
-                OK = False
-                break
-            else:
-                OK = True
-                continue
-        if OK is True:
-            return eval(entry['synthesis'])
+    elif len(variables) == 1:
+        x = variables[0]
+        return constant_synthetizing(ctx, expr, x)
+
+    elif len(variables) == 2:
+        x = variables[0]
+        y = variables[1]
+        return two_vars_synthetizing(ctx, expr, x, y)
 
     return expr
 
@@ -88,6 +135,7 @@ def main():
 
     x = ast.variable(ctx.newSymbolicVariable(8))
     y = ast.variable(ctx.newSymbolicVariable(8))
+    z = ast.variable(ctx.newSymbolicVariable(32))
 
     # Some obfuscated expressions
     obf_exprs = [
@@ -96,6 +144,7 @@ def main():
         (x & ~y) | (~x & y),    # x ^ y
         (x ^ y) + y - (~x & y), # x | y
         -(x | y) + y + x,       # x & y
+        ((z << 8) >> 16) << 8,  # z & 0xffff00
     ]
 
     for expr in obf_exprs:
