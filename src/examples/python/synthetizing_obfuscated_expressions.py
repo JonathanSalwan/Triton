@@ -138,7 +138,7 @@ def synthetize(ctx, expr):
 
 
 # The following function returns an MBA-obfuscated expression found by
-# Mougey et al. while analyzing an obfuscated program. I take this
+# Mougey et al. while analyzing an obfuscated program. I took this
 # representation from the Ninon Eyrolle's thesis. The MBA performs
 # the following operation: (x ^ 92).
 def x_xor_92_obfuscated(x):
