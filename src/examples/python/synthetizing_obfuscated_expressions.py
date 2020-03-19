@@ -3,7 +3,7 @@
 ##
 ## Example of synthetizing obfuscated expressions.
 ##
-## $ python ./synthetizing_obfuscated_expressions.py
+## $ time python ./synthetizing_obfuscated_expressions.py
 ## In: (((((SymVar_0 | SymVar_1) + SymVar_1) & 0xff) - ((~(SymVar_0) & 0xff) & SymVar_1)) & 0xff)
 ## Out: ((SymVar_0 + SymVar_1) & 0xff)
 ##
@@ -27,6 +27,8 @@
 ##
 ## In: (((0xed * ((((((((0x2d * ((((((((((((((((((0x3a * (((((((((((0x56 * ((((((((((((0xed * ((((0xe5 * Sy ...
 ## Out: (SymVar_0 ^ 0x5c)
+##
+## python ./synthetizing_obfuscated_expressions.py  0.12s user 0.01s system 99% cpu 0.125 total
 ##
 
 import sys
