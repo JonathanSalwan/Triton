@@ -524,14 +524,10 @@ namespace triton {
 
       this->astCtxt   = nullptr;
       this->irBuilder = nullptr;
-      this->modes     = nullptr;
       this->solver    = nullptr;
       this->symbolic  = nullptr;
       this->taint     = nullptr;
     }
-
-    // Use default modes.
-    this->modes = std::make_shared<triton::modes::Modes>();
 
     // Clean up the ast context
     this->astCtxt = std::make_shared<triton::ast::AstContext>(this->modes);
@@ -546,7 +542,8 @@ namespace triton {
       this->removeEngines();
       this->initEngines();
       this->clearArchitecture();
-      this->removeAllCallbacks();
+      this->clearCallbacks();
+      this->clearModes();
     }
   }
 
@@ -613,8 +610,8 @@ namespace triton {
   }
 
 
-  void API::removeAllCallbacks(void) {
-    this->callbacks.removeAllCallbacks();
+  void API::clearCallbacks(void) {
+    this->callbacks.clearCallbacks();
   }
 
 
@@ -672,6 +669,11 @@ namespace triton {
 
   bool API::isModeEnabled(triton::modes::mode_e mode) const {
     return this->modes->isModeEnabled(mode);
+  }
+
+
+  void API::clearModes(void) {
+    this->modes->clearModes();
   }
 
 

@@ -52,6 +52,12 @@ The symbolic expression (`symExpr`) must be aligned to the targeted size registe
 - <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
 Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
+- <b>void clearCallbacks(void)</b><br>
+Clears recorded callbacks.
+
+- <b>void clearModes(void)</b><br>
+Clears recorded modes.
+
 - <b>void clearPathConstraints(void)</b><br>
 Clears the current path predicate.
 
@@ -264,9 +270,6 @@ Processes an instruction and updates engines according to the instruction semant
 
 - <b>void pushPathConstraint(\ref py_AstNode_page node)</b><br>
 Pushs constraints to the current path predicate.
-
-- <b>void removeAllCallbacks(void)</b><br>
-Removes all recorded callbacks.
 
 - <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
@@ -723,6 +726,38 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
+      }
+
+
+      static PyObject* TritonContext_clearCallbacks(PyObject* self, PyObject* noarg) {
+        try {
+          PyTritonContext_AsTritonContext(self)->clearCallbacks();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
+      static PyObject* TritonContext_clearModes(PyObject* self, PyObject* noarg) {
+        try {
+          PyTritonContext_AsTritonContext(self)->clearModes();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
       }
 
 
@@ -2066,22 +2101,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_removeAllCallbacks(PyObject* self, PyObject* noarg) {
-        try {
-          PyTritonContext_AsTritonContext(self)->removeAllCallbacks();
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* TritonContext_removeCallback(PyObject* self, PyObject* args) {
         PyObject* cb       = nullptr;
         PyObject* function = nullptr;
@@ -2889,6 +2908,8 @@ namespace triton {
         {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,       METH_VARARGS,       ""},
         {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,     METH_VARARGS,       ""},
         {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                         METH_O,             ""},
+        {"clearCallbacks",                      (PyCFunction)TritonContext_clearCallbacks,                         METH_NOARGS,        ""},
+        {"clearModes",                          (PyCFunction)TritonContext_clearModes,                             METH_NOARGS,        ""},
         {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
@@ -2953,7 +2974,6 @@ namespace triton {
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                      METH_NOARGS,        ""},
         {"processing",                          (PyCFunction)TritonContext_processing,                             METH_O,             ""},
         {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                     METH_O,             ""},
-        {"removeAllCallbacks",                  (PyCFunction)TritonContext_removeAllCallbacks,                     METH_NOARGS,        ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                         METH_VARARGS,       ""},
         {"reset",                               (PyCFunction)TritonContext_reset,                                  METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                        METH_O,             ""},

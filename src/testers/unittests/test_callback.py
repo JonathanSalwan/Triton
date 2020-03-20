@@ -50,7 +50,7 @@ class TestCallback(unittest.TestCase):
         self.assertTrue(flag)
 
         flag = False
-        self.Triton.removeAllCallbacks()
+        self.Triton.clearCallbacks()
         self.Triton.processing(Instruction(b"\x48\x89\xd8"))  # mov rax, rbx
         self.assertFalse(flag)
 

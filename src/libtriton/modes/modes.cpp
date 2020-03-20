@@ -23,6 +23,12 @@ namespace triton {
     }
 
 
+    Modes& Modes::operator=(const Modes& other) {
+      this->copy(other);
+      return *this;
+    }
+
+
     void Modes::copy(const Modes& other) {
       this->enabledModes = other.enabledModes;
     }
@@ -43,11 +49,9 @@ namespace triton {
     }
 
 
-    Modes& Modes::operator=(const Modes& other) {
-      this->copy(other);
-      return *this;
+    void Modes::clearModes(void) {
+      this->enabledModes.clear();
     }
 
   }; /* modes namespace */
 }; /*triton namespace */
-

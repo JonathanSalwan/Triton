@@ -134,8 +134,8 @@ namespace triton {
         //! Adds a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
-        //! Removes all recorded callbacks.
-        TRITON_EXPORT void removeAllCallbacks(void);
+        //! Clears recorded callbacks.
+        TRITON_EXPORT void clearCallbacks(void);
 
         //! Deletes a GET_CONCRETE_MEMORY_VALUE callback.
         TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);

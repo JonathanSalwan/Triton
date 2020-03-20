@@ -275,8 +275,8 @@ namespace triton {
         //! [**callbacks api**] - Adds a SYMBOLIC_SIMPLIFICATION callback.
         TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
-        //! [**callbacks api**] - Removes all recorded callbacks.
-        TRITON_EXPORT void removeAllCallbacks(void);
+        //! [**callbacks api**] - Clears recorded callbacks.
+        TRITON_EXPORT void clearCallbacks(void);
 
         //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback (LOAD).
         TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
@@ -311,6 +311,9 @@ namespace triton {
 
         //! [**modes api**] - Returns true if the mode is enabled.
         TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
+
+        //! [**modes api**] - Clears recorded modes.
+        TRITON_EXPORT void clearModes(void);
 
 
 

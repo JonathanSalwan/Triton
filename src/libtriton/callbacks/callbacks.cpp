@@ -53,7 +53,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeAllCallbacks(void) {
+    void Callbacks::clearCallbacks(void) {
       this->getConcreteMemoryValueCallbacks.clear();
       this->getConcreteRegisterValueCallbacks.clear();
       this->setConcreteMemoryValueCallbacks.clear();

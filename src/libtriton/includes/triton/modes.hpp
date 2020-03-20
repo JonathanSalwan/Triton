@@ -49,14 +49,17 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT Modes(const Modes& other);
 
+        //! Copies a Modes.
+        TRITON_EXPORT Modes& operator=(const Modes& other);
+
         //! Returns true if the mode is enabled.
         TRITON_EXPORT bool isModeEnabled(triton::modes::mode_e mode) const;
 
         //! Enables or disables a specific mode.
         TRITON_EXPORT void setMode(triton::modes::mode_e mode, bool flag);
 
-        //! Copies a Modes.
-        TRITON_EXPORT Modes& operator=(const Modes& other);
+        //! Clears recorded modes.
+        TRITON_EXPORT void clearModes(void);
     };
 
     //! Shared Modes.
