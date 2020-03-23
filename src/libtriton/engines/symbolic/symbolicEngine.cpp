@@ -868,6 +868,11 @@ namespace triton {
         triton::ast::SharedAbstractNode finalExpr = nullptr;
         triton::uint32 regSize                    = reg.getSize();
 
+        /* If it's a flag register, there is nothing to do with sub register */
+        if (this->architecture->isFlag(reg)) {
+          return node;
+        }
+
         switch (regSize) {
           case BYTE_SIZE: {
             auto origReg = this->getRegisterAst(parentReg);
@@ -931,15 +936,8 @@ namespace triton {
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment) {
         SharedSymbolicExpression se = nullptr;
 
-        /* Check if the register is a flag */
-        if (this->architecture->isFlag(reg)) {
-          se = this->newSymbolicExpression(node, REGISTER_EXPRESSION, comment);
-          this->assignSymbolicExpressionToRegister(se, reg);
-        }
-        else {
-          se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, comment);
-          this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
-        }
+        se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, comment);
+        this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
 
         inst.setWrittenRegister(reg, node);
         return inst.addSymbolicExpression(se);

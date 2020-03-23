@@ -420,3 +420,15 @@ class TestIssue860(unittest.TestCase):
         # ((x << 8) >> 16) << 8 == x & 0xffff00
         m = self.ctx.getModel(self.ast.forall([x], ((x << 8) >> 16) << 8 == x & c))
         self.assertEqual(m[1].getValue(), 0x00ffff00)
+
+
+class TestIssue862(unittest.TestCase):
+    """Testing #862."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_issue(self):
+        v = self.ctx.symbolizeRegister(self.ctx.registers.zf)
+        self.assertEqual(v.getName(), "SymVar_0")
