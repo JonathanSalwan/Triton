@@ -480,6 +480,8 @@ def main():
     # Set optimization
     ctx.setMode(MODE.ALIGNED_MEMORY, True)
     ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.CONSTANT_FOLDING, True)
+    ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
     # AST representation as Python syntax
     ctx.setAstRepresentationMode(AST_REPRESENTATION.SMT)
