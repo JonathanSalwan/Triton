@@ -481,9 +481,9 @@ namespace triton {
        * symbolizeExpression(43, 8)
        * #43 = SymVar_4
        */
-      SharedSymbolicVariable SymbolicEngine::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarAlias) {
         const SharedSymbolicExpression& expression = this->getSymbolicExpression(exprId);
-        const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(UNDEFINED_VARIABLE, 0, symVarSize, symVarComment);
+        const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(UNDEFINED_VARIABLE, 0, symVarSize, symVarAlias);
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt->variable(symVar);
 
         if (expression->getAst())
@@ -496,13 +496,13 @@ namespace triton {
 
 
       /* The memory size is used to define the symbolic variable's size. */
-      SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias) {
         triton::uint64 memAddr    = mem.getAddress();
         triton::uint32 symVarSize = mem.getSize();
         triton::uint512 cv        = this->architecture->getConcreteMemoryValue(mem);
 
         /* First we create a symbolic variable */
-        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(MEMORY_VARIABLE, memAddr, symVarSize * BYTE_SIZE_BIT, symVarComment);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(MEMORY_VARIABLE, memAddr, symVarSize * BYTE_SIZE_BIT, symVarAlias);
 
         /* Create the AST node */
         const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt->variable(symVar);
@@ -537,7 +537,7 @@ namespace triton {
       }
 
 
-      SharedSymbolicVariable SymbolicEngine::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment) {
+      SharedSymbolicVariable SymbolicEngine::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias) {
         const triton::arch::Register& parent  = this->architecture->getRegister(reg.getParent());
         triton::uint32 symVarSize             = reg.getBitSize();
         triton::uint512 cv                    = this->architecture->getConcreteRegisterValue(reg);
@@ -549,7 +549,7 @@ namespace triton {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::symbolizeRegister(): This register is immutable");
 
         /* Create the symbolic variable */
-        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(REGISTER_VARIABLE, reg.getId(), symVarSize, symVarComment);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(REGISTER_VARIABLE, reg.getId(), symVarSize, symVarAlias);
 
         /* Create the AST node */
         const triton::ast::SharedAbstractNode& tmp = this->insertSubRegisterInParent(reg, this->astCtxt->variable(symVar), false);
@@ -568,10 +568,10 @@ namespace triton {
 
 
       /* Adds a new symbolic variable */
-      SharedSymbolicVariable SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 origin, triton::uint32 size, const std::string& comment) {
+      SharedSymbolicVariable SymbolicEngine::newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 origin, triton::uint32 size, const std::string& alias) {
         triton::usize uniqueId = this->getUniqueSymVarId();
 
-        SharedSymbolicVariable symVar = std::make_shared<SymbolicVariable>(type, origin, uniqueId, size, comment);
+        SharedSymbolicVariable symVar = std::make_shared<SymbolicVariable>(type, origin, uniqueId, size, alias);
         if (symVar == nullptr)
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
 

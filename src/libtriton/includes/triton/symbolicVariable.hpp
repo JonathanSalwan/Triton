@@ -84,7 +84,7 @@ namespace triton {
                                          triton::uint64 origin,
                                          triton::usize id,
                                          triton::uint32 size,
-                                         const std::string& comment);
+                                         const std::string& alias);
 
           //! Constructor by copy.
           TRITON_EXPORT SymbolicVariable(const SymbolicVariable& other);

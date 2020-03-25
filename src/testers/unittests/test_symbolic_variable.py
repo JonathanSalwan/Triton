@@ -16,7 +16,7 @@ class TestSymbolicVariable(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.X86_64)
         self.v0 = self.ctx.newSymbolicVariable(8)
         self.v1 = self.ctx.newSymbolicVariable(16)
-        self.v2 = self.ctx.newSymbolicVariable(32, "test com")
+        self.v2 = self.ctx.newSymbolicVariable(32, "v2")
         self.v3 = self.ctx.newSymbolicVariable(32)
         self.v3.setAlias("v3")
 
@@ -48,27 +48,30 @@ class TestSymbolicVariable(unittest.TestCase):
         """Test comment"""
         self.assertEqual(self.v0.getComment(), "")
         self.assertEqual(self.v1.getComment(), "")
-        self.assertEqual(self.v2.getComment(), "test com")
+        self.assertEqual(self.v2.getAlias(), "v2")
 
         self.v0.setComment("test v0")
         self.v1.setComment("test v1")
 
         self.assertEqual(self.v0.getComment(), "test v0")
         self.assertEqual(self.v1.getComment(), "test v1")
-        self.assertEqual(self.v2.getComment(), "test com")
+        self.assertEqual(self.v2.getComment(), "")
 
     def test_str(self):
         """Test variable representation"""
         self.assertEqual(str(self.v0), "SymVar_0:8")
         self.assertEqual(str(self.v1), "SymVar_1:16")
-        self.assertEqual(str(self.v2), "SymVar_2:32")
+        self.assertEqual(str(self.v2), "v2:32")
 
     def test_alias(self):
         """Test alias"""
+        self.assertEqual(self.v2.getName(), "SymVar_2")
         self.assertEqual(self.v3.getName(), "SymVar_3")
         self.assertEqual(self.v3.getAlias(), "v3")
         self.assertEqual(str(self.v3), "v3:32")
         self.assertEqual(self.v3.getId(), 3)
+        self.assertEqual(str(self.v2), "v2:32")
+        self.assertEqual(self.v2.getId(), 2)
 
     def test_model_with_alias(self):
         var = self.ctx.symbolizeRegister(self.ctx.registers.rax)

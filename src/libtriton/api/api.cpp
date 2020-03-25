@@ -686,21 +686,21 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarAlias) {
     this->checkSymbolic();
-    return this->symbolic->symbolizeExpression(exprId, symVarSize, symVarComment);
+    return this->symbolic->symbolizeExpression(exprId, symVarSize, symVarAlias);
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias) {
     this->checkSymbolic();
-    return this->symbolic->symbolizeMemory(mem, symVarComment);
+    return this->symbolic->symbolizeMemory(mem, symVarAlias);
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias) {
     this->checkSymbolic();
-    return this->symbolic->symbolizeRegister(reg, symVarComment);
+    return this->symbolic->symbolizeRegister(reg, symVarAlias);
   }
 
 
@@ -758,9 +758,9 @@ namespace triton {
   }
 
 
-  triton::engines::symbolic::SharedSymbolicVariable API::newSymbolicVariable(triton::uint32 varSize, const std::string& comment) {
+  triton::engines::symbolic::SharedSymbolicVariable API::newSymbolicVariable(triton::uint32 varSize, const std::string& alias) {
     this->checkSymbolic();
-    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, varSize, comment);
+    return this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, varSize, alias);
   }
 
 

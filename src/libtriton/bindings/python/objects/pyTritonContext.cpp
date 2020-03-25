@@ -259,7 +259,7 @@ Returns true if the taint engine is enabled.
 - <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
-- <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string alias)</b><br>
 Returns a new symbolic variable.
 
 - <b>void popPathConstraint(void)</b><br>
@@ -322,13 +322,13 @@ set to True, Triton will use z3 to simplify the given `node` before calling its 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
-- <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string symVarAlias)</b><br>
 Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page symbolizeMemory(\ref py_MemoryAccess_page mem, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeMemory(\ref py_MemoryAccess_page mem, string symVarAlias)</b><br>
 Converts a symbolic memory expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string comment)</b><br>
+- <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string symVarAlias)</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
 - <b>bool taintAssignment(\ref py_MemoryAccess_page memDst, \ref py_Immediate_page immSrc)</b><br>
@@ -2019,26 +2019,26 @@ namespace triton {
 
 
       static PyObject* TritonContext_newSymbolicVariable(PyObject* self, PyObject* args) {
-        PyObject* size        = nullptr;
-        PyObject* comment     = nullptr;
-        std::string ccomment  = "";
+        PyObject* size      = nullptr;
+        PyObject* alias     = nullptr;
+        std::string calias  = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &size, &comment) == false) {
+        if (PyArg_ParseTuple(args, "|OO", &size, &alias) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::newSymbolicVariable(): Invalid number of arguments");
         }
 
         if (size == nullptr || (!PyLong_Check(size) && !PyInt_Check(size)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::newSymbolicVariable(): Expects an integer as first argument.");
 
-        if (comment != nullptr && !PyStr_Check(comment))
+        if (alias != nullptr && !PyStr_Check(alias))
           return PyErr_Format(PyExc_TypeError, "TritonContext::newSymbolicVariable(): Expects a sting as second  argument.");
 
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
+        if (alias != nullptr)
+          calias = PyStr_AsString(alias);
 
         try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->newSymbolicVariable(PyLong_AsUint32(size), ccomment));
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->newSymbolicVariable(PyLong_AsUint32(size), calias));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2551,11 +2551,11 @@ namespace triton {
       static PyObject* TritonContext_symbolizeExpression(PyObject* self, PyObject* args) {
         PyObject* exprId        = nullptr;
         PyObject* symVarSize    = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
+        PyObject* symVarAlias   = nullptr;
+        std::string calias      = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &comment) == false) {
+        if (PyArg_ParseTuple(args, "|OOO", &exprId, &symVarSize, &symVarAlias) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Invalid number of arguments");
         }
 
@@ -2565,14 +2565,14 @@ namespace triton {
         if (symVarSize == nullptr || (!PyLong_Check(symVarSize) && !PyInt_Check(symVarSize)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Expects an integer as second argument.");
 
-        if (comment != nullptr && !PyStr_Check(comment))
+        if (symVarAlias != nullptr && !PyStr_Check(symVarAlias))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeExpression(): Expects a sting as third argument.");
 
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
+        if (symVarAlias != nullptr)
+          calias = PyStr_AsString(symVarAlias);
 
         try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeExpression(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), ccomment));
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeExpression(PyLong_AsUsize(exprId), PyLong_AsUint32(symVarSize), calias));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2585,25 +2585,25 @@ namespace triton {
 
       static PyObject* TritonContext_symbolizeMemory(PyObject* self, PyObject* args) {
         PyObject* mem           = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
+        PyObject* symVarAlias   = nullptr;
+        std::string calias      = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &mem, &comment) == false) {
+        if (PyArg_ParseTuple(args, "|OO", &mem, &symVarAlias) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Invalid number of arguments");
         }
 
         if (mem == nullptr || (!PyMemoryAccess_Check(mem)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Expects a MemoryAccess as first argument.");
 
-        if (comment != nullptr && !PyStr_Check(comment))
+        if (symVarAlias != nullptr && !PyStr_Check(symVarAlias))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeMemory(): Expects a sting as second argument.");
 
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
+        if (symVarAlias != nullptr)
+          calias = PyStr_AsString(symVarAlias);
 
         try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeMemory(*PyMemoryAccess_AsMemoryAccess(mem), ccomment));
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeMemory(*PyMemoryAccess_AsMemoryAccess(mem), calias));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2616,25 +2616,25 @@ namespace triton {
 
       static PyObject* TritonContext_symbolizeRegister(PyObject* self, PyObject* args) {
         PyObject* reg           = nullptr;
-        PyObject* comment       = nullptr;
-        std::string ccomment    = "";
+        PyObject* symVarAlias   = nullptr;
+        std::string calias      = "";
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &reg, &comment) == false) {
+        if (PyArg_ParseTuple(args, "|OO", &reg, &symVarAlias) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Invalid number of arguments");
         }
 
         if (reg == nullptr || (!PyRegister_Check(reg)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Expects a Register as first argument.");
 
-        if (comment != nullptr && !PyStr_Check(comment))
+        if (symVarAlias != nullptr && !PyStr_Check(symVarAlias))
           return PyErr_Format(PyExc_TypeError, "TritonContext::symbolizeRegister(): Expects a sting as second argument.");
 
-        if (comment != nullptr)
-          ccomment = PyStr_AsString(comment);
+        if (symVarAlias != nullptr)
+          calias = PyStr_AsString(symVarAlias);
 
         try {
-          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeRegister(*PyRegister_AsRegister(reg), ccomment));
+          return PySymbolicVariable(PyTritonContext_AsTritonContext(self)->symbolizeRegister(*PyRegister_AsRegister(reg), calias));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;

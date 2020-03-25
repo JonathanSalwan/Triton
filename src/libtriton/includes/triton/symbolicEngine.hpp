@@ -176,7 +176,7 @@ namespace triton {
           TRITON_EXPORT void removeSymbolicExpression(const SharedSymbolicExpression& expr);
 
           //! Adds a symbolic variable.
-          TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& comment="");
+          TRITON_EXPORT SharedSymbolicVariable newSymbolicVariable(triton::engines::symbolic::variable_e type, triton::uint64 source, triton::uint32 size, const std::string& alias="");
 
           //! Returns the symbolic variable corresponding to the symbolic variable id.
           TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
@@ -266,13 +266,13 @@ namespace triton {
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicVariable> getSymbolicVariables(void) const;
 
           //! Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits.
-          TRITON_EXPORT SharedSymbolicVariable symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable symbolizeExpression(triton::usize exprId, triton::uint32 symVarSize, const std::string& symVarAlias="");
 
           //! Converts a symbolic memory expression to a symbolic variable.
-          TRITON_EXPORT SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias="");
 
           //! Converts a symbolic register expression to a symbolic variable.
-          TRITON_EXPORT SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarComment="");
+          TRITON_EXPORT SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias="");
 
           //! Concretizes all symbolic memory references.
           TRITON_EXPORT void concretizeAllMemory(void);

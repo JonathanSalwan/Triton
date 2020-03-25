@@ -19,9 +19,9 @@ namespace triton {
                                          triton::uint64 origin,
                                          triton::usize id,
                                          triton::uint32 size,
-                                         const std::string& comment) {
-        this->alias   = "";
-        this->comment = comment;
+                                         const std::string& alias) {
+        this->alias   = alias;
+        this->comment = "";
         this->id      = id;
         this->name    = TRITON_SYMVAR_NAME + std::to_string(id);
         this->origin  = origin;

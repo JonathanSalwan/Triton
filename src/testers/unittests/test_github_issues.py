@@ -198,8 +198,8 @@ class TestIssue789(unittest.TestCase):
         self.seen_mem.append(addr)
 
         # Create symbolic var
-        comment = "mem_{:#x}".format(ma.getAddress())
-        symvar = ctx.symbolizeMemory(ma,comment)
+        alias = "mem_{:#x}".format(ma.getAddress())
+        symvar = ctx.symbolizeMemory(ma, alias)
         self.mem_symvars.append(symvar)
 
 
@@ -210,8 +210,8 @@ class TestIssue789(unittest.TestCase):
         self.seen_regs.append(reg_id)
 
         # Create symbolic var
-        comment = "sym_reg_{}".format(reg.getName())
-        symvar = ctx.symbolizeRegister(reg, comment)
+        alias = "sym_reg_{}".format(reg.getName())
+        symvar = ctx.symbolizeRegister(reg, alias)
         self.reg_symvars.append(symvar)
 
 
@@ -229,7 +229,7 @@ class TestIssue789(unittest.TestCase):
         self.emulate(0x400000)
         ast = self.ctx.getAstContext()
         rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)
-        self.assertEqual(str(ast.unroll(rax.getAst())), "(bvadd SymVar_2 SymVar_3)")
+        self.assertEqual(str(ast.unroll(rax.getAst())), "(bvadd sym_reg_rax sym_reg_rbx)")
 
 
 
