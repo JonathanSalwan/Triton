@@ -39,6 +39,11 @@ namespace triton {
     }
 
 
+    Instruction::Instruction(triton::uint64 addr, const triton::uint8* opcode, triton::uint32 opSize) : Instruction::Instruction(opcode, opSize) {
+      this->setAddress(addr);
+    }
+
+
     Instruction::Instruction(const Instruction& other) {
       this->copy(other);
     }

@@ -107,6 +107,17 @@ This object is used to represent an Instruction.
 \subsection py_Instruction_constructor Constructor
 
 ~~~~~~~~~~~~~{.py}
+>>> inst = Instruction()
+>>> inst.setAddress(0x40000)
+>>> inst.setOpcode(b"\x48\xC7\xC0\x01\x00\x00\x00")
+>>> ctxt.processing(inst)
+True
+>>> print(inst)
+0x40000: mov rax, 1
+
+~~~~~~~~~~~~~
+
+~~~~~~~~~~~~~{.py}
 >>> inst = Instruction(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> inst.setAddress(0x40000)
 >>> ctxt.processing(inst)
@@ -117,9 +128,7 @@ True
 ~~~~~~~~~~~~~
 
 ~~~~~~~~~~~~~{.py}
->>> inst = Instruction()
->>> inst.setAddress(0x40000)
->>> inst.setOpcode(b"\x48\xC7\xC0\x01\x00\x00\x00")
+>>> inst = Instruction(0x40000, b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
 True
 >>> print(inst)
@@ -795,6 +804,18 @@ namespace triton {
       }
 
 
+      PyObject* PyInstruction(const triton::arch::Instruction& inst) {
+        Instruction_Object* object;
+
+        PyType_Ready(&Instruction_Type);
+        object = PyObject_NEW(Instruction_Object, &Instruction_Type);
+        if (object != NULL)
+          object->inst = new triton::arch::Instruction(inst);
+
+        return (PyObject*)object;
+      }
+
+
       PyObject* PyInstruction(const triton::uint8* opcode, triton::uint32 opSize) {
         Instruction_Object* object;
 
@@ -807,13 +828,13 @@ namespace triton {
       }
 
 
-      PyObject* PyInstruction(const triton::arch::Instruction& inst) {
+      PyObject* PyInstruction(triton::uint64 addr, const triton::uint8* opcode, triton::uint32 opSize) {
         Instruction_Object* object;
 
         PyType_Ready(&Instruction_Type);
         object = PyObject_NEW(Instruction_Object, &Instruction_Type);
         if (object != NULL)
-          object->inst = new triton::arch::Instruction(inst);
+          object->inst = new triton::arch::Instruction(addr, opcode, opSize);
 
         return (PyObject*)object;
       }

@@ -124,6 +124,9 @@ namespace triton {
         //! Constructor with opcode.
         TRITON_EXPORT Instruction(const triton::uint8* opcode, triton::uint32 opSize);
 
+        //! Constructor with opcode and address
+        TRITON_EXPORT Instruction(triton::uint64 addr, const triton::uint8* opcode, triton::uint32 opSize);
+
         //! Constructor by copy.
         TRITON_EXPORT Instruction(const Instruction& other);
 

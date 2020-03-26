@@ -96,6 +96,18 @@ class TestInstruction(unittest.TestCase):
         """Check disassembly equivalent."""
         self.assertEqual(self.inst.getDisassembly(), "add rax, rbx")
 
+    def test_constructor(self):
+        """Check opcode informations."""
+        inst1 = Instruction()
+        inst2 = Instruction(b"\xc3")
+        inst3 = Instruction(0x1000, b"\xc3")
+        self.assertEqual(inst1.getOpcode(), b"")
+        self.assertEqual(inst1.getAddress(), 0)
+        self.assertEqual(inst2.getOpcode(), b"\xc3")
+        self.assertEqual(inst2.getAddress(), 0)
+        self.assertEqual(inst3.getOpcode(), b"\xc3")
+        self.assertEqual(inst3.getAddress(), 0x1000)
+
 
 class TestLoadAccess(unittest.TestCase):
 

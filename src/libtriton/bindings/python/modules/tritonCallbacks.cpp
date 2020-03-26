@@ -99,23 +99,37 @@ namespace triton {
 
 
       static PyObject* triton_Instruction(PyObject* self, PyObject* args) {
-        PyObject* opcodes = nullptr;
+        PyObject* arg1 = nullptr;
+        PyObject* arg2 = nullptr;
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|O", &opcodes) == false) {
+        if (PyArg_ParseTuple(args, "|OO", &arg1, &arg2) == false) {
           return PyErr_Format(PyExc_TypeError, "Instruction(): Invalid constructor.");
         }
 
-        if (opcodes == nullptr)
-          return PyInstruction();
-
-        if (!PyBytes_Check(opcodes))
-          return PyErr_Format(PyExc_TypeError, "Instruction(): Expects bytes as argument.");
-
         try {
-          triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(opcodes));
-          triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(opcodes));
-          return PyInstruction(opc, size);
+          /* Instruction() */
+          if (arg1 == nullptr)
+            return PyInstruction();
+
+          /* Instruction(opcode) */
+          else if (arg1 && PyBytes_Check(arg1) && arg2 == nullptr) {
+            triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(arg1));
+            triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(arg1));
+            return PyInstruction(opc, size);
+          }
+
+          /* Instruction(address, opcode) */
+          else if (arg1 && arg2 && (PyLong_Check(arg1) || PyInt_Check(arg1)) && PyBytes_Check(arg2)) {
+            triton::uint64 addr = PyLong_AsUint64(arg1);
+            triton::uint8* opc  = reinterpret_cast<triton::uint8*>(PyBytes_AsString(arg2));
+            triton::uint32 size = static_cast<triton::uint32>(PyBytes_Size(arg2));
+            return PyInstruction(addr, opc, size);
+          }
+
+          else {
+            return PyErr_Format(PyExc_TypeError, "Instruction(): Expects bytes as first argument or an integer as first and bytes as second argument.");
+          }
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
