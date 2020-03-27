@@ -43,6 +43,9 @@ namespace triton {
         //! Modes API
         triton::modes::SharedModes modes;
 
+        //! AstContext API
+        triton::ast::SharedAstContext astCtxt;
+
         //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 

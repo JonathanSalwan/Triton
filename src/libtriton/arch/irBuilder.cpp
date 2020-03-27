@@ -26,7 +26,7 @@ namespace triton {
                          const triton::ast::SharedAstContext& astCtxt,
                          triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                          triton::engines::taint::TaintEngine* taintEngine)
-      : modes(modes) {
+      : modes(modes), astCtxt(astCtxt) {
 
       if (architecture == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The architecture API must be defined.");
@@ -220,6 +220,8 @@ namespace triton {
         /* Symbolic Expressions */
         this->removeSymbolicExpressions(inst);
       }
+
+      this->astCtxt->garbage();
     }
 
 

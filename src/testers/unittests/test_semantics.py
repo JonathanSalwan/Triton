@@ -51,7 +51,7 @@ class TestIR(unittest.TestCase):
         """
         while pc:
             # Fetch opcode
-            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
+            opcode = self.ctx.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
@@ -59,10 +59,10 @@ class TestIR(unittest.TestCase):
             instruction.setAddress(pc)
 
             # Process
-            self.assertTrue(self.Triton.processing(instruction))
+            self.assertTrue(self.ctx.processing(instruction))
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
+            pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.rip)
 
         return
 
@@ -75,58 +75,58 @@ class TestIR(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
 
     def test_ir(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
+        self.ctx = TritonContext()
         # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx.setArchitecture(ARCH.X86_64)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(0x40065c)
         return
 
     def test_ir_with_opti1(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
+        self.ctx = TritonContext()
         # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(0x40065c)
         return
 
     def test_ir_with_opti2(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
+        self.ctx = TritonContext()
         # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
-        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "ir-test-suite.bin")
         self.load_binary(binary_file)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(0x40065c)
         return
@@ -146,19 +146,19 @@ class TestIRQemu(unittest.TestCase):
     # Simulate the __libc_start_main routine
     def __libc_start_main(self):
         # Get arguments
-        main = self.Triton.getConcreteRegisterValue(self.Triton.registers.rdi)
+        main = self.ctx.getConcreteRegisterValue(self.ctx.registers.rdi)
 
         # Push the return value to jump into the main() function
-        self.Triton.concretizeRegister(self.Triton.registers.rsp)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, self.Triton.getConcreteRegisterValue(self.Triton.registers.rsp)-CPUSIZE.QWORD)
+        self.ctx.concretizeRegister(self.ctx.registers.rsp)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, self.ctx.getConcreteRegisterValue(self.ctx.registers.rsp)-CPUSIZE.QWORD)
 
-        ret2main = MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.registers.rsp), CPUSIZE.QWORD)
-        self.Triton.concretizeMemory(ret2main)
-        self.Triton.setConcreteMemoryValue(ret2main, main)
+        ret2main = MemoryAccess(self.ctx.getConcreteRegisterValue(self.ctx.registers.rsp), CPUSIZE.QWORD)
+        self.ctx.concretizeMemory(ret2main)
+        self.ctx.setConcreteMemoryValue(ret2main, main)
 
         # Setup argc / argv
-        self.Triton.concretizeRegister(self.Triton.registers.rdi)
-        self.Triton.concretizeRegister(self.Triton.registers.rsi)
+        self.ctx.concretizeRegister(self.ctx.registers.rdi)
+        self.ctx.concretizeRegister(self.ctx.registers.rsi)
 
         # Setup target argvs
         argvs = list()
@@ -170,11 +170,11 @@ class TestIRQemu(unittest.TestCase):
         index = 0
         for argv in argvs:
             addrs.append(base)
-            self.Triton.setConcreteMemoryAreaValue(base, argv+'\x00')
+            self.ctx.setConcreteMemoryAreaValue(base, argv+'\x00')
 
             # Tainting argvs
             for i in range(len(argv)):
-                self.Triton.taintMemory(base + i)
+                self.ctx.taintMemory(base + i)
 
             base += len(argv)+1
             index += 1
@@ -182,11 +182,11 @@ class TestIRQemu(unittest.TestCase):
         argc = len(argvs)
         argv = base
         for addr in addrs:
-            self.Triton.setConcreteMemoryValue(MemoryAccess(base, CPUSIZE.QWORD), addr)
+            self.ctx.setConcreteMemoryValue(MemoryAccess(base, CPUSIZE.QWORD), addr)
             base += CPUSIZE.QWORD
 
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rdi, argc)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsi, argv)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, argc)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, argv)
 
         return 0
 
@@ -201,7 +201,7 @@ class TestIRQemu(unittest.TestCase):
         """
         while pc:
             # Fetch opcode
-            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
+            opcode = self.ctx.getConcreteMemoryAreaValue(pc, 16)
 
             # Create the Triton instruction
             instruction = Instruction()
@@ -209,7 +209,7 @@ class TestIRQemu(unittest.TestCase):
             instruction.setAddress(pc)
 
             # Process
-            ret = self.Triton.processing(instruction)
+            ret = self.ctx.processing(instruction)
 
             if instruction.getType() == OPCODE.X86.HLT:
                 break
@@ -221,29 +221,29 @@ class TestIRQemu(unittest.TestCase):
             self.hooking_handler()
 
             # Next
-            pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
+            pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.rip)
 
         return
 
     def hooking_handler(self):
-        pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
+        pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.rip)
         for rel in self.RELO:
             if rel[2] == pc:
                 # Emulate the routine and the return value
                 ret_value = rel[1]()
-                self.Triton.concretizeRegister(self.Triton.registers.rax)
-                self.Triton.setConcreteRegisterValue(self.Triton.registers.rax, ret_value)
+                self.ctx.concretizeRegister(self.ctx.registers.rax)
+                self.ctx.setConcreteRegisterValue(self.ctx.registers.rax, ret_value)
 
                 # Get the return address
-                ret_addr = self.Triton.getConcreteMemoryValue(MemoryAccess(self.Triton.getConcreteRegisterValue(self.Triton.registers.rsp), CPUSIZE.QWORD))
+                ret_addr = self.ctx.getConcreteMemoryValue(MemoryAccess(self.ctx.getConcreteRegisterValue(self.ctx.registers.rsp), CPUSIZE.QWORD))
 
                 # Hijack RIP to skip the call
-                self.Triton.concretizeRegister(self.Triton.registers.rip)
-                self.Triton.setConcreteRegisterValue(self.Triton.registers.rip, ret_addr)
+                self.ctx.concretizeRegister(self.ctx.registers.rip)
+                self.ctx.setConcreteRegisterValue(self.ctx.registers.rip, ret_addr)
 
                 # Restore RSP (simulate the ret)
-                self.Triton.concretizeRegister(self.Triton.registers.rsp)
-                self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, self.Triton.getConcreteRegisterValue(self.Triton.registers.rsp)+CPUSIZE.QWORD)
+                self.ctx.concretizeRegister(self.ctx.registers.rsp)
+                self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, self.ctx.getConcreteRegisterValue(self.ctx.registers.rsp)+CPUSIZE.QWORD)
         return
 
     def load_binary(self, filename):
@@ -255,7 +255,7 @@ class TestIRQemu(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
         return binary
 
     def make_relocation(self, binary):
@@ -269,16 +269,14 @@ class TestIRQemu(unittest.TestCase):
             symbolRelo = rel.address
             for crel in self.RELO:
                 if symbolName == crel[0]:
-                    self.Triton.setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD), crel[2])
+                    self.ctx.setConcreteMemoryValue(MemoryAccess(symbolRelo, CPUSIZE.QWORD), crel[2])
                     break
         return
 
     def test_ir(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
-        # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -287,19 +285,17 @@ class TestIRQemu(unittest.TestCase):
         self.make_relocation(binary)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(binary.entrypoint)
         return
 
     def test_ir_with_opti1(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
-        # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -308,20 +304,18 @@ class TestIRQemu(unittest.TestCase):
         self.make_relocation(binary)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(binary.entrypoint)
         return
 
     def test_ir_with_opti2(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.Triton = TritonContext()
-        # Set arch
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
-        self.Triton.setMode(MODE.AST_OPTIMIZATIONS, True)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -330,8 +324,8 @@ class TestIRQemu(unittest.TestCase):
         self.make_relocation(binary)
 
         # Define a fake stack
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rbp, 0x7fffffff)
-        self.Triton.setConcreteRegisterValue(self.Triton.registers.rsp, 0x6fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rbp, 0x7fffffff)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x6fffffff)
 
         self.emulate(binary.entrypoint)
         return
