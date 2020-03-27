@@ -43,18 +43,18 @@ namespace triton {
     }
 
 
+    const SharedAbstractNode& AstContext::collect(const SharedAbstractNode& node) {
+      this->nodes.push_front(node);
+      return this->nodes.front();
+    }
+
+
     void AstContext::garbage(void) {
       this->nodes.erase(std::remove_if(this->nodes.begin(), this->nodes.end(),
         [](const SharedAbstractNode& n) {
           return (n.use_count() == 1 ? true : false);
         }), this->nodes.end()
       );
-    }
-
-
-    const SharedAbstractNode& AstContext::collect(const SharedAbstractNode& node) {
-      this->nodes.push_front(node);
-      return this->nodes.front();
     }
 
 

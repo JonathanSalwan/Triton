@@ -64,9 +64,6 @@ namespace triton {
         //! The list of nodes
         std::deque<SharedAbstractNode> nodes;
 
-        //! Collect new nodes
-        const SharedAbstractNode& collect(const SharedAbstractNode& node);
-
       public:
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
@@ -76,6 +73,12 @@ namespace triton {
 
         //! Operator
         TRITON_EXPORT AstContext& operator=(const AstContext& other);
+
+        //! Collect new nodes
+        TRITON_EXPORT const SharedAbstractNode& collect(const SharedAbstractNode& node);
+
+        //! Garbage unused nodes.
+        TRITON_EXPORT void garbage(void);
 
         //! AST C++ API - assert node builder
         TRITON_EXPORT const SharedAbstractNode& assert_(const SharedAbstractNode& expr);
@@ -310,9 +313,6 @@ namespace triton {
 
         //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
-
-        //! Garbage unused nodes.
-        TRITON_EXPORT void garbage(void);
     };
 
     //! Shared AST context

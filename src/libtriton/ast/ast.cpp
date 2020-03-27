@@ -3069,11 +3069,11 @@ namespace triton {
   namespace ast {
 
     /* Returns a new instance of a given node. */
-    static SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
+    static const SharedAbstractNode& shallowCopy(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
-        return nullptr;
+        throw triton::exceptions::Ast("triton::ast::shallowCopy(): node cannot be null.");
 
       switch (node->getType()) {
         case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node));     break;
@@ -3149,7 +3149,7 @@ namespace triton {
         }
       }
 
-      return newNode;
+      return node->getContext()->collect(newNode);
     }
 
 
@@ -3159,7 +3159,7 @@ namespace triton {
 
       for (auto&& n : nodes) {
         /* Do a copy of all children */
-        auto newNode = shallowCopy(n.get(), unroll);
+        const auto& newNode = shallowCopy(n.get(), unroll);
         exprs[n.get()] = newNode;
 
         /* For each child, set its parent */
