@@ -358,13 +358,13 @@ namespace triton {
        * bvrol(rot, expr) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
        **/
       if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
-        auto size   = expr->getBitvectorSize();
-        auto bvsize = this->bv(size, size);
-        auto node   = this->bvor(
-                        this->bvshl(expr, this->bvsmod(rot, bvsize)),
-                        this->bvlshr(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
-                      );
-        return this->collect(node);
+        auto size        = expr->getBitvectorSize();
+        auto bvsize      = this->bv(size, size);
+        const auto& node = this->bvor(
+                             this->bvshl(expr, this->bvsmod(rot, bvsize)),
+                             this->bvlshr(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
+                           );
+        return node;
       }
 
       /* Otherwise, we concretize the index rotation */
@@ -408,12 +408,12 @@ namespace triton {
        * bvror(rot, expr) = ((value >> (rot % size)) | (value << (size - (rot % size))))
        **/
       if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
-        auto size          = expr->getBitvectorSize();
-        auto bvsize        = this->bv(size, size);
-        const auto& node   = this->bvor(
-                               this->bvlshr(expr, this->bvsmod(rot, bvsize)),
-                               this->bvshl(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
-                             );
+        auto size        = expr->getBitvectorSize();
+        auto bvsize      = this->bv(size, size);
+        const auto& node = this->bvor(
+                             this->bvlshr(expr, this->bvsmod(rot, bvsize)),
+                             this->bvshl(expr, this->bvsub(bvsize, this->bvsmod(rot, bvsize)))
+                           );
         return node;
       }
 

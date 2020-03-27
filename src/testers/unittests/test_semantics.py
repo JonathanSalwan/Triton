@@ -80,7 +80,6 @@ class TestIR(unittest.TestCase):
     def test_ir(self):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
-        # Set arch
         self.ctx.setArchitecture(ARCH.X86_64)
 
         # Load the binary
@@ -97,7 +96,6 @@ class TestIR(unittest.TestCase):
     def test_ir_with_opti1(self):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
-        # Set arch
         self.ctx.setArchitecture(ARCH.X86_64)
         self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
@@ -115,7 +113,6 @@ class TestIR(unittest.TestCase):
     def test_ir_with_opti2(self):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
-        # Set arch
         self.ctx.setArchitecture(ARCH.X86_64)
         self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
@@ -277,6 +274,7 @@ class TestIRQemu(unittest.TestCase):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu.bin")
@@ -295,6 +293,7 @@ class TestIRQemu(unittest.TestCase):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
 
         # Load the binary
@@ -314,6 +313,7 @@ class TestIRQemu(unittest.TestCase):
         """Load binary, setup environment and emulate the ir test suite."""
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
         self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
