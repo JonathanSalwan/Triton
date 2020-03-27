@@ -3,7 +3,7 @@
 scripts_path=$(dirname $0)
 
 echo "[+] Running ./crypto_test-nothumb-O0-run.py ..."
-status=$(python $scripts_path/crypto_test-nothumb-O0-run.py | grep "^ko" > /dev/null; if [ $? -eq 0 ]; then echo OK; else echo KO; fi)
+status=$(python $scripts_path/crypto_test-nothumb-O0-run.py | grep "^ok" > /dev/null; if [ $? -eq 0 ]; then echo OK; else echo KO; fi)
 echo "[$status] Running ./crypto_test-nothumb-O0-run.py"
 
 echo "[+] Running ./crypto_test-nothumb-O1-run.py ..."
