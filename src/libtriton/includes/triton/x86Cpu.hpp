@@ -65,6 +65,9 @@ namespace triton {
           //! Copies a x86Cpu class.
           void copy(const x86Cpu& other);
 
+          //! Initializes the disassembler
+          void disassInit(void);
+
         protected:
           /*! \brief map of address -> concrete value
            *

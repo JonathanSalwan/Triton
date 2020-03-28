@@ -65,6 +65,9 @@ namespace triton {
           //! Copies a AArch64Cpu class.
           void copy(const AArch64Cpu& other);
 
+          //! Initializes the disassembler
+          inline void disassInit(void);
+
         protected:
           /*! \brief map of address -> concrete value
            *

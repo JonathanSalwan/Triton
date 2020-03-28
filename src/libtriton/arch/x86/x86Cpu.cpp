@@ -22,15 +22,10 @@ namespace triton {
 
       x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(ARCH_X86) {
         this->callbacks = callbacks;
+        this->handle    = 0;
+
         this->clear();
-
-        /* Open capstone */
-        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_32, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
-          throw triton::exceptions::Disassembly("x86Cpu::x86Cpu(): Cannot open capstone.");
-
-        /* Init capstone's options */
-        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
-        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
+        this->disassInit();
       }
 
 
@@ -41,14 +36,30 @@ namespace triton {
 
       x86Cpu::~x86Cpu() {
         this->memory.clear();
-        triton::extlibs::capstone::cs_close(&this->handle);
+        if (this->handle) {
+          triton::extlibs::capstone::cs_close(&this->handle);
+        }
+      }
+
+
+      void x86Cpu::disassInit(void) {
+        if (this->handle) {
+          triton::extlibs::capstone::cs_close(&this->handle);
+        }
+
+        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_32, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
+          throw triton::exceptions::Disassembly("x86Cpu::disassInit(): Cannot open capstone.");
+
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
       }
 
 
       void x86Cpu::copy(const x86Cpu& other) {
         this->callbacks = other.callbacks;
-        this->handle    = other.handle;
         this->memory    = other.memory;
+
+        this->disassInit();
 
         std::memcpy(this->eax,     other.eax,    sizeof(this->eax));
         std::memcpy(this->ebx,     other.ebx,    sizeof(this->ebx));

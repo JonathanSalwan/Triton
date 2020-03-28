@@ -22,14 +22,10 @@ namespace triton {
 
       AArch64Cpu::AArch64Cpu(triton::callbacks::Callbacks* callbacks) : AArch64Specifications(ARCH_AARCH64) {
         this->callbacks = callbacks;
+        this->handle    = 0;
+
         this->clear();
-
-        /* Open capstone */
-        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM64, triton::extlibs::capstone::CS_MODE_ARM, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
-          throw triton::exceptions::Disassembly("AArch64Cpu::AArch64Cpu(): Cannot open capstone.");
-
-        /* Init capstone's options */
-        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+        this->disassInit();
       }
 
 
@@ -40,14 +36,29 @@ namespace triton {
 
       AArch64Cpu::~AArch64Cpu() {
         this->memory.clear();
-        triton::extlibs::capstone::cs_close(&this->handle);
+        if (this->handle) {
+          triton::extlibs::capstone::cs_close(&this->handle);
+        }
+      }
+
+
+      void AArch64Cpu::disassInit(void) {
+        if (this->handle) {
+          triton::extlibs::capstone::cs_close(&this->handle);
+        }
+
+        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM64, triton::extlibs::capstone::CS_MODE_ARM, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
+          throw triton::exceptions::Disassembly("AArch64Cpu::disassInit(): Cannot open capstone.");
+
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
       }
 
 
       void AArch64Cpu::copy(const AArch64Cpu& other) {
         this->callbacks = other.callbacks;
-        this->handle    = other.handle;
         this->memory    = other.memory;
+
+        this->disassInit();
 
         std::memcpy(this->x0,   other.x0,   sizeof(this->x0));
         std::memcpy(this->x1,   other.x1,   sizeof(this->x1));
