@@ -12,15 +12,16 @@
 #include <unordered_map>
 #include <vector>
 
+#include <triton/aarch64Specifications.hpp>
 #include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/externalLibs.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/aarch64Specifications.hpp>
 
 
 
@@ -57,6 +58,9 @@ namespace triton {
         private:
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
+
+          //! Capstone context
+          triton::extlibs::capstone::csh handle;
 
           //! Copies a AArch64Cpu class.
           void copy(const AArch64Cpu& other);

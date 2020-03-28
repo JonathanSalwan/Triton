@@ -16,6 +16,7 @@
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/externalLibs.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
@@ -57,6 +58,9 @@ namespace triton {
         private:
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
+
+          //! Capstone context
+          triton::extlibs::capstone::csh handle;
 
           //! Copies a x8664Cpu class.
           void copy(const x8664Cpu& other);

@@ -11,7 +11,6 @@
 #include <triton/coreUtils.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/externalLibs.hpp>
 #include <triton/immediate.hpp>
 #include <triton/x86Cpu.hpp>
 
@@ -24,7 +23,16 @@ namespace triton {
       x86Cpu::x86Cpu(triton::callbacks::Callbacks* callbacks) : x86Specifications(ARCH_X86) {
         this->callbacks = callbacks;
         this->clear();
+
+        /* Open capstone */
+        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_32, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
+          throw triton::exceptions::Disassembly("x86Cpu::x86Cpu(): Cannot open capstone.");
+
+        /* Init capstone's options */
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
       }
+
 
       x86Cpu::x86Cpu(const x86Cpu& other) : x86Specifications(ARCH_X86) {
         this->copy(other);
@@ -33,11 +41,13 @@ namespace triton {
 
       x86Cpu::~x86Cpu() {
         this->memory.clear();
+        triton::extlibs::capstone::cs_close(&this->handle);
       }
 
 
       void x86Cpu::copy(const x86Cpu& other) {
         this->callbacks = other.callbacks;
+        this->handle    = other.handle;
         this->memory    = other.memory;
 
         std::memcpy(this->eax,     other.eax,    sizeof(this->eax));
@@ -303,102 +313,89 @@ namespace triton {
 
 
       void x86Cpu::disassembly(triton::arch::Instruction& inst) const {
-        triton::extlibs::capstone::csh       handle;
-        triton::extlibs::capstone::cs_insn*  insn;
-        triton::usize                        count = 0;
+        triton::extlibs::capstone::cs_insn* insn;
+        triton::usize count = 0;
 
         /* Check if the opcode and opcode' size are defined */
         if (inst.getOpcode() == nullptr || inst.getSize() == 0)
           throw triton::exceptions::Disassembly("x86Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
-        /* Open capstone */
-        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_X86, triton::extlibs::capstone::CS_MODE_32, &handle) != triton::extlibs::capstone::CS_ERR_OK)
-          throw triton::exceptions::Disassembly("x86Cpu::disassembly(): Cannot open capstone.");
-
-        /* Init capstone's options */
-        triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
-        triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_SYNTAX, triton::extlibs::capstone::CS_OPT_SYNTAX_INTEL);
-
         /* Clear instructicon's operands if alredy defined */
         inst.operands.clear();
 
         /* Let's disass and build our operands */
-        count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
+        count = triton::extlibs::capstone::cs_disasm(this->handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
         if (count > 0) {
+          /* Detail information */
           triton::extlibs::capstone::cs_detail* detail = insn->detail;
-          for (triton::uint32 j = 0; j < 1; j++) {
 
-            /* Init the disassembly */
-            std::stringstream str;
+          /* Init the disassembly */
+          std::stringstream str;
 
-            /* Add mnemonic */
-            str << insn[j].mnemonic;
+          str << insn[0].mnemonic;
+          if (detail->x86.op_count)
+            str << " " <<  insn[0].op_str;
 
-            /* Add operands */
-            if (detail->x86.op_count)
-              str << " " <<  insn[j].op_str;
+          inst.setDisassembly(str.str());
 
-            inst.setDisassembly(str.str());
+          /* Refine the size */
+          inst.setSize(insn[0].size);
 
-            /* Refine the size */
-            inst.setSize(insn[j].size);
+          /* Init the instruction's type */
+          inst.setType(this->capstoneInstructionToTritonInstruction(insn[0].id));
 
-            /* Init the instruction's type */
-            inst.setType(this->capstoneInstructionToTritonInstruction(insn[j].id));
+          /* Init the instruction's prefix */
+          inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
-            /* Init the instruction's prefix */
-            inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
+          /* Init operands */
+          for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
+            triton::extlibs::capstone::cs_x86_op* op = &(detail->x86.operands[n]);
+            switch(op->type) {
 
-            /* Init operands */
-            for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
-              triton::extlibs::capstone::cs_x86_op* op = &(detail->x86.operands[n]);
-              switch(op->type) {
+              case triton::extlibs::capstone::X86_OP_IMM:
+                inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, op->size)));
+                break;
 
-                case triton::extlibs::capstone::X86_OP_IMM:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Immediate(op->imm, op->size)));
-                  break;
+              case triton::extlibs::capstone::X86_OP_MEM: {
+                triton::arch::MemoryAccess mem;
 
-                case triton::extlibs::capstone::X86_OP_MEM: {
-                  triton::arch::MemoryAccess mem;
+                /* Set the size of the memory access */
+                mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
 
-                  /* Set the size of the memory access */
-                  mem.setPair(std::make_pair(((op->size * BYTE_SIZE_BIT) - 1), 0));
+                /* LEA if exists */
+                const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
+                const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
+                const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
-                  /* LEA if exists */
-                  const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
-                  const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                  const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+                triton::uint32 immsize = (
+                                          this->isRegisterValid(base.getId()) ? base.getSize() :
+                                          this->isRegisterValid(index.getId()) ? index.getSize() :
+                                          this->gprSize()
+                                        );
 
-                  triton::uint32 immsize = (
-                                            this->isRegisterValid(base.getId()) ? base.getSize() :
-                                            this->isRegisterValid(index.getId()) ? index.getSize() :
-                                            this->gprSize()
-                                          );
+                triton::arch::Immediate disp(op->mem.disp, immsize);
+                triton::arch::Immediate scale(op->mem.scale, immsize);
 
-                  triton::arch::Immediate disp(op->mem.disp, immsize);
-                  triton::arch::Immediate scale(op->mem.scale, immsize);
+                /* Specify that LEA contains a PC relative */
+                if (base.getId() == this->pcId)
+                  mem.setPcRelative(inst.getNextAddress());
 
-                  /* Specify that LEA contains a PC relative */
-                  if (base.getId() == this->pcId)
-                    mem.setPcRelative(inst.getNextAddress());
+                mem.setSegmentRegister(segment);
+                mem.setBaseRegister(base);
+                mem.setIndexRegister(index);
+                mem.setDisplacement(disp);
+                mem.setScale(scale);
 
-                  mem.setSegmentRegister(segment);
-                  mem.setBaseRegister(base);
-                  mem.setIndexRegister(index);
-                  mem.setDisplacement(disp);
-                  mem.setScale(scale);
-
-                  inst.operands.push_back(triton::arch::OperandWrapper(mem));
-                  break;
-                }
-
-                case triton::extlibs::capstone::X86_OP_REG:
-                  inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Register(*this, this->capstoneRegisterToTritonRegister(op->reg))));
-                  break;
-
-                default:
-                  break;
+                inst.operands.push_back(triton::arch::OperandWrapper(mem));
+                break;
               }
+
+              case triton::extlibs::capstone::X86_OP_REG:
+                inst.operands.push_back(triton::arch::OperandWrapper(triton::arch::Register(*this, this->capstoneRegisterToTritonRegister(op->reg))));
+                break;
+
+              default:
+                break;
             }
 
           }
@@ -417,9 +414,6 @@ namespace triton {
         }
         else
           throw triton::exceptions::Disassembly("x86Cpu::disassembly(): Failed to disassemble the given code.");
-
-        triton::extlibs::capstone::cs_close(&handle);
-        return;
       }
 
 

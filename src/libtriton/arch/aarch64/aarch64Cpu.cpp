@@ -12,7 +12,6 @@
 #include <triton/coreUtils.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
-#include <triton/externalLibs.hpp>
 #include <triton/immediate.hpp>
 
 
@@ -24,6 +23,13 @@ namespace triton {
       AArch64Cpu::AArch64Cpu(triton::callbacks::Callbacks* callbacks) : AArch64Specifications(ARCH_AARCH64) {
         this->callbacks = callbacks;
         this->clear();
+
+        /* Open capstone */
+        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM64, triton::extlibs::capstone::CS_MODE_ARM, &this->handle) != triton::extlibs::capstone::CS_ERR_OK)
+          throw triton::exceptions::Disassembly("AArch64Cpu::AArch64Cpu(): Cannot open capstone.");
+
+        /* Init capstone's options */
+        triton::extlibs::capstone::cs_option(this->handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
       }
 
 
@@ -34,11 +40,13 @@ namespace triton {
 
       AArch64Cpu::~AArch64Cpu() {
         this->memory.clear();
+        triton::extlibs::capstone::cs_close(&this->handle);
       }
 
 
       void AArch64Cpu::copy(const AArch64Cpu& other) {
         this->callbacks = other.callbacks;
+        this->handle    = other.handle;
         this->memory    = other.memory;
 
         std::memcpy(this->x0,   other.x0,   sizeof(this->x0));
@@ -221,157 +229,144 @@ namespace triton {
 
 
       void AArch64Cpu::disassembly(triton::arch::Instruction& inst) const {
-        triton::extlibs::capstone::csh       handle;
-        triton::extlibs::capstone::cs_insn*  insn;
-        triton::usize                        count = 0;
-        triton::uint32                       size = 0;
+        triton::extlibs::capstone::cs_insn* insn;
+        triton::usize count = 0;
+        triton::uint32 size = 0;
 
         /* Check if the opcode and opcode' size are defined */
         if (inst.getOpcode() == nullptr || inst.getSize() == 0)
           throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
-        /* Open capstone */
-        if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM64, triton::extlibs::capstone::CS_MODE_ARM, &handle) != triton::extlibs::capstone::CS_ERR_OK)
-          throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Cannot open capstone.");
-
-        /* Init capstone's options */
-        triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
-
         /* Clear instructicon's operands if alredy defined */
         inst.operands.clear();
 
         /* Let's disass and build our operands */
-        count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
+        count = triton::extlibs::capstone::cs_disasm(this->handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
         if (count > 0) {
+          /* Detail information */
           triton::extlibs::capstone::cs_detail* detail = insn->detail;
-          for (triton::uint32 j = 0; j < 1; j++) {
 
-            /* Init the disassembly */
-            std::stringstream str;
+          /* Init the disassembly */
+          std::stringstream str;
 
-            /* Add mnemonic */
-            str << insn[j].mnemonic;
+          str << insn[0].mnemonic;
+          if (detail->arm64.op_count)
+            str << " " <<  insn[0].op_str;
 
-            /* Add operands */
-            if (detail->arm64.op_count)
-              str << " " <<  insn[j].op_str;
+          inst.setDisassembly(str.str());
 
-            inst.setDisassembly(str.str());
+          /* Refine the size */
+          inst.setSize(insn[0].size);
 
-            /* Refine the size */
-            inst.setSize(insn[j].size);
+          /* Init the instruction's type */
+          inst.setType(this->capstoneInstructionToTritonInstruction(insn[0].id));
 
-            /* Init the instruction's type */
-            inst.setType(this->capstoneInstructionToTritonInstruction(insn[j].id));
+          /* Init the instruction's code codition */
+          inst.setCodeCondition(this->capstoneConditionToTritonCondition(detail->arm64.cc));
 
-            /* Init the instruction's code codition */
-            inst.setCodeCondition(this->capstoneConditionToTritonCondition(detail->arm64.cc));
+          /* Init the instruction's write back flag */
+          inst.setWriteBack(detail->arm64.writeback);
 
-            /* Init the instruction's write back flag */
-            inst.setWriteBack(detail->arm64.writeback);
+          /* Set True if the instruction udpate flags */
+          inst.setUpdateFlag(detail->arm64.update_flags);
 
-            /* Set True if the instruction udpate flags */
-            inst.setUpdateFlag(detail->arm64.update_flags);
+          /* Init operands */
+          for (triton::uint32 n = 0; n < detail->arm64.op_count; n++) {
+            triton::extlibs::capstone::cs_arm64_op* op = &(detail->arm64.operands[n]);
+            switch(op->type) {
 
-            /* Init operands */
-            for (triton::uint32 n = 0; n < detail->arm64.op_count; n++) {
-              triton::extlibs::capstone::cs_arm64_op* op = &(detail->arm64.operands[n]);
-              switch(op->type) {
+              case triton::extlibs::capstone::ARM64_OP_IMM: {
+                triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
 
-                case triton::extlibs::capstone::ARM64_OP_IMM: {
-                  triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
-
-                  /*
-                   * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
-                   * So, if Triton truncates the value by setting a size less than
-                   * the original one, we redefine the size automatically.
-                   */
-                  if (static_cast<triton::uint64>(op->imm) > imm.getValue()) {
-                    imm = Immediate();
-                    imm.setValue(op->imm, 0); /* By setting 0 as size, we automatically identify the size of the value */
-                  }
-
-                  /* Set Shift type and value */
-                  imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
-                  imm.setShiftValue(op->shift.value);
-
-                  inst.operands.push_back(triton::arch::OperandWrapper(imm));
-                  break;
+                /*
+                 * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
+                 * So, if Triton truncates the value by setting a size less than
+                 * the original one, we redefine the size automatically.
+                 */
+                if (static_cast<triton::uint64>(op->imm) > imm.getValue()) {
+                  imm = Immediate();
+                  imm.setValue(op->imm, 0); /* By setting 0 as size, we automatically identify the size of the value */
                 }
 
-                case triton::extlibs::capstone::ARM64_OP_MEM: {
-                  triton::arch::MemoryAccess mem;
+                /* Set Shift type and value */
+                imm.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                imm.setShiftValue(op->shift.value);
 
-                  /* Set the size of the memory access */
-                  mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
+                inst.operands.push_back(triton::arch::OperandWrapper(imm));
+                break;
+              }
 
-                  /* LEA if exists */
-                  triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
-                  triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
+              case triton::extlibs::capstone::ARM64_OP_MEM: {
+                triton::arch::MemoryAccess mem;
 
-                  triton::uint32 immsize = (
-                                            this->isRegisterValid(base.getId()) ? base.getSize() :
-                                            this->isRegisterValid(index.getId()) ? index.getSize() :
-                                            this->gprSize()
-                                          );
+                /* Set the size of the memory access */
+                mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
 
-                  triton::arch::Immediate disp(op->mem.disp, immsize);
+                /* LEA if exists */
+                triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
+                triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
-                  /* Specify that LEA contains a PC relative */
-                  /* FIXME: Valid in ARM64 ? */
-                  if (base.getId() == this->pcId)
-                    mem.setPcRelative(inst.getNextAddress());
+                triton::uint32 immsize = (
+                                          this->isRegisterValid(base.getId()) ? base.getSize() :
+                                          this->isRegisterValid(index.getId()) ? index.getSize() :
+                                          this->gprSize()
+                                        );
 
-                  /* Set extend type and size */
-                  index.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
-                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
-                    index.setExtendedSize(base.getBitSize());
+                triton::arch::Immediate disp(op->mem.disp, immsize);
 
-                  /* Note that in ARM64 there is no segment register and scale value */
-                  mem.setBaseRegister(base);
-                  mem.setIndexRegister(index);
-                  mem.setDisplacement(disp);
+                /* Specify that LEA contains a PC relative */
+                /* FIXME: Valid in ARM64 ? */
+                if (base.getId() == this->pcId)
+                  mem.setPcRelative(inst.getNextAddress());
 
-                  /* If there is an index register available, set scale to 1 to perform this following computation (base) + (index * scale) */
-                  if (this->isRegisterValid(index.getId())) {
-                    mem.setScale(triton::arch::Immediate(1, immsize));
-                  }
+                /* Set extend type and size */
+                index.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
+                if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
+                  index.setExtendedSize(base.getBitSize());
 
-                  inst.operands.push_back(triton::arch::OperandWrapper(mem));
-                  break;
+                /* Note that in ARM64 there is no segment register and scale value */
+                mem.setBaseRegister(base);
+                mem.setIndexRegister(index);
+                mem.setDisplacement(disp);
+
+                /* If there is an index register available, set scale to 1 to perform this following computation (base) + (index * scale) */
+                if (this->isRegisterValid(index.getId())) {
+                  mem.setScale(triton::arch::Immediate(1, immsize));
                 }
 
-                case triton::extlibs::capstone::ARM64_OP_REG: {
-                  triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
+                inst.operands.push_back(triton::arch::OperandWrapper(mem));
+                break;
+              }
 
-                  /* Set Shift type and value */
-                  reg.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
-                  reg.setShiftValue(op->shift.value);
+              case triton::extlibs::capstone::ARM64_OP_REG: {
+                triton::arch::Register reg(*this, this->capstoneRegisterToTritonRegister(op->reg));
 
-                  /* Set extend type and size */
-                  reg.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
-                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
-                    reg.setExtendedSize(size * BYTE_SIZE_BIT);
+                /* Set Shift type and value */
+                reg.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                reg.setShiftValue(op->shift.value);
 
-                  /* Define a base address for next operand */
-                  if (!size)
-                    size = reg.getSize();
+                /* Set extend type and size */
+                reg.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
+                if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
+                  reg.setExtendedSize(size * BYTE_SIZE_BIT);
 
-                  inst.operands.push_back(triton::arch::OperandWrapper(reg));
-                  break;
-                }
+                /* Define a base address for next operand */
+                if (!size)
+                  size = reg.getSize();
 
-                default:
-                  /* FIXME: What about FP, C-IMM ? */
-                  throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
-              } // switch
-            } // for operand
+                inst.operands.push_back(triton::arch::OperandWrapper(reg));
+                break;
+              }
 
-            /* Set control flow */
-            if (insn[j].id == triton::extlibs::capstone::ARM64_INS_RET)
-              inst.setControlFlow(true);
+              default:
+                /* FIXME: What about FP, C-IMM ? */
+                throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
+            } // switch
+          } // for operand
 
-          } // for instruction
+          /* Set control flow */
+          if (insn[0].id == triton::extlibs::capstone::ARM64_INS_RET)
+            inst.setControlFlow(true);
 
           /* Set branch */
           if (detail->groups_count > 0) {
@@ -388,9 +383,6 @@ namespace triton {
         }
         else
           throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Failed to disassemble the given code.");
-
-        triton::extlibs::capstone::cs_close(&handle);
-        return;
       }
 
 
