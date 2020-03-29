@@ -28,8 +28,9 @@ namespace triton {
           astCtxt(astCtxt),
           modes(modes) {
 
-        if (architecture == nullptr)
+        if (architecture == nullptr) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::SymbolicEngine(): The architecture pointer must be valid.");
+        }
 
         this->architecture      = architecture;
         this->callbacks         = callbacks;
@@ -99,17 +100,17 @@ namespace triton {
       void SymbolicEngine::concretizeRegister(const triton::arch::Register& reg) {
         triton::arch::register_e parentId = reg.getParent();
 
-        if (!this->architecture->isRegisterValid(parentId))
-          return;
-
-        this->symbolicReg[parentId] = nullptr;
+        if (this->architecture->isRegisterValid(parentId)) {
+          this->symbolicReg[parentId] = nullptr;
+        }
       }
 
 
       /* Same as concretizeRegister but with all registers */
       void SymbolicEngine::concretizeAllRegister(void) {
-        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++)
+        for (triton::uint32 i = 0; i < this->numberOfRegisters; i++) {
           this->symbolicReg[i] = nullptr;
+        }
       }
 
 
@@ -122,8 +123,9 @@ namespace triton {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
-        for (triton::uint32 index = 0; index < size; index++)
+        for (triton::uint32 index = 0; index < size; index++) {
           this->concretizeMemory(addr+index);
+        }
       }
 
 
@@ -170,8 +172,9 @@ namespace triton {
       /* Adds an aligned memory */
       void SymbolicEngine::addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr) {
         this->removeAlignedMemory(address, size);
-        if (!(this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && expr->getAst()->isSymbolized() == false))
+        if (!(this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && expr->getAst()->isSymbolized() == false)) {
           this->alignedMemoryReference[std::make_pair(address, size)] = expr;
+        }
       }
 
 
@@ -190,18 +193,12 @@ namespace triton {
 
         /* Remove overloaded negative ranges */
         for (triton::uint32 index = 1; index < DQQWORD_SIZE; index++) {
-          if (index < WORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, WORD_SIZE));
-          if (index < DWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, DWORD_SIZE));
-          if (index < QWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, QWORD_SIZE));
-          if (index < DQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, DQWORD_SIZE));
-          if (index < QQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, QQWORD_SIZE));
-          if (index < DQQWORD_SIZE)
-            this->alignedMemoryReference.erase(std::make_pair(address-index, DQQWORD_SIZE));
+          if (index < WORD_SIZE)    this->alignedMemoryReference.erase(std::make_pair(address-index, WORD_SIZE));
+          if (index < DWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, DWORD_SIZE));
+          if (index < QWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, QWORD_SIZE));
+          if (index < DQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, DQWORD_SIZE));
+          if (index < QQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, QQWORD_SIZE));
+          if (index < DQQWORD_SIZE) this->alignedMemoryReference.erase(std::make_pair(address-index, DQQWORD_SIZE));
         }
       }
 
@@ -209,8 +206,9 @@ namespace triton {
       /* Returns the reference memory if it's referenced otherwise returns nullptr */
       SharedSymbolicExpression SymbolicEngine::getSymbolicMemory(triton::uint64 addr) const {
         auto it = this->memoryReference.find(addr);
-        if (it != this->memoryReference.end())
+        if (it != this->memoryReference.end()) {
           return it->second;
+        }
         return nullptr;
       }
 
@@ -218,13 +216,15 @@ namespace triton {
       /* Returns the symbolic variable otherwise raises an exception */
       SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(triton::usize symVarId) const {
         auto it = this->symbolicVariables.find(symVarId);
-        if (it == this->symbolicVariables.end())
+        if (it == this->symbolicVariables.end()) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): Unregistred symbolic variable.");
+        }
 
-        if (auto node = it->second.lock())
+        if (auto node = it->second.lock()) {
           return node;
-        else
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): This symbolic variable is dead.");
+        }
+
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicVariable(): This symbolic variable is dead.");
       }
 
 
@@ -259,8 +259,9 @@ namespace triton {
           }
         }
 
-        for (auto id : toRemove)
+        for (triton::usize id : toRemove) {
           this->symbolicVariables.erase(id);
+        }
 
         return ret;
       }
@@ -268,12 +269,14 @@ namespace triton {
 
       void SymbolicEngine::setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
         /* Set implicit read of the base register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstBaseRegister()))
+        if (this->architecture->isRegisterValid(mem.getConstBaseRegister())) {
           (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
+        }
 
         /* Set implicit read of the index register (LEA) */
-        if (this->architecture->isRegisterValid(mem.getConstIndexRegister()))
+        if (this->architecture->isRegisterValid(mem.getConstIndexRegister())) {
           (void)this->getRegisterAst(inst, mem.getConstIndexRegister());
+        }
       }
 
 
@@ -281,10 +284,11 @@ namespace triton {
       const SharedSymbolicExpression& SymbolicEngine::getSymbolicRegister(const triton::arch::Register& reg) const {
         triton::arch::register_e parentId = reg.getParent();
 
-        if (!this->architecture->isRegisterValid(parentId))
-          throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicRegister(): Invalid Register");
+        if (this->architecture->isRegisterValid(parentId)) {
+          return this->symbolicReg.at(parentId);
+        }
 
-        return this->symbolicReg.at(parentId);
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicRegister(): Invalid Register");
       }
 
 
@@ -306,8 +310,10 @@ namespace triton {
       std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) {
         std::vector<triton::uint8> area;
 
-        for (triton::usize index = 0; index < size; index++)
-          area.push_back(this->getSymbolicMemoryValue(baseAddr+index));
+        area.reserve(size);
+        for (triton::usize index = 0; index < size; index++) {
+          area.push_back(this->getSymbolicMemoryValue(baseAddr + index));
+        }
 
         return area;
       }
@@ -341,12 +347,13 @@ namespace triton {
         triton::usize id = this->getUniqueSymExprId();
 
         /* Performes transformation if there are rules recorded */
-        const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
+        triton::ast::SharedAbstractNode snode = this->processSimplification(node);
 
         /* Allocates the new shared symbolic expression */
         SharedSymbolicExpression expr = std::make_shared<SymbolicExpression>(snode, id, type, comment);
-        if (expr == nullptr)
+        if (expr == nullptr) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicExpression(): not enough memory");
+        }
 
         /* Save and returns the new shared symbolic expression */
         this->symbolicExpressions[id] = expr;
@@ -359,13 +366,13 @@ namespace triton {
         if (this->symbolicExpressions.find(expr->getId()) != this->symbolicExpressions.end()) {
           /* Concretize memory */
           if (expr->getType() == MEMORY_EXPRESSION) {
-            auto mem = expr->getOriginMemory();
+            const auto& mem = expr->getOriginMemory();
             this->concretizeMemory(mem);
           }
 
           /* Concretize register */
           else if (expr->getType() == REGISTER_EXPRESSION) {
-            auto reg = expr->getOriginRegister();
+            const auto& reg = expr->getOriginRegister();
             this->concretizeRegister(reg);
           }
 
@@ -378,11 +385,13 @@ namespace triton {
       /* Gets the shared symbolic expression from a symbolic id */
       SharedSymbolicExpression SymbolicEngine::getSymbolicExpression(triton::usize symExprId) const {
         auto it = this->symbolicExpressions.find(symExprId);
-        if (it == this->symbolicExpressions.end())
+        if (it == this->symbolicExpressions.end()) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpression(): symbolic expression id not found");
+        }
 
-        if (auto sp = it->second.lock())
+        if (auto sp = it->second.lock()) {
           return sp;
+        }
 
         this->symbolicExpressions.erase(symExprId);
         throw triton::exceptions::SymbolicEngine("SymbolicEngine::getSymbolicExpression(): symbolic expression is not available anymore");
@@ -414,12 +423,13 @@ namespace triton {
       std::unordered_map<triton::usize, SharedSymbolicExpression> SymbolicEngine::sliceExpressions(const SharedSymbolicExpression& expr) {
         std::unordered_map<triton::usize, SharedSymbolicExpression> exprs;
 
-        if (expr == nullptr)
+        if (expr == nullptr) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::sliceExpressions(): expr cannot be null.");
+        }
 
         exprs[expr->getId()] = expr;
-        auto worklist = triton::ast::childrenExtraction(expr->getAst(), true /* unroll */, false /* revert */);
 
+        auto worklist = triton::ast::childrenExtraction(expr->getAst(), true /* unroll */, false /* revert */);
         for (auto&& n : worklist) {
           if (n->getType() == triton::ast::REFERENCE_NODE) {
             auto expr  = reinterpret_cast<triton::ast::ReferenceNode*>(n.get())->getSymbolicExpression();
@@ -447,8 +457,9 @@ namespace triton {
           }
         }
 
-        for (auto id : invalidSymExpr)
+        for (auto id : invalidSymExpr) {
           this->symbolicExpressions.erase(id);
+        }
 
         return taintedExprs;
       }
@@ -486,8 +497,9 @@ namespace triton {
         const SharedSymbolicVariable& symVar       = this->newSymbolicVariable(UNDEFINED_VARIABLE, 0, symVarSize, symVarAlias);
         const triton::ast::SharedAbstractNode& tmp = this->astCtxt->variable(symVar);
 
-        if (expression->getAst())
+        if (expression->getAst()) {
            this->setConcreteVariableValue(symVar, expression->getAst()->evaluate());
+        }
 
         expression->setAst(tmp);
 
@@ -572,8 +584,9 @@ namespace triton {
         triton::usize uniqueId = this->getUniqueSymVarId();
 
         SharedSymbolicVariable symVar = std::make_shared<SymbolicVariable>(type, origin, uniqueId, size, alias);
-        if (symVar == nullptr)
+        if (symVar == nullptr) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::newSymbolicVariable(): Cannot allocate a new symbolic variable");
+        }
 
         this->symbolicVariables[uniqueId] = symVar;
         return symVar;
@@ -606,18 +619,10 @@ namespace triton {
 
       triton::ast::SharedAbstractNode SymbolicEngine::getShiftAst(triton::arch::aarch64::shift_e type, triton::uint32 value, const triton::ast::SharedAbstractNode& node) {
         switch (type) {
-          case triton::arch::aarch64::ID_SHIFT_ASR:
-            return this->astCtxt->bvashr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
-
-          case triton::arch::aarch64::ID_SHIFT_LSL:
-            return this->astCtxt->bvshl(node, this->astCtxt->bv(value, node->getBitvectorSize()));
-
-          case triton::arch::aarch64::ID_SHIFT_LSR:
-            return this->astCtxt->bvlshr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
-
-          case triton::arch::aarch64::ID_SHIFT_ROR:
-            return this->astCtxt->bvror(node, value);
-
+          case triton::arch::aarch64::ID_SHIFT_ASR: return this->astCtxt->bvashr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+          case triton::arch::aarch64::ID_SHIFT_LSL: return this->astCtxt->bvshl(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+          case triton::arch::aarch64::ID_SHIFT_LSR: return this->astCtxt->bvlshr(node, this->astCtxt->bv(value, node->getBitvectorSize()));
+          case triton::arch::aarch64::ID_SHIFT_ROR: return this->astCtxt->bvror(node, value);
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getShiftAst(): Invalid shift operand.");
         }
@@ -626,30 +631,14 @@ namespace triton {
 
       triton::ast::SharedAbstractNode SymbolicEngine::getExtendAst(triton::arch::aarch64::extend_e type, triton::uint32 size, const triton::ast::SharedAbstractNode& node) {
         switch (type) {
-          case triton::arch::aarch64::ID_EXTEND_UXTB:
-            return this->astCtxt->zx(size, this->astCtxt->extract(7, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_UXTH:
-            return this->astCtxt->zx(size, this->astCtxt->extract(15, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_UXTW:
-            return this->astCtxt->zx(size, this->astCtxt->extract(31, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_UXTX:
-            return this->astCtxt->zx(size, this->astCtxt->extract(63, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_SXTB:
-            return this->astCtxt->sx(size, this->astCtxt->extract(7, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_SXTH:
-            return this->astCtxt->sx(size, this->astCtxt->extract(15, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_SXTW:
-            return this->astCtxt->sx(size, this->astCtxt->extract(31, 0, node));
-
-          case triton::arch::aarch64::ID_EXTEND_SXTX:
-            return this->astCtxt->sx(size, this->astCtxt->extract(63, 0, node));
-
+          case triton::arch::aarch64::ID_EXTEND_UXTB: return this->astCtxt->zx(size, this->astCtxt->extract( 7, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_UXTH: return this->astCtxt->zx(size, this->astCtxt->extract(15, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_UXTW: return this->astCtxt->zx(size, this->astCtxt->extract(31, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_UXTX: return this->astCtxt->zx(size, this->astCtxt->extract(63, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_SXTB: return this->astCtxt->sx(size, this->astCtxt->extract( 7, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_SXTH: return this->astCtxt->sx(size, this->astCtxt->extract(15, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_SXTW: return this->astCtxt->sx(size, this->astCtxt->extract(31, 0, node));
+          case triton::arch::aarch64::ID_EXTEND_SXTX: return this->astCtxt->sx(size, this->astCtxt->extract(63, 0, node));
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getExtendAst(): Invalid extend operand.");
         }
@@ -661,8 +650,9 @@ namespace triton {
         triton::ast::SharedAbstractNode node = this->astCtxt->bv(imm.getValue(), imm.getBitSize());
 
         /* Shift AST if it's a shift operand */
-        if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID)
+        if (imm.getShiftType() != triton::arch::aarch64::ID_SHIFT_INVALID) {
           return this->getShiftAst(imm.getShiftType(), imm.getShiftValue(), node);
+        }
 
         return node;
       }
@@ -697,38 +687,22 @@ namespace triton {
           return anode;
         }
 
-        /* Iterate on every memory cells to use their symbolic or concrete values */
+        /* If the memory access is 1 byte long, just return the appropriate 8-bit vector */
+        if (size == 1) {
+          const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address);
+          if (symMem) return this->astCtxt->reference(symMem);
+          else        return this->astCtxt->bv(concreteValue[size - 1], BYTE_SIZE_BIT);
+        }
+
+        /* If the memory access is more than 1 byte long, concatenate each memory cell */
+        opVec.reserve(size);
         while (size) {
           const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
-          /* Check if the memory cell is already symbolic */
-          if (symMem != nullptr) {
-            tmp = this->astCtxt->reference(symMem);
-            opVec.push_back(this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, tmp));
-          }
-          /* Otherwise, use the concerte value */
-          else {
-            tmp = this->astCtxt->bv(concreteValue[size - 1], BYTE_SIZE_BIT);
-            opVec.push_back(this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, tmp));
-          }
+          if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
+          else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], BYTE_SIZE_BIT));
           size--;
         }
-
-        /* Concatenate all memory cell to create a bit vector with the appropriate memory access */
-        switch (opVec.size()) {
-          case DQQWORD_SIZE:
-          case QQWORD_SIZE:
-          case DQWORD_SIZE:
-          case QWORD_SIZE:
-          case DWORD_SIZE:
-          case WORD_SIZE:
-            tmp = this->astCtxt->concat(opVec);
-            break;
-          case BYTE_SIZE:
-            tmp = opVec.front();
-            break;
-        }
-
-        return tmp;
+        return this->astCtxt->concat(opVec);
       }
 
 
@@ -755,13 +729,9 @@ namespace triton {
         triton::uint512 value                = this->architecture->getConcreteRegisterValue(reg);
 
         /* Check if the register is already symbolic */
-        if (const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg)) {
-          node = this->astCtxt->extract(high, low, this->astCtxt->reference(symReg));
-        }
-        /* Otherwise, use the concerte value */
-        else {
-          node = this->astCtxt->bv(value, bvSize);
-        }
+        const SharedSymbolicExpression& symReg = this->getSymbolicRegister(reg);
+        if (symReg) node = this->astCtxt->extract(high, low, this->astCtxt->reference(symReg));
+        else        node = this->astCtxt->bv(value, bvSize);
 
         /* extend AST if it's a extend operand (mainly used for AArch64) */
         if (reg.getExtendType() != triton::arch::aarch64::ID_EXTEND_INVALID)
@@ -786,10 +756,8 @@ namespace triton {
       /* Returns the new symbolic abstract expression and links this expression to the instruction. */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::OperandWrapper& dst, const std::string& comment) {
         switch (dst.getType()) {
-          case triton::arch::OP_MEM:
-            return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
-          case triton::arch::OP_REG:
-            return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
+          case triton::arch::OP_MEM: return this->createSymbolicMemoryExpression(inst, node, dst.getConstMemory(), comment);
+          case triton::arch::OP_REG: return this->createSymbolicRegisterExpression(inst, node, dst.getConstRegister(), comment);
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::createSymbolicExpression(): Invalid operand.");
         }
@@ -814,6 +782,7 @@ namespace triton {
          * As the x86's memory can be accessed without alignment, each byte of the
          * memory must be assigned to an unique reference.
          */
+        ret.reserve(mem.getSize());
         while (writeSize) {
           triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
           triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
@@ -836,12 +805,13 @@ namespace triton {
         /* Set implicit read of the base and index registers from an effective address */
         this->setImplicitReadRegisterFromEffectiveAddress(inst, mem);
 
+        /* Set explicit write of the memory access */
+        inst.setStoreAccess(mem, node);
+
         /* If there is only one reference, we return the symbolic expression */
         if (ret.size() == 1) {
           /* Synchronize the concrete state */
           this->architecture->setConcreteMemoryValue(mem, tmp->evaluate());
-          /* Define the memory store */
-          inst.setStoreAccess(mem, node);
           /* It will return se */
           return inst.symbolicExpressions.back();
         }
@@ -855,54 +825,48 @@ namespace triton {
         se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Temporary concatenation reference - " + comment);
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize()));
 
-        /* Set explicit write of the memory access */
-        inst.setStoreAccess(mem, node);
-
         return inst.addSymbolicExpression(se);
       }
 
 
       /* Returns the parent AST after inserting the subregister (node) in its AST. */
       triton::ast::SharedAbstractNode SymbolicEngine::insertSubRegisterInParent(const triton::arch::Register& reg, const triton::ast::SharedAbstractNode& node, bool zxForAssign) {
-        const triton::arch::Register& parentReg   = this->architecture->getParentRegister(reg);
-        triton::ast::SharedAbstractNode finalExpr = nullptr;
-        triton::uint32 regSize                    = reg.getSize();
+        const triton::arch::Register& parentReg = this->architecture->getParentRegister(reg);
 
         /* If it's a flag register, there is nothing to do with sub register */
         if (this->architecture->isFlag(reg)) {
           return node;
         }
 
-        switch (regSize) {
+        switch (reg.getSize()) {
+          /* ----------------------------------------------------------------*/
           case BYTE_SIZE: {
-            auto origReg = this->getRegisterAst(parentReg);
-            /* Mainly used for x86 */
+            const auto& origReg = this->getRegisterAst(parentReg);
+            /*
+             * Mainly used for x86
+             * r[........xxxxxxxx]
+             */
             if (reg.getLow() == 0) {
-              finalExpr = this->astCtxt->concat(
-                            this->astCtxt->extract((parentReg.getBitSize() - 1), BYTE_SIZE_BIT, origReg),
-                            node
-                          );
+              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), BYTE_SIZE_BIT, origReg);
+              return this->astCtxt->concat(keep, node);
             }
+            /*
+             * Mainly used for x86
+             * r[xxxxxxxx........]
+             */
             else {
-              finalExpr = this->astCtxt->concat(
-                            this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg),
-                            this->astCtxt->concat(
-                              node,
-                              this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, origReg)
-                            )
-                          );
+              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg);
+              return this->astCtxt->concat(keep, this->astCtxt->concat(node, this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, origReg)));
             }
-            break;
           }
+
+          /* ----------------------------------------------------------------*/
           case WORD_SIZE: {
-            auto origReg = this->getRegisterAst(parentReg);
-            /* Mainly used for x86 */
-            finalExpr = this->astCtxt->concat(
-                          this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg),
-                          node
-                        );
-            break;
+            const auto& origReg = this->getRegisterAst(parentReg);
+            return this->astCtxt->concat(this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg), node);
           }
+
+          /* ----------------------------------------------------------------*/
           case DWORD_SIZE:
           case QWORD_SIZE:
           case DQWORD_SIZE:
@@ -910,25 +874,22 @@ namespace triton {
           case DQQWORD_SIZE: {
             if (zxForAssign == false) {
               if (parentReg.getBitSize() > reg.getBitSize()) {
-                auto origReg = this->getRegisterAst(parentReg);
-                finalExpr = this->astCtxt->concat(
-                              this->astCtxt->extract((parentReg.getBitSize() - 1), reg.getHigh() + 1, origReg),
-                              node
-                            );
+                const auto& origReg = this->getRegisterAst(parentReg);
+                return this->astCtxt->concat(this->astCtxt->extract((parentReg.getBitSize() - 1), reg.getHigh() + 1, origReg), node);
               }
               else {
-                finalExpr = node;
+                return node;
               }
             }
             /* zxForAssign == true */
             else {
-              finalExpr = this->astCtxt->zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
+              return this->astCtxt->zx(parentReg.getBitSize() - node->getBitvectorSize(), node);
             }
-            break;
           }
+          /* ----------------------------------------------------------------*/
         }
 
-        return finalExpr;
+        throw triton::exceptions::SymbolicEngine("SymbolicEngine::insertSubRegisterInParent(): Invalid register size.");
       }
 
 
@@ -991,8 +952,9 @@ namespace triton {
         triton::uint32 writeSize                    = mem.getSize();
 
         /* Check if the size of the symbolic expression is equal to the memory access */
-        if (node->getBitvectorSize() != mem.getBitSize())
+        if (node->getBitvectorSize() != mem.getBitSize()) {
           throw triton::exceptions::SymbolicEngine("SymbolicEngine::assignSymbolicExpressionToMemory(): The size of the symbolic expression is not equal to the memory access.");
+        }
 
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
@@ -1033,8 +995,9 @@ namespace triton {
       bool SymbolicEngine::isSymbolicExpressionExists(triton::usize symExprId) const {
         auto it = this->symbolicExpressions.find(symExprId);
 
-        if (it != this->symbolicExpressions.end())
+        if (it != this->symbolicExpressions.end()) {
           return (it->second.use_count() > 0);
+        }
 
         return false;
       }
@@ -1053,14 +1016,10 @@ namespace triton {
       bool SymbolicEngine::isMemorySymbolized(triton::uint64 addr, triton::uint32 size) const {
         for (triton::uint32 i = 0; i < size; i++) {
           const SharedSymbolicExpression& expr = this->getSymbolicMemory(addr + i);
-
-          if(expr == nullptr)
-            continue;
-
-          if (expr->isSymbolized())
+          if (expr && expr->isSymbolized()) {
             return true;
+          }
         }
-
         return false;
       }
 
@@ -1068,11 +1027,10 @@ namespace triton {
       /* Returns true if the register expression contains a symbolic variable. */
       bool SymbolicEngine::isRegisterSymbolized(const triton::arch::Register& reg) const {
         const SharedSymbolicExpression& expr = this->getSymbolicRegister(reg);
-
-        if (expr == nullptr)
-          return false;
-
-        return expr->isSymbolized();
+        if (expr) {
+          return expr->isSymbolized();
+        }
+        return false;
       }
 
 
