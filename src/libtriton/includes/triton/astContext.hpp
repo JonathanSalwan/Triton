@@ -75,7 +75,7 @@ namespace triton {
         TRITON_EXPORT AstContext& operator=(const AstContext& other);
 
         //! Collect new nodes
-        TRITON_EXPORT SharedAbstractNode collect(const SharedAbstractNode& node);
+        TRITON_EXPORT SharedAbstractNode collect(SharedAbstractNode node);
 
         //! Garbage unused nodes.
         TRITON_EXPORT void garbage(void);

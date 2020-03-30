@@ -43,16 +43,16 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::collect(const SharedAbstractNode& node) {
+    SharedAbstractNode AstContext::collect(SharedAbstractNode node) {
       /*
        * We keep a shared reference of nodes in a deep AST. Instead of keeping
        * each node (which does not scales), we only keep one reference at each
-       * deep step of 50000. Thus, it will avoid the stack recursion on destructor
+       * deep step of 10000. Thus, it will avoid the stack recursion on destructor
        * calls of shared_ptr.
        * See: #753.
        */
       triton::uint32 lvl = node->getLevel();
-      if (lvl != 0 && (lvl % 50000) == 0) {
+      if (lvl != 0 && (lvl % 10000) == 0) {
         this->nodes.push_front(node);
       }
       return node;
@@ -61,16 +61,8 @@ namespace triton {
 
     void AstContext::garbage(void) {
       this->nodes.erase(std::remove_if(this->nodes.begin(), this->nodes.end(),
-        [this](const SharedAbstractNode& n) {
-          if (n.use_count() == 1) {
-            for (auto child : n->getChildren()) {
-              if (child->getLevel() >= 10000) {
-                this->nodes.push_back(child);
-              }
-            }
-            return true;
-          }
-          return false;
+        [](const SharedAbstractNode& n) {
+          return (n.use_count() == 1 ? true : false);
         }), this->nodes.end()
       );
     }

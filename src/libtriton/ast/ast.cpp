@@ -285,7 +285,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -336,7 +336,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -387,7 +387,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -470,7 +470,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -521,7 +521,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -572,7 +572,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -623,7 +623,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -670,7 +670,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -721,7 +721,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -768,7 +768,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -819,7 +819,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -881,7 +881,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -943,7 +943,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1007,7 +1007,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1065,7 +1065,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1123,7 +1123,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1174,7 +1174,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1232,7 +1232,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1290,7 +1290,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1352,7 +1352,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1414,7 +1414,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1465,7 +1465,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1520,7 +1520,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1571,7 +1571,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1622,7 +1622,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1673,7 +1673,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1724,7 +1724,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1779,7 +1779,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1830,7 +1830,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1881,7 +1881,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1945,7 +1945,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -1987,7 +1987,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2044,7 +2044,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2094,7 +2094,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2145,7 +2145,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2196,7 +2196,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2260,7 +2260,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2311,7 +2311,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2368,7 +2368,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2461,7 +2461,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2510,7 +2510,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval && this->children[index]->evaluate();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LandNode::init(): Must take logical nodes as arguments.");
@@ -2565,7 +2565,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2612,7 +2612,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LnotNode::init(): Must take logical nodes arguments.");
@@ -2664,7 +2664,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = this->eval || this->children[index]->evaluate();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LorNode::init(): Must take logical nodes as arguments.");
@@ -2716,7 +2716,7 @@ namespace triton {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
         this->eval = !this->eval != !this->children[index]->evaluate();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
 
         if (this->children[index]->isLogical() == false)
           throw triton::exceptions::Ast("LxorNode::init(): Must take logical nodes as arguments.");
@@ -2857,7 +2857,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
@@ -2957,7 +2957,7 @@ namespace triton {
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->children[index]->setParent(this);
         this->symbolized |= this->children[index]->isSymbolized();
-        this->level += this->children[index]->getLevel();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
       }
 
       /* Init parents if needed */
