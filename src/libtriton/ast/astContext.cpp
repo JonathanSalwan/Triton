@@ -60,10 +60,17 @@ namespace triton {
 
 
     void AstContext::garbage(void) {
-      return;
       this->nodes.erase(std::remove_if(this->nodes.begin(), this->nodes.end(),
-        [](const SharedAbstractNode& n) {
-          return (n.use_count() == 1 ? true : false);
+        [this](const SharedAbstractNode& n) {
+          if (n.use_count() == 1) {
+            for (auto child : n->getChildren()) {
+              if (child->getLevel() >= 10000) {
+                this->nodes.push_back(child);
+              }
+            }
+            return true;
+          }
+          return false;
         }), this->nodes.end()
       );
     }
