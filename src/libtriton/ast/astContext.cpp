@@ -43,7 +43,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::collect(SharedAbstractNode node) {
+    SharedAbstractNode AstContext::collect(const SharedAbstractNode& node) {
       /*
        * We keep a shared reference of nodes in a deep AST. Instead of keeping
        * each node (which does not scales), we only keep one reference at each
