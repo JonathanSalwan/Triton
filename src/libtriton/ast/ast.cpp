@@ -3069,7 +3069,7 @@ namespace triton {
   namespace ast {
 
     /* Returns a new instance of a given node. */
-    static const SharedAbstractNode& shallowCopy(AbstractNode* node, bool unroll) {
+    static SharedAbstractNode shallowCopy(AbstractNode* node, bool unroll) {
       SharedAbstractNode newNode = nullptr;
 
       if (node == nullptr)
