@@ -111,6 +111,9 @@ JL                           |            | Jump if less
 JLE                          |            | Jump if less or equal
 JMP                          |            | Jump
 JNE                          |            | Jump if not equal
+JRCXZ                        |            | Jump if rcx is zero
+JECXZ                        |            | Jump if ecx is zero
+JCXZ                         |            | Jump if cx is zero
 JNO                          |            | Jump if not overflow
 JNP                          |            | Jump if not parity
 JNS                          |            | Jump if not sign
@@ -427,6 +430,9 @@ namespace triton {
           case ID_INS_INC:            this->inc_s(inst);          break;
           case ID_INS_INVD:           this->invd_s(inst);         break;
           case ID_INS_INVLPG:         this->invlpg_s(inst);       break;
+          case ID_INS_JRCXZ:          this->jrcxz_s(inst);        break;
+          case ID_INS_JECXZ:          this->jecxz_s(inst);        break;
+          case ID_INS_JCXZ:           this->jcxz_s(inst);         break;
           case ID_INS_JA:             this->ja_s(inst);           break;
           case ID_INS_JAE:            this->jae_s(inst);          break;
           case ID_INS_JB:             this->jb_s(inst);           break;
@@ -5396,6 +5402,88 @@ namespace triton {
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
+
+      void x86Semantics::jrcxz_s(triton::arch::Instruction& inst) {
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto  rcx     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RCX));
+        auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
+        auto& srcImm2 = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, rcx);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
+
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, QWORD_SIZE_BIT)), op3, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (!op1->evaluate().is_zero())
+          inst.setConditionTaken(true);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(pc, rcx);
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr);
+      }
+
+      void x86Semantics::jecxz_s(triton::arch::Instruction& inst) {
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto  ecx     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ECX));
+        auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
+        auto& srcImm2 = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, ecx);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
+
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, DWORD_SIZE_BIT)), op3, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (!op1->evaluate().is_zero())
+          inst.setConditionTaken(true);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(pc, ecx);
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr);
+      }
+
+      void x86Semantics::jcxz_s(triton::arch::Instruction& inst) {
+        auto  pc      = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto  cx      = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CX));
+        auto  srcImm1 = triton::arch::OperandWrapper(Immediate(inst.getNextAddress(), pc.getSize()));
+        auto& srcImm2 = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, cx);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
+
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, WORD_SIZE_BIT)), op3, op2);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
+
+        /* Set condition flag */
+        if (!op1->evaluate().is_zero())
+          inst.setConditionTaken(true);
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(pc, cx);
+
+        /* Create the path constraint */
+        this->symbolicEngine->pushPathConstraint(inst, expr);
+      }
+
 
 
       void x86Semantics::ja_s(triton::arch::Instruction& inst) {
