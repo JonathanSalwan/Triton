@@ -86,10 +86,10 @@ def putsHandler(ctx):
 
 def abortHandler(ctx):
     global FINISH
-
     debug('[+] abort hooked')
     # sys.exit(0)
     FINISH = True
+    return
 
 
 def libcMainHandler(ctx):
@@ -250,7 +250,7 @@ def emulate(ctx, pc):
                 print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
 
             SERIAL = str()
-            for _, v in list(models[0].items()):
+            for _, v in list(sorted(models[0].items())):
                 SERIAL += "%c" % (v.getValue())
 
             print('[+] Pick up the first serial: %s' %(SERIAL))
@@ -360,8 +360,6 @@ def main():
     run(ctx, binary)
 
     return not VALID == True
-
-    return 0
 
 
 if __name__ == '__main__':
