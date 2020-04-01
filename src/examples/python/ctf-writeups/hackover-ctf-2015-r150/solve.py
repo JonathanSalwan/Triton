@@ -18,10 +18,12 @@
 from __future__ import print_function
 from triton     import ARCH, TritonContext, CPUSIZE, MemoryAccess, Instruction, OPCODE
 
+import os
 import sys
 import string
 
 # Script options
+TARGET = os.path.join(os.path.dirname(__file__), 'rvs.bin')
 DEBUG = False
 
 # Memory mapping
@@ -139,7 +141,9 @@ def __libc_start_main():
     Triton.concretizeRegister(Triton.registers.rsi)
 
     # Setup target argvs
-    argvs = [sys.argv[1]] + sys.argv[2:]
+    argvs = [
+        bytes(TARGET.encode('utf-8')), # argv[0]
+    ]
 
     # Define argc / argv
     base  = BASE_ARGV
@@ -148,7 +152,7 @@ def __libc_start_main():
     index = 0
     for argv in argvs:
         addrs.append(base)
-        Triton.setConcreteMemoryAreaValue(base, bytes(argv.encode('utf-8'))+b'\x00')
+        Triton.setConcreteMemoryAreaValue(base, argv+b'\x00')
 
         # Tainting argvs
         for i in range(len(argv)):
@@ -179,7 +183,6 @@ def __fgets():
     arg2 = Triton.getConcreteRegisterValue(Triton.registers.rsi)
 
     indx = 0
-    #user = raw_input("")[:arg2]
     user = "blah blah"
 
     for c in user:
@@ -299,12 +302,8 @@ if __name__ == '__main__':
     # Set the architecture
     Triton.setArchitecture(ARCH.X86_64)
 
-    if len(sys.argv) < 2:
-        print('Syntax: %s ./rvs' %(sys.argv[0]))
-        sys.exit(1)
-
     # Load the binary
-    binary = loadBinary(sys.argv[1])
+    binary = loadBinary(TARGET)
 
     # Perform our own relocations
     makeRelocation(binary)

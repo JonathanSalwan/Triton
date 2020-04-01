@@ -204,7 +204,6 @@ def emulate(ctx, pc):
             # Slice expressions
             rax   = ctx.getSymbolicRegister(ctx.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
-            vars  = astCtxt.search(eax, AST_NODE.VARIABLE)
 
             # Push a new constraint to the current path predicate
             ctx.pushPathConstraint(eax == goodBranches[pc])
@@ -251,13 +250,6 @@ def memoryCaching(ctx, mem):
     return
 
 
-# Constant folding simplification.
-def constantFolding(ctx, node):
-    if node.isSymbolized():
-        return node
-    return ctx.getAstContext().bv(node.evaluate(), node.getBitvectorSize())
-
-
 def initialize():
     ctx = TritonContext()
 
@@ -272,7 +264,6 @@ def initialize():
 
     # Define internal callbacks.
     ctx.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)
-    ctx.addCallback(constantFolding, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
     # Load the meory dump
     load_dump(ctx, os.path.join(os.path.dirname(__file__), "baby-re.dump"))

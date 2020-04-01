@@ -176,12 +176,11 @@ def scanfHandler(ctx):
     arg2 = ctx.getConcreteRegisterValue(ctx.registers.rsi)
 
     # Fill scanf buffer with dummy inputs
-    ctx.setConcreteMemoryAreaValue(arg2, b"a" * 30 + b'\n\x00')
+    ctx.setConcreteMemoryAreaValue(arg2, b"HACKCON{???????????}\n\x00")
 
     # Symbolize 30 bytes
     debug('[+] symbolizing scanf buffer')
-    for index in range(20):
-        ctx.taintMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
+    for index in range(8, 19):
         var = ctx.symbolizeMemory(MemoryAccess(arg2 + index, CPUSIZE.BYTE))
 
     # Return value
@@ -399,15 +398,15 @@ def emulate(ctx, pc):
             pco = ctx.getPathPredicate()
             mod = myExternalSolver(ctx, ast.land(
                     [pco] +
-                    [ast.variable(ctx.getSymbolicVariable(x)) >= 0x20 for x in range(0, 20)] +
-                    [ast.variable(ctx.getSymbolicVariable(x)) <= 0x7e for x in range(0, 20)] +
-                    [ast.variable(ctx.getSymbolicVariable(x)) != 0x00 for x in range(0, 20)]
+                    [ast.variable(ctx.getSymbolicVariable(x)) >= 0x20 for x in range(0, 11)] +
+                    [ast.variable(ctx.getSymbolicVariable(x)) <= 0x7e for x in range(0, 11)] +
+                    [ast.variable(ctx.getSymbolicVariable(x)) != 0x00 for x in range(0, 11)]
                   ))
             serial = str()
             for k, v in sorted(mod.items()):
                 serial += chr(v)
-            print('Serial is: %s' %(serial))
-            SERIAL = serial
+            SERIAL = "HACKCON{%s}" %(serial)
+            print('Serial is: %s' %(SERIAL))
 
         # Next
         pc = ctx.getConcreteRegisterValue(ctx.registers.rip)

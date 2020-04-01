@@ -13,7 +13,6 @@ EXAMPLE_DIR = os.path.join(os.path.dirname(__file__), "..", "..", "examples", "p
 
 ARGS = {
     "small_x86-64_symbolic_emulator.py":                [os.path.join(EXAMPLE_DIR, "samples", "sample_1"), "hello"],
-    os.path.join("hackover-ctf-2015-r150", "solve.py"): [os.path.join(EXAMPLE_DIR, "ctf-writeups", "hackover-ctf-2015-r150", "rvs")]
 }
 
 

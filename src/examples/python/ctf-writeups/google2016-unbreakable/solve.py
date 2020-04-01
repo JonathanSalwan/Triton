@@ -212,8 +212,8 @@ def exitHandler(ctx):
             [ast.variable(ctx.getSymbolicVariable(2))  == ord('F')] +
             [ast.variable(ctx.getSymbolicVariable(3))  == ord('{')] +
             [ast.variable(ctx.getSymbolicVariable(50)) == ord('}')] +
-            [ast.variable(ctx.getSymbolicVariable(x))  >= 0x20 for x in range(4, 49)] +
-            [ast.variable(ctx.getSymbolicVariable(x))  <= 0x7e for x in range(4, 49)] +
+            [ast.variable(ctx.getSymbolicVariable(x))  >= 0x30 for x in range(4, 49)] +
+            [ast.variable(ctx.getSymbolicVariable(x))  <= 0x7a for x in range(4, 49)] +
             [ast.variable(ctx.getSymbolicVariable(x))  != 0x00 for x in range(4, 49)]
           ))
 
@@ -327,7 +327,7 @@ def emulate(ctx, pc):
 
         count += 1
 
-        #print instruction
+        #print(instruction)
 
         if instruction.getType() == OPCODE.X86.HLT:
             break
@@ -338,8 +338,8 @@ def emulate(ctx, pc):
         if instruction.getAddress() in conditions:
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
             ast = ctx.getAstContext()
-            pco = ctx.getPathPredicate()
-            mod = ctx.getModel(ast.land([pco, zf == 1]))
+            ctx.pushPathConstraint(zf == 1)
+            mod = ctx.getModel(ctx.getPathPredicate())
             for k,v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariable(v.getId()), v.getValue())
 
