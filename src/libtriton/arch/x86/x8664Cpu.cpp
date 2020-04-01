@@ -142,6 +142,12 @@ namespace triton {
         std::memcpy(this->fs,      other.fs,     sizeof(this->fs));
         std::memcpy(this->gs,      other.gs,     sizeof(this->gs));
         std::memcpy(this->ss,      other.ss,     sizeof(this->ss));
+        std::memcpy(this->dr0,     other.dr0,    sizeof(this->dr0));
+        std::memcpy(this->dr1,     other.dr1,    sizeof(this->dr1));
+        std::memcpy(this->dr2,     other.dr2,    sizeof(this->dr2));
+        std::memcpy(this->dr3,     other.dr3,    sizeof(this->dr3));
+        std::memcpy(this->dr6,     other.dr6,    sizeof(this->dr6));
+        std::memcpy(this->dr7,     other.dr7,    sizeof(this->dr7));
       }
 
 
@@ -231,6 +237,12 @@ namespace triton {
         std::memset(this->fs,      0x00, sizeof(this->fs));
         std::memset(this->gs,      0x00, sizeof(this->gs));
         std::memset(this->ss,      0x00, sizeof(this->ss));
+        std::memset(this->dr0,     0x00, sizeof(this->dr0));
+        std::memset(this->dr1,     0x00, sizeof(this->dr1));
+        std::memset(this->dr2,     0x00, sizeof(this->dr2));
+        std::memset(this->dr3,     0x00, sizeof(this->dr3));
+        std::memset(this->dr6,     0x00, sizeof(this->dr6));
+        std::memset(this->dr7,     0x00, sizeof(this->dr7));
       }
 
 
@@ -258,6 +270,7 @@ namespace triton {
           this->isAVX256(regId)   ||
           this->isAVX512(regId)   ||
           this->isControl(regId)  ||
+          this->isDebug(regId)    ||
           this->isSegment(regId)
         );
       }
@@ -295,6 +308,11 @@ namespace triton {
 
       bool x8664Cpu::isControl(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_CR0 && regId <= triton::arch::ID_REG_X86_CR15) ? true : false);
+      }
+
+
+      bool x8664Cpu::isDebug(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_DR0 && regId <= triton::arch::ID_REG_X86_DR7) ? true : false);
       }
 
 
@@ -356,6 +374,10 @@ namespace triton {
 
           /* Add Control */
           else if (this->isControl(regId))
+            ret.insert(&reg);
+
+          /* Add Debug */
+          else if (this->isDebug(regId))
             ret.insert(&reg);
 
           /* Add Segment */
@@ -735,6 +757,13 @@ namespace triton {
           case triton::arch::ID_REG_X86_CR13: return (*((triton::uint64*)(this->cr13)));
           case triton::arch::ID_REG_X86_CR14: return (*((triton::uint64*)(this->cr14)));
           case triton::arch::ID_REG_X86_CR15: return (*((triton::uint64*)(this->cr15)));
+
+          case triton::arch::ID_REG_X86_DR0: return (*((triton::uint64*)(this->dr0)));
+          case triton::arch::ID_REG_X86_DR1: return (*((triton::uint64*)(this->dr1)));
+          case triton::arch::ID_REG_X86_DR2: return (*((triton::uint64*)(this->dr2)));
+          case triton::arch::ID_REG_X86_DR3: return (*((triton::uint64*)(this->dr3)));
+          case triton::arch::ID_REG_X86_DR6: return (*((triton::uint64*)(this->dr6)));
+          case triton::arch::ID_REG_X86_DR7: return (*((triton::uint64*)(this->dr7)));
 
           case triton::arch::ID_REG_X86_IE:  return (((*((triton::uint64*)(this->mxcsr))) >> 0) & 1);
           case triton::arch::ID_REG_X86_DE:  return (((*((triton::uint64*)(this->mxcsr))) >> 1) & 1);
@@ -1182,12 +1211,19 @@ namespace triton {
           case triton::arch::ID_REG_X86_CR14: (*((triton::uint64*)(this->cr14))) = value.convert_to<triton::uint64>(); break;
           case triton::arch::ID_REG_X86_CR15: (*((triton::uint64*)(this->cr15))) = value.convert_to<triton::uint64>(); break;
 
-          case triton::arch::ID_REG_X86_CS:  (*((triton::uint64*)(this->cs))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_DS:  (*((triton::uint64*)(this->ds))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_ES:  (*((triton::uint64*)(this->es))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_FS:  (*((triton::uint64*)(this->fs))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_GS:  (*((triton::uint64*)(this->gs))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_SS:  (*((triton::uint64*)(this->ss))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR0: (*((triton::uint64*)(this->dr0))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR1: (*((triton::uint64*)(this->dr1))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR2: (*((triton::uint64*)(this->dr2))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR3: (*((triton::uint64*)(this->dr3))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR6: (*((triton::uint64*)(this->dr6))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DR7: (*((triton::uint64*)(this->dr7))) = value.convert_to<triton::uint64>(); break;
+
+          case triton::arch::ID_REG_X86_CS: (*((triton::uint64*)(this->cs))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_DS: (*((triton::uint64*)(this->ds))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_ES: (*((triton::uint64*)(this->es))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_FS: (*((triton::uint64*)(this->fs))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_GS: (*((triton::uint64*)(this->gs))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_SS: (*((triton::uint64*)(this->ss))) = value.convert_to<triton::uint64>(); break;
 
           default:
             throw triton::exceptions::Cpu("x8664Cpu:setConcreteRegisterValue(): Invalid register.");

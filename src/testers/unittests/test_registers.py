@@ -120,7 +120,16 @@ class TestRegisterValues(unittest.TestCase):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
 
-    def test_set_concrete_value(self):
+    def set_concrete_value(self, ctx):
+        for reg in ctx.getParentRegisters():
+            i = random.randrange(0, 0xffffffffffffffff) & reg.getBitvector().getMaxValue()
+            self.assertEqual(ctx.getConcreteRegisterValue(reg), 0)
+            ctx.setConcreteRegisterValue(reg, i)
+            self.assertEqual(ctx.getConcreteRegisterValue(reg), i)
+            ctx.setConcreteRegisterValue(reg, 0)
+            self.assertEqual(ctx.getConcreteRegisterValue(reg), 0)
+
+    def test_set_concrete_value1(self):
         """Check register value modification."""
         for reg in (REG.X86_64.AH, REG.X86_64.AL):
             # OK
@@ -134,6 +143,12 @@ class TestRegisterValues(unittest.TestCase):
         self.ctx.setConcreteRegisterValue(reg, 1)
         with self.assertRaises(Exception):
             self.ctx.setConcreteRegisterValue(reg, 2)
+
+    def test_set_concrete_value2(self):
+        ctx1 = TritonContext(ARCH.X86_64)
+        ctx2 = TritonContext(ARCH.X86)
+        self.set_concrete_value(ctx1)
+        self.set_concrete_value(ctx2)
 
     def test_overlap(self):
         """Check register overlapping."""

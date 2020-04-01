@@ -199,6 +199,14 @@ REG_SPEC(CR13, cr13, QWORD_SIZE_BIT-1, 0, CR13, DWORD_SIZE_BIT-1, 0, CR13, true)
 REG_SPEC(CR14, cr14, QWORD_SIZE_BIT-1, 0, CR14, DWORD_SIZE_BIT-1, 0, CR14, true)  // cr14
 REG_SPEC(CR15, cr15, QWORD_SIZE_BIT-1, 0, CR15, DWORD_SIZE_BIT-1, 0, CR15, true)  // cr15
 
+/* Debug */
+REG_SPEC(DR0,  dr0,  QWORD_SIZE_BIT-1, 0, DR0,  DWORD_SIZE_BIT-1, 0, DR0,  true)  // dr0
+REG_SPEC(DR1,  dr1,  QWORD_SIZE_BIT-1, 0, DR1,  DWORD_SIZE_BIT-1, 0, DR1,  true)  // dr1
+REG_SPEC(DR2,  dr2,  QWORD_SIZE_BIT-1, 0, DR2,  DWORD_SIZE_BIT-1, 0, DR2,  true)  // dr2
+REG_SPEC(DR3,  dr3,  QWORD_SIZE_BIT-1, 0, DR3,  DWORD_SIZE_BIT-1, 0, DR3,  true)  // dr3
+REG_SPEC(DR6,  dr6,  QWORD_SIZE_BIT-1, 0, DR6,  DWORD_SIZE_BIT-1, 0, DR6,  true)  // dr6
+REG_SPEC(DR7,  dr7,  QWORD_SIZE_BIT-1, 0, DR7,  DWORD_SIZE_BIT-1, 0, DR7,  true)  // dr7
+
 /* Flags ID used in the Taint and Symbolic Engines */
 REG_SPEC_NO_CAPSTONE(AC,  ac,  0, 0, AC,  0, 0, AC,  true)  // ac
 REG_SPEC_NO_CAPSTONE(AF,  af,  0, 0, AF,  0, 0, AF,  true)  // af

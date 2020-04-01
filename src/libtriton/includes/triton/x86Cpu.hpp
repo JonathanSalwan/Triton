@@ -175,6 +175,18 @@ namespace triton {
           triton::uint8 gs[DWORD_SIZE];
           //! Concrete value of SS
           triton::uint8 ss[DWORD_SIZE];
+          //! Concrete value of dr0
+          triton::uint8 dr0[DWORD_SIZE];
+          //! Condete value of dr1
+          triton::uint8 dr1[DWORD_SIZE];
+          //! Condete value of dr2
+          triton::uint8 dr2[DWORD_SIZE];
+          //! Condete value of dr3
+          triton::uint8 dr3[DWORD_SIZE];
+          //! Condete value of dr6
+          triton::uint8 dr6[DWORD_SIZE];
+          //! Condete value of dr7
+          triton::uint8 dr7[DWORD_SIZE];
 
         public:
           //! Constructor.
@@ -203,6 +215,9 @@ namespace triton {
 
           //! Returns true if regId is a control (cr) register.
           TRITON_EXPORT bool isControl(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is a debug (dr) register.
+          TRITON_EXPORT bool isDebug(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a Segment.
           TRITON_EXPORT bool isSegment(triton::arch::register_e regId) const;
