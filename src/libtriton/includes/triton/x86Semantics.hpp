@@ -638,6 +638,15 @@ namespace triton {
           //! The INVLPG semantics.
           void invlpg_s(triton::arch::Instruction& inst);
 
+          //! The JRCXZ semantics.
+          void jrcxz_s(triton::arch::Instruction& inst);
+
+          //! The JECXZ semantics.
+          void jecxz_s(triton::arch::Instruction& inst);
+
+          //! The JCXZ semantics.
+          void jcxz_s(triton::arch::Instruction& inst);
+
           //! The JA semantics.
           void ja_s(triton::arch::Instruction& inst);
 
