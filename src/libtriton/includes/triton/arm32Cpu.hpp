@@ -8,8 +8,8 @@
 #ifndef TRITON_ARM32CPU_HPP
 #define TRITON_ARM32CPU_HPP
 
-#include <map>
 #include <set>
+#include <unordered_map>
 #include <vector>
 
 #include <triton/archEnums.hpp>
@@ -76,7 +76,7 @@ namespace triton {
              * **item1**: memory address<br>
              * **item2**: concrete value
              */
-            std::map<triton::uint64, triton::uint8> memory;
+            std::unordered_map<triton::uint64, triton::uint8> memory;
 
             //! Concrete value of r0
             triton::uint8 r0[DWORD_SIZE];

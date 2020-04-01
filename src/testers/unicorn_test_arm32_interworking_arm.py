@@ -7,6 +7,7 @@ from unicorn             import *
 from unicorn.arm_const   import *
 from capstone            import *
 from capstone.arm_const  import *
+from struct              import pack
 
 import sys
 import random
@@ -233,8 +234,8 @@ if __name__ == '__main__':
 
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
         "r0":    random.randint(0x0, 0xffffffff),
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),

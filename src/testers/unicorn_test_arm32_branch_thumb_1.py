@@ -5,17 +5,17 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
+from struct              import pack
 
 import sys
 import pprint
 import random
 
-ADDR  = 0x100000
-ADDR2 = 0x300000
-STACK = 0x500000
-HEAP  = 0x600000
-SIZE  = 10 * 1024 * 1024
-
+ADDR   = 0x100000
+ADDR2  = 0x300000
+STACK  = 0x500000
+HEAP   = 0x600000
+SIZE   = 10 * 1024 * 1024
 TARGET = 0x200000
 
 CODE2 = [
@@ -242,8 +242,8 @@ def print_state(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
         "r0":    TARGET | 1,
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),

@@ -5,6 +5,7 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
+from struct              import pack
 
 import sys
 import pprint
@@ -365,8 +366,8 @@ def print_state(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
         "r0":    TARGET,
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),

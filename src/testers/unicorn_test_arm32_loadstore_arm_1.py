@@ -5,17 +5,18 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
+from struct              import pack
 
 import sys
 import pprint
 import random
 
-# DEBUG = True
 DEBUG = False
 ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
+
 CODE  = [
     # MISC ------------------------------------------------------------------- #
     (b"\xf4\x00\xcd\xe1", "strd r0, r1, [sp, #4]"),
@@ -626,8 +627,8 @@ def print_stack(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytes(bytearray([b for b in range(255, -1, -1)])),
-        "heap":  bytes(bytearray([b for b in range(255)])),
+        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),

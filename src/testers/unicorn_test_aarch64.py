@@ -2,9 +2,11 @@
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
+
 from triton              import *
 from unicorn             import *
 from unicorn.arm64_const import *
+from struct              import pack
 
 import sys
 import pprint
@@ -13,6 +15,7 @@ ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
+
 CODE  = [
     (b"\x80\x46\x82\xd2", "movz x0, #0x1234"),
     (b"\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
@@ -2035,6 +2038,7 @@ def emu_with_triton(opcode, istate):
     }
     return ostate
 
+
 def diff_state(state1, state2):
     for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
@@ -2043,11 +2047,12 @@ def diff_state(state1, state2):
             print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
 
+
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": b"".join([bytes(255 - i) for i in range(256)]),
-        "heap":  b"".join([bytes(i) for i in range(256)]),
+        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
         "x0":    0,
         "x1":    0,
         "x2":    0,
