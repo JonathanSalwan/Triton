@@ -272,3 +272,32 @@ class TestMemoryAccess(unittest.TestCase):
         inst = Instruction(b"\x8a\x4f\x0d") # mov cl, byte ptr [rdi + 0xd]
         self.ctx.processing(inst)
         self.assertEqual(len(inst.getReadRegisters()), 1)
+
+
+class Test869(unittest.TestCase):
+
+    """Testing jcxz instructions."""
+
+    def test_1(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.processing(Instruction(0x1000, b"\x48\xff\xc1")) # inc rcx
+        ctx.processing(Instruction(0x2000, b"\xe3\x30")) # jrcxz 0x32
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rip), 0x2002)
+
+    def test_2(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.processing(Instruction(0x1000, b"\x48\x31\xc9")) # xor rcx, rcx
+        ctx.processing(Instruction(0x2000, b"\xe3\x30")) # jrcxz 0x32
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rip), 0x2032)
+
+    def test_3(self):
+        ctx = TritonContext(ARCH.X86)
+        ctx.processing(Instruction(0x1000, b"\x41")) # inc rcx
+        ctx.processing(Instruction(0x2000, b"\xe3\x30")) # jecxz 0x32
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.eip), 0x2002)
+
+    def test_4(self):
+        ctx = TritonContext(ARCH.X86)
+        ctx.processing(Instruction(0x1000, b"\x31\xc9")) # xor rcx, rcx
+        ctx.processing(Instruction(0x2000, b"\xe3\x30")) # jecxz 0x32
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.eip), 0x2032)

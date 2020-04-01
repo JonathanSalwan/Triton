@@ -638,15 +638,6 @@ namespace triton {
           //! The INVLPG semantics.
           void invlpg_s(triton::arch::Instruction& inst);
 
-          //! The JRCXZ semantics.
-          void jrcxz_s(triton::arch::Instruction& inst);
-
-          //! The JECXZ semantics.
-          void jecxz_s(triton::arch::Instruction& inst);
-
-          //! The JCXZ semantics.
-          void jcxz_s(triton::arch::Instruction& inst);
-
           //! The JA semantics.
           void ja_s(triton::arch::Instruction& inst);
 
@@ -659,8 +650,14 @@ namespace triton {
           //! The JBE semantics.
           void jbe_s(triton::arch::Instruction& inst);
 
+          //! The JCXZ semantics.
+          void jcxz_s(triton::arch::Instruction& inst);
+
           //! The JE semantics.
           void je_s(triton::arch::Instruction& inst);
+
+          //! The JECXZ semantics.
+          void jecxz_s(triton::arch::Instruction& inst);
 
           //! The JG semantics.
           void jg_s(triton::arch::Instruction& inst);
@@ -694,6 +691,9 @@ namespace triton {
 
           //! The JP semantics.
           void jp_s(triton::arch::Instruction& inst);
+
+          //! The JRCXZ semantics.
+          void jrcxz_s(triton::arch::Instruction& inst);
 
           //! The JS semantics.
           void js_s(triton::arch::Instruction& inst);
