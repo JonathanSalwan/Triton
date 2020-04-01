@@ -145,7 +145,7 @@ namespace triton {
         TRITON_EXPORT bool isRegisterValid(const triton::arch::Register& reg) const;
 
         //! [**architecture api**] - Returns true if the execution mode is Thumb. Only useful for Arm32.
-        TRITON_EXPORT virtual bool isThumb(void) const;
+        TRITON_EXPORT bool isThumb(void) const;
 
         //! [**architecture api**] - Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT triton::uint32 getGprBitSize(void) const;

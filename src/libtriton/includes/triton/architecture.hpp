@@ -78,7 +78,7 @@ namespace triton {
         TRITON_EXPORT bool isValid(void) const;
 
         //! Returns true if the execution mode is Thumb. Only useful for Arm32.
-        TRITON_EXPORT virtual bool isThumb(void) const;
+        TRITON_EXPORT bool isThumb(void) const;
 
         //! Returns the kind of architecture as triton::arch::architecture_e.
         TRITON_EXPORT triton::arch::architecture_e getArchitecture(void) const;

@@ -361,7 +361,7 @@ namespace triton {
 
 
   bool API::isThumb(void) const {
-    return return this->arch.isThumb();
+    return this->arch.isThumb();
   }
 
 
