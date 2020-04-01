@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -240,8 +240,8 @@ def print_state(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
         "r0":    TARGET | 1,
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),

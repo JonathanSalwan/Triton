@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -113,7 +113,7 @@ def emu_with_unicorn(opcode, istate):
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
-    mu.mem_write(STACK,                istate['stack'])
+    mu.mem_write(STACK,                bytes(istate['stack']))
     mu.mem_write(HEAP,                 bytes(istate['heap']))
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
@@ -174,7 +174,7 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
-    ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
+    ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
     ctx.setConcreteRegisterValue(ctx.registers.r1,  istate['r1'])
@@ -264,8 +264,8 @@ def print_stack(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),

@@ -232,11 +232,11 @@ def emulate(ctx, pc):
 
         # Process
         if ctx.processing(instruction) == False:
-            opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in opcodes])
+            opcodes_str = " ".join(["{:02x}".format(b) for b in bytearray(instruction.getOpcode())])
             debug('[-] Instruction not supported: %s\t%s' %(opcodes_str, str(instruction)))
             break
 
-        opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in opcodes])
+        opcodes_str = " ".join(["{:02x}".format(b) for b in bytearray(instruction.getOpcode())])
 
         debug('{}\t{}'.format(opcodes_str, instruction))
 
