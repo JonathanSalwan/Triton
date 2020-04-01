@@ -135,6 +135,11 @@ namespace triton {
     }
 
 
+    bool Architecture::isThumb(void) const {
+      return this->cpu->isThumb();
+    }
+
+
     triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;
