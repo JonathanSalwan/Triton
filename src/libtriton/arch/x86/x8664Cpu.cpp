@@ -1247,6 +1247,10 @@ namespace triton {
         }
       }
 
+      bool x8664Cpu::isThumb(void) const {
+        return false;
+      }
+
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */
