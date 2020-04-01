@@ -1992,8 +1992,7 @@ namespace triton {
 
       static PyObject* TritonContext_isThumb(PyObject* self, PyObject* noarg) {
         try {
-        auto cpu = PyTritonContext_AsTritonContext(self)->getCpuInstance();
-          if (cpu->isThumb() == true)
+          if (PyTritonContext_AsTritonContext(self)->isThumb() == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
