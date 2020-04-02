@@ -136,6 +136,8 @@ namespace triton {
 
 
     bool Architecture::isThumb(void) const {
+      if (!this->cpu)
+        return false;
       return this->cpu->isThumb();
     }
 

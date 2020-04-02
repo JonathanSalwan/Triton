@@ -185,6 +185,7 @@ namespace triton {
            * case the operand is a register, it switches mode according to the
            * instruction set selection bit (LSB) of the register.
            */
+          // FIXME: do not use getCpuInstance().
           auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
           bool state;
 
@@ -199,6 +200,7 @@ namespace triton {
               throw triton::exceptions::Semantics("Arm32Semantics::Arm32Semantics(): Invalid operand type.");
           }
 
+          // FIXME: add setThumb() in CpuInterface.
           cpu->setThumb(state);
         }
 
@@ -207,8 +209,7 @@ namespace triton {
           /* Set instruction set selection bit (LSB) according to the current
            * execution mode.
            */
-          auto thumb = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
-
+          auto thumb = this->architecture->isThumb();
           return this->astCtxt->bvor(node, this->astCtxt->bv(thumb ? 1 : 0, node->getBitvectorSize()));
         }
 
@@ -254,7 +255,7 @@ namespace triton {
            * more information, refer to "PC, the program counter" description
            * within the "ARM core registers" section in the reference manual.
            */
-          auto thumb  = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance())->isThumb();
+          auto thumb  = this->architecture->isThumb();
           auto offset = thumb ? 4 : 8;
           auto node   = this->symbolicEngine->getOperandAst(inst, op);
 
