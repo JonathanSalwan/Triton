@@ -191,6 +191,7 @@ PCMPEQW                      | mmx/sse2   | Compare Packed Data for Equal (words
 PCMPGTB                      | mmx/sse2   | Compare Packed Data for Greater Than (bytes)
 PCMPGTD                      | mmx/sse2   | Compare Packed Data for Greater Than (dwords)
 PCMPGTW                      | mmx/sse2   | Compare Packed Data for Greater Than (words)
+PEXTRB                       | sse4.1     | Extract Byte
 PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
 PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
 PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
@@ -314,8 +315,9 @@ UNPCKLPS                     | sse1       | Unpack and Interleave Low Packed Sin
 VMOVDQA                      | avx        | VEX Move aligned packed integer values
 VMOVDQU                      | avx        | VEX Move unaligned packed integer values
 VPAND                        | avx/avx2   | VEX Logical AND
-VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
 VPANDN                       | avx/avx2   | VEX Logical AND NOT
+VPEXTRB                      | avx/avx2   | VEX Extract Byte
+VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
 VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
@@ -521,6 +523,7 @@ namespace triton {
           case ID_INS_PCMPGTB:        this->pcmpgtb_s(inst);      break;
           case ID_INS_PCMPGTD:        this->pcmpgtd_s(inst);      break;
           case ID_INS_PCMPGTW:        this->pcmpgtw_s(inst);      break;
+          case ID_INS_PEXTRB:         this->pextrb_s(inst);       break;
           case ID_INS_PMAXSB:         this->pmaxsb_s(inst);       break;
           case ID_INS_PMAXSD:         this->pmaxsd_s(inst);       break;
           case ID_INS_PMAXSW:         this->pmaxsw_s(inst);       break;
@@ -645,10 +648,11 @@ namespace triton {
           case ID_INS_VMOVDQU:        this->vmovdqu_s(inst);      break;
           case ID_INS_VPAND:          this->vpand_s(inst);        break;
           case ID_INS_VPANDN:         this->vpandn_s(inst);       break;
+          case ID_INS_VPEXTRB:        this->vpextrb_s(inst);      break;
           case ID_INS_VPMOVMSKB:      this->vpmovmskb_s(inst);    break;
           case ID_INS_VPOR:           this->vpor_s(inst);         break;
-          case ID_INS_VPTEST:         this->vptest_s(inst);       break;
           case ID_INS_VPSHUFD:        this->vpshufd_s(inst);      break;
+          case ID_INS_VPTEST:         this->vptest_s(inst);       break;
           case ID_INS_VPXOR:          this->vpxor_s(inst);        break;
           case ID_INS_WAIT:           this->wait_s(inst);         break;
           case ID_INS_WBINVD:         this->wbinvd_s(inst);       break;
@@ -8323,6 +8327,34 @@ namespace triton {
       }
 
 
+      void x86Semantics::pextrb_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        auto node = this->astCtxt->extract(7, 0,
+                      this->astCtxt->bvlshr(
+                        op2,
+                        this->astCtxt->bv(((op3->evaluate() & 0x0f) * 8), op2->getBitvectorSize())
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::pmaxsd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -13172,6 +13204,34 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpextrb_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        auto node = this->astCtxt->extract(7, 0,
+                      this->astCtxt->bvlshr(
+                        op2,
+                        this->astCtxt->bv(((op3->evaluate() & 0x0f) * 8), op2->getBitvectorSize())
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
