@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -39,6 +39,24 @@ CODE  = [
     (b"\x18\x50\xa1\xe8", "stm r1!, {r3, r4, ip, lr}"),
     (b"\x18\x50\xb1\xe8", "ldm r1!, {r3, r4, ip, lr}"),
     (b"\x04\xe0\x9f\xe5", "ldr lr, [pc, #4]"),
+
+    (b"\x03\x00\x91\xe7", "ldr r0, [r1, r3]"),
+    (b"\x03\x00\x11\xe7", "ldr r0, [r1, -r3]"),
+    (b"\x03\x00\x91\xe6", "ldr r0, [r1], r3"),
+    (b"\x03\x00\x11\xe6", "ldr r0, [r1], -r3"),
+    (b"\x03\x01\x11\xe6", "ldr r0, [r1], -r3, lsl #2"),
+    (b"\x03\x01\x11\xe7", "ldr r0, [r1, -r3, lsl #2]"),
+    (b"\x03\x01\x31\xe7", "ldr r0, [r1, -r3, lsl #2]!"),
+    (b"\x04\x00\x11\xe4", "ldr r0, [r1], #-4"),
+
+    (b"\x03\x00\xd1\xe7", "ldrb r0, [r1, r3]"),
+    (b"\x03\x00\x51\xe7", "ldrb r0, [r1, -r3]"),
+    (b"\x03\x00\xd1\xe6", "ldrb r0, [r1], r3"),
+    (b"\x03\x00\x51\xe6", "ldrb r0, [r1], -r3"),
+    (b"\x03\x01\x51\xe6", "ldrb r0, [r1], -r3, lsl #2"),
+    (b"\x03\x01\x51\xe7", "ldrb r0, [r1, -r3, lsl #2]"),
+    (b"\x03\x01\x71\xe7", "ldrb r0, [r1, -r3, lsl #2]!"),
+    (b"\x04\x00\x51\xe4", "ldrb r0, [r1], #-4"),
 
     # LDR - Offset addressing -----------------------------------------------  #
     (b"\x00\x00\x91\xe5", "ldr r0, [r1]"),
@@ -464,8 +482,8 @@ def emu_with_unicorn(opcode, istate):
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
-    mu.mem_write(STACK,                istate['stack'])
-    mu.mem_write(HEAP,                 istate['heap'])
+    mu.mem_write(STACK,                bytes(istate['stack']))
+    mu.mem_write(HEAP,                 bytes(istate['heap']))
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
     mu.reg_write(UC_ARM_REG_R2,        istate['r2'])
@@ -627,8 +645,8 @@ def print_stack(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),

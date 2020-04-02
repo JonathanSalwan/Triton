@@ -60,7 +60,7 @@ rcx:64 bv[63..0]
 0x100:64 bv[63..0]
 
 >>> print(op1.getLeaAst())
-(bvadd (_ bv0 64) (bvadd (bvmul (_ bv0 64) (_ bv2 64)) (_ bv256 64)))
+(bvadd (bvadd (_ bv0 64) (bvmul (_ bv0 64) (_ bv2 64))) (_ bv256 64))
 
 >>> print(hex(op1.getLeaAst().evaluate()))
 0x100

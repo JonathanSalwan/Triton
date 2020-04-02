@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -22,7 +22,7 @@ SIZE   = 10 * 1024 * 1024
 TARGET = 0x200000
 
 CODE2 = [
-    (b"\x00\xbf", "nop"),           # Thumb
+    (b"\x00\xf0\x20\xe3", "nop"),   # ARM
 ]
 
 CODE  = [
@@ -389,13 +389,13 @@ def print_state(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
-        "r0":    0x100000 | 0x1,
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
+        "r0":    0x100000,
         "r1":    0x200000,
-        "r2":    0x400000 | 0x1,
+        "r2":    0x400000,
         "r3":    0x100000,
-        "r4":    0x300000 | 0x1,
+        "r4":    0x300000,
         "r5":    HEAP + 5 * 0x4,
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),
@@ -414,7 +414,7 @@ if __name__ == '__main__':
     }
 
     # Set TARGET value to test LDR instructions.
-    state["heap"][5*0x4:5*0x4*3] = struct.pack("<I", 0x300000 | 0x1)
+    state["heap"][5*0x4:5*0x4*3] = struct.pack("<I", 0x300000)
 
     # for i, b in enumerate(state["heap"]):
     #     print("{:02x}: {:02x}".format(i, b))

@@ -69,6 +69,9 @@ namespace triton {
             //! Copies a Arm32Cpu class.
             void copy(const Arm32Cpu& other);
 
+            //! Post process instructions to provide a uniformity among ARM and Thumb modes.
+            void postDisassembly(triton::arch::Instruction& inst) const;
+
           protected:
             /*! \brief map of address -> concrete value
              *

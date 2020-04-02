@@ -228,6 +228,24 @@ namespace triton {
           return (value >> sr_count) | (value << sl_count);
         }
 
+        inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceBaseOperandAst(triton::arch::Instruction& inst,
+                                                                                            triton::arch::OperandWrapper& op) {
+          /* NOTE: This is a hacky way to obtain the ast of the operand
+           * without the shift. This has to be done before building the
+           * semantics (the current value is needed, not the new one).
+           */
+          /* TODO (cnheitman): Discuss. Should we deal with this here (and in
+           * this way) or move it to the Symbolic Engine. See also
+           * `getArm32SourceOperandAst` and its use of `getShiftAst`.
+           */
+          if (op.getType() == triton::arch::OP_REG) {
+            auto opBase = triton::arch::OperandWrapper(op.getRegister());
+            opBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
+            return this->symbolicEngine->getOperandAst(inst, opBase);
+          }
+
+          throw triton::exceptions::Semantics("Arm32Semantics::getArm32SourceBaseOperandAst(): Invalid operand type.");
+        }
 
         inline triton::ast::SharedAbstractNode Arm32Semantics::getArm32SourceOperandAst(triton::arch::Instruction& inst,
                                                                                         triton::arch::OperandWrapper& op) {
@@ -241,6 +259,12 @@ namespace triton {
           auto node   = this->symbolicEngine->getOperandAst(inst, op);
 
           if (op.getType() == triton::arch::OP_REG && op.getRegister().getId() == ID_REG_ARM32_PC) {
+            /* NOTE: PC always points to the address to the current instruction
+             * plus: a) 8 in case of ARM mode, or b) 4 in case of Thumb. It is
+             * also aligned to 4 bytes. For more information, refer to section
+             * "Use of labels in UAL instruction syntax" of the reference
+             * manual.
+             */
             node = this->astCtxt->bv(inst.getAddress() + offset, op.getBitSize());
 
             /* Shift AST if it's a shift operand */
@@ -329,7 +353,7 @@ namespace triton {
                                            triton::arch::OperandWrapper& dst) {
           /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
            * used for instructions that use a destination register. In that case,
-           * it check whether the destination is the PC and acts accordingly.
+           * it checks whether the destination is the PC and acts accordingly.
            * For example: ADD, SUB, etc.
            */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
@@ -357,8 +381,9 @@ namespace triton {
                                            triton::arch::OperandWrapper& dst2) {
 
           /* NOTE: This version of Arm32Semantics::controlFlow_s should only be
-           * used for instructions that use two destination registers. In that case,
-           * it check whether any of the destination register is the PC and acts accordingly.
+           * used for instructions that use two destination registers. In that
+           * case, it checks whether any of the destination register is the PC
+           * and acts accordingly.
            * For example: SMULL.
            */
           auto pc = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_ARM32_PC));
@@ -864,6 +889,26 @@ namespace triton {
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "adc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::adc_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
@@ -897,7 +942,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -914,7 +959,7 @@ namespace triton {
           /* Process modified immediate constants (expand immediate) */
           /* For more information, look for "Modified immediate constants in ARM
            * instructions" in the reference manual. For example:
-           * "adc ip, ip, #16, #20".
+           * "add r0, r0, #16, #20".
            */
           if (inst.operands.size() == 4) {
             auto src3 = inst.operands[3];
@@ -960,7 +1005,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -973,6 +1018,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "and r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::and_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -1002,7 +1067,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1016,16 +1081,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -1086,7 +1143,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1128,6 +1185,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "bic r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::bic_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
           auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
@@ -1156,7 +1233,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1370,6 +1447,11 @@ namespace triton {
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
 
+          /* Spread taint */
+          if (cond->evaluate() == true) {
+            expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+          }
+
           /* Update symbolic flags */
           this->cfSub_s(inst, cond, expr, src1, op1, op2);
           this->nf_s(inst, cond, expr, src1);
@@ -1390,6 +1472,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "eor r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::eor_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -1419,7 +1521,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1444,7 +1546,6 @@ namespace triton {
             auto& dst = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -1477,7 +1578,7 @@ namespace triton {
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
 
-              /* Update swtich mode accordingly. */
+              /* Update execution mode accordingly. */
               this->updateExecutionState(dst, op2);
             }
           }
@@ -1531,31 +1632,57 @@ namespace triton {
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
-          /* TODO: Add Offset addressing. */
           /* Optional behavior. Post-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn>], #+/-<imm> */
+          /* NOTE: There are two possible cases here:
+           *   - LDR <Rt>, [<Rn>], #+/-<imm>
+           *   - LDR <Rt>, [<Rn>], +/-<Rm>
+           */
           if (inst.operands.size() == 3) {
-            auto& imm  = inst.operands[2].getImmediate();
-            auto& base = src.getMemory().getBaseRegister();
+            if (inst.operands[2].getType() == OP_IMM) {
+              auto& imm  = inst.operands[2].getImmediate();
+              auto& base = src.getMemory().getBaseRegister();
 
-            /* Create symbolic operands of the post computation */
-            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
-            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
-            /* Create the semantics of the base register */
-            auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
-              thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              if (imm.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              }
+
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            } else {
+              auto& reg  = inst.operands[2].getRegister();
+              auto& base = src.getMemory().getBaseRegister();
+
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto regNode  = this->symbolicEngine->getOperandAst(inst, reg);
+
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
+
+              if (reg.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, regNode);
+              }
+
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
             }
-
-            auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
-
-            /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDR operation - Post-indexed base register computation");
-
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
           }
 
           /* Optional behavior. Pre-indexed computation of the base register */
@@ -1580,7 +1707,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -1612,29 +1739,57 @@ namespace triton {
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
 
-          /* TODO: Add Offset addressing. */
           /* Optional behavior. Post-indexed computation of the base register */
-          /* LDR <Rt>, [<Rn>], #+/-<imm> */
+          /* NOTE: There are two possible cases here:
+           *   - LDRB <Rt>, [<Rn>], #+/-<imm>
+           *   - LDRB <Rt>, [<Rn>], +/-<Rm>
+           */
           if (inst.operands.size() == 3) {
-            auto& imm  = inst.operands[2].getImmediate();
-            auto& base = src.getMemory().getBaseRegister();
+            if (inst.operands[2].getType() == OP_IMM) {
+              auto& imm  = inst.operands[2].getImmediate();
+              auto& base = src.getMemory().getBaseRegister();
 
-            /* Create symbolic operands of the post computation */
-            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
-            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
-            /* Create the semantics of the base register */
-            auto node2 = this->astCtxt->ite(
-                            cond,
-                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
-                            baseNode
-                          );
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              if (imm.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              }
 
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            } else {
+              auto& reg  = inst.operands[2].getRegister();
+              auto& base = src.getMemory().getBaseRegister();
+
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto regNode  = this->symbolicEngine->getOperandAst(inst, reg);
+
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
+
+              if (reg.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, regNode);
+              }
+
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            }
           }
 
           /* Optional behavior. Pre-indexed computation of the base register */
@@ -1659,9 +1814,8 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): Check. Here should it be node2 or node1? */
-            this->updateExecutionState(dst, node2);
+            /* Update execution mode accordingly. */
+            this->updateExecutionState(dst, node1);
           }
 
           /* Update the symbolic control flow */
@@ -1670,33 +1824,36 @@ namespace triton {
 
 
         void Arm32Semantics::ldrd_s(triton::arch::Instruction& inst) {
+          auto& dst1          = inst.operands[0];
+          auto& dst2          = inst.operands[1];
           auto& base          = inst.operands[2];
           triton::uint32 size = DWORD_SIZE;
 
+          /* Compute memory address */
+          auto addr1 = base.getMemory().getAddress() + size * 0;
+          auto src1  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr1, size));
+
+          auto addr2 = base.getMemory().getAddress() + size * 1;
+          auto src2  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr2, size));
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, dst1);
+          auto op3 = this->getArm32SourceOperandAst(inst, src2);
+          auto op4 = this->getArm32SourceOperandAst(inst, dst2);
+
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(cond, op1, op2);
+          auto node2 = this->astCtxt->ite(cond, op3, op4);
 
-          for (unsigned int i = 0; i < 2; i++) {
-            auto& dst = inst.operands[i];
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "LDRD operation - LOAD access");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "LDRD operation - LOAD access");
 
-            /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
-            auto addr = base.getMemory().getAddress() + size * i;
-            auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
-
-            /* Create symbolic operands */
-            auto op2 = this->getArm32SourceOperandAst(inst, src);
-            auto op3 = this->getArm32SourceOperandAst(inst, dst);
-
-            /* Create the semantics */
-            auto node = this->astCtxt->ite(cond, op2, op3);
-
-            /* Create symbolic expression */
-            auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LDRD operation - LOAD access");
-
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr1, dst, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src));
-          }
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr1, dst1, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src1));
+          this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(src2));
 
           /* Optional behavior. Post-indexed computation of the base register */
           /* LDRD <Rt>, [<Rn>], #+/-<imm> */
@@ -1744,14 +1901,13 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
+            /* Update execution mode accordingly. */
+            this->updateExecutionState(dst1, op1);
+            this->updateExecutionState(dst2, op2);
           }
 
           /* Update the symbolic control flow */
-          /* TODO (cnheitman): Fix. (Similar to SMULL). */
-          // this->controlFlow_s(inst, cond, dst1, dst2);
-          this->controlFlow_s(inst);
+          this->controlFlow_s(inst, cond, dst1, dst2);
         }
 
 
@@ -1760,16 +1916,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -1830,7 +1978,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1844,16 +1992,8 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
+          auto op1     = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node1;
@@ -1914,7 +2054,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -1950,7 +2090,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2033,7 +2173,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2046,6 +2186,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "orr r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::orr_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2075,7 +2235,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2131,7 +2291,7 @@ namespace triton {
             if (cond->evaluate() == true && dst.getRegister().getId() == ID_REG_ARM32_PC) {
               updateControlFlow = false;
 
-              /* Update swtich mode accordingly. */
+              /* Update execution mode accordingly. */
               this->updateExecutionState(dst, op2);
             }
           }
@@ -2206,7 +2366,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2220,15 +2380,7 @@ namespace triton {
           auto& src1 = inst.operands[1];
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src1.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src1);
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
 
           /* Create the semantics */
@@ -2290,7 +2442,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -2305,17 +2457,9 @@ namespace triton {
           auto  cf  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Create symbolic operands */
-          /* NOTE: This is a hacky way to obtain the ast of the operand
-           * without the shift. This has to be done before building the
-           * semantics (the current value is needed, not the new one).
-           */
-          /* TODO (cnheitman): Improve this code. */
-          auto srcBase = triton::arch::OperandWrapper(src.getRegister());
-          srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-          auto op1base = this->symbolicEngine->getOperandAst(inst, srcBase);
-
-          auto op1 = this->getArm32SourceOperandAst(inst, src);
-          auto op2 = this->getArm32SourceOperandAst(inst, cf);
+          auto op1base = this->getArm32SourceBaseOperandAst(inst, src);
+          auto op1     = this->getArm32SourceOperandAst(inst, src);
+          auto op2     = this->getArm32SourceOperandAst(inst, cf);
 
           /* Create the semantics */
           auto node1 = this->astCtxt->extract(
@@ -2348,7 +2492,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
           }
 
@@ -2361,6 +2505,26 @@ namespace triton {
           auto& dst  = inst.operands[0];
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "rsb r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::rsb_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2391,7 +2555,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2405,6 +2569,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "rsc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::rsc_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2439,7 +2623,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2453,6 +2637,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto  cf   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
+
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "sbc r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::sbc_s(): Invalid operand type.");
+            }
+          }
 
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
@@ -2487,7 +2691,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -2535,8 +2739,15 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
-            /* TODO (cnheitman): There could be a execution mode switch. Fix. */
+            /* Update execution mode accordingly. */
+            /* NOTE: The invocations are done in the order the manual says
+             * the instruction updates each register. Examples for this case
+             * could be:
+             *   - smull pc, r1, r2, r3
+             *   - smull pc, pc, r2, r3
+             */
+            this->updateExecutionState(dst2, upper);
+            this->updateExecutionState(dst1, lower);
           }
 
           /* Update the symbolic control flow */
@@ -2558,7 +2769,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2618,7 +2828,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * i;
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2696,7 +2905,7 @@ namespace triton {
             /* Create the semantics of the base register */
             auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
+            if (imm.isSubtracted() == true) {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
@@ -2773,7 +2982,7 @@ namespace triton {
             /* Create the semantics of the base register */
             auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            if (imm.getSubtracted() == true) {
+            if (imm.isSubtracted() == true) {
               thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
             }
 
@@ -2825,7 +3034,6 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            /* TODO (cnheitman): Make memory access symbolic (do not evaluate). */
             auto addr = base.getMemory().getAddress() + size * i;
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
@@ -2844,28 +3052,56 @@ namespace triton {
           }
 
           /* Optional behavior. Post-indexed computation of the base register. */
-          /* STRD <Rt>, <Rt2>, [<Rn>], #+/-<imm>; STRD <Rt>, <Rt2>, [<Rn>], +/-<Rm>*/
+          /* NOTE: There are two possible cases here:
+           *   - STRD <Rt>, <Rt2>, [<Rn>], #+/-<imm>
+           *   - STRD <Rt>, <Rt2>, [<Rn>], +/-<Rm>
+           */
           if (inst.operands.size() == 4) {
-            /* TODO (cnheitman): Differenciate between imm and reg operand (as in STRH).*/
-            auto& imm  = inst.operands[3].getImmediate();
-            auto& base = inst.operands[2].getMemory().getBaseRegister();
+            if (inst.operands[2].getType() == OP_IMM) {
+              auto& imm  = inst.operands[3].getImmediate();
+              auto& base = inst.operands[2].getMemory().getBaseRegister();
 
-            /* Create symbolic operands of the post computation */
-            auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
-            auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
-            /* Create the semantics of the base register */
-            auto node2 = this->astCtxt->ite(
-                            cond,
-                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
-                            baseNode
-                            );
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-            /* Create symbolic expression */
-            auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+              if (imm.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
+              }
 
-            /* Spread taint */
-            this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
+            } else {
+              auto& reg  = inst.operands[3].getRegister();
+              auto& base = inst.operands[2].getMemory().getBaseRegister();
+
+              /* Create symbolic operands of the post computation */
+              auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
+              auto regNode  = this->symbolicEngine->getOperandAst(inst, reg);
+
+              /* Create the semantics of the base register */
+              auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
+
+              if (reg.isSubtracted() == true) {
+                thenNode = this->astCtxt->bvsub(baseNode, regNode);
+              }
+
+              auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
+
+              /* Create symbolic expression */
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "STRD operation - Base register computation");
+
+              /* Spread taint */
+              this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base) | this->taintEngine->isTainted(reg));
+            }
           }
 
           /* Optional behavior. Pre-indexed computation of the base register. */
@@ -2922,7 +3158,6 @@ namespace triton {
           /* Optional behavior. Post-indexed computation of the base register. */
           /* STRH <Rt>, [<Rn>], #+/-<imm>; STRH <Rt>, [<Rn>], +/-<Rm>*/
           if (inst.operands.size() == 3) {
-            /* TODO (cnheitman): Refactor. */
             if (inst.operands[2].getType() == OP_IMM) {
               auto& imm  = inst.operands[2].getImmediate();
               auto& base = dst.getMemory().getBaseRegister();
@@ -2934,7 +3169,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
 
-              if (imm.getSubtracted() == true) {
+              if (imm.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode));
               }
 
@@ -2956,7 +3191,7 @@ namespace triton {
               /* Create the semantics of the base register */
               auto thenNode = this->astCtxt->bvadd(baseNode, regNode);
 
-              if (reg.getSubtracted() == true) {
+              if (reg.isSubtracted() == true) {
                 thenNode = this->astCtxt->bvsub(baseNode, regNode);
               }
 
@@ -3003,6 +3238,26 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
 
+          /* Process modified immediate constants (expand immediate) */
+          /* For more information, look for "Modified immediate constants in ARM
+           * instructions" in the reference manual. For example:
+           * "sub r0, r0, #16, #20".
+           */
+          if (inst.operands.size() == 4) {
+            auto src3 = inst.operands[3];
+
+            if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
+              auto size  = src2.getSize();
+              auto value = src2.getImmediate().getValue();
+              auto shift = src3.getImmediate().getValue();
+
+              /* Replace src2 with the expanded immediate */
+              src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
+            } else {
+              throw triton::exceptions::Semantics("Arm32Semantics::sub_s(): Invalid operand type.");
+            }
+          }
+
           /* Create symbolic operands */
           auto op1 = this->getArm32SourceOperandAst(inst, src1);
           auto op2 = this->getArm32SourceOperandAst(inst, src2);
@@ -3032,7 +3287,7 @@ namespace triton {
           if (cond->evaluate() == true) {
             inst.setConditionTaken(true);
 
-            /* Update swtich mode accordingly. */
+            /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node1);
           }
 
@@ -3056,6 +3311,11 @@ namespace triton {
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "TST operation");
 
+          /* Spread taint */
+          if (cond->evaluate() == true) {
+            expr->isTainted = this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2);
+          }
+
           /* Update symbolic flags */
           this->cfBitwise_s(inst, cond, expr, src2);
           this->nf_s(inst, cond, expr, src1);
@@ -3076,14 +3336,18 @@ namespace triton {
                                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                          triton::arch::OperandWrapper& src) {
 
-          /* TODO (cnheitman): Check if we can use the same prototype as the
-           * rest of the functions that process the CF.
+          /* NOTE: This function builds the semantics for updating the carry
+           * flag for all bitwise instructions: AND, BIC, EOR, MVN, ORN, ORR,
+           * and TST. The way the carry flag is updated depends on the type of
+           * operand (and in the case of a register operand, it even depends
+           * whether it is shifted or not). For more information refer to the
+           * manual to any of the aforementioned instructions.
            */
 
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Create symbolic operands */
-          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Create the semantics */
           triton::ast::SharedAbstractNode node = nullptr;
@@ -3091,15 +3355,18 @@ namespace triton {
           triton::ast::SharedAbstractNode shiftAmount = nullptr;
 
           switch (src.getType()) {
-            /* TODO (cnheitman): Comment each case. */
-
             case triton::arch::OP_IMM: {
-              /* From ARMExpandImm_C():
-               *    unrotated_value = ZeroExtend(imm12<7:0>, 32);
-               *    (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, #<const> */
+
+              /* From the instruction decoding:
+               *    - (imm32, carry) = ARMExpandImm_C(imm12, APSR.C);
+               *
+               * From ARMExpandImm_C():
+               *    - unrotated_value = ZeroExtend(imm12<7:0>, 32);
+               *    - (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
                */
 
-              node = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op1));
+              node = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op));
               shiftType = triton::arch::arm::ID_SHIFT_ROR;
               shiftAmount = this->astCtxt->bv(
                               2 * (src.getImmediate().getValue() & 0x00000f00),
@@ -3109,28 +3376,31 @@ namespace triton {
             }
 
             case triton::arch::OP_REG: {
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm>, <type> <Rs> */
               if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
+                /* From the instruction operation:
+                 *    - shift_n = UInt(R[s]<7:0>);
+                 *    - (shifted, carry) = Shift_C(R[m], shift_t, shift_n, APSR.C);
+                 */
+
                 auto shift = static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister());
 
-                /* NOTE: This is a hacky way to obtain the ast of the operand
-                 * without the shift. This has to be done before building the
-                 * semantics (the current value is needed, not the new one).
-                 */
-                /* TODO (cnheitman): Improve this code. */
-                auto srcBase = triton::arch::OperandWrapper(src.getRegister());
-                srcBase.getRegister().setShiftType(triton::arch::arm::ID_SHIFT_INVALID);
-
-                node = this->symbolicEngine->getOperandAst(inst, srcBase);
+                node = this->getArm32SourceBaseOperandAst(inst, src);
                 shiftAmount = this->getShiftCAmountAst(shift);
                 shiftType = this->getShiftCBaseType(shift);
-              } else {
+              }
+
+              /* For instance, this applies to: AND{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm> {, <shift>} */
+              else {
+
                 /* From the instruction decoding:
-                 *    (shift_t, shift_n) = (SRType_LSL, 0);
+                 *    - (shift_t, shift_n) = (SRType_LSL, 0);
+                 *    - (shifted, carry) = Shift_C(R[m], shift_t, shift_n, APSR.C);
                  */
 
-                node = op1;
+                node = op;
                 shiftType = triton::arch::arm::ID_SHIFT_LSL;
-                shiftAmount = this->astCtxt->bv(0, op1->getBitvectorSize());
+                shiftAmount = this->astCtxt->bv(0, op->getBitvectorSize());
               }
               break;
             }
@@ -3158,11 +3428,16 @@ namespace triton {
                                         const triton::ast::SharedAbstractNode& op1,
                                         triton::arch::OperandWrapper& src,
                                         const triton::arch::arm::shift_e type) {
-          /* IMPORTANT: We asume that op1 is a register without its shift. */
 
-          /* TODO (cnheitman): Check if we can use the same prototype as the
-           * rest of the functions that process the CF.
+          /* NOTE: This function builds the semantics for updating the carry
+           * flag for all shift instructions: ASR, LSL, LSR, ROR, and RRX. The
+           * way the carry flag is updated depends on the type of operand (and
+           * in the case of a register operand, it even depends whether it is
+           * shifted or not). For more information refer to the manual to any
+           * of the aforementioned instructions.
            */
+
+          /* IMPORTANT: We assume that op1 is a register without its shift. */
 
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
@@ -3172,22 +3447,37 @@ namespace triton {
           triton::ast::SharedAbstractNode shiftAmount = nullptr;
 
           switch (src.getType()) {
-            /* TODO (cnheitman): Comment each case. */
-
             case triton::arch::OP_IMM: {
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rm>, #<imm> */
+
+              /* IMPORTANT: This case ONLY seems to apply to the Thumb version
+               * of the shift instructions. Empirically determined, the
+               * reference manual doesn't seem to provide information about
+               * this.
+               */
               shiftAmount = this->astCtxt->bv(src.getImmediate().getValue(), op1->getBitvectorSize());
               break;
             }
 
             case triton::arch::OP_REG: {
+              /* From the instruction operation:
+               *    - shift_n = UInt(R[m]<7:0>);
+               *    - (result, carry) = Shift_C(R[n], SRType_XXX, shift_n, APSR.C);
+               *
+               * where 'SRType_XXX' varies according to the instruction (for instance,
+               * SRType_ASR in case it is an ASR instruction).
+               */
+
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rm>, #<imm> */
               if (src.getRegister().getShiftType() != triton::arch::arm::ID_SHIFT_INVALID) {
                 auto shift = static_cast<const triton::arch::arm::ArmOperandProperties>(src.getRegister());
 
                 shiftAmount = this->getShiftCAmountAst(shift);
                 shiftType = this->getShiftCBaseType(shift);
-              } else {
-                // (result, carry) = Shift_C(R[m], SRType_XXX, shift_n, APSR.C);
+              }
 
+              /* For instance, this applies to: ASR{S}{<c>}{<q>} {<Rd>,} <Rn>, <Rm> */
+              else {
                 /* Create symbolic operands */
                 auto op2 = this->getArm32SourceOperandAst(inst, src);
 
@@ -3271,7 +3561,7 @@ namespace triton {
 
         triton::ast::SharedAbstractNode Arm32Semantics::getShiftCAst(const triton::ast::SharedAbstractNode& node,
                                                                      const triton::arch::arm::shift_e type,
-                                                                     const triton::ast::SharedAbstractNode& shifAmount) {
+                                                                     const triton::ast::SharedAbstractNode& shiftAmount) {
 
           /* NOTE This function implements the Shift_C function from the
            * reference manual:
@@ -3282,39 +3572,71 @@ namespace triton {
            * for more information.
            */
 
+          /* NOTE This function slightly overlaps with SymbolicEngine::getShiftAst. */
+
           auto cf = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_C));
 
           /* Set carry out node to the current value of the carry (carry in). */
           triton::ast::SharedAbstractNode carryOutNode = this->symbolicEngine->getOperandAst(cf);
 
-          /* TODO (cnheitman): Make amount symbolic. */
-          uint32 amount = shifAmount->evaluate().convert_to<triton::uint32>();
-
-          if (amount == 0)
+          if (shiftAmount->evaluate() == 0)
             return carryOutNode;
 
           switch (type) {
             case triton::arch::arm::ID_SHIFT_ASR: {
-              auto extendedX = this->astCtxt->sx(amount, node);
-              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                0,
+                                0,
+                                this->astCtxt->bvashr(
+                                  node,
+                                  this->astCtxt->bvsub(
+                                    shiftAmount,
+                                    this->astCtxt->bv(1, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_LSL: {
-              auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, amount));
-              carryOutNode = this->astCtxt->extract(DWORD_SIZE_BIT, DWORD_SIZE_BIT, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                DWORD_SIZE_BIT,
+                                DWORD_SIZE_BIT,
+                                this->astCtxt->bvshl(
+                                  this->astCtxt->zx(node->getBitvectorSize()+1, node),
+                                  this->astCtxt->zx(node->getBitvectorSize()+1, shiftAmount)
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_LSR: {
-              auto extendedX = this->astCtxt->zx(amount, node);
-              carryOutNode = this->astCtxt->extract(amount-1, amount-1, extendedX);
+              carryOutNode = this->astCtxt->extract(
+                                0,
+                                0,
+                                this->astCtxt->bvlshr(
+                                  node,
+                                  this->astCtxt->bvsub(
+                                    shiftAmount,
+                                    this->astCtxt->bv(1, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
             case triton::arch::arm::ID_SHIFT_ROR: {
-              auto result = this->ror_c(node, amount);
-              carryOutNode = this->astCtxt->extract(DWORD_SIZE_BIT-1, DWORD_SIZE_BIT-1, result);
+              carryOutNode = this->astCtxt->extract(
+                                DWORD_SIZE_BIT-1,
+                                DWORD_SIZE_BIT-1,
+                                this->astCtxt->bvror(
+                                  node,
+                                  this->astCtxt->bvurem(
+                                    shiftAmount,
+                                    this->astCtxt->bv(DWORD_SIZE_BIT, shiftAmount->getBitvectorSize())
+                                  )
+                                )
+                              );
               break;
             }
 
@@ -3417,66 +3739,6 @@ namespace triton {
           }
 
           return amount;
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsl_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift > 0) {
-            auto extendedX = this->astCtxt->concat(node, this->astCtxt->bv(0, shift));
-            auto result = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, extendedX);
-            return result;
-          } else {
-            return nullptr;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsl(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->lsl_c(node, shift);
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsr_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift > 0) {
-            auto extendedX = this->astCtxt->zx(shift, node);
-            auto result = this->astCtxt->extract(shift+DWORD_SIZE_BIT-1, shift, extendedX);
-            return result;
-          } else {
-            return nullptr;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::lsr(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->lsr_c(node, shift);
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::ror_c(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return nullptr;
-          } else {
-            auto m = shift % DWORD_SIZE_BIT;
-            auto result = this->astCtxt->bvor(this->lsr(node, m), this->lsl(node, DWORD_SIZE_BIT-m));
-            return result;
-          }
-        }
-
-
-        triton::ast::SharedAbstractNode Arm32Semantics::ror(const triton::ast::SharedAbstractNode& node, uint32 shift) {
-          if (shift == 0) {
-            return node;
-          } else {
-            return this->ror_c(node, shift);
-          }
         }
       }; /* arm32 namespace */
     }; /* arm namespace */

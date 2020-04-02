@@ -58,6 +58,9 @@ namespace triton {
         //! Returns true if the register ID is valid.
         TRITON_EXPORT virtual bool isRegisterValid(triton::arch::register_e regId) const = 0;
 
+        //! Returns true if the execution mode is Thumb. Only useful for Arm32.
+        TRITON_EXPORT virtual bool isThumb(void) const = 0;
+
         //! Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT virtual triton::uint32 gprSize(void) const = 0;
 
