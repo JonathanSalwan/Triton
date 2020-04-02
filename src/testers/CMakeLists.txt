@@ -1,5 +1,4 @@
 # Pintool
-# FIXME: python3
 if(PINTOOL AND ${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND NOT PYTHON36)
     enable_testing()
 
@@ -31,6 +30,6 @@ endif()
 # Misc
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
     enable_testing()
-    add_test(UnicornAArch64Semantics sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/aarch64/unicorn_test_aarch64.py")
-    add_test(UnicornX86Semantics sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/x86/unicorn_test_x86.py")
+    add_test(UnicornAArch64Semantics    sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/aarch64/unicorn_test_aarch64.py")
+    add_test(UnicornX86Semantics        sh -c "${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/x86/unicorn_test_x86.py")
 endif()
