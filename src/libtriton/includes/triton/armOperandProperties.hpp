@@ -59,6 +59,7 @@ namespace triton {
 
           //! The subtracted flag. Used in memory access operands and determines whether this operand has to be added or subtracted to the base register.
           bool subtracted;
+
         public:
           //! Constructor.
           TRITON_EXPORT ArmOperandProperties();

@@ -75,18 +75,17 @@ namespace triton {
             TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
           private:
-            //! Builds the semantics of a conditional instruction.
-            triton::ast::SharedAbstractNode buildConditionalSemantics(triton::arch::Instruction& inst,
-                                                                      triton::arch::OperandWrapper& dst,
-                                                                      const triton::ast::SharedAbstractNode& opNode);
+            //! Rotates right.
+            uint32_t ror(uint32_t value, unsigned int count);
 
             //! Execution state update semantics.
-            void updateExecutionState(triton::arch::OperandWrapper& dst,
-                                      const triton::ast::SharedAbstractNode& node);
+            void updateExecutionState(triton::arch::OperandWrapper& dst, const triton::ast::SharedAbstractNode& node);
 
             //! Exchanges instrution set according to provide operand.
-            void exchangeInstructionSet(triton::arch::OperandWrapper& op,
-                                        const triton::ast::SharedAbstractNode& node);
+            void exchangeInstructionSet(triton::arch::OperandWrapper& op, const triton::ast::SharedAbstractNode& node);
+
+            //! Builds the semantics of a conditional instruction.
+            triton::ast::SharedAbstractNode buildConditionalSemantics(triton::arch::Instruction& inst, triton::arch::OperandWrapper& dst, const triton::ast::SharedAbstractNode& opNode);
 
             //! Returns the AST corresponding to the adjustment of the LSB of the provided node.
             triton::ast::SharedAbstractNode adjustISSB(const triton::ast::SharedAbstractNode& node);
@@ -94,26 +93,20 @@ namespace triton {
             //! Returns the AST corresponding to the clearing of the LSB of the provided node.
             triton::ast::SharedAbstractNode clearISSB(const triton::ast::SharedAbstractNode& node);
 
-            //! Rotates right.
-            uint32_t ror(uint32_t value, unsigned int count);
-
             //! Returns the AST corresponding to the Arm32 source base operand (it does not include the shift).
-            triton::ast::SharedAbstractNode getArm32SourceBaseOperandAst(triton::arch::Instruction& inst,
-                                                                         triton::arch::OperandWrapper& op);
+            triton::ast::SharedAbstractNode getArm32SourceBaseOperandAst(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
 
             //! Returns the AST corresponding to the Arm32 source operand.
-            triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst,
-                                                                     triton::arch::OperandWrapper& op);
+            triton::ast::SharedAbstractNode getArm32SourceOperandAst(triton::arch::Instruction& inst, triton::arch::OperandWrapper& op);
 
             //! Aligns the stack (add). Returns the new stack value.
-            triton::uint64 alignAddStack_s(triton::arch::Instruction& inst,
-                                           const triton::ast::SharedAbstractNode& cond,
-                                           triton::uint32 delta);
+            triton::uint64 alignAddStack_s(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& cond, triton::uint32 delta);
 
             //! Aligns the stack (sub). Returns the new stack value.
-            triton::uint64 alignSubStack_s(triton::arch::Instruction& inst,
-                                           const triton::ast::SharedAbstractNode& cond,
-                                           triton::uint32 delta);
+            triton::uint64 alignSubStack_s(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& cond, triton::uint32 delta);
+
+            //! Creates a conditional node.
+            triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
 
             //! Control flow semantics. Used to represent PC.
             void controlFlow_s(triton::arch::Instruction& inst);
@@ -128,9 +121,6 @@ namespace triton {
                                const triton::ast::SharedAbstractNode& cond,
                                triton::arch::OperandWrapper& dst1,
                                triton::arch::OperandWrapper& dst2);
-
-            //! Creates a conditional node.
-            triton::ast::SharedAbstractNode getCodeConditionAst(triton::arch::Instruction& inst);
 
             //! Gets the taint state (based on flags) of a conditional instruction.
             bool getCodeConditionTaintState(const triton::arch::Instruction& inst);
