@@ -91,6 +91,41 @@ CODE  = [
     (b"\x66\x0f\x3a\x16\xc8\x20",                   "pextrd eax, xmm1, 32"),
     (b"\x66\x0f\x3a\x16\xc8\x21",                   "pextrd eax, xmm1, 33"),
 
+    (b"\x66\x0f\x3a\x16\x0b\x00",                   "pextrd [rbx], xmm1, 0"),
+    (b"\x66\x0f\x3a\x16\x0b\x01",                   "pextrd [rbx], xmm1, 1"),
+    (b"\x66\x0f\x3a\x16\x0b\x02",                   "pextrd [rbx], xmm1, 2"),
+    (b"\x66\x0f\x3a\x16\x0b\x03",                   "pextrd [rbx], xmm1, 3"),
+    (b"\x66\x0f\x3a\x16\x0b\x04",                   "pextrd [rbx], xmm1, 4"),
+    (b"\x66\x0f\x3a\x16\x0b\x05",                   "pextrd [rbx], xmm1, 5"),
+    (b"\x66\x0f\x3a\x16\x0b\x06",                   "pextrd [rbx], xmm1, 6"),
+    (b"\x66\x0f\x3a\x16\x0b\x07",                   "pextrd [rbx], xmm1, 7"),
+    (b"\x66\x0f\x3a\x16\x0b\x08",                   "pextrd [rbx], xmm1, 8"),
+    (b"\x66\x0f\x3a\x16\x0b\x09",                   "pextrd [rbx], xmm1, 9"),
+    (b"\x66\x0f\x3a\x16\x0b\x0a",                   "pextrd [rbx], xmm1, 10"),
+    (b"\x66\x0f\x3a\x16\x0b\x0b",                   "pextrd [rbx], xmm1, 11"),
+    (b"\x66\x0f\x3a\x16\x0b\x0c",                   "pextrd [rbx], xmm1, 12"),
+    (b"\x66\x0f\x3a\x16\x0b\x0d",                   "pextrd [rbx], xmm1, 13"),
+    (b"\x66\x0f\x3a\x16\x0b\x0e",                   "pextrd [rbx], xmm1, 14"),
+    (b"\x66\x0f\x3a\x16\x0b\x0f",                   "pextrd [rbx], xmm1, 15"),
+    (b"\x66\x0f\x3a\x16\x0b\x10",                   "pextrd [rbx], xmm1, 16"),
+    (b"\x66\x0f\x3a\x16\x0b\x11",                   "pextrd [rbx], xmm1, 17"),
+    (b"\x66\x0f\x3a\x16\x0b\x12",                   "pextrd [rbx], xmm1, 18"),
+    (b"\x66\x0f\x3a\x16\x0b\x13",                   "pextrd [rbx], xmm1, 19"),
+    (b"\x66\x0f\x3a\x16\x0b\x14",                   "pextrd [rbx], xmm1, 20"),
+    (b"\x66\x0f\x3a\x16\x0b\x15",                   "pextrd [rbx], xmm1, 21"),
+    (b"\x66\x0f\x3a\x16\x0b\x16",                   "pextrd [rbx], xmm1, 22"),
+    (b"\x66\x0f\x3a\x16\x0b\x17",                   "pextrd [rbx], xmm1, 23"),
+    (b"\x66\x0f\x3a\x16\x0b\x18",                   "pextrd [rbx], xmm1, 24"),
+    (b"\x66\x0f\x3a\x16\x0b\x19",                   "pextrd [rbx], xmm1, 25"),
+    (b"\x66\x0f\x3a\x16\x0b\x1a",                   "pextrd [rbx], xmm1, 26"),
+    (b"\x66\x0f\x3a\x16\x0b\x1b",                   "pextrd [rbx], xmm1, 27"),
+    (b"\x66\x0f\x3a\x16\x0b\x1c",                   "pextrd [rbx], xmm1, 28"),
+    (b"\x66\x0f\x3a\x16\x0b\x1d",                   "pextrd [rbx], xmm1, 29"),
+    (b"\x66\x0f\x3a\x16\x0b\x1e",                   "pextrd [rbx], xmm1, 30"),
+    (b"\x66\x0f\x3a\x16\x0b\x1f",                   "pextrd [rbx], xmm1, 31"),
+    (b"\x66\x0f\x3a\x16\x0b\x20",                   "pextrd [rbx], xmm1, 32"),
+    (b"\x66\x0f\x3a\x16\x0b\x21",                   "pextrd [rbx], xmm1, 33"),
+
     (b"\x66\x48\x0f\x3a\x16\xc8\x00",               "pextrq rax, xmm1, 0"),
     (b"\x66\x48\x0f\x3a\x16\xc8\x01",               "pextrq rax, xmm1, 1"),
     (b"\x66\x48\x0f\x3a\x16\xc8\x02",               "pextrq rax, xmm1, 2"),
@@ -125,6 +160,76 @@ CODE  = [
     (b"\x66\x48\x0f\x3a\x16\xc8\x1f",               "pextrq rax, xmm1, 31"),
     (b"\x66\x48\x0f\x3a\x16\xc8\x20",               "pextrq rax, xmm1, 32"),
     (b"\x66\x48\x0f\x3a\x16\xc8\x21",               "pextrq rax, xmm1, 33"),
+
+    (b"\x66\x0f\xc5\xc1\x00",                       "pextrw eax, xmm1, 0"),
+    (b"\x66\x0f\xc5\xc1\x01",                       "pextrw eax, xmm1, 1"),
+    (b"\x66\x0f\xc5\xc1\x02",                       "pextrw eax, xmm1, 2"),
+    (b"\x66\x0f\xc5\xc1\x03",                       "pextrw eax, xmm1, 3"),
+    (b"\x66\x0f\xc5\xc1\x04",                       "pextrw eax, xmm1, 4"),
+    (b"\x66\x0f\xc5\xc1\x05",                       "pextrw eax, xmm1, 5"),
+    (b"\x66\x0f\xc5\xc1\x06",                       "pextrw eax, xmm1, 6"),
+    (b"\x66\x0f\xc5\xc1\x07",                       "pextrw eax, xmm1, 7"),
+    (b"\x66\x0f\xc5\xc1\x08",                       "pextrw eax, xmm1, 8"),
+    (b"\x66\x0f\xc5\xc1\x09",                       "pextrw eax, xmm1, 9"),
+    (b"\x66\x0f\xc5\xc1\x0a",                       "pextrw eax, xmm1, 10"),
+    (b"\x66\x0f\xc5\xc1\x0b",                       "pextrw eax, xmm1, 11"),
+    (b"\x66\x0f\xc5\xc1\x0c",                       "pextrw eax, xmm1, 12"),
+    (b"\x66\x0f\xc5\xc1\x0d",                       "pextrw eax, xmm1, 13"),
+    (b"\x66\x0f\xc5\xc1\x0e",                       "pextrw eax, xmm1, 14"),
+    (b"\x66\x0f\xc5\xc1\x0f",                       "pextrw eax, xmm1, 15"),
+    (b"\x66\x0f\xc5\xc1\x10",                       "pextrw eax, xmm1, 16"),
+    (b"\x66\x0f\xc5\xc1\x11",                       "pextrw eax, xmm1, 17"),
+    (b"\x66\x0f\xc5\xc1\x12",                       "pextrw eax, xmm1, 18"),
+    (b"\x66\x0f\xc5\xc1\x13",                       "pextrw eax, xmm1, 19"),
+    (b"\x66\x0f\xc5\xc1\x14",                       "pextrw eax, xmm1, 20"),
+    (b"\x66\x0f\xc5\xc1\x15",                       "pextrw eax, xmm1, 21"),
+    (b"\x66\x0f\xc5\xc1\x16",                       "pextrw eax, xmm1, 22"),
+    (b"\x66\x0f\xc5\xc1\x17",                       "pextrw eax, xmm1, 23"),
+    (b"\x66\x0f\xc5\xc1\x18",                       "pextrw eax, xmm1, 24"),
+    (b"\x66\x0f\xc5\xc1\x19",                       "pextrw eax, xmm1, 25"),
+    (b"\x66\x0f\xc5\xc1\x1a",                       "pextrw eax, xmm1, 26"),
+    (b"\x66\x0f\xc5\xc1\x1b",                       "pextrw eax, xmm1, 27"),
+    (b"\x66\x0f\xc5\xc1\x1c",                       "pextrw eax, xmm1, 28"),
+    (b"\x66\x0f\xc5\xc1\x1d",                       "pextrw eax, xmm1, 29"),
+    (b"\x66\x0f\xc5\xc1\x1e",                       "pextrw eax, xmm1, 30"),
+    (b"\x66\x0f\xc5\xc1\x1f",                       "pextrw eax, xmm1, 31"),
+    (b"\x66\x0f\xc5\xc1\x20",                       "pextrw eax, xmm1, 32"),
+    (b"\x66\x0f\xc5\xc1\x21",                       "pextrw eax, xmm1, 33"),
+
+    (b"\x0f\xc5\xc1\x00",                           "pextrw eax, mm1, 0"),
+    (b"\x0f\xc5\xc1\x01",                           "pextrw eax, mm1, 1"),
+    (b"\x0f\xc5\xc1\x02",                           "pextrw eax, mm1, 2"),
+    (b"\x0f\xc5\xc1\x03",                           "pextrw eax, mm1, 3"),
+    (b"\x0f\xc5\xc1\x04",                           "pextrw eax, mm1, 4"),
+    (b"\x0f\xc5\xc1\x05",                           "pextrw eax, mm1, 5"),
+    (b"\x0f\xc5\xc1\x06",                           "pextrw eax, mm1, 6"),
+    (b"\x0f\xc5\xc1\x07",                           "pextrw eax, mm1, 7"),
+    (b"\x0f\xc5\xc1\x08",                           "pextrw eax, mm1, 8"),
+    (b"\x0f\xc5\xc1\x09",                           "pextrw eax, mm1, 9"),
+    (b"\x0f\xc5\xc1\x0a",                           "pextrw eax, mm1, 10"),
+    (b"\x0f\xc5\xc1\x0b",                           "pextrw eax, mm1, 11"),
+    (b"\x0f\xc5\xc1\x0c",                           "pextrw eax, mm1, 12"),
+    (b"\x0f\xc5\xc1\x0d",                           "pextrw eax, mm1, 13"),
+    (b"\x0f\xc5\xc1\x0e",                           "pextrw eax, mm1, 14"),
+    (b"\x0f\xc5\xc1\x0f",                           "pextrw eax, mm1, 15"),
+    (b"\x0f\xc5\xc1\x10",                           "pextrw eax, mm1, 16"),
+    (b"\x0f\xc5\xc1\x11",                           "pextrw eax, mm1, 17"),
+    (b"\x0f\xc5\xc1\x12",                           "pextrw eax, mm1, 18"),
+    (b"\x0f\xc5\xc1\x13",                           "pextrw eax, mm1, 19"),
+    (b"\x0f\xc5\xc1\x14",                           "pextrw eax, mm1, 20"),
+    (b"\x0f\xc5\xc1\x15",                           "pextrw eax, mm1, 21"),
+    (b"\x0f\xc5\xc1\x16",                           "pextrw eax, mm1, 22"),
+    (b"\x0f\xc5\xc1\x17",                           "pextrw eax, mm1, 23"),
+    (b"\x0f\xc5\xc1\x18",                           "pextrw eax, mm1, 24"),
+    (b"\x0f\xc5\xc1\x19",                           "pextrw eax, mm1, 25"),
+    (b"\x0f\xc5\xc1\x1a",                           "pextrw eax, mm1, 26"),
+    (b"\x0f\xc5\xc1\x1b",                           "pextrw eax, mm1, 27"),
+    (b"\x0f\xc5\xc1\x1c",                           "pextrw eax, mm1, 28"),
+    (b"\x0f\xc5\xc1\x1d",                           "pextrw eax, mm1, 29"),
+    (b"\x0f\xc5\xc1\x1e",                           "pextrw eax, mm1, 30"),
+    (b"\x0f\xc5\xc1\x1f",                           "pextrw eax, mm1, 31"),
+    (b"\x0f\xc5\xc1\x20",                           "pextrw eax, mm1, 32"),
+    (b"\x0f\xc5\xc1\x21",                           "pextrw eax, mm1, 33"),
 
     (b"\xc4\xe3\x79\x14\xc8\x00",                   "vpextrb eax, xmm1, 0"),
     (b"\xc4\xe3\x79\x14\xc8\x01",                   "vpextrb eax, xmm1, 1"),
@@ -230,6 +335,41 @@ CODE  = [
     (b"\xc4\xe3\xf9\x16\xc8\x1f",                   "vpextrq rax, xmm1, 31"),
     (b"\xc4\xe3\xf9\x16\xc8\x20",                   "vpextrq rax, xmm1, 32"),
     (b"\xc4\xe3\xf9\x16\xc8\x20",                   "vpextrq rax, xmm1, 33"),
+
+    (b"\xc5\xf9\xc5\xc1\x00",                       "vpextrw eax, xmm1, 0"),
+    (b"\xc5\xf9\xc5\xc1\x01",                       "vpextrw eax, xmm1, 1"),
+    (b"\xc5\xf9\xc5\xc1\x02",                       "vpextrw eax, xmm1, 2"),
+    (b"\xc5\xf9\xc5\xc1\x03",                       "vpextrw eax, xmm1, 3"),
+    (b"\xc5\xf9\xc5\xc1\x04",                       "vpextrw eax, xmm1, 4"),
+    (b"\xc5\xf9\xc5\xc1\x05",                       "vpextrw eax, xmm1, 5"),
+    (b"\xc5\xf9\xc5\xc1\x06",                       "vpextrw eax, xmm1, 6"),
+    (b"\xc5\xf9\xc5\xc1\x07",                       "vpextrw eax, xmm1, 7"),
+    (b"\xc5\xf9\xc5\xc1\x08",                       "vpextrw eax, xmm1, 8"),
+    (b"\xc5\xf9\xc5\xc1\x09",                       "vpextrw eax, xmm1, 9"),
+    (b"\xc5\xf9\xc5\xc1\x0a",                       "vpextrw eax, xmm1, 10"),
+    (b"\xc5\xf9\xc5\xc1\x0b",                       "vpextrw eax, xmm1, 11"),
+    (b"\xc5\xf9\xc5\xc1\x0c",                       "vpextrw eax, xmm1, 12"),
+    (b"\xc5\xf9\xc5\xc1\x0d",                       "vpextrw eax, xmm1, 13"),
+    (b"\xc5\xf9\xc5\xc1\x0e",                       "vpextrw eax, xmm1, 14"),
+    (b"\xc5\xf9\xc5\xc1\x0f",                       "vpextrw eax, xmm1, 15"),
+    (b"\xc5\xf9\xc5\xc1\x10",                       "vpextrw eax, xmm1, 16"),
+    (b"\xc5\xf9\xc5\xc1\x11",                       "vpextrw eax, xmm1, 17"),
+    (b"\xc5\xf9\xc5\xc1\x12",                       "vpextrw eax, xmm1, 18"),
+    (b"\xc5\xf9\xc5\xc1\x13",                       "vpextrw eax, xmm1, 19"),
+    (b"\xc5\xf9\xc5\xc1\x14",                       "vpextrw eax, xmm1, 20"),
+    (b"\xc5\xf9\xc5\xc1\x15",                       "vpextrw eax, xmm1, 21"),
+    (b"\xc5\xf9\xc5\xc1\x16",                       "vpextrw eax, xmm1, 22"),
+    (b"\xc5\xf9\xc5\xc1\x17",                       "vpextrw eax, xmm1, 23"),
+    (b"\xc5\xf9\xc5\xc1\x18",                       "vpextrw eax, xmm1, 24"),
+    (b"\xc5\xf9\xc5\xc1\x19",                       "vpextrw eax, xmm1, 25"),
+    (b"\xc5\xf9\xc5\xc1\x1a",                       "vpextrw eax, xmm1, 26"),
+    (b"\xc5\xf9\xc5\xc1\x1b",                       "vpextrw eax, xmm1, 27"),
+    (b"\xc5\xf9\xc5\xc1\x1c",                       "vpextrw eax, xmm1, 28"),
+    (b"\xc5\xf9\xc5\xc1\x1d",                       "vpextrw eax, xmm1, 29"),
+    (b"\xc5\xf9\xc5\xc1\x1e",                       "vpextrw eax, xmm1, 30"),
+    (b"\xc5\xf9\xc5\xc1\x1f",                       "vpextrw eax, xmm1, 31"),
+    (b"\xc5\xf9\xc5\xc1\x20",                       "vpextrw eax, xmm1, 32"),
+    (b"\xc5\xf9\xc5\xc1\x21",                       "vpextrw eax, xmm1, 33"),
 ]
 
 
@@ -276,6 +416,14 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_X86_REG_XMM7,   istate['xmm7'])
     mu.reg_write(UC_X86_REG_XMM8,   istate['xmm8'])
     mu.reg_write(UC_X86_REG_XMM9,   istate['xmm9'])
+    mu.reg_write(UC_X86_REG_MM0,    istate['mm0'])
+    mu.reg_write(UC_X86_REG_MM1,    istate['mm1'])
+    mu.reg_write(UC_X86_REG_MM2,    istate['mm2'])
+    mu.reg_write(UC_X86_REG_MM3,    istate['mm3'])
+    mu.reg_write(UC_X86_REG_MM4,    istate['mm4'])
+    mu.reg_write(UC_X86_REG_MM5,    istate['mm5'])
+    mu.reg_write(UC_X86_REG_MM6,    istate['mm6'])
+    mu.reg_write(UC_X86_REG_MM7,    istate['mm7'])
 
     # emulate code in infinite time & unlimited instructions
     mu.emu_start(istate['rip'], istate['rip'] + len(opcode))
@@ -311,6 +459,14 @@ def emu_with_unicorn(opcode, istate):
         "xmm7":    mu.reg_read(UC_X86_REG_XMM7),
         "xmm8":    mu.reg_read(UC_X86_REG_XMM8),
         "xmm9":    mu.reg_read(UC_X86_REG_XMM9),
+        "mm0":     mu.reg_read(UC_X86_REG_MM0),
+        "mm1":     mu.reg_read(UC_X86_REG_MM1),
+        "mm2":     mu.reg_read(UC_X86_REG_MM2),
+        "mm3":     mu.reg_read(UC_X86_REG_MM3),
+        "mm4":     mu.reg_read(UC_X86_REG_MM4),
+        "mm5":     mu.reg_read(UC_X86_REG_MM5),
+        "mm6":     mu.reg_read(UC_X86_REG_MM6),
+        "mm7":     mu.reg_read(UC_X86_REG_MM7),
     }
     return ostate
 
@@ -352,6 +508,14 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.xmm7,    istate['xmm7'])
     ctx.setConcreteRegisterValue(ctx.registers.xmm8,    istate['xmm8'])
     ctx.setConcreteRegisterValue(ctx.registers.xmm9,    istate['xmm9'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm0,     istate['mm0'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm1,     istate['mm1'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm2,     istate['mm2'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm3,     istate['mm3'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm4,     istate['mm4'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm5,     istate['mm5'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm6,     istate['mm6'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm7,     istate['mm7'])
 
     ctx.processing(inst)
     #print(inst)
@@ -361,6 +525,7 @@ def emu_with_triton(opcode, istate):
     ostate = {
         "stack":  ctx.getConcreteMemoryAreaValue(STACK, 0x100),
         "heap":   ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "eflags": ctx.getConcreteRegisterValue(ctx.registers.eflags),
         "rax":    ctx.getSymbolicRegisterValue(ctx.registers.rax),
         "rbx":    ctx.getSymbolicRegisterValue(ctx.registers.rbx),
         "rcx":    ctx.getSymbolicRegisterValue(ctx.registers.rcx),
@@ -388,7 +553,14 @@ def emu_with_triton(opcode, istate):
         "xmm7":   ctx.getSymbolicRegisterValue(ctx.registers.xmm7),
         "xmm8":   ctx.getSymbolicRegisterValue(ctx.registers.xmm8),
         "xmm9":   ctx.getSymbolicRegisterValue(ctx.registers.xmm9),
-        "eflags": ctx.getConcreteRegisterValue(ctx.registers.eflags)
+        "mm0":    ctx.getSymbolicRegisterValue(ctx.registers.mm0),
+        "mm1":    ctx.getSymbolicRegisterValue(ctx.registers.mm1),
+        "mm2":    ctx.getSymbolicRegisterValue(ctx.registers.mm2),
+        "mm3":    ctx.getSymbolicRegisterValue(ctx.registers.mm3),
+        "mm4":    ctx.getSymbolicRegisterValue(ctx.registers.mm4),
+        "mm5":    ctx.getSymbolicRegisterValue(ctx.registers.mm5),
+        "mm6":    ctx.getSymbolicRegisterValue(ctx.registers.mm6),
+        "mm7":    ctx.getSymbolicRegisterValue(ctx.registers.mm7),
     }
     return ostate
 
@@ -435,6 +607,14 @@ if __name__ == '__main__':
         "xmm7":     0,
         "xmm8":     0,
         "xmm9":     0,
+        "mm0":      0, # not supported by Uniorn
+        "mm1":      0, # not supported by Uniorn
+        "mm2":      0, # not supported by Uniorn
+        "mm3":      0, # not supported by Uniorn
+        "mm4":      0, # not supported by Uniorn
+        "mm5":      0, # not supported by Uniorn
+        "mm6":      0, # not supported by Uniorn
+        "mm7":      0, # not supported by Uniorn
     }
 
     for opcode, disassembly in CODE:

@@ -917,6 +917,9 @@ namespace triton {
           //! The PEXTRQ semantics.
           void pextrq_s(triton::arch::Instruction& inst);
 
+          //! The PEXTRW semantics.
+          void pextrw_s(triton::arch::Instruction& inst);
+
           //! The PMAXSB semantics.
           void pmaxsb_s(triton::arch::Instruction& inst);
 
@@ -1282,6 +1285,9 @@ namespace triton {
 
           //! The VPEXTRQ semantics.
           void vpextrq_s(triton::arch::Instruction& inst);
+
+          //! The VPEXTRW semantics.
+          void vpextrw_s(triton::arch::Instruction& inst);
 
           //! The VPOR semantics.
           void vpor_s(triton::arch::Instruction& inst);

@@ -194,6 +194,7 @@ PCMPGTW                      | mmx/sse2   | Compare Packed Data for Greater Than
 PEXTRB                       | sse4.1     | Extract Byte
 PEXTRD                       | sse4.1     | Extract Dword
 PEXTRQ                       | sse4.1     | Extract Qword
+PEXTRW                       | sse4.1     | Extract Word
 PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
 PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
 PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
@@ -321,6 +322,7 @@ VPANDN                       | avx/avx2   | VEX Logical AND NOT
 VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
+VPEXTRW                      | avx/avx2   | VEX Extract Word
 VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
 VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
@@ -530,6 +532,7 @@ namespace triton {
           case ID_INS_PEXTRB:         this->pextrb_s(inst);       break;
           case ID_INS_PEXTRD:         this->pextrd_s(inst);       break;
           case ID_INS_PEXTRQ:         this->pextrq_s(inst);       break;
+          case ID_INS_PEXTRW:         this->pextrw_s(inst);       break;
           case ID_INS_PMAXSB:         this->pmaxsb_s(inst);       break;
           case ID_INS_PMAXSD:         this->pmaxsd_s(inst);       break;
           case ID_INS_PMAXSW:         this->pmaxsw_s(inst);       break;
@@ -657,6 +660,7 @@ namespace triton {
           case ID_INS_VPEXTRB:        this->vpextrb_s(inst);      break;
           case ID_INS_VPEXTRD:        this->vpextrd_s(inst);      break;
           case ID_INS_VPEXTRQ:        this->vpextrq_s(inst);      break;
+          case ID_INS_VPEXTRW:        this->vpextrw_s(inst);      break;
           case ID_INS_VPMOVMSKB:      this->vpmovmskb_s(inst);    break;
           case ID_INS_VPOR:           this->vpor_s(inst);         break;
           case ID_INS_VPSHUFD:        this->vpshufd_s(inst);      break;
@@ -8419,6 +8423,48 @@ namespace triton {
       }
 
 
+      void x86Semantics::pextrw_s(triton::arch::Instruction& inst) {
+        triton::uint32 count = 0;
+        auto& dst            = inst.operands[0];
+        auto& src1           = inst.operands[1];
+        auto& src2           = inst.operands[2];
+
+        /*
+         * When specifying a word location in an MMX technology register, the
+         * 2 least-significant bits of the count operand specify the location;
+         * for an XMM register, the 3 least-significant bits specify the
+         * location.
+         */
+        if (src1.getBitSize() == QWORD_SIZE_BIT) {
+          count = 0x03;
+        }
+        else {
+          count = 0x07;
+        }
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        auto node = this->astCtxt->extract(WORD_SIZE_BIT - 1, 0,
+                      this->astCtxt->bvlshr(
+                        op2,
+                        this->astCtxt->bv(((op3->evaluate() & count) * WORD_SIZE_BIT), op2->getBitvectorSize())
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::pmaxsd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -13349,6 +13395,48 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRQ operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpextrw_s(triton::arch::Instruction& inst) {
+        triton::uint32 count = 0;
+        auto& dst            = inst.operands[0];
+        auto& src1           = inst.operands[1];
+        auto& src2           = inst.operands[2];
+
+        /*
+         * When specifying a word location in an MMX technology register, the
+         * 2 least-significant bits of the count operand specify the location;
+         * for an XMM register, the 3 least-significant bits specify the
+         * location.
+         */
+        if (src1.getBitSize() == QWORD_SIZE_BIT) {
+          count = 0x03;
+        }
+        else {
+          count = 0x07;
+        }
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        auto node = this->astCtxt->extract(WORD_SIZE_BIT - 1, 0,
+                      this->astCtxt->bvlshr(
+                        op2,
+                        this->astCtxt->bv(((op3->evaluate() & count) * WORD_SIZE_BIT), op2->getBitvectorSize())
+                      )
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRW operation");
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
