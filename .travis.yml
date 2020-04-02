@@ -85,7 +85,7 @@ before_install:
   # Install unicorn. Only test AArch64 with Unicorn on Linux.
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then git clone https://github.com/unicorn-engine/unicorn; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd ./unicorn; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then UNICORN_ARCHS="aarch64" ./make.sh; fi # we use unicorn to only test our aarch64 semantics
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then UNICORN_ARCHS="x86 arm aarch64" ./make.sh; fi # we use unicorn to only test some semantics
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo make install; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cd bindings/python; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo ${PYTHON_BINARY} ./setup.py install; fi
