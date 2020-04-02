@@ -5,8 +5,6 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
-from capstone            import *
-from capstone.arm_const  import *
 from struct              import pack
 
 import sys

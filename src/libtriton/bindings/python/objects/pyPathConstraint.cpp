@@ -20,7 +20,6 @@
 >>> ctxt.setArchitecture(ARCH.X86_64)
 >>> astCtxt = ctxt.getAstContext()
 
-# TODO : Set up a real programm to test the behavior
 */
 
 /*! \page py_PathConstraint_page PathConstraint
