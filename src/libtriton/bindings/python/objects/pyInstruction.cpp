@@ -217,6 +217,9 @@ Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 - <b>bool isWriteBack(void)</b><br>
 Returns true if the instruction performs a write back. Mainly used for AArch64 instructions like LDR.
 
+- <b>bool isThumb(void)</b><br>
+Returns true if the instruction is a Thumb instruction.
+
 - <b>void setAddress(integer addr)</b><br>
 Sets the address of the instruction.
 
@@ -636,6 +639,18 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isThumb(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isThumb() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_setAddress(PyObject* self, PyObject* addr) {
         try {
           if (!PyLong_Check(addr) && !PyInt_Check(addr))
@@ -729,6 +744,7 @@ namespace triton {
         {"isSymbolized",              Instruction_isSymbolized,             METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"isWriteBack",               Instruction_isWriteBack,              METH_NOARGS,     ""},
+        {"isThumb",                   Instruction_isThumb,                  METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcode",                 Instruction_setOpcode,                METH_O,          ""},
         {"setThreadId",               Instruction_setThreadId,              METH_O,          ""},

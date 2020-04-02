@@ -688,6 +688,11 @@ namespace triton {
           }
         }
 
+
+        bool AArch64Cpu::isThumb(void) const {
+          return false;
+        }
+
       }; /* aarch64 namespace */
     }; /* arm namespace */
   }; /* arch namespace */

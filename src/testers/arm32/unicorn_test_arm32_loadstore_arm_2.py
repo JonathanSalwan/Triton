@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -11,42 +11,36 @@ import sys
 import pprint
 import random
 
-ADDR   = 0x100000
-ADDR2  = 0x300000
-STACK  = 0x500000
-HEAP   = 0x600000
-SIZE   = 10 * 1024 * 1024
-TARGET = 0x200000
-
-CODE2 = [
-    (b"\x00\xf0\x20\xe3", "nop"),   # ARM
-]
+ADDR  = 0x100000
+STACK = 0x200000
+HEAP  = 0x300000
+SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    # B ---------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xbf", "b #0x200000"),
+    (b"\x04\xf0\x2d\xe5", "push {pc}"),
 
-    # BL --------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xff", "bl #0x200000"),
+    (b"\x03\x00\x2d\xe9", "push {r0, r1}"),
+    (b"\x01\x01\x2d\xe9", "push {r0, r8}"),
+    (b"\xff\x01\x2d\xe9", "push {r0 - r8}"),
 
-    # BLX -------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xef", "blx #0x200000"),
+    (b"\x04\x20\x2d\x05", "pusheq {r2}"),
+    (b"\x0c\x00\x2d\x09", "pusheq {r2, r3}"),
 
-    (b"\x80\x47", "blx r0"),
-
-    (b"\xe8\x47", "blx sp"),
-
-    (b"\xf8\x47", "blx pc"),
-
-    # BX --------------------------------------------------------------------- #
-    (b"\x00\x47", "bx r0"),
-
-    (b"\x68\x47", "bx sp"),
-
-    (b"\x78\x47", "bx pc"),
-
-    # CBZ -------------------------------------------------------------------- #
-    (b"\xf5\xb3", "cbz r5, #0x200000"),
+    (b"\x3c\x01\x2d\x09", "pusheq {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x19", "pushne {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x29", "pushcs {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x39", "pushcc {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x49", "pushmi {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x59", "pushpl {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x69", "pushvs {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x79", "pushvc {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x89", "pushhi {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\x99", "pushls {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xa9", "pushge {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xb9", "pushlt {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xc9", "pushgt {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xd9", "pushle {r2 - r5, r8}"),
+    (b"\x3c\x01\x2d\xe9", "pushal {r2 - r5, r8}"),
 ]
 
 
@@ -61,7 +55,7 @@ def hook_code(mu, address, size, istate):
         "r2":    mu.reg_read(UC_ARM_REG_R2),
         "r3":    mu.reg_read(UC_ARM_REG_R3),
         "r4":    mu.reg_read(UC_ARM_REG_R4),
-        "r5":    0,
+        "r5":    mu.reg_read(UC_ARM_REG_R5),
         "r6":    mu.reg_read(UC_ARM_REG_R6),
         "r7":    mu.reg_read(UC_ARM_REG_R7),
         "r8":    mu.reg_read(UC_ARM_REG_R8),
@@ -80,25 +74,17 @@ def hook_code(mu, address, size, istate):
 
     # print_state(istate, istate, ostate)
 
-
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # map memory for this emulation
-    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
-        index += len(op)
-
-    # Valid memory region to land when testing branches.
-    index = 0
-    for op, _ in CODE2:
-        mu.mem_write(ADDR2+index, op)
         index += len(op)
 
     apsr = mu.reg_read(UC_ARM_REG_APSR)
@@ -124,12 +110,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # tracing all instructions with customized callback
+    # # tracing all instructions with customized callback
     # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
     # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
-    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode), count=1)
+    # NOTE: The +4 and count=1 is a trick so UC updates PC.
+    mu.emu_start(istate['pc'], istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -181,7 +168,7 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.r12, istate['r12'])
     ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
     ctx.setConcreteRegisterValue(ctx.registers.r14, istate['r14'])
-    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'] | 1) # NOTE: Enable Thumb mode by setting lsb of PC.
+    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
     ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
     ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
     ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
@@ -196,8 +183,8 @@ def emu_with_triton(opcode, istate):
     # print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -238,14 +225,26 @@ def print_state(istate, uc_ostate, tt_ostate):
 
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
+def print_heap(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
+def print_stack(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
 
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
-        "r0":    TARGET | 1,
-        "r1":    random.randint(0x0, 0xffffffff),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
+        "r0":    0xdeadbeef,
+        "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
@@ -257,7 +256,7 @@ if __name__ == '__main__':
         "r10":   random.randint(0x0, 0xffffffff),
         "r11":   random.randint(0x0, 0xffffffff),
         "r12":   random.randint(0x0, 0xffffffff),
-        "sp":    STACK,
+        "sp":    STACK + 64 * 4,
         "r14":   random.randint(0x0, 0xffffffff),
         "pc":    ADDR,
         "n":     random.randint(0x0, 0x1),
@@ -265,6 +264,12 @@ if __name__ == '__main__':
         "c":     random.randint(0x0, 0x1),
         "v":     random.randint(0x0, 0x1),
     }
+
+    # for i, b in enumerate(state["stack"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
+    # for i, b in enumerate(state["heap"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
 
     # NOTE: This tests each instruction separatly. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
@@ -280,11 +285,32 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
+        # print(type(uc_state['heap']))
+        # print(type(tt_state['heap']))
+
+        for a, b in zip(uc_state['heap'], tt_state['heap']):
+            if a != b:
+                print('[KO] %s (heap differs!)' %(disassembly))
+                print_heap(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+        for a, b in zip(uc_state['stack'], tt_state['stack']):
+            if a != b:
+                print('[KO] %s (stack differs!)' %(disassembly))
+                print_stack(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
         if uc_state != tt_state:
             print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
+
+        # print_state(state, uc_state, tt_state)
+        # print_heap(state, uc_state, tt_state)
+        # print_stack(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 

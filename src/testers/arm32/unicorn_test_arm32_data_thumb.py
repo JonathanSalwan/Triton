@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -11,92 +11,147 @@ import sys
 import pprint
 import random
 
+DEBUG = False
 ADDR  = 0x100000
-ADDR2 = 0x300000
-STACK = 0x500000
-HEAP  = 0x600000
-SIZE  = 10 * 1024 * 1024
-
-TARGET = 0x200000
-
-CODE2 = [
-    (b"\x00\xbf", "nop"),           # Thumb
-]
+STACK = 0x200000
+HEAP  = 0x300000
+SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    # B ---------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xbf", "b #0x200000"),
+    # MISC ------------------------------------------------------------------- #
+    (b"\x0d\xf2\x24\x42", "addw r2, sp, #1060"),
+    (b"\x80\x1a",         "subs r0, r0, r2"),
+    (b"\x01\xf0\x02\x00", "and r0, r1, #2"),
+    (b"\x01\xea\x03\x00", "and r0, r1, r3"),
+    (b"\x11\xf0\x02\x00", "ands r0, r1, #2"),
+    (b"\x11\xea\x03\x00", "ands r0, r1, r3"),
+    (b"\x61\xf1\x02\x00", "sbc r0, r1, #2"),
+    (b"\x61\xeb\x03\x00", "sbc r0, r1, r3"),
+    (b"\x71\xf1\x02\x00", "sbcs r0, r1, #2"),
+    (b"\x71\xeb\x03\x00", "sbcs r0, r1, r3"),
+    (b"\x6f\xf0\x02\x00", "mvn r0, #2"),
+    (b"\x6f\xea\x03\x00", "mvn r0, r3"),
+    (b"\x7f\xf0\x02\x00", "mvns r0, #2"),
+    (b"\xd8\x43",         "mvns r0, r3"),
+    (b"\x20\xea\x01\x00", "bic r0, r0, r1"),
+    (b"\x61\xfa\x02\xf1", "ror r1, r1, r2"),
+    (b"\x00\xba",         "rev r0, r0"),
+    (b"\x4f\xea\xa1\x00", "asr r0, r1, #2"),
+    (b"\x41\xfa\x03\xf0", "asr r0, r1, r3"),
+    (b"\x4f\xea\x91\x00", "lsr r0, r1, #2"),
+    (b"\x21\xfa\x03\xf0", "lsr r0, r1, r3"),
+    (b"\x4f\xea\x81\x00", "lsl r0, r1, #2"),
+    (b"\x01\xfa\x03\xf0", "lsl r0, r1, r3"),
+    (b"\x4f\xea\xb1\x00", "ror r0, r1, #2"),
+    (b"\x61\xfa\x03\xf0", "ror r0, r1, r3"),
+    (b"\x88\x10",         "asrs r0, r1, #2"),
+    (b"\x51\xfa\x03\xf0", "asrs r0, r1, r3"),
+    (b"\x88\x08",         "lsrs r0, r1, #2"),
+    (b"\x31\xfa\x03\xf0", "lsrs r0, r1, r3"),
+    (b"\x88\x00",         "lsls r0, r1, #2"),
+    (b"\x11\xfa\x03\xf0", "lsls r0, r1, r3"),
+    (b"\x5f\xea\xb1\x00", "rors r0, r1, #2"),
+    (b"\x71\xfa\x03\xf0", "rors r0, r1, r3"),
+    (b"\x33\x43",         "orrs r3, r6"),
+    (b"\x08\xea\x0e\x03", "and.w r3, r8, lr"),
+    (b"\x08\x41",         "asrs r0, r1"),
+    (b"\x88\x40",         "lsls r0, r1"),
+    (b"\xc8\x40",         "lsrs r0, r1"),
+    (b"\xc8\x41",         "rors r0, r1"),
+    (b"\x5f\xea\x31\x00", "rrxs r0, r1"),
+    (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
+    (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
+    (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
 
-    # BL --------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xff", "bl #0x200000"),
 
-    # BLX -------------------------------------------------------------------- #
-    (b"\xff\xf1\xfe\xef", "blx #0x200000"),
+    # ADC -------------------------------------------------------------------- #
+    (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),
+    (b"\x41\xeb\x02\x00", "adc r0, r1, r2"),
 
-    (b"\x80\x47", "blx r0"),
+    # ADCS ------------------------------------------------------------------- #
+    (b"\x51\xf1\x02\x00", "adcs r0, r1, #2"),
+    (b"\x51\xeb\x02\x00", "adcs r0, r1, r2"),
 
-    (b"\xe8\x47", "blx sp"),
+    # ADD -------------------------------------------------------------------- #
+    (b"\x00\xf1\x02\x00", "add r0, #2"),
+    (b"\x00\xf1\x02\x00", "add r0, r0, #2"),
+    (b"\x01\xf1\x02\x00", "add r0, r1, #2"),
+    (b"\x01\xeb\x02\x00", "add r0, r1, r2"),
+    (b"\x01\xeb\xa2\x00", "add r0, r1, r2, asr #2"),
+    (b"\x01\xeb\x82\x00", "add r0, r1, r2, lsl #2"),
+    (b"\x01\xeb\x92\x00", "add r0, r1, r2, lsr #2"),
+    (b"\x01\xeb\xb2\x00", "add r0, r1, r2, ror #2"),
+    (b"\x01\xeb\x32\x00", "add r0, r1, r2, rrx"),
 
-    (b"\xf8\x47", "blx pc"),
+    # ADDS ------------------------------------------------------------------- #
+    (b"\x02\x30",         "adds r0, #2"),
+    (b"\x80\x1c",         "adds r0, r0, #2"),
+    (b"\x88\x1c",         "adds r0, r1, #2"),
+    (b"\x88\x18",         "adds r0, r1, r2"),
+    (b"\x11\xeb\xa2\x00", "adds r0, r1, r2, asr #2"),
+    (b"\x11\xeb\x82\x00", "adds r0, r1, r2, lsl #2"),
+    (b"\x11\xeb\x92\x00", "adds r0, r1, r2, lsr #2"),
+    (b"\x11\xeb\xb2\x00", "adds r0, r1, r2, ror #2"),
+    (b"\x11\xeb\x32\x00", "adds r0, r1, r2, rrx"),
 
-    # BX --------------------------------------------------------------------- #
-    (b"\x00\x47", "bx r0"),
+    # CMP -------------------------------------------------------------------- #
+    (b"\x88\x42",         "cmp r0, r1"),
+    (b"\x04\x28",         "cmp r0, #4"),
+    (b"\xb0\xeb\x21\x1f", "cmp r0, r1, asr #4"),
+    (b"\xb0\xeb\x01\x1f", "cmp r0, r1, lsl #4"),
+    (b"\xb0\xeb\x11\x1f", "cmp r0, r1, lsr #4"),
+    (b"\xb0\xeb\x31\x1f", "cmp r0, r1, ror #4"),
+    (b"\xb0\xeb\x31\x0f", "cmp r0, r1, rrx"),
 
-    (b"\x68\x47", "bx sp"),
+    # EOR -------------------------------------------------------------------- #
+    (b"\x80\xea\x01\x00", "eor r0, r1"),
 
-    (b"\x78\x47", "bx pc"),
+    # MOV -------------------------------------------------------------------- #
+    (b"\x4f\xf0\x02\x00", "mov r0, #2"),
+    (b"\x11\x46",         "mov r1, r2"),
+
+    # MOVS ------------------------------------------------------------------- #
+    (b"\x02\x20",         "movs r0, #2"),
+    (b"\x11\x00",         "movs r1, r2"),
+
+    # MOV(S) with SP as operand ---------------------------------------------- #
+    (b"\x85\x46",         "mov sp, r0"),
+    (b"\x5f\xea\x00\x0d", "movs sp, r0"),
+
+    # SUB -------------------------------------------------------------------- #
+    (b"\xa0\xf1\x02\x00", "sub r0, #2"),
+    (b"\xa0\xf1\x02\x00", "sub r0, r0, #2"),
+    (b"\xa1\xf1\x02\x00", "sub r0, r1, #2"),
+    (b"\xa1\xeb\x02\x00", "sub r0, r1, r2"),
+    (b"\xa1\xeb\xa2\x00", "sub r0, r1, r2, asr #2"),
+    (b"\xa1\xeb\x82\x00", "sub r0, r1, r2, lsl #2"),
+    (b"\xa1\xeb\x92\x00", "sub r0, r1, r2, lsr #2"),
+    (b"\xa1\xeb\xb2\x00", "sub r0, r1, r2, ror #2"),
+    (b"\xa1\xeb\x32\x00", "sub r0, r1, r2, rrx"),
+
+    # SUBS ------------------------------------------------------------------- #
+    (b"\x02\x38",         "subs r0, #2"),
+    (b"\x80\x1e",         "subs r0, r0, #2"),
+    (b"\x88\x1e",         "subs r0, r1, #2"),
+    (b"\x88\x1a",         "subs r0, r1, r2"),
+    (b"\xb1\xeb\xa2\x00", "subs r0, r1, r2, asr #2"),
+    (b"\xb1\xeb\x82\x00", "subs r0, r1, r2, lsl #2"),
+    (b"\xb1\xeb\x92\x00", "subs r0, r1, r2, lsr #2"),
+    (b"\xb1\xeb\xb2\x00", "subs r0, r1, r2, ror #2"),
+    (b"\xb1\xeb\x32\x00", "subs r0, r1, r2, rrx"),
 ]
-
-
-def hook_code(mu, address, size, istate):
-    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
-
-    ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
-        "r0":    mu.reg_read(UC_ARM_REG_R0),
-        "r1":    mu.reg_read(UC_ARM_REG_R1),
-        "r2":    mu.reg_read(UC_ARM_REG_R2),
-        "r3":    mu.reg_read(UC_ARM_REG_R3),
-        "r4":    mu.reg_read(UC_ARM_REG_R4),
-        "r5":    mu.reg_read(UC_ARM_REG_R5),
-        "r6":    mu.reg_read(UC_ARM_REG_R6),
-        "r7":    mu.reg_read(UC_ARM_REG_R7),
-        "r8":    mu.reg_read(UC_ARM_REG_R8),
-        "r9":    mu.reg_read(UC_ARM_REG_R9),
-        "r10":   mu.reg_read(UC_ARM_REG_R10),
-        "r11":   mu.reg_read(UC_ARM_REG_R11),
-        "r12":   mu.reg_read(UC_ARM_REG_R12),
-        "sp":    mu.reg_read(UC_ARM_REG_SP),
-        "r14":   mu.reg_read(UC_ARM_REG_R14),
-        "pc":    mu.reg_read(UC_ARM_REG_PC),
-        "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
-        "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
-        "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
-        "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
-    }
-
-    # print_state(istate, istate, ostate)
-
 
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
-    mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
+    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
 
     # map memory for this emulation
-    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
-        index += len(op)
-
-    # Valid memory region to land when testing branches.
-    index = 0
-    for op, _ in CODE2:
-        mu.mem_write(ADDR2+index, op)
         index += len(op)
 
     apsr = mu.reg_read(UC_ARM_REG_APSR)
@@ -122,12 +177,8 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # tracing all instructions with customized callback
-    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
-
     # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
-    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode), count=1)
+    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode) + 2, count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -187,11 +238,12 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    # print()
-    # print(inst)
-    # for x in inst.getSymbolicExpressions():
-    #    print(x)
-    # print()
+    if DEBUG:
+        print()
+        print(inst)
+        for x in inst.getSymbolicExpressions():
+           print(x)
+        print()
 
     ostate = {
         "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
@@ -240,9 +292,9 @@ def print_state(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
-        "r0":    TARGET | 1,
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
+        "r0":    random.randint(0x0, 0xffffffff),
         "r1":    random.randint(0x0, 0xffffffff),
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),

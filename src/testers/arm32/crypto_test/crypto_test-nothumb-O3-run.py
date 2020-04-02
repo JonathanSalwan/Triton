@@ -10,18 +10,38 @@ import sys
 import lief
 import os
 
-DEBUG  = True
-INPUT  = 'arm32'
-SERIAL = None
-TARGET = os.path.join(os.path.dirname(__file__), 'crackme_hash-arm')
-VALID  = False
 
-FINISH = False
-MAX_INSTRS = 10000
+DEBUG  = False
+# DEBUG  = True
+TARGET = os.path.join(os.path.dirname(__file__), './bin/crypto_test-nothumb-O3.bin')
+STOP_ADDR = None
+MAX_INSTRS = 100000
+
 
 # The debug function
 def debug(s):
     if DEBUG: print(s)
+
+
+def print_state(ctx):
+    print('[+] r0   (r0): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r0)))
+    print('[+] r1   (r1): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r1)))
+    print('[+] r2   (r2): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r2)))
+    print('[+] r3   (r3): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r3)))
+    print('[+] r4   (r4): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r4)))
+    print('[+] r5   (r5): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r5)))
+    print('[+] r6   (r6): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r6)))
+    print('[+] r6   (r6): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r6)))
+    print('[+] r7   (r7): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r7)))
+    print('[+] r8   (r8): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r8)))
+    print('[+] r9   (r9): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r9)))
+    print('[+] r10 (r10): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r10)))
+    print('[+] r11  (fp): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r11)))
+    print('[+] r12  (ip): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r12)))
+    print('[+] r13  (sp): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.sp)))
+    print('[+] r14  (lr): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r14)))
+    print('[+] r15  (pc): {:08x}'.format(ctx.getConcreteRegisterValue(ctx.registers.pc)))
+
 
 # Memory mapping
 BASE_PLT   = 0x10000000
@@ -51,60 +71,72 @@ def getFormatString(ctx, addr):
            .replace("%u", "{:d}").replace("%lu", "{:d}")                            \
 
 
-# Simulate the printf() function
-def printfHandler(ctx):
-    debug('[+] printf hooked')
+# Simulate the aeabi_memclr() function
+def aeabi_memclrHandler(ctx):
+    print('[+] __aeabi_memclr hooked')
 
     # Get arguments
-    arg1   = getFormatString(ctx, ctx.getConcreteRegisterValue(ctx.registers.r0))
-    arg2   = ctx.getConcreteRegisterValue(ctx.registers.r1)
-    arg3   = ctx.getConcreteRegisterValue(ctx.registers.r2)
-    arg4   = ctx.getConcreteRegisterValue(ctx.registers.r3)
-    arg5   = ctx.getConcreteRegisterValue(ctx.registers.r4)
-    arg6   = ctx.getConcreteRegisterValue(ctx.registers.r5)
-    nbArgs = arg1.count("{")
-    args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
-    s      = arg1.format(*args)
+    arg1 = ctx.getConcreteRegisterValue(ctx.registers.r0)
+    arg2 = ctx.getConcreteRegisterValue(ctx.registers.r1)
 
-    sys.stdout.write(s + "\n")
+    print('\targ1: {:x}'.format(arg1))
+    print('\targ2: {:x}'.format(arg2))
 
-    # Return value
-    return len(s)
+    for i in range(0, arg2):
+        ctx.setConcreteMemoryValue(arg1 + i, 0)
+
+
+# Simulate the __aeabi_memcpy() function
+def aeabi_memcpyHandler(ctx):
+    print('[+] __aeabi_memcpy hooked')
+
+    # Get arguments
+    arg1 = ctx.getConcreteRegisterValue(ctx.registers.r0)
+    arg2 = ctx.getConcreteRegisterValue(ctx.registers.r1)
+    arg3 = ctx.getConcreteRegisterValue(ctx.registers.r2)
+
+    print('\targ1: {:x}'.format(arg1))
+    print('\targ2: {:x}'.format(arg2))
+    print('\targ3: {:x}'.format(arg3))
+
+    for i in range(0, arg3):
+        b = ctx.getConcreteMemoryValue(arg2 + i)
+        ctx.setConcreteMemoryValue(arg1 + i, b)
 
 
 # Simulate the puts() function
 def putsHandler(ctx):
-    debug('[+] puts hooked')
+    print('[+] puts hooked')
 
     # Get arguments
     arg1 = getMemoryString(ctx, ctx.getConcreteRegisterValue(ctx.registers.r0))
+
+    print('\targ1: "{}" ({:08x})'.format(arg1, ctx.getConcreteRegisterValue(ctx.registers.r0)))
+
     sys.stdout.write(arg1 + '\n')
 
     # Return value
     return len(arg1) + 1
 
 
-def abortHandler(ctx):
-    global FINISH
-    debug('[+] abort hooked')
-    # sys.exit(0)
-    FINISH = True
-    return
+def libcInitHandler(ctx):
+    global STOP_ADDR
 
+    print('[+] __libc_init hooked')
 
-def libcMainHandler(ctx):
-    debug('[+] __libc_start_main hooked')
+    # Get return address of __libc_init
+    STOP_ADDR = ctx.getConcreteRegisterValue(ctx.registers.r14)
 
-    # Get main function address.
-    main_addr = ctx.getConcreteRegisterValue(ctx.registers.r0)
+    print('[+] Set stop address to: {:x}'.format(STOP_ADDR))
+
+    # Get address of main function.
+    main_addr = ctx.getConcreteRegisterValue(ctx.registers.r2)
+
+    debug('[+] Address of main function: {:x}'.format(main_addr))
 
     # Setup argc / argv
-    ctx.concretizeRegister(ctx.registers.r0)
-    ctx.concretizeRegister(ctx.registers.r1)
-
     argvs = [
         bytes(TARGET.encode('utf-8')), # argv[0]
-        bytes(INPUT.encode('utf-8'))
     ]
 
     # Define argc / argv
@@ -115,11 +147,6 @@ def libcMainHandler(ctx):
     for argv in argvs:
         addrs.append(base)
         ctx.setConcreteMemoryAreaValue(base, argv+b'\x00')
-        if index == 1:
-            # Only symbolized argv[1]
-            for indexCell in range(len(argv)):
-                var = ctx.symbolizeMemory(MemoryAccess(base+indexCell, CPUSIZE.BYTE))
-                var.setComment('argv[%d][%d]' %(index, indexCell))
         debug('[+] argv[%d] = %s' %(index, argv))
         base += len(argv)+1
         index += 1
@@ -134,21 +161,22 @@ def libcMainHandler(ctx):
     ctx.setConcreteRegisterValue(ctx.registers.r1, argv)
 
     # Simulate call to main
-    # debug('[+] Simulating call to main...')
+    debug('[+] Simulating call to main...')
     ctx.setConcreteRegisterValue(ctx.registers.sp, ctx.getConcreteRegisterValue(ctx.registers.sp)-CPUSIZE.DWORD)
     push_addr = MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.sp), CPUSIZE.DWORD)
     ctx.setConcreteMemoryValue(push_addr, main_addr)
-    # debug('    Pushing {:x} at {:x}'.format(main_addr, ctx.getConcreteRegisterValue(ctx.registers.sp)))
+    debug('    Pushing {:x} at {:x}'.format(main_addr, ctx.getConcreteRegisterValue(ctx.registers.sp)))
 
     return None
 
 
 # Functions to emulate
 customRelocation = [
-    ('printf',            printfHandler,   BASE_PLT + 0),
-    ('puts',              putsHandler,     BASE_PLT + 1),
-    ('__libc_start_main', libcMainHandler, BASE_PLT + 2),
-    ('abort',             abortHandler,    BASE_PLT + 4),
+    ('__libc_init',     libcInitHandler,     BASE_PLT + 0 * 8),
+    ('puts',            putsHandler,         BASE_PLT + 1 * 8),
+    ('__aeabi_memclr8', aeabi_memclrHandler, BASE_PLT + 2 * 8),
+    ('__aeabi_memclr',  aeabi_memclrHandler, BASE_PLT + 3 * 8),
+    ('__aeabi_memcpy',  aeabi_memcpyHandler, BASE_PLT + 4 * 8),
 ]
 
 
@@ -157,11 +185,11 @@ def hookingHandler(ctx):
     for rel in customRelocation:
         if rel[2] == pc:
             # Simulate push {lr}
-            # debug('[+] Simulating "push {lr}"')
+            debug('[+] Simulating "push {lr}"')
             ctx.setConcreteRegisterValue(ctx.registers.sp, ctx.getConcreteRegisterValue(ctx.registers.sp)-CPUSIZE.DWORD)
             push_addr = MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.sp), CPUSIZE.DWORD)
             ctx.setConcreteMemoryValue(push_addr, ctx.getConcreteRegisterValue(ctx.registers.r14))
-            # debug('    lr : {:x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r14)))
+            debug('    lr : {:x}'.format(ctx.getConcreteRegisterValue(ctx.registers.r14)))
 
             # Emulate the routine and the return value
             ret_value = rel[1](ctx)
@@ -169,11 +197,11 @@ def hookingHandler(ctx):
                 ctx.setConcreteRegisterValue(ctx.registers.r0, ret_value)
 
             # Simulate pop {lr}
-            # debug('[+] Simulating "pop {pc}"')
+            debug('[+] Simulating "pop {pc}"')
             pop_addr = MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.sp), CPUSIZE.DWORD)
             pc = ctx.getConcreteMemoryValue(pop_addr)
             ctx.setConcreteRegisterValue(ctx.registers.sp, ctx.getConcreteRegisterValue(ctx.registers.sp)+CPUSIZE.DWORD)
-            # debug("    pc : {:x}".format(pc))
+            debug("    pc : {:x}".format(pc))
 
             # Update PC
             ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
@@ -182,11 +210,18 @@ def hookingHandler(ctx):
 
 # Emulate the binary.
 def emulate(ctx, pc):
-    global SERIAL
-    global VALID
+    ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
 
     count = 0
-    while pc and count < MAX_INSTRS and not FINISH:
+    while pc and count < MAX_INSTRS:
+        if STOP_ADDR and pc == STOP_ADDR:
+            debug("[+] Emulation reached stop address...")
+            break
+
+        if count >= MAX_INSTRS:
+            print("[-] Emulation exceeded max number of instructions!")
+            break
+
         # Fetch opcodes
         opcodes = ctx.getConcreteMemoryAreaValue(pc, 4)
 
@@ -197,60 +232,15 @@ def emulate(ctx, pc):
 
         # Process
         if ctx.processing(instruction) == False:
-            opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in instruction.getOpcode()])
+            opcodes_str = " ".join(["{:02x}".format(b) for b in bytearray(instruction.getOpcode())])
             debug('[-] Instruction not supported: %s\t%s' %(opcodes_str, str(instruction)))
             break
 
-        # debug(instruction)
+        opcodes_str = " ".join(["{:02x}".format(b) for b in bytearray(instruction.getOpcode())])
 
-        # .text:00010518                 LDR     R0, =unk_105C0  ; s
-        # .text:0001051C                 BL      puts
-        # .text:00010520                 B       loc_1052C
-        if pc == 0x1051C:
-            # We validated the crackme
-            VALID = True
+        debug('{}\t{}'.format(opcodes_str, instruction))
 
-        # .text:0001050C                 LDR     R2, =0xAD6D
-        # .text:00010510                 CMP     R3, R2
-        # .text:00010514                 BNE     loc_10524
-        if pc == 0x10510 and SERIAL is None:
-            print('[+] Please wait, calculating hash collisions...')
-            r3 = ctx.getSymbolicRegister(ctx.registers.r3)
-
-            SymVar_0 = ctx.getSymbolicVariable('SymVar_0')
-            SymVar_1 = ctx.getSymbolicVariable('SymVar_1')
-            SymVar_2 = ctx.getSymbolicVariable('SymVar_2')
-            SymVar_3 = ctx.getSymbolicVariable('SymVar_3')
-            SymVar_4 = ctx.getSymbolicVariable('SymVar_4')
-
-            astCtxt = ctx.getAstContext()
-
-            # We want printable characters
-            expr = astCtxt.land([
-                     astCtxt.bvugt(astCtxt.variable(SymVar_0), astCtxt.bv(96,  CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvult(astCtxt.variable(SymVar_0), astCtxt.bv(123, CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvugt(astCtxt.variable(SymVar_1), astCtxt.bv(96,  CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvult(astCtxt.variable(SymVar_1), astCtxt.bv(123, CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvugt(astCtxt.variable(SymVar_2), astCtxt.bv(96,  CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvult(astCtxt.variable(SymVar_2), astCtxt.bv(123, CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvugt(astCtxt.variable(SymVar_3), astCtxt.bv(96,  CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvult(astCtxt.variable(SymVar_3), astCtxt.bv(123, CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvugt(astCtxt.variable(SymVar_4), astCtxt.bv(96,  CPUSIZE.BYTE_BIT)),
-                     astCtxt.bvult(astCtxt.variable(SymVar_4), astCtxt.bv(123, CPUSIZE.BYTE_BIT)),
-                     astCtxt.equal(r3.getAst(), astCtxt.bv(0xad6d, CPUSIZE.DWORD_BIT)) # collision: (assert (= r3 0xad6d)
-                   ])
-
-            # Get max 20 different models
-            models = ctx.getModels(expr, 20)
-            print('[+] Found several hash collisions:')
-            for model in models:
-                print({k: "0x%x, '%c'" % (v.getValue(), v.getValue()) for k, v in list(model.items())})
-
-            SERIAL = str()
-            for _, v in list(sorted(models[0].items())):
-                SERIAL += "%c" % (v.getValue())
-
-            print('[+] Pick up the first serial: %s' %(SERIAL))
+        # print_state(ctx)
 
         # Inc the number of instructions executed
         count += 1
@@ -262,6 +252,7 @@ def emulate(ctx, pc):
         pc = ctx.getConcreteRegisterValue(ctx.registers.pc)
 
     debug('[+] Instruction executed: %d' %(count))
+
     return
 
 
@@ -321,19 +312,11 @@ def run(ctx, binary):
 
 
 def main():
-    global INPUT
-    global SERIAL
-    global FINISH
-
     # Get a Triton context
     ctx = TritonContext()
 
     # Set the architecture
     ctx.setArchitecture(ARCH.ARM32)
-
-    # Set optimization
-    ctx.setMode(MODE.ALIGNED_MEMORY, True)
-    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Parse the binary
     binary = lief.parse(TARGET)
@@ -347,16 +330,7 @@ def main():
     # First emulation
     run(ctx, binary)
 
-    FINISH = False
-
-    # Replace the input with the good serial to validate the chall
-    INPUT = SERIAL
-
-    # Second emulation
-    print('[+] Start a second emualtion with the good serial to validate the chall')
-    run(ctx, binary)
-
-    return not VALID == True
+    return 0
 
 
 if __name__ == '__main__':

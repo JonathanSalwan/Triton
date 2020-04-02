@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -12,165 +12,58 @@ import pprint
 import random
 
 ADDR  = 0x100000
-ADDR2 = 0x300000
-STACK = 0x500000
-HEAP  = 0x600000
-SIZE  = 10 * 1024 * 1024
-
-TARGET = 0x200000
-
-CODE2 = [
-    (b"\x00\xbf", "nop"),           # Thumb
-]
+STACK = 0x200000
+HEAP  = 0x300000
+SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    # B ---------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\x0a", "beq #0x200001"),
-    (b"\xfe\xff\x07\x1a", "bne #0x200001"),
-    (b"\xfe\xff\x07\x2a", "bcs #0x200001"),
-    (b"\xfe\xff\x07\x3a", "bcc #0x200001"),
-    (b"\xfe\xff\x07\x4a", "bmi #0x200001"),
-    (b"\xfe\xff\x07\x5a", "bpl #0x200001"),
-    (b"\xfe\xff\x07\x6a", "bvs #0x200001"),
-    (b"\xfe\xff\x07\x7a", "bvc #0x200001"),
-    (b"\xfe\xff\x07\x8a", "bhi #0x200001"),
-    (b"\xfe\xff\x07\x9a", "bls #0x200001"),
-    (b"\xfe\xff\x07\xaa", "bge #0x200001"),
-    (b"\xfe\xff\x07\xba", "blt #0x200001"),
-    (b"\xfe\xff\x07\xca", "bgt #0x200001"),
-    (b"\xfe\xff\x07\xda", "ble #0x200001"),
-    (b"\xfe\xff\x07\xea", "bal #0x200001"),
+    # LDR - Offset addressing.
+    (b"\x08\x68",         "ldr r0, [r1]"),
+    (b"\x48\x68",         "ldr r0, [r1, #0x4]"),
+    (b"\x51\xf8\x04\x0c", "ldr r0, [r1, #-0x4]"),
 
-    # BL --------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\x0b", "bleq #0x200001"),
-    (b"\xfe\xff\x07\x1b", "blne #0x200001"),
-    (b"\xfe\xff\x07\x2b", "blcs #0x200001"),
-    (b"\xfe\xff\x07\x3b", "blcc #0x200001"),
-    (b"\xfe\xff\x07\x4b", "blmi #0x200001"),
-    (b"\xfe\xff\x07\x5b", "blpl #0x200001"),
-    (b"\xfe\xff\x07\x6b", "blvs #0x200001"),
-    (b"\xfe\xff\x07\x7b", "blvc #0x200001"),
-    (b"\xfe\xff\x07\x8b", "blhi #0x200001"),
-    (b"\xfe\xff\x07\x9b", "blls #0x200001"),
-    (b"\xfe\xff\x07\xab", "blge #0x200001"),
-    (b"\xfe\xff\x07\xbb", "bllt #0x200001"),
-    (b"\xfe\xff\x07\xcb", "blgt #0x200001"),
-    (b"\xfe\xff\x07\xdb", "blle #0x200001"),
-    (b"\xfe\xff\x07\xeb", "blal #0x200001"),
+    # LDR - Pre-indexed addressing.
+    (b"\x51\xf8\x00\x0f", "ldr r0, [r1]!"),
+    (b"\x51\xf8\x04\x0f", "ldr r0, [r1, #0x4]!"),
+    (b"\x51\xf8\x04\x0d", "ldr r0, [r1, #-0x4]!"),
 
-    # BLX -------------------------------------------------------------------- #
-    (b"\xfe\xff\x07\xfa", "blxeq #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxne #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxcs #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxcc #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxmi #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxpl #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxvs #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxvc #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxhi #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxls #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxge #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxlt #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxgt #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxle #0x200001"),
-    (b"\xfe\xff\x07\xfa", "blxal #0x200001"),
+    # LDR - Post-indexed addressing.
+    (b"\x51\xf8\x04\x0b", "ldr r0, [r1], #0x4"),
+    (b"\x51\xf8\x04\x09", "ldr r0, [r1], #-0x4"),
 
-    (b"\x30\xff\x2f\x01", "blxeq r0"),
-    (b"\x30\xff\x2f\x11", "blxne r0"),
-    (b"\x30\xff\x2f\x21", "blxcs r0"),
-    (b"\x30\xff\x2f\x31", "blxcc r0"),
-    (b"\x30\xff\x2f\x41", "blxmi r0"),
-    (b"\x30\xff\x2f\x51", "blxpl r0"),
-    (b"\x30\xff\x2f\x61", "blxvs r0"),
-    (b"\x30\xff\x2f\x71", "blxvc r0"),
-    (b"\x30\xff\x2f\x81", "blxhi r0"),
-    (b"\x30\xff\x2f\x91", "blxls r0"),
-    (b"\x30\xff\x2f\xa1", "blxge r0"),
-    (b"\x30\xff\x2f\xb1", "blxlt r0"),
-    (b"\x30\xff\x2f\xc1", "blxgt r0"),
-    (b"\x30\xff\x2f\xd1", "blxle r0"),
-    (b"\x30\xff\x2f\xe1", "blxal r0"),
+    # LDR with SP as operand
+    (b"\xd1\xf8\x00\xd0", "ldr sp, [r1]"),
 
-    (b"\x3d\xff\x2f\x01", "blxeq sp"),
-    (b"\x3d\xff\x2f\x11", "blxne sp"),
-    (b"\x3d\xff\x2f\x21", "blxcs sp"),
-    (b"\x3d\xff\x2f\x31", "blxcc sp"),
-    (b"\x3d\xff\x2f\x41", "blxmi sp"),
-    (b"\x3d\xff\x2f\x51", "blxpl sp"),
-    (b"\x3d\xff\x2f\x61", "blxvs sp"),
-    (b"\x3d\xff\x2f\x71", "blxvc sp"),
-    (b"\x3d\xff\x2f\x81", "blxhi sp"),
-    (b"\x3d\xff\x2f\x91", "blxls sp"),
-    (b"\x3d\xff\x2f\xa1", "blxge sp"),
-    (b"\x3d\xff\x2f\xb1", "blxlt sp"),
-    (b"\x3d\xff\x2f\xc1", "blxgt sp"),
-    (b"\x3d\xff\x2f\xd1", "blxle sp"),
-    (b"\x3d\xff\x2f\xe1", "blxal sp"),
+    (b"\x00\x98",         "ldr r0, [sp]"),
 
-    (b"\x3f\xff\x2f\x01", "blxeq pc"),
-    (b"\x3f\xff\x2f\x11", "blxne pc"),
-    (b"\x3f\xff\x2f\x21", "blxcs pc"),
-    (b"\x3f\xff\x2f\x31", "blxcc pc"),
-    (b"\x3f\xff\x2f\x41", "blxmi pc"),
-    (b"\x3f\xff\x2f\x51", "blxpl pc"),
-    (b"\x3f\xff\x2f\x61", "blxvs pc"),
-    (b"\x3f\xff\x2f\x71", "blxvc pc"),
-    (b"\x3f\xff\x2f\x81", "blxhi pc"),
-    (b"\x3f\xff\x2f\x91", "blxls pc"),
-    (b"\x3f\xff\x2f\xa1", "blxge pc"),
-    (b"\x3f\xff\x2f\xb1", "blxlt pc"),
-    (b"\x3f\xff\x2f\xc1", "blxgt pc"),
-    (b"\x3f\xff\x2f\xd1", "blxle pc"),
-    (b"\x3f\xff\x2f\xe1", "blxal pc"),
+    # LDRB
+    # TODO: Add missing instructions.
+    (b"\x08\x78",         "ldrb r0, [r1, #0]"),
 
-    # BX --------------------------------------------------------------------- #
-    (b"\x10\xff\x2f\x01", "bxeq r0"),
-    (b"\x10\xff\x2f\x11", "bxne r0"),
-    (b"\x10\xff\x2f\x21", "bxcs r0"),
-    (b"\x10\xff\x2f\x31", "bxcc r0"),
-    (b"\x10\xff\x2f\x41", "bxmi r0"),
-    (b"\x10\xff\x2f\x51", "bxpl r0"),
-    (b"\x10\xff\x2f\x61", "bxvs r0"),
-    (b"\x10\xff\x2f\x71", "bxvc r0"),
-    (b"\x10\xff\x2f\x81", "bxhi r0"),
-    (b"\x10\xff\x2f\x91", "bxls r0"),
-    (b"\x10\xff\x2f\xa1", "bxge r0"),
-    (b"\x10\xff\x2f\xb1", "bxlt r0"),
-    (b"\x10\xff\x2f\xc1", "bxgt r0"),
-    (b"\x10\xff\x2f\xd1", "bxle r0"),
-    (b"\x10\xff\x2f\xe1", "bxal r0"),
+    # LDRD
+    # TODO: Add missing instructions.
+    (b"\xd1\xe9\x0b\x02", "ldrd r0, r2, [r1, #0x2c]"),
 
-    (b"\x1d\xff\x2f\x01", "bxeq sp"),
-    (b"\x1d\xff\x2f\x11", "bxne sp"),
-    (b"\x1d\xff\x2f\x21", "bxcs sp"),
-    (b"\x1d\xff\x2f\x31", "bxcc sp"),
-    (b"\x1d\xff\x2f\x41", "bxmi sp"),
-    (b"\x1d\xff\x2f\x51", "bxpl sp"),
-    (b"\x1d\xff\x2f\x61", "bxvs sp"),
-    (b"\x1d\xff\x2f\x71", "bxvc sp"),
-    (b"\x1d\xff\x2f\x81", "bxhi sp"),
-    (b"\x1d\xff\x2f\x91", "bxls sp"),
-    (b"\x1d\xff\x2f\xa1", "bxge sp"),
-    (b"\x1d\xff\x2f\xb1", "bxlt sp"),
-    (b"\x1d\xff\x2f\xc1", "bxgt sp"),
-    (b"\x1d\xff\x2f\xd1", "bxle sp"),
-    (b"\x1d\xff\x2f\xe1", "bxal sp"),
+    # STR - Offset addressing.
+    (b"\x08\x60",         "str r0, [r1]"),
+    (b"\x48\x60",         "str r0, [r1, #0x4]"),
+    (b"\x41\xf8\x04\x0c", "str r0, [r1, #-0x4]"),
 
-    (b"\x1f\xff\x2f\x01", "bxeq pc"),
-    (b"\x1f\xff\x2f\x11", "bxne pc"),
-    (b"\x1f\xff\x2f\x21", "bxcs pc"),
-    (b"\x1f\xff\x2f\x31", "bxcc pc"),
-    (b"\x1f\xff\x2f\x41", "bxmi pc"),
-    (b"\x1f\xff\x2f\x51", "bxpl pc"),
-    (b"\x1f\xff\x2f\x61", "bxvs pc"),
-    (b"\x1f\xff\x2f\x71", "bxvc pc"),
-    (b"\x1f\xff\x2f\x81", "bxhi pc"),
-    (b"\x1f\xff\x2f\x91", "bxls pc"),
-    (b"\x1f\xff\x2f\xa1", "bxge pc"),
-    (b"\x1f\xff\x2f\xb1", "bxlt pc"),
-    (b"\x1f\xff\x2f\xc1", "bxgt pc"),
-    (b"\x1f\xff\x2f\xd1", "bxle pc"),
-    (b"\x1f\xff\x2f\xe1", "bxal pc"),
+    # STR - Pre-indexed addressing.
+    (b"\x41\xf8\x00\x0f", "str r0, [r1]!"),
+    (b"\x41\xf8\x04\x0f", "str r0, [r1, #0x4]!"),
+    (b"\x41\xf8\x04\x0d", "str r0, [r1, #-0x4]!"),
+
+    # STR - Post-indexed addressing.
+    (b"\x41\xf8\x04\x0b", "str r0, [r1], #0x4"),
+    (b"\x41\xf8\x04\x09", "str r0, [r1], #-0x4"),
+
+    # STR with SP as operand
+    (b"\xc1\xf8\x00\xd0", "str sp, [r1]"),
+
+    (b"\x00\x90",         "str r0, [sp]"),
+
+    # TODO: Test with PC as source register.
 ]
 
 
@@ -204,25 +97,17 @@ def hook_code(mu, address, size, istate):
 
     # print_state(istate, istate, ostate)
 
-
 def emu_with_unicorn(opcode, istate):
     # Initialize emulator in arm32 mode
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # map memory for this emulation
-    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
     mu.mem_map(ADDR, SIZE)
 
     # write machine code to be emulated to memory
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
-        index += len(op)
-
-    # Valid memory region to land when testing branches.
-    index = 0
-    for op, _ in CODE2:
-        mu.mem_write(ADDR2+index, op)
         index += len(op)
 
     apsr = mu.reg_read(UC_ARM_REG_APSR)
@@ -248,12 +133,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # tracing all instructions with customized callback
+    # # tracing all instructions with customized callback
     # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
     # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
-    mu.emu_start(istate['pc'], istate['pc'] + len(opcode), count=1)
+    # NOTE: The +4 and count=1 is a trick so UC updates PC.
+    mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
         "stack": mu.mem_read(STACK, 0x100),
@@ -305,7 +191,7 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.r12, istate['r12'])
     ctx.setConcreteRegisterValue(ctx.registers.sp,  istate['sp'])
     ctx.setConcreteRegisterValue(ctx.registers.r14, istate['r14'])
-    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'])
+    ctx.setConcreteRegisterValue(ctx.registers.pc,  istate['pc'] | 1)  # NOTE: Enable Thumb mode by setting lsb of PC.
     ctx.setConcreteRegisterValue(ctx.registers.n,   istate['n'])
     ctx.setConcreteRegisterValue(ctx.registers.z,   istate['z'])
     ctx.setConcreteRegisterValue(ctx.registers.c,   istate['c'])
@@ -320,8 +206,8 @@ def emu_with_triton(opcode, istate):
     # print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -362,14 +248,26 @@ def print_state(istate, uc_ostate, tt_ostate):
 
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
+def print_heap(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
+def print_stack(istate, uc_ostate, tt_ostate):
+    print("IN|UC|TT")
+    for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
+        if ord(a) != b or ord(a) != c:
+            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+
 
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
-        "r0":    TARGET | 0x1,
-        "r1":    random.randint(0x0, 0xffffffff),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
+        "r0":    0xdeadbeef,
+        "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
@@ -390,6 +288,12 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
+    # for i, b in enumerate(state["stack"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
+    # for i, b in enumerate(state["heap"]):
+    #     print("{:02x}: {:02x}".format(i, ord(b)))
+
     # NOTE: This tests each instruction separatly. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
@@ -404,11 +308,32 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
+        # print(type(uc_state['heap']))
+        # print(type(tt_state['heap']))
+
+        for a, b in zip(uc_state['heap'], tt_state['heap']):
+            if a != b:
+                print('[KO] %s (heap differs!)' %(disassembly))
+                print_heap(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+        for a, b in zip(uc_state['stack'], tt_state['stack']):
+            if a != b:
+                print('[KO] %s (stack differs!)' %(disassembly))
+                print_stack(state, uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
         if uc_state != tt_state:
             print('[KO] %s' %(disassembly))
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
+
+        # print_state(state, uc_state, tt_state)
+        # print_heap(state, uc_state, tt_state)
+        # print_stack(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 

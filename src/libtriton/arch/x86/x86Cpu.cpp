@@ -978,6 +978,10 @@ namespace triton {
         }
       }
 
+      bool x86Cpu::isThumb(void) const {
+        return false;
+      }
+
     }; /* x86 namespace */
   }; /* arch namespace */
 }; /* triton namespace */

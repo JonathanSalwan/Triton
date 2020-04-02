@@ -175,6 +175,7 @@ namespace triton {
             TRITON_EXPORT bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
             TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
             TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
+            TRITON_EXPORT bool isThumb(void) const;
             TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;

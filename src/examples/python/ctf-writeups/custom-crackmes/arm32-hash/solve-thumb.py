@@ -185,9 +185,6 @@ def emulate(ctx, pc):
     global SERIAL
     global VALID
 
-    # TODO: Remove?
-    ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-
     count = 0
     while pc and count < MAX_INSTRS and not FINISH:
         # Fetch opcodes
@@ -200,7 +197,7 @@ def emulate(ctx, pc):
 
         # Process
         if ctx.processing(instruction) == False:
-            opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in opcodes])
+            opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in instruction.getOpcode()])
             debug('[-] Instruction not supported: %s\t%s' %(opcodes_str, str(instruction)))
             break
 

@@ -70,7 +70,7 @@ namespace triton {
       }
 
 
-      bool ArmOperandProperties::getSubtracted(void) const {
+      bool ArmOperandProperties::isSubtracted(void) const {
         return this->subtracted;
       }
 

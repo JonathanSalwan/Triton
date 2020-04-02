@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -17,53 +17,9 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    # LDR - Offset addressing.
-    (b"\x08\x68",         "ldr r0, [r1]"),
-    (b"\x48\x68",         "ldr r0, [r1, #0x4]"),
-    (b"\x51\xf8\x04\x0c", "ldr r0, [r1, #-0x4]"),
-
-    # LDR - Pre-indexed addressing.
-    (b"\x51\xf8\x00\x0f", "ldr r0, [r1]!"),
-    (b"\x51\xf8\x04\x0f", "ldr r0, [r1, #0x4]!"),
-    (b"\x51\xf8\x04\x0d", "ldr r0, [r1, #-0x4]!"),
-
-    # LDR - Post-indexed addressing.
-    (b"\x51\xf8\x04\x0b", "ldr r0, [r1], #0x4"),
-    (b"\x51\xf8\x04\x09", "ldr r0, [r1], #-0x4"),
-
-    # LDR with SP as operand
-    (b"\xd1\xf8\x00\xd0", "ldr sp, [r1]"),
-
-    (b"\x00\x98",         "ldr r0, [sp]"),
-
-    # LDRB
-    # TODO: Add missing instructions.
-    (b"\x08\x78",         "ldrb r0, [r1, #0]"),
-
-    # LDRD
-    # TODO: Add missing instructions.
-    (b"\xd1\xe9\x0b\x02", "ldrd r0, r2, [r1, #0x2c]"),
-
-    # STR - Offset addressing.
-    (b"\x08\x60",         "str r0, [r1]"),
-    (b"\x48\x60",         "str r0, [r1, #0x4]"),
-    (b"\x41\xf8\x04\x0c", "str r0, [r1, #-0x4]"),
-
-    # STR - Pre-indexed addressing.
-    (b"\x41\xf8\x00\x0f", "str r0, [r1]!"),
-    (b"\x41\xf8\x04\x0f", "str r0, [r1, #0x4]!"),
-    (b"\x41\xf8\x04\x0d", "str r0, [r1, #-0x4]!"),
-
-    # STR - Post-indexed addressing.
-    (b"\x41\xf8\x04\x0b", "str r0, [r1], #0x4"),
-    (b"\x41\xf8\x04\x09", "str r0, [r1], #-0x4"),
-
-    # STR with SP as operand
-    (b"\xc1\xf8\x00\xd0", "str sp, [r1]"),
-
-    (b"\x00\x90",         "str r0, [sp]"),
-
-    # TODO: Test with PC as source register.
+    (b"\x03\xbc",         "pop {r0, r1}"),
+    (b"\xbd\xe8\x01\x01", "pop {r0, r8}"),
+    (b"\xbd\xe8\xff\x01", "pop {r0 - r8}"),
 ]
 
 
@@ -113,7 +69,7 @@ def emu_with_unicorn(opcode, istate):
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
-    mu.mem_write(STACK,                istate['stack'])
+    mu.mem_write(STACK,                bytes(istate['stack']))
     mu.mem_write(HEAP,                 bytes(istate['heap']))
     mu.reg_write(UC_ARM_REG_R0,        istate['r0'])
     mu.reg_write(UC_ARM_REG_R1,        istate['r1'])
@@ -174,7 +130,7 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
-    ctx.setConcreteMemoryAreaValue(STACK,           istate['stack'])
+    ctx.setConcreteMemoryAreaValue(STACK,           bytes(istate['stack']))
     ctx.setConcreteMemoryAreaValue(HEAP,            bytes(istate['heap']))
     ctx.setConcreteRegisterValue(ctx.registers.r0,  istate['r0'])
     ctx.setConcreteRegisterValue(ctx.registers.r1,  istate['r1'])
@@ -264,17 +220,17 @@ def print_stack(istate, uc_ostate, tt_ostate):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack": bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":  bytearray(b"".join([pack('B', i) for i in range(256)])),
+        "stack": bytearray([255 - i for i in range(256)]),
+        "heap":  bytearray([i for i in range(256)]),
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
-        "r2":    random.randint(0x0, 0xffffffff),
-        "r3":    random.randint(0x0, 0xffffffff),
-        "r4":    random.randint(0x0, 0xffffffff),
-        "r5":    random.randint(0x0, 0xffffffff),
+        "r2":    0xAAAAAAAA,
+        "r3":    0xBBBBBBBB,
+        "r4":    0xCCCCCCCC,
+        "r5":    0xDDDDDDDD,
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),
-        "r8":    random.randint(0x0, 0xffffffff),
+        "r8":    0xEEEEEEEE,
         "r9":    random.randint(0x0, 0xffffffff),
         "r10":   random.randint(0x0, 0xffffffff),
         "r11":   random.randint(0x0, 0xffffffff),
