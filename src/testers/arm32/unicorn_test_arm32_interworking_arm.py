@@ -92,7 +92,7 @@ def emu_with_unicorn(start, stop, istate):
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
     # tracing all instructions with customized callback
-    mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
+    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
 
     # emulate code in infinite time & unlimited instructions
     # print("[UC] Executing from {:#x} to {:#x}".format(start, stop))
