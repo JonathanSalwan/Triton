@@ -16,6 +16,7 @@
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/externalLibs.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
@@ -66,8 +67,17 @@ namespace triton {
             //! Callbacks API
             triton::callbacks::Callbacks* callbacks;
 
+            //! Capstone context for ARM mode.
+            triton::extlibs::capstone::csh handle_arm;
+
+            //! Capstone context for Thumb mode.
+            triton::extlibs::capstone::csh handle_thumb;
+
             //! Copies a Arm32Cpu class.
             void copy(const Arm32Cpu& other);
+
+            //! Initializes the disassembler.
+            inline void disassInit(void);
 
             //! Post process instructions to provide a uniformity among ARM and Thumb modes.
             void postDisassembly(triton::arch::Instruction& inst) const;

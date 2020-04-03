@@ -25,7 +25,11 @@ namespace triton {
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
           this->callbacks = callbacks;
           this->thumb = false;
+          this->handle_arm = 0;
+          this->handle_thumb = 0;
+
           this->clear();
+          this->disassInit();
         }
 
 
@@ -36,12 +40,41 @@ namespace triton {
 
         Arm32Cpu::~Arm32Cpu() {
           this->memory.clear();
+
+          if (this->handle_arm)
+            triton::extlibs::capstone::cs_close(&this->handle_arm);
+
+          if (this->handle_thumb)
+            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+        }
+
+
+        void Arm32Cpu::disassInit(void) {
+          /* Open capstone in ARM mode. */
+          if (this->handle_arm)
+            triton::extlibs::capstone::cs_close(&this->handle_arm);
+
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &this->handle_arm) != triton::extlibs::capstone::CS_ERR_OK)
+            throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in ARM mode.");
+
+          triton::extlibs::capstone::cs_option(this->handle_arm, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+
+          /* Open capstone in Thumb mode. */
+          if (this->handle_thumb)
+            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_THUMB, &this->handle_thumb) != triton::extlibs::capstone::CS_ERR_OK)
+            throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in Thumb mode.");
+
+          triton::extlibs::capstone::cs_option(this->handle_thumb, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
         }
 
 
         void Arm32Cpu::copy(const Arm32Cpu& other) {
           this->callbacks = other.callbacks;
           this->memory    = other.memory;
+
+          this->disassInit();
 
           std::memcpy(this->r0,   other.r0,   sizeof(this->r0));
           std::memcpy(this->r1,   other.r1,   sizeof(this->r1));
@@ -190,7 +223,6 @@ namespace triton {
 
         void Arm32Cpu::disassembly(triton::arch::Instruction& inst) const {
           triton::extlibs::capstone::csh       handle;
-          triton::extlibs::capstone::cs_mode   mode;
           triton::extlibs::capstone::cs_insn*  insn;
           triton::usize                        count = 0;
 
@@ -198,14 +230,8 @@ namespace triton {
           if (inst.getOpcode() == nullptr || inst.getSize() == 0)
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
-          /* Open capstone */
-          mode = this->thumb ? triton::extlibs::capstone::CS_MODE_THUMB : triton::extlibs::capstone::CS_MODE_ARM;
-
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, mode, &handle) != triton::extlibs::capstone::CS_ERR_OK)
-            throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Cannot open capstone.");
-
-          /* Init capstone's options */
-          triton::extlibs::capstone::cs_option(handle, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+          /* Select capstone handler (based on execution mode) */
+          handle = this->thumb ? this->handle_thumb : this->handle_arm;
 
           /* Clear instructicon's operands if alredy defined */
           inst.operands.clear();
@@ -423,7 +449,6 @@ namespace triton {
           else
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Failed to disassemble the given code.");
 
-          triton::extlibs::capstone::cs_close(&handle);
           return;
         }
 
