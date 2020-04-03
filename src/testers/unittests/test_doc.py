@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # coding: utf-8
 """Tester for documentation."""
 import unittest

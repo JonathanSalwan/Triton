@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # coding: utf-8
 """Testing the arithmetic and logic AST interpreter."""
 
