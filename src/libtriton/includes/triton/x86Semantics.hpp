@@ -920,6 +920,15 @@ namespace triton {
           //! The PEXTRW semantics.
           void pextrw_s(triton::arch::Instruction& inst);
 
+          //! The PINSRB semantics.
+          void pinsrb_s(triton::arch::Instruction& inst);
+
+          //! The PINSRD semantics.
+          void pinsrd_s(triton::arch::Instruction& inst);
+
+          //! The PINSRQ semantics.
+          void pinsrq_s(triton::arch::Instruction& inst);
+
           //! The PMAXSB semantics.
           void pmaxsb_s(triton::arch::Instruction& inst);
 

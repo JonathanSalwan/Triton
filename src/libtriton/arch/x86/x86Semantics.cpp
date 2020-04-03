@@ -195,6 +195,9 @@ PEXTRB                       | sse4.1     | Extract Byte
 PEXTRD                       | sse4.1     | Extract Dword
 PEXTRQ                       | sse4.1     | Extract Qword
 PEXTRW                       | sse4.1     | Extract Word
+PINSRB                       | sse4.1     | Insert Byte
+PINSRD                       | sse4.1     | Insert Dword
+PINSRQ                       | sse4.1     | Insert Qword
 PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
 PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
 PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
@@ -533,6 +536,9 @@ namespace triton {
           case ID_INS_PEXTRD:         this->pextrd_s(inst);       break;
           case ID_INS_PEXTRQ:         this->pextrq_s(inst);       break;
           case ID_INS_PEXTRW:         this->pextrw_s(inst);       break;
+          case ID_INS_PINSRB:         this->pinsrb_s(inst);       break;
+          case ID_INS_PINSRD:         this->pinsrd_s(inst);       break;
+          case ID_INS_PINSRQ:         this->pinsrq_s(inst);       break;
           case ID_INS_PMAXSB:         this->pmaxsb_s(inst);       break;
           case ID_INS_PMAXSD:         this->pmaxsd_s(inst);       break;
           case ID_INS_PMAXSW:         this->pmaxsw_s(inst);       break;
@@ -8360,7 +8366,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -8388,7 +8394,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -8416,7 +8422,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -8456,6 +8462,141 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PEXTRW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::pinsrb_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        // SEL  = COUNT[3:0];
+        // MASK = (0FFH << (SEL * 8));
+        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x0f;
+        triton::uint128 mask = 0xff;
+        mask = mask << (sel * 8);
+
+        // TEMP = (((SRC[7:0] << (SEL * 8)) AND MASK);
+        auto temp = this->astCtxt->bvand(
+                      this->astCtxt->bvshl(
+                        this->astCtxt->zx(120, this->astCtxt->extract(7, 0, op2)),
+                        this->astCtxt->bv(sel * 8, 128)
+                      ),
+                      this->astCtxt->bv(mask, 128)
+                    );
+
+        // DEST = ((DEST AND NOT MASK) OR TEMP);
+        auto node = this->astCtxt->bvor(
+                      this->astCtxt->bvand(
+                        op1,
+                        this->astCtxt->bvnot(this->astCtxt->bv(mask, 128))
+                      ),
+                      temp
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PINSRB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::pinsrd_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        // SEL  = COUNT[1:0];
+        // MASK = (0FFFFFFFFH << (SEL * 32));
+        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x03;
+        triton::uint128 mask = 0xffffffff;
+        mask = mask << (sel * 32);
+
+        // TEMP = (((SRC[31:0] << (SEL * 32)) AND MASK);
+        auto temp = this->astCtxt->bvand(
+                      this->astCtxt->bvshl(
+                        this->astCtxt->zx(96, this->astCtxt->extract(31, 0, op2)),
+                        this->astCtxt->bv(sel * 32, 128)
+                      ),
+                      this->astCtxt->bv(mask, 128)
+                    );
+
+        // DEST = ((DEST AND NOT MASK) OR TEMP);
+        auto node = this->astCtxt->bvor(
+                      this->astCtxt->bvand(
+                        op1,
+                        this->astCtxt->bvnot(this->astCtxt->bv(mask, 128))
+                      ),
+                      temp
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PINSRD operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::pinsrq_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        // SEL  = COUNT[0:0];
+        // MASK = (0FFFFFFFFFFFFFFFFH << (SEL * 64));
+        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x1;
+        triton::uint128 mask = 0xffffffffffffffff;
+        mask = mask << (sel * 64);
+
+        // TEMP = (((SRC[63:0] << (SEL * 64)) AND MASK);
+        auto temp = this->astCtxt->bvand(
+                      this->astCtxt->bvshl(
+                        this->astCtxt->zx(64, this->astCtxt->extract(63, 0, op2)),
+                        this->astCtxt->bv(sel * 64, 128)
+                      ),
+                      this->astCtxt->bv(mask, 128)
+                    );
+
+        // DEST = ((DEST AND NOT MASK) OR TEMP);
+        auto node = this->astCtxt->bvor(
+                      this->astCtxt->bvand(
+                        op1,
+                        this->astCtxt->bvnot(this->astCtxt->bv(mask, 128))
+                      ),
+                      temp
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PINSRQ operation");
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
@@ -13341,7 +13482,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -13369,7 +13510,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -13397,7 +13538,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -13439,7 +13580,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPEXTRW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
