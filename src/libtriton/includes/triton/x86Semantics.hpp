@@ -929,6 +929,9 @@ namespace triton {
           //! The PINSRQ semantics.
           void pinsrq_s(triton::arch::Instruction& inst);
 
+          //! The PINSRW semantics.
+          void pinsrw_s(triton::arch::Instruction& inst);
+
           //! The PMAXSB semantics.
           void pmaxsb_s(triton::arch::Instruction& inst);
 

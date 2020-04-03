@@ -198,6 +198,7 @@ PEXTRW                       | sse4.1     | Extract Word
 PINSRB                       | sse4.1     | Insert Byte
 PINSRD                       | sse4.1     | Insert Dword
 PINSRQ                       | sse4.1     | Insert Qword
+PINSRW                       | sse2       | Insert Word
 PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
 PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
 PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
@@ -539,6 +540,7 @@ namespace triton {
           case ID_INS_PINSRB:         this->pinsrb_s(inst);       break;
           case ID_INS_PINSRD:         this->pinsrd_s(inst);       break;
           case ID_INS_PINSRQ:         this->pinsrq_s(inst);       break;
+          case ID_INS_PINSRW:         this->pinsrw_s(inst);       break;
           case ID_INS_PMAXSB:         this->pmaxsb_s(inst);       break;
           case ID_INS_PMAXSD:         this->pmaxsd_s(inst);       break;
           case ID_INS_PMAXSW:         this->pmaxsw_s(inst);       break;
@@ -8487,7 +8489,7 @@ namespace triton {
         triton::uint128 mask = 0xff;
         mask = mask << (sel * 8);
 
-        // TEMP = (((SRC[7:0] << (SEL * 8)) AND MASK);
+        // TEMP = ((SRC[7:0] << (SEL * 8)) AND MASK);
         auto temp = this->astCtxt->bvand(
                       this->astCtxt->bvshl(
                         this->astCtxt->zx(120, this->astCtxt->extract(7, 0, op2)),
@@ -8532,7 +8534,7 @@ namespace triton {
         triton::uint128 mask = 0xffffffff;
         mask = mask << (sel * 32);
 
-        // TEMP = (((SRC[31:0] << (SEL * 32)) AND MASK);
+        // TEMP = ((SRC[31:0] << (SEL * 32)) AND MASK);
         auto temp = this->astCtxt->bvand(
                       this->astCtxt->bvshl(
                         this->astCtxt->zx(96, this->astCtxt->extract(31, 0, op2)),
@@ -8577,7 +8579,7 @@ namespace triton {
         triton::uint128 mask = 0xffffffffffffffff;
         mask = mask << (sel * 64);
 
-        // TEMP = (((SRC[63:0] << (SEL * 64)) AND MASK);
+        // TEMP = ((SRC[63:0] << (SEL * 64)) AND MASK);
         auto temp = this->astCtxt->bvand(
                       this->astCtxt->bvshl(
                         this->astCtxt->zx(64, this->astCtxt->extract(63, 0, op2)),
@@ -8597,6 +8599,95 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PINSRQ operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::pinsrw_s(triton::arch::Instruction& inst) {
+        triton::uint128 mask = 0xffff;
+        triton::uint64 sel   = 0;
+        auto& dst            = inst.operands[0];
+        auto& src1           = inst.operands[1];
+        auto& src2           = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /*
+         * PINSRW (with 64-bit source operand)
+         *
+         * SEL = COUNT AND 3H;
+         * CASE (Determine word position) {
+         *   if SEL == 0: MASK = 000000000000FFFFH;
+         *   if SEL == 1: MASK = 00000000FFFF0000H;
+         *   if SEL == 2: MASK = 0000FFFF00000000H;
+         *   if SEL == 3: MASK = FFFF000000000000H;
+         * }
+         */
+        if (dst.getBitSize() == QWORD_SIZE_BIT) {
+          sel = op3->evaluate().convert_to<triton::uint64>() & 0x3;
+          switch (sel) {
+            case 1: mask = mask << 16; break;
+            case 2: mask = mask << 32; break;
+            case 3: mask = mask << 48; break;
+          }
+        }
+
+        /*
+         * PINSRW (with 128-bit source operand)
+         *
+         * SEL ← COUNT AND 7H;
+         * CASE (Determine word position) {
+         *   SEL == 0: MASK = 0000000000000000000000000000FFFFH;
+         *   SEL == 1: MASK = 000000000000000000000000FFFF0000H;
+         *   SEL == 2: MASK = 00000000000000000000FFFF00000000H;
+         *   SEL == 3: MASK = 0000000000000000FFFF000000000000H;
+         *   SEL == 4: MASK = 000000000000FFFF0000000000000000H;
+         *   SEL == 5: MASK = 00000000FFFF00000000000000000000H;
+         *   SEL == 6: MASK = 0000FFFF000000000000000000000000H;
+         *   SEL == 7: MASK = FFFF0000000000000000000000000000H;
+         * }
+         */
+        else {
+          sel = op3->evaluate().convert_to<triton::uint64>() & 0x7;
+          switch (sel) {
+            case 1: mask = mask << 16;  break;
+            case 2: mask = mask << 32;  break;
+            case 3: mask = mask << 48;  break;
+            case 4: mask = mask << 64;  break;
+            case 5: mask = mask << 80;  break;
+            case 6: mask = mask << 96;  break;
+            case 7: mask = mask << 112; break;
+          }
+        }
+
+        // TEMP = ((SRC << (SEL ∗ 16)) AND MASK);
+        auto temp = this->astCtxt->bvand(
+                      this->astCtxt->bvshl(
+                        this->astCtxt->zx(96, this->astCtxt->extract(31, 0, op2)),
+                        this->astCtxt->bv(sel * 16, 128)
+                      ),
+                      this->astCtxt->bv(mask, 128)
+                    );
+
+        // DEST = ((DEST AND NOT MASK) OR TEMP);
+        auto node = this->astCtxt->bvor(
+                      this->astCtxt->bvand(
+                        op1,
+                        this->astCtxt->bvnot(this->astCtxt->bv(mask, 128))
+                      ),
+                      temp
+                    );
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PINSRW operation");
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src1);
