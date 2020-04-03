@@ -16,7 +16,7 @@ DEBUG  = False
 TARGET = os.path.join(os.path.dirname(__file__), './bin/crypto_test-nothumb-O2.bin')
 STOP_ADDR = None
 MAX_INSTRS = 100000
-
+RET_VALUE = -1
 
 # The debug function
 def debug(s):
@@ -106,6 +106,8 @@ def aeabi_memcpyHandler(ctx):
 
 # Simulate the puts() function
 def putsHandler(ctx):
+    global RET_VALUE
+
     print('[+] puts hooked')
 
     # Get arguments
@@ -114,6 +116,10 @@ def putsHandler(ctx):
     print('\targ1: "{}" ({:08x})'.format(arg1, ctx.getConcreteRegisterValue(ctx.registers.r0)))
 
     sys.stdout.write(arg1 + '\n')
+
+    # FIXME: Find a better way to check for success.
+    if arg1 == "ok":
+        RET_VALUE = 0
 
     # Return value
     return len(arg1) + 1
@@ -330,7 +336,7 @@ def main():
     # First emulation
     run(ctx, binary)
 
-    return 0
+    return RET_VALUE
 
 
 if __name__ == '__main__':

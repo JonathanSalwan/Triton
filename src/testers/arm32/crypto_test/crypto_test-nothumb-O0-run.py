@@ -16,7 +16,7 @@ DEBUG  = False
 TARGET = os.path.join(os.path.dirname(__file__), './bin/crypto_test-nothumb-O0.bin')
 STOP_ADDR = None
 MAX_INSTRS = 100000
-
+RET_VALUE = -1
 
 # The debug function
 def debug(s):
@@ -160,6 +160,8 @@ def strlenHandler(ctx):
 
 # Simulate the printf() function
 def printfHandler(ctx):
+    global RET_VALUE
+
     print('[+] printf hooked')
 
     # Get arguments
@@ -174,6 +176,10 @@ def printfHandler(ctx):
     s      = arg1.format(*args)
 
     sys.stdout.write(s)
+
+    # FIXME: Find a better way to check for success.
+    if arg1 == "ok\n":
+        RET_VALUE = 0
 
     # Return value
     return len(s)
@@ -392,7 +398,7 @@ def main():
     # First emulation
     run(ctx, binary)
 
-    return 0
+    return RET_VALUE
 
 
 if __name__ == '__main__':
