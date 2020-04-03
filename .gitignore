@@ -12,7 +12,7 @@
 .DS_Store
 .gdb_history
 CMakeLists.txt.user
-build/*
+build*/*
 peda-session*
 pin.log
 pintool.log
