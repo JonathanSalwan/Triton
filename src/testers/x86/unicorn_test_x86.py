@@ -744,6 +744,11 @@ CODE  = [
     (None, b"\x48\xc7\xc0\xff\xff\xff\xff",               "mov rax, 0xffffffffffffffff"),
     (None, b"\x48\xc7\xc3\x00\x00\x00\x00",               "mov rbx, 0x0"),
     (None, b"\xf3\x0f\xbc\xd8",                           "tzcnt ebx, eax"),
+
+    (None, b"\x0f\xae\x04\x24",                           "fxsave [rsp]"),
+    (None, b"\x0f\xae\x0c\x24",                           "fxrstor [rsp]"),
+    (None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 [rsp]"),
+    (None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 [rsp]"),
 ]
 
 

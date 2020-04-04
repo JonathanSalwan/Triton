@@ -133,6 +133,10 @@ LODSQ                        |            | Load quadword at address
 LODSW                        |            | Load word at address
 LOOP                         |            | Loop According to ECX Counter
 LZCNT                        |            | Count the Number of Leading Zero Bits
+FXRSTOR                      | sse1       | Restore the x87 FPU, MMX, XMM, and MXCSR register state from m512byte
+FXRSTOR64                    | sse1       | Restore the x87 FPU, MMX, XMM, and MXCSR register state from m512byte (REX.W = 1)
+FXSAVE                       | sse1       | Save the x87 FPU, MMX, XMM, and MXCSR register state to m512byte
+FXSAVE64                     | sse1       | Save the x87 FPU, MMX, XMM, and MXCSR register state to m512byte (REX.W = 1)
 MFENCE                       | sse2       | Memory Fence
 MOV                          |            | Move
 MOVABS                       |            | Move
