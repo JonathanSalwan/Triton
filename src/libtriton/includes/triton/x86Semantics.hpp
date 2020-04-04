@@ -162,6 +162,7 @@ namespace triton {
           void cfLzcnt_s(triton::arch::Instruction& inst,
                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
                          triton::arch::OperandWrapper& src,
+                         const triton::ast::SharedAbstractNode& op1,
                          bool vol=false);
 
           //! The CF semantics.
@@ -267,6 +268,7 @@ namespace triton {
           void cfTzcnt_s(triton::arch::Instruction& inst,
                          const triton::engines::symbolic::SharedSymbolicExpression& parent,
                          triton::arch::OperandWrapper& src,
+                         const triton::ast::SharedAbstractNode& op1,
                          bool vol=false);
 
           //! The OF semantics.
