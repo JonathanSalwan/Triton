@@ -438,6 +438,10 @@ namespace triton {
           case ID_INS_ENDBR32:        this->endbr32_s(inst);      break;
           case ID_INS_ENDBR64:        this->endbr64_s(inst);      break;
           case ID_INS_EXTRACTPS:      this->extractps_s(inst);    break;
+          case ID_INS_FXRSTOR:        this->fxrstor_s(inst);      break;
+          case ID_INS_FXRSTOR64:      this->fxrstor64_s(inst);    break;
+          case ID_INS_FXSAVE:         this->fxsave_s(inst);       break;
+          case ID_INS_FXSAVE64:       this->fxsave64_s(inst);     break;
           case ID_INS_IDIV:           this->idiv_s(inst);         break;
           case ID_INS_IMUL:           this->imul_s(inst);         break;
           case ID_INS_INC:            this->inc_s(inst);          break;
@@ -5223,6 +5227,272 @@ namespace triton {
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::fxrstor_s(triton::arch::Instruction& inst) {
+        auto& src = inst.operands[0];
+
+        /* Create symbolic operands */
+        auto addr = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+
+        /* Create symbolic expression */
+
+        /* Spread taint */
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::fxrstor64_s(triton::arch::Instruction& inst) {
+        // TODO: implement it
+      }
+
+
+      void x86Semantics::fxsave_s(triton::arch::Instruction& inst) {
+        /* Fetch the current architecture */
+        auto arch = this->architecture->getArchitecture();
+
+        /* Fetch the memory operand */
+        auto& dst = inst.operands[0];
+        auto& mem = dst.getMemory();
+        auto m512byte = mem.getAddress();
+
+        /* Fetch the FPU, MMX and SSE states */
+        auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
+        auto fsw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FSW));
+        auto ftw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FTW));
+        auto fop = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FOP));
+        auto fip = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FIP));
+        auto fcs = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCS));
+        auto fdp = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FDP));
+        auto fds = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FDS));
+        auto mxcsr = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_MXCSR));
+        auto mxcsr_mask = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_MXCSR_MASK));
+        auto st0 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST0));
+        auto st1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST1));
+        auto st2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST2));
+        auto st3 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST3));
+        auto st4 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST4));
+        auto st5 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST5));
+        auto st6 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST6));
+        auto st7 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST7));
+        auto xmm0 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM0));
+        auto xmm1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM1));
+        auto xmm2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM2));
+        auto xmm3 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM3));
+        auto xmm4 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM4));
+        auto xmm5 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM5));
+        auto xmm6 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM6));
+        auto xmm7 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM7));
+
+        /* Create the symbolic operands */
+        auto fcw_ast = this->symbolicEngine->getOperandAst(inst, fcw);
+        auto fsw_ast = this->symbolicEngine->getOperandAst(inst, fsw);
+        auto ftw_ast = this->symbolicEngine->getOperandAst(inst, ftw);
+        auto fop_ast = this->symbolicEngine->getOperandAst(inst, fop);
+        auto fip_ast = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0, this->symbolicEngine->getOperandAst(inst, fip));
+        auto fcs_ast = this->symbolicEngine->getOperandAst(inst, fcs);
+        auto fdp_ast = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0, this->symbolicEngine->getOperandAst(inst, fdp));
+        auto fds_ast = this->symbolicEngine->getOperandAst(inst, fds);
+        auto mxcsr_ast = this->symbolicEngine->getOperandAst(inst, mxcsr);
+        auto mxcsr_mask_ast = this->symbolicEngine->getOperandAst(inst, mxcsr_mask);
+        auto st0_ast = this->symbolicEngine->getOperandAst(inst, st0);
+        auto st1_ast = this->symbolicEngine->getOperandAst(inst, st1);
+        auto st2_ast = this->symbolicEngine->getOperandAst(inst, st2);
+        auto st3_ast = this->symbolicEngine->getOperandAst(inst, st3);
+        auto st4_ast = this->symbolicEngine->getOperandAst(inst, st4);
+        auto st5_ast = this->symbolicEngine->getOperandAst(inst, st5);
+        auto st6_ast = this->symbolicEngine->getOperandAst(inst, st6);
+        auto st7_ast = this->symbolicEngine->getOperandAst(inst, st7);
+        auto xmm0_ast = this->symbolicEngine->getOperandAst(inst, xmm0);
+        auto xmm1_ast = this->symbolicEngine->getOperandAst(inst, xmm1);
+        auto xmm2_ast = this->symbolicEngine->getOperandAst(inst, xmm2);
+        auto xmm3_ast = this->symbolicEngine->getOperandAst(inst, xmm3);
+        auto xmm4_ast = this->symbolicEngine->getOperandAst(inst, xmm4);
+        auto xmm5_ast = this->symbolicEngine->getOperandAst(inst, xmm5);
+        auto xmm6_ast = this->symbolicEngine->getOperandAst(inst, xmm6);
+        auto xmm7_ast = this->symbolicEngine->getOperandAst(inst, xmm7);
+
+        // TODO @fvrmatteo: determine the proper abridged FTW
+        // <CODE HERE>
+
+        /* Create the semantics, symbolic expressions and tainting for the 'Non-64-bit Mode Layout' */
+        auto fcw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 0, fcw.getSize()));
+        auto fsw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 2, fsw.getSize()));
+        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize()));
+        auto fop_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 6, fop.getSize()));
+        auto fip_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 8, fip.getSize() / 2));
+        auto fcs_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 12, fcs.getSize()));
+        auto fdp_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 16, fdp.getSize() / 2));
+        auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
+        auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
+        auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
+        auto st0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32, st0.getSize()));
+        auto st1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48, st1.getSize()));
+        auto st2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64, st2.getSize()));
+        auto st3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80, st3.getSize()));
+        auto st4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96, st4.getSize()));
+        auto st5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, st5.getSize()));
+        auto st6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, st6.getSize()));
+        auto st7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, st7.getSize()));
+        auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
+        auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
+        auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
+        auto xmm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 208, xmm3.getSize()));
+        auto xmm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 224, xmm4.getSize()));
+        auto xmm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 240, xmm5.getSize()));
+        auto xmm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
+        auto xmm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
+
+        auto fcw_store = this->astCtxt->zx(fcw_addr.getBitSize() - fcw.getBitSize(), fcw_ast);
+        auto fsw_store = this->astCtxt->zx(fsw_addr.getBitSize() - fsw.getBitSize(), fsw_ast);
+        auto ftw_store = this->astCtxt->zx(ftw_addr.getBitSize() - ftw.getBitSize(), ftw_ast);
+        auto fop_store = this->astCtxt->zx(fop_addr.getBitSize() - fop.getBitSize(), fop_ast);
+        auto fip_store = this->astCtxt->zx(fip_addr.getBitSize() - fip.getBitSize(), fip_ast);
+        auto fcs_store = this->astCtxt->zx(fcs_addr.getBitSize() - fcs.getBitSize(), fcs_ast);
+        auto fdp_store = this->astCtxt->zx(fdp_addr.getBitSize() - fdp.getBitSize(), fdp_ast);
+        auto fds_store = this->astCtxt->zx(fds_addr.getBitSize() - fds.getBitSize(), fds_ast);
+        auto mxcsr_store = this->astCtxt->zx(mxcsr_addr.getBitSize() - mxcsr.getBitSize(), mxcsr_ast);
+        auto mxcsr_mask_store = this->astCtxt->zx(mxcsr_mask_addr.getBitSize() - mxcsr_mask.getBitSize(), mxcsr_mask_ast);
+        auto st0_store = this->astCtxt->zx(st0_addr.getBitSize() - st0.getBitSize(), st0_ast);
+        auto st1_store = this->astCtxt->zx(st1_addr.getBitSize() - st1.getBitSize(), st1_ast);
+        auto st2_store = this->astCtxt->zx(st2_addr.getBitSize() - st2.getBitSize(), st2_ast);
+        auto st3_store = this->astCtxt->zx(st3_addr.getBitSize() - st3.getBitSize(), st3_ast);
+        auto st4_store = this->astCtxt->zx(st4_addr.getBitSize() - st4.getBitSize(), st4_ast);
+        auto st5_store = this->astCtxt->zx(st5_addr.getBitSize() - st5.getBitSize(), st5_ast);
+        auto st6_store = this->astCtxt->zx(st6_addr.getBitSize() - st6.getBitSize(), st6_ast);
+        auto st7_store = this->astCtxt->zx(st7_addr.getBitSize() - st7.getBitSize(), st7_ast);
+        auto xmm0_store = this->astCtxt->zx(xmm0_addr.getBitSize() - xmm0.getBitSize(), xmm0_ast);
+        auto xmm1_store = this->astCtxt->zx(xmm1_addr.getBitSize() - xmm1.getBitSize(), xmm1_ast);
+        auto xmm2_store = this->astCtxt->zx(xmm2_addr.getBitSize() - xmm2.getBitSize(), xmm2_ast);
+        auto xmm3_store = this->astCtxt->zx(xmm3_addr.getBitSize() - xmm3.getBitSize(), xmm3_ast);
+        auto xmm4_store = this->astCtxt->zx(xmm4_addr.getBitSize() - xmm4.getBitSize(), xmm4_ast);
+        auto xmm5_store = this->astCtxt->zx(xmm5_addr.getBitSize() - xmm5.getBitSize(), xmm5_ast);
+        auto xmm6_store = this->astCtxt->zx(xmm6_addr.getBitSize() - xmm6.getBitSize(), xmm6_ast);
+        auto xmm7_store = this->astCtxt->zx(xmm7_addr.getBitSize() - xmm7.getBitSize(), xmm7_ast);
+
+        auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_store, fcw_addr, "FXSAVE FCW operation");
+        auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_store, fsw_addr, "FXSAVE FSW operation");
+        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, ftw_store, ftw_addr, "FXSAVE FTW operation");
+        auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_store, fop_addr, "FXSAVE FOP operation");
+        auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_store, fip_addr, "FXSAVE FIP operation");
+        auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_store, fcs_addr, "FXSAVE FCS operation");
+        auto fdp_expr = this->symbolicEngine->createSymbolicExpression(inst, fdp_store, fdp_addr, "FXSAVE FDP operation");
+        auto fds_expr = this->symbolicEngine->createSymbolicExpression(inst, fds_store, fds_addr, "FXSAVE FDS operation");
+        auto mxcsr_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_store, mxcsr_addr, "FXSAVE MXCSR operation");
+        auto mxcsr_mask_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_mask_store, mxcsr_mask_addr, "FXSAVE MXCSR_MASK operation");
+        auto st0_expr = this->symbolicEngine->createSymbolicExpression(inst, st0_store, st0_addr, "FXSAVE ST0 operation");
+        auto st1_expr = this->symbolicEngine->createSymbolicExpression(inst, st1_store, st1_addr, "FXSAVE ST1 operation");
+        auto st2_expr = this->symbolicEngine->createSymbolicExpression(inst, st2_store, st2_addr, "FXSAVE ST2 operation");
+        auto st3_expr = this->symbolicEngine->createSymbolicExpression(inst, st3_store, st3_addr, "FXSAVE ST3 operation");
+        auto st4_expr = this->symbolicEngine->createSymbolicExpression(inst, st4_store, st4_addr, "FXSAVE ST4 operation");
+        auto st5_expr = this->symbolicEngine->createSymbolicExpression(inst, st5_store, st5_addr, "FXSAVE ST5 operation");
+        auto st6_expr = this->symbolicEngine->createSymbolicExpression(inst, st6_store, st6_addr, "FXSAVE ST6 operation");
+        auto st7_expr = this->symbolicEngine->createSymbolicExpression(inst, st7_store, st7_addr, "FXSAVE ST7 operation");
+        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_store, xmm0_addr, "FXSAVE XMM0 operation");
+        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_store, xmm1_addr, "FXSAVE XMM1 operation");
+        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_store, xmm2_addr, "FXSAVE XMM2 operation");
+        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_store, xmm3_addr, "FXSAVE XMM3 operation");
+        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_store, xmm4_addr, "FXSAVE XMM4 operation");
+        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_store, xmm5_addr, "FXSAVE XMM5 operation");
+        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_store, xmm6_addr, "FXSAVE XMM6 operation");
+        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_store, xmm7_addr, "FXSAVE XMM7 operation");
+
+        fcw_expr->isTainted = this->taintEngine->taintAssignment(fcw_addr, fcw);
+        fsw_expr->isTainted = this->taintEngine->taintAssignment(fsw_addr, fsw);
+        ftw_expr->isTainted = this->taintEngine->taintAssignment(ftw_addr, ftw);
+        fop_expr->isTainted = this->taintEngine->taintAssignment(fop_addr, fop);
+        fip_expr->isTainted = this->taintEngine->taintAssignment(fip_addr, fip);
+        fcs_expr->isTainted = this->taintEngine->taintAssignment(fcs_addr, fcs);
+        fdp_expr->isTainted = this->taintEngine->taintAssignment(fdp_addr, fdp);
+        fds_expr->isTainted = this->taintEngine->taintAssignment(fds_addr, fds);
+        mxcsr_expr->isTainted = this->taintEngine->taintAssignment(mxcsr_addr, mxcsr);
+        mxcsr_mask_expr->isTainted = this->taintEngine->taintAssignment(mxcsr_mask_addr, mxcsr_mask);
+        st0_expr->isTainted = this->taintEngine->taintAssignment(st0_addr, st0);
+        st1_expr->isTainted = this->taintEngine->taintAssignment(st1_addr, st1);
+        st2_expr->isTainted = this->taintEngine->taintAssignment(st2_addr, st2);
+        st3_expr->isTainted = this->taintEngine->taintAssignment(st3_addr, st3);
+        st4_expr->isTainted = this->taintEngine->taintAssignment(st4_addr, st4);
+        st5_expr->isTainted = this->taintEngine->taintAssignment(st5_addr, st5);
+        st6_expr->isTainted = this->taintEngine->taintAssignment(st6_addr, st6);
+        st7_expr->isTainted = this->taintEngine->taintAssignment(st7_addr, st7);
+        xmm0_expr->isTainted = this->taintEngine->taintAssignment(xmm0_addr, xmm0);
+        xmm1_expr->isTainted = this->taintEngine->taintAssignment(xmm1_addr, xmm1);
+        xmm2_expr->isTainted = this->taintEngine->taintAssignment(xmm2_addr, xmm2);
+        xmm3_expr->isTainted = this->taintEngine->taintAssignment(xmm3_addr, xmm3);
+        xmm4_expr->isTainted = this->taintEngine->taintAssignment(xmm4_addr, xmm4);
+        xmm5_expr->isTainted = this->taintEngine->taintAssignment(xmm5_addr, xmm5);
+        xmm6_expr->isTainted = this->taintEngine->taintAssignment(xmm6_addr, xmm6);
+        xmm7_expr->isTainted = this->taintEngine->taintAssignment(xmm7_addr, xmm7);
+
+        /* Additional semantics, symbolic expressions and tainting for the '64-bit Mode Layout (with REX.W = 0)' */
+        if (arch == triton::arch::architecture_e::ARCH_X86_64) {
+          auto xmm8 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
+          auto xmm9 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
+          auto xmm10 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM10));
+          auto xmm11 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM11));
+          auto xmm12 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM12));
+          auto xmm13 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM13));
+          auto xmm14 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM14));
+          auto xmm15 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM15));
+
+          auto xmm8_ast = this->symbolicEngine->getOperandAst(inst, xmm8);
+          auto xmm9_ast = this->symbolicEngine->getOperandAst(inst, xmm9);
+          auto xmm10_ast = this->symbolicEngine->getOperandAst(inst, xmm10);
+          auto xmm11_ast = this->symbolicEngine->getOperandAst(inst, xmm11);
+          auto xmm12_ast = this->symbolicEngine->getOperandAst(inst, xmm12);
+          auto xmm13_ast = this->symbolicEngine->getOperandAst(inst, xmm13);
+          auto xmm14_ast = this->symbolicEngine->getOperandAst(inst, xmm14);
+          auto xmm15_ast = this->symbolicEngine->getOperandAst(inst, xmm15);
+
+          auto xmm8_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 288, xmm8.getSize()));
+          auto xmm9_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 304, xmm9.getSize()));
+          auto xmm10_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 320, xmm10.getSize()));
+          auto xmm11_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 336, xmm11.getSize()));
+          auto xmm12_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 352, xmm12.getSize()));
+          auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
+          auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
+          auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
+
+          auto xmm8_store  = this->astCtxt->zx(xmm8_addr.getBitSize() -  xmm8.getBitSize(),  xmm8_ast);
+          auto xmm9_store  = this->astCtxt->zx(xmm9_addr.getBitSize() -  xmm9.getBitSize(),  xmm9_ast);
+          auto xmm10_store = this->astCtxt->zx(xmm10_addr.getBitSize() - xmm10.getBitSize(), xmm10_ast);
+          auto xmm11_store = this->astCtxt->zx(xmm11_addr.getBitSize() - xmm11.getBitSize(), xmm11_ast);
+          auto xmm12_store = this->astCtxt->zx(xmm12_addr.getBitSize() - xmm12.getBitSize(), xmm12_ast);
+          auto xmm13_store = this->astCtxt->zx(xmm13_addr.getBitSize() - xmm13.getBitSize(), xmm13_ast);
+          auto xmm14_store = this->astCtxt->zx(xmm14_addr.getBitSize() - xmm14.getBitSize(), xmm14_ast);
+          auto xmm15_store = this->astCtxt->zx(xmm15_addr.getBitSize() - xmm15.getBitSize(), xmm15_ast);
+
+          auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_store, xmm8_addr, "FXSAVE XMM8 operation");
+          auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_store, xmm9_addr, "FXSAVE XMM9 operation");
+          auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_store, xmm10_addr, "FXSAVE XMM10 operation");
+          auto xmm11_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm11_store, xmm11_addr, "FXSAVE XMM11 operation");
+          auto xmm12_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm12_store, xmm12_addr, "FXSAVE XMM12 operation");
+          auto xmm13_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm13_store, xmm13_addr, "FXSAVE XMM13 operation");
+          auto xmm14_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm14_store, xmm14_addr, "FXSAVE XMM14 operation");
+          auto xmm15_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm15_store, xmm15_addr, "FXSAVE XMM15 operation");
+
+          xmm8_expr->isTainted  = this->taintEngine->taintAssignment(xmm8_addr, xmm8);
+          xmm9_expr->isTainted  = this->taintEngine->taintAssignment(xmm9_addr, xmm9);
+          xmm10_expr->isTainted = this->taintEngine->taintAssignment(xmm10_addr, xmm10);
+          xmm11_expr->isTainted = this->taintEngine->taintAssignment(xmm11_addr, xmm11);
+          xmm12_expr->isTainted = this->taintEngine->taintAssignment(xmm12_addr, xmm12);
+          xmm13_expr->isTainted = this->taintEngine->taintAssignment(xmm13_addr, xmm13);
+          xmm14_expr->isTainted = this->taintEngine->taintAssignment(xmm14_addr, xmm14);
+          xmm15_expr->isTainted = this->taintEngine->taintAssignment(xmm15_addr, xmm15);
+        }
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::fxsave64_s(triton::arch::Instruction& inst) {
+        // TODO: implement it
       }
 
 
