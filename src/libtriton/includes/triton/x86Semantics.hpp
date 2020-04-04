@@ -159,6 +159,12 @@ namespace triton {
                         bool vol=false);
 
           //! The CF semantics.
+          void cfLzcnt_s(triton::arch::Instruction& inst,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& src,
+                         bool vol=false);
+
+          //! The CF semantics.
           void cfMul_s(triton::arch::Instruction& inst,
                        const triton::engines::symbolic::SharedSymbolicExpression& parent,
                        triton::arch::OperandWrapper& dst,
@@ -256,6 +262,12 @@ namespace triton {
                        const triton::ast::SharedAbstractNode& op1,
                        const triton::ast::SharedAbstractNode& op2,
                        bool vol=false);
+
+          //! The CF semantics.
+          void cfTzcnt_s(triton::arch::Instruction& inst,
+                         const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                         triton::arch::OperandWrapper& src,
+                         bool vol=false);
 
           //! The OF semantics.
           void ofAdd_s(triton::arch::Instruction& inst,
@@ -730,6 +742,9 @@ namespace triton {
 
           //! The LOOP semantics.
           void loop_s(triton::arch::Instruction& inst);
+
+          //! The LZCNT semantics.
+          void lzcnt_s(triton::arch::Instruction& inst);
 
           //! The MFENCE semantics.
           void mfence_s(triton::arch::Instruction& inst);

@@ -1163,6 +1163,36 @@ namespace triton {
       }
 
 
+      void x86Semantics::cfLzcnt_s(triton::arch::Instruction& inst,
+                                   const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                   triton::arch::OperandWrapper& src,
+                                   bool vol) {
+
+        auto bvSize = src.getBitSize();
+        auto low    = vol ? 0 : src.getLow();
+        auto high   = vol ? bvSize-1 : src.getHigh();
+
+        /*
+         * Create the semantic.
+         * cf = 0 == parent
+         */
+        auto node = this->astCtxt->ite(
+                      this->astCtxt->equal(
+                        this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
+                        this->astCtxt->bv(0, bvSize)
+                      ),
+                      this->astCtxt->bv(1, 1),
+                      this->astCtxt->bv(0, 1)
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+      }
+
+
       void x86Semantics::cfMul_s(triton::arch::Instruction& inst,
                                  const triton::engines::symbolic::SharedSymbolicExpression& parent,
                                  triton::arch::OperandWrapper& dst,
@@ -1594,6 +1624,36 @@ namespace triton {
                           this->astCtxt->bvxor(op1, op2)
                         )
                       )
+                    );
+
+        /* Create the symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_CF), "Carry flag");
+
+        /* Spread the taint from the parent to the child */
+        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_CF), parent->isTainted);
+      }
+
+
+      void x86Semantics::cfTzcnt_s(triton::arch::Instruction& inst,
+                                   const triton::engines::symbolic::SharedSymbolicExpression& parent,
+                                   triton::arch::OperandWrapper& src,
+                                   bool vol) {
+
+        auto bvSize = src.getBitSize();
+        auto low    = vol ? 0 : src.getLow();
+        auto high   = vol ? bvSize-1 : src.getHigh();
+
+        /*
+         * Create the semantic.
+         * cf = 0 == parent
+         */
+        auto node = this->astCtxt->ite(
+                      this->astCtxt->equal(
+                        this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
+                        this->astCtxt->bv(0, bvSize)
+                      ),
+                      this->astCtxt->bv(1, 1),
+                      this->astCtxt->bv(0, 1)
                     );
 
         /* Create the symbolic expression */
@@ -6423,6 +6483,188 @@ namespace triton {
 
         /* Create the path constraint */
         this->symbolicEngine->pushPathConstraint(inst, expr1);
+      }
+
+
+      void x86Semantics::lzcnt_s(triton::arch::Instruction& inst) {
+        auto& dst     = inst.operands[0];
+        auto& src     = inst.operands[1];
+        auto  bvSize1 = dst.getBitSize();
+        auto  bvSize2 = src.getBitSize();
+
+        /* Create symbolic operands */
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        triton::ast::SharedAbstractNode node = nullptr;
+        switch (src.getSize()) {
+          case BYTE_SIZE:
+            node = this->astCtxt->ite(
+              this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)),
+              this->astCtxt->bv(bvSize2, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 1, bvSize2 - 1, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 2, bvSize2 - 2, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 3, bvSize2 - 3, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 4, bvSize2 - 4, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(3, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 5, bvSize2 - 5, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(4, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 6, bvSize2 - 6, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(5, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 7, bvSize2 - 7, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(6, bvSize1),
+              this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 8, bvSize2 - 8, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(7, bvSize1),
+              this->astCtxt->bv(8, bvSize1))))))))));
+            break;
+          case WORD_SIZE:
+            node = this->astCtxt->ite(
+                this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)),
+                this->astCtxt->bv(bvSize2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 1, bvSize2 - 1, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 2, bvSize2 - 2, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 3, bvSize2 - 3, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 4, bvSize2 - 4, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(3, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 5, bvSize2 - 5, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(4, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 6, bvSize2 - 6, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(5, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 7, bvSize2 - 7, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(6, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 8, bvSize2 - 8, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(7, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 9, bvSize2 - 9, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(8, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 10, bvSize2 - 10, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(9, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 11, bvSize2 - 11, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(10, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 12, bvSize2 - 12, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(11, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 13, bvSize2 - 13, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(12, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 14, bvSize2 - 14, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(13, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 15, bvSize2 - 15, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(14, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 16, bvSize2 - 16, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(15, bvSize1),
+                this->astCtxt->bv(16, bvSize1))))))))))))))))));
+            break;
+          case DWORD_SIZE:
+            node = this->astCtxt->ite(
+                this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)),
+                this->astCtxt->bv(bvSize2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 1, bvSize2 - 1, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 2, bvSize2 - 2, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 3, bvSize2 - 3, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 4, bvSize2 - 4, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(3, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 5, bvSize2 - 5, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(4, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 6, bvSize2 - 6, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(5, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 7, bvSize2 - 7, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(6, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 8, bvSize2 - 8, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(7, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 9, bvSize2 - 9, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(8, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 10, bvSize2 - 10, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(9, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 11, bvSize2 - 11, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(10, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 12, bvSize2 - 12, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(11, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 13, bvSize2 - 13, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(12, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 14, bvSize2 - 14, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(13, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 15, bvSize2 - 15, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(14, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 16, bvSize2 - 16, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(15, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 17, bvSize2 - 17, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(16, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 18, bvSize2 - 18, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(17, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 19, bvSize2 - 19, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(18, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 20, bvSize2 - 20, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(19, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 21, bvSize2 - 21, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(20, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 22, bvSize2 - 22, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(21, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 23, bvSize2 - 23, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(22, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 24, bvSize2 - 24, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(23, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 25, bvSize2 - 25, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(24, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 26, bvSize2 - 26, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(25, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 27, bvSize2 - 27, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(26, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 28, bvSize2 - 28, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(27, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 29, bvSize2 - 29, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(28, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 30, bvSize2 - 30, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(29, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 31, bvSize2 - 31, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(30, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 32, bvSize2 - 32, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(31, bvSize1),
+                this->astCtxt->bv(32, bvSize1))))))))))))))))))))))))))))))))));
+            break;
+          case QWORD_SIZE:
+            node = this->astCtxt->ite(
+                this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)),
+                this->astCtxt->bv(bvSize2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 1, bvSize2 - 1, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 2, bvSize2 - 2, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 3, bvSize2 - 3, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 4, bvSize2 - 4, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(3, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 5, bvSize2 - 5, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(4, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 6, bvSize2 - 6, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(5, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 7, bvSize2 - 7, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(6, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 8, bvSize2 - 8, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(7, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 9, bvSize2 - 9, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(8, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 10, bvSize2 - 10, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(9, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 11, bvSize2 - 11, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(10, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 12, bvSize2 - 12, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(11, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 13, bvSize2 - 13, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(12, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 14, bvSize2 - 14, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(13, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 15, bvSize2 - 15, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(14, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 16, bvSize2 - 16, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(15, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 17, bvSize2 - 17, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(16, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 18, bvSize2 - 18, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(17, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 19, bvSize2 - 19, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(18, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 20, bvSize2 - 20, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(19, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 21, bvSize2 - 21, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(20, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 22, bvSize2 - 22, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(21, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 23, bvSize2 - 23, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(22, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 24, bvSize2 - 24, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(23, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 25, bvSize2 - 25, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(24, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 26, bvSize2 - 26, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(25, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 27, bvSize2 - 27, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(26, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 28, bvSize2 - 28, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(27, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 29, bvSize2 - 29, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(28, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 30, bvSize2 - 30, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(29, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 31, bvSize2 - 31, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(30, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 32, bvSize2 - 32, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(31, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 33, bvSize2 - 33, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(32, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 34, bvSize2 - 34, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(33, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 35, bvSize2 - 35, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(34, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 36, bvSize2 - 36, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(35, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 37, bvSize2 - 37, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(36, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 38, bvSize2 - 38, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(37, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 39, bvSize2 - 39, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(38, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 40, bvSize2 - 40, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(39, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 41, bvSize2 - 41, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(40, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 42, bvSize2 - 42, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(41, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 43, bvSize2 - 43, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(42, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 44, bvSize2 - 44, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(43, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 45, bvSize2 - 45, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(44, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 46, bvSize2 - 46, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(45, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 47, bvSize2 - 47, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(46, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 48, bvSize2 - 48, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(47, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 49, bvSize2 - 49, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(48, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 50, bvSize2 - 50, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(49, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 51, bvSize2 - 51, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(50, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 52, bvSize2 - 52, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(51, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 53, bvSize2 - 53, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(52, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 54, bvSize2 - 54, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(53, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 55, bvSize2 - 55, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(54, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 56, bvSize2 - 56, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(55, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 57, bvSize2 - 57, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(56, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 58, bvSize2 - 58, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(57, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 59, bvSize2 - 59, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(58, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 60, bvSize2 - 60, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(59, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 61, bvSize2 - 61, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(60, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 62, bvSize2 - 62, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(61, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 63, bvSize2 - 63, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(62, bvSize1),
+                this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 64, bvSize2 - 64, op2), this->astCtxt->bvtrue()), this->astCtxt->bv(63, bvSize1),
+                this->astCtxt->bv(64, bvSize1))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))));
+            break;
+          default:
+            throw triton::exceptions::Semantics("x86Semantics::lzcnt_s(): Invalid operand size.");
+        }
+
+        /* Create symbolic expression */
+        auto srcExp = this->symbolicEngine->createSymbolicExpression(inst, op2, src, "LZCNT source");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "LZCNT operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update symbolic flags */
+        this->zf_s(inst, expr, src);
+        this->cfLzcnt_s(inst, srcExp, src);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
       }
 
 
@@ -13347,6 +13589,7 @@ namespace triton {
         }
 
         /* Create symbolic expression */
+        auto srcExp = this->symbolicEngine->createSymbolicExpression(inst, op2, src, "TZCNT source");
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "TZCNT operation");
 
         /* Spread taint */
@@ -13354,6 +13597,13 @@ namespace triton {
 
         /* Update symbolic flags */
         this->zf_s(inst, expr, src);
+        this->cfTzcnt_s(inst, srcExp, src);
+
+        /* Tag undefined flags */
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_OF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
+        this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_AF));
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
