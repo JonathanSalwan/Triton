@@ -193,8 +193,6 @@ namespace triton {
           triton::uint8 zmm30[DQQWORD_SIZE];
           //! Concrete value of zmm31
           triton::uint8 zmm31[DQQWORD_SIZE];
-          //! Concrete value of mxcsr
-          triton::uint8 mxcsr[QWORD_SIZE];
           //! Concrete value of cr0
           triton::uint8 cr0[QWORD_SIZE];
           //! Concrete value of cr1
@@ -251,6 +249,26 @@ namespace triton {
           triton::uint8 dr6[QWORD_SIZE];
           //! Condete value of dr7
           triton::uint8 dr7[QWORD_SIZE];
+          //! Concrete value of the x87 FPU Control Word
+          triton::uint8 fcw[WORD_SIZE];
+          //! Concrete value of the x87 FPU Status Word
+          triton::uint8 fsw[WORD_SIZE];
+          //! Concrete value of the x87 FPU Tag Word
+          triton::uint8 ftw[BYTE_SIZE];
+          //! Concrete value of the x87 FPU Opcode
+          triton::uint8 fop[WORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Pointer Offset
+          triton::uint8 fip[QWORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Pointer Selector
+          triton::uint8 fcs[WORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Offset
+          triton::uint8 fdp[QWORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Selector
+          triton::uint8 fds[WORD_SIZE];
+          //! Concrete value of the SSE Register State
+          triton::uint8 mxcsr[DWORD_SIZE];
+          //! Concrete value of the SSE Register State Mask
+          triton::uint8 mxcsr_mask[DWORD_SIZE];
 
         public:
           //! Constructor.
@@ -273,6 +291,9 @@ namespace triton {
 
           //! Returns true if regId is a SSE register.
           TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is a FPU register.
+          TRITON_EXPORT bool isFPU(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;

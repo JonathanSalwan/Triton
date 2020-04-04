@@ -61,93 +61,102 @@ namespace triton {
 
         this->disassInit();
 
-        std::memcpy(this->rax,     other.rax,    sizeof(this->rax));
-        std::memcpy(this->rbx,     other.rbx,    sizeof(this->rbx));
-        std::memcpy(this->rcx,     other.rcx,    sizeof(this->rcx));
-        std::memcpy(this->rdx,     other.rdx,    sizeof(this->rdx));
-        std::memcpy(this->rdi,     other.rdi,    sizeof(this->rdi));
-        std::memcpy(this->rsi,     other.rsi,    sizeof(this->rsi));
-        std::memcpy(this->rsp,     other.rsp,    sizeof(this->rsp));
-        std::memcpy(this->rbp,     other.rbp,    sizeof(this->rbp));
-        std::memcpy(this->rip,     other.rip,    sizeof(this->rip));
-        std::memcpy(this->eflags,  other.eflags, sizeof(this->eflags));
-        std::memcpy(this->r8,      other.r8,     sizeof(this->r8));
-        std::memcpy(this->r9,      other.r9,     sizeof(this->r9));
-        std::memcpy(this->r10,     other.r10,    sizeof(this->r10));
-        std::memcpy(this->r11,     other.r11,    sizeof(this->r11));
-        std::memcpy(this->r12,     other.r12,    sizeof(this->r12));
-        std::memcpy(this->r13,     other.r13,    sizeof(this->r13));
-        std::memcpy(this->r14,     other.r14,    sizeof(this->r14));
-        std::memcpy(this->r15,     other.r15,    sizeof(this->r15));
-        std::memcpy(this->mm0,     other.mm0,    sizeof(this->mm0));
-        std::memcpy(this->mm1,     other.mm1,    sizeof(this->mm1));
-        std::memcpy(this->mm2,     other.mm2,    sizeof(this->mm2));
-        std::memcpy(this->mm3,     other.mm3,    sizeof(this->mm3));
-        std::memcpy(this->mm4,     other.mm4,    sizeof(this->mm4));
-        std::memcpy(this->mm5,     other.mm5,    sizeof(this->mm5));
-        std::memcpy(this->mm6,     other.mm6,    sizeof(this->mm6));
-        std::memcpy(this->mm7,     other.mm7,    sizeof(this->mm7));
-        std::memcpy(this->zmm0,    other.zmm0,   sizeof(this->zmm0));
-        std::memcpy(this->zmm1,    other.zmm1,   sizeof(this->zmm1));
-        std::memcpy(this->zmm2,    other.zmm2,   sizeof(this->zmm2));
-        std::memcpy(this->zmm3,    other.zmm3,   sizeof(this->zmm3));
-        std::memcpy(this->zmm4,    other.zmm4,   sizeof(this->zmm4));
-        std::memcpy(this->zmm5,    other.zmm5,   sizeof(this->zmm5));
-        std::memcpy(this->zmm6,    other.zmm6,   sizeof(this->zmm6));
-        std::memcpy(this->zmm7,    other.zmm7,   sizeof(this->zmm7));
-        std::memcpy(this->zmm8,    other.zmm8,   sizeof(this->zmm8));
-        std::memcpy(this->zmm9,    other.zmm9,   sizeof(this->zmm9));
-        std::memcpy(this->zmm10,   other.zmm10,  sizeof(this->zmm10));
-        std::memcpy(this->zmm11,   other.zmm11,  sizeof(this->zmm11));
-        std::memcpy(this->zmm12,   other.zmm12,  sizeof(this->zmm12));
-        std::memcpy(this->zmm13,   other.zmm13,  sizeof(this->zmm13));
-        std::memcpy(this->zmm14,   other.zmm14,  sizeof(this->zmm14));
-        std::memcpy(this->zmm15,   other.zmm15,  sizeof(this->zmm15));
-        std::memcpy(this->zmm16,   other.zmm16,  sizeof(this->zmm16));
-        std::memcpy(this->zmm17,   other.zmm17,  sizeof(this->zmm17));
-        std::memcpy(this->zmm18,   other.zmm18,  sizeof(this->zmm18));
-        std::memcpy(this->zmm19,   other.zmm19,  sizeof(this->zmm19));
-        std::memcpy(this->zmm20,   other.zmm20,  sizeof(this->zmm20));
-        std::memcpy(this->zmm21,   other.zmm21,  sizeof(this->zmm21));
-        std::memcpy(this->zmm22,   other.zmm22,  sizeof(this->zmm22));
-        std::memcpy(this->zmm23,   other.zmm23,  sizeof(this->zmm23));
-        std::memcpy(this->zmm24,   other.zmm24,  sizeof(this->zmm24));
-        std::memcpy(this->zmm25,   other.zmm25,  sizeof(this->zmm25));
-        std::memcpy(this->zmm26,   other.zmm26,  sizeof(this->zmm26));
-        std::memcpy(this->zmm27,   other.zmm27,  sizeof(this->zmm27));
-        std::memcpy(this->zmm28,   other.zmm28,  sizeof(this->zmm28));
-        std::memcpy(this->zmm29,   other.zmm29,  sizeof(this->zmm29));
-        std::memcpy(this->zmm30,   other.zmm30,  sizeof(this->zmm30));
-        std::memcpy(this->zmm31,   other.zmm31,  sizeof(this->zmm31));
-        std::memcpy(this->mxcsr,   other.mxcsr,  sizeof(this->mxcsr));
-        std::memcpy(this->cr0,     other.cr0,    sizeof(this->cr0));
-        std::memcpy(this->cr1,     other.cr1,    sizeof(this->cr1));
-        std::memcpy(this->cr2,     other.cr2,    sizeof(this->cr2));
-        std::memcpy(this->cr3,     other.cr3,    sizeof(this->cr3));
-        std::memcpy(this->cr4,     other.cr4,    sizeof(this->cr4));
-        std::memcpy(this->cr5,     other.cr5,    sizeof(this->cr5));
-        std::memcpy(this->cr6,     other.cr6,    sizeof(this->cr6));
-        std::memcpy(this->cr7,     other.cr7,    sizeof(this->cr7));
-        std::memcpy(this->cr8,     other.cr8,    sizeof(this->cr8));
-        std::memcpy(this->cr9,     other.cr9,    sizeof(this->cr9));
-        std::memcpy(this->cr10,    other.cr10,   sizeof(this->cr10));
-        std::memcpy(this->cr11,    other.cr11,   sizeof(this->cr11));
-        std::memcpy(this->cr12,    other.cr12,   sizeof(this->cr12));
-        std::memcpy(this->cr13,    other.cr13,   sizeof(this->cr13));
-        std::memcpy(this->cr14,    other.cr14,   sizeof(this->cr14));
-        std::memcpy(this->cr15,    other.cr15,   sizeof(this->cr15));
-        std::memcpy(this->cs,      other.cs,     sizeof(this->cs));
-        std::memcpy(this->ds,      other.ds,     sizeof(this->ds));
-        std::memcpy(this->es,      other.es,     sizeof(this->es));
-        std::memcpy(this->fs,      other.fs,     sizeof(this->fs));
-        std::memcpy(this->gs,      other.gs,     sizeof(this->gs));
-        std::memcpy(this->ss,      other.ss,     sizeof(this->ss));
-        std::memcpy(this->dr0,     other.dr0,    sizeof(this->dr0));
-        std::memcpy(this->dr1,     other.dr1,    sizeof(this->dr1));
-        std::memcpy(this->dr2,     other.dr2,    sizeof(this->dr2));
-        std::memcpy(this->dr3,     other.dr3,    sizeof(this->dr3));
-        std::memcpy(this->dr6,     other.dr6,    sizeof(this->dr6));
-        std::memcpy(this->dr7,     other.dr7,    sizeof(this->dr7));
+        std::memcpy(this->rax,        other.rax,        sizeof(this->rax));
+        std::memcpy(this->rbx,        other.rbx,        sizeof(this->rbx));
+        std::memcpy(this->rcx,        other.rcx,        sizeof(this->rcx));
+        std::memcpy(this->rdx,        other.rdx,        sizeof(this->rdx));
+        std::memcpy(this->rdi,        other.rdi,        sizeof(this->rdi));
+        std::memcpy(this->rsi,        other.rsi,        sizeof(this->rsi));
+        std::memcpy(this->rsp,        other.rsp,        sizeof(this->rsp));
+        std::memcpy(this->rbp,        other.rbp,        sizeof(this->rbp));
+        std::memcpy(this->rip,        other.rip,        sizeof(this->rip));
+        std::memcpy(this->eflags,     other.eflags,     sizeof(this->eflags));
+        std::memcpy(this->r8,         other.r8,         sizeof(this->r8));
+        std::memcpy(this->r9,         other.r9,         sizeof(this->r9));
+        std::memcpy(this->r10,        other.r10,        sizeof(this->r10));
+        std::memcpy(this->r11,        other.r11,        sizeof(this->r11));
+        std::memcpy(this->r12,        other.r12,        sizeof(this->r12));
+        std::memcpy(this->r13,        other.r13,        sizeof(this->r13));
+        std::memcpy(this->r14,        other.r14,        sizeof(this->r14));
+        std::memcpy(this->r15,        other.r15,        sizeof(this->r15));
+        std::memcpy(this->mm0,        other.mm0,        sizeof(this->mm0));
+        std::memcpy(this->mm1,        other.mm1,        sizeof(this->mm1));
+        std::memcpy(this->mm2,        other.mm2,        sizeof(this->mm2));
+        std::memcpy(this->mm3,        other.mm3,        sizeof(this->mm3));
+        std::memcpy(this->mm4,        other.mm4,        sizeof(this->mm4));
+        std::memcpy(this->mm5,        other.mm5,        sizeof(this->mm5));
+        std::memcpy(this->mm6,        other.mm6,        sizeof(this->mm6));
+        std::memcpy(this->mm7,        other.mm7,        sizeof(this->mm7));
+        std::memcpy(this->zmm0,       other.zmm0,       sizeof(this->zmm0));
+        std::memcpy(this->zmm1,       other.zmm1,       sizeof(this->zmm1));
+        std::memcpy(this->zmm2,       other.zmm2,       sizeof(this->zmm2));
+        std::memcpy(this->zmm3,       other.zmm3,       sizeof(this->zmm3));
+        std::memcpy(this->zmm4,       other.zmm4,       sizeof(this->zmm4));
+        std::memcpy(this->zmm5,       other.zmm5,       sizeof(this->zmm5));
+        std::memcpy(this->zmm6,       other.zmm6,       sizeof(this->zmm6));
+        std::memcpy(this->zmm7,       other.zmm7,       sizeof(this->zmm7));
+        std::memcpy(this->zmm8,       other.zmm8,       sizeof(this->zmm8));
+        std::memcpy(this->zmm9,       other.zmm9,       sizeof(this->zmm9));
+        std::memcpy(this->zmm10,      other.zmm10,      sizeof(this->zmm10));
+        std::memcpy(this->zmm11,      other.zmm11,      sizeof(this->zmm11));
+        std::memcpy(this->zmm12,      other.zmm12,      sizeof(this->zmm12));
+        std::memcpy(this->zmm13,      other.zmm13,      sizeof(this->zmm13));
+        std::memcpy(this->zmm14,      other.zmm14,      sizeof(this->zmm14));
+        std::memcpy(this->zmm15,      other.zmm15,      sizeof(this->zmm15));
+        std::memcpy(this->zmm16,      other.zmm16,      sizeof(this->zmm16));
+        std::memcpy(this->zmm17,      other.zmm17,      sizeof(this->zmm17));
+        std::memcpy(this->zmm18,      other.zmm18,      sizeof(this->zmm18));
+        std::memcpy(this->zmm19,      other.zmm19,      sizeof(this->zmm19));
+        std::memcpy(this->zmm20,      other.zmm20,      sizeof(this->zmm20));
+        std::memcpy(this->zmm21,      other.zmm21,      sizeof(this->zmm21));
+        std::memcpy(this->zmm22,      other.zmm22,      sizeof(this->zmm22));
+        std::memcpy(this->zmm23,      other.zmm23,      sizeof(this->zmm23));
+        std::memcpy(this->zmm24,      other.zmm24,      sizeof(this->zmm24));
+        std::memcpy(this->zmm25,      other.zmm25,      sizeof(this->zmm25));
+        std::memcpy(this->zmm26,      other.zmm26,      sizeof(this->zmm26));
+        std::memcpy(this->zmm27,      other.zmm27,      sizeof(this->zmm27));
+        std::memcpy(this->zmm28,      other.zmm28,      sizeof(this->zmm28));
+        std::memcpy(this->zmm29,      other.zmm29,      sizeof(this->zmm29));
+        std::memcpy(this->zmm30,      other.zmm30,      sizeof(this->zmm30));
+        std::memcpy(this->zmm31,      other.zmm31,      sizeof(this->zmm31));
+        std::memcpy(this->mxcsr,      other.mxcsr,      sizeof(this->mxcsr));
+        std::memcpy(this->cr0,        other.cr0,        sizeof(this->cr0));
+        std::memcpy(this->cr1,        other.cr1,        sizeof(this->cr1));
+        std::memcpy(this->cr2,        other.cr2,        sizeof(this->cr2));
+        std::memcpy(this->cr3,        other.cr3,        sizeof(this->cr3));
+        std::memcpy(this->cr4,        other.cr4,        sizeof(this->cr4));
+        std::memcpy(this->cr5,        other.cr5,        sizeof(this->cr5));
+        std::memcpy(this->cr6,        other.cr6,        sizeof(this->cr6));
+        std::memcpy(this->cr7,        other.cr7,        sizeof(this->cr7));
+        std::memcpy(this->cr8,        other.cr8,        sizeof(this->cr8));
+        std::memcpy(this->cr9,        other.cr9,        sizeof(this->cr9));
+        std::memcpy(this->cr10,       other.cr10,       sizeof(this->cr10));
+        std::memcpy(this->cr11,       other.cr11,       sizeof(this->cr11));
+        std::memcpy(this->cr12,       other.cr12,       sizeof(this->cr12));
+        std::memcpy(this->cr13,       other.cr13,       sizeof(this->cr13));
+        std::memcpy(this->cr14,       other.cr14,       sizeof(this->cr14));
+        std::memcpy(this->cr15,       other.cr15,       sizeof(this->cr15));
+        std::memcpy(this->cs,         other.cs,         sizeof(this->cs));
+        std::memcpy(this->ds,         other.ds,         sizeof(this->ds));
+        std::memcpy(this->es,         other.es,         sizeof(this->es));
+        std::memcpy(this->fs,         other.fs,         sizeof(this->fs));
+        std::memcpy(this->gs,         other.gs,         sizeof(this->gs));
+        std::memcpy(this->ss,         other.ss,         sizeof(this->ss));
+        std::memcpy(this->dr0,        other.dr0,        sizeof(this->dr0));
+        std::memcpy(this->dr1,        other.dr1,        sizeof(this->dr1));
+        std::memcpy(this->dr2,        other.dr2,        sizeof(this->dr2));
+        std::memcpy(this->dr3,        other.dr3,        sizeof(this->dr3));
+        std::memcpy(this->dr6,        other.dr6,        sizeof(this->dr6));
+        std::memcpy(this->dr7,        other.dr7,        sizeof(this->dr7));
+        std::memcpy(this->mxcsr_mask, other.mxcsr_mask, sizeof(this->mxcsr_mask));
+        std::memcpy(this->fcw,        other.fcw,        sizeof(this->fcw));
+        std::memcpy(this->fsw,        other.fsw,        sizeof(this->fsw));
+        std::memcpy(this->ftw,        other.ftw,        sizeof(this->ftw));
+        std::memcpy(this->fop,        other.fop,        sizeof(this->fop));
+        std::memcpy(this->fip,        other.fip,        sizeof(this->fip));
+        std::memcpy(this->fcs,        other.fcs,        sizeof(this->fcs));
+        std::memcpy(this->fdp,        other.fdp,        sizeof(this->fdp));
+        std::memcpy(this->fds,        other.fds,        sizeof(this->fds));
       }
 
 
@@ -156,93 +165,102 @@ namespace triton {
         this->memory.clear();
 
         /* Clear registers */
-        std::memset(this->rax,     0x00, sizeof(this->rax));
-        std::memset(this->rbx,     0x00, sizeof(this->rbx));
-        std::memset(this->rcx,     0x00, sizeof(this->rcx));
-        std::memset(this->rdx,     0x00, sizeof(this->rdx));
-        std::memset(this->rdi,     0x00, sizeof(this->rdi));
-        std::memset(this->rsi,     0x00, sizeof(this->rsi));
-        std::memset(this->rsp,     0x00, sizeof(this->rsp));
-        std::memset(this->rbp,     0x00, sizeof(this->rbp));
-        std::memset(this->rip,     0x00, sizeof(this->rip));
-        std::memset(this->eflags,  0x00, sizeof(this->eflags));
-        std::memset(this->r8,      0x00, sizeof(this->r8));
-        std::memset(this->r9,      0x00, sizeof(this->r9));
-        std::memset(this->r10,     0x00, sizeof(this->r10));
-        std::memset(this->r11,     0x00, sizeof(this->r11));
-        std::memset(this->r12,     0x00, sizeof(this->r12));
-        std::memset(this->r13,     0x00, sizeof(this->r13));
-        std::memset(this->r14,     0x00, sizeof(this->r14));
-        std::memset(this->r15,     0x00, sizeof(this->r15));
-        std::memset(this->mm0,     0x00, sizeof(this->mm0));
-        std::memset(this->mm1,     0x00, sizeof(this->mm1));
-        std::memset(this->mm2,     0x00, sizeof(this->mm2));
-        std::memset(this->mm3,     0x00, sizeof(this->mm3));
-        std::memset(this->mm4,     0x00, sizeof(this->mm4));
-        std::memset(this->mm5,     0x00, sizeof(this->mm5));
-        std::memset(this->mm6,     0x00, sizeof(this->mm6));
-        std::memset(this->mm7,     0x00, sizeof(this->mm7));
-        std::memset(this->zmm0,    0x00, sizeof(this->zmm0));
-        std::memset(this->zmm1,    0x00, sizeof(this->zmm1));
-        std::memset(this->zmm2,    0x00, sizeof(this->zmm2));
-        std::memset(this->zmm3,    0x00, sizeof(this->zmm3));
-        std::memset(this->zmm4,    0x00, sizeof(this->zmm4));
-        std::memset(this->zmm5,    0x00, sizeof(this->zmm5));
-        std::memset(this->zmm6,    0x00, sizeof(this->zmm6));
-        std::memset(this->zmm7,    0x00, sizeof(this->zmm7));
-        std::memset(this->zmm8,    0x00, sizeof(this->zmm8));
-        std::memset(this->zmm9,    0x00, sizeof(this->zmm9));
-        std::memset(this->zmm10,   0x00, sizeof(this->zmm10));
-        std::memset(this->zmm11,   0x00, sizeof(this->zmm11));
-        std::memset(this->zmm12,   0x00, sizeof(this->zmm12));
-        std::memset(this->zmm13,   0x00, sizeof(this->zmm13));
-        std::memset(this->zmm14,   0x00, sizeof(this->zmm14));
-        std::memset(this->zmm15,   0x00, sizeof(this->zmm15));
-        std::memset(this->zmm16,   0x00, sizeof(this->zmm16));
-        std::memset(this->zmm17,   0x00, sizeof(this->zmm17));
-        std::memset(this->zmm18,   0x00, sizeof(this->zmm18));
-        std::memset(this->zmm19,   0x00, sizeof(this->zmm19));
-        std::memset(this->zmm20,   0x00, sizeof(this->zmm20));
-        std::memset(this->zmm21,   0x00, sizeof(this->zmm21));
-        std::memset(this->zmm22,   0x00, sizeof(this->zmm22));
-        std::memset(this->zmm23,   0x00, sizeof(this->zmm23));
-        std::memset(this->zmm24,   0x00, sizeof(this->zmm24));
-        std::memset(this->zmm25,   0x00, sizeof(this->zmm25));
-        std::memset(this->zmm26,   0x00, sizeof(this->zmm26));
-        std::memset(this->zmm27,   0x00, sizeof(this->zmm27));
-        std::memset(this->zmm28,   0x00, sizeof(this->zmm28));
-        std::memset(this->zmm29,   0x00, sizeof(this->zmm29));
-        std::memset(this->zmm30,   0x00, sizeof(this->zmm30));
-        std::memset(this->zmm31,   0x00, sizeof(this->zmm31));
-        std::memset(this->mxcsr,   0x00, sizeof(this->mxcsr));
-        std::memset(this->cr0,     0x00, sizeof(this->cr0));
-        std::memset(this->cr1,     0x00, sizeof(this->cr1));
-        std::memset(this->cr2,     0x00, sizeof(this->cr2));
-        std::memset(this->cr3,     0x00, sizeof(this->cr3));
-        std::memset(this->cr4,     0x00, sizeof(this->cr4));
-        std::memset(this->cr5,     0x00, sizeof(this->cr5));
-        std::memset(this->cr6,     0x00, sizeof(this->cr6));
-        std::memset(this->cr7,     0x00, sizeof(this->cr7));
-        std::memset(this->cr8,     0x00, sizeof(this->cr8));
-        std::memset(this->cr9,     0x00, sizeof(this->cr9));
-        std::memset(this->cr10,    0x00, sizeof(this->cr10));
-        std::memset(this->cr11,    0x00, sizeof(this->cr11));
-        std::memset(this->cr12,    0x00, sizeof(this->cr12));
-        std::memset(this->cr13,    0x00, sizeof(this->cr13));
-        std::memset(this->cr14,    0x00, sizeof(this->cr14));
-        std::memset(this->cr15,    0x00, sizeof(this->cr15));
-        std::memset(this->cs,      0x00, sizeof(this->cs));
-        std::memset(this->ds,      0x00, sizeof(this->ds));
-        std::memset(this->es,      0x00, sizeof(this->es));
-        std::memset(this->fs,      0x00, sizeof(this->fs));
-        std::memset(this->gs,      0x00, sizeof(this->gs));
-        std::memset(this->ss,      0x00, sizeof(this->ss));
-        std::memset(this->dr0,     0x00, sizeof(this->dr0));
-        std::memset(this->dr1,     0x00, sizeof(this->dr1));
-        std::memset(this->dr2,     0x00, sizeof(this->dr2));
-        std::memset(this->dr3,     0x00, sizeof(this->dr3));
-        std::memset(this->dr6,     0x00, sizeof(this->dr6));
-        std::memset(this->dr7,     0x00, sizeof(this->dr7));
+        std::memset(this->rax,        0x00, sizeof(this->rax));
+        std::memset(this->rbx,        0x00, sizeof(this->rbx));
+        std::memset(this->rcx,        0x00, sizeof(this->rcx));
+        std::memset(this->rdx,        0x00, sizeof(this->rdx));
+        std::memset(this->rdi,        0x00, sizeof(this->rdi));
+        std::memset(this->rsi,        0x00, sizeof(this->rsi));
+        std::memset(this->rsp,        0x00, sizeof(this->rsp));
+        std::memset(this->rbp,        0x00, sizeof(this->rbp));
+        std::memset(this->rip,        0x00, sizeof(this->rip));
+        std::memset(this->eflags,     0x00, sizeof(this->eflags));
+        std::memset(this->r8,         0x00, sizeof(this->r8));
+        std::memset(this->r9,         0x00, sizeof(this->r9));
+        std::memset(this->r10,        0x00, sizeof(this->r10));
+        std::memset(this->r11,        0x00, sizeof(this->r11));
+        std::memset(this->r12,        0x00, sizeof(this->r12));
+        std::memset(this->r13,        0x00, sizeof(this->r13));
+        std::memset(this->r14,        0x00, sizeof(this->r14));
+        std::memset(this->r15,        0x00, sizeof(this->r15));
+        std::memset(this->mm0,        0x00, sizeof(this->mm0));
+        std::memset(this->mm1,        0x00, sizeof(this->mm1));
+        std::memset(this->mm2,        0x00, sizeof(this->mm2));
+        std::memset(this->mm3,        0x00, sizeof(this->mm3));
+        std::memset(this->mm4,        0x00, sizeof(this->mm4));
+        std::memset(this->mm5,        0x00, sizeof(this->mm5));
+        std::memset(this->mm6,        0x00, sizeof(this->mm6));
+        std::memset(this->mm7,        0x00, sizeof(this->mm7));
+        std::memset(this->zmm0,       0x00, sizeof(this->zmm0));
+        std::memset(this->zmm1,       0x00, sizeof(this->zmm1));
+        std::memset(this->zmm2,       0x00, sizeof(this->zmm2));
+        std::memset(this->zmm3,       0x00, sizeof(this->zmm3));
+        std::memset(this->zmm4,       0x00, sizeof(this->zmm4));
+        std::memset(this->zmm5,       0x00, sizeof(this->zmm5));
+        std::memset(this->zmm6,       0x00, sizeof(this->zmm6));
+        std::memset(this->zmm7,       0x00, sizeof(this->zmm7));
+        std::memset(this->zmm8,       0x00, sizeof(this->zmm8));
+        std::memset(this->zmm9,       0x00, sizeof(this->zmm9));
+        std::memset(this->zmm10,      0x00, sizeof(this->zmm10));
+        std::memset(this->zmm11,      0x00, sizeof(this->zmm11));
+        std::memset(this->zmm12,      0x00, sizeof(this->zmm12));
+        std::memset(this->zmm13,      0x00, sizeof(this->zmm13));
+        std::memset(this->zmm14,      0x00, sizeof(this->zmm14));
+        std::memset(this->zmm15,      0x00, sizeof(this->zmm15));
+        std::memset(this->zmm16,      0x00, sizeof(this->zmm16));
+        std::memset(this->zmm17,      0x00, sizeof(this->zmm17));
+        std::memset(this->zmm18,      0x00, sizeof(this->zmm18));
+        std::memset(this->zmm19,      0x00, sizeof(this->zmm19));
+        std::memset(this->zmm20,      0x00, sizeof(this->zmm20));
+        std::memset(this->zmm21,      0x00, sizeof(this->zmm21));
+        std::memset(this->zmm22,      0x00, sizeof(this->zmm22));
+        std::memset(this->zmm23,      0x00, sizeof(this->zmm23));
+        std::memset(this->zmm24,      0x00, sizeof(this->zmm24));
+        std::memset(this->zmm25,      0x00, sizeof(this->zmm25));
+        std::memset(this->zmm26,      0x00, sizeof(this->zmm26));
+        std::memset(this->zmm27,      0x00, sizeof(this->zmm27));
+        std::memset(this->zmm28,      0x00, sizeof(this->zmm28));
+        std::memset(this->zmm29,      0x00, sizeof(this->zmm29));
+        std::memset(this->zmm30,      0x00, sizeof(this->zmm30));
+        std::memset(this->zmm31,      0x00, sizeof(this->zmm31));
+        std::memset(this->mxcsr,      0x00, sizeof(this->mxcsr));
+        std::memset(this->cr0,        0x00, sizeof(this->cr0));
+        std::memset(this->cr1,        0x00, sizeof(this->cr1));
+        std::memset(this->cr2,        0x00, sizeof(this->cr2));
+        std::memset(this->cr3,        0x00, sizeof(this->cr3));
+        std::memset(this->cr4,        0x00, sizeof(this->cr4));
+        std::memset(this->cr5,        0x00, sizeof(this->cr5));
+        std::memset(this->cr6,        0x00, sizeof(this->cr6));
+        std::memset(this->cr7,        0x00, sizeof(this->cr7));
+        std::memset(this->cr8,        0x00, sizeof(this->cr8));
+        std::memset(this->cr9,        0x00, sizeof(this->cr9));
+        std::memset(this->cr10,       0x00, sizeof(this->cr10));
+        std::memset(this->cr11,       0x00, sizeof(this->cr11));
+        std::memset(this->cr12,       0x00, sizeof(this->cr12));
+        std::memset(this->cr13,       0x00, sizeof(this->cr13));
+        std::memset(this->cr14,       0x00, sizeof(this->cr14));
+        std::memset(this->cr15,       0x00, sizeof(this->cr15));
+        std::memset(this->cs,         0x00, sizeof(this->cs));
+        std::memset(this->ds,         0x00, sizeof(this->ds));
+        std::memset(this->es,         0x00, sizeof(this->es));
+        std::memset(this->fs,         0x00, sizeof(this->fs));
+        std::memset(this->gs,         0x00, sizeof(this->gs));
+        std::memset(this->ss,         0x00, sizeof(this->ss));
+        std::memset(this->dr0,        0x00, sizeof(this->dr0));
+        std::memset(this->dr1,        0x00, sizeof(this->dr1));
+        std::memset(this->dr2,        0x00, sizeof(this->dr2));
+        std::memset(this->dr3,        0x00, sizeof(this->dr3));
+        std::memset(this->dr6,        0x00, sizeof(this->dr6));
+        std::memset(this->dr7,        0x00, sizeof(this->dr7));
+        std::memcpy(this->mxcsr_mask, 0x00, sizeof(this->mxcsr_mask));
+        std::memcpy(this->fcw,        0x00, sizeof(this->fcw));
+        std::memcpy(this->fsw,        0x00, sizeof(this->fsw));
+        std::memcpy(this->ftw,        0x00, sizeof(this->ftw));
+        std::memcpy(this->fop,        0x00, sizeof(this->fop));
+        std::memcpy(this->fip,        0x00, sizeof(this->fip));
+        std::memcpy(this->fcs,        0x00, sizeof(this->fcs));
+        std::memcpy(this->fdp,        0x00, sizeof(this->fdp));
+        std::memcpy(this->fds,        0x00, sizeof(this->fds));
       }
 
 
@@ -258,7 +276,7 @@ namespace triton {
 
 
       bool x8664Cpu::isFlag(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_AC && regId <= triton::arch::ID_REG_X86_FZ) ? true : false);
+        return ((regId >= triton::arch::ID_REG_X86_AC && regId <= triton::arch::ID_REG_X86_FSW_B) ? true : false);
       }
 
 
@@ -267,6 +285,7 @@ namespace triton {
           this->isGPR(regId)      ||
           this->isMMX(regId)      ||
           this->isSSE(regId)      ||
+          this->isFPU(regId)      ||
           this->isAVX256(regId)   ||
           this->isAVX512(regId)   ||
           this->isControl(regId)  ||
@@ -293,6 +312,11 @@ namespace triton {
 
       bool x8664Cpu::isSSE(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM15) ? true : false);
+      }
+
+
+      bool x8664Cpu::isFPU(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_FTW && regId <= triton::arch::ID_REG_X86_FDP) ? true : false);
       }
 
 
@@ -362,6 +386,10 @@ namespace triton {
 
           /* Add SSE */
           else if (this->isSSE(regId))
+            ret.insert(&reg);
+
+          /* Add FPU */
+          else if (this->isFPU(regId))
             ret.insert(&reg);
 
           /* Add AVX-256 */
@@ -739,7 +767,7 @@ namespace triton {
           case triton::arch::ID_REG_X86_ZMM30: value = triton::utils::fromBufferToUint<triton::uint512>(this->zmm30); return value;
           case triton::arch::ID_REG_X86_ZMM31: value = triton::utils::fromBufferToUint<triton::uint512>(this->zmm31); return value;
 
-          case triton::arch::ID_REG_X86_MXCSR: return (*((triton::uint64*)(this->mxcsr)));
+          case triton::arch::ID_REG_X86_MXCSR: return (*((triton::uint32*)(this->mxcsr)));
 
           case triton::arch::ID_REG_X86_CR0:  return (*((triton::uint64*)(this->cr0)));
           case triton::arch::ID_REG_X86_CR1:  return (*((triton::uint64*)(this->cr1)));
@@ -765,22 +793,22 @@ namespace triton {
           case triton::arch::ID_REG_X86_DR6: return (*((triton::uint64*)(this->dr6)));
           case triton::arch::ID_REG_X86_DR7: return (*((triton::uint64*)(this->dr7)));
 
-          case triton::arch::ID_REG_X86_IE:  return (((*((triton::uint64*)(this->mxcsr))) >> 0) & 1);
-          case triton::arch::ID_REG_X86_DE:  return (((*((triton::uint64*)(this->mxcsr))) >> 1) & 1);
-          case triton::arch::ID_REG_X86_ZE:  return (((*((triton::uint64*)(this->mxcsr))) >> 2) & 1);
-          case triton::arch::ID_REG_X86_OE:  return (((*((triton::uint64*)(this->mxcsr))) >> 3) & 1);
-          case triton::arch::ID_REG_X86_UE:  return (((*((triton::uint64*)(this->mxcsr))) >> 4) & 1);
-          case triton::arch::ID_REG_X86_PE:  return (((*((triton::uint64*)(this->mxcsr))) >> 5) & 1);
-          case triton::arch::ID_REG_X86_DAZ: return (((*((triton::uint64*)(this->mxcsr))) >> 6) & 1);
-          case triton::arch::ID_REG_X86_IM:  return (((*((triton::uint64*)(this->mxcsr))) >> 7) & 1);
-          case triton::arch::ID_REG_X86_DM:  return (((*((triton::uint64*)(this->mxcsr))) >> 8) & 1);
-          case triton::arch::ID_REG_X86_ZM:  return (((*((triton::uint64*)(this->mxcsr))) >> 9) & 1);
-          case triton::arch::ID_REG_X86_OM:  return (((*((triton::uint64*)(this->mxcsr))) >> 10) & 1);
-          case triton::arch::ID_REG_X86_UM:  return (((*((triton::uint64*)(this->mxcsr))) >> 11) & 1);
-          case triton::arch::ID_REG_X86_PM:  return (((*((triton::uint64*)(this->mxcsr))) >> 12) & 1);
-          case triton::arch::ID_REG_X86_RL:  return (((*((triton::uint64*)(this->mxcsr))) >> 13) & 1);
-          case triton::arch::ID_REG_X86_RH:  return (((*((triton::uint64*)(this->mxcsr))) >> 14) & 1);
-          case triton::arch::ID_REG_X86_FZ:  return (((*((triton::uint64*)(this->mxcsr))) >> 15) & 1);
+          case triton::arch::ID_REG_X86_SSE_IE:  return (((*((triton::uint32*)(this->mxcsr))) >> 0) & 1);
+          case triton::arch::ID_REG_X86_SSE_DE:  return (((*((triton::uint32*)(this->mxcsr))) >> 1) & 1);
+          case triton::arch::ID_REG_X86_SSE_ZE:  return (((*((triton::uint32*)(this->mxcsr))) >> 2) & 1);
+          case triton::arch::ID_REG_X86_SSE_OE:  return (((*((triton::uint32*)(this->mxcsr))) >> 3) & 1);
+          case triton::arch::ID_REG_X86_SSE_UE:  return (((*((triton::uint32*)(this->mxcsr))) >> 4) & 1);
+          case triton::arch::ID_REG_X86_SSE_PE:  return (((*((triton::uint32*)(this->mxcsr))) >> 5) & 1);
+          case triton::arch::ID_REG_X86_SSE_DAZ: return (((*((triton::uint32*)(this->mxcsr))) >> 6) & 1);
+          case triton::arch::ID_REG_X86_SSE_IM:  return (((*((triton::uint32*)(this->mxcsr))) >> 7) & 1);
+          case triton::arch::ID_REG_X86_SSE_DM:  return (((*((triton::uint32*)(this->mxcsr))) >> 8) & 1);
+          case triton::arch::ID_REG_X86_SSE_ZM:  return (((*((triton::uint32*)(this->mxcsr))) >> 9) & 1);
+          case triton::arch::ID_REG_X86_SSE_OM:  return (((*((triton::uint32*)(this->mxcsr))) >> 10) & 1);
+          case triton::arch::ID_REG_X86_SSE_UM:  return (((*((triton::uint32*)(this->mxcsr))) >> 11) & 1);
+          case triton::arch::ID_REG_X86_SSE_PM:  return (((*((triton::uint32*)(this->mxcsr))) >> 12) & 1);
+          case triton::arch::ID_REG_X86_SSE_RL:  return (((*((triton::uint32*)(this->mxcsr))) >> 13) & 1);
+          case triton::arch::ID_REG_X86_SSE_RH:  return (((*((triton::uint32*)(this->mxcsr))) >> 14) & 1);
+          case triton::arch::ID_REG_X86_SSE_FZ:  return (((*((triton::uint32*)(this->mxcsr))) >> 15) & 1);
 
           case triton::arch::ID_REG_X86_CF:  return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
           case triton::arch::ID_REG_X86_PF:  return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
@@ -805,6 +833,41 @@ namespace triton {
           case triton::arch::ID_REG_X86_FS: return (*((triton::uint64*)(this->fs)));
           case triton::arch::ID_REG_X86_GS: return (*((triton::uint64*)(this->gs)));
           case triton::arch::ID_REG_X86_SS: return (*((triton::uint64*)(this->ss)));
+
+          case triton::arch::ID_REG_X86_MXCSR_MASK: return (*((triton::uint32*)(this->mxcsr_mask)));
+          case triton::arch::ID_REG_X86_FIP: return (*((triton::uint64*)(this->fip)));
+          case triton::arch::ID_REG_X86_FDP: return (*((triton::uint64*)(this->fdp)));
+          case triton::arch::ID_REG_X86_FCW: return (*((triton::uint16*)(this->fcw)));
+          case triton::arch::ID_REG_X86_FSW: return (*((triton::uint16*)(this->fsw)));
+          case triton::arch::ID_REG_X86_FOP: return (*((triton::uint16*)(this->fop)));
+          case triton::arch::ID_REG_X86_FCS: return (*((triton::uint16*)(this->fcs)));
+          case triton::arch::ID_REG_X86_FDS: return (*((triton::uint16*)(this->fds)));
+          case triton::arch::ID_REG_X86_FTW: return (*((triton::uint8*)(this->ftw)));
+
+          case triton::arch::ID_REG_X86_FCW_IM: return (((*((triton::uint16*)(this->fcw))) >> 0) & 1);
+          case triton::arch::ID_REG_X86_FCW_DM: return (((*((triton::uint16*)(this->fcw))) >> 1) & 1);
+          case triton::arch::ID_REG_X86_FCW_ZM: return (((*((triton::uint16*)(this->fcw))) >> 2) & 1);
+          case triton::arch::ID_REG_X86_FCW_OM: return (((*((triton::uint16*)(this->fcw))) >> 3) & 1);
+          case triton::arch::ID_REG_X86_FCW_UM: return (((*((triton::uint16*)(this->fcw))) >> 4) & 1);
+          case triton::arch::ID_REG_X86_FCW_PM: return (((*((triton::uint16*)(this->fcw))) >> 5) & 1);
+          case triton::arch::ID_REG_X86_FCW_PC: return (((*((triton::uint16*)(this->fcw))) >> 8) & 3);
+          case triton::arch::ID_REG_X86_FCW_RC: return (((*((triton::uint16*)(this->fcw))) >> 10) & 3);
+          case triton::arch::ID_REG_X86_FCW_X: return (((*((triton::uint16*)(this->fcw))) >> 12) & 1);
+
+          case triton::arch::ID_REG_X86_FSW_IE: return (((*((triton::uint16*)(this->fsw))) >> 0) & 1);
+          case triton::arch::ID_REG_X86_FSW_DE: return (((*((triton::uint16*)(this->fsw))) >> 1) & 1);
+          case triton::arch::ID_REG_X86_FSW_ZE: return (((*((triton::uint16*)(this->fsw))) >> 2) & 1);
+          case triton::arch::ID_REG_X86_FSW_OE: return (((*((triton::uint16*)(this->fsw))) >> 3) & 1);
+          case triton::arch::ID_REG_X86_FSW_UE: return (((*((triton::uint16*)(this->fsw))) >> 4) & 1);
+          case triton::arch::ID_REG_X86_FSW_PE: return (((*((triton::uint16*)(this->fsw))) >> 5) & 1);
+          case triton::arch::ID_REG_X86_FSW_SF: return (((*((triton::uint16*)(this->fsw))) >> 6) & 1);
+          case triton::arch::ID_REG_X86_FSW_ES: return (((*((triton::uint16*)(this->fsw))) >> 7) & 1);
+          case triton::arch::ID_REG_X86_FSW_C0: return (((*((triton::uint16*)(this->fsw))) >> 8) & 1);
+          case triton::arch::ID_REG_X86_FSW_C1: return (((*((triton::uint16*)(this->fsw))) >> 9) & 1);
+          case triton::arch::ID_REG_X86_FSW_C2: return (((*((triton::uint16*)(this->fsw))) >> 10) & 1);
+          case triton::arch::ID_REG_X86_FSW_TOP: return (((*((triton::uint16*)(this->fsw))) >> 11) & 7);
+          case triton::arch::ID_REG_X86_FSW_C3: return (((*((triton::uint16*)(this->fsw))) >> 14) & 1);
+          case triton::arch::ID_REG_X86_FSW_B: return (((*((triton::uint16*)(this->fsw))) >> 15) & 1);
 
           default:
             throw triton::exceptions::Cpu("x8664Cpu::getConcreteRegisterValue(): Invalid register.");
@@ -1111,86 +1174,203 @@ namespace triton {
           case triton::arch::ID_REG_X86_ZMM30: triton::utils::fromUintToBuffer(value, this->zmm30); break;
           case triton::arch::ID_REG_X86_ZMM31: triton::utils::fromUintToBuffer(value, this->zmm31); break;
 
-          case triton::arch::ID_REG_X86_MXCSR: (*((triton::uint64*)(this->mxcsr))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_MXCSR: (*((triton::uint32*)(this->mxcsr))) = value.convert_to<triton::uint32>(); break;
 
-          case triton::arch::ID_REG_X86_IE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
+          case triton::arch::ID_REG_X86_SSE_IE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
             break;
           }
-          case triton::arch::ID_REG_X86_DE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
+          case triton::arch::ID_REG_X86_SSE_DE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
             break;
           }
-          case triton::arch::ID_REG_X86_ZE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
+          case triton::arch::ID_REG_X86_SSE_ZE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
             break;
           }
-          case triton::arch::ID_REG_X86_OE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
+          case triton::arch::ID_REG_X86_SSE_OE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
             break;
           }
-          case triton::arch::ID_REG_X86_UE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
+          case triton::arch::ID_REG_X86_SSE_UE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
             break;
           }
-          case triton::arch::ID_REG_X86_PE: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
+          case triton::arch::ID_REG_X86_SSE_PE: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
             break;
           }
-          case triton::arch::ID_REG_X86_DAZ: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
+          case triton::arch::ID_REG_X86_SSE_DAZ: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
             break;
           }
-          case triton::arch::ID_REG_X86_IM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
+          case triton::arch::ID_REG_X86_SSE_IM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
             break;
           }
-          case triton::arch::ID_REG_X86_DM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
+          case triton::arch::ID_REG_X86_SSE_DM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
             break;
           }
-          case triton::arch::ID_REG_X86_ZM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
+          case triton::arch::ID_REG_X86_SSE_ZM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
             break;
           }
-          case triton::arch::ID_REG_X86_OM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
+          case triton::arch::ID_REG_X86_SSE_OM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
             break;
           }
-          case triton::arch::ID_REG_X86_UM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
+          case triton::arch::ID_REG_X86_SSE_UM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
             break;
           }
-          case triton::arch::ID_REG_X86_PM: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 12) : b & ~(1 << 12);
+          case triton::arch::ID_REG_X86_SSE_PM: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 12) : b & ~(1 << 12);
             break;
           }
-          case triton::arch::ID_REG_X86_RL: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 13) : b & ~(1 << 13);
+          case triton::arch::ID_REG_X86_SSE_RL: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 13) : b & ~(1 << 13);
             break;
           }
-          case triton::arch::ID_REG_X86_RH: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
+          case triton::arch::ID_REG_X86_SSE_RH: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
             break;
           }
-          case triton::arch::ID_REG_X86_FZ: {
-            triton::uint64 b = (*((triton::uint64*)(this->mxcsr)));
-            (*((triton::uint64*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
+          case triton::arch::ID_REG_X86_SSE_FZ: {
+            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
+            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
+            break;
+          }
+
+          case triton::arch::ID_REG_X86_FCW_IM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_DM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_ZM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_OM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_UM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_PM: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_PC: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (3 << 8) : b & ~(3 << 8);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_RC: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (3 << 10) : b & ~(3 << 10);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FCW_X: {
+            triton::uint16 b = (*((triton::uint16*)(this->fcw)));
+            (*((triton::uint16*)(this->fcw))) = !value.is_zero() ? b | (1 << 12) : b & ~(1 << 12);
+            break;
+          }
+
+          case triton::arch::ID_REG_X86_FSW_IE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_DE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_ZE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_OE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_UE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_PE: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_SF: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_ES: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_C0: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_C1: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_C2: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_TOP: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (7 << 11) : b & ~(7 << 11);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_C3: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
+            break;
+          }
+          case triton::arch::ID_REG_X86_FSW_B: {
+            triton::uint16 b = (*((triton::uint16*)(this->fsw)));
+            (*((triton::uint16*)(this->fsw))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
             break;
           }
 

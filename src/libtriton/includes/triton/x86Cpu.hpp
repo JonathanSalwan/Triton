@@ -97,6 +97,7 @@ namespace triton {
           triton::uint8 eip[DWORD_SIZE];
           //! Concrete value of eflags
           triton::uint8 eflags[DWORD_SIZE];
+          // TODO @fvrmatteo: use an 80-bit type for MMX registers
           //! Concrete value of mm0
           triton::uint8 mm0[QWORD_SIZE];
           //! Concrete value of mm1
@@ -129,8 +130,6 @@ namespace triton {
           triton::uint8 ymm6[QQWORD_SIZE];
           //! Concrete value of ymm7
           triton::uint8 ymm7[QQWORD_SIZE];
-          //! Concrete value of mxcsr
-          triton::uint8 mxcsr[DWORD_SIZE];
           //! Concrete value of cr0
           triton::uint8 cr0[DWORD_SIZE];
           //! Concrete value of cr1
@@ -177,16 +176,37 @@ namespace triton {
           triton::uint8 ss[DWORD_SIZE];
           //! Concrete value of dr0
           triton::uint8 dr0[DWORD_SIZE];
-          //! Condete value of dr1
+          //! Concrete value of dr1
           triton::uint8 dr1[DWORD_SIZE];
-          //! Condete value of dr2
+          //! Concrete value of dr2
           triton::uint8 dr2[DWORD_SIZE];
-          //! Condete value of dr3
+          //! Concrete value of dr3
           triton::uint8 dr3[DWORD_SIZE];
-          //! Condete value of dr6
+          //! Concrete value of dr6
           triton::uint8 dr6[DWORD_SIZE];
-          //! Condete value of dr7
+          //! Concrete value of dr7
           triton::uint8 dr7[DWORD_SIZE];
+          //! Concrete value of the x87 FPU Control Word
+          triton::uint8 fcw[WORD_SIZE];
+          //! Concrete value of the x87 FPU Status Word
+          triton::uint8 fsw[WORD_SIZE];
+          //! Concrete value of the x87 FPU Tag Word
+          triton::uint8 ftw[BYTE_SIZE];
+          //! Concrete value of the x87 FPU Opcode
+          triton::uint8 fop[WORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Pointer Offset
+          triton::uint8 fip[QWORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Pointer Selector
+          triton::uint8 fcs[WORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Offset
+          triton::uint8 fdp[QWORD_SIZE];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Selector
+          triton::uint8 fds[WORD_SIZE];
+          //! Concrete value of the SSE Register State
+          // TODO @fvrmatteo: understand why a 64-bit type was used
+          triton::uint8 mxcsr[DWORD_SIZE];
+          //! Concrete value of the SSE Register State Mask
+          triton::uint8 mxcsr_mask[DWORD_SIZE];
 
         public:
           //! Constructor.
@@ -209,6 +229,9 @@ namespace triton {
 
           //! Returns true if regId is a SSE register.
           TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is a FPU register.
+          TRITON_EXPORT bool isFPU(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;
