@@ -252,15 +252,15 @@ namespace triton {
         std::memset(this->dr3,        0x00, sizeof(this->dr3));
         std::memset(this->dr6,        0x00, sizeof(this->dr6));
         std::memset(this->dr7,        0x00, sizeof(this->dr7));
-        std::memcpy(this->mxcsr_mask, 0x00, sizeof(this->mxcsr_mask));
-        std::memcpy(this->fcw,        0x00, sizeof(this->fcw));
-        std::memcpy(this->fsw,        0x00, sizeof(this->fsw));
-        std::memcpy(this->ftw,        0x00, sizeof(this->ftw));
-        std::memcpy(this->fop,        0x00, sizeof(this->fop));
-        std::memcpy(this->fip,        0x00, sizeof(this->fip));
-        std::memcpy(this->fcs,        0x00, sizeof(this->fcs));
-        std::memcpy(this->fdp,        0x00, sizeof(this->fdp));
-        std::memcpy(this->fds,        0x00, sizeof(this->fds));
+        std::memset(this->mxcsr_mask, 0x00, sizeof(this->mxcsr_mask));
+        std::memset(this->fcw,        0x00, sizeof(this->fcw));
+        std::memset(this->fsw,        0x00, sizeof(this->fsw));
+        std::memset(this->ftw,        0x00, sizeof(this->ftw));
+        std::memset(this->fop,        0x00, sizeof(this->fop));
+        std::memset(this->fip,        0x00, sizeof(this->fip));
+        std::memset(this->fcs,        0x00, sizeof(this->fcs));
+        std::memset(this->fdp,        0x00, sizeof(this->fdp));
+        std::memset(this->fds,        0x00, sizeof(this->fds));
       }
 
 
