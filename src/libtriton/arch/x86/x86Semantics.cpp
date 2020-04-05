@@ -5247,8 +5247,10 @@ namespace triton {
         auto& mem = dst.getMemory();
         auto m512byte = mem.getAddress();
 
-        // TODO @fvrmatteo: check if the address is on a 16-byte boundary
-        // <CODE HERE>
+        /* Check if the address is on a 16-byte boundary */
+        if ((m512byte % 16) != 0) {
+          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+        }
 
         /* Fetch the FPU, MMX and SSE implicint operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5449,6 +5451,11 @@ namespace triton {
         auto& mem = dst.getMemory();
         auto m512byte = mem.getAddress();
 
+        /* Check if the address is on a 16-byte boundary */
+        if ((m512byte % 16) != 0) {
+          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+        }
+
         /* Fetch the FPU, MMX and SSE implicit operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
         auto fsw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FSW));
@@ -5643,8 +5650,10 @@ namespace triton {
         auto& mem = dst.getMemory();
         auto m512byte = mem.getAddress();
 
-        // TODO @fvrmatteo: check if the address is on a 16-byte boundary
-        // <CODE HERE>
+        /* Check if the address is on a 16-byte boundary */
+        if ((m512byte % 16) != 0) {
+          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+        }
 
         /* Fetch the FPU, MMX and SSE implicint operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5702,13 +5711,48 @@ namespace triton {
         auto xmm6_ast = this->symbolicEngine->getOperandAst(inst, xmm6);
         auto xmm7_ast = this->symbolicEngine->getOperandAst(inst, xmm7);
 
-        // TODO @fvrmatteo: determine the proper abridged FTW
-        // <CODE HERE>
+        /*
+          Calculate the abridged x87 FPU Tag Word (from 2 bytes to 1 byte encoding)
+          - Two-bit values of 00, 01, and 10 are encoded as a 1
+          - A two-bit value of 11 is encoded as a 0
+        */
+        auto eb_1_0 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(1, 0, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_3_2 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(3, 2, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_5_4 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(5, 4, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_7_6 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(7, 6, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_9_8 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(9, 8, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_11_10 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(11, 10, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_13_12 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(13, 12, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_15_14 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(15, 14, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+
+        auto aftw_ast = this->astCtxt->concat(eb_15_14,
+          this->astCtxt->concat(eb_13_12,
+          this->astCtxt->concat(eb_11_10,
+          this->astCtxt->concat(eb_9_8,
+          this->astCtxt->concat(eb_7_6,
+          this->astCtxt->concat(eb_5_4,
+          this->astCtxt->concat(eb_3_2, eb_1_0)))))));
 
         /* Fetch the implicit memory slots for the 'Non-64-bit Mode Layout' */
         auto fcw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 0, fcw.getSize()));
         auto fsw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 2, fsw.getSize()));
-        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize()));
+        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize() / 2));
         auto fop_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 6, fop.getSize()));
         auto fip_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 8, fip.getSize() / 2));
         auto fcs_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 12, fcs.getSize()));
@@ -5733,61 +5777,33 @@ namespace triton {
         auto xmm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
         auto xmm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
 
-        /* Craft the semantics */
-        auto fcw_store = this->astCtxt->zx(fcw_addr.getBitSize() - fcw.getBitSize(), fcw_ast);
-        auto fsw_store = this->astCtxt->zx(fsw_addr.getBitSize() - fsw.getBitSize(), fsw_ast);
-        auto ftw_store = this->astCtxt->zx(ftw_addr.getBitSize() - ftw.getBitSize(), ftw_ast);
-        auto fop_store = this->astCtxt->zx(fop_addr.getBitSize() - fop.getBitSize(), fop_ast);
-        auto fip_store = this->astCtxt->zx(fip_addr.getBitSize() - fip.getBitSize(), fip_ast);
-        auto fcs_store = this->astCtxt->zx(fcs_addr.getBitSize() - fcs.getBitSize(), fcs_ast);
-        auto fdp_store = this->astCtxt->zx(fdp_addr.getBitSize() - fdp.getBitSize(), fdp_ast);
-        auto fds_store = this->astCtxt->zx(fds_addr.getBitSize() - fds.getBitSize(), fds_ast);
-        auto mxcsr_store = this->astCtxt->zx(mxcsr_addr.getBitSize() - mxcsr.getBitSize(), mxcsr_ast);
-        auto mxcsr_mask_store = this->astCtxt->zx(mxcsr_mask_addr.getBitSize() - mxcsr_mask.getBitSize(), mxcsr_mask_ast);
-        auto mm0_store = this->astCtxt->zx(mm0_addr.getBitSize() - mm0.getBitSize(), mm0_ast);
-        auto mm1_store = this->astCtxt->zx(mm1_addr.getBitSize() - mm1.getBitSize(), mm1_ast);
-        auto mm2_store = this->astCtxt->zx(mm2_addr.getBitSize() - mm2.getBitSize(), mm2_ast);
-        auto mm3_store = this->astCtxt->zx(mm3_addr.getBitSize() - mm3.getBitSize(), mm3_ast);
-        auto mm4_store = this->astCtxt->zx(mm4_addr.getBitSize() - mm4.getBitSize(), mm4_ast);
-        auto mm5_store = this->astCtxt->zx(mm5_addr.getBitSize() - mm5.getBitSize(), mm5_ast);
-        auto mm6_store = this->astCtxt->zx(mm6_addr.getBitSize() - mm6.getBitSize(), mm6_ast);
-        auto mm7_store = this->astCtxt->zx(mm7_addr.getBitSize() - mm7.getBitSize(), mm7_ast);
-        auto xmm0_store = this->astCtxt->zx(xmm0_addr.getBitSize() - xmm0.getBitSize(), xmm0_ast);
-        auto xmm1_store = this->astCtxt->zx(xmm1_addr.getBitSize() - xmm1.getBitSize(), xmm1_ast);
-        auto xmm2_store = this->astCtxt->zx(xmm2_addr.getBitSize() - xmm2.getBitSize(), xmm2_ast);
-        auto xmm3_store = this->astCtxt->zx(xmm3_addr.getBitSize() - xmm3.getBitSize(), xmm3_ast);
-        auto xmm4_store = this->astCtxt->zx(xmm4_addr.getBitSize() - xmm4.getBitSize(), xmm4_ast);
-        auto xmm5_store = this->astCtxt->zx(xmm5_addr.getBitSize() - xmm5.getBitSize(), xmm5_ast);
-        auto xmm6_store = this->astCtxt->zx(xmm6_addr.getBitSize() - xmm6.getBitSize(), xmm6_ast);
-        auto xmm7_store = this->astCtxt->zx(xmm7_addr.getBitSize() - xmm7.getBitSize(), xmm7_ast);
-
         /* Craft the symbolic expressions */
-        auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_store, fcw_addr, "FXSAVE FCW operation");
-        auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_store, fsw_addr, "FXSAVE FSW operation");
-        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, ftw_store, ftw_addr, "FXSAVE FTW operation");
-        auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_store, fop_addr, "FXSAVE FOP operation");
-        auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_store, fip_addr, "FXSAVE FIP operation");
-        auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_store, fcs_addr, "FXSAVE FCS operation");
-        auto fdp_expr = this->symbolicEngine->createSymbolicExpression(inst, fdp_store, fdp_addr, "FXSAVE FDP operation");
-        auto fds_expr = this->symbolicEngine->createSymbolicExpression(inst, fds_store, fds_addr, "FXSAVE FDS operation");
-        auto mxcsr_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_store, mxcsr_addr, "FXSAVE MXCSR operation");
-        auto mxcsr_mask_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_mask_store, mxcsr_mask_addr, "FXSAVE MXCSR_MASK operation");
-        auto mm0_expr = this->symbolicEngine->createSymbolicExpression(inst, mm0_store, mm0_addr, "FXSAVE MM0 operation");
-        auto mm1_expr = this->symbolicEngine->createSymbolicExpression(inst, mm1_store, mm1_addr, "FXSAVE MM1 operation");
-        auto mm2_expr = this->symbolicEngine->createSymbolicExpression(inst, mm2_store, mm2_addr, "FXSAVE MM2 operation");
-        auto mm3_expr = this->symbolicEngine->createSymbolicExpression(inst, mm3_store, mm3_addr, "FXSAVE MM3 operation");
-        auto mm4_expr = this->symbolicEngine->createSymbolicExpression(inst, mm4_store, mm4_addr, "FXSAVE MM4 operation");
-        auto mm5_expr = this->symbolicEngine->createSymbolicExpression(inst, mm5_store, mm5_addr, "FXSAVE MM5 operation");
-        auto mm6_expr = this->symbolicEngine->createSymbolicExpression(inst, mm6_store, mm6_addr, "FXSAVE MM6 operation");
-        auto mm7_expr = this->symbolicEngine->createSymbolicExpression(inst, mm7_store, mm7_addr, "FXSAVE MM7 operation");
-        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_store, xmm0_addr, "FXSAVE XMM0 operation");
-        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_store, xmm1_addr, "FXSAVE XMM1 operation");
-        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_store, xmm2_addr, "FXSAVE XMM2 operation");
-        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_store, xmm3_addr, "FXSAVE XMM3 operation");
-        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_store, xmm4_addr, "FXSAVE XMM4 operation");
-        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_store, xmm5_addr, "FXSAVE XMM5 operation");
-        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_store, xmm6_addr, "FXSAVE XMM6 operation");
-        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_store, xmm7_addr, "FXSAVE XMM7 operation");
+        auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE FCW operation");
+        auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw_addr, "FXSAVE FSW operation");
+        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, aftw_ast, ftw_addr, "FXSAVE Abridged FTW operation");
+        auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_ast, fop_addr, "FXSAVE FOP operation");
+        auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_ast, fip_addr, "FXSAVE FIP operation");
+        auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_ast, fcs_addr, "FXSAVE FCS operation");
+        auto fdp_expr = this->symbolicEngine->createSymbolicExpression(inst, fdp_ast, fdp_addr, "FXSAVE FDP operation");
+        auto fds_expr = this->symbolicEngine->createSymbolicExpression(inst, fds_ast, fds_addr, "FXSAVE FDS operation");
+        auto mxcsr_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_ast, mxcsr_addr, "FXSAVE MXCSR operation");
+        auto mxcsr_mask_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_mask_ast, mxcsr_mask_addr, "FXSAVE MXCSR_MASK operation");
+        auto mm0_expr = this->symbolicEngine->createSymbolicExpression(inst, mm0_ast, mm0_addr, "FXSAVE MM0 operation");
+        auto mm1_expr = this->symbolicEngine->createSymbolicExpression(inst, mm1_ast, mm1_addr, "FXSAVE MM1 operation");
+        auto mm2_expr = this->symbolicEngine->createSymbolicExpression(inst, mm2_ast, mm2_addr, "FXSAVE MM2 operation");
+        auto mm3_expr = this->symbolicEngine->createSymbolicExpression(inst, mm3_ast, mm3_addr, "FXSAVE MM3 operation");
+        auto mm4_expr = this->symbolicEngine->createSymbolicExpression(inst, mm4_ast, mm4_addr, "FXSAVE MM4 operation");
+        auto mm5_expr = this->symbolicEngine->createSymbolicExpression(inst, mm5_ast, mm5_addr, "FXSAVE MM5 operation");
+        auto mm6_expr = this->symbolicEngine->createSymbolicExpression(inst, mm6_ast, mm6_addr, "FXSAVE MM6 operation");
+        auto mm7_expr = this->symbolicEngine->createSymbolicExpression(inst, mm7_ast, mm7_addr, "FXSAVE MM7 operation");
+        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_ast, xmm0_addr, "FXSAVE XMM0 operation");
+        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_ast, xmm1_addr, "FXSAVE XMM1 operation");
+        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_ast, xmm2_addr, "FXSAVE XMM2 operation");
+        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_ast, xmm3_addr, "FXSAVE XMM3 operation");
+        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_ast, xmm4_addr, "FXSAVE XMM4 operation");
+        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_ast, xmm5_addr, "FXSAVE XMM5 operation");
+        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_ast, xmm6_addr, "FXSAVE XMM6 operation");
+        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_ast, xmm7_addr, "FXSAVE XMM7 operation");
 
         /* Spread the taint */
         fcw_expr->isTainted = this->taintEngine->taintAssignment(fcw_addr, fcw);
@@ -5885,6 +5901,11 @@ namespace triton {
         auto& mem = dst.getMemory();
         auto m512byte = mem.getAddress();
 
+        /* Check if the address is on a 16-byte boundary */
+        if ((m512byte % 16) != 0) {
+          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+        }
+
         /* Fetch the FPU, MMX and SSE implicit operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
         auto fsw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FSW));
@@ -5957,13 +5978,48 @@ namespace triton {
         auto xmm14_ast = this->symbolicEngine->getOperandAst(inst, xmm14);
         auto xmm15_ast = this->symbolicEngine->getOperandAst(inst, xmm15);
 
-        // TODO @fvrmatteo: determine the proper abridged FTW
-        // <CODE HERE>
+        /*
+          Calculate the abridged x87 FPU Tag Word (from 2 bytes to 1 byte encoding)
+          - Two-bit values of 00, 01, and 10 are encoded as a 1
+          - A two-bit value of 11 is encoded as a 0
+        */
+        auto eb_1_0 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(1, 0, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_3_2 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(3, 2, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_5_4 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(5, 4, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_7_6 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(7, 6, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_9_8 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(9, 8, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_11_10 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(11, 10, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_13_12 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(13, 12, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+        auto eb_15_14 = this->astCtxt->ite(
+          this->astCtxt->equal(this->astCtxt->extract(15, 14, ftw_ast), this->astCtxt->bv(3, 2)),
+          this->astCtxt->bv(0, 1), this->astCtxt->bv(1, 1));
+
+        auto aftw_ast = this->astCtxt->concat(eb_15_14,
+          this->astCtxt->concat(eb_13_12,
+          this->astCtxt->concat(eb_11_10,
+          this->astCtxt->concat(eb_9_8,
+          this->astCtxt->concat(eb_7_6,
+          this->astCtxt->concat(eb_5_4,
+          this->astCtxt->concat(eb_3_2, eb_1_0)))))));
 
         /* Fetch the implicit memory slots for the '64-bit Mode Layout (with REX.W = 1)' */
         auto fcw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 0, fcw.getSize()));
         auto fsw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 2, fsw.getSize()));
-        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize()));
+        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize() / 2));
         auto fop_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 6, fop.getSize()));
         auto fip_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 8, fip.getSize()));
         auto fcs_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 12, fcs.getSize()));
@@ -5996,77 +6052,41 @@ namespace triton {
         auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
         auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
-        /* Craft the semantics */
-        auto fcw_store = this->astCtxt->zx(fcw_addr.getBitSize() - fcw.getBitSize(), fcw_ast);
-        auto fsw_store = this->astCtxt->zx(fsw_addr.getBitSize() - fsw.getBitSize(), fsw_ast);
-        auto ftw_store = this->astCtxt->zx(ftw_addr.getBitSize() - ftw.getBitSize(), ftw_ast);
-        auto fop_store = this->astCtxt->zx(fop_addr.getBitSize() - fop.getBitSize(), fop_ast);
-        auto fip_store = this->astCtxt->zx(fip_addr.getBitSize() - fip.getBitSize(), fip_ast);
-        auto fcs_store = this->astCtxt->zx(fcs_addr.getBitSize() - fcs.getBitSize(), fcs_ast);
-        auto fdp_store = this->astCtxt->zx(fdp_addr.getBitSize() - fdp.getBitSize(), fdp_ast);
-        auto fds_store = this->astCtxt->zx(fds_addr.getBitSize() - fds.getBitSize(), fds_ast);
-        auto mxcsr_store = this->astCtxt->zx(mxcsr_addr.getBitSize() - mxcsr.getBitSize(), mxcsr_ast);
-        auto mxcsr_mask_store = this->astCtxt->zx(mxcsr_mask_addr.getBitSize() - mxcsr_mask.getBitSize(), mxcsr_mask_ast);
-        auto mm0_store = this->astCtxt->zx(mm0_addr.getBitSize() - mm0.getBitSize(), mm0_ast);
-        auto mm1_store = this->astCtxt->zx(mm1_addr.getBitSize() - mm1.getBitSize(), mm1_ast);
-        auto mm2_store = this->astCtxt->zx(mm2_addr.getBitSize() - mm2.getBitSize(), mm2_ast);
-        auto mm3_store = this->astCtxt->zx(mm3_addr.getBitSize() - mm3.getBitSize(), mm3_ast);
-        auto mm4_store = this->astCtxt->zx(mm4_addr.getBitSize() - mm4.getBitSize(), mm4_ast);
-        auto mm5_store = this->astCtxt->zx(mm5_addr.getBitSize() - mm5.getBitSize(), mm5_ast);
-        auto mm6_store = this->astCtxt->zx(mm6_addr.getBitSize() - mm6.getBitSize(), mm6_ast);
-        auto mm7_store = this->astCtxt->zx(mm7_addr.getBitSize() - mm7.getBitSize(), mm7_ast);
-        auto xmm0_store = this->astCtxt->zx(xmm0_addr.getBitSize() - xmm0.getBitSize(), xmm0_ast);
-        auto xmm1_store = this->astCtxt->zx(xmm1_addr.getBitSize() - xmm1.getBitSize(), xmm1_ast);
-        auto xmm2_store = this->astCtxt->zx(xmm2_addr.getBitSize() - xmm2.getBitSize(), xmm2_ast);
-        auto xmm3_store = this->astCtxt->zx(xmm3_addr.getBitSize() - xmm3.getBitSize(), xmm3_ast);
-        auto xmm4_store = this->astCtxt->zx(xmm4_addr.getBitSize() - xmm4.getBitSize(), xmm4_ast);
-        auto xmm5_store = this->astCtxt->zx(xmm5_addr.getBitSize() - xmm5.getBitSize(), xmm5_ast);
-        auto xmm6_store = this->astCtxt->zx(xmm6_addr.getBitSize() - xmm6.getBitSize(), xmm6_ast);
-        auto xmm7_store = this->astCtxt->zx(xmm7_addr.getBitSize() - xmm7.getBitSize(), xmm7_ast);
-        auto xmm8_store  = this->astCtxt->zx(xmm8_addr.getBitSize() -  xmm8.getBitSize(),  xmm8_ast);
-        auto xmm9_store  = this->astCtxt->zx(xmm9_addr.getBitSize() -  xmm9.getBitSize(),  xmm9_ast);
-        auto xmm10_store = this->astCtxt->zx(xmm10_addr.getBitSize() - xmm10.getBitSize(), xmm10_ast);
-        auto xmm11_store = this->astCtxt->zx(xmm11_addr.getBitSize() - xmm11.getBitSize(), xmm11_ast);
-        auto xmm12_store = this->astCtxt->zx(xmm12_addr.getBitSize() - xmm12.getBitSize(), xmm12_ast);
-        auto xmm13_store = this->astCtxt->zx(xmm13_addr.getBitSize() - xmm13.getBitSize(), xmm13_ast);
-        auto xmm14_store = this->astCtxt->zx(xmm14_addr.getBitSize() - xmm14.getBitSize(), xmm14_ast);
-        auto xmm15_store = this->astCtxt->zx(xmm15_addr.getBitSize() - xmm15.getBitSize(), xmm15_ast);
-
         /* Craft the symbolic expressions */
-        auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_store, fcw_addr, "FXSAVE64 FCW operation");
-        auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_store, fsw_addr, "FXSAVE64 FSW operation");
-        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, ftw_store, ftw_addr, "FXSAVE64 FTW operation");
-        auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_store, fop_addr, "FXSAVE64 FOP operation");
-        auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_store, fip_addr, "FXSAVE64 FIP operation");
-        auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_store, fcs_addr, "FXSAVE64 FCS operation");
-        auto fdp_expr = this->symbolicEngine->createSymbolicExpression(inst, fdp_store, fdp_addr, "FXSAVE64 FDP operation");
-        auto fds_expr = this->symbolicEngine->createSymbolicExpression(inst, fds_store, fds_addr, "FXSAVE64 FDS operation");
-        auto mxcsr_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_store, mxcsr_addr, "FXSAVE64 MXCSR operation");
-        auto mxcsr_mask_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_mask_store, mxcsr_mask_addr, "FXSAVE64 MXCSR_MASK operation");
-        auto mm0_expr = this->symbolicEngine->createSymbolicExpression(inst, mm0_store, mm0_addr, "FXSAVE64 MM0 operation");
-        auto mm1_expr = this->symbolicEngine->createSymbolicExpression(inst, mm1_store, mm1_addr, "FXSAVE64 MM1 operation");
-        auto mm2_expr = this->symbolicEngine->createSymbolicExpression(inst, mm2_store, mm2_addr, "FXSAVE64 MM2 operation");
-        auto mm3_expr = this->symbolicEngine->createSymbolicExpression(inst, mm3_store, mm3_addr, "FXSAVE64 MM3 operation");
-        auto mm4_expr = this->symbolicEngine->createSymbolicExpression(inst, mm4_store, mm4_addr, "FXSAVE64 MM4 operation");
-        auto mm5_expr = this->symbolicEngine->createSymbolicExpression(inst, mm5_store, mm5_addr, "FXSAVE64 MM5 operation");
-        auto mm6_expr = this->symbolicEngine->createSymbolicExpression(inst, mm6_store, mm6_addr, "FXSAVE64 MM6 operation");
-        auto mm7_expr = this->symbolicEngine->createSymbolicExpression(inst, mm7_store, mm7_addr, "FXSAVE64 MM7 operation");
-        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_store, xmm0_addr, "FXSAVE64 XMM0 operation");
-        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_store, xmm1_addr, "FXSAVE64 XMM1 operation");
-        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_store, xmm2_addr, "FXSAVE64 XMM2 operation");
-        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_store, xmm3_addr, "FXSAVE64 XMM3 operation");
-        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_store, xmm4_addr, "FXSAVE64 XMM4 operation");
-        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_store, xmm5_addr, "FXSAVE64 XMM5 operation");
-        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_store, xmm6_addr, "FXSAVE64 XMM6 operation");
-        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_store, xmm7_addr, "FXSAVE64 XMM7 operation");
-        auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_store, xmm8_addr, "FXSAVE64 XMM8 operation");
-        auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_store, xmm9_addr, "FXSAVE64 XMM9 operation");
-        auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_store, xmm10_addr, "FXSAVE64 XMM10 operation");
-        auto xmm11_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm11_store, xmm11_addr, "FXSAVE64 XMM11 operation");
-        auto xmm12_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm12_store, xmm12_addr, "FXSAVE64 XMM12 operation");
-        auto xmm13_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm13_store, xmm13_addr, "FXSAVE64 XMM13 operation");
-        auto xmm14_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm14_store, xmm14_addr, "FXSAVE64 XMM14 operation");
-        auto xmm15_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm15_store, xmm15_addr, "FXSAVE64 XMM15 operation");
+        auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE64 FCW operation");
+        auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw_addr, "FXSAVE64 FSW operation");
+        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, aftw_ast, ftw_addr, "FXSAVE64 Abridged FTW operation");
+        auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_ast, fop_addr, "FXSAVE64 FOP operation");
+        auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_ast, fip_addr, "FXSAVE64 FIP operation");
+        auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_ast, fcs_addr, "FXSAVE64 FCS operation");
+        auto fdp_expr = this->symbolicEngine->createSymbolicExpression(inst, fdp_ast, fdp_addr, "FXSAVE64 FDP operation");
+        auto fds_expr = this->symbolicEngine->createSymbolicExpression(inst, fds_ast, fds_addr, "FXSAVE64 FDS operation");
+        auto mxcsr_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_ast, mxcsr_addr, "FXSAVE64 MXCSR operation");
+        auto mxcsr_mask_expr = this->symbolicEngine->createSymbolicExpression(inst, mxcsr_mask_ast, mxcsr_mask_addr, "FXSAVE64 MXCSR_MASK operation");
+        auto mm0_expr = this->symbolicEngine->createSymbolicExpression(inst, mm0_ast, mm0_addr, "FXSAVE64 MM0 operation");
+        auto mm1_expr = this->symbolicEngine->createSymbolicExpression(inst, mm1_ast, mm1_addr, "FXSAVE64 MM1 operation");
+        auto mm2_expr = this->symbolicEngine->createSymbolicExpression(inst, mm2_ast, mm2_addr, "FXSAVE64 MM2 operation");
+        auto mm3_expr = this->symbolicEngine->createSymbolicExpression(inst, mm3_ast, mm3_addr, "FXSAVE64 MM3 operation");
+        auto mm4_expr = this->symbolicEngine->createSymbolicExpression(inst, mm4_ast, mm4_addr, "FXSAVE64 MM4 operation");
+        auto mm5_expr = this->symbolicEngine->createSymbolicExpression(inst, mm5_ast, mm5_addr, "FXSAVE64 MM5 operation");
+        auto mm6_expr = this->symbolicEngine->createSymbolicExpression(inst, mm6_ast, mm6_addr, "FXSAVE64 MM6 operation");
+        auto mm7_expr = this->symbolicEngine->createSymbolicExpression(inst, mm7_ast, mm7_addr, "FXSAVE64 MM7 operation");
+        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_ast, xmm0_addr, "FXSAVE64 XMM0 operation");
+        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_ast, xmm1_addr, "FXSAVE64 XMM1 operation");
+        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_ast, xmm2_addr, "FXSAVE64 XMM2 operation");
+        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_ast, xmm3_addr, "FXSAVE64 XMM3 operation");
+        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_ast, xmm4_addr, "FXSAVE64 XMM4 operation");
+        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_ast, xmm5_addr, "FXSAVE64 XMM5 operation");
+        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_ast, xmm6_addr, "FXSAVE64 XMM6 operation");
+        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_ast, xmm7_addr, "FXSAVE64 XMM7 operation");
+        auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_ast, xmm8_addr, "FXSAVE64 XMM8 operation");
+        auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_ast, xmm9_addr, "FXSAVE64 XMM9 operation");
+        auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_ast, xmm10_addr, "FXSAVE64 XMM10 operation");
+        auto xmm11_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm11_ast, xmm11_addr, "FXSAVE64 XMM11 operation");
+        auto xmm12_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm12_ast, xmm12_addr, "FXSAVE64 XMM12 operation");
+        auto xmm13_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm13_ast, xmm13_addr, "FXSAVE64 XMM13 operation");
+        auto xmm14_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm14_ast, xmm14_addr, "FXSAVE64 XMM14 operation");
+        auto xmm15_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm15_ast, xmm15_addr, "FXSAVE64 XMM15 operation");
 
         /* Spread the taint */
         fcw_expr->isTainted = this->taintEngine->taintAssignment(fcw_addr, fcw);

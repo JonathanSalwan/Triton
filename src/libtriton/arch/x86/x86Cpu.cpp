@@ -664,24 +664,24 @@ namespace triton {
           case triton::arch::ID_REG_X86_SS: return (*((triton::uint32*)(this->ss)));
 
           case triton::arch::ID_REG_X86_MXCSR_MASK: return (*((triton::uint32*)(this->mxcsr_mask)));
-          case triton::arch::ID_REG_X86_FIP: return (*((triton::uint64*)(this->fip)));
-          case triton::arch::ID_REG_X86_FDP: return (*((triton::uint64*)(this->fdp)));
-          case triton::arch::ID_REG_X86_FCW: return (*((triton::uint16*)(this->fcw)));
-          case triton::arch::ID_REG_X86_FSW: return (*((triton::uint16*)(this->fsw)));
-          case triton::arch::ID_REG_X86_FOP: return (*((triton::uint16*)(this->fop)));
-          case triton::arch::ID_REG_X86_FCS: return (*((triton::uint16*)(this->fcs)));
-          case triton::arch::ID_REG_X86_FDS: return (*((triton::uint16*)(this->fds)));
-          case triton::arch::ID_REG_X86_FTW: return (*((triton::uint8*)(this->ftw)));
+          case triton::arch::ID_REG_X86_FIP:        return (*((triton::uint64*)(this->fip)));
+          case triton::arch::ID_REG_X86_FDP:        return (*((triton::uint64*)(this->fdp)));
+          case triton::arch::ID_REG_X86_FCW:        return (*((triton::uint16*)(this->fcw)));
+          case triton::arch::ID_REG_X86_FSW:        return (*((triton::uint16*)(this->fsw)));
+          case triton::arch::ID_REG_X86_FOP:        return (*((triton::uint16*)(this->fop)));
+          case triton::arch::ID_REG_X86_FCS:        return (*((triton::uint16*)(this->fcs)));
+          case triton::arch::ID_REG_X86_FDS:        return (*((triton::uint16*)(this->fds)));
+          case triton::arch::ID_REG_X86_FTW:        return (*((triton::uint16*)(this->ftw)));
 
-          case triton::arch::ID_REG_X86_FCW_IM: return (((*((triton::uint16*)(this->fcw))) >> 0) & 1);
-          case triton::arch::ID_REG_X86_FCW_DM: return (((*((triton::uint16*)(this->fcw))) >> 1) & 1);
-          case triton::arch::ID_REG_X86_FCW_ZM: return (((*((triton::uint16*)(this->fcw))) >> 2) & 1);
-          case triton::arch::ID_REG_X86_FCW_OM: return (((*((triton::uint16*)(this->fcw))) >> 3) & 1);
-          case triton::arch::ID_REG_X86_FCW_UM: return (((*((triton::uint16*)(this->fcw))) >> 4) & 1);
-          case triton::arch::ID_REG_X86_FCW_PM: return (((*((triton::uint16*)(this->fcw))) >> 5) & 1);
-          case triton::arch::ID_REG_X86_FCW_PC: return (((*((triton::uint16*)(this->fcw))) >> 8) & 3);
+          case triton::arch::ID_REG_X86_FCW_IM: return (((*((triton::uint16*)(this->fcw))) >> 0)  & 1);
+          case triton::arch::ID_REG_X86_FCW_DM: return (((*((triton::uint16*)(this->fcw))) >> 1)  & 1);
+          case triton::arch::ID_REG_X86_FCW_ZM: return (((*((triton::uint16*)(this->fcw))) >> 2)  & 1);
+          case triton::arch::ID_REG_X86_FCW_OM: return (((*((triton::uint16*)(this->fcw))) >> 3)  & 1);
+          case triton::arch::ID_REG_X86_FCW_UM: return (((*((triton::uint16*)(this->fcw))) >> 4)  & 1);
+          case triton::arch::ID_REG_X86_FCW_PM: return (((*((triton::uint16*)(this->fcw))) >> 5)  & 1);
+          case triton::arch::ID_REG_X86_FCW_PC: return (((*((triton::uint16*)(this->fcw))) >> 8)  & 3);
           case triton::arch::ID_REG_X86_FCW_RC: return (((*((triton::uint16*)(this->fcw))) >> 10) & 3);
-          case triton::arch::ID_REG_X86_FCW_X: return (((*((triton::uint16*)(this->fcw))) >> 12) & 1);
+          case triton::arch::ID_REG_X86_FCW_X:  return (((*((triton::uint16*)(this->fcw))) >> 12) & 1);
 
           case triton::arch::ID_REG_X86_FSW_IE: return (((*((triton::uint16*)(this->fsw))) >> 0) & 1);
           case triton::arch::ID_REG_X86_FSW_DE: return (((*((triton::uint16*)(this->fsw))) >> 1) & 1);
@@ -905,7 +905,8 @@ namespace triton {
           case triton::arch::ID_REG_X86_YMM6: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm6); break;
           case triton::arch::ID_REG_X86_YMM7: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm7); break;
 
-          case triton::arch::ID_REG_X86_MXCSR: (*((triton::uint32*)(this->mxcsr))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_X86_MXCSR:      (*((triton::uint32*)(this->mxcsr))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_X86_MXCSR_MASK: (*((triton::uint32*)(this->mxcsr_mask))) = value.convert_to<triton::uint32>(); break;
 
           case triton::arch::ID_REG_X86_SSE_IE: {
             triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
@@ -987,6 +988,15 @@ namespace triton {
             (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
             break;
           }
+
+          case triton::arch::ID_REG_X86_FIP: (*((triton::uint64*)(this->fip))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_FDP: (*((triton::uint64*)(this->fdp))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_FCW: (*((triton::uint16*)(this->fcw))) = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_FSW: (*((triton::uint16*)(this->fsw))) = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_FOP: (*((triton::uint16*)(this->fop))) = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_FCS: (*((triton::uint16*)(this->fcs))) = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_FDS: (*((triton::uint16*)(this->fds))) = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_FTW: (*((triton::uint16*)(this->ftw))) = value.convert_to<triton::uint16>(); break;
 
           case triton::arch::ID_REG_X86_FCW_IM: {
             triton::uint16 b = (*((triton::uint16*)(this->fcw)));

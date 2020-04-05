@@ -254,7 +254,7 @@ namespace triton {
           //! Concrete value of the x87 FPU Status Word
           triton::uint8 fsw[WORD_SIZE];
           //! Concrete value of the x87 FPU Tag Word
-          triton::uint8 ftw[BYTE_SIZE];
+          triton::uint8 ftw[WORD_SIZE];
           //! Concrete value of the x87 FPU Opcode
           triton::uint8 fop[WORD_SIZE];
           //! Concrete value of the x87 FPU Instruction Pointer Offset
