@@ -5409,7 +5409,7 @@ namespace triton {
           auto xmm11_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 336, xmm11.getSize()));
           auto xmm12_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 352, xmm12.getSize()));
           auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
-          auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
+          auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
           auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
           auto xmm8_ast = this->symbolicEngine->getOperandAst(inst, xmm8_addr);
@@ -5525,7 +5525,7 @@ namespace triton {
         auto xmm11_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 336, xmm11.getSize()));
         auto xmm12_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 352, xmm12.getSize()));
         auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
-        auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
+        auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
         auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
         /* Create the symbolic operands */
@@ -5859,7 +5859,7 @@ namespace triton {
           auto xmm11_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 336, xmm11.getSize()));
           auto xmm12_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 352, xmm12.getSize()));
           auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
-          auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
+          auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
           auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
           auto xmm8_store  = this->astCtxt->zx(xmm8_addr.getBitSize() -  xmm8.getBitSize(),  xmm8_ast);
@@ -6049,7 +6049,7 @@ namespace triton {
         auto xmm11_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 336, xmm11.getSize()));
         auto xmm12_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 352, xmm12.getSize()));
         auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
-        auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 284, xmm14.getSize()));
+        auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
         auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
         /* Craft the symbolic expressions */
