@@ -49,6 +49,7 @@ namespace triton {
           size != WORD_SIZE     &&
           size != DWORD_SIZE    &&
           size != QWORD_SIZE    &&
+          size != FWORD_SIZE    &&
           size != DQWORD_SIZE   &&
           size != QQWORD_SIZE   &&
           size != DQQWORD_SIZE)

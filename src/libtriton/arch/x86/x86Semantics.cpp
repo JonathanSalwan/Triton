@@ -5248,9 +5248,11 @@ namespace triton {
         auto m512byte = mem.getAddress();
 
         /* Check if the address is on a 16-byte boundary */
-        if ((m512byte % 16) != 0) {
+        if (m512byte & 0xF) {
           // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
         }
+
+        // TODO @fvrmatteo: implement check for fast FXRSTOR (Extended Feature Enable Register needed)
 
         /* Fetch the FPU, MMX and SSE implicint operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5283,7 +5285,7 @@ namespace triton {
         /* Fetch the implicit memory slots for the 'Non-64-bit Mode Layout' */
         auto fcw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 0, fcw.getSize()));
         auto fsw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 2, fsw.getSize()));
-        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize()));
+        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize() / 2));
         auto fop_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 6, fop.getSize()));
         auto fip_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 8, fip.getSize() / 2));
         auto fcs_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 12, fcs.getSize()));
@@ -5291,14 +5293,14 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32, mm0.getSize()));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48, mm1.getSize()));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64, mm2.getSize()));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80, mm3.getSize()));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96, mm4.getSize()));
-        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
-        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
-        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  FWORD_SIZE));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  FWORD_SIZE));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  FWORD_SIZE));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  FWORD_SIZE));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  FWORD_SIZE));
+        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, FWORD_SIZE));
+        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, FWORD_SIZE));
+        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, FWORD_SIZE));
         auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
         auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
         auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
@@ -5313,9 +5315,9 @@ namespace triton {
         auto fsw_ast = this->symbolicEngine->getOperandAst(inst, fsw_addr);
         auto ftw_ast = this->symbolicEngine->getOperandAst(inst, ftw_addr);
         auto fop_ast = this->symbolicEngine->getOperandAst(inst, fop_addr);
-        auto fip_ast = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0, this->symbolicEngine->getOperandAst(inst, fip_addr));
+        auto fip_ast = this->astCtxt->zx(DWORD_SIZE_BIT, this->symbolicEngine->getOperandAst(inst, fip_addr));
         auto fcs_ast = this->symbolicEngine->getOperandAst(inst, fcs_addr);
-        auto fdp_ast = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0, this->symbolicEngine->getOperandAst(inst, fdp_addr));
+        auto fdp_ast = this->astCtxt->zx(DWORD_SIZE_BIT, this->symbolicEngine->getOperandAst(inst, fdp_addr));
         auto fds_ast = this->symbolicEngine->getOperandAst(inst, fds_addr);
         auto mxcsr_ast = this->symbolicEngine->getOperandAst(inst, mxcsr_addr);
         auto mxcsr_mask_ast = this->symbolicEngine->getOperandAst(inst, mxcsr_mask_addr);
@@ -5336,10 +5338,225 @@ namespace triton {
         auto xmm6_ast = this->symbolicEngine->getOperandAst(inst, xmm6_addr);
         auto xmm7_ast = this->symbolicEngine->getOperandAst(inst, xmm7_addr);
 
+        /* Fetch the abridged x87 FPU Tag Word Encoded Bits */
+        auto eb_1_0   = this->astCtxt->extract(0, 0, ftw_ast);
+        auto eb_3_2   = this->astCtxt->extract(1, 1, ftw_ast);
+        auto eb_5_4   = this->astCtxt->extract(2, 2, ftw_ast);
+        auto eb_7_6   = this->astCtxt->extract(3, 3, ftw_ast);
+        auto eb_9_8   = this->astCtxt->extract(4, 4, ftw_ast);
+        auto eb_11_10 = this->astCtxt->extract(5, 5, ftw_ast);
+        auto eb_13_12 = this->astCtxt->extract(6, 6, ftw_ast);
+        auto eb_15_14 = this->astCtxt->extract(7, 7, ftw_ast);
+
+        /* Extract the fraction from the MMX registers */
+        auto fraction_mm0 = this->astCtxt->extract(62, 0, mm0_ast);
+        auto fraction_mm1 = this->astCtxt->extract(62, 0, mm1_ast);
+        auto fraction_mm2 = this->astCtxt->extract(62, 0, mm2_ast);
+        auto fraction_mm3 = this->astCtxt->extract(62, 0, mm3_ast);
+        auto fraction_mm4 = this->astCtxt->extract(62, 0, mm4_ast);
+        auto fraction_mm5 = this->astCtxt->extract(62, 0, mm5_ast);
+        auto fraction_mm6 = this->astCtxt->extract(62, 0, mm6_ast);
+        auto fraction_mm7 = this->astCtxt->extract(62, 0, mm7_ast);
+
+        /* Extract the integer bit from the MMX registers */
+        auto integer_mm0 = this->astCtxt->extract(63, 63, mm0_ast);
+        auto integer_mm1 = this->astCtxt->extract(63, 63, mm1_ast);
+        auto integer_mm2 = this->astCtxt->extract(63, 63, mm2_ast);
+        auto integer_mm3 = this->astCtxt->extract(63, 63, mm3_ast);
+        auto integer_mm4 = this->astCtxt->extract(63, 63, mm4_ast);
+        auto integer_mm5 = this->astCtxt->extract(63, 63, mm5_ast);
+        auto integer_mm6 = this->astCtxt->extract(63, 63, mm6_ast);
+        auto integer_mm7 = this->astCtxt->extract(63, 63, mm7_ast);
+
+        /* Extract the exponent from the MMX registers */
+        auto exponent_mm0 = this->astCtxt->extract(79, 64, mm0_ast);
+        auto exponent_mm1 = this->astCtxt->extract(79, 64, mm1_ast);
+        auto exponent_mm2 = this->astCtxt->extract(79, 64, mm2_ast);
+        auto exponent_mm3 = this->astCtxt->extract(79, 64, mm3_ast);
+        auto exponent_mm4 = this->astCtxt->extract(79, 64, mm4_ast);
+        auto exponent_mm5 = this->astCtxt->extract(79, 64, mm5_ast);
+        auto exponent_mm6 = this->astCtxt->extract(79, 64, mm6_ast);
+        auto exponent_mm7 = this->astCtxt->extract(79, 64, mm7_ast);
+
+        /* Exponent All Zeros */
+        auto ea0_mm0 = this->astCtxt->equal(exponent_mm0, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm1 = this->astCtxt->equal(exponent_mm1, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm2 = this->astCtxt->equal(exponent_mm2, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm3 = this->astCtxt->equal(exponent_mm3, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm4 = this->astCtxt->equal(exponent_mm4, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm5 = this->astCtxt->equal(exponent_mm5, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm6 = this->astCtxt->equal(exponent_mm6, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm7 = this->astCtxt->equal(exponent_mm7, this->astCtxt->bv(0x0000, 16));
+
+        /* Exponent All Ones */
+        auto ea1_mm0 = this->astCtxt->equal(exponent_mm0, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm1 = this->astCtxt->equal(exponent_mm1, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm2 = this->astCtxt->equal(exponent_mm2, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm3 = this->astCtxt->equal(exponent_mm3, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm4 = this->astCtxt->equal(exponent_mm4, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm5 = this->astCtxt->equal(exponent_mm5, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm6 = this->astCtxt->equal(exponent_mm6, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm7 = this->astCtxt->equal(exponent_mm7, this->astCtxt->bv(0xFFFF, 16));
+
+        /* Exponent Neither All Zeroes Or Ones */
+        auto ena01_mm0 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm0, ea1_mm0), this->astCtxt->bvfalse());
+        auto ena01_mm1 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm1, ea1_mm1), this->astCtxt->bvfalse());
+        auto ena01_mm2 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm2, ea1_mm2), this->astCtxt->bvfalse());
+        auto ena01_mm3 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm3, ea1_mm3), this->astCtxt->bvfalse());
+        auto ena01_mm4 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm4, ea1_mm4), this->astCtxt->bvfalse());
+        auto ena01_mm5 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm5, ea1_mm5), this->astCtxt->bvfalse());
+        auto ena01_mm6 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm6, ea1_mm6), this->astCtxt->bvfalse());
+        auto ena01_mm7 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm7, ea1_mm7), this->astCtxt->bvfalse());
+
+        /* Integer Bit 0 */
+        auto ib0_mm0 = this->astCtxt->equal(integer_mm0, this->astCtxt->bv(0, 1));
+        auto ib0_mm1 = this->astCtxt->equal(integer_mm1, this->astCtxt->bv(0, 1));
+        auto ib0_mm2 = this->astCtxt->equal(integer_mm2, this->astCtxt->bv(0, 1));
+        auto ib0_mm3 = this->astCtxt->equal(integer_mm3, this->astCtxt->bv(0, 1));
+        auto ib0_mm4 = this->astCtxt->equal(integer_mm4, this->astCtxt->bv(0, 1));
+        auto ib0_mm5 = this->astCtxt->equal(integer_mm5, this->astCtxt->bv(0, 1));
+        auto ib0_mm6 = this->astCtxt->equal(integer_mm6, this->astCtxt->bv(0, 1));
+        auto ib0_mm7 = this->astCtxt->equal(integer_mm7, this->astCtxt->bv(0, 1));
+
+        /* Fraction All Zeroes */
+        auto fa0_mm0 = this->astCtxt->equal(fraction_mm0, this->astCtxt->bv(0, 63));
+        auto fa0_mm1 = this->astCtxt->equal(fraction_mm1, this->astCtxt->bv(0, 63));
+        auto fa0_mm2 = this->astCtxt->equal(fraction_mm2, this->astCtxt->bv(0, 63));
+        auto fa0_mm3 = this->astCtxt->equal(fraction_mm3, this->astCtxt->bv(0, 63));
+        auto fa0_mm4 = this->astCtxt->equal(fraction_mm4, this->astCtxt->bv(0, 63));
+        auto fa0_mm5 = this->astCtxt->equal(fraction_mm5, this->astCtxt->bv(0, 63));
+        auto fa0_mm6 = this->astCtxt->equal(fraction_mm6, this->astCtxt->bv(0, 63));
+        auto fa0_mm7 = this->astCtxt->equal(fraction_mm7, this->astCtxt->bv(0, 63));
+
+        /* Determine the x87 FPU Tag Word (Diagram at page 379 of the AMD Architecture Programmer's Manual, Volume 2: System Programming) */
+        auto db_1_0   = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm0,
+            this->astCtxt->ite(ib0_mm0,
+              this->astCtxt->ite(fa0_mm0,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm0,
+              this->astCtxt->ite(ib0_mm0,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_3_2   = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm1,
+            this->astCtxt->ite(ib0_mm1,
+              this->astCtxt->ite(fa0_mm1,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm1,
+              this->astCtxt->ite(ib0_mm1,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_5_4   = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm2,
+            this->astCtxt->ite(ib0_mm2,
+              this->astCtxt->ite(fa0_mm2,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm2,
+              this->astCtxt->ite(ib0_mm2,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_7_6   = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm3,
+            this->astCtxt->ite(ib0_mm3,
+              this->astCtxt->ite(fa0_mm3,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm3,
+              this->astCtxt->ite(ib0_mm3,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_9_8   = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm4,
+            this->astCtxt->ite(ib0_mm4,
+              this->astCtxt->ite(fa0_mm4,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm4,
+              this->astCtxt->ite(ib0_mm4,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_11_10   = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm5,
+            this->astCtxt->ite(ib0_mm5,
+              this->astCtxt->ite(fa0_mm5,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm5,
+              this->astCtxt->ite(ib0_mm5,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_13_12   = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm6,
+            this->astCtxt->ite(ib0_mm6,
+              this->astCtxt->ite(fa0_mm6,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm6,
+              this->astCtxt->ite(ib0_mm6,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_15_14   = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm7,
+            this->astCtxt->ite(ib0_mm7,
+              this->astCtxt->ite(fa0_mm7,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm7,
+              this->astCtxt->ite(ib0_mm7,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+
+        /* Restore the x87 FPU Tag Word */
+        auto uftw_ast = this->astCtxt->concat(db_15_14,
+          this->astCtxt->concat(db_13_12,
+          this->astCtxt->concat(db_11_10,
+          this->astCtxt->concat(db_9_8,
+          this->astCtxt->concat(db_7_6,
+          this->astCtxt->concat(db_5_4,
+          this->astCtxt->concat(db_3_2, db_1_0)))))));
+
+        /* Zero extend the MMX registers to 128 bits */
+        mm0_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm0_ast);
+        mm1_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm1_ast);
+        mm2_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm2_ast);
+        mm3_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm3_ast);
+        mm4_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm4_ast);
+        mm5_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm5_ast);
+        mm6_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm6_ast);
+        mm7_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm7_ast);
+
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw, "FXRSTOR FCW operation");
         auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw, "FXRSTOR FSW operation");
-        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, ftw_ast, ftw, "FXRSTOR FTW operation");
+        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, uftw_ast, ftw, "FXRSTOR Updated FTW operation");
         auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_ast, fop, "FXRSTOR FOP operation");
         auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_ast, fip, "FXRSTOR FIP operation");
         auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_ast, fcs, "FXRSTOR FCS operation");
@@ -5452,9 +5669,11 @@ namespace triton {
         auto m512byte = mem.getAddress();
 
         /* Check if the address is on a 16-byte boundary */
-        if ((m512byte % 16) != 0) {
+        if (m512byte & 0xF) {
           // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
         }
+
+        // TODO @fvrmatteo: implement check for fast FXRSTOR64 (Extended Feature Enable Register needed)
 
         /* Fetch the FPU, MMX and SSE implicit operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5495,7 +5714,7 @@ namespace triton {
         /* Fetch the implicit memory slots for the '64-bit Mode Layout (with REX.W = 1)' */
         auto fcw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 0, fcw.getSize()));
         auto fsw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 2, fsw.getSize()));
-        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize()));
+        auto ftw_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 4, ftw.getSize() / 2));
         auto fop_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 6, fop.getSize()));
         auto fip_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 8, fip.getSize()));
         auto fcs_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 12, fcs.getSize()));
@@ -5503,14 +5722,14 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32, mm0.getSize()));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48, mm1.getSize()));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64, mm2.getSize()));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80, mm3.getSize()));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96, mm4.getSize()));
-        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
-        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
-        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  FWORD_SIZE));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  FWORD_SIZE));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  FWORD_SIZE));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  FWORD_SIZE));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  FWORD_SIZE));
+        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, FWORD_SIZE));
+        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, FWORD_SIZE));
+        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, FWORD_SIZE));
         auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
         auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
         auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
@@ -5564,10 +5783,225 @@ namespace triton {
         auto xmm14_ast = this->symbolicEngine->getOperandAst(inst, xmm14_addr);
         auto xmm15_ast = this->symbolicEngine->getOperandAst(inst, xmm15_addr);
 
+        /* Fetch the abridged x87 FPU Tag Word Encoded Bits */
+        auto eb_1_0   = this->astCtxt->extract(0, 0, ftw_ast);
+        auto eb_3_2   = this->astCtxt->extract(1, 1, ftw_ast);
+        auto eb_5_4   = this->astCtxt->extract(2, 2, ftw_ast);
+        auto eb_7_6   = this->astCtxt->extract(3, 3, ftw_ast);
+        auto eb_9_8   = this->astCtxt->extract(4, 4, ftw_ast);
+        auto eb_11_10 = this->astCtxt->extract(5, 5, ftw_ast);
+        auto eb_13_12 = this->astCtxt->extract(6, 6, ftw_ast);
+        auto eb_15_14 = this->astCtxt->extract(7, 7, ftw_ast);
+
+        /* Extract the fraction from the MMX registers */
+        auto fraction_mm0 = this->astCtxt->extract(62, 0, mm0_ast);
+        auto fraction_mm1 = this->astCtxt->extract(62, 0, mm1_ast);
+        auto fraction_mm2 = this->astCtxt->extract(62, 0, mm2_ast);
+        auto fraction_mm3 = this->astCtxt->extract(62, 0, mm3_ast);
+        auto fraction_mm4 = this->astCtxt->extract(62, 0, mm4_ast);
+        auto fraction_mm5 = this->astCtxt->extract(62, 0, mm5_ast);
+        auto fraction_mm6 = this->astCtxt->extract(62, 0, mm6_ast);
+        auto fraction_mm7 = this->astCtxt->extract(62, 0, mm7_ast);
+
+        /* Extract the integer bit from the MMX registers */
+        auto integer_mm0 = this->astCtxt->extract(63, 63, mm0_ast);
+        auto integer_mm1 = this->astCtxt->extract(63, 63, mm1_ast);
+        auto integer_mm2 = this->astCtxt->extract(63, 63, mm2_ast);
+        auto integer_mm3 = this->astCtxt->extract(63, 63, mm3_ast);
+        auto integer_mm4 = this->astCtxt->extract(63, 63, mm4_ast);
+        auto integer_mm5 = this->astCtxt->extract(63, 63, mm5_ast);
+        auto integer_mm6 = this->astCtxt->extract(63, 63, mm6_ast);
+        auto integer_mm7 = this->astCtxt->extract(63, 63, mm7_ast);
+
+        /* Extract the exponent from the MMX registers */
+        auto exponent_mm0 = this->astCtxt->extract(79, 64, mm0_ast);
+        auto exponent_mm1 = this->astCtxt->extract(79, 64, mm1_ast);
+        auto exponent_mm2 = this->astCtxt->extract(79, 64, mm2_ast);
+        auto exponent_mm3 = this->astCtxt->extract(79, 64, mm3_ast);
+        auto exponent_mm4 = this->astCtxt->extract(79, 64, mm4_ast);
+        auto exponent_mm5 = this->astCtxt->extract(79, 64, mm5_ast);
+        auto exponent_mm6 = this->astCtxt->extract(79, 64, mm6_ast);
+        auto exponent_mm7 = this->astCtxt->extract(79, 64, mm7_ast);
+
+        /* Exponent All Zeros */
+        auto ea0_mm0 = this->astCtxt->equal(exponent_mm0, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm1 = this->astCtxt->equal(exponent_mm1, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm2 = this->astCtxt->equal(exponent_mm2, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm3 = this->astCtxt->equal(exponent_mm3, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm4 = this->astCtxt->equal(exponent_mm4, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm5 = this->astCtxt->equal(exponent_mm5, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm6 = this->astCtxt->equal(exponent_mm6, this->astCtxt->bv(0x0000, 16));
+        auto ea0_mm7 = this->astCtxt->equal(exponent_mm7, this->astCtxt->bv(0x0000, 16));
+
+        /* Exponent All Ones */
+        auto ea1_mm0 = this->astCtxt->equal(exponent_mm0, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm1 = this->astCtxt->equal(exponent_mm1, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm2 = this->astCtxt->equal(exponent_mm2, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm3 = this->astCtxt->equal(exponent_mm3, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm4 = this->astCtxt->equal(exponent_mm4, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm5 = this->astCtxt->equal(exponent_mm5, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm6 = this->astCtxt->equal(exponent_mm6, this->astCtxt->bv(0xFFFF, 16));
+        auto ea1_mm7 = this->astCtxt->equal(exponent_mm7, this->astCtxt->bv(0xFFFF, 16));
+
+        /* Exponent Neither All Zeroes Or Ones */
+        auto ena01_mm0 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm0, ea1_mm0), this->astCtxt->bvfalse());
+        auto ena01_mm1 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm1, ea1_mm1), this->astCtxt->bvfalse());
+        auto ena01_mm2 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm2, ea1_mm2), this->astCtxt->bvfalse());
+        auto ena01_mm3 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm3, ea1_mm3), this->astCtxt->bvfalse());
+        auto ena01_mm4 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm4, ea1_mm4), this->astCtxt->bvfalse());
+        auto ena01_mm5 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm5, ea1_mm5), this->astCtxt->bvfalse());
+        auto ena01_mm6 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm6, ea1_mm6), this->astCtxt->bvfalse());
+        auto ena01_mm7 = this->astCtxt->equal(this->astCtxt->lor(ea0_mm7, ea1_mm7), this->astCtxt->bvfalse());
+
+        /* Integer Bit 0 */
+        auto ib0_mm0 = this->astCtxt->equal(integer_mm0, this->astCtxt->bv(0, 1));
+        auto ib0_mm1 = this->astCtxt->equal(integer_mm1, this->astCtxt->bv(0, 1));
+        auto ib0_mm2 = this->astCtxt->equal(integer_mm2, this->astCtxt->bv(0, 1));
+        auto ib0_mm3 = this->astCtxt->equal(integer_mm3, this->astCtxt->bv(0, 1));
+        auto ib0_mm4 = this->astCtxt->equal(integer_mm4, this->astCtxt->bv(0, 1));
+        auto ib0_mm5 = this->astCtxt->equal(integer_mm5, this->astCtxt->bv(0, 1));
+        auto ib0_mm6 = this->astCtxt->equal(integer_mm6, this->astCtxt->bv(0, 1));
+        auto ib0_mm7 = this->astCtxt->equal(integer_mm7, this->astCtxt->bv(0, 1));
+
+        /* Fraction All Zeroes */
+        auto fa0_mm0 = this->astCtxt->equal(fraction_mm0, this->astCtxt->bv(0, 63));
+        auto fa0_mm1 = this->astCtxt->equal(fraction_mm1, this->astCtxt->bv(0, 63));
+        auto fa0_mm2 = this->astCtxt->equal(fraction_mm2, this->astCtxt->bv(0, 63));
+        auto fa0_mm3 = this->astCtxt->equal(fraction_mm3, this->astCtxt->bv(0, 63));
+        auto fa0_mm4 = this->astCtxt->equal(fraction_mm4, this->astCtxt->bv(0, 63));
+        auto fa0_mm5 = this->astCtxt->equal(fraction_mm5, this->astCtxt->bv(0, 63));
+        auto fa0_mm6 = this->astCtxt->equal(fraction_mm6, this->astCtxt->bv(0, 63));
+        auto fa0_mm7 = this->astCtxt->equal(fraction_mm7, this->astCtxt->bv(0, 63));
+
+        /* Determine the x87 FPU Tag Word (Diagram at page 379 of the AMD Architecture Programmer's Manual, Volume 2: System Programming) */
+        auto db_1_0   = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm0,
+            this->astCtxt->ite(ib0_mm0,
+              this->astCtxt->ite(fa0_mm0,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm0,
+              this->astCtxt->ite(ib0_mm0,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_3_2   = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm1,
+            this->astCtxt->ite(ib0_mm1,
+              this->astCtxt->ite(fa0_mm1,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm1,
+              this->astCtxt->ite(ib0_mm1,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_5_4   = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm2,
+            this->astCtxt->ite(ib0_mm2,
+              this->astCtxt->ite(fa0_mm2,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm2,
+              this->astCtxt->ite(ib0_mm2,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_7_6   = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm3,
+            this->astCtxt->ite(ib0_mm3,
+              this->astCtxt->ite(fa0_mm3,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm3,
+              this->astCtxt->ite(ib0_mm3,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_9_8   = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm4,
+            this->astCtxt->ite(ib0_mm4,
+              this->astCtxt->ite(fa0_mm4,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm4,
+              this->astCtxt->ite(ib0_mm4,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_11_10   = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm5,
+            this->astCtxt->ite(ib0_mm5,
+              this->astCtxt->ite(fa0_mm5,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm5,
+              this->astCtxt->ite(ib0_mm5,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_13_12   = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm6,
+            this->astCtxt->ite(ib0_mm6,
+              this->astCtxt->ite(fa0_mm6,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm6,
+              this->astCtxt->ite(ib0_mm6,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+        auto db_15_14   = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
+          this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
+          this->astCtxt->ite(ea0_mm7,
+            this->astCtxt->ite(ib0_mm7,
+              this->astCtxt->ite(fa0_mm7,
+                this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
+                this->astCtxt->bv(2, 2)),   // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction Not All 0'
+              this->astCtxt->bv(2, 2)),     // 'Exponent All 0' + 'Integer Bit 1'
+            this->astCtxt->ite(ena01_mm7,
+              this->astCtxt->ite(ib0_mm7,
+                this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
+                this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
+              this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
+
+        /* Restore the x87 FPU Tag Word */
+        auto uftw_ast = this->astCtxt->concat(db_15_14,
+          this->astCtxt->concat(db_13_12,
+          this->astCtxt->concat(db_11_10,
+          this->astCtxt->concat(db_9_8,
+          this->astCtxt->concat(db_7_6,
+          this->astCtxt->concat(db_5_4,
+          this->astCtxt->concat(db_3_2, db_1_0)))))));
+
+        /* Zero extend the MMX registers to 128 bits */
+        mm0_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm0_ast);
+        mm1_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm1_ast);
+        mm2_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm2_ast);
+        mm3_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm3_ast);
+        mm4_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm4_ast);
+        mm5_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm5_ast);
+        mm6_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm6_ast);
+        mm7_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm7_ast);
+
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw, "FXRSTOR64 FCW operation");
         auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw, "FXRSTOR64 FSW operation");
-        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, ftw_ast, ftw, "FXRSTOR64 FTW operation");
+        auto ftw_expr = this->symbolicEngine->createSymbolicExpression(inst, uftw_ast, ftw, "FXRSTOR64 Updated FTW operation");
         auto fop_expr = this->symbolicEngine->createSymbolicExpression(inst, fop_ast, fop, "FXRSTOR64 FOP operation");
         auto fip_expr = this->symbolicEngine->createSymbolicExpression(inst, fip_ast, fip, "FXRSTOR64 FIP operation");
         auto fcs_expr = this->symbolicEngine->createSymbolicExpression(inst, fcs_ast, fcs, "FXRSTOR64 FCS operation");
@@ -5651,9 +6085,11 @@ namespace triton {
         auto m512byte = mem.getAddress();
 
         /* Check if the address is on a 16-byte boundary */
-        if ((m512byte % 16) != 0) {
+        if (m512byte & 0xF) {
           // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
         }
+
+        // TODO @fvrmatteo: implement check for fast FXSAVE (Extended Feature Enable Register needed)
 
         /* Fetch the FPU, MMX and SSE implicint operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5760,11 +6196,11 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32, mm0.getSize()));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48, mm1.getSize()));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64, mm2.getSize()));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80, mm3.getSize()));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96, mm4.getSize()));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  mm0.getSize()));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  mm1.getSize()));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  mm2.getSize()));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  mm3.getSize()));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  mm4.getSize()));
         auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
         auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
         auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
@@ -5776,6 +6212,25 @@ namespace triton {
         auto xmm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 240, xmm5.getSize()));
         auto xmm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
         auto xmm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
+
+        /* Write the correct 80 bits of the MMX registers */
+        auto mm0_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm0_addr));
+        auto mm1_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm1_addr));
+        auto mm2_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm2_addr));
+        auto mm3_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm3_addr));
+        auto mm4_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm4_addr));
+        auto mm5_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm5_addr));
+        auto mm6_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm6_addr));
+        auto mm7_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm7_addr));
+
+        mm0_ast = this->astCtxt->concat(mm0_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm0_ast));
+        mm1_ast = this->astCtxt->concat(mm1_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm1_ast));
+        mm2_ast = this->astCtxt->concat(mm2_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm2_ast));
+        mm3_ast = this->astCtxt->concat(mm3_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm3_ast));
+        mm4_ast = this->astCtxt->concat(mm4_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm4_ast));
+        mm5_ast = this->astCtxt->concat(mm5_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm5_ast));
+        mm6_ast = this->astCtxt->concat(mm6_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm6_ast));
+        mm7_ast = this->astCtxt->concat(mm7_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm7_ast));
 
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE FCW operation");
@@ -5835,8 +6290,8 @@ namespace triton {
 
         /* Additional semantics, symbolic expressions and tainting for the '64-bit Mode Layout (with REX.W = 0)' */
         if (arch == triton::arch::architecture_e::ARCH_X86_64) {
-          auto xmm8 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
-          auto xmm9 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
+          auto xmm8  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
+          auto xmm9  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
           auto xmm10 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM10));
           auto xmm11 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM11));
           auto xmm12 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM12));
@@ -5844,8 +6299,8 @@ namespace triton {
           auto xmm14 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM14));
           auto xmm15 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM15));
 
-          auto xmm8_ast = this->symbolicEngine->getOperandAst(inst, xmm8);
-          auto xmm9_ast = this->symbolicEngine->getOperandAst(inst, xmm9);
+          auto xmm8_ast  = this->symbolicEngine->getOperandAst(inst, xmm8);
+          auto xmm9_ast  = this->symbolicEngine->getOperandAst(inst, xmm9);
           auto xmm10_ast = this->symbolicEngine->getOperandAst(inst, xmm10);
           auto xmm11_ast = this->symbolicEngine->getOperandAst(inst, xmm11);
           auto xmm12_ast = this->symbolicEngine->getOperandAst(inst, xmm12);
@@ -5862,23 +6317,14 @@ namespace triton {
           auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
           auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
 
-          auto xmm8_store  = this->astCtxt->zx(xmm8_addr.getBitSize() -  xmm8.getBitSize(),  xmm8_ast);
-          auto xmm9_store  = this->astCtxt->zx(xmm9_addr.getBitSize() -  xmm9.getBitSize(),  xmm9_ast);
-          auto xmm10_store = this->astCtxt->zx(xmm10_addr.getBitSize() - xmm10.getBitSize(), xmm10_ast);
-          auto xmm11_store = this->astCtxt->zx(xmm11_addr.getBitSize() - xmm11.getBitSize(), xmm11_ast);
-          auto xmm12_store = this->astCtxt->zx(xmm12_addr.getBitSize() - xmm12.getBitSize(), xmm12_ast);
-          auto xmm13_store = this->astCtxt->zx(xmm13_addr.getBitSize() - xmm13.getBitSize(), xmm13_ast);
-          auto xmm14_store = this->astCtxt->zx(xmm14_addr.getBitSize() - xmm14.getBitSize(), xmm14_ast);
-          auto xmm15_store = this->astCtxt->zx(xmm15_addr.getBitSize() - xmm15.getBitSize(), xmm15_ast);
-
-          auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_store, xmm8_addr, "FXSAVE XMM8 operation");
-          auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_store, xmm9_addr, "FXSAVE XMM9 operation");
-          auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_store, xmm10_addr, "FXSAVE XMM10 operation");
-          auto xmm11_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm11_store, xmm11_addr, "FXSAVE XMM11 operation");
-          auto xmm12_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm12_store, xmm12_addr, "FXSAVE XMM12 operation");
-          auto xmm13_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm13_store, xmm13_addr, "FXSAVE XMM13 operation");
-          auto xmm14_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm14_store, xmm14_addr, "FXSAVE XMM14 operation");
-          auto xmm15_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm15_store, xmm15_addr, "FXSAVE XMM15 operation");
+          auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_ast, xmm8_addr, "FXSAVE XMM8 operation");
+          auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_ast, xmm9_addr, "FXSAVE XMM9 operation");
+          auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_ast, xmm10_addr, "FXSAVE XMM10 operation");
+          auto xmm11_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm11_ast, xmm11_addr, "FXSAVE XMM11 operation");
+          auto xmm12_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm12_ast, xmm12_addr, "FXSAVE XMM12 operation");
+          auto xmm13_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm13_ast, xmm13_addr, "FXSAVE XMM13 operation");
+          auto xmm14_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm14_ast, xmm14_addr, "FXSAVE XMM14 operation");
+          auto xmm15_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm15_ast, xmm15_addr, "FXSAVE XMM15 operation");
 
           xmm8_expr->isTainted  = this->taintEngine->taintAssignment(xmm8_addr, xmm8);
           xmm9_expr->isTainted  = this->taintEngine->taintAssignment(xmm9_addr, xmm9);
@@ -5902,9 +6348,11 @@ namespace triton {
         auto m512byte = mem.getAddress();
 
         /* Check if the address is on a 16-byte boundary */
-        if ((m512byte % 16) != 0) {
+        if (m512byte & 0xF) {
           // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
         }
+
+        // TODO @fvrmatteo: implement check for fast FXRSAVE64 (Extended Feature Enable Register needed)
 
         /* Fetch the FPU, MMX and SSE implicit operands */
         auto fcw = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_FCW));
@@ -5925,16 +6373,16 @@ namespace triton {
         auto mm5 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_MM5));
         auto mm6 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_MM6));
         auto mm7 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_MM7));
-        auto xmm0 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM0));
-        auto xmm1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM1));
-        auto xmm2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM2));
-        auto xmm3 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM3));
-        auto xmm4 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM4));
-        auto xmm5 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM5));
-        auto xmm6 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM6));
-        auto xmm7 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM7));
-        auto xmm8 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
-        auto xmm9 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
+        auto xmm0  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM0));
+        auto xmm1  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM1));
+        auto xmm2  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM2));
+        auto xmm3  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM3));
+        auto xmm4  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM4));
+        auto xmm5  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM5));
+        auto xmm6  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM6));
+        auto xmm7  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM7));
+        auto xmm8  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
+        auto xmm9  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
         auto xmm10 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM10));
         auto xmm11 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM11));
         auto xmm12 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM12));
@@ -5961,16 +6409,16 @@ namespace triton {
         auto mm5_ast = this->symbolicEngine->getOperandAst(inst, mm5);
         auto mm6_ast = this->symbolicEngine->getOperandAst(inst, mm6);
         auto mm7_ast = this->symbolicEngine->getOperandAst(inst, mm7);
-        auto xmm0_ast = this->symbolicEngine->getOperandAst(inst, xmm0);
-        auto xmm1_ast = this->symbolicEngine->getOperandAst(inst, xmm1);
-        auto xmm2_ast = this->symbolicEngine->getOperandAst(inst, xmm2);
-        auto xmm3_ast = this->symbolicEngine->getOperandAst(inst, xmm3);
-        auto xmm4_ast = this->symbolicEngine->getOperandAst(inst, xmm4);
-        auto xmm5_ast = this->symbolicEngine->getOperandAst(inst, xmm5);
-        auto xmm6_ast = this->symbolicEngine->getOperandAst(inst, xmm6);
-        auto xmm7_ast = this->symbolicEngine->getOperandAst(inst, xmm7);
-        auto xmm8_ast = this->symbolicEngine->getOperandAst(inst, xmm8);
-        auto xmm9_ast = this->symbolicEngine->getOperandAst(inst, xmm9);
+        auto xmm0_ast  = this->symbolicEngine->getOperandAst(inst, xmm0);
+        auto xmm1_ast  = this->symbolicEngine->getOperandAst(inst, xmm1);
+        auto xmm2_ast  = this->symbolicEngine->getOperandAst(inst, xmm2);
+        auto xmm3_ast  = this->symbolicEngine->getOperandAst(inst, xmm3);
+        auto xmm4_ast  = this->symbolicEngine->getOperandAst(inst, xmm4);
+        auto xmm5_ast  = this->symbolicEngine->getOperandAst(inst, xmm5);
+        auto xmm6_ast  = this->symbolicEngine->getOperandAst(inst, xmm6);
+        auto xmm7_ast  = this->symbolicEngine->getOperandAst(inst, xmm7);
+        auto xmm8_ast  = this->symbolicEngine->getOperandAst(inst, xmm8);
+        auto xmm9_ast  = this->symbolicEngine->getOperandAst(inst, xmm9);
         auto xmm10_ast = this->symbolicEngine->getOperandAst(inst, xmm10);
         auto xmm11_ast = this->symbolicEngine->getOperandAst(inst, xmm11);
         auto xmm12_ast = this->symbolicEngine->getOperandAst(inst, xmm12);
@@ -6027,22 +6475,22 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32, mm0.getSize()));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48, mm1.getSize()));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64, mm2.getSize()));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80, mm3.getSize()));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96, mm4.getSize()));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  mm0.getSize()));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  mm1.getSize()));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  mm2.getSize()));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  mm3.getSize()));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  mm4.getSize()));
         auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
         auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
         auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
-        auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
-        auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
-        auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
-        auto xmm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 208, xmm3.getSize()));
-        auto xmm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 224, xmm4.getSize()));
-        auto xmm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 240, xmm5.getSize()));
-        auto xmm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
-        auto xmm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
+        auto xmm0_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
+        auto xmm1_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
+        auto xmm2_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
+        auto xmm3_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 208, xmm3.getSize()));
+        auto xmm4_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 224, xmm4.getSize()));
+        auto xmm5_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 240, xmm5.getSize()));
+        auto xmm6_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
+        auto xmm7_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
         auto xmm8_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 288, xmm8.getSize()));
         auto xmm9_addr  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 304, xmm9.getSize()));
         auto xmm10_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 320, xmm10.getSize()));
@@ -6051,6 +6499,25 @@ namespace triton {
         auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
         auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
         auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
+
+        /* Write the correct 80 bits of the MMX registers */
+        auto mm0_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm0_addr));
+        auto mm1_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm1_addr));
+        auto mm2_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm2_addr));
+        auto mm3_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm3_addr));
+        auto mm4_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm4_addr));
+        auto mm5_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm5_addr));
+        auto mm6_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm6_addr));
+        auto mm7_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm7_addr));
+
+        mm0_ast = this->astCtxt->concat(mm0_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm0_ast));
+        mm1_ast = this->astCtxt->concat(mm1_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm1_ast));
+        mm2_ast = this->astCtxt->concat(mm2_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm2_ast));
+        mm3_ast = this->astCtxt->concat(mm3_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm3_ast));
+        mm4_ast = this->astCtxt->concat(mm4_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm4_ast));
+        mm5_ast = this->astCtxt->concat(mm5_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm5_ast));
+        mm6_ast = this->astCtxt->concat(mm6_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm6_ast));
+        mm7_ast = this->astCtxt->concat(mm7_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm7_ast));
 
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE64 FCW operation");
@@ -6071,14 +6538,14 @@ namespace triton {
         auto mm5_expr = this->symbolicEngine->createSymbolicExpression(inst, mm5_ast, mm5_addr, "FXSAVE64 MM5 operation");
         auto mm6_expr = this->symbolicEngine->createSymbolicExpression(inst, mm6_ast, mm6_addr, "FXSAVE64 MM6 operation");
         auto mm7_expr = this->symbolicEngine->createSymbolicExpression(inst, mm7_ast, mm7_addr, "FXSAVE64 MM7 operation");
-        auto xmm0_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm0_ast, xmm0_addr, "FXSAVE64 XMM0 operation");
-        auto xmm1_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm1_ast, xmm1_addr, "FXSAVE64 XMM1 operation");
-        auto xmm2_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm2_ast, xmm2_addr, "FXSAVE64 XMM2 operation");
-        auto xmm3_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm3_ast, xmm3_addr, "FXSAVE64 XMM3 operation");
-        auto xmm4_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm4_ast, xmm4_addr, "FXSAVE64 XMM4 operation");
-        auto xmm5_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm5_ast, xmm5_addr, "FXSAVE64 XMM5 operation");
-        auto xmm6_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm6_ast, xmm6_addr, "FXSAVE64 XMM6 operation");
-        auto xmm7_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm7_ast, xmm7_addr, "FXSAVE64 XMM7 operation");
+        auto xmm0_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm0_ast, xmm0_addr, "FXSAVE64 XMM0 operation");
+        auto xmm1_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm1_ast, xmm1_addr, "FXSAVE64 XMM1 operation");
+        auto xmm2_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm2_ast, xmm2_addr, "FXSAVE64 XMM2 operation");
+        auto xmm3_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm3_ast, xmm3_addr, "FXSAVE64 XMM3 operation");
+        auto xmm4_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm4_ast, xmm4_addr, "FXSAVE64 XMM4 operation");
+        auto xmm5_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm5_ast, xmm5_addr, "FXSAVE64 XMM5 operation");
+        auto xmm6_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm6_ast, xmm6_addr, "FXSAVE64 XMM6 operation");
+        auto xmm7_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm7_ast, xmm7_addr, "FXSAVE64 XMM7 operation");
         auto xmm8_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm8_ast, xmm8_addr, "FXSAVE64 XMM8 operation");
         auto xmm9_expr  = this->symbolicEngine->createSymbolicExpression(inst, xmm9_ast, xmm9_addr, "FXSAVE64 XMM9 operation");
         auto xmm10_expr = this->symbolicEngine->createSymbolicExpression(inst, xmm10_ast, xmm10_addr, "FXSAVE64 XMM10 operation");
@@ -6107,14 +6574,14 @@ namespace triton {
         mm5_expr->isTainted = this->taintEngine->taintAssignment(mm5_addr, mm5);
         mm6_expr->isTainted = this->taintEngine->taintAssignment(mm6_addr, mm6);
         mm7_expr->isTainted = this->taintEngine->taintAssignment(mm7_addr, mm7);
-        xmm0_expr->isTainted = this->taintEngine->taintAssignment(xmm0_addr, xmm0);
-        xmm1_expr->isTainted = this->taintEngine->taintAssignment(xmm1_addr, xmm1);
-        xmm2_expr->isTainted = this->taintEngine->taintAssignment(xmm2_addr, xmm2);
-        xmm3_expr->isTainted = this->taintEngine->taintAssignment(xmm3_addr, xmm3);
-        xmm4_expr->isTainted = this->taintEngine->taintAssignment(xmm4_addr, xmm4);
-        xmm5_expr->isTainted = this->taintEngine->taintAssignment(xmm5_addr, xmm5);
-        xmm6_expr->isTainted = this->taintEngine->taintAssignment(xmm6_addr, xmm6);
-        xmm7_expr->isTainted = this->taintEngine->taintAssignment(xmm7_addr, xmm7);
+        xmm0_expr->isTainted  = this->taintEngine->taintAssignment(xmm0_addr, xmm0);
+        xmm1_expr->isTainted  = this->taintEngine->taintAssignment(xmm1_addr, xmm1);
+        xmm2_expr->isTainted  = this->taintEngine->taintAssignment(xmm2_addr, xmm2);
+        xmm3_expr->isTainted  = this->taintEngine->taintAssignment(xmm3_addr, xmm3);
+        xmm4_expr->isTainted  = this->taintEngine->taintAssignment(xmm4_addr, xmm4);
+        xmm5_expr->isTainted  = this->taintEngine->taintAssignment(xmm5_addr, xmm5);
+        xmm6_expr->isTainted  = this->taintEngine->taintAssignment(xmm6_addr, xmm6);
+        xmm7_expr->isTainted  = this->taintEngine->taintAssignment(xmm7_addr, xmm7);
         xmm8_expr->isTainted  = this->taintEngine->taintAssignment(xmm8_addr, xmm8);
         xmm9_expr->isTainted  = this->taintEngine->taintAssignment(xmm9_addr, xmm9);
         xmm10_expr->isTainted = this->taintEngine->taintAssignment(xmm10_addr, xmm10);

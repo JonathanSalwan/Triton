@@ -35,6 +35,12 @@
 /*! Returns the QWORD size in bit. */
 #define QWORD_SIZE_BIT 64
 
+/*! Returns the FWORD size in byte. */
+#define FWORD_SIZE 10
+
+/*! Returns the FWORD size in bit. */
+#define FWORD_SIZE_BIT 80
+
 /*! Returns the DQWORD size in byte. */
 #define DQWORD_SIZE 16
 

@@ -1117,15 +1117,18 @@ if __name__ == '__main__':
         "mxcsr_mask": 0xFFBF,   # Unsupported by Unicorn
         "fcw":        0x27F,
         "fsw":        0x4444,
-        "ftw":        0xFFFF,
+        "ftw":        0xFFFF
     }
 
     for st, opcode, disassembly in CODE:
         if st is not None:
             state.update(st)
         try:
+            print("> Unicorn emulation: %s" % disassembly)
             uc_state = emu_with_unicorn(opcode, state)
+            print("> Triton emulation: %s" % disassembly)
             tt_state = emu_with_triton(opcode, state)
+            print("> Emulation done")
         except Exception as e:
             print('[KO] %s' %(disassembly))
             print('\t%s' %(e))
