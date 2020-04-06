@@ -1162,16 +1162,19 @@ namespace triton {
 
           /* Initialize the AST of the memory access (LEA) -> ((pc + base) + (index * scale) + disp) */
           auto pcPlusBaseAst    = mem.getPcRelative() ? this->astCtxt->bv(mem.getPcRelative(), bitSize) :
-                                    (this->architecture->isRegisterValid(base) ? this->getRegisterAst(base) : this->astCtxt->bv(0, bitSize));
+                                    (this->architecture->isRegisterValid(base) ? this->getRegisterAst(base) :
+                                      this->astCtxt->bv(0, bitSize));
+
           auto indexMulScaleAst = this->astCtxt->bvmul(
-                                      (this->architecture->isRegisterValid(index) ? this->getRegisterAst(index) : this->astCtxt->bv(0, bitSize)),
-                                      this->astCtxt->bv(scaleValue, bitSize)
-                                    );
+                                    (this->architecture->isRegisterValid(index) ? this->getRegisterAst(index) : this->astCtxt->bv(0, bitSize)),
+                                    this->astCtxt->bv(scaleValue, bitSize)
+                                  );
+
           auto dispAst          = this->astCtxt->bv(dispValue, bitSize);
           auto leaAst           = this->astCtxt->bvadd(
-                                    index.isSubtracted() ? this->astCtxt->bvsub(pcPlusBaseAst, indexMulScaleAst) :
-                                      this->astCtxt->bvadd(pcPlusBaseAst, indexMulScaleAst),
-                                    dispAst);
+                                    index.isSubtracted() ? this->astCtxt->bvsub(pcPlusBaseAst, indexMulScaleAst) : this->astCtxt->bvadd(pcPlusBaseAst, indexMulScaleAst),
+                                    dispAst
+                                  );
 
           /* Use segments as base address instead of selector into the GDT. */
           if (segmentValue) {
