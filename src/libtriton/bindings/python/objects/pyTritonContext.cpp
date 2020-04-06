@@ -1281,7 +1281,7 @@ namespace triton {
           ret = xPyDict_New();
           auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node));
           for (auto it = model.begin(); it != model.end(); it++) {
-            xPyDict_SetItem(ret, PyLong_FromUint32(it->first), PySolverModel(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySolverModel(it->second));
           }
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -1321,7 +1321,7 @@ namespace triton {
             auto model = *it;
 
             for (auto it2 = model.begin(); it2 != model.end(); it2++) {
-              xPyDict_SetItem(mdict, PyLong_FromUint32(it2->first), PySolverModel(it2->second));
+              xPyDict_SetItem(mdict, PyLong_FromUsize(it2->first), PySolverModel(it2->second));
             }
             if (model.size() > 0)
               PyList_SetItem(ret, index++, mdict);

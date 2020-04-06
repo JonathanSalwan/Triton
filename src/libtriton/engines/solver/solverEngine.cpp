@@ -76,16 +76,16 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::uint32, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node) const {
+      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node) const {
         if (!this->solver)
-          return std::unordered_map<triton::uint32, SolverModel>{};
+          return std::unordered_map<triton::usize, SolverModel>{};
         return this->solver->getModel(node);
       }
 
 
-      std::vector<std::unordered_map<triton::uint32, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
         if (!this->solver)
-          return std::vector<std::unordered_map<triton::uint32, SolverModel>>{};
+          return std::vector<std::unordered_map<triton::usize, SolverModel>>{};
         return this->solver->getModels(node, limit);
       }
 

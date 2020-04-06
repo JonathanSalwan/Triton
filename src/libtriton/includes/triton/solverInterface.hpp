@@ -53,7 +53,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT virtual std::unordered_map<triton::uint32, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const = 0;
+          TRITON_EXPORT virtual std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const = 0;
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
           /*! \brief vector of map of symbolic variable id -> model
@@ -62,7 +62,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT virtual std::vector<std::unordered_map<triton::uint32, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const = 0;
+          TRITON_EXPORT virtual std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const = 0;
 
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT virtual bool isSat(const triton::ast::SharedAbstractNode& node) const = 0;

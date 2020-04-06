@@ -93,7 +93,7 @@ namespace triton {
 
       static PyObject* SolverModel_getId(PyObject* self, PyObject* noarg) {
         try {
-          return PyLong_FromUint32(PySolverModel_AsSolverModel(self)->getId());
+          return PyLong_FromUsize(PySolverModel_AsSolverModel(self)->getId());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

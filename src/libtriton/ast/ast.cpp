@@ -2289,7 +2289,7 @@ namespace triton {
 
 
     void ForallNode::init(bool withParents) {
-      triton::uint32 size = this->children.size();
+      triton::usize size = this->children.size();
 
       if (size < 2)
         throw triton::exceptions::Ast("ForallNode::init(): Must take at least two children.");

@@ -39,8 +39,8 @@ namespace triton {
       }
 
 
-      std::vector<std::unordered_map<triton::uint32, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
-        std::vector<std::unordered_map<triton::uint32, SolverModel>> ret;
+      std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+        std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
         triton::ast::TritonToZ3Ast z3Ast{false};
 
@@ -69,7 +69,7 @@ namespace triton {
             z3::model m = solver.get_model();
 
             /* Traversing the model */
-            std::unordered_map<triton::uint32, SolverModel> smodel;
+            std::unordered_map<triton::usize, SolverModel> smodel;
             z3::expr_vector args(ctx);
             for (triton::uint32 i = 0; i < m.size(); i++) {
 
@@ -148,9 +148,9 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::uint32, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node) const {
-        std::unordered_map<triton::uint32, SolverModel> ret;
-        std::vector<std::unordered_map<triton::uint32, SolverModel>> allModels;
+      std::unordered_map<triton::usize, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node) const {
+        std::unordered_map<triton::usize, SolverModel> ret;
+        std::vector<std::unordered_map<triton::usize, SolverModel>> allModels;
 
         allModels = this->getModels(node, 1);
         if (allModels.size() > 0)

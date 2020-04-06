@@ -366,7 +366,7 @@ namespace triton {
 
       /* forall representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ForallNode* node) {
-        triton::uint32 size = node->getChildren().size() - 1;
+        triton::usize size = node->getChildren().size() - 1;
 
         stream << "forall([";
         for (triton::uint32 i = 0; i != size; i++) {

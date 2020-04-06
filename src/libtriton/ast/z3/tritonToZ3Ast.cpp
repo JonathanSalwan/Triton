@@ -205,7 +205,7 @@ namespace triton {
         }
 
         case FORALL_NODE: {
-          triton::uint32 size = node->getChildren().size() - 1;
+          triton::usize size = node->getChildren().size() - 1;
           Z3_app* vars = new Z3_app[size];
 
           for (triton::uint32 i = 0; i != size; i++) {
