@@ -5,11 +5,10 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
-from struct              import pack
 
-import sys
 import pprint
 import random
+import sys
 
 ADDR  = 0x100000
 STACK = 0x200000
@@ -44,49 +43,20 @@ CODE  = [
 ]
 
 
-def hook_code(mu, address, size, istate):
-    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
-
-    ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
-        "r0":    mu.reg_read(UC_ARM_REG_R0),
-        "r1":    mu.reg_read(UC_ARM_REG_R1),
-        "r2":    mu.reg_read(UC_ARM_REG_R2),
-        "r3":    mu.reg_read(UC_ARM_REG_R3),
-        "r4":    mu.reg_read(UC_ARM_REG_R4),
-        "r5":    mu.reg_read(UC_ARM_REG_R5),
-        "r6":    mu.reg_read(UC_ARM_REG_R6),
-        "r7":    mu.reg_read(UC_ARM_REG_R7),
-        "r8":    mu.reg_read(UC_ARM_REG_R8),
-        "r9":    mu.reg_read(UC_ARM_REG_R9),
-        "r10":   mu.reg_read(UC_ARM_REG_R10),
-        "r11":   mu.reg_read(UC_ARM_REG_R11),
-        "r12":   mu.reg_read(UC_ARM_REG_R12),
-        "sp":    mu.reg_read(UC_ARM_REG_SP),
-        "r14":   mu.reg_read(UC_ARM_REG_R14),
-        "pc":    mu.reg_read(UC_ARM_REG_PC),
-        "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
-        "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
-        "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
-        "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
-    }
-
-    # print_state(istate, istate, ostate)
-
 def emu_with_unicorn(opcode, istate):
-    # Initialize emulator in arm32 mode
+    # Initialize emulator in arm32 mode.
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
-    # map memory for this emulation
+    # Map memory for this emulation.
     mu.mem_map(ADDR, SIZE)
 
-    # write machine code to be emulated to memory
+    # Write machine code to be emulated to memory.
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
         index += len(op)
 
+    # Retrieve APSR register value.
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
@@ -110,17 +80,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # # tracing all instructions with customized callback
-    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
-
-    # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    # Emulate opcode.
     # NOTE: The +4 and count=1 is a trick so UC updates PC.
     mu.emu_start(istate['pc'], istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
+        "stack": bytearray(mu.mem_read(STACK, 0x100)),
+        "heap":  bytearray(mu.mem_read(HEAP, 0x100)),
         "r0":    mu.reg_read(UC_ARM_REG_R0),
         "r1":    mu.reg_read(UC_ARM_REG_R1),
         "r2":    mu.reg_read(UC_ARM_REG_R2),
@@ -143,6 +109,7 @@ def emu_with_unicorn(opcode, istate):
         "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
     }
     return ostate
+
 
 def emu_with_triton(opcode, istate):
     ctx = TritonContext()
@@ -208,6 +175,7 @@ def emu_with_triton(opcode, istate):
     }
     return ostate
 
+
 def diff_state(state1, state2):
     for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
@@ -215,6 +183,7 @@ def diff_state(state1, state2):
         elif not (k == 'heap' or k == 'stack') and v != state2[k]:
             print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
+
 
 def print_state(istate, uc_ostate, tt_ostate):
     for k in sorted(istate.keys()):
@@ -225,21 +194,25 @@ def print_state(istate, uc_ostate, tt_ostate):
 
         print("{:>3s}: {:08x} | {:08x} {} {:08x}".format(k, istate[k], uc_ostate[k], diff, tt_ostate[k]))
 
-def print_heap(istate, uc_ostate, tt_ostate):
+
+def diff_heap(istate, uc_ostate, tt_ostate):
     print("IN|UC|TT")
     for a, b, c in zip(istate['heap'], uc_ostate['heap'], tt_ostate['heap']):
-        if ord(a) != b or ord(a) != c:
-            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+        if a != b or a != c:
+            print("{:02x}|{:02x}|{:02x}".format(a, b, c), sep=" ")
 
-def print_stack(istate, uc_ostate, tt_ostate):
+
+def diff_stack(istate, uc_ostate, tt_ostate):
     print("IN|UC|TT")
+    sp = istate["sp"]
     for a, b, c in zip(istate['stack'], uc_ostate['stack'], tt_ostate['stack']):
-        if ord(a) != b or ord(a) != c:
-            print("{:02x}|{:02x}|{:02x}".format(ord(a), b, c), sep=" ")
+        if a != b or a != c:
+            print("{:x}: {:02x}|{:02x}|{:02x}".format(sp, a, b, c), sep=" ")
+        sp += 1
 
 
 if __name__ == '__main__':
-    # initial state
+    # Initial state.
     state = {
         "stack": bytearray([255 - i for i in range(256)]),
         "heap":  bytearray([i for i in range(256)]),
@@ -265,13 +238,7 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # for i, b in enumerate(state["stack"]):
-    #     print("{:02x}: {:02x}".format(i, ord(b)))
-
-    # for i, b in enumerate(state["heap"]):
-    #     print("{:02x}: {:02x}".format(i, ord(b)))
-
-    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:
@@ -285,20 +252,17 @@ if __name__ == '__main__':
             print('\t%s' %(e))
             sys.exit(-1)
 
-        # print(type(uc_state['heap']))
-        # print(type(tt_state['heap']))
-
         for a, b in zip(uc_state['heap'], tt_state['heap']):
             if a != b:
                 print('[KO] %s (heap differs!)' %(disassembly))
-                print_heap(state, uc_state, tt_state)
+                diff_heap(state, uc_state, tt_state)
                 print_state(state, uc_state, tt_state)
                 sys.exit(-1)
 
         for a, b in zip(uc_state['stack'], tt_state['stack']):
             if a != b:
                 print('[KO] %s (stack differs!)' %(disassembly))
-                print_stack(state, uc_state, tt_state)
+                diff_stack(state, uc_state, tt_state)
                 print_state(state, uc_state, tt_state)
                 sys.exit(-1)
 
@@ -307,10 +271,6 @@ if __name__ == '__main__':
             diff_state(uc_state, tt_state)
             print_state(state, uc_state, tt_state)
             sys.exit(-1)
-
-        # print_state(state, uc_state, tt_state)
-        # print_heap(state, uc_state, tt_state)
-        # print_stack(state, uc_state, tt_state)
 
         print('[OK] %s' %(disassembly))
 

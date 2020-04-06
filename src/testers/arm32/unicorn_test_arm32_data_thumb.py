@@ -5,13 +5,11 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
-from struct              import pack
 
-import sys
 import pprint
 import random
+import sys
 
-DEBUG = False
 ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
@@ -62,7 +60,6 @@ CODE  = [
     (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
     (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
     (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
-
 
     # ADC -------------------------------------------------------------------- #
     (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),
@@ -141,19 +138,21 @@ CODE  = [
     (b"\xb1\xeb\x32\x00", "subs r0, r1, r2, rrx"),
 ]
 
-def emu_with_unicorn(opcode, istate):
-    # Initialize emulator in arm32 mode
-    mu = Uc(UC_ARCH_ARM, UC_MODE_THUMB)
 
-    # map memory for this emulation
+def emu_with_unicorn(opcode, istate):
+    # Initialize emulator in arm32 mode.
+    mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
+
+    # Map memory for this emulation.
     mu.mem_map(ADDR, SIZE)
 
-    # write machine code to be emulated to memory
+    # Write machine code to be emulated to memory.
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
         index += len(op)
 
+    # Retrieve APSR register value.
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
@@ -177,12 +176,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # emulate code in infinite time & unlimited instructions
+    # Emulate opcode.
+    # NOTE: The +2 and count=1 is a trick so UC updates PC.
     mu.emu_start(istate['pc'] | 1, istate['pc'] + len(opcode) + 2, count=1)
 
     ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
+        "stack": bytearray(mu.mem_read(STACK, 0x100)),
+        "heap":  bytearray(mu.mem_read(HEAP, 0x100)),
         "r0":    mu.reg_read(UC_ARM_REG_R0),
         "r1":    mu.reg_read(UC_ARM_REG_R1),
         "r2":    mu.reg_read(UC_ARM_REG_R2),
@@ -205,6 +205,7 @@ def emu_with_unicorn(opcode, istate):
         "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
     }
     return ostate
+
 
 def emu_with_triton(opcode, istate):
     ctx = TritonContext()
@@ -238,16 +239,15 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    if DEBUG:
-        print()
-        print(inst)
-        for x in inst.getSymbolicExpressions():
-           print(x)
-        print()
+    # print()
+    # print(inst)
+    # for x in inst.getSymbolicExpressions():
+    #    print(x)
+    # print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -271,6 +271,7 @@ def emu_with_triton(opcode, istate):
     }
     return ostate
 
+
 def diff_state(state1, state2):
     for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
@@ -278,6 +279,7 @@ def diff_state(state1, state2):
         elif not (k == 'heap' or k == 'stack') and v != state2[k]:
             print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
+
 
 def print_state(istate, uc_ostate, tt_ostate):
     for k in sorted(istate.keys()):
@@ -290,7 +292,7 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 
 if __name__ == '__main__':
-    # initial state
+    # Initial state.
     state = {
         "stack": bytearray([255 - i for i in range(256)]),
         "heap":  bytearray([i for i in range(256)]),
@@ -316,7 +318,7 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:

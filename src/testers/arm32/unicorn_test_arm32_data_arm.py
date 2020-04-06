@@ -5,13 +5,11 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
-from struct              import pack
 
-import sys
 import pprint
 import random
+import sys
 
-DEBUG = False
 ADDR  = 0x100000
 STACK = 0x200000
 HEAP  = 0x300000
@@ -4288,49 +4286,20 @@ CODE  = [
 ]
 
 
-def hook_code(mu, address, size, istate):
-    print(">>> Tracing instruction at 0x%x, instruction size = 0x%x" %(address, size))
-
-    ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
-        "r0":    mu.reg_read(UC_ARM_REG_R0),
-        "r1":    mu.reg_read(UC_ARM_REG_R1),
-        "r2":    mu.reg_read(UC_ARM_REG_R2),
-        "r3":    mu.reg_read(UC_ARM_REG_R3),
-        "r4":    mu.reg_read(UC_ARM_REG_R4),
-        "r5":    mu.reg_read(UC_ARM_REG_R5),
-        "r6":    mu.reg_read(UC_ARM_REG_R6),
-        "r7":    mu.reg_read(UC_ARM_REG_R7),
-        "r8":    mu.reg_read(UC_ARM_REG_R8),
-        "r9":    mu.reg_read(UC_ARM_REG_R9),
-        "r10":   mu.reg_read(UC_ARM_REG_R10),
-        "r11":   mu.reg_read(UC_ARM_REG_R11),
-        "r12":   mu.reg_read(UC_ARM_REG_R12),
-        "sp":    mu.reg_read(UC_ARM_REG_SP),
-        "r14":   mu.reg_read(UC_ARM_REG_R14),
-        "pc":    mu.reg_read(UC_ARM_REG_PC),
-        "n":   ((mu.reg_read(UC_ARM_REG_APSR) >> 31) & 1),
-        "z":   ((mu.reg_read(UC_ARM_REG_APSR) >> 30) & 1),
-        "c":   ((mu.reg_read(UC_ARM_REG_APSR) >> 29) & 1),
-        "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
-    }
-
-    # print_state(istate, istate, ostate)
-
 def emu_with_unicorn(opcode, istate):
-    # Initialize emulator in arm32 mode
+    # Initialize emulator in arm32 mode.
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
-    # map memory for this emulation
+    # Map memory for this emulation.
     mu.mem_map(ADDR, SIZE)
 
-    # write machine code to be emulated to memory
+    # Write machine code to be emulated to memory.
     index = 0
     for op, _ in CODE:
         mu.mem_write(ADDR+index, op)
         index += len(op)
 
+    # Retrieve APSR register value.
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
@@ -4354,17 +4323,13 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # # tracing all instructions with customized callback
-    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
-
-    # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(istate['pc'], istate['pc'] + len(opcode)))
+    # Emulate opcode.
     # NOTE: The +4 and count=1 is a trick so UC updates PC.
     mu.emu_start(istate['pc'], istate['pc'] + len(opcode) + 4, count=1)
 
     ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
+        "stack": bytearray(mu.mem_read(STACK, 0x100)),
+        "heap":  bytearray(mu.mem_read(HEAP, 0x100)),
         "r0":    mu.reg_read(UC_ARM_REG_R0),
         "r1":    mu.reg_read(UC_ARM_REG_R1),
         "r2":    mu.reg_read(UC_ARM_REG_R2),
@@ -4387,6 +4352,7 @@ def emu_with_unicorn(opcode, istate):
         "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
     }
     return ostate
+
 
 def emu_with_triton(opcode, istate):
     ctx = TritonContext()
@@ -4420,16 +4386,15 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    if DEBUG:
-        print()
-        print(inst)
-        for x in inst.getSymbolicExpressions():
-           print(x)
-        print()
+    # print()
+    # print(inst)
+    # for x in inst.getSymbolicExpressions():
+    #    print(x)
+    # print()
 
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -4453,6 +4418,7 @@ def emu_with_triton(opcode, istate):
     }
     return ostate
 
+
 def diff_state(state1, state2):
     for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
@@ -4460,6 +4426,7 @@ def diff_state(state1, state2):
         elif not (k == 'heap' or k == 'stack') and v != state2[k]:
             print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
+
 
 def print_state(istate, uc_ostate, tt_ostate):
     for k in sorted(istate.keys()):
@@ -4472,7 +4439,7 @@ def print_state(istate, uc_ostate, tt_ostate):
 
 
 if __name__ == '__main__':
-    # initial state
+    # Initial state.
     state = {
         "stack": bytearray([255 - i for i in range(256)]),
         "heap":  bytearray([i for i in range(256)]),
@@ -4498,7 +4465,7 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # NOTE: This tests each instruction separatly. Therefore, it keeps track of
+    # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:

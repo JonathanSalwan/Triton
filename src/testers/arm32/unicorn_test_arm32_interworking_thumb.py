@@ -5,11 +5,10 @@ from __future__          import print_function
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
-from struct              import pack
 
-import sys
+import pprint
 import random
-
+import sys
 
 ADDR  = 0x000000
 STACK = 0x100000
@@ -39,36 +38,20 @@ CODE = [
 ]
 
 
-def hook_code(mu, address, size, istate):
-    opcode = mu.mem_read(address, size)
-    cpsr = mu.reg_read(ARM_REG_CPSR)
-    thumb = (cpsr >> 5) & 0x1
-
-    # print("[UC] CPSR[T]: {:x}".format(thumb))
-
-    md = Cs(CS_ARCH_ARM, CS_MODE_THUMB if thumb else CS_MODE_ARM)
-    md.detail = True
-    i = list(md.disasm(opcode, address))[0]
-    disasm = "{} {}".format(i.mnemonic, i.op_str)
-
-    # print("[UC] Processing: {:08x}: {}".format(address, disasm))
-
-    # print("-" * 80)
-
 def emu_with_unicorn(start, stop, istate):
-    # Initialize emulator in arm32 mode
+    # Initialize emulator in arm32 mode.
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
-    # map memory for this emulation
-    # print("[UC] Mapping memory from {:#x} to {:#x}".format(ADDR, ADDR + SIZE));
+    # Map memory for this emulation.
     mu.mem_map(ADDR, SIZE)
 
-    # write machine code to be emulated to memory
+    # Write machine code to be emulated to memory.
     index = 0
     for _, op, _ in CODE:
         mu.mem_write(ADDR+index, op)
         index += len(op)
 
+    # Retrieve APSR register value.
     apsr = mu.reg_read(UC_ARM_REG_APSR)
     nzcv = istate['n'] << 31 | istate['z'] << 30 | istate['c'] << 29 | istate['v'] << 28
 
@@ -92,19 +75,15 @@ def emu_with_unicorn(start, stop, istate):
     mu.reg_write(UC_ARM_REG_PC,        istate['pc'])
     mu.reg_write(UC_ARM_REG_APSR,      apsr & 0x0fffffff | nzcv)
 
-    # tracing all instructions with customized callback
-    # mu.hook_add(UC_HOOK_CODE, hook_code, user_data=istate)
-
-    # emulate code in infinite time & unlimited instructions
-    # print("[UC] Executing from {:#x} to {:#x}".format(start & ~0x1, stop))
+    # Emulate code from start to stop.
     try:
         mu.emu_start(start, stop)
     except UcError as e:
         print("[UC] Error: {}".format(e))
 
     ostate = {
-        "stack": mu.mem_read(STACK, 0x100),
-        "heap":  mu.mem_read(HEAP, 0x100),
+        "stack": bytearray(mu.mem_read(STACK, 0x100)),
+        "heap":  bytearray(mu.mem_read(HEAP, 0x100)),
         "r0":    mu.reg_read(UC_ARM_REG_R0),
         "r1":    mu.reg_read(UC_ARM_REG_R1),
         "r2":    mu.reg_read(UC_ARM_REG_R2),
@@ -127,6 +106,7 @@ def emu_with_unicorn(start, stop, istate):
         "v":   ((mu.reg_read(UC_ARM_REG_APSR) >> 28) & 1),
     }
     return ostate
+
 
 def emu_with_triton(start, stop, istate):
     ctx = TritonContext()
@@ -161,11 +141,7 @@ def emu_with_triton(start, stop, istate):
 
     addr = start & ~0x1
     while addr != stop:
-        # print("[TT] Fetching instruction at address: {:08x}".format(addr))
-
         opcode, disasm = code[addr]
-
-        # print("[TT] Processing: {:08x}: {}".format(addr, disasm))
 
         inst = Instruction(opcode)
 
@@ -181,11 +157,9 @@ def emu_with_triton(start, stop, istate):
 
         addr = ctx.getSymbolicRegisterValue(ctx.registers.pc)
 
-        # print("-" * 80)
-
     ostate = {
-        "stack": ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":  ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
+        "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
+        "heap":  bytearray(ctx.getConcreteMemoryAreaValue(HEAP, 0x100)),
         "r0":    ctx.getSymbolicRegisterValue(ctx.registers.r0),
         "r1":    ctx.getSymbolicRegisterValue(ctx.registers.r1),
         "r2":    ctx.getSymbolicRegisterValue(ctx.registers.r2),
@@ -209,6 +183,7 @@ def emu_with_triton(start, stop, istate):
     }
     return ostate
 
+
 def diff_state(state1, state2):
     for k, v in list(state1.items()):
         if (k == 'heap' or k == 'stack') and v != state2[k]:
@@ -216,6 +191,7 @@ def diff_state(state1, state2):
         elif not (k == 'heap' or k == 'stack') and v != state2[k]:
             print('\t%s: %#x (UC) != %#x (TT)' %(k, v, state2[k]))
     return
+
 
 def print_state(istate, uc_ostate, tt_ostate):
     for k in sorted(istate.keys()):
@@ -231,7 +207,7 @@ if __name__ == '__main__':
     start = 0x14 | 1    # Address of _start function.
     stop  = 0x20        # Address of the last instruction of _start function.
 
-    # initial state
+    # Initial state.
     state = {
         "stack": bytearray([255 - i for i in range(256)]),
         "heap":  bytearray([i for i in range(256)]),
@@ -261,15 +237,16 @@ if __name__ == '__main__':
         uc_state = emu_with_unicorn(start, stop, state)
         tt_state = emu_with_triton(start, stop, state)
     except Exception as e:
-        print('[EE] \t%s' %(e))
+        print('[KO] %s' %('Interworking Thumb -> ARM -> Thumb'))
+        print('\t%s' %(e))
         sys.exit(-1)
 
     if uc_state != tt_state:
-        print("[EE] Execution differs!")
+        print('[KO] %s' %('Interworking Thumb -> ARM -> Thumb'))
         diff_state(uc_state, tt_state)
         print_state(state, uc_state, tt_state)
         sys.exit(-1)
 
-    print("[OK] Interworking Thumb -> ARM -> Thumb")
+    print('[OK] %s' %('Interworking Thumb -> ARM -> Thumb'))
 
     sys.exit(0)
