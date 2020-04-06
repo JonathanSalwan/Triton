@@ -16,44 +16,64 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
-    # LDR - Offset addressing.
+    # LDR - Offset addressing ------------------------------------------------ #
     (b"\x08\x68",         "ldr r0, [r1]"),
     (b"\x48\x68",         "ldr r0, [r1, #0x4]"),
     (b"\x51\xf8\x04\x0c", "ldr r0, [r1, #-0x4]"),
 
-    # LDR - Pre-indexed addressing.
+    # LDR - Pre-indexed addressing  ------------------------------------------ #
     (b"\x51\xf8\x00\x0f", "ldr r0, [r1]!"),
     (b"\x51\xf8\x04\x0f", "ldr r0, [r1, #0x4]!"),
     (b"\x51\xf8\x04\x0d", "ldr r0, [r1, #-0x4]!"),
 
-    # LDR - Post-indexed addressing.
+    # LDR - Post-indexed addressing  ----------------------------------------- #
     (b"\x51\xf8\x04\x0b", "ldr r0, [r1], #0x4"),
     (b"\x51\xf8\x04\x09", "ldr r0, [r1], #-0x4"),
 
-    # LDR with SP as operand
+    # LDR with SP as operand ------------------------------------------------- #
     (b"\xd1\xf8\x00\xd0", "ldr sp, [r1]"),
 
     (b"\x00\x98",         "ldr r0, [sp]"),
 
-    # LDRB
-    # TODO: Add missing instructions.
-    (b"\x08\x78",         "ldrb r0, [r1, #0]"),
+    # LDRB - Offset addressing ----------------------------------------------- #
+    (b"\x08\x78",         "ldrb r0, [r1]"),
+    (b"\x08\x79",         "ldrb r0, [r1, #0x4]"),
+    (b"\x11\xf8\x04\x0c", "ldrb r0, [r1, #-0x4]"),
 
-    # LDRD
-    # TODO: Add missing instructions.
-    (b"\xd1\xe9\x0b\x02", "ldrd r0, r2, [r1, #0x2c]"),
+    # LDRB - Pre-indexed addressing ------------------------------------------ #
+    (b"\x11\xf8\x00\x0f", "ldrb r0, [r1]!"),
+    (b"\x11\xf8\x04\x0f", "ldrb r0, [r1, #0x4]!"),
+    (b"\x11\xf8\x04\x0d", "ldrb r0, [r1, #-0x4]!"),
 
-    # STR - Offset addressing.
+    # LDRB - Post-indexed addressing ----------------------------------------- #
+    (b"\x11\xf8\x04\x0b", "ldrb r0, [r1], #0x4"),
+    (b"\x11\xf8\x04\x09", "ldrb r0, [r1], #-0x4"),
+
+    # LDRD - Offset addressing ----------------------------------------------- #
+    (b"\xd1\xe9\x00\x02", "ldrd r0, r2, [r1]"),
+    (b"\xd1\xe9\x01\x02", "ldrd r0, r2, [r1, #0x4]"),
+    (b"\x51\xe9\x01\x02", "ldrd r0, r2, [r1, #-0x4]"),
+
+    # LDRD - Pre-indexed addressing ------------------------------------------ #
+    (b"\xf1\xe9\x00\x02", "ldrd r0, r2, [r1]!"),
+    (b"\xf1\xe9\x01\x02", "ldrd r0, r2, [r1, #0x4]!"),
+    (b"\x71\xe9\x01\x02", "ldrd r0, r2, [r1, #-0x4]!"),
+
+    # LDRD - Post-indexed addressing ----------------------------------------- #
+    (b"\xf1\xe8\x01\x02", "ldrd r0, r2, [r1], #0x4"),
+    (b"\x71\xe8\x01\x02", "ldrd r0, r2, [r1], #-0x4"),
+
+    # STR - Offset addressing ------------------------------------------------ #
     (b"\x08\x60",         "str r0, [r1]"),
     (b"\x48\x60",         "str r0, [r1, #0x4]"),
     (b"\x41\xf8\x04\x0c", "str r0, [r1, #-0x4]"),
 
-    # STR - Pre-indexed addressing.
+    # STR - Pre-indexed addressing ------------------------------------------- #
     (b"\x41\xf8\x00\x0f", "str r0, [r1]!"),
     (b"\x41\xf8\x04\x0f", "str r0, [r1, #0x4]!"),
     (b"\x41\xf8\x04\x0d", "str r0, [r1, #-0x4]!"),
 
-    # STR - Post-indexed addressing.
+    # STR - Post-indexed addressing  ----------------------------------------- #
     (b"\x41\xf8\x04\x0b", "str r0, [r1], #0x4"),
     (b"\x41\xf8\x04\x09", "str r0, [r1], #-0x4"),
 
@@ -61,6 +81,34 @@ CODE  = [
     (b"\xc1\xf8\x00\xd0", "str sp, [r1]"),
 
     (b"\x00\x90",         "str r0, [sp]"),
+
+    # STRB - Offset addressing ------------------------------------------------ #
+    (b"\x08\x70",         "strb r0, [r1]"),
+    (b"\x08\x71",         "strb r0, [r1, #0x4]"),
+    (b"\x01\xf8\x04\x0c", "strb r0, [r1, #-0x4]"),
+
+    # STRB - Pre-indexed addressing ------------------------------------------- #
+    (b"\x01\xf8\x00\x0f", "strb r0, [r1]!"),
+    (b"\x01\xf8\x04\x0f", "strb r0, [r1, #0x4]!"),
+    (b"\x01\xf8\x04\x0d", "strb r0, [r1, #-0x4]!"),
+
+    # STRB - Post-indexed addressing  ----------------------------------------- #
+    (b"\x01\xf8\x04\x0b", "strb r0, [r1], #0x4"),
+    (b"\x01\xf8\x04\x09", "strb r0, [r1], #-0x4"),
+
+    # STRD - Offset addressing ------------------------------------------------ #
+    (b"\xc1\xe9\x00\x02", "strd r0, r2, [r1]"),
+    (b"\xc1\xe9\x01\x02", "strd r0, r2, [r1, #0x4]"),
+    (b"\x41\xe9\x01\x02", "strd r0, r2, [r1, #-0x4]"),
+
+    # STRD - Pre-indexed addressing ------------------------------------------- #
+    (b"\xe1\xe9\x00\x02", "strd r0, r2, [r1]!"),
+    (b"\xe1\xe9\x01\x02", "strd r0, r2, [r1, #0x4]!"),
+    (b"\x61\xe9\x01\x02", "strd r0, r2, [r1, #-0x4]!"),
+
+    # STRD - Post-indexed addressing  ----------------------------------------- #
+    (b"\xe1\xe8\x01\x02", "strd r0, r2, [r1], #0x4"),
+    (b"\x61\xe8\x01\x02", "strd r0, r2, [r1], #-0x4"),
 
     # TODO: Test with PC as source register.
 ]
