@@ -78,115 +78,115 @@ namespace triton {
           std::unordered_map<triton::uint64, triton::uint8> memory;
 
           //! Concrete value of eax
-          triton::uint8 eax[DWORD_SIZE];
+          triton::uint8 eax[triton::size::dword];
           //! Concrete value of ebx
-          triton::uint8 ebx[DWORD_SIZE];
+          triton::uint8 ebx[triton::size::dword];
           //! Concrete value of ecx
-          triton::uint8 ecx[DWORD_SIZE];
+          triton::uint8 ecx[triton::size::dword];
           //! Concrete value of edx
-          triton::uint8 edx[DWORD_SIZE];
+          triton::uint8 edx[triton::size::dword];
           //! Concrete value of edi
-          triton::uint8 edi[DWORD_SIZE];
+          triton::uint8 edi[triton::size::dword];
           //! Concrete value of esi
-          triton::uint8 esi[DWORD_SIZE];
+          triton::uint8 esi[triton::size::dword];
           //! Concrete value of ebp
-          triton::uint8 ebp[DWORD_SIZE];
+          triton::uint8 ebp[triton::size::dword];
           //! Concrete value of esp
-          triton::uint8 esp[DWORD_SIZE];
+          triton::uint8 esp[triton::size::dword];
           //! Concrete value of eip
-          triton::uint8 eip[DWORD_SIZE];
+          triton::uint8 eip[triton::size::dword];
           //! Concrete value of eflags
-          triton::uint8 eflags[DWORD_SIZE];
+          triton::uint8 eflags[triton::size::dword];
           //! Concrete value of mm0
-          triton::uint8 mm0[QWORD_SIZE];
+          triton::uint8 mm0[triton::size::qword];
           //! Concrete value of mm1
-          triton::uint8 mm1[QWORD_SIZE];
+          triton::uint8 mm1[triton::size::qword];
           //! Concrete value of mm2
-          triton::uint8 mm2[QWORD_SIZE];
+          triton::uint8 mm2[triton::size::qword];
           //! Concrete value of mm3
-          triton::uint8 mm3[QWORD_SIZE];
+          triton::uint8 mm3[triton::size::qword];
           //! Concrete value of mm4
-          triton::uint8 mm4[QWORD_SIZE];
+          triton::uint8 mm4[triton::size::qword];
           //! Concrete value of mm5
-          triton::uint8 mm5[QWORD_SIZE];
+          triton::uint8 mm5[triton::size::qword];
           //! Concrete value of mm6
-          triton::uint8 mm6[QWORD_SIZE];
+          triton::uint8 mm6[triton::size::qword];
           //! Concrete value of mm7
-          triton::uint8 mm7[QWORD_SIZE];
+          triton::uint8 mm7[triton::size::qword];
           //! Concrete value of ymm0
-          triton::uint8 ymm0[QQWORD_SIZE];
+          triton::uint8 ymm0[triton::size::qqword];
           //! Concrete value of ymm1
-          triton::uint8 ymm1[QQWORD_SIZE];
+          triton::uint8 ymm1[triton::size::qqword];
           //! Concrete value of ymm2
-          triton::uint8 ymm2[QQWORD_SIZE];
+          triton::uint8 ymm2[triton::size::qqword];
           //! Concrete value of ymm3
-          triton::uint8 ymm3[QQWORD_SIZE];
+          triton::uint8 ymm3[triton::size::qqword];
           //! Concrete value of ymm4
-          triton::uint8 ymm4[QQWORD_SIZE];
+          triton::uint8 ymm4[triton::size::qqword];
           //! Concrete value of ymm5
-          triton::uint8 ymm5[QQWORD_SIZE];
+          triton::uint8 ymm5[triton::size::qqword];
           //! Concrete value of ymm6
-          triton::uint8 ymm6[QQWORD_SIZE];
+          triton::uint8 ymm6[triton::size::qqword];
           //! Concrete value of ymm7
-          triton::uint8 ymm7[QQWORD_SIZE];
+          triton::uint8 ymm7[triton::size::qqword];
           //! Concrete value of mxcsr
-          triton::uint8 mxcsr[DWORD_SIZE];
+          triton::uint8 mxcsr[triton::size::dword];
           //! Concrete value of cr0
-          triton::uint8 cr0[DWORD_SIZE];
+          triton::uint8 cr0[triton::size::dword];
           //! Concrete value of cr1
-          triton::uint8 cr1[DWORD_SIZE];
+          triton::uint8 cr1[triton::size::dword];
           //! Concrete value of cr2
-          triton::uint8 cr2[DWORD_SIZE];
+          triton::uint8 cr2[triton::size::dword];
           //! Concrete value of cr3
-          triton::uint8 cr3[DWORD_SIZE];
+          triton::uint8 cr3[triton::size::dword];
           //! Concrete value of cr4
-          triton::uint8 cr4[DWORD_SIZE];
+          triton::uint8 cr4[triton::size::dword];
           //! Concrete value of cr5
-          triton::uint8 cr5[DWORD_SIZE];
+          triton::uint8 cr5[triton::size::dword];
           //! Concrete value of cr6
-          triton::uint8 cr6[DWORD_SIZE];
+          triton::uint8 cr6[triton::size::dword];
           //! Concrete value of cr7
-          triton::uint8 cr7[DWORD_SIZE];
+          triton::uint8 cr7[triton::size::dword];
           //! Concrete value of cr8
-          triton::uint8 cr8[DWORD_SIZE];
+          triton::uint8 cr8[triton::size::dword];
           //! Concrete value of cr9
-          triton::uint8 cr9[DWORD_SIZE];
+          triton::uint8 cr9[triton::size::dword];
           //! Concrete value of cr10
-          triton::uint8 cr10[DWORD_SIZE];
+          triton::uint8 cr10[triton::size::dword];
           //! Concrete value of cr11
-          triton::uint8 cr11[DWORD_SIZE];
+          triton::uint8 cr11[triton::size::dword];
           //! Concrete value of cr12
-          triton::uint8 cr12[DWORD_SIZE];
+          triton::uint8 cr12[triton::size::dword];
           //! Concrete value of cr13
-          triton::uint8 cr13[DWORD_SIZE];
+          triton::uint8 cr13[triton::size::dword];
           //! Concrete value of cr14
-          triton::uint8 cr14[DWORD_SIZE];
+          triton::uint8 cr14[triton::size::dword];
           //! Concrete value of cr15
-          triton::uint8 cr15[DWORD_SIZE];
+          triton::uint8 cr15[triton::size::dword];
           //! Concrete value of CS
-          triton::uint8 cs[DWORD_SIZE];
+          triton::uint8 cs[triton::size::dword];
           //! Concrete value of DS
-          triton::uint8 ds[DWORD_SIZE];
+          triton::uint8 ds[triton::size::dword];
           //! Concrete value of ES
-          triton::uint8 es[DWORD_SIZE];
+          triton::uint8 es[triton::size::dword];
           //! Concrete value of FS
-          triton::uint8 fs[DWORD_SIZE];
+          triton::uint8 fs[triton::size::dword];
           //! Concrete value of GS
-          triton::uint8 gs[DWORD_SIZE];
+          triton::uint8 gs[triton::size::dword];
           //! Concrete value of SS
-          triton::uint8 ss[DWORD_SIZE];
+          triton::uint8 ss[triton::size::dword];
           //! Concrete value of dr0
-          triton::uint8 dr0[DWORD_SIZE];
+          triton::uint8 dr0[triton::size::dword];
           //! Condete value of dr1
-          triton::uint8 dr1[DWORD_SIZE];
+          triton::uint8 dr1[triton::size::dword];
           //! Condete value of dr2
-          triton::uint8 dr2[DWORD_SIZE];
+          triton::uint8 dr2[triton::size::dword];
           //! Condete value of dr3
-          triton::uint8 dr3[DWORD_SIZE];
+          triton::uint8 dr3[triton::size::dword];
           //! Condete value of dr6
-          triton::uint8 dr6[DWORD_SIZE];
+          triton::uint8 dr6[triton::size::dword];
           //! Condete value of dr7
-          triton::uint8 dr7[DWORD_SIZE];
+          triton::uint8 dr7[triton::size::dword];
 
         public:
           //! Constructor.

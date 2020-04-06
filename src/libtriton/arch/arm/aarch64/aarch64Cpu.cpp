@@ -177,12 +177,12 @@ namespace triton {
 
 
         triton::uint32 AArch64Cpu::gprSize(void) const {
-          return QWORD_SIZE;
+          return triton::size::qword;
         }
 
 
         triton::uint32 AArch64Cpu::gprBitSize(void) const {
-          return QWORD_SIZE_BIT;
+          return triton::bitsize::qword;
         }
 
 
@@ -288,7 +288,7 @@ namespace triton {
               switch(op->type) {
 
                 case triton::extlibs::capstone::ARM64_OP_IMM: {
-                  triton::arch::Immediate imm(op->imm, size ? size : QWORD_SIZE);
+                  triton::arch::Immediate imm(op->imm, size ? size : triton::size::qword);
 
                   /*
                    * Instruction such that CBZ, CBNZ or TBZ may imply a wrong size.
@@ -312,7 +312,7 @@ namespace triton {
                   triton::arch::MemoryAccess mem;
 
                   /* Set the size of the memory access */
-                  mem.setPair(std::make_pair(size ? ((size * BYTE_SIZE_BIT) - 1) : QWORD_SIZE_BIT - 1, 0));
+                  mem.setPair(std::make_pair(size ? ((size * triton::bitsize::byte) - 1) : triton::bitsize::qword - 1, 0));
 
                   /* LEA if exists */
                   triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
@@ -328,13 +328,15 @@ namespace triton {
 
                   /* Specify that LEA contains a PC relative */
                   /* FIXME: Valid in ARM64 ? */
-                  if (base.getId() == this->pcId)
+                  if (base.getId() == this->pcId) {
                     mem.setPcRelative(inst.getNextAddress());
+                  }
 
                   /* Set extend type and size */
                   index.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
-                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
+                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID) {
                     index.setExtendedSize(base.getBitSize());
+                  }
 
                   /* Note that in ARM64 there is no segment register and scale value */
                   mem.setBaseRegister(base);
@@ -359,12 +361,14 @@ namespace triton {
 
                   /* Set extend type and size */
                   reg.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
-                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID)
-                    reg.setExtendedSize(size * BYTE_SIZE_BIT);
+                  if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID) {
+                    reg.setExtendedSize(size * triton::bitsize::byte);
+                  }
 
                   /* Define a base address for next operand */
-                  if (!size)
+                  if (!size) {
                     size = reg.getSize();
+                  }
 
                   inst.operands.push_back(triton::arch::OperandWrapper(reg));
                   break;
@@ -400,7 +404,7 @@ namespace triton {
 
         triton::uint8 AArch64Cpu::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
           if (execCallbacks && this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE));
+            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, triton::size::byte));
 
           auto it = this->memory.find(addr);
           if (it == this->memory.end())
@@ -421,11 +425,11 @@ namespace triton {
           addr = mem.getAddress();
           size = mem.getSize();
 
-          if (size == 0 || size > DQQWORD_SIZE)
+          if (size == 0 || size > triton::size::dqqword)
             throw triton::exceptions::Cpu("AArch64Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
           for (triton::sint32 i = size-1; i >= 0; i--)
-            ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i, false));
+            ret = ((ret << triton::bitsize::byte) | this->getConcreteMemoryValue(addr+i, false));
 
           return ret;
         }
@@ -530,7 +534,7 @@ namespace triton {
 
         void AArch64Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
           if (this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE), value);
+            this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, triton::size::byte), value);
           this->memory[addr] = value;
         }
 
@@ -543,7 +547,7 @@ namespace triton {
           if (cv > mem.getMaxValue())
             throw triton::exceptions::Register("AArch64Cpu::setConcreteMemoryValue(): You cannot set this concrete value (too big) to this memory access.");
 
-          if (size == 0 || size > DQQWORD_SIZE)
+          if (size == 0 || size > triton::size::dqqword)
             throw triton::exceptions::Cpu("AArch64Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
           if (this->callbacks)

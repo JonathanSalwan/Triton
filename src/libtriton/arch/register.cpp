@@ -66,7 +66,7 @@ namespace triton {
 
 
     triton::uint32 Register::getSize(void) const {
-      return this->getVectorSize() / BYTE_SIZE_BIT;
+      return this->getVectorSize() / triton::bitsize::byte;
     }
 
 

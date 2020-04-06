@@ -1932,8 +1932,8 @@ namespace triton {
       if (!size)
         throw triton::exceptions::Ast("BvNode::init(): Size cannot be equal to zero.");
 
-      if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("BvNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
+      if (size > triton::bitsize::max_supported)
+        throw triton::exceptions::Ast("BvNode::init(): Size cannot be greater than triton::bitsize::max_supported.");
 
       /* Init attributes */
       this->size       = size;
@@ -2033,8 +2033,8 @@ namespace triton {
         this->size += this->children[index]->getBitvectorSize();
       }
 
-      if (this->size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("ConcatNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
+      if (this->size > triton::bitsize::max_supported)
+        throw triton::exceptions::Ast("ConcatNode::init(): Size cannot be greater than triton::bitsize::max_supported.");
 
       this->eval = this->children[0]->evaluate();
       for (triton::uint32 index = 0; index < this->children.size()-1; index++)
@@ -2845,8 +2845,8 @@ namespace triton {
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
-      if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than MAX_BITS_SUPPORTED.");
+      if (size > triton::bitsize::max_supported)
+        throw triton::exceptions::Ast("SxNode::SxNode(): Size cannot be greater than triton::bitsize::max_supported.");
 
       this->level      = 1;
       this->symbolized = false;
@@ -2946,8 +2946,8 @@ namespace triton {
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
-      if (size > MAX_BITS_SUPPORTED)
-        throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than MAX_BITS_SUPPORTED.");
+      if (size > triton::bitsize::max_supported)
+        throw triton::exceptions::Ast("ZxNode::init(): Size cannot be greater than triton::bitsize::max_supported.");
 
       this->eval       = (this->children[1]->evaluate() & this->getBitvectorMask());
       this->level      = 1;

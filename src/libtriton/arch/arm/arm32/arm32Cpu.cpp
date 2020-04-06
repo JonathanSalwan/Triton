@@ -163,12 +163,12 @@ namespace triton {
 
 
         triton::uint32 Arm32Cpu::gprSize(void) const {
-          return DWORD_SIZE;
+          return triton::size::dword;
         }
 
 
         triton::uint32 Arm32Cpu::gprBitSize(void) const {
-          return DWORD_SIZE_BIT;
+          return triton::bitsize::dword;
         }
 
 
@@ -286,7 +286,7 @@ namespace triton {
                 switch(op->type) {
 
                   case triton::extlibs::capstone::ARM_OP_IMM: {
-                    triton::arch::Immediate imm(op->imm, DWORD_SIZE);
+                    triton::arch::Immediate imm(op->imm, triton::size::dword);
 
                     if (op->subtracted)
                       imm.setSubtracted(true);
@@ -299,7 +299,7 @@ namespace triton {
                     triton::arch::MemoryAccess mem;
 
                     /* Set the size of the memory access */
-                    mem.setPair(std::make_pair(DWORD_SIZE_BIT-1, 0));
+                    mem.setPair(std::make_pair(triton::bitsize::dword-1, 0));
 
                     /* LEA if exists */
                     const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
@@ -508,7 +508,7 @@ namespace triton {
 
         triton::uint8 Arm32Cpu::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
           if (execCallbacks && this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE));
+            this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, triton::size::byte));
 
           auto it = this->memory.find(addr);
           if (it == this->memory.end())
@@ -529,11 +529,11 @@ namespace triton {
           addr = mem.getAddress();
           size = mem.getSize();
 
-          if (size == 0 || size > DQQWORD_SIZE)
+          if (size == 0 || size > triton::size::dqqword)
             throw triton::exceptions::Cpu("Arm32Cpu::getConcreteMemoryValue(): Invalid size memory.");
 
           for (triton::sint32 i = size-1; i >= 0; i--)
-            ret = ((ret << BYTE_SIZE_BIT) | this->getConcreteMemoryValue(addr+i, false));
+            ret = ((ret << triton::bitsize::byte) | this->getConcreteMemoryValue(addr+i, false));
 
           return ret;
         }
@@ -587,7 +587,7 @@ namespace triton {
 
         void Arm32Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
           if (this->callbacks)
-            this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, BYTE_SIZE), value);
+            this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, triton::size::byte), value);
           this->memory[addr] = value;
         }
 
@@ -600,7 +600,7 @@ namespace triton {
           if (cv > mem.getMaxValue())
             throw triton::exceptions::Register("Arm32Cpu::setConcreteMemoryValue(): You cannot set this concrete value (too big) to this memory access.");
 
-          if (size == 0 || size > DQQWORD_SIZE)
+          if (size == 0 || size > triton::size::dqqword)
             throw triton::exceptions::Cpu("Arm32Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
           if (this->callbacks)

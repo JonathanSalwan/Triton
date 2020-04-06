@@ -39,31 +39,31 @@ namespace triton {
     void Immediate::setValue(triton::uint64 value, triton::uint32 size /* bytes */) {
       /* If the size is zero, try to define the size according to the value. */
       if (size == 0) {
-        if      (/* ..... 0x0000000000000000 */ value <= 0x00000000000000ff) size = BYTE_SIZE;
-        else if (value >= 0x0000000000000100 && value <= 0x000000000000ffff) size = WORD_SIZE;
-        else if (value >= 0x0000000000010000 && value <= 0x00000000ffffffff) size = DWORD_SIZE;
-        else if (value >= 0x0000000100000000 && value <= 0xffffffffffffffff) size = QWORD_SIZE;
+        if      (/* ..... 0x0000000000000000 */ value <= 0x00000000000000ff) size = triton::size::byte;
+        else if (value >= 0x0000000000000100 && value <= 0x000000000000ffff) size = triton::size::word;
+        else if (value >= 0x0000000000010000 && value <= 0x00000000ffffffff) size = triton::size::dword;
+        else if (value >= 0x0000000100000000 && value <= 0xffffffffffffffff) size = triton::size::qword;
       }
 
-      if (size != BYTE_SIZE     &&
-          size != WORD_SIZE     &&
-          size != DWORD_SIZE    &&
-          size != QWORD_SIZE    &&
-          size != DQWORD_SIZE   &&
-          size != QQWORD_SIZE   &&
-          size != DQQWORD_SIZE)
+      if (size != triton::size::byte     &&
+          size != triton::size::word     &&
+          size != triton::size::dword    &&
+          size != triton::size::qword    &&
+          size != triton::size::dqword   &&
+          size != triton::size::qqword   &&
+          size != triton::size::dqqword)
         throw triton::exceptions::Immediate("Immediate::setValue(): size must be aligned.");
 
       switch (size) {
-        case BYTE_SIZE:
+        case triton::size::byte:
           this->value = static_cast<triton::uint8>(value);
           break;
 
-        case WORD_SIZE:
+        case triton::size::word:
           this->value = static_cast<triton::uint16>(value);
           break;
 
-        case DWORD_SIZE:
+        case triton::size::dword:
           this->value = static_cast<triton::uint32>(value);
           break;
 
@@ -72,12 +72,12 @@ namespace triton {
           this->value = value;
       }
 
-      this->setPair(std::make_pair(((size * BYTE_SIZE_BIT) - 1), 0));
+      this->setPair(std::make_pair(((size * triton::bitsize::byte) - 1), 0));
     }
 
 
     triton::uint32 Immediate::getSize(void) const {
-      return this->getVectorSize() / BYTE_SIZE_BIT;
+      return this->getVectorSize() / triton::bitsize::byte;
     }
 
 

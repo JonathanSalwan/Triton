@@ -679,7 +679,7 @@ namespace tracer {
         return Usage();
 
       /* Define Triton architecure */
-      if (sizeof(void*) == QWORD_SIZE)
+      if (sizeof(void*) == triton::size::qword)
         tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86_64);
       else
         tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86);

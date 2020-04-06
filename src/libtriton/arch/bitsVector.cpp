@@ -56,10 +56,10 @@ namespace triton {
     void BitsVector::setHigh(triton::uint32 v) {
       this->high = v;
 
-      if (this->high >= MAX_BITS_SUPPORTED)
-        throw triton::exceptions::BitsVector("BitsVector::setHigh(): The highest bit cannot be greater than MAX_BITS_SUPPORTED.");
+      if (this->high >= triton::bitsize::max_supported)
+        throw triton::exceptions::BitsVector("BitsVector::setHigh(): The highest bit cannot be greater than triton::bitsize::max_supported.");
 
-      if (this->getVectorSize() % BYTE_SIZE_BIT && this->getVectorSize() != FLAG_SIZE_BIT)
+      if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
         throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 
@@ -70,7 +70,7 @@ namespace triton {
       if (this->low > this->high)
         throw triton::exceptions::BitsVector("BitsVector::setLow(): The lower bit cannot be greater than highest.");
 
-      if (this->low % BYTE_SIZE_BIT)
+      if (this->low % triton::bitsize::byte)
         throw triton::exceptions::BitsVector("BitsVector::setLow(): The lower bit must be a multiple of 8.");
     }
 
@@ -79,16 +79,16 @@ namespace triton {
       this->high = std::get<0>(p);
       this->low  = std::get<1>(p);
 
-      if (this->high >= MAX_BITS_SUPPORTED)
-        throw triton::exceptions::BitsVector("BitsVector::setPair(): The highest bit cannot be greater than MAX_BITS_SUPPORTED.");
+      if (this->high >= triton::bitsize::max_supported)
+        throw triton::exceptions::BitsVector("BitsVector::setPair(): The highest bit cannot be greater than triton::bitsize::max_supported.");
 
-      if (this->low % BYTE_SIZE_BIT)
+      if (this->low % triton::bitsize::byte)
         throw triton::exceptions::BitsVector("BitsVector::setPair(): The lower bit must be a multiple of 8.");
 
       if (this->low > this->high)
         throw triton::exceptions::BitsVector("BitsVector::setPair(): The lower bit cannot be greater than highest.");
 
-      if (this->getVectorSize() % BYTE_SIZE_BIT && this->getVectorSize() != FLAG_SIZE_BIT)
+      if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
         throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 

@@ -1097,7 +1097,7 @@ namespace triton {
             node1 = this->astCtxt->bvashr(
                       op1,
                       this->astCtxt->zx(
-                        DWORD_SIZE_BIT-8,
+                        triton::bitsize::dword-8,
                         this->astCtxt->extract(7, 0, op2)
                       )
                     );
@@ -1524,7 +1524,7 @@ namespace triton {
 
         void Arm32Semantics::ldm_s(triton::arch::Instruction& inst) {
           auto& base          = inst.operands[0];
-          triton::uint32 size = DWORD_SIZE;
+          triton::uint32 size = triton::size::dword;
 
           /* Create symbolic operands */
           auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
@@ -1819,7 +1819,7 @@ namespace triton {
           auto& dst1          = inst.operands[0];
           auto& dst2          = inst.operands[1];
           auto& base          = inst.operands[2];
-          triton::uint32 size = DWORD_SIZE;
+          triton::uint32 size = triton::size::dword;
 
           /* Compute memory address */
           auto addr1 = base.getMemory().getAddress() + size * 0;
@@ -1932,7 +1932,7 @@ namespace triton {
             node1 = this->astCtxt->bvshl(
                       op1,
                       this->astCtxt->zx(
-                        DWORD_SIZE_BIT-8,
+                        triton::bitsize::dword-8,
                         this->astCtxt->extract(7, 0, op2)
                       )
                     );
@@ -2008,7 +2008,7 @@ namespace triton {
             node1 = this->astCtxt->bvlshr(
                       op1,
                       this->astCtxt->zx(
-                        DWORD_SIZE_BIT-8,
+                        triton::bitsize::dword-8,
                         this->astCtxt->extract(7, 0, op2)
                       )
                     );
@@ -2396,7 +2396,7 @@ namespace triton {
             node1 = this->astCtxt->bvror(
                       op1,
                       this->astCtxt->zx(
-                        DWORD_SIZE_BIT-8,
+                        triton::bitsize::dword-8,
                         this->astCtxt->extract(7, 0, op2)
                       )
                     );
@@ -2705,11 +2705,11 @@ namespace triton {
           /* Create the semantics */
           auto cond  = this->getCodeConditionAst(inst);
           auto mul   = this->astCtxt->bvmul(
-                         this->astCtxt->sx(QWORD_SIZE_BIT, op1),
-                         this->astCtxt->sx(QWORD_SIZE_BIT, op2)
+                         this->astCtxt->sx(triton::bitsize::qword, op1),
+                         this->astCtxt->sx(triton::bitsize::qword, op2)
                        );
-          auto lower = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, mul);
-          auto upper = this->astCtxt->extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, mul);
+          auto lower = this->astCtxt->extract(triton::bitsize::dword-1, 0, mul);
+          auto upper = this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, mul);
           auto node1 = this->astCtxt->ite(cond, lower, this->symbolicEngine->getOperandAst(inst, dst1));
           auto node2 = this->astCtxt->ite(cond, upper, this->symbolicEngine->getOperandAst(inst, dst2));
 
@@ -2749,7 +2749,7 @@ namespace triton {
 
         void Arm32Semantics::stm_s(triton::arch::Instruction& inst) {
           auto& base          = inst.operands[0];
-          triton::uint32 size = DWORD_SIZE;
+          triton::uint32 size = triton::size::dword;
 
           /* Create symbolic operands */
           auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
@@ -2808,7 +2808,7 @@ namespace triton {
 
         void Arm32Semantics::stmib_s(triton::arch::Instruction& inst) {
           auto& base          = inst.operands[0];
-          triton::uint32 size = DWORD_SIZE;
+          triton::uint32 size = triton::size::dword;
 
           /* Create symbolic operands */
           auto baseNode = this->symbolicEngine->getOperandAst(inst, base);
@@ -3017,7 +3017,7 @@ namespace triton {
 
         void Arm32Semantics::strd_s(triton::arch::Instruction& inst) {
           auto& base          = inst.operands[2];
-          triton::uint32 size = DWORD_SIZE;
+          triton::uint32 size = triton::size::dword;
 
           /* Create the semantics */
           auto cond = this->getCodeConditionAst(inst);
@@ -3358,7 +3358,7 @@ namespace triton {
                *    - (imm32, carry_out) = Shift_C(unrotated_value, SRType_ROR, 2*UInt(imm12<11:8>), carry_in);
                */
 
-              node = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op));
+              node = this->astCtxt->zx(triton::bitsize::dword-8, this->astCtxt->extract(7, 0, op));
               shiftType = triton::arch::arm::ID_SHIFT_ROR;
               shiftAmount = this->astCtxt->bv(
                               2 * (src.getImmediate().getValue() & 0x00000f00),
@@ -3473,7 +3473,7 @@ namespace triton {
                 auto op2 = this->getArm32SourceOperandAst(inst, src);
 
                 /* Create the semantics */
-                shiftAmount = this->astCtxt->zx(DWORD_SIZE_BIT-8, this->astCtxt->extract(7, 0, op2));
+                shiftAmount = this->astCtxt->zx(triton::bitsize::dword-8, this->astCtxt->extract(7, 0, op2));
 
                 /* Special case for instruction RRX. */
                 if (type == triton::arch::arm::ID_SHIFT_RRX) {
@@ -3591,8 +3591,8 @@ namespace triton {
 
             case triton::arch::arm::ID_SHIFT_LSL: {
               carryOutNode = this->astCtxt->extract(
-                               DWORD_SIZE_BIT,
-                               DWORD_SIZE_BIT,
+                               triton::bitsize::dword,
+                               triton::bitsize::dword,
                                this->astCtxt->bvshl(
                                  this->astCtxt->zx(node->getBitvectorSize()+1, node),
                                  this->astCtxt->zx(node->getBitvectorSize()+1, shiftAmount)
@@ -3618,13 +3618,13 @@ namespace triton {
 
             case triton::arch::arm::ID_SHIFT_ROR: {
               carryOutNode = this->astCtxt->extract(
-                               DWORD_SIZE_BIT-1,
-                               DWORD_SIZE_BIT-1,
+                               triton::bitsize::dword-1,
+                               triton::bitsize::dword-1,
                                this->astCtxt->bvror(
                                  node,
                                  this->astCtxt->bvurem(
                                    shiftAmount,
-                                   this->astCtxt->bv(DWORD_SIZE_BIT, shiftAmount->getBitvectorSize())
+                                   this->astCtxt->bv(triton::bitsize::dword, shiftAmount->getBitvectorSize())
                                  )
                                )
                              );
@@ -3691,7 +3691,7 @@ namespace triton {
           auto reg = shift.getShiftRegister();
 
           triton::ast::SharedAbstractNode amount;
-          triton::ast::SharedAbstractNode immShiftAmount = this->astCtxt->bv(imm, DWORD_SIZE_BIT);
+          triton::ast::SharedAbstractNode immShiftAmount = this->astCtxt->bv(imm, triton::bitsize::dword);
           triton::ast::SharedAbstractNode regShiftAmount = nullptr;
 
           if (reg != triton::arch::ID_REG_INVALID) {

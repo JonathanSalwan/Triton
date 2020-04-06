@@ -1352,7 +1352,7 @@ namespace triton {
           /* Create the semantics */
           triton::ast::SharedAbstractNode node = nullptr;
           switch (src.getSize()) {
-            case DWORD_SIZE:
+            case triton::size::dword:
               node = this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(31, 31, op), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize),
                      this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(30, 30, op), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize),
                      this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(29, 29, op), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize),
@@ -1389,7 +1389,7 @@ namespace triton {
                      ))))))))))))))))))))))))))))))));
               break;
 
-            case QWORD_SIZE:
+            case triton::size::qword:
               node = this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(63, 63, op), this->astCtxt->bvtrue()), this->astCtxt->bv(0, bvSize),
                      this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(62, 62, op), this->astCtxt->bvtrue()), this->astCtxt->bv(1, bvSize),
                      this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(61, 61, op), this->astCtxt->bvtrue()), this->astCtxt->bv(2, bvSize),
@@ -2834,12 +2834,12 @@ namespace triton {
           std::list<triton::ast::SharedAbstractNode> bits;
 
           switch(src.getSize()) {
-            case QWORD_SIZE:
+            case triton::size::qword:
                 bits.push_front(this->astCtxt->extract(63, 56, op));
                 bits.push_front(this->astCtxt->extract(55, 48, op));
                 bits.push_front(this->astCtxt->extract(47, 40, op));
                 bits.push_front(this->astCtxt->extract(39, 32, op));
-            case DWORD_SIZE:
+            case triton::size::dword:
                 bits.push_front(this->astCtxt->extract(31, 24, op));
                 bits.push_front(this->astCtxt->extract(23, 16, op));
                 bits.push_front(this->astCtxt->extract(15, 8,  op));
@@ -2875,12 +2875,12 @@ namespace triton {
           bits.reserve(8);
 
           switch(src.getSize()) {
-            case QWORD_SIZE:
+            case triton::size::qword:
                 bits.push_back(this->astCtxt->extract(55, 48, op));
                 bits.push_back(this->astCtxt->extract(63, 56, op));
                 bits.push_back(this->astCtxt->extract(39, 32, op));
                 bits.push_back(this->astCtxt->extract(47, 40, op));
-            case DWORD_SIZE:
+            case triton::size::dword:
                 bits.push_back(this->astCtxt->extract(23, 16, op));
                 bits.push_back(this->astCtxt->extract(31, 24, op));
                 bits.push_back(this->astCtxt->extract(7,  0,  op));
@@ -3030,8 +3030,8 @@ namespace triton {
           auto node = this->astCtxt->bvadd(
                         op3,
                         this->astCtxt->bvmul(
-                          this->astCtxt->sx(DWORD_SIZE_BIT, op1),
-                          this->astCtxt->sx(DWORD_SIZE_BIT, op2)
+                          this->astCtxt->sx(triton::bitsize::dword, op1),
+                          this->astCtxt->sx(triton::bitsize::dword, op2)
                         )
                       );
 
@@ -3061,8 +3061,8 @@ namespace triton {
           auto node = this->astCtxt->bvsub(
                         op3,
                         this->astCtxt->bvmul(
-                          this->astCtxt->sx(DWORD_SIZE_BIT, op1),
-                          this->astCtxt->sx(DWORD_SIZE_BIT, op2)
+                          this->astCtxt->sx(triton::bitsize::dword, op1),
+                          this->astCtxt->sx(triton::bitsize::dword, op2)
                         )
                       );
 
@@ -3088,11 +3088,11 @@ namespace triton {
 
           /* Create the semantics */
           auto node = this->astCtxt->extract(
-                        DQWORD_SIZE_BIT-1,
-                        QWORD_SIZE_BIT,
+                        triton::bitsize::dqword-1,
+                        triton::bitsize::qword,
                         this->astCtxt->bvmul(
-                          this->astCtxt->sx(QWORD_SIZE_BIT, op1),
-                          this->astCtxt->sx(QWORD_SIZE_BIT, op2)
+                          this->astCtxt->sx(triton::bitsize::qword, op1),
+                          this->astCtxt->sx(triton::bitsize::qword, op2)
                         )
                       );
 
@@ -3118,8 +3118,8 @@ namespace triton {
 
           /* Create the semantics */
           auto node = this->astCtxt->bvmul(
-                        this->astCtxt->sx(DWORD_SIZE_BIT, op1),
-                        this->astCtxt->sx(DWORD_SIZE_BIT, op2)
+                        this->astCtxt->sx(triton::bitsize::dword, op1),
+                        this->astCtxt->sx(triton::bitsize::dword, op2)
                       );
 
           /* Create symbolic expression */
@@ -3791,8 +3791,8 @@ namespace triton {
           auto node = this->astCtxt->bvadd(
                         op3,
                         this->astCtxt->bvmul(
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op1),
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op2)
+                          this->astCtxt->zx(triton::bitsize::dword, op1),
+                          this->astCtxt->zx(triton::bitsize::dword, op2)
                         )
                       );
 
@@ -3819,8 +3819,8 @@ namespace triton {
           /* Create the semantics */
           auto node = this->astCtxt->bvneg(
                         this->astCtxt->bvmul(
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op1),
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op2)
+                          this->astCtxt->zx(triton::bitsize::dword, op1),
+                          this->astCtxt->zx(triton::bitsize::dword, op2)
                         )
                       );
 
@@ -3850,8 +3850,8 @@ namespace triton {
           auto node = this->astCtxt->bvsub(
                         op3,
                         this->astCtxt->bvmul(
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op1),
-                          this->astCtxt->zx(DWORD_SIZE_BIT, op2)
+                          this->astCtxt->zx(triton::bitsize::dword, op1),
+                          this->astCtxt->zx(triton::bitsize::dword, op2)
                         )
                       );
 
@@ -3877,11 +3877,11 @@ namespace triton {
 
           /* Create the semantics */
           auto node = this->astCtxt->extract(
-                        DQWORD_SIZE_BIT-1,
-                        QWORD_SIZE_BIT,
+                        triton::bitsize::dqword-1,
+                        triton::bitsize::qword,
                         this->astCtxt->bvmul(
-                          this->astCtxt->zx(QWORD_SIZE_BIT, op1),
-                          this->astCtxt->zx(QWORD_SIZE_BIT, op2)
+                          this->astCtxt->zx(triton::bitsize::qword, op1),
+                          this->astCtxt->zx(triton::bitsize::qword, op2)
                         )
                       );
 
@@ -3907,8 +3907,8 @@ namespace triton {
 
           /* Create the semantics */
           auto node = this->astCtxt->bvmul(
-                        this->astCtxt->zx(DWORD_SIZE_BIT, op1),
-                        this->astCtxt->zx(DWORD_SIZE_BIT, op2)
+                        this->astCtxt->zx(triton::bitsize::dword, op1),
+                        this->astCtxt->zx(triton::bitsize::dword, op2)
                       );
 
           /* Create symbolic expression */

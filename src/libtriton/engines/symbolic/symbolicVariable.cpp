@@ -28,8 +28,8 @@ namespace triton {
         this->size    = size;
         this->type    = type;
 
-        if (this->size > MAX_BITS_SUPPORTED)
-          throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size cannot be greater than MAX_BITS_SUPPORTED.");
+        if (this->size > triton::bitsize::max_supported)
+          throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size cannot be greater than triton::bitsize::max_supported.");
 
         if (this->size == 0)
           throw triton::exceptions::SymbolicVariable("SymbolicVariable::SymbolicVariable(): Size cannot be zero.");

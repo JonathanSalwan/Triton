@@ -31,7 +31,7 @@ namespace tracer {
 
 
       triton::uint512 getCurrentRegisterValue(const triton::arch::Register& reg) {
-        triton::uint8 buffer[DQQWORD_SIZE] = {0};
+        triton::uint8 buffer[triton::size::dqqword] = {0};
         triton::uint512 value = 0;
 
         if (tracer::pintool::context::lastContext == nullptr)
@@ -283,13 +283,13 @@ namespace tracer {
           throw std::runtime_error("tracer::pintool::context::getCurrentMemoryValue(): Page not readable.");
 
         switch(size) {
-          case BYTE_SIZE:    value = *(reinterpret_cast<triton::uint8*>(addr));  break;
-          case WORD_SIZE:    value = *(reinterpret_cast<triton::uint16*>(addr)); break;
-          case DWORD_SIZE:   value = *(reinterpret_cast<triton::uint32*>(addr)); break;
-          case QWORD_SIZE:   value = *(reinterpret_cast<triton::uint64*>(addr)); break;
-          case DQWORD_SIZE:  value = triton::utils::fromBufferToUint<triton::uint128>(reinterpret_cast<triton::uint8*>(addr)); break;
-          case QQWORD_SIZE:  value = triton::utils::fromBufferToUint<triton::uint256>(reinterpret_cast<triton::uint8*>(addr)); break;
-          case DQQWORD_SIZE: value = triton::utils::fromBufferToUint<triton::uint512>(reinterpret_cast<triton::uint8*>(addr)); break;
+          case triton::size::byte:    value = *(reinterpret_cast<triton::uint8*>(addr));  break;
+          case triton::size::word:    value = *(reinterpret_cast<triton::uint16*>(addr)); break;
+          case triton::size::dword:   value = *(reinterpret_cast<triton::uint32*>(addr)); break;
+          case triton::size::qword:   value = *(reinterpret_cast<triton::uint64*>(addr)); break;
+          case triton::size::dqword:  value = triton::utils::fromBufferToUint<triton::uint128>(reinterpret_cast<triton::uint8*>(addr)); break;
+          case triton::size::qqword:  value = triton::utils::fromBufferToUint<triton::uint256>(reinterpret_cast<triton::uint8*>(addr)); break;
+          case triton::size::dqqword: value = triton::utils::fromBufferToUint<triton::uint512>(reinterpret_cast<triton::uint8*>(addr)); break;
         }
 
         return value;
@@ -297,7 +297,7 @@ namespace tracer {
 
 
       void setCurrentRegisterValue(const triton::arch::Register& reg, triton::uint512 value) {
-        triton::uint8 buffer[DQQWORD_SIZE] = {0};
+        triton::uint8 buffer[triton::size::dqqword] = {0};
 
         if (reg.getId() != reg.getParent() || tracer::pintool::api.isFlag(reg))
           throw std::runtime_error("tracer::pintool::context::setCurrentRegisterValue(): You cannot set a Pin register value on a sub-register or a flag.");

@@ -92,39 +92,39 @@ namespace triton {
             std::unordered_map<triton::uint64, triton::uint8> memory;
 
             //! Concrete value of r0
-            triton::uint8 r0[DWORD_SIZE];
+            triton::uint8 r0[triton::size::dword];
             //! Concrete value of r1
-            triton::uint8 r1[DWORD_SIZE];
+            triton::uint8 r1[triton::size::dword];
             //! Concrete value of r2
-            triton::uint8 r2[DWORD_SIZE];
+            triton::uint8 r2[triton::size::dword];
             //! Concrete value of r3
-            triton::uint8 r3[DWORD_SIZE];
+            triton::uint8 r3[triton::size::dword];
             //! Concrete value of r4
-            triton::uint8 r4[DWORD_SIZE];
+            triton::uint8 r4[triton::size::dword];
             //! Concrete value of r5
-            triton::uint8 r5[DWORD_SIZE];
+            triton::uint8 r5[triton::size::dword];
             //! Concrete value of r6
-            triton::uint8 r6[DWORD_SIZE];
+            triton::uint8 r6[triton::size::dword];
             //! Concrete value of r7
-            triton::uint8 r7[DWORD_SIZE];
+            triton::uint8 r7[triton::size::dword];
             //! Concrete value of r8
-            triton::uint8 r8[DWORD_SIZE];
+            triton::uint8 r8[triton::size::dword];
             //! Concrete value of r9
-            triton::uint8 r9[DWORD_SIZE];
+            triton::uint8 r9[triton::size::dword];
             //! Concrete value of r10
-            triton::uint8 r10[DWORD_SIZE];
+            triton::uint8 r10[triton::size::dword];
             //! Concrete value of r11
-            triton::uint8 r11[DWORD_SIZE];
+            triton::uint8 r11[triton::size::dword];
             //! Concrete value of r12
-            triton::uint8 r12[DWORD_SIZE];
+            triton::uint8 r12[triton::size::dword];
             //! Concrete value of sp
-            triton::uint8 sp[DWORD_SIZE];
+            triton::uint8 sp[triton::size::dword];
             //! Concrete value of r14
-            triton::uint8 r14[DWORD_SIZE];
+            triton::uint8 r14[triton::size::dword];
             //! Concrete value of pc
-            triton::uint8 pc[DWORD_SIZE];
+            triton::uint8 pc[triton::size::dword];
             // //! Concrete value of apsr
-            triton::uint8 apsr[DWORD_SIZE];
+            triton::uint8 apsr[triton::size::dword];
 
             //! Thumb mode flag
             bool thumb;

@@ -2132,7 +2132,7 @@ namespace triton {
                               bool vol) {
 
         auto low    = vol ? 0 : dst.getLow();
-        auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
+        auto high   = vol ? triton::bitsize::byte-1 : !low ? triton::bitsize::byte-1 : triton::bitsize::word-1;
 
         /*
          * Create the semantics.
@@ -2141,13 +2141,13 @@ namespace triton {
          * significant byte of the result.
          */
         auto node = this->astCtxt->bv(1, 1);
-        for (triton::uint32 counter = 0; counter <= BYTE_SIZE_BIT-1; counter++) {
+        for (triton::uint32 counter = 0; counter <= triton::bitsize::byte-1; counter++) {
           node = this->astCtxt->bvxor(
                    node,
                    this->astCtxt->extract(0, 0,
                      this->astCtxt->bvlshr(
                        this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
-                       this->astCtxt->bv(counter, BYTE_SIZE_BIT)
+                       this->astCtxt->bv(counter, triton::bitsize::byte)
                      )
                   )
                 );
@@ -2169,7 +2169,7 @@ namespace triton {
 
         auto bvSize = dst.getBitSize();
         auto low    = vol ? 0 : dst.getLow();
-        auto high   = vol ? BYTE_SIZE_BIT-1 : !low ? BYTE_SIZE_BIT-1 : WORD_SIZE_BIT-1;
+        auto high   = vol ? triton::bitsize::byte-1 : !low ? triton::bitsize::byte-1 : triton::bitsize::word-1;
         auto pf     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
 
         /*
@@ -2177,13 +2177,13 @@ namespace triton {
          * pf if op2 != 0
          */
         auto node1 = this->astCtxt->bv(1, 1);
-        for (triton::uint32 counter = 0; counter <= BYTE_SIZE_BIT-1; counter++) {
+        for (triton::uint32 counter = 0; counter <= triton::bitsize::byte-1; counter++) {
           node1 = this->astCtxt->bvxor(
                    node1,
                    this->astCtxt->extract(0, 0,
                      this->astCtxt->bvlshr(
                        this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
-                       this->astCtxt->bv(counter, BYTE_SIZE_BIT)
+                       this->astCtxt->bv(counter, triton::bitsize::byte)
                      )
                   )
                 );
@@ -2503,7 +2503,7 @@ namespace triton {
 
 
       void x86Semantics::aad_s(triton::arch::Instruction& inst) {
-        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, BYTE_SIZE)); /* D5 0A */
+        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, triton::size::byte)); /* D5 0A */
         auto  src2   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AL));
         auto  src3   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AH));
         auto  dst    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
@@ -2520,7 +2520,7 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt->zx(
-                      BYTE_SIZE_BIT,
+                      triton::bitsize::byte,
                       this->astCtxt->bvadd(
                         op2,
                         this->astCtxt->bvmul(op3, op1)
@@ -2549,7 +2549,7 @@ namespace triton {
 
 
       void x86Semantics::aam_s(triton::arch::Instruction& inst) {
-        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, BYTE_SIZE)); /* D4 0A */
+        auto  src1   = triton::arch::OperandWrapper(triton::arch::Immediate(0x0a, triton::size::byte)); /* D4 0A */
         auto  src2   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AL));
         auto  dst    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
         auto  dsttmp = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AL));
@@ -2899,12 +2899,12 @@ namespace triton {
         auto node = this->astCtxt->bvand(
                       this->astCtxt->bvlshr(
                         op1,
-                        this->astCtxt->zx(src1.getBitSize() - BYTE_SIZE_BIT, this->astCtxt->extract(7, 0, op2))
+                        this->astCtxt->zx(src1.getBitSize() - triton::bitsize::byte, this->astCtxt->extract(7, 0, op2))
                       ),
                       this->astCtxt->bvsub(
                         this->astCtxt->bvshl(
                           this->astCtxt->bv(1, src1.getBitSize()),
-                          this->astCtxt->zx(src1.getBitSize() - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8, op2))
+                          this->astCtxt->zx(src1.getBitSize() - triton::bitsize::byte, this->astCtxt->extract(15, 8, op2))
                         ),
                         this->astCtxt->bv(1, src1.getBitSize())
                       )
@@ -3026,7 +3026,7 @@ namespace triton {
         /* Create the semantics */
         triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
-          case BYTE_SIZE:
+          case triton::size::byte:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSF only if op2 != 0 */
                      op1,
@@ -3042,7 +3042,7 @@ namespace triton {
                      ))))))))
                    );
             break;
-          case WORD_SIZE:
+          case triton::size::word:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSF only if op2 != 0 */
                      op1,
@@ -3066,7 +3066,7 @@ namespace triton {
                      ))))))))))))))))
                    );
             break;
-          case DWORD_SIZE:
+          case triton::size::dword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSF only if op2 != 0 */
                      op1,
@@ -3106,7 +3106,7 @@ namespace triton {
                      ))))))))))))))))))))))))))))))))
                    );
             break;
-          case QWORD_SIZE:
+          case triton::size::qword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSF only if op2 != 0 */
                      op1,
@@ -3216,7 +3216,7 @@ namespace triton {
         /* Create the semantics */
         triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
-          case BYTE_SIZE:
+          case triton::size::byte:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSR only if op2 != 0 */
                      op1,
@@ -3232,7 +3232,7 @@ namespace triton {
                      ))))))))
                    );
             break;
-          case WORD_SIZE:
+          case triton::size::word:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSR only if op2 != 0 */
                      op1,
@@ -3256,7 +3256,7 @@ namespace triton {
                      ))))))))))))))))
                    );
             break;
-          case DWORD_SIZE:
+          case triton::size::dword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSR only if op2 != 0 */
                      op1,
@@ -3296,7 +3296,7 @@ namespace triton {
                      ))))))))))))))))))))))))))))))))
                    );
             break;
-          case QWORD_SIZE:
+          case triton::size::qword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op2, this->astCtxt->bv(0, bvSize2)), /* Apply BSR only if op2 != 0 */
                      op1,
@@ -3402,15 +3402,15 @@ namespace triton {
         /* Create the semantics */
         std::list<triton::ast::SharedAbstractNode> bytes;
         switch (src.getSize()) {
-          case QWORD_SIZE:
+          case triton::size::qword:
             bytes.push_front(this->astCtxt->extract(63, 56, op1));
             bytes.push_front(this->astCtxt->extract(55, 48, op1));
             bytes.push_front(this->astCtxt->extract(47, 40, op1));
             bytes.push_front(this->astCtxt->extract(39, 32, op1));
-          case DWORD_SIZE:
+          case triton::size::dword:
             bytes.push_front(this->astCtxt->extract(31, 24, op1));
             bytes.push_front(this->astCtxt->extract(23, 16, op1));
-          case WORD_SIZE:
+          case triton::size::word:
             bytes.push_front(this->astCtxt->extract(15, 8, op1));
             bytes.push_front(this->astCtxt->extract(7,  0, op1));
             break;
@@ -3427,7 +3427,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintAssignment(src, src);
 
         /* Tag undefined registers */
-        if (src.getSize() == WORD_SIZE) {
+        if (src.getSize() == triton::size::word) {
           // When the BSWAP instruction references a 16-bit register, the result is undefined.
           this->undefined_s(inst, src.getRegister());
         }
@@ -3690,7 +3690,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
 
         /* Create the semantics */
-        auto node = this->astCtxt->sx(BYTE_SIZE_BIT, this->astCtxt->extract(BYTE_SIZE_BIT-1, 0, op1));
+        auto node = this->astCtxt->sx(triton::bitsize::byte, this->astCtxt->extract(triton::bitsize::byte-1, 0, op1));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CBW operation");
@@ -3711,7 +3711,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics - TMP = 64 bitvec (EDX:EAX) */
-        auto node1 = this->astCtxt->sx(DWORD_SIZE_BIT, op1);
+        auto node1 = this->astCtxt->sx(triton::bitsize::dword, op1);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
@@ -3720,7 +3720,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_EAX));
 
         /* Create the semantics - EDX = TMP[63...32] */
-        auto node2 = this->astCtxt->extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, this->astCtxt->reference(expr1));
+        auto node2 = this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, this->astCtxt->reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CDQ operation");
@@ -3740,7 +3740,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
 
         /* Create the semantics */
-        auto node = this->astCtxt->sx(DWORD_SIZE_BIT, this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, op1));
+        auto node = this->astCtxt->sx(triton::bitsize::dword, this->astCtxt->extract(triton::bitsize::dword-1, 0, op1));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CDQE operation");
@@ -3783,11 +3783,11 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         switch (dst.getBitSize()) {
-          case QWORD_SIZE_BIT:
-            node = this->astCtxt->bvand(op1, this->astCtxt->bv(0xfffffffffffffff7, QWORD_SIZE_BIT));
+          case triton::bitsize::qword:
+            node = this->astCtxt->bvand(op1, this->astCtxt->bv(0xfffffffffffffff7, triton::bitsize::qword));
             break;
-          case DWORD_SIZE_BIT:
-            node = this->astCtxt->bvand(op1, this->astCtxt->bv(0xfffffff7, DWORD_SIZE_BIT));
+          case triton::bitsize::dword:
+            node = this->astCtxt->bvand(op1, this->astCtxt->bv(0xfffffff7, triton::bitsize::dword));
             break;
           default:
             throw triton::exceptions::Semantics("x86Semantics::clts_s(): Invalid operand size.");
@@ -4420,13 +4420,13 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(BYTE_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(BYTE_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::byte, index1.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::byte, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op4, this->astCtxt->bv(BYTE_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op4, this->astCtxt->bv(BYTE_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op4, this->astCtxt->bv(triton::size::byte, index2.getBitSize())),
+                       this->astCtxt->bvsub(op4, this->astCtxt->bv(triton::size::byte, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -4482,13 +4482,13 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(DWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(DWORD_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::dword, index1.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::dword, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op4, this->astCtxt->bv(DWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op4, this->astCtxt->bv(DWORD_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op4, this->astCtxt->bv(triton::size::dword, index2.getBitSize())),
+                       this->astCtxt->bvsub(op4, this->astCtxt->bv(triton::size::dword, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -4544,13 +4544,13 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(QWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(QWORD_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::qword, index1.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::qword, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op4, this->astCtxt->bv(QWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op4, this->astCtxt->bv(QWORD_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op4, this->astCtxt->bv(triton::size::qword, index2.getBitSize())),
+                       this->astCtxt->bvsub(op4, this->astCtxt->bv(triton::size::qword, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -4606,13 +4606,13 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(WORD_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(WORD_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::word, index1.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::word, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op5, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op4, this->astCtxt->bv(WORD_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op4, this->astCtxt->bv(WORD_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op4, this->astCtxt->bv(triton::size::word, index2.getBitSize())),
+                       this->astCtxt->bvsub(op4, this->astCtxt->bv(triton::size::word, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -4647,13 +4647,13 @@ namespace triton {
         triton::arch::OperandWrapper accumulatorp(this->architecture->getParentRegister(ID_REG_X86_AL));
 
         switch (src1.getSize()) {
-          case WORD_SIZE:
+          case triton::size::word:
             accumulator.setRegister(arch::Register(this->architecture->getRegister(ID_REG_X86_AX)));
             break;
-          case DWORD_SIZE:
+          case triton::size::dword:
             accumulator.setRegister(arch::Register(this->architecture->getRegister(ID_REG_X86_EAX)));
             break;
-          case QWORD_SIZE:
+          case triton::size::qword:
             accumulator.setRegister(arch::Register(this->architecture->getRegister(ID_REG_X86_RAX)));
             break;
         }
@@ -4737,9 +4737,9 @@ namespace triton {
         /* CMP8B */
         auto node1 = this->astCtxt->bvsub(this->astCtxt->concat(op2, op3), op1);
         /* Destination */
-        auto node2 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, DQWORD_SIZE_BIT)), this->astCtxt->concat(op4, op5), op1);
+        auto node2 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, triton::bitsize::dqword)), this->astCtxt->concat(op4, op5), op1);
         /* EDX:EAX */
-        auto node3 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, DQWORD_SIZE_BIT)), this->astCtxt->concat(op2, op3), op1);
+        auto node3 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, triton::bitsize::dqword)), this->astCtxt->concat(op2, op3), op1);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "CMP operation");
@@ -4783,13 +4783,13 @@ namespace triton {
         /* CMP8B */
         auto node1 = this->astCtxt->bvsub(this->astCtxt->concat(op2, op3), op1);
         /* Destination */
-        auto node2 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, QWORD_SIZE_BIT)), this->astCtxt->concat(op4, op5), op1);
+        auto node2 = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, triton::bitsize::qword)), this->astCtxt->concat(op4, op5), op1);
         /* EDX:EAX */
-        auto node3  = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, QWORD_SIZE_BIT)), this->astCtxt->concat(op2, op3), op1);
+        auto node3  = this->astCtxt->ite(this->astCtxt->equal(node1, this->astCtxt->bv(0, triton::bitsize::qword)), this->astCtxt->concat(op2, op3), op1);
         auto node3p = this->astCtxt->ite(
                         this->astCtxt->equal(
                           node1,
-                          this->astCtxt->bv(0, QWORD_SIZE_BIT)),
+                          this->astCtxt->bv(0, triton::bitsize::qword)),
                           this->astCtxt->concat(op2p, op3p),
                           this->astCtxt->zx(src2p.getBitSize() + src3p.getBitSize() - src1.getBitSize(), op1)
                       );
@@ -4972,7 +4972,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics - TMP = 128 bitvec (RDX:RAX) */
-        auto node1 = this->astCtxt->sx(QWORD_SIZE_BIT, op1);
+        auto node1 = this->astCtxt->sx(triton::bitsize::qword, op1);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
@@ -4981,7 +4981,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_RAX));
 
         /* Create the semantics - RDX = TMP[127...64] */
-        auto node2 = this->astCtxt->extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, this->astCtxt->reference(expr1));
+        auto node2 = this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, this->astCtxt->reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CQO operation");
@@ -5002,7 +5002,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics - TMP = 32 bitvec (DX:AX) */
-        auto node1 = this->astCtxt->sx(WORD_SIZE_BIT, op1);
+        auto node1 = this->astCtxt->sx(triton::bitsize::word, op1);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicVolatileExpression(inst, node1, "Temporary variable");
@@ -5011,7 +5011,7 @@ namespace triton {
         expr1->isTainted = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_AX));
 
         /* Create the semantics - DX = TMP[31...16] */
-        auto node2 = this->astCtxt->extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, this->astCtxt->reference(expr1));
+        auto node2 = this->astCtxt->extract(triton::bitsize::dword-1, triton::bitsize::word, this->astCtxt->reference(expr1));
 
         /* Create symbolic expression */
         auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CWD operation");
@@ -5031,7 +5031,7 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
 
         /* Create the semantics */
-        auto node = this->astCtxt->sx(WORD_SIZE_BIT, this->astCtxt->extract(WORD_SIZE_BIT-1, 0, op1));
+        auto node = this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(triton::bitsize::word-1, 0, op1));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "CWDE operation");
@@ -5081,19 +5081,19 @@ namespace triton {
         /* Create symbolic expression */
         switch (src.getSize()) {
 
-          case BYTE_SIZE: {
+          case triton::size::byte: {
             /* AX */
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->symbolicEngine->getOperandAst(inst, ax);
             /* res = AX / Source */
-            auto result = this->astCtxt->bvudiv(dividend, this->astCtxt->zx(BYTE_SIZE_BIT, divisor));
+            auto result = this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::byte, divisor));
             /* mod = AX % Source */
-            auto mod = this->astCtxt->bvurem(dividend, this->astCtxt->zx(BYTE_SIZE_BIT, divisor));
+            auto mod = this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::byte, divisor));
             /* AH = mod */
             /* AL = res */
             auto node = this->astCtxt->concat(
-                          this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, mod),   /* AH = mod */
-                          this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, result) /* AL = res */
+                          this->astCtxt->extract((triton::bitsize::byte - 1), 0, mod),   /* AH = mod */
+                          this->astCtxt->extract((triton::bitsize::byte - 1), 0, result) /* AL = res */
                         );
             /* Create symbolic expression */
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "DIV operation");
@@ -5102,15 +5102,15 @@ namespace triton {
             break;
           }
 
-          case WORD_SIZE: {
+          case triton::size::word: {
             /* DX:AX */
             auto dx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DX));
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, dx), this->symbolicEngine->getOperandAst(inst, ax));
             /* res = DX:AX / Source */
-            auto result = this->astCtxt->extract((WORD_SIZE_BIT - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(WORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::word, divisor)));
             /* mod = DX:AX % Source */
-            auto mod = this->astCtxt->extract((WORD_SIZE_BIT - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(WORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::word, divisor)));
             /* Create the symbolic expression for AX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, ax, "DIV operation");
             /* Apply the taint for AX */
@@ -5122,15 +5122,15 @@ namespace triton {
             break;
           }
 
-          case DWORD_SIZE: {
+          case triton::size::dword: {
             /* EDX:EAX */
             auto edx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
             auto eax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, edx), this->symbolicEngine->getOperandAst(inst, eax));
             /* res = EDX:EAX / Source */
-            auto result = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(DWORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::dword, divisor)));
             /* mod = EDX:EAX % Source */
-            auto mod = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(DWORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::dword, divisor)));
             /* Create the symbolic expression for EAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, eax, "DIV operation");
             /* Apply the taint for EAX */
@@ -5142,15 +5142,15 @@ namespace triton {
             break;
           }
 
-          case QWORD_SIZE: {
+          case triton::size::qword: {
             /* RDX:RAX */
             auto rdx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RDX));
             auto rax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, rdx), this->symbolicEngine->getOperandAst(inst, rax));
             /* res = RDX:RAX / Source */
-            auto result = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(QWORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::qword, divisor)));
             /* mod = RDX:RAX % Source */
-            auto mod = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(QWORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::qword, divisor)));
             /* Create the symbolic expression for RAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, rax, "DIV operation");
             /* Apply the taint for EAX */
@@ -5199,21 +5199,21 @@ namespace triton {
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
         /* Create the semantics */
-        auto node = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::dword-1, 0,
                       this->astCtxt->bvlshr(
                         op2,
                         this->astCtxt->bvmul(
                           this->astCtxt->zx(126, this->astCtxt->extract(1, 0, op3)),
-                          this->astCtxt->bv(DWORD_SIZE_BIT, DQWORD_SIZE_BIT)
+                          this->astCtxt->bv(triton::bitsize::dword, triton::bitsize::dqword)
                         )
                       )
                     );
 
         switch (dst.getBitSize()) {
-          case DWORD_SIZE_BIT:
+          case triton::bitsize::dword:
             break;
-          case QWORD_SIZE_BIT:
-            node = this->astCtxt->zx(DWORD_SIZE_BIT, node);
+          case triton::bitsize::qword:
+            node = this->astCtxt->zx(triton::bitsize::dword, node);
             break;
           default:
             throw triton::exceptions::Semantics("x86Semantics::extractps_s(): Invalid destination operand.");
@@ -5239,19 +5239,19 @@ namespace triton {
         /* Create symbolic expression */
         switch (src.getSize()) {
 
-          case BYTE_SIZE: {
+          case triton::size::byte: {
             /* AX */
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->symbolicEngine->getOperandAst(inst, ax);
             /* res = AX / Source */
-            auto result = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(BYTE_SIZE_BIT, divisor));
+            auto result = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::byte, divisor));
             /* mod = AX % Source */
-            auto mod = this->astCtxt->bvsrem(dividend, this->astCtxt->sx(BYTE_SIZE_BIT, divisor));
+            auto mod = this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::byte, divisor));
             /* AH = mod */
             /* AL = res */
             auto node = this->astCtxt->concat(
-                          this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, mod),   /* AH = mod */
-                          this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, result) /* AL = res */
+                          this->astCtxt->extract((triton::bitsize::byte - 1), 0, mod),   /* AH = mod */
+                          this->astCtxt->extract((triton::bitsize::byte - 1), 0, result) /* AL = res */
                         );
             /* Create symbolic expression */
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "IDIV operation");
@@ -5260,15 +5260,15 @@ namespace triton {
             break;
           }
 
-          case WORD_SIZE: {
+          case triton::size::word: {
             /* DX:AX */
             auto dx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DX));
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, dx), this->symbolicEngine->getOperandAst(inst, ax));
             /* res = DX:AX / Source */
-            auto result = this->astCtxt->extract((WORD_SIZE_BIT - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(WORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
             /* mod = DX:AX % Source */
-            auto mod = this->astCtxt->extract((WORD_SIZE_BIT - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(WORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
             /* Create the symbolic expression for AX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, ax, "IDIV operation");
             /* Apply the taint for AX */
@@ -5280,15 +5280,15 @@ namespace triton {
             break;
           }
 
-          case DWORD_SIZE: {
+          case triton::size::dword: {
             /* EDX:EAX */
             auto edx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
             auto eax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, edx), this->symbolicEngine->getOperandAst(inst, eax));
             /* res = EDX:EAX / Source */
-            auto result = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(DWORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
             /* mod = EDX:EAX % Source */
-            auto mod = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(DWORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
             /* Create the symbolic expression for EAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, eax, "IDIV operation");
             /* Apply the taint for EAX */
@@ -5300,15 +5300,15 @@ namespace triton {
             break;
           }
 
-          case QWORD_SIZE: {
+          case triton::size::qword: {
             /* RDX:RAX */
             auto rdx = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RDX));
             auto rax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, rdx), this->symbolicEngine->getOperandAst(inst, rax));
             /* res = RDX:RAX / Source */
-            auto result = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(QWORD_SIZE_BIT, divisor)));
+            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
             /* mod = RDX:RAX % Source */
-            auto mod = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(QWORD_SIZE_BIT, divisor)));
+            auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsrem(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
             /* Create the symbolic expression for RAX */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, result, rax, "IDIV operation");
             /* Apply the taint for EAX */
@@ -5346,12 +5346,12 @@ namespace triton {
             switch (src.getSize()) {
 
               /* dst = AX */
-              case BYTE_SIZE: {
+              case triton::size::byte: {
                 auto ax   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
                 auto al   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AL));
                 auto op1  = this->symbolicEngine->getOperandAst(inst, al);
                 auto op2  = this->symbolicEngine->getOperandAst(inst, src);
-                auto node = this->astCtxt->bvmul(this->astCtxt->sx(BYTE_SIZE_BIT, op1), this->astCtxt->sx(BYTE_SIZE_BIT, op2));
+                auto node = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::byte, op1), this->astCtxt->sx(triton::bitsize::byte, op2));
                 auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "IMUL operation");
                 expr->isTainted = this->taintEngine->taintUnion(ax, src);
                 this->cfImul_s(inst, expr, al, this->astCtxt->bvmul(op1, op2), node);
@@ -5360,14 +5360,14 @@ namespace triton {
               }
 
               /* dst = DX:AX */
-              case WORD_SIZE: {
+              case triton::size::word: {
                 auto ax    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
                 auto dx    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, ax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(WORD_SIZE_BIT, op1), this->astCtxt->sx(WORD_SIZE_BIT, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(WORD_SIZE_BIT-1, 0, node), ax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(DWORD_SIZE_BIT-1, WORD_SIZE_BIT, node), dx, "IMUL operation");
+                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::word, op1), this->astCtxt->sx(triton::bitsize::word, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::word-1, 0, node), ax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dword-1, triton::bitsize::word, node), dx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(ax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(dx, ax);
                 this->cfImul_s(inst, expr1, ax, this->astCtxt->bvmul(op1, op2), node);
@@ -5376,14 +5376,14 @@ namespace triton {
               }
 
               /* dst = EDX:EAX */
-              case DWORD_SIZE: {
+              case triton::size::dword: {
                 auto eax   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
                 auto edx   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, eax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(DWORD_SIZE_BIT, op1), this->astCtxt->sx(DWORD_SIZE_BIT, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, node), eax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(QWORD_SIZE_BIT-1, DWORD_SIZE_BIT, node), edx, "IMUL operation");
+                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::dword, op1), this->astCtxt->sx(triton::bitsize::dword, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dword-1, 0, node), eax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, node), edx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(eax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(edx, eax);
                 this->cfImul_s(inst, expr1, eax, this->astCtxt->bvmul(op1, op2), node);
@@ -5392,14 +5392,14 @@ namespace triton {
               }
 
               /* dst = RDX:RAX */
-              case QWORD_SIZE: {
+              case triton::size::qword: {
                 auto rax   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
                 auto rdx   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RDX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, rax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(QWORD_SIZE_BIT, op1), this->astCtxt->sx(QWORD_SIZE_BIT, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, node), rax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, node), rdx, "IMUL operation");
+                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::qword, op1), this->astCtxt->sx(triton::bitsize::qword, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::qword-1, 0, node), rax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, node), rdx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(rax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(rdx, rax);
                 this->cfImul_s(inst, expr1, rax, this->astCtxt->bvmul(op1, op2), node);
@@ -5633,7 +5633,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
 
-        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, WORD_SIZE_BIT)), op3, op2);
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, triton::bitsize::word)), op3, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
@@ -5690,7 +5690,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
 
-        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, DWORD_SIZE_BIT)), op3, op2);
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, triton::bitsize::dword)), op3, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
@@ -6050,7 +6050,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, srcImm1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, srcImm2);
 
-        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, QWORD_SIZE_BIT)), op3, op2);
+        auto node = this->astCtxt->ite(this->astCtxt->equal(op1, this->astCtxt->bv(0, triton::bitsize::qword)), op3, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, pc, "Program Counter");
@@ -6313,8 +6313,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(BYTE_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(BYTE_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::byte, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::byte, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -6353,8 +6353,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(DWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(DWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::dword, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::dword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -6393,8 +6393,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(QWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(QWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::qword, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::qword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -6433,8 +6433,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(WORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(WORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::word, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::word, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -6502,7 +6502,7 @@ namespace triton {
         /* Create the semantics */
         triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
-          case BYTE_SIZE:
+          case triton::size::byte:
             node = this->astCtxt->ite(
               this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
               this->astCtxt->bv(bvSize2, bvSize1),
@@ -6516,7 +6516,7 @@ namespace triton {
               this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 8, bvSize2 - 8, op1), this->astCtxt->bvtrue()), this->astCtxt->bv(7, bvSize1),
               this->astCtxt->bv(8, bvSize1))))))))));
             break;
-          case WORD_SIZE:
+          case triton::size::word:
             node = this->astCtxt->ite(
                 this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                 this->astCtxt->bv(bvSize2, bvSize1),
@@ -6538,7 +6538,7 @@ namespace triton {
                 this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 16, bvSize2 - 16, op1), this->astCtxt->bvtrue()), this->astCtxt->bv(15, bvSize1),
                 this->astCtxt->bv(16, bvSize1))))))))))))))))));
             break;
-          case DWORD_SIZE:
+          case triton::size::dword:
             node = this->astCtxt->ite(
                 this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                 this->astCtxt->bv(bvSize2, bvSize1),
@@ -6576,7 +6576,7 @@ namespace triton {
                 this->astCtxt->ite(this->astCtxt->equal(this->astCtxt->extract(bvSize2 - 32, bvSize2 - 32, op1), this->astCtxt->bvtrue()), this->astCtxt->bv(31, bvSize1),
                 this->astCtxt->bv(32, bvSize1))))))))))))))))))))))))))))))))));
             break;
-          case QWORD_SIZE:
+          case triton::size::qword:
             node = this->astCtxt->ite(
                 this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                 this->astCtxt->bv(bvSize2, bvSize1),
@@ -6710,7 +6710,7 @@ namespace triton {
         if (dst.getType() == triton::arch::OP_REG) {
           uint32 id = dst.getConstRegister().getId();
           if (id >= triton::arch::ID_REG_X86_CS && id <= triton::arch::ID_REG_X86_SS) {
-            node = this->astCtxt->extract(WORD_SIZE_BIT-1, 0, node);
+            node = this->astCtxt->extract(triton::bitsize::word-1, 0, node);
           }
           if (id >= triton::arch::ID_REG_X86_CR0 && id <= triton::arch::ID_REG_X86_CR15) {
             undef = true;
@@ -6804,18 +6804,18 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* GPR 32-bits */
-          case DWORD_SIZE_BIT:
-            node = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, op2);
+          case triton::bitsize::dword:
+            node = this->astCtxt->extract(triton::bitsize::dword-1, 0, op2);
             break;
 
           /* MMX 64-bits */
-          case QWORD_SIZE_BIT:
-            node = this->astCtxt->zx(DWORD_SIZE_BIT, this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, op2));
+          case triton::bitsize::qword:
+            node = this->astCtxt->zx(triton::bitsize::dword, this->astCtxt->extract(triton::bitsize::dword-1, 0, op2));
             break;
 
           /* XMM 128-bits */
-          case DQWORD_SIZE_BIT:
-            node = this->astCtxt->zx(QWORD_SIZE_BIT + DWORD_SIZE_BIT, this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, op2));
+          case triton::bitsize::dqword:
+            node = this->astCtxt->zx(triton::bitsize::qword + triton::bitsize::dword, this->astCtxt->extract(triton::bitsize::dword-1, 0, op2));
             break;
         }
 
@@ -6838,7 +6838,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->concat(this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, op2), this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, op2));
+        auto node = this->astCtxt->concat(this->astCtxt->extract(triton::bitsize::qword-1, 0, op2), this->astCtxt->extract(triton::bitsize::qword-1, 0, op2));
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVDDUP operation");
@@ -6859,7 +6859,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, op2);
+        auto node = this->astCtxt->extract(triton::bitsize::qword-1, 0, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVDQ2Q operation");
@@ -6918,8 +6918,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt->concat(
-                      this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
-                      this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2)  /* Destination[63..0] = Source[127..64]; */
+                      this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op1), /* Destination[127..64] unchanged */
+                      this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op2)  /* Destination[63..0] = Source[127..64]; */
                     );
 
         /* Create symbolic expression */
@@ -6945,16 +6945,16 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
-        if (dst.getSize() == DQWORD_SIZE) {
+        if (dst.getSize() == triton::size::dqword) {
           node = this->astCtxt->concat(
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2), /* Destination[127..64] = Source */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op1)  /* Destination[63..0] unchanged */
                  );
         }
 
         /* m64, xmm */
         else {
-          node = this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2); /* Destination[63..00] = Source[127..64] */
+          node = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op2); /* Destination[63..00] = Source[127..64] */
         }
 
         /* Create symbolic expression */
@@ -6980,16 +6980,16 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
-        if (dst.getSize() == DQWORD_SIZE) {
+        if (dst.getSize() == triton::size::dqword) {
           node = this->astCtxt->concat(
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source */
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2), /* Destination[127..64] = Source */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op1)  /* Destination[63..0] unchanged */
                  );
         }
 
         /* m64, xmm */
         else {
-          node = this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op2); /* Destination[63..00] = Source[127..64] */
+          node = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op2); /* Destination[63..00] = Source[127..64] */
         }
 
         /* Create symbolic expression */
@@ -7013,8 +7013,8 @@ namespace triton {
 
         /* Create the semantics */
         auto node = this->astCtxt->concat(
-                      this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2), /* Destination[127..64] = Source[63..0] */
-                      this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op1)  /* Destination[63..0] unchanged */
+                      this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2), /* Destination[127..64] = Source[63..0] */
+                      this->astCtxt->extract((triton::bitsize::qword - 1), 0, op1)  /* Destination[63..0] unchanged */
                     );
 
         /* Create symbolic expression */
@@ -7040,16 +7040,16 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
-        if (dst.getSize() == DQWORD_SIZE) {
+        if (dst.getSize() == triton::size::dqword) {
           node = this->astCtxt->concat(
-                   this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
+                   this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op1), /* Destination[127..64] unchanged */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2)                /* Destination[63..0] = Source */
                  );
         }
 
         /* m64, xmm */
         else {
-          node = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2); /* Destination = Source[63..00] */
+          node = this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2); /* Destination = Source[63..00] */
         }
 
         /* Create symbolic expression */
@@ -7075,16 +7075,16 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* xmm, m64 */
-        if (dst.getSize() == DQWORD_SIZE) {
+        if (dst.getSize() == triton::size::dqword) {
           node = this->astCtxt->concat(
-                   this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, op1), /* Destination[127..64] unchanged */
-                   this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2)                /* Destination[63..0] = Source */
+                   this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, op1), /* Destination[127..64] unchanged */
+                   this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2)                /* Destination[63..0] = Source */
                  );
         }
 
         /* m64, xmm */
         else {
-          node = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, op2); /* Destination = Source[63..00] */
+          node = this->astCtxt->extract((triton::bitsize::qword - 1), 0, op2); /* Destination = Source[63..00] */
         }
 
         /* Create symbolic expression */
@@ -7310,23 +7310,23 @@ namespace triton {
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* when operating on MMX technology registers and memory locations */
-        if (dst.getBitSize() == QWORD_SIZE_BIT && src.getBitSize() == QWORD_SIZE_BIT)
+        if (dst.getBitSize() == triton::bitsize::qword && src.getBitSize() == triton::bitsize::qword)
           node = op2;
 
         /* when source and destination operands are XMM registers */
-        else if (dst.getBitSize() == DQWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT)
+        else if (dst.getBitSize() == triton::bitsize::dqword && src.getBitSize() == triton::bitsize::dqword)
           node = this->astCtxt->concat(
-                  this->astCtxt->extract(DQWORD_SIZE_BIT-1, QWORD_SIZE_BIT, op1),
-                  this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, op2)
+                  this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, op1),
+                  this->astCtxt->extract(triton::bitsize::qword-1, 0, op2)
                  );
 
         /* when source operand is XMM register and destination operand is memory location */
         else if (dst.getBitSize() < src.getBitSize())
-          node = this->astCtxt->extract(QWORD_SIZE_BIT-1, 0, op2);
+          node = this->astCtxt->extract(triton::bitsize::qword-1, 0, op2);
 
         /* when source operand is memory location and destination operand is XMM register */
         else if (dst.getBitSize() > src.getBitSize())
-          node = this->astCtxt->zx(QWORD_SIZE_BIT, op2);
+          node = this->astCtxt->zx(triton::bitsize::qword, op2);
 
         /* Invalid operation */
         else
@@ -7336,7 +7336,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVQ operation");
 
         /* Spread taint */
-        if (dst.getBitSize() == DQWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT)
+        if (dst.getBitSize() == triton::bitsize::dqword && src.getBitSize() == triton::bitsize::dqword)
           expr->isTainted = this->taintEngine->taintUnion(dst, src);
         else
           expr->isTainted = this->taintEngine->taintAssignment(dst, src);
@@ -7353,7 +7353,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->zx(QWORD_SIZE_BIT, op2);
+        auto node = this->astCtxt->zx(triton::bitsize::qword, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVQ2DQ operation");
@@ -7391,13 +7391,13 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(BYTE_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(BYTE_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::byte, index1.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::byte, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(BYTE_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(BYTE_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::byte, index2.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::byte, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -7435,7 +7435,7 @@ namespace triton {
          * F2 0F 10 /r MOVSD xmm1, m64
          * F2 0F 11 /r MOVSD m64, xmm2
          */
-        if (dst.getBitSize() == DQWORD_SIZE_BIT) {
+        if (dst.getBitSize() == triton::bitsize::dqword) {
           auto op1  = this->symbolicEngine->getOperandAst(inst, src);
           auto op2  = this->symbolicEngine->getOperandAst(dst);
 
@@ -7451,7 +7451,7 @@ namespace triton {
         /*
          * F2 0F 11 /r MOVSD m64, xmm2
          */
-        else if (dst.getBitSize() == QWORD_SIZE_BIT && src.getBitSize() == DQWORD_SIZE_BIT) {
+        else if (dst.getBitSize() == triton::bitsize::qword && src.getBitSize() == triton::bitsize::dqword) {
           auto op1  = this->symbolicEngine->getOperandAst(inst, src);
           auto node = this->astCtxt->extract(63, 0, op1);
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVSD operation");
@@ -7470,13 +7470,13 @@ namespace triton {
           auto node1 = op1;
           auto node2 = this->astCtxt->ite(
                          this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                         this->astCtxt->bvadd(op2, this->astCtxt->bv(DWORD_SIZE, index1.getBitSize())),
-                         this->astCtxt->bvsub(op2, this->astCtxt->bv(DWORD_SIZE, index1.getBitSize()))
+                         this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::dword, index1.getBitSize())),
+                         this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::dword, index1.getBitSize()))
                        );
           auto node3 = this->astCtxt->ite(
                          this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                         this->astCtxt->bvadd(op3, this->astCtxt->bv(DWORD_SIZE, index2.getBitSize())),
-                         this->astCtxt->bvsub(op3, this->astCtxt->bv(DWORD_SIZE, index2.getBitSize()))
+                         this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::dword, index2.getBitSize())),
+                         this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::dword, index2.getBitSize()))
                        );
 
           /* Create symbolic expression */
@@ -7556,13 +7556,13 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(QWORD_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(QWORD_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::qword, index1.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::qword, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(QWORD_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(QWORD_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::qword, index2.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::qword, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -7605,13 +7605,13 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(WORD_SIZE, index1.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(WORD_SIZE, index1.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::word, index1.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::word, index1.getBitSize()))
                      );
         auto node3 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(WORD_SIZE, index2.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(WORD_SIZE, index2.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::word, index2.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::word, index2.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -7698,27 +7698,27 @@ namespace triton {
         switch (src2.getSize()) {
 
           /* AX = AL * r/m8 */
-          case BYTE_SIZE: {
+          case triton::size::byte: {
             auto dst  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto src1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AL));
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
             /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(BYTE_SIZE_BIT, op1), this->astCtxt->zx(BYTE_SIZE_BIT, op2));
+            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::byte, op1), this->astCtxt->zx(triton::bitsize::byte, op2));
             /* Create symbolic expression */
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MUL operation");
             /* Apply the taint */
             expr->isTainted = this->taintEngine->taintUnion(dst, src2);
             /* Update symbolic flags */
-            auto ah = this->astCtxt->extract((WORD_SIZE_BIT - 1), BYTE_SIZE_BIT, node);
+            auto ah = this->astCtxt->extract((triton::bitsize::word - 1), triton::bitsize::byte, node);
             this->cfMul_s(inst, expr, src2, ah);
             this->ofMul_s(inst, expr, src2, ah);
             break;
           }
 
           /* DX:AX = AX * r/m16 */
-          case WORD_SIZE: {
+          case triton::size::word: {
             auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DX));
             auto src1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
@@ -7726,14 +7726,14 @@ namespace triton {
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
             /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(WORD_SIZE_BIT, op1), this->astCtxt->zx(WORD_SIZE_BIT, op2));
+            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::word, op1), this->astCtxt->zx(triton::bitsize::word, op2));
             /* Create symbolic expression for ax */
-            auto ax = this->astCtxt->extract((WORD_SIZE_BIT - 1), 0, node);
+            auto ax = this->astCtxt->extract((triton::bitsize::word - 1), 0, node);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, ax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for dx */
-            auto dx = this->astCtxt->extract((DWORD_SIZE_BIT - 1), WORD_SIZE_BIT, node);
+            auto dx = this->astCtxt->extract((triton::bitsize::dword - 1), triton::bitsize::word, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, dx, dst2, "MUL operation");
             /* Apply the taint */
             expr2->isTainted = this->taintEngine->taintUnion(dst2, src2);
@@ -7745,7 +7745,7 @@ namespace triton {
           }
 
           /* EDX:EAX = EAX * r/m32 */
-          case DWORD_SIZE: {
+          case triton::size::dword: {
             auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
             auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
             auto src1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
@@ -7753,14 +7753,14 @@ namespace triton {
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
             /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(DWORD_SIZE_BIT, op1), this->astCtxt->zx(DWORD_SIZE_BIT, op2));
+            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::dword, op1), this->astCtxt->zx(triton::bitsize::dword, op2));
             /* Create symbolic expression for eax */
-            auto eax = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, node);
+            auto eax = this->astCtxt->extract((triton::bitsize::dword - 1), 0, node);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, eax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for edx */
-            auto edx = this->astCtxt->extract((QWORD_SIZE_BIT - 1), DWORD_SIZE_BIT, node);
+            auto edx = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, edx, dst2, "MUL operation");
             /* Apply the taint */
             expr2->isTainted = this->taintEngine->taintUnion(dst2, src2);
@@ -7772,7 +7772,7 @@ namespace triton {
           }
 
           /* RDX:RAX = RAX * r/m64 */
-          case QWORD_SIZE: {
+          case triton::size::qword: {
             auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
             auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RDX));
             auto src1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
@@ -7780,14 +7780,14 @@ namespace triton {
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
             /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(QWORD_SIZE_BIT, op1), this->astCtxt->zx(QWORD_SIZE_BIT, op2));
+            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::qword, op1), this->astCtxt->zx(triton::bitsize::qword, op2));
             /* Create symbolic expression for eax */
-            auto rax = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, node);
+            auto rax = this->astCtxt->extract((triton::bitsize::qword - 1), 0, node);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, rax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for rdx */
-            auto rdx = this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, node);
+            auto rdx = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, rdx, dst2, "MUL operation");
             /* Apply the taint */
             expr2->isTainted = this->taintEngine->taintUnion(dst2, src2);
@@ -7815,7 +7815,7 @@ namespace triton {
         switch (inst.operands[0].getSize()) {
 
           /* r32a, r32b, r/m32 */
-          case DWORD_SIZE: {
+          case triton::size::dword: {
             auto& dst1 = inst.operands[0];
             auto& dst2 = inst.operands[1];
             auto  src1 = inst.operands[2];
@@ -7826,9 +7826,9 @@ namespace triton {
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
             /* Create the semantics */
-            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(DWORD_SIZE_BIT, op1), this->astCtxt->zx(DWORD_SIZE_BIT, op2));
-            auto node1 = this->astCtxt->extract((DWORD_SIZE_BIT - 1), 0, node);
-            auto node2 = this->astCtxt->extract((QWORD_SIZE_BIT - 1), DWORD_SIZE_BIT, node);
+            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::dword, op1), this->astCtxt->zx(triton::bitsize::dword, op2));
+            auto node1 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, node);
+            auto node2 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, node);
 
             /* Create symbolic expression for eax */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst2, "MULX operation");
@@ -7844,7 +7844,7 @@ namespace triton {
           }
 
           /* r64a, r64b, r/m64 */
-          case QWORD_SIZE: {
+          case triton::size::qword: {
             auto& dst1 = inst.operands[0];
             auto& dst2 = inst.operands[1];
             auto  src1 = inst.operands[2];
@@ -7855,9 +7855,9 @@ namespace triton {
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
             /* Create the semantics */
-            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(QWORD_SIZE_BIT, op1), this->astCtxt->zx(QWORD_SIZE_BIT, op2));
-            auto node1 = this->astCtxt->extract((QWORD_SIZE_BIT - 1), 0, node);
-            auto node2 = this->astCtxt->extract((DQWORD_SIZE_BIT - 1), QWORD_SIZE_BIT, node);
+            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::qword, op1), this->astCtxt->zx(triton::bitsize::qword, op2));
+            auto node1 = this->astCtxt->extract((triton::bitsize::qword - 1), 0, node);
+            auto node2 = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, node);
 
             /* Create symbolic expression for eax */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst2, "MULX operation");
@@ -8024,7 +8024,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(127, 120, op1), this->astCtxt->extract(127, 120, op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(119, 112, op1), this->astCtxt->extract(119, 112, op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(111, 104, op1), this->astCtxt->extract(111, 104, op2)));
@@ -8035,7 +8035,7 @@ namespace triton {
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(71,  64,  op1), this->astCtxt->extract(71,  64,  op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(63,  56,  op1), this->astCtxt->extract(63,  56,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(55,  48,  op1), this->astCtxt->extract(55,  48,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(47,  40,  op1), this->astCtxt->extract(47,  40,  op2)));
@@ -8079,12 +8079,12 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(127, 96, op1), this->astCtxt->extract(127, 96, op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(95,  64, op1), this->astCtxt->extract(95,  64, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(63,  32, op1), this->astCtxt->extract(63,  32, op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(31,  0,  op1), this->astCtxt->extract(31,  0,  op2)));
             break;
@@ -8122,11 +8122,11 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(127, 64, op1), this->astCtxt->extract(127, 64, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(63,  0,  op1), this->astCtxt->extract(63,  0,  op2)));
             break;
 
@@ -8163,14 +8163,14 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(127, 112, op1), this->astCtxt->extract(127, 112, op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(111, 96,  op1), this->astCtxt->extract(111, 96,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(95,  80,  op1), this->astCtxt->extract(95,  80,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(79,  64,  op1), this->astCtxt->extract(79,  64,  op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(63,  48,  op1), this->astCtxt->extract(63,  48,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(47,  32,  op1), this->astCtxt->extract(47,  32,  op2)));
             packed.push_back(this->astCtxt->bvadd(this->astCtxt->extract(31,  16,  op1), this->astCtxt->extract(31,  16,  op2)));
@@ -8258,19 +8258,19 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(
-            this->astCtxt->extract(BYTE_SIZE_BIT-1, 0,
+            this->astCtxt->extract(triton::bitsize::byte-1, 0,
               this->astCtxt->bvlshr(
                 this->astCtxt->bvadd(
                   this->astCtxt->bvadd(
                     this->astCtxt->zx(1, this->astCtxt->extract(high, low, op1)),
                     this->astCtxt->zx(1, this->astCtxt->extract(high, low, op2))
                   ),
-                  this->astCtxt->bv(1, BYTE_SIZE_BIT+1)
+                  this->astCtxt->bv(1, triton::bitsize::byte+1)
                 ),
-                this->astCtxt->bv(1, BYTE_SIZE_BIT+1)
+                this->astCtxt->bv(1, triton::bitsize::byte+1)
               )
             )
           );
@@ -8301,20 +8301,20 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(
-            this->astCtxt->extract(WORD_SIZE_BIT-1, 0,
+            this->astCtxt->extract(triton::bitsize::word-1, 0,
               this->astCtxt->bvlshr(
                 this->astCtxt->bvadd(
                   this->astCtxt->bvadd(
                     this->astCtxt->zx(1, this->astCtxt->extract(high, low, op1)),
                     this->astCtxt->zx(1, this->astCtxt->extract(high, low, op2))
                   ),
-                  this->astCtxt->bv(1, WORD_SIZE_BIT+1)
+                  this->astCtxt->bv(1, triton::bitsize::word+1)
                 ),
-                this->astCtxt->bv(1, WORD_SIZE_BIT+1)
+                this->astCtxt->bv(1, triton::bitsize::word+1)
               )
             )
           );
@@ -8346,14 +8346,14 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->equal(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xff, BYTE_SIZE_BIT),
-                          this->astCtxt->bv(0x00, BYTE_SIZE_BIT))
+                          this->astCtxt->bv(0xff, triton::bitsize::byte),
+                          this->astCtxt->bv(0x00, triton::bitsize::byte))
                        );
         }
 
@@ -8382,15 +8382,15 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->equal(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xffffffff, DWORD_SIZE_BIT),
-                          this->astCtxt->bv(0x00000000, DWORD_SIZE_BIT))
+                          this->astCtxt->bv(0xffffffff, triton::bitsize::dword),
+                          this->astCtxt->bv(0x00000000, triton::bitsize::dword))
                        );
         }
 
@@ -8419,15 +8419,15 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->equal(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xffff, WORD_SIZE_BIT),
-                          this->astCtxt->bv(0x0000, WORD_SIZE_BIT))
+                          this->astCtxt->bv(0xffff, triton::bitsize::word),
+                          this->astCtxt->bv(0x0000, triton::bitsize::word))
                        );
         }
 
@@ -8457,14 +8457,14 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsgt(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xff, BYTE_SIZE_BIT),
-                          this->astCtxt->bv(0x00, BYTE_SIZE_BIT))
+                          this->astCtxt->bv(0xff, triton::bitsize::byte),
+                          this->astCtxt->bv(0x00, triton::bitsize::byte))
                        );
         }
 
@@ -8493,15 +8493,15 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsgt(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xffffffff, DWORD_SIZE_BIT),
-                          this->astCtxt->bv(0x00000000, DWORD_SIZE_BIT))
+                          this->astCtxt->bv(0xffffffff, triton::bitsize::dword),
+                          this->astCtxt->bv(0x00000000, triton::bitsize::dword))
                        );
         }
 
@@ -8530,15 +8530,15 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsgt(
                             this->astCtxt->extract(high, low, op1),
                             this->astCtxt->extract(high, low, op2)),
-                          this->astCtxt->bv(0xffff, WORD_SIZE_BIT),
-                          this->astCtxt->bv(0x0000, WORD_SIZE_BIT))
+                          this->astCtxt->bv(0xffff, triton::bitsize::word),
+                          this->astCtxt->bv(0x0000, triton::bitsize::word))
                        );
         }
 
@@ -8568,8 +8568,8 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsle(
                             this->astCtxt->extract(high, low, op1),
@@ -8602,10 +8602,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(BYTE_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::byte - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & 0x0f) * BYTE_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & 0x0f) * triton::bitsize::byte), op2->getBitvectorSize())
                       )
                     );
 
@@ -8630,10 +8630,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::dword - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & 0x3) * DWORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & 0x3) * triton::bitsize::dword), op2->getBitvectorSize())
                       )
                     );
 
@@ -8658,10 +8658,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(QWORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::qword - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & 0x1) * QWORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & 0x1) * triton::bitsize::qword), op2->getBitvectorSize())
                       )
                     );
 
@@ -8688,7 +8688,7 @@ namespace triton {
          * for an XMM register, the 3 least-significant bits specify the
          * location.
          */
-        if (src1.getBitSize() == QWORD_SIZE_BIT) {
+        if (src1.getBitSize() == triton::bitsize::qword) {
           count = 0x03;
         }
         else {
@@ -8700,10 +8700,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(WORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::word - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & count) * WORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & count) * triton::bitsize::word), op2->getBitvectorSize())
                       )
                     );
 
@@ -8876,7 +8876,7 @@ namespace triton {
          *   if SEL == 3: MASK = FFFF000000000000H;
          * }
          */
-        if (dst.getBitSize() == QWORD_SIZE_BIT) {
+        if (dst.getBitSize() == triton::bitsize::qword) {
           sel = op3->evaluate().convert_to<triton::uint64>() & 0x3;
           switch (sel) {
             case 1: mask = mask << 16; break;
@@ -8954,9 +8954,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsle(
                             this->astCtxt->extract(high, low, op1),
@@ -8991,9 +8991,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsle(
                             this->astCtxt->extract(high, low, op1),
@@ -9029,8 +9029,8 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvule(
                             this->astCtxt->extract(high, low, op1),
@@ -9065,9 +9065,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvule(
                             this->astCtxt->extract(high, low, op1),
@@ -9102,9 +9102,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvule(
                             this->astCtxt->extract(high, low, op1),
@@ -9140,8 +9140,8 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsge(
                             this->astCtxt->extract(high, low, op1),
@@ -9176,9 +9176,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsge(
                             this->astCtxt->extract(high, low, op1),
@@ -9213,9 +9213,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvsge(
                             this->astCtxt->extract(high, low, op1),
@@ -9251,8 +9251,8 @@ namespace triton {
         pck.reserve(dst.getSize());
 
         for (triton::uint32 index = 0; index < dst.getSize(); index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * BYTE_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - BYTE_SIZE_BIT) - (index * BYTE_SIZE_BIT);
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvuge(
                             this->astCtxt->extract(high, low, op1),
@@ -9287,9 +9287,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / DWORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * DWORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - DWORD_SIZE_BIT) - (index * DWORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvuge(
                             this->astCtxt->extract(high, low, op1),
@@ -9324,9 +9324,9 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(dst.getSize());
 
-        for (triton::uint32 index = 0; index < dst.getSize() / WORD_SIZE; index++) {
-          uint32 high = (dst.getBitSize() - 1) - (index * WORD_SIZE_BIT);
-          uint32 low  = (dst.getBitSize() - WORD_SIZE_BIT) - (index * WORD_SIZE_BIT);
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->ite(
                           this->astCtxt->bvuge(
                             this->astCtxt->extract(high, low, op1),
@@ -9361,7 +9361,7 @@ namespace triton {
         mskb.reserve(16);
 
         switch (src.getSize()) {
-          case DQWORD_SIZE:
+          case triton::size::dqword:
             mskb.push_back(this->astCtxt->extract(127, 127, op2));
             mskb.push_back(this->astCtxt->extract(119, 119, op2));
             mskb.push_back(this->astCtxt->extract(111, 111, op2));
@@ -9371,7 +9371,7 @@ namespace triton {
             mskb.push_back(this->astCtxt->extract(79,  79,  op2));
             mskb.push_back(this->astCtxt->extract(71,  71,  op2));
 
-          case QWORD_SIZE:
+          case triton::size::qword:
             mskb.push_back(this->astCtxt->extract(63,  63,  op2));
             mskb.push_back(this->astCtxt->extract(55,  55,  op2));
             mskb.push_back(this->astCtxt->extract(47,  47,  op2));
@@ -9409,10 +9409,10 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(4);
 
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(31, 24, op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(23, 16, op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(31, 24, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(23, 16, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9438,8 +9438,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9465,14 +9465,14 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(8);
 
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(63, 56, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(55, 48, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(47, 40, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(39, 32, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(31, 24, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(23, 16, op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->sx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(63, 56, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(55, 48, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(47, 40, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(39, 32, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(31, 24, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(23, 16, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9498,8 +9498,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt->extract(63, 32, op2)));
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt->extract(31, 0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::dword, this->astCtxt->extract(63, 32, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::dword, this->astCtxt->extract(31, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9525,10 +9525,10 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(4);
 
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(63, 48, op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(47, 32, op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(31, 16, op2)));
-        pck.push_back(this->astCtxt->sx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(15, 0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(63, 48, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(47, 32, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(31, 16, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(15, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9554,8 +9554,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(31, 16, op2)));
-        pck.push_back(this->astCtxt->sx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(15, 0,  op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::word, this->astCtxt->extract(31, 16, op2)));
+        pck.push_back(this->astCtxt->sx(triton::bitsize::qword - triton::bitsize::word, this->astCtxt->extract(15, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9581,10 +9581,10 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(4);
 
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(31, 24, op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(23, 16, op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(31, 24, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(23, 16, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9610,8 +9610,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9637,14 +9637,14 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(8);
 
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(63, 56, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(55, 48, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(47, 40, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(39, 32, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(31, 24, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(23, 16, op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(15, 8,  op2)));
-        pck.push_back(this->astCtxt->zx(WORD_SIZE_BIT - BYTE_SIZE_BIT, this->astCtxt->extract(7,  0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(63, 56, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(55, 48, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(47, 40, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(39, 32, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(31, 24, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(23, 16, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(15, 8,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::word - triton::bitsize::byte, this->astCtxt->extract(7,  0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9670,8 +9670,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt->extract(63, 32, op2)));
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - DWORD_SIZE_BIT, this->astCtxt->extract(31, 0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::dword, this->astCtxt->extract(63, 32, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::dword, this->astCtxt->extract(31, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9697,10 +9697,10 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(4);
 
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(63, 48, op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(47, 32, op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(31, 16, op2)));
-        pck.push_back(this->astCtxt->zx(DWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(15, 0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(63, 48, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(47, 32, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(31, 16, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::dword - triton::bitsize::word, this->astCtxt->extract(15, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -9726,8 +9726,8 @@ namespace triton {
         std::vector<triton::ast::SharedAbstractNode> pck;
         pck.reserve(2);
 
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(31, 16, op2)));
-        pck.push_back(this->astCtxt->zx(QWORD_SIZE_BIT - WORD_SIZE_BIT, this->astCtxt->extract(15, 0,  op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::word, this->astCtxt->extract(31, 16, op2)));
+        pck.push_back(this->astCtxt->zx(triton::bitsize::qword - triton::bitsize::word, this->astCtxt->extract(15, 0,  op2)));
 
         auto node = this->astCtxt->concat(pck);
 
@@ -10124,8 +10124,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(7, 6, op3)),
-                this->astCtxt->bv(32, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(7, 6, op3)),
+                this->astCtxt->bv(32, triton::bitsize::dqword)
               )
             )
           )
@@ -10135,8 +10135,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(5, 4, op3)),
-                this->astCtxt->bv(32, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(5, 4, op3)),
+                this->astCtxt->bv(32, triton::bitsize::dqword)
               )
             )
           )
@@ -10146,8 +10146,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(3, 2, op3)),
-                this->astCtxt->bv(32, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(3, 2, op3)),
+                this->astCtxt->bv(32, triton::bitsize::dqword)
               )
             )
           )
@@ -10157,8 +10157,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(1, 0, op3)),
-                this->astCtxt->bv(32, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(1, 0, op3)),
+                this->astCtxt->bv(32, triton::bitsize::dqword)
               )
             )
           )
@@ -10195,8 +10195,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(7, 6, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(7, 6, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10206,8 +10206,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(5, 4, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(5, 4, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10217,8 +10217,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(3, 2, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(3, 2, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10228,8 +10228,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(1, 0, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(1, 0, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10272,8 +10272,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(7, 6, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(7, 6, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10283,8 +10283,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(5, 4, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(5, 4, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10294,8 +10294,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(3, 2, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(3, 2, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10305,8 +10305,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(DQWORD_SIZE_BIT-2, this->astCtxt->extract(1, 0, op3)),
-                this->astCtxt->bv(16, DQWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::dqword-2, this->astCtxt->extract(1, 0, op3)),
+                this->astCtxt->bv(16, triton::bitsize::dqword)
               )
             )
           )
@@ -10343,8 +10343,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(QWORD_SIZE_BIT-2, this->astCtxt->extract(7, 6, op3)),
-                this->astCtxt->bv(16, QWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::qword-2, this->astCtxt->extract(7, 6, op3)),
+                this->astCtxt->bv(16, triton::bitsize::qword)
               )
             )
           )
@@ -10354,8 +10354,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(QWORD_SIZE_BIT-2, this->astCtxt->extract(5, 4, op3)),
-                this->astCtxt->bv(16, QWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::qword-2, this->astCtxt->extract(5, 4, op3)),
+                this->astCtxt->bv(16, triton::bitsize::qword)
               )
             )
           )
@@ -10365,8 +10365,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(QWORD_SIZE_BIT-2, this->astCtxt->extract(3, 2, op3)),
-                this->astCtxt->bv(16, QWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::qword-2, this->astCtxt->extract(3, 2, op3)),
+                this->astCtxt->bv(16, triton::bitsize::qword)
               )
             )
           )
@@ -10376,8 +10376,8 @@ namespace triton {
             this->astCtxt->bvlshr(
               op2,
               this->astCtxt->bvmul(
-                this->astCtxt->zx(QWORD_SIZE_BIT-2, this->astCtxt->extract(1, 0, op3)),
-                this->astCtxt->bv(16, QWORD_SIZE_BIT)
+                this->astCtxt->zx(triton::bitsize::qword-2, this->astCtxt->extract(1, 0, op3)),
+                this->astCtxt->bv(16, triton::bitsize::qword)
               )
             )
           )
@@ -10410,12 +10410,12 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(127, 96, op1), this->astCtxt->extract(31, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 95, 64, op1), this->astCtxt->extract(31, 0, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(63, 32, op1), this->astCtxt->extract(31, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(31,  0, op1), this->astCtxt->extract(31, 0, op2)));
             break;
@@ -10450,11 +10450,11 @@ namespace triton {
                       op1,
                       this->astCtxt->bvmul(
                         this->astCtxt->ite(
-                          this->astCtxt->bvuge(op2, this->astCtxt->bv(WORD_SIZE_BIT, dst.getBitSize())),
-                          this->astCtxt->bv(WORD_SIZE_BIT, dst.getBitSize()),
+                          this->astCtxt->bvuge(op2, this->astCtxt->bv(triton::bitsize::word, dst.getBitSize())),
+                          this->astCtxt->bv(triton::bitsize::word, dst.getBitSize()),
                           op2
                         ),
-                        this->astCtxt->bv(QWORD_SIZE, dst.getBitSize())
+                        this->astCtxt->bv(triton::size::qword, dst.getBitSize())
                       )
                     );
 
@@ -10485,14 +10485,14 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(127, 64, op1), this->astCtxt->extract(63, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 63,  0, op1), this->astCtxt->extract(63, 0, op2)));
             node = this->astCtxt->concat(packed);
             break;
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             /* MMX register is only one QWORD so it's a simple shl */
             node = this->astCtxt->bvshl(op1, op2);
             break;
@@ -10526,14 +10526,14 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(127, 112, op1), this->astCtxt->extract(15, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(111,  96, op1), this->astCtxt->extract(15, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 95,  80, op1), this->astCtxt->extract(15, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract( 79,  64, op1), this->astCtxt->extract(15, 0, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(63, 48, op1), this->astCtxt->extract(15, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(47, 32, op1), this->astCtxt->extract(15, 0, op2)));
             packed.push_back(this->astCtxt->bvshl(this->astCtxt->extract(31, 16, op1), this->astCtxt->extract(15, 0, op2)));
@@ -10570,11 +10570,11 @@ namespace triton {
                       op1,
                       this->astCtxt->bvmul(
                         this->astCtxt->ite(
-                          this->astCtxt->bvuge(op2, this->astCtxt->bv(WORD_SIZE_BIT, dst.getBitSize())),
-                          this->astCtxt->bv(WORD_SIZE_BIT, dst.getBitSize()),
+                          this->astCtxt->bvuge(op2, this->astCtxt->bv(triton::bitsize::word, dst.getBitSize())),
+                          this->astCtxt->bv(triton::bitsize::word, dst.getBitSize()),
                           op2
                         ),
-                        this->astCtxt->bv(QWORD_SIZE, dst.getBitSize())
+                        this->astCtxt->bv(triton::size::qword, dst.getBitSize())
                       )
                     );
 
@@ -10604,7 +10604,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(127, 120, op1), this->astCtxt->extract(127, 120, op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(119, 112, op1), this->astCtxt->extract(119, 112, op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(111, 104, op1), this->astCtxt->extract(111, 104, op2)));
@@ -10615,7 +10615,7 @@ namespace triton {
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(71,  64,  op1), this->astCtxt->extract(71,  64,  op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(63,  56,  op1), this->astCtxt->extract(63,  56,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(55,  48,  op1), this->astCtxt->extract(55,  48,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(47,  40,  op1), this->astCtxt->extract(47,  40,  op2)));
@@ -10659,12 +10659,12 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(127, 96, op1), this->astCtxt->extract(127, 96, op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(95,  64, op1), this->astCtxt->extract(95,  64, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(63,  32, op1), this->astCtxt->extract(63,  32, op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(31,  0,  op1), this->astCtxt->extract(31,  0,  op2)));
             break;
@@ -10702,11 +10702,11 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(127, 64, op1), this->astCtxt->extract(127, 64, op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(63,  0,  op1), this->astCtxt->extract(63,  0,  op2)));
             break;
 
@@ -10743,14 +10743,14 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(127, 112, op1), this->astCtxt->extract(127, 112, op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(111, 96,  op1), this->astCtxt->extract(111, 96,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(95,  80,  op1), this->astCtxt->extract(95,  80,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(79,  64,  op1), this->astCtxt->extract(79,  64,  op2)));
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(63,  48,  op1), this->astCtxt->extract(63,  48,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(47,  32,  op1), this->astCtxt->extract(47,  32,  op2)));
             packed.push_back(this->astCtxt->bvsub(this->astCtxt->extract(31,  16,  op1), this->astCtxt->extract(31,  16,  op2)));
@@ -10823,7 +10823,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(63, 56, op2));
             unpack.push_back(this->astCtxt->extract(63, 56, op1));
             unpack.push_back(this->astCtxt->extract(55, 48, op2));
@@ -10835,7 +10835,7 @@ namespace triton {
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(127, 120, op2));
             unpack.push_back(this->astCtxt->extract(127, 120, op1));
             unpack.push_back(this->astCtxt->extract(119, 112, op2));
@@ -10886,13 +10886,13 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(63, 32, op2));
             unpack.push_back(this->astCtxt->extract(63, 32, op1));
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(127, 96, op2));
             unpack.push_back(this->astCtxt->extract(127, 96, op1));
             unpack.push_back(this->astCtxt->extract(95,  64, op2));
@@ -10931,7 +10931,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(127, 64, op2));
             unpack.push_back(this->astCtxt->extract(127, 64, op1));
             break;
@@ -10968,7 +10968,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(63, 48, op2));
             unpack.push_back(this->astCtxt->extract(63, 48, op1));
             unpack.push_back(this->astCtxt->extract(47, 32, op2));
@@ -10976,7 +10976,7 @@ namespace triton {
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(127, 112, op2));
             unpack.push_back(this->astCtxt->extract(127, 112, op1));
             unpack.push_back(this->astCtxt->extract(111, 96,  op2));
@@ -11019,7 +11019,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(31, 24, op2));
             unpack.push_back(this->astCtxt->extract(31, 24, op1));
             unpack.push_back(this->astCtxt->extract(23, 16, op2));
@@ -11031,7 +11031,7 @@ namespace triton {
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(63, 56, op2));
             unpack.push_back(this->astCtxt->extract(63, 56, op1));
             unpack.push_back(this->astCtxt->extract(55, 48, op2));
@@ -11082,13 +11082,13 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(31, 0, op2));
             unpack.push_back(this->astCtxt->extract(31, 0, op1));
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(63, 32, op2));
             unpack.push_back(this->astCtxt->extract(63, 32, op1));
             unpack.push_back(this->astCtxt->extract(31, 0,  op2));
@@ -11127,7 +11127,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(63, 0, op2));
             unpack.push_back(this->astCtxt->extract(63, 0, op1));
             break;
@@ -11164,7 +11164,7 @@ namespace triton {
         switch (dst.getBitSize()) {
 
           /* MMX */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             unpack.push_back(this->astCtxt->extract(31, 16, op2));
             unpack.push_back(this->astCtxt->extract(31, 16, op1));
             unpack.push_back(this->astCtxt->extract(15, 0,  op2));
@@ -11172,7 +11172,7 @@ namespace triton {
             break;
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             unpack.push_back(this->astCtxt->extract(63, 48, op2));
             unpack.push_back(this->astCtxt->extract(63, 48, op1));
             unpack.push_back(this->astCtxt->extract(47, 32, op2));
@@ -11520,28 +11520,28 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask: 0x1f without MOD */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op2 = this->astCtxt->bvand(
                     op2,
-                    this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                    this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())
                   );
             break;
 
           /* Mask: 0x1f without MOD */
-          case DWORD_SIZE_BIT:
+          case triton::bitsize::dword:
             op2 = this->astCtxt->bvand(
                     op2,
-                    this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                    this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())
                   );
             break;
 
           /* Mask: 0x1f MOD size + 1 */
-          case WORD_SIZE_BIT:
-          case BYTE_SIZE_BIT:
+          case triton::bitsize::word:
+          case triton::bitsize::byte:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize()+1, src.getBitSize())
                   );
             break;
@@ -11598,28 +11598,28 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask: 0x3f without MOD */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op2 = this->astCtxt->bvand(
                     op2,
-                    this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                    this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())
                   );
             break;
 
           /* Mask: 0x1f without MOD */
-          case DWORD_SIZE_BIT:
+          case triton::bitsize::dword:
             op2 = this->astCtxt->bvand(
                     op2,
-                    this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                    this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())
                   );
             break;
 
           /* Mask: 0x1f MOD size + 1 */
-          case WORD_SIZE_BIT:
-          case BYTE_SIZE_BIT:
+          case triton::bitsize::word:
+          case triton::bitsize::byte:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize()+1, src.getBitSize())
                   );
             break;
@@ -11729,34 +11729,34 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src.getBitSize())
                   );
 
             op2bis = this->astCtxt->bvand(
                        op2bis,
-                       this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                       this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())
                      );
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-          case WORD_SIZE_BIT:
-          case BYTE_SIZE_BIT:
+          case triton::bitsize::dword:
+          case triton::bitsize::word:
+          case triton::bitsize::byte:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src.getBitSize())
                   );
 
             op2bis = this->astCtxt->bvand(
                        op2bis,
-                       this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                       this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())
                      );
             break;
 
@@ -11801,34 +11801,34 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src.getBitSize())
                   );
 
             op2bis = this->astCtxt->bvand(
                        op2bis,
-                       this->astCtxt->bv(QWORD_SIZE_BIT-1, src.getBitSize())
+                       this->astCtxt->bv(triton::bitsize::qword-1, src.getBitSize())
                      );
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-          case WORD_SIZE_BIT:
-          case BYTE_SIZE_BIT:
+          case triton::bitsize::dword:
+          case triton::bitsize::word:
+          case triton::bitsize::byte:
             op2 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op2,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src.getBitSize())
                   );
 
             op2bis = this->astCtxt->bvand(
                        op2bis,
-                       this->astCtxt->bv(DWORD_SIZE_BIT-1, src.getBitSize())
+                       this->astCtxt->bv(triton::bitsize::dword-1, src.getBitSize())
                      );
             break;
 
@@ -11873,13 +11873,13 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::qword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize()));
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::dword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize()));
             break;
 
           default:
@@ -11949,10 +11949,10 @@ namespace triton {
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->astCtxt->zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
 
-        if (dst.getBitSize() == QWORD_SIZE_BIT)
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+        if (dst.getBitSize() == triton::bitsize::qword)
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, dst.getBitSize()));
         else
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, dst.getBitSize()));
 
         /* Create the semantics */
         auto node = this->astCtxt->bvashr(op1, op2);
@@ -11995,13 +11995,13 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::qword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize()));
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::dword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize()));
             break;
 
           default:
@@ -12084,8 +12084,8 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(BYTE_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(BYTE_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::byte, index.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::byte, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -12137,8 +12137,8 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(DWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(DWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::dword, index.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::dword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -12190,8 +12190,8 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(QWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(QWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::qword, index.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::qword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -12243,8 +12243,8 @@ namespace triton {
         auto node1 = this->astCtxt->bvsub(op1, op2);
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op4, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op3, this->astCtxt->bv(WORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op3, this->astCtxt->bv(WORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op3, this->astCtxt->bv(triton::size::word, index.getBitSize())),
+                       this->astCtxt->bvsub(op3, this->astCtxt->bv(triton::size::word, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -12793,10 +12793,10 @@ namespace triton {
         auto op2    = this->astCtxt->zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
         auto op2bis = op2;
 
-        if (dst.getBitSize() == QWORD_SIZE_BIT)
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+        if (dst.getBitSize() == triton::bitsize::qword)
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, dst.getBitSize()));
         else
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, dst.getBitSize()));
 
         /* Create the semantics */
         auto node = this->astCtxt->bvshl(op1, op2);
@@ -12845,23 +12845,23 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op3 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op3,
-                      this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src2.getBitSize())
                   );
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-          case WORD_SIZE_BIT:
+          case triton::bitsize::dword:
+          case triton::bitsize::word:
             op3 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op3,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize())),
-                    this->astCtxt->bv(DWORD_SIZE_BIT, src2.getBitSize())
+                      this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize())),
+                    this->astCtxt->bv(triton::bitsize::dword, src2.getBitSize())
                   );
             break;
 
@@ -12928,13 +12928,13 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::qword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize()));
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::dword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize()));
             break;
 
           default:
@@ -12965,10 +12965,10 @@ namespace triton {
         auto op2    = this->astCtxt->zx(dst.getBitSize() - src.getBitSize(), this->symbolicEngine->getOperandAst(inst, src));
         auto op2bis = op2;
 
-        if (dst.getBitSize() == QWORD_SIZE_BIT)
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, dst.getBitSize()));
+        if (dst.getBitSize() == triton::bitsize::qword)
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, dst.getBitSize()));
         else
-          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, dst.getBitSize()));
+          op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, dst.getBitSize()));
 
         /* Create the semantics */
         auto node = this->astCtxt->bvlshr(op1, op2);
@@ -13017,23 +13017,23 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
+          case triton::bitsize::qword:
             op3 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op3,
-                      this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize())),
+                      this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize())),
                     this->astCtxt->bv(dst.getBitSize(), src2.getBitSize())
                   );
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-          case WORD_SIZE_BIT:
+          case triton::bitsize::dword:
+          case triton::bitsize::word:
             op3 = this->astCtxt->bvsmod(
                     this->astCtxt->bvand(
                       op3,
-                      this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize())),
-                    this->astCtxt->bv(DWORD_SIZE_BIT, src2.getBitSize())
+                      this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize())),
+                    this->astCtxt->bv(triton::bitsize::dword, src2.getBitSize())
                   );
             break;
 
@@ -13100,13 +13100,13 @@ namespace triton {
 
         switch (dst.getBitSize()) {
           /* Mask 0x3f MOD size */
-          case QWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(QWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::qword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::qword-1, src2.getBitSize()));
             break;
 
           /* Mask 0x1f MOD size */
-          case DWORD_SIZE_BIT:
-            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(DWORD_SIZE_BIT-1, src2.getBitSize()));
+          case triton::bitsize::dword:
+            op2 = this->astCtxt->bvand(op2, this->astCtxt->bv(triton::bitsize::dword-1, src2.getBitSize()));
             break;
 
           default:
@@ -13157,7 +13157,7 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = this->astCtxt->extract(DWORD_SIZE_BIT-1, 0, op2);
+        auto node = this->astCtxt->extract(triton::bitsize::dword-1, 0, op2);
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STMXCSR operation");
@@ -13193,8 +13193,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(BYTE_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(BYTE_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::byte, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::byte, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -13233,8 +13233,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(DWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(DWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::dword, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::dword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -13273,8 +13273,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(QWORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(QWORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::qword, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::qword, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -13313,8 +13313,8 @@ namespace triton {
         auto node1 = op1;
         auto node2 = this->astCtxt->ite(
                        this->astCtxt->equal(op3, this->astCtxt->bvfalse()),
-                       this->astCtxt->bvadd(op2, this->astCtxt->bv(WORD_SIZE, index.getBitSize())),
-                       this->astCtxt->bvsub(op2, this->astCtxt->bv(WORD_SIZE, index.getBitSize()))
+                       this->astCtxt->bvadd(op2, this->astCtxt->bv(triton::size::word, index.getBitSize())),
+                       this->astCtxt->bvsub(op2, this->astCtxt->bv(triton::size::word, index.getBitSize()))
                      );
 
         /* Create symbolic expression */
@@ -13435,7 +13435,7 @@ namespace triton {
         /* Create the semantics */
         triton::ast::SharedAbstractNode node = nullptr;
         switch (src.getSize()) {
-          case BYTE_SIZE:
+          case triton::size::byte:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                      this->astCtxt->bv(bvSize1, bvSize1),
@@ -13451,7 +13451,7 @@ namespace triton {
                      ))))))))
                    );
             break;
-          case WORD_SIZE:
+          case triton::size::word:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                      this->astCtxt->bv(bvSize1, bvSize1),
@@ -13475,7 +13475,7 @@ namespace triton {
                      ))))))))))))))))
                    );
             break;
-          case DWORD_SIZE:
+          case triton::size::dword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                      this->astCtxt->bv(bvSize1, bvSize1),
@@ -13515,7 +13515,7 @@ namespace triton {
                      ))))))))))))))))))))))))))))))))
                    );
             break;
-          case QWORD_SIZE:
+          case triton::size::qword:
             node = this->astCtxt->ite(
                      this->astCtxt->equal(op1, this->astCtxt->bv(0, bvSize2)),
                      this->astCtxt->bv(bvSize1, bvSize1),
@@ -13842,10 +13842,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(DWORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::dword - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & 0x3) * DWORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & 0x3) * triton::bitsize::dword), op2->getBitvectorSize())
                       )
                     );
 
@@ -13870,10 +13870,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(QWORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::qword - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & 0x1) * QWORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & 0x1) * triton::bitsize::qword), op2->getBitvectorSize())
                       )
                     );
 
@@ -13900,7 +13900,7 @@ namespace triton {
          * for an XMM register, the 3 least-significant bits specify the
          * location.
          */
-        if (src1.getBitSize() == QWORD_SIZE_BIT) {
+        if (src1.getBitSize() == triton::bitsize::qword) {
           count = 0x03;
         }
         else {
@@ -13912,10 +13912,10 @@ namespace triton {
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
         auto op3 = this->symbolicEngine->getOperandAst(inst, src2);
 
-        auto node = this->astCtxt->extract(WORD_SIZE_BIT - 1, 0,
+        auto node = this->astCtxt->extract(triton::bitsize::word - 1, 0,
                       this->astCtxt->bvlshr(
                         op2,
-                        this->astCtxt->bv(((op3->evaluate() & count) * WORD_SIZE_BIT), op2->getBitvectorSize())
+                        this->astCtxt->bv(((op3->evaluate() & count) * triton::bitsize::word), op2->getBitvectorSize())
                       )
                     );
 
@@ -13942,7 +13942,7 @@ namespace triton {
         mskb.reserve(32);
 
         switch (src.getSize()) {
-          case QQWORD_SIZE:
+          case triton::size::qqword:
             mskb.push_back(this->astCtxt->extract(255, 255, op2));
             mskb.push_back(this->astCtxt->extract(247, 247, op2));
             mskb.push_back(this->astCtxt->extract(239, 239, op2));
@@ -13960,7 +13960,7 @@ namespace triton {
             mskb.push_back(this->astCtxt->extract(143, 143, op2));
             mskb.push_back(this->astCtxt->extract(135, 135, op2));
 
-          case DQWORD_SIZE:
+          case triton::size::dqword:
             mskb.push_back(this->astCtxt->extract(127, 127, op2));
             mskb.push_back(this->astCtxt->extract(119, 119, op2));
             mskb.push_back(this->astCtxt->extract(111, 111, op2));
@@ -14039,7 +14039,7 @@ namespace triton {
         switch (dstSize) {
 
           /* YMM */
-          case QQWORD_SIZE_BIT:
+          case triton::bitsize::qqword:
             pack.push_back(
               this->astCtxt->extract(31, 0,
                 this->astCtxt->bvlshr(
@@ -14086,7 +14086,7 @@ namespace triton {
             );
 
           /* XMM */
-          case DQWORD_SIZE_BIT:
+          case triton::bitsize::dqword:
             pack.push_back(
               this->astCtxt->extract(31, 0,
                 this->astCtxt->bvlshr(

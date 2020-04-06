@@ -136,7 +136,7 @@ namespace triton {
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
         this->memoryReference.erase(addr);
-        this->removeAlignedMemory(addr, BYTE_SIZE);
+        this->removeAlignedMemory(addr, triton::size::byte);
       }
 
 
@@ -182,23 +182,23 @@ namespace triton {
       void SymbolicEngine::removeAlignedMemory(triton::uint64 address, triton::uint32 size) {
         /* Remove overloaded positive ranges */
         for (triton::uint32 index = 0; index < size; index++) {
-          this->alignedMemoryReference.erase(std::make_pair(address+index, BYTE_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, WORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, DWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, QWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, DQWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, QQWORD_SIZE));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, DQQWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::byte));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::word));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dword));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qword));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqword));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qqword));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqqword));
         }
 
         /* Remove overloaded negative ranges */
-        for (triton::uint32 index = 1; index < DQQWORD_SIZE; index++) {
-          if (index < WORD_SIZE)    this->alignedMemoryReference.erase(std::make_pair(address-index, WORD_SIZE));
-          if (index < DWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, DWORD_SIZE));
-          if (index < QWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, QWORD_SIZE));
-          if (index < DQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, DQWORD_SIZE));
-          if (index < QQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, QQWORD_SIZE));
-          if (index < DQQWORD_SIZE) this->alignedMemoryReference.erase(std::make_pair(address-index, DQQWORD_SIZE));
+        for (triton::uint32 index = 1; index < triton::size::dqqword; index++) {
+          if (index < triton::size::word)    this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::word));
+          if (index < triton::size::dword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dword));
+          if (index < triton::size::qword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qword));
+          if (index < triton::size::dqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqword));
+          if (index < triton::size::qqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qqword));
+          if (index < triton::size::dqqword) this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqqword));
         }
       }
 
@@ -294,7 +294,7 @@ namespace triton {
 
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
-        triton::arch::MemoryAccess mem(address, BYTE_SIZE);
+        triton::arch::MemoryAccess mem(address, triton::size::byte);
         return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
       }
 
@@ -514,7 +514,7 @@ namespace triton {
         triton::uint512 cv        = this->architecture->getConcreteMemoryValue(mem);
 
         /* First we create a symbolic variable */
-        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(MEMORY_VARIABLE, memAddr, symVarSize * BYTE_SIZE_BIT, symVarAlias);
+        const SharedSymbolicVariable& symVar = this->newSymbolicVariable(MEMORY_VARIABLE, memAddr, symVarSize * bitsize::byte, symVarAlias);
 
         /* Create the AST node */
         const triton::ast::SharedAbstractNode& symVarNode = this->astCtxt->variable(symVar);
@@ -531,15 +531,15 @@ namespace triton {
 
         /*  Split expression in bytes */
         for (triton::sint32 index = symVarSize-1; index >= 0; index--) {
-          triton::uint32 high = ((BYTE_SIZE_BIT * (index + 1)) - 1);
-          triton::uint32 low  = ((BYTE_SIZE_BIT * (index + 1)) - BYTE_SIZE_BIT);
+          triton::uint32 high = ((bitsize::byte * (index + 1)) - 1);
+          triton::uint32 low  = ((bitsize::byte * (index + 1)) - bitsize::byte);
 
           /* Isolate the good part of the symbolic variable */
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, symVarNode);
 
           /* Create a new symbolic expression containing the symbolic variable */
           const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
-          se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, BYTE_SIZE));
+          se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, triton::size::byte));
 
           /* Assign the symbolic expression to the memory cell */
           this->addMemoryReference(memAddr+index, se);
@@ -773,7 +773,7 @@ namespace triton {
         triton::ast::SharedAbstractNode tmp       = nullptr;
         triton::uint64 address                    = mem.getAddress();
         triton::uint32 size                       = mem.getSize();
-        triton::uint8 concreteValue[DQQWORD_SIZE] = {0};
+        triton::uint8 concreteValue[triton::size::dqqword] = {0};
         triton::uint512 value                     = this->architecture->getConcreteMemoryValue(mem);
 
         triton::utils::fromUintToBuffer(value, concreteValue);
@@ -791,7 +791,7 @@ namespace triton {
         if (size == 1) {
           const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address);
           if (symMem) return this->astCtxt->reference(symMem);
-          else        return this->astCtxt->bv(concreteValue[size - 1], BYTE_SIZE_BIT);
+          else        return this->astCtxt->bv(concreteValue[size - 1], bitsize::byte);
         }
 
         /* If the memory access is more than 1 byte long, concatenate each memory cell */
@@ -799,7 +799,7 @@ namespace triton {
         while (size) {
           const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
           if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
-          else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], BYTE_SIZE_BIT));
+          else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], bitsize::byte));
           size--;
         }
         return this->astCtxt->concat(opVec);
@@ -886,14 +886,14 @@ namespace triton {
          */
         ret.reserve(mem.getSize());
         while (writeSize) {
-          triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
-          triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
+          triton::uint32 high = ((writeSize * bitsize::byte) - 1);
+          triton::uint32 low  = ((writeSize * bitsize::byte) - bitsize::byte);
           /* Extract each byte of the memory */
           tmp = this->astCtxt->extract(high, low, node);
           /* Assign each byte to a new symbolic expression */
           se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
           /* Set the origin of the symbolic expression */
-          se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
+          se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
           /* ret is the for the final expression */
           ret.push_back(tmp);
           /* add the symbolic expression to the instruction */
@@ -942,14 +942,14 @@ namespace triton {
 
         switch (reg.getSize()) {
           /* ----------------------------------------------------------------*/
-          case BYTE_SIZE: {
+          case triton::size::byte: {
             const auto& origReg = this->getRegisterAst(parentReg);
             /*
              * Mainly used for x86
              * r[........xxxxxxxx]
              */
             if (reg.getLow() == 0) {
-              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), BYTE_SIZE_BIT, origReg);
+              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), bitsize::byte, origReg);
               return this->astCtxt->concat(keep, node);
             }
             /*
@@ -957,23 +957,23 @@ namespace triton {
              * r[xxxxxxxx........]
              */
             else {
-              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg);
-              return this->astCtxt->concat(keep, this->astCtxt->concat(node, this->astCtxt->extract((BYTE_SIZE_BIT - 1), 0, origReg)));
+              const auto& keep = this->astCtxt->extract((parentReg.getBitSize() - 1), bitsize::word, origReg);
+              return this->astCtxt->concat(keep, this->astCtxt->concat(node, this->astCtxt->extract((bitsize::byte - 1), 0, origReg)));
             }
           }
 
           /* ----------------------------------------------------------------*/
-          case WORD_SIZE: {
+          case triton::size::word: {
             const auto& origReg = this->getRegisterAst(parentReg);
-            return this->astCtxt->concat(this->astCtxt->extract((parentReg.getBitSize() - 1), WORD_SIZE_BIT, origReg), node);
+            return this->astCtxt->concat(this->astCtxt->extract((parentReg.getBitSize() - 1), bitsize::word, origReg), node);
           }
 
           /* ----------------------------------------------------------------*/
-          case DWORD_SIZE:
-          case QWORD_SIZE:
-          case DQWORD_SIZE:
-          case QQWORD_SIZE:
-          case DQQWORD_SIZE: {
+          case triton::size::dword:
+          case triton::size::qword:
+          case triton::size::dqword:
+          case triton::size::qqword:
+          case triton::size::dqqword: {
             if (zxForAssign == false) {
               if (parentReg.getBitSize() > reg.getBitSize()) {
                 const auto& origReg = this->getRegisterAst(parentReg);
@@ -1068,14 +1068,14 @@ namespace triton {
          * memory must be assigned to an unique reference.
          */
         while (writeSize) {
-          triton::uint32 high = ((writeSize * BYTE_SIZE_BIT) - 1);
-          triton::uint32 low  = ((writeSize * BYTE_SIZE_BIT) - BYTE_SIZE_BIT);
+          triton::uint32 high = ((writeSize * bitsize::byte) - 1);
+          triton::uint32 low  = ((writeSize * bitsize::byte) - bitsize::byte);
           /* Extract each byte of the memory */
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, node);
           /* For each byte create a new symbolic expression */
           const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
           /* Set the origin of the symbolic expression */
-          byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), BYTE_SIZE));
+          byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
           /* Assign memory with little endian */
           this->addMemoryReference((address + writeSize) - 1, byteRef);
           /* continue */
@@ -1144,7 +1144,7 @@ namespace triton {
 
       /* Initializes the memory access AST (LOAD and STORE) */
       void SymbolicEngine::initLeaAst(triton::arch::MemoryAccess& mem, bool force) {
-        if (mem.getBitSize() >= BYTE_SIZE_BIT) {
+        if (mem.getBitSize() >= bitsize::byte) {
           const triton::arch::Register& base  = mem.getConstBaseRegister();
           const triton::arch::Register& index = mem.getConstIndexRegister();
           const triton::arch::Register& seg   = mem.getConstSegmentRegister();
@@ -1217,9 +1217,9 @@ namespace triton {
           this->architecture->setConcreteRegisterValue(reg, value);
         }
 
-        else if (symVar->getType() == MEMORY_VARIABLE && symVar->getSize() && !(symVar->getSize() % BYTE_SIZE_BIT)) {
+        else if (symVar->getType() == MEMORY_VARIABLE && symVar->getSize() && !(symVar->getSize() % bitsize::byte)) {
           triton::uint64 addr            = symVar->getOrigin();
-          triton::uint32 size            = symVar->getSize() / BYTE_SIZE_BIT;
+          triton::uint32 size            = symVar->getSize() / bitsize::byte;
           triton::arch::MemoryAccess mem = triton::arch::MemoryAccess(addr, size);
 
           this->architecture->setConcreteMemoryValue(mem, value);

@@ -8,52 +8,72 @@
 #ifndef TRITON_CPUSIZE_H
 #define TRITON_CPUSIZE_H
 
-/*! Returns the FLAG size in bit. */
-#define FLAG_SIZE_BIT 1
+#include <triton/tritonTypes.hpp>
 
-/*! Returns the BYTE size in byte. */
-#define BYTE_SIZE 1
 
-/*! Returns the BYTE size in bit. */
-#define BYTE_SIZE_BIT 8
 
-/*! Returns the WORD size in byte. */
-#define WORD_SIZE 2
+//! The Triton namespace
+namespace triton {
+/*!
+ *  \addtogroup triton
+ *  @{
+ */
 
-/*! Returns the WORD size in bit. */
-#define WORD_SIZE_BIT 16
+  //! The Size namespace
+  namespace size {
+  /*!
+   *  \ingroup triton
+   *  \addtogroup size
+   *  @{
+   */
+    //! byte size in byte
+    constexpr triton::uint32 byte          = 1;
+    //! word size in byte
+    constexpr triton::uint32 word          = 2;
+    //! dword size in byte
+    constexpr triton::uint32 dword         = 4;
+    //! qword size in byte
+    constexpr triton::uint32 qword         = 8;
+    //! dqword size in byte
+    constexpr triton::uint32 dqword        = 16;
+    //! qqword size in byte
+    constexpr triton::uint32 qqword        = 32;
+    //! dqqword size in byte
+    constexpr triton::uint32 dqqword       = 64;
+    //! max size supported in byte
+    constexpr triton::uint32 max_supported = dqqword;
+  /*! @} End of size namespace */
+  };
 
-/*! Returns the DWORD size in byte. */
-#define DWORD_SIZE 4
+  //! The BitSize namespace
+  namespace bitsize {
+  /*!
+   *  \ingroup triton
+   *  \addtogroup bitsize
+   *  @{
+   */
+    //! flag size in bit
+    constexpr triton::uint32 flag          = 1;
+    //! byte size in bit
+    constexpr triton::uint32 byte          = 8;
+    //! word size in bit
+    constexpr triton::uint32 word          = 16;
+    //! dword size in bit
+    constexpr triton::uint32 dword         = 32;
+    //! qword size in bit
+    constexpr triton::uint32 qword         = 64;
+    //! dqword size in bit
+    constexpr triton::uint32 dqword        = 128;
+    //! qqword size in bit
+    constexpr triton::uint32 qqword        = 256;
+    //! dqqword size in bit
+    constexpr triton::uint32 dqqword       = 512;
+    //! max size supported in bit
+    constexpr triton::uint32 max_supported = dqqword;
+  /*! @} End of bitsize namespace */
+  };
 
-/*! Returns the DWORD size in bit. */
-#define DWORD_SIZE_BIT 32
-
-/*! Returns the QWORD size in byte. */
-#define QWORD_SIZE 8
-
-/*! Returns the QWORD size in bit. */
-#define QWORD_SIZE_BIT 64
-
-/*! Returns the DQWORD size in byte. */
-#define DQWORD_SIZE 16
-
-/*! Returns the DQWORD size in bit. */
-#define DQWORD_SIZE_BIT 128
-
-/*! Returns the QQWORD size in byte. */
-#define QQWORD_SIZE 32
-
-/*! Returns the QQWORD size in bit. */
-#define QQWORD_SIZE_BIT 256
-
-/*! Returns the DQQWORD size in byte. */
-#define DQQWORD_SIZE 64
-
-/*! Returns the DQQWORD size in bit. */
-#define DQQWORD_SIZE_BIT 512
-
-/*! Returns the max bits supported */
-#define MAX_BITS_SUPPORTED DQQWORD_SIZE_BIT
+/*! @} End of triton namespace */
+};
 
 #endif /* TRITON_CPUSIZE_H */
