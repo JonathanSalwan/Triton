@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 ##
 ## $ python forward_tainting.py

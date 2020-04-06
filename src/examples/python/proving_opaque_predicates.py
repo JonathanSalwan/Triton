@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 ##
 ## Example to detect opaque predicates. This example is based

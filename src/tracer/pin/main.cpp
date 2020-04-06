@@ -135,7 +135,7 @@ if __name__ == '__main__':
     sys.exit(0)
 ~~~~~~~~~~~~~
 
-The database connection is a pure example to show you how to interact with the Triton API. As Triton is written in `C++`, you can directly
+The database connection is a pure example to show how to interact with the Triton API. As Triton is written in `C++`, you can directly
 create your Triton instruction inside a DBI engine (like Pin or Valgrind). According to your tracer, you can refer to the [Python](https://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
 or the [C++](https://triton.quarkslab.com/documentation/doxygen/classtriton_1_1API.html) API.
 
