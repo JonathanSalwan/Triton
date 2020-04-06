@@ -365,6 +365,11 @@ namespace triton {
   }
 
 
+  void API::setThumb(bool state) {
+    this->arch.setThumb(state);
+  }
+
+
   triton::uint32 API::getGprBitSize(void) const {
     return this->arch.gprBitSize();
   }

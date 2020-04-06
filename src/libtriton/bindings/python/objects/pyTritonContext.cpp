@@ -319,6 +319,9 @@ Sets the targeted memory as tainted or not. Returns true if the memory is still 
 - <b>bool setTaintRegister(\ref py_Register_page reg, bool flag)</b><br>
 Sets the targeted register as tainted or not. Returns true if the register is still tainted.
 
+- <b>void setThumb(bool state)</b><br>
+Sets CPU state to Thumb mode (only valid for ARM32).
+
 - <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
 Calls all simplification callbacks recorded and returns a new simplified node. If the `z3` flag is
 set to True, Triton will use z3 to simplify the given `node` before calling its recorded callbacks.
@@ -2511,6 +2514,22 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_setThumb(PyObject* self, PyObject* state) {
+        if (state == nullptr || !PyBool_Check(state))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setThumb(): Expects an boolean as argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->setThumb(PyLong_AsBool(state));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_simplify(PyObject* self, PyObject* args) {
         PyObject* node        = nullptr;
         PyObject* z3Flag      = nullptr;
@@ -3003,6 +3022,7 @@ namespace triton {
         {"setMode",                             (PyCFunction)TritonContext_setMode,                                METH_VARARGS,       ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},
+        {"setThumb",                            (PyCFunction)TritonContext_setThumb,                               METH_O,             ""},
         {"simplify",                            (PyCFunction)TritonContext_simplify,                               METH_VARARGS,       ""},
         {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                       METH_O,             ""},
         {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                    METH_VARARGS,       ""},

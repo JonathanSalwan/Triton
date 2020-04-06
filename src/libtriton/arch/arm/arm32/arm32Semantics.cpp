@@ -177,19 +177,18 @@ namespace triton {
 
 
         inline void Arm32Semantics::exchangeInstructionSet(triton::arch::OperandWrapper& op, const triton::ast::SharedAbstractNode& node) {
+          bool state = false;
+
           /* NOTE: There are two possibilities, depending on the operand. If it
            * is an immediate, there is a mode switch (that is, if it is currently
            * in ARM mode it switches to Thumb and the other way around). In
            * case the operand is a register, it switches mode according to the
            * instruction set selection bit (LSB) of the register.
            */
-          // FIXME: do not use getCpuInstance().
-          auto cpu = static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->architecture->getCpuInstance());
-          bool state;
 
           switch (op.getType()) {
             case triton::arch::OP_IMM:
-              state = !cpu->isThumb();
+              state = !this->architecture->isThumb();
               break;
             case triton::arch::OP_REG:
               state = (node->evaluate() & 0x1) == 0x1;
@@ -198,8 +197,7 @@ namespace triton {
               throw triton::exceptions::Semantics("Arm32Semantics::Arm32Semantics(): Invalid operand type.");
           }
 
-          // FIXME: add setThumb() in CpuInterface.
-          cpu->setThumb(state);
+          this->architecture->setThumb(state);
         }
 
 

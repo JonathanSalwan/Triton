@@ -96,5 +96,5 @@ class TestAstRepresentation(unittest.TestCase):
         self.Triton.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
         self.assertEqual(self.Triton.getAstRepresentationMode(), AST_REPRESENTATION.PYTHON)
         for n in self.node:
-            # FIXME: lower() in order to handle boost-1.55 (from travis) and boost-1.71 (from an up-to-date machine)
+            # Note: lower() in order to handle boost-1.55 (from travis) and boost-1.71 (from an up-to-date machine)
             self.assertEqual(str(n[0]).lower(), n[2].lower())

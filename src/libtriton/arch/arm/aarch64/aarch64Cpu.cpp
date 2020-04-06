@@ -690,7 +690,13 @@ namespace triton {
 
 
         bool AArch64Cpu::isThumb(void) const {
+          /* There is no thumb mode in aarch64 */
           return false;
+        }
+
+
+        void AArch64Cpu::setThumb(bool state) {
+          /* There is no thumb mode in aarch64 */
         }
 
       }; /* aarch64 namespace */

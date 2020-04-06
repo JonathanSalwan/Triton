@@ -61,6 +61,9 @@ namespace triton {
         //! Returns true if the execution mode is Thumb. Only useful for Arm32.
         TRITON_EXPORT virtual bool isThumb(void) const = 0;
 
+        //! Sets CPU state to Thumb mode.
+        TRITON_EXPORT virtual void setThumb(bool state) = 0;
+
         //! Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT virtual triton::uint32 gprSize(void) const = 0;
 

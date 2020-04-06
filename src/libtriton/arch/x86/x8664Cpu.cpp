@@ -1247,8 +1247,15 @@ namespace triton {
         }
       }
 
+
       bool x8664Cpu::isThumb(void) const {
+        /* There is no thumb mode in x86_64 */
         return false;
+      }
+
+
+      void x8664Cpu::setThumb(bool state) {
+        /* There is no thumb mode in x86_64 */
       }
 
     }; /* x86 namespace */

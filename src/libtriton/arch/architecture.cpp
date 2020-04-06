@@ -142,6 +142,13 @@ namespace triton {
     }
 
 
+    void Architecture::setThumb(bool state) {
+      if (this->cpu) {
+        this->cpu->setThumb(state);
+      }
+    }
+
+
     triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;

@@ -145,17 +145,12 @@ namespace triton {
             //! Returns true if regId is a GRP.
             TRITON_EXPORT bool isGPR(triton::arch::register_e regId) const;
 
-            //! Returns true if CPU is in Thumb mode.
-            TRITON_EXPORT bool isThumb(void) const;
-
-            //! Sets CPU state to Thumb mode.
-            TRITON_EXPORT void setThumb(bool state);
-
             /* Virtual pure inheritance ================================================= */
             TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
             TRITON_EXPORT bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
             TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
             TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
+            TRITON_EXPORT bool isThumb(void) const;
             TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
@@ -178,6 +173,7 @@ namespace triton {
             TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
             TRITON_EXPORT void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
             TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
+            TRITON_EXPORT void setThumb(bool state);
             TRITON_EXPORT void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
             /* End of virtual pure inheritance ========================================== */
         };

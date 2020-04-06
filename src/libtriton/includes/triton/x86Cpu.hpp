@@ -250,6 +250,7 @@ namespace triton {
           TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
           TRITON_EXPORT void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
           TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
+          TRITON_EXPORT void setThumb(bool state);
           TRITON_EXPORT void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
           /* End of virtual pure inheritance ========================================== */
       };

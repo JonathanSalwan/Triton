@@ -147,6 +147,9 @@ namespace triton {
         //! [**architecture api**] - Returns true if the execution mode is Thumb. Only useful for Arm32.
         TRITON_EXPORT bool isThumb(void) const;
 
+        //! [**architecture api**] - Sets CPU state to Thumb mode.
+        TRITON_EXPORT void setThumb(bool state);
+
         //! [**architecture api**] - Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT triton::uint32 getGprBitSize(void) const;
 

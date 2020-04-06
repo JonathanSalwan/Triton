@@ -978,8 +978,15 @@ namespace triton {
         }
       }
 
+
       bool x86Cpu::isThumb(void) const {
+        /* There is no thumb mode in x86 */
         return false;
+      }
+
+
+      void x86Cpu::setThumb(bool state) {
+        /* There is no thumb mode in x86 */
       }
 
     }; /* x86 namespace */
