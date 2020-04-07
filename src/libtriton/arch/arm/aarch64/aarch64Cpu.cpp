@@ -375,7 +375,7 @@ namespace triton {
                 }
 
                 default:
-                  /* FIXME: What about FP, C-IMM ? */
+                  /* NOTE: FP, CIMM, and missing one are not supported yet. */
                   throw triton::exceptions::Disassembly("AArch64Cpu::disassembly(): Invalid operand.");
               } // switch
             } // for operand
