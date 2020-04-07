@@ -149,11 +149,17 @@ namespace triton {
          */
         TRITON_EXPORT virtual void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) = 0;
 
-        //! Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
-        TRITON_EXPORT virtual bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1) = 0;
+        //! Returns true if memory cells have a defined concrete value
+        TRITON_EXPORT virtual bool isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const = 0;
 
-        //! Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
-        TRITON_EXPORT virtual void unmapMemory(triton::uint64 baseAddr, triton::usize size=1) = 0;
+        //! Returns true if memory cells have a defined concrete value
+        TRITON_EXPORT virtual bool isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size=1) const = 0;
+
+        //! Clears concrete values assigned to the memory cells
+        TRITON_EXPORT virtual void clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) = 0;
+
+        //! Clears concrete values assigned to the memory cells
+        TRITON_EXPORT virtual void clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size=1) = 0;
     };
 
   /*! @} End of arch namespace */

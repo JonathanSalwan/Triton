@@ -289,17 +289,31 @@ namespace triton {
     }
 
 
-    bool Architecture::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+    bool Architecture::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
       if (!this->cpu)
-        throw triton::exceptions::Architecture("Architecture::isMemoryMapped(): You must define an architecture.");
-      return this->cpu->isMemoryMapped(baseAddr, size);
+        throw triton::exceptions::Architecture("Architecture::isConcreteMemoryValueDefined(): You must define an architecture.");
+      return this->cpu->isConcreteMemoryValueDefined(mem);
     }
 
 
-    void Architecture::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+    bool Architecture::isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size) const {
       if (!this->cpu)
-        throw triton::exceptions::Architecture("Architecture::unmapMemory(): You must define an architecture.");
-      this->cpu->unmapMemory(baseAddr, size);
+        throw triton::exceptions::Architecture("Architecture::isConcreteMemoryValueDefined(): You must define an architecture.");
+      return this->cpu->isConcreteMemoryValueDefined(baseAddr, size);
+    }
+
+
+    void Architecture::clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::clearConcreteMemoryValue(): You must define an architecture.");
+      this->cpu->clearConcreteMemoryValue(mem);
+    }
+
+
+    void Architecture::clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size) {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::clearConcreteMemoryValue(): You must define an architecture.");
+      this->cpu->clearConcreteMemoryValue(baseAddr, size);
     }
 
   }; /* arch namespace */

@@ -217,11 +217,17 @@ namespace triton {
          */
         TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
 
-        //! [**architecture api**] - Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation. \sa getConcreteMemoryValue() and getConcreteMemoryAreaValue().
-        TRITON_EXPORT bool isMemoryMapped(triton::uint64 baseAddr, triton::usize size=1);
+        //! Returns true if memory cells have a defined concrete value
+        TRITON_EXPORT bool isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const;
 
-        //! [**architecture api**] - Removes the range `[baseAddr:size]` from the internal memory representation. \sa isMemoryMapped().
-        TRITON_EXPORT void unmapMemory(triton::uint64 baseAddr, triton::usize size=1);
+        //! Returns true if memory cells have a defined concrete value
+        TRITON_EXPORT bool isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size=1) const;
+
+        //! Clears concrete values assigned to the memory cells
+        TRITON_EXPORT void clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem);
+
+        //! Clears concrete values assigned to the memory cells
+        TRITON_EXPORT void clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size=1);
 
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;

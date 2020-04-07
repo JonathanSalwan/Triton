@@ -480,15 +480,27 @@ namespace triton {
   }
 
 
-  bool API::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+  bool API::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
     this->checkArchitecture();
-    return this->arch.isMemoryMapped(baseAddr, size);
+    return this->arch.isConcreteMemoryValueDefined(mem);
   }
 
 
-  void API::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+  bool API::isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size) const {
     this->checkArchitecture();
-    this->arch.unmapMemory(baseAddr, size);
+    return this->arch.isConcreteMemoryValueDefined(baseAddr, size);
+  }
+
+
+  void API::clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+    this->checkArchitecture();
+    this->arch.clearConcreteMemoryValue(mem);
+  }
+
+
+  void API::clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size) {
+    this->checkArchitecture();
+    this->arch.clearConcreteMemoryValue(baseAddr, size);
   }
 
 

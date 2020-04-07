@@ -239,7 +239,7 @@ def memoryCaching(ctx, mem):
     addr = mem.getAddress()
     size = mem.getSize()
     for index in range(size):
-        if not ctx.isMemoryMapped(addr+index):
+        if not ctx.isConcreteMemoryValueDefined(addr+index, 1):
             for r in memoryCache:
                 if addr+index >= r['start'] and addr+index < r['start'] + r['size']:
                     i = ((addr + index) - r['start'])

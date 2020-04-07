@@ -676,23 +676,6 @@ namespace triton {
         }
 
 
-        bool AArch64Cpu::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
-          for (triton::usize index = 0; index < size; index++) {
-            if (this->memory.find(baseAddr + index) == this->memory.end())
-              return false;
-          }
-          return true;
-        }
-
-
-        void AArch64Cpu::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
-          for (triton::usize index = 0; index < size; index++) {
-            if (this->memory.find(baseAddr + index) != this->memory.end())
-              this->memory.erase(baseAddr + index);
-          }
-        }
-
-
         bool AArch64Cpu::isThumb(void) const {
           /* There is no thumb mode in aarch64 */
           return false;
@@ -701,6 +684,34 @@ namespace triton {
 
         void AArch64Cpu::setThumb(bool state) {
           /* There is no thumb mode in aarch64 */
+        }
+
+
+        bool AArch64Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
+          return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
+        }
+
+
+        bool AArch64Cpu::isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size) const {
+          for (triton::usize index = 0; index < size; index++) {
+            if (this->memory.find(baseAddr + index) == this->memory.end())
+              return false;
+          }
+          return true;
+        }
+
+
+        void AArch64Cpu::clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+          this->clearConcreteMemoryValue(mem.getAddress(), mem.getSize());
+        }
+
+
+        void AArch64Cpu::clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size) {
+          for (triton::usize index = 0; index < size; index++) {
+            if (this->memory.find(baseAddr + index) != this->memory.end()) {
+              this->memory.erase(baseAddr + index);
+            }
+          }
         }
 
       }; /* aarch64 namespace */

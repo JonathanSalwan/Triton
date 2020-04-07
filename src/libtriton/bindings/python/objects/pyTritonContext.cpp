@@ -59,6 +59,12 @@ Clears recorded callbacks.
 - <b>void clearModes(void)</b><br>
 Clears recorded modes.
 
+- <b>void clearConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+Clears concrete values assigned to the memory cells.
+
+- <b>void clearConcreteMemoryValue(integer addr, integer size)</b><br>
+Clears concrete values assigned to the memory cells from `addr` to `addr + size`.
+
 - <b>void clearPathConstraints(void)</b><br>
 Clears the current path predicate.
 
@@ -212,11 +218,14 @@ Returns the list of all tainted symbolic expressions.
 - <b>bool isArchitectureValid(void)</b><br>
 Returns true if the architecture is valid.
 
+- <b>bool isConcreteMemoryValueDefined(\ref py_MemoryAccess_page mem)</b><br>
+Returns true if memory cells have a defined concrete value.
+
+- <b>bool isConcreteMemoryValueDefined(integer addr, integer size)</b><br>
+Returns true if memory cells have a defined concrete value.
+
 - <b>bool isFlag(\ref py_Register_page reg)</b><br>
 Returns true if the register is a flag.
-
-- <b>bool isMemoryMapped(integer baseAddr, integer size=1)</b><br>
-Returns true if the range `[baseAddr:size]` is mapped into the internal memory representation.
 
 - <b>bool isMemorySymbolized(integer addr)</b><br>
 Returns true if the memory cell expression contains a symbolic variable.
@@ -390,9 +399,6 @@ tainted. Returns true if `regDst` is tainted.
 - <b>bool taintUnion(\ref py_Register_page regDst, \ref py_Register_page regSrc)</b><br>
 Taints `regDst` from `regSrc` with an union - `regDst` is tainted if `regDst` or `regSrc` are
 tainted. Returns true if `regDst` is tainted.
-
-- <b>void unmapMemory(integer baseAddr, integer size=1)</b><br>
-Removes the range `[baseAddr:size]` from the internal memory representation.
 
 - <b>bool untaintMemory(integer addr)</b><br>
 Untaints an address. Returns true if the address is still tainted.
@@ -755,6 +761,43 @@ namespace triton {
       static PyObject* TritonContext_clearModes(PyObject* self, PyObject* noarg) {
         try {
           PyTritonContext_AsTritonContext(self)->clearModes();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
+      static PyObject* TritonContext_clearConcreteMemoryValue(PyObject* self, PyObject* args) {
+        PyObject* baseAddr        = nullptr;
+        PyObject* size            = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::clearConcreteMemoryValue(): Invalid number of arguments");
+        }
+
+        try {
+          if (baseAddr && PyMemoryAccess_Check(baseAddr)) {
+            PyTritonContext_AsTritonContext(self)->clearConcreteMemoryValue(*PyMemoryAccess_AsMemoryAccess(baseAddr));
+          }
+          else if (baseAddr && (PyLong_Check(baseAddr) || PyInt_Check(baseAddr))) {
+            if (size && (PyLong_Check(size) || PyInt_Check(size))) {
+              PyTritonContext_AsTritonContext(self)->clearConcreteMemoryValue(PyLong_AsUint64(baseAddr), PyLong_AsUsize(size));
+            }
+            else {
+              return PyErr_Format(PyExc_TypeError, "TritonContext::clearConcreteMemoryValue(): Expects a size (integer) as second argument.");
+            }
+          }
+          else {
+            return PyErr_Format(PyExc_TypeError, "TritonContext::clearConcreteMemoryValue(): Expects a base address (integer) as arguments or a memory cells.");
+          }
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1734,14 +1777,34 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_isFlag(PyObject* self, PyObject* reg) {
-        if (!PyRegister_Check(reg))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::isFlag(): Expects a Register as argument.");
+      static PyObject* TritonContext_isConcreteMemoryValueDefined(PyObject* self, PyObject* args) {
+        PyObject* baseAddr        = nullptr;
+        PyObject* size            = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::isConcreteMemoryValueDefined(): Invalid number of arguments");
+        }
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          if (baseAddr && PyMemoryAccess_Check(baseAddr)) {
+            if (PyTritonContext_AsTritonContext(self)->isConcreteMemoryValueDefined(*PyMemoryAccess_AsMemoryAccess(baseAddr)) == true)
+              Py_RETURN_TRUE;
+            Py_RETURN_FALSE;
+          }
+          else if (baseAddr && (PyLong_Check(baseAddr) || PyInt_Check(baseAddr))) {
+            if (size && (PyLong_Check(size) || PyInt_Check(size))) {
+              if (PyTritonContext_AsTritonContext(self)->isConcreteMemoryValueDefined(PyLong_AsUint64(baseAddr), PyLong_AsUsize(size)) == true)
+                Py_RETURN_TRUE;
+              Py_RETURN_FALSE;
+            }
+            else {
+              return PyErr_Format(PyExc_TypeError, "TritonContext::isConcreteMemoryValueDefined(): Expects a size (integer) as second argument.");
+            }
+          }
+          else {
+            return PyErr_Format(PyExc_TypeError, "TritonContext::isConcreteMemoryValueDefined(): Expects a base address (integer) as arguments or a memory cells.");
+          }
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1752,28 +1815,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_isMemoryMapped(PyObject* self, PyObject* args) {
-        PyObject* baseAddr        = nullptr;
-        PyObject* size            = nullptr;
-        triton::uint64 c_baseAddr = 0;
-        triton::usize c_size      = 1;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::isMemoryMapped(): Invalid number of arguments");
-        }
-
-        if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::isMemoryMapped(): Expects a base address (integer) as first argument.");
-
-        if (size != nullptr && !PyLong_Check(size) && !PyInt_Check(size))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::isMemoryMapped(): Expects a size (integer) as second argument.");
+      static PyObject* TritonContext_isFlag(PyObject* self, PyObject* reg) {
+        if (!PyRegister_Check(reg))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::isFlag(): Expects a Register as argument.");
 
         try {
-          c_baseAddr = PyLong_AsUint64(baseAddr);
-          if (size != nullptr)
-            c_size = PyLong_AsUsize(size);
-          if (PyTritonContext_AsTritonContext(self)->isMemoryMapped(c_baseAddr, c_size) == true)
+          if (PyTritonContext_AsTritonContext(self)->isFlag(*PyRegister_AsRegister(reg)) == true)
             Py_RETURN_TRUE;
           Py_RETURN_FALSE;
         }
@@ -2816,41 +2863,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_unmapMemory(PyObject* self, PyObject* args) {
-        PyObject* baseAddr        = nullptr;
-        PyObject* size            = nullptr;
-        triton::uint64 c_baseAddr = 0;
-        triton::usize c_size      = 1;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &baseAddr, &size) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::unmapMemory(): Invalid number of arguments");
-        }
-
-        if (baseAddr == nullptr || (!PyLong_Check(baseAddr) && !PyInt_Check(baseAddr)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::unmapMemory(): Expects a base address (integer) as first argument.");
-
-        if (size != nullptr && !PyLong_Check(size) && !PyInt_Check(size))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::unmapMemory(): Expects a size (integer) as second argument.");
-
-        try {
-          c_baseAddr = PyLong_AsUint64(baseAddr);
-          if (size != nullptr)
-            c_size = PyLong_AsUsize(size);
-          PyTritonContext_AsTritonContext(self)->unmapMemory(c_baseAddr, c_size);
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
       static PyObject* TritonContext_untaintMemory(PyObject* self, PyObject* mem) {
         try {
           if (PyMemoryAccess_Check(mem)) {
@@ -2946,6 +2958,7 @@ namespace triton {
         {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                         METH_O,             ""},
         {"clearCallbacks",                      (PyCFunction)TritonContext_clearCallbacks,                         METH_NOARGS,        ""},
         {"clearModes",                          (PyCFunction)TritonContext_clearModes,                             METH_NOARGS,        ""},
+        {"clearConcreteMemoryValue",            (PyCFunction)TritonContext_clearConcreteMemoryValue,               METH_VARARGS,       ""},
         {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
@@ -2992,8 +3005,8 @@ namespace triton {
         {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                    METH_NOARGS,        ""},
         {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,          METH_NOARGS,        ""},
         {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                    METH_NOARGS,        ""},
+        {"isConcreteMemoryValueDefined",        (PyCFunction)TritonContext_isConcreteMemoryValueDefined,           METH_VARARGS,       ""},
         {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                 METH_O,             ""},
-        {"isMemoryMapped",                      (PyCFunction)TritonContext_isMemoryMapped,                         METH_VARARGS,       ""},
         {"isMemorySymbolized",                  (PyCFunction)TritonContext_isMemorySymbolized,                     METH_O,             ""},
         {"isMemoryTainted",                     (PyCFunction)TritonContext_isMemoryTainted,                        METH_O,             ""},
         {"isModeEnabled",                       (PyCFunction)TritonContext_isModeEnabled,                          METH_O,             ""},
@@ -3032,7 +3045,6 @@ namespace triton {
         {"taintMemory",                         (PyCFunction)TritonContext_taintMemory,                            METH_O,             ""},
         {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                          METH_O,             ""},
         {"taintUnion",                          (PyCFunction)TritonContext_taintUnion,                             METH_VARARGS,       ""},
-        {"unmapMemory",                         (PyCFunction)TritonContext_unmapMemory,                            METH_VARARGS,       ""},
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                          METH_O,             ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                        METH_O,             ""},
         {nullptr,                               nullptr,                                                           0,                  nullptr}

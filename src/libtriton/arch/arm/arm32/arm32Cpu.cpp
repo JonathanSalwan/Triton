@@ -692,7 +692,22 @@ namespace triton {
         }
 
 
-        bool Arm32Cpu::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
+        bool Arm32Cpu::isThumb(void) const {
+          return this->thumb;
+        }
+
+
+        void Arm32Cpu::setThumb(bool state) {
+          this->thumb = state;
+        }
+
+
+        bool Arm32Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
+          return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
+        }
+
+
+        bool Arm32Cpu::isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size) const {
           for (triton::usize index = 0; index < size; index++) {
             if (this->memory.find(baseAddr + index) == this->memory.end())
               return false;
@@ -701,21 +716,17 @@ namespace triton {
         }
 
 
-        void Arm32Cpu::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
+        void Arm32Cpu::clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+          this->clearConcreteMemoryValue(mem.getAddress(), mem.getSize());
+        }
+
+
+        void Arm32Cpu::clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size) {
           for (triton::usize index = 0; index < size; index++) {
-            if (this->memory.find(baseAddr + index) != this->memory.end())
+            if (this->memory.find(baseAddr + index) != this->memory.end()) {
               this->memory.erase(baseAddr + index);
+            }
           }
-        }
-
-
-        bool Arm32Cpu::isThumb(void) const {
-          return this->thumb;
-        }
-
-
-        void Arm32Cpu::setThumb(bool state) {
-          this->thumb = state;
         }
 
       }; /* arm32 namespace */

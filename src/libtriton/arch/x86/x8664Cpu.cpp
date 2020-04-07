@@ -1231,23 +1231,6 @@ namespace triton {
       }
 
 
-      bool x8664Cpu::isMemoryMapped(triton::uint64 baseAddr, triton::usize size) {
-        for (triton::usize index = 0; index < size; index++) {
-          if (this->memory.find(baseAddr + index) == this->memory.end())
-            return false;
-        }
-        return true;
-      }
-
-
-      void x8664Cpu::unmapMemory(triton::uint64 baseAddr, triton::usize size) {
-        for (triton::usize index = 0; index < size; index++) {
-          if (this->memory.find(baseAddr + index) != this->memory.end())
-            this->memory.erase(baseAddr + index);
-        }
-      }
-
-
       bool x8664Cpu::isThumb(void) const {
         /* There is no thumb mode in x86_64 */
         return false;
@@ -1256,6 +1239,34 @@ namespace triton {
 
       void x8664Cpu::setThumb(bool state) {
         /* There is no thumb mode in x86_64 */
+      }
+
+
+      bool x8664Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
+        return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
+      }
+
+
+      bool x8664Cpu::isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size) const {
+        for (triton::usize index = 0; index < size; index++) {
+          if (this->memory.find(baseAddr + index) == this->memory.end())
+            return false;
+        }
+        return true;
+      }
+
+
+      void x8664Cpu::clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem) {
+        this->clearConcreteMemoryValue(mem.getAddress(), mem.getSize());
+      }
+
+
+      void x8664Cpu::clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size) {
+        for (triton::usize index = 0; index < size; index++) {
+          if (this->memory.find(baseAddr + index) != this->memory.end()) {
+            this->memory.erase(baseAddr + index);
+          }
+        }
       }
 
     }; /* x86 namespace */

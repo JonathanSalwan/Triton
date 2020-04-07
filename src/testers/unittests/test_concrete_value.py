@@ -133,16 +133,16 @@ class TestX86ConcreteMemoryValue(unittest.TestCase):
         size = 256
         count = 1
 
-        self.assertFalse(self.Triton.isMemoryMapped(base, size))
+        self.assertFalse(self.Triton.isConcreteMemoryValueDefined(base, size))
 
         for x in range(size):
             self.Triton.setConcreteMemoryValue(base + x, count & 0xff)
             self.assertEqual(self.Triton.getConcreteMemoryValue(base + x), count & 0xff)
             count += 1
 
-        self.assertTrue(self.Triton.isMemoryMapped(base, size))
-        self.Triton.unmapMemory(base, size)
-        self.assertFalse(self.Triton.isMemoryMapped(base, size))
+        self.assertTrue(self.Triton.isConcreteMemoryValueDefined(base, size))
+        self.Triton.clearConcreteMemoryValue(base, size)
+        self.assertFalse(self.Triton.isConcreteMemoryValueDefined(base, size))
 
         self.Triton.setConcreteMemoryAreaValue(0x1000, b"\x11\x22\x33\x44\x55\x66")
         self.Triton.setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
@@ -162,16 +162,16 @@ class TestX8664ConcreteMemoryValue(unittest.TestCase):
         size = 512
         count = 1
 
-        self.assertFalse(self.Triton.isMemoryMapped(base, size))
+        self.assertFalse(self.Triton.isConcreteMemoryValueDefined(base, size))
 
         for x in range(size):
             self.Triton.setConcreteMemoryValue(base + x, count & 0xff)
             self.assertEqual(self.Triton.getConcreteMemoryValue(base + x), count & 0xff)
             count += 1
 
-        self.assertTrue(self.Triton.isMemoryMapped(base, size))
-        self.Triton.unmapMemory(base, size)
-        self.assertFalse(self.Triton.isMemoryMapped(base, size))
+        self.assertTrue(self.Triton.isConcreteMemoryValueDefined(base, size))
+        self.Triton.clearConcreteMemoryValue(base, size)
+        self.assertFalse(self.Triton.isConcreteMemoryValueDefined(base, size))
 
         self.Triton.setConcreteMemoryAreaValue(0x1000, b"\x11\x22\x33\x44\x55\x66")
         self.Triton.setConcreteMemoryAreaValue(0x1006, [0x77, 0x88, 0x99, 0xaa, 0xbb, 0xcc])
