@@ -68,8 +68,6 @@ namespace triton {
           //! Initializes the disassembler
           void disassInit(void);
 
-          triton::uint128 FPU_MASK = (triton::uint128(0xFFFF) << 64) + triton::uint128(0xFFFFFFFFFFFFFFFF);
-
         protected:
           /*! \brief map of address -> concrete value
            *
@@ -116,21 +114,21 @@ namespace triton {
           //! Concrete value of eflags
           triton::uint8 eflags[QWORD_SIZE];
           //! Concrete value of mm0
-          triton::uint8 mm0[DQWORD_SIZE];
+          triton::uint8 mm0[FWORD_SIZE];
           //! Concrete value of mm1
-          triton::uint8 mm1[DQWORD_SIZE];
+          triton::uint8 mm1[FWORD_SIZE];
           //! Concrete value of mm2
-          triton::uint8 mm2[DQWORD_SIZE];
+          triton::uint8 mm2[FWORD_SIZE];
           //! Concrete value of mm3
-          triton::uint8 mm3[DQWORD_SIZE];
+          triton::uint8 mm3[FWORD_SIZE];
           //! Concrete value of mm4
-          triton::uint8 mm4[DQWORD_SIZE];
+          triton::uint8 mm4[FWORD_SIZE];
           //! Concrete value of mm5
-          triton::uint8 mm5[DQWORD_SIZE];
+          triton::uint8 mm5[FWORD_SIZE];
           //! Concrete value of mm6
-          triton::uint8 mm6[DQWORD_SIZE];
+          triton::uint8 mm6[FWORD_SIZE];
           //! Concrete value of mm7
-          triton::uint8 mm7[DQWORD_SIZE];
+          triton::uint8 mm7[FWORD_SIZE];
           //! Concrete value of zmm0
           triton::uint8 zmm0[DQQWORD_SIZE];
           //! Concrete value of zmm1
@@ -247,6 +245,10 @@ namespace triton {
           triton::uint8 dr2[QWORD_SIZE];
           //! Condete value of dr3
           triton::uint8 dr3[QWORD_SIZE];
+          //! Condete value of dr4
+          triton::uint8 dr4[QWORD_SIZE];
+          //! Condete value of dr5
+          triton::uint8 dr5[QWORD_SIZE];
           //! Condete value of dr6
           triton::uint8 dr6[QWORD_SIZE];
           //! Condete value of dr7
@@ -267,6 +269,8 @@ namespace triton {
           triton::uint8 fdp[QWORD_SIZE];
           //! Concrete value of the x87 FPU Instruction Operand Pointer Selector
           triton::uint8 fds[WORD_SIZE];
+          //! Concrete value of the EFER MSR Register
+          triton::uint8 efer[QWORD_SIZE];
           //! Concrete value of the SSE Register State
           triton::uint8 mxcsr[DWORD_SIZE];
           //! Concrete value of the SSE Register State Mask
@@ -296,6 +300,9 @@ namespace triton {
 
           //! Returns true if regId is a FPU register.
           TRITON_EXPORT bool isFPU(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is an EFER register
+          TRITON_EXPORT bool isEFER(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;

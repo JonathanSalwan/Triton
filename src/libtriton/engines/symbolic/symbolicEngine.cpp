@@ -186,6 +186,7 @@ namespace triton {
           this->alignedMemoryReference.erase(std::make_pair(address+index, WORD_SIZE));
           this->alignedMemoryReference.erase(std::make_pair(address+index, DWORD_SIZE));
           this->alignedMemoryReference.erase(std::make_pair(address+index, QWORD_SIZE));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, FWORD_SIZE));
           this->alignedMemoryReference.erase(std::make_pair(address+index, DQWORD_SIZE));
           this->alignedMemoryReference.erase(std::make_pair(address+index, QQWORD_SIZE));
           this->alignedMemoryReference.erase(std::make_pair(address+index, DQQWORD_SIZE));
@@ -196,6 +197,7 @@ namespace triton {
           if (index < WORD_SIZE)    this->alignedMemoryReference.erase(std::make_pair(address-index, WORD_SIZE));
           if (index < DWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, DWORD_SIZE));
           if (index < QWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, QWORD_SIZE));
+          if (index < FWORD_SIZE)   this->alignedMemoryReference.erase(std::make_pair(address-index, FWORD_SIZE));
           if (index < DQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, DQWORD_SIZE));
           if (index < QQWORD_SIZE)  this->alignedMemoryReference.erase(std::make_pair(address-index, QQWORD_SIZE));
           if (index < DQQWORD_SIZE) this->alignedMemoryReference.erase(std::make_pair(address-index, DQQWORD_SIZE));
@@ -971,6 +973,7 @@ namespace triton {
           /* ----------------------------------------------------------------*/
           case DWORD_SIZE:
           case QWORD_SIZE:
+          case FWORD_SIZE:
           case DQWORD_SIZE:
           case QQWORD_SIZE:
           case DQQWORD_SIZE: {

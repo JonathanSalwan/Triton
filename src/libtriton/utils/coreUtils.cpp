@@ -17,6 +17,14 @@
 namespace triton {
   namespace utils {
 
+    void fromUintToBuffer(triton::uint80 value, triton::uint8* buffer) {
+      for (triton::uint32 i = 0; i < FWORD_SIZE; i++) {
+        buffer[i] = (value & 0xff).convert_to<triton::uint8>();
+        value >>= BYTE_SIZE_BIT;
+      }
+    }
+
+
     void fromUintToBuffer(triton::uint128 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < DQWORD_SIZE; i++) {
         buffer[i] = (value & 0xff).convert_to<triton::uint8>();
@@ -38,6 +46,14 @@ namespace triton {
         buffer[i] = (value & 0xff).convert_to<triton::uint8>();
         value >>= BYTE_SIZE_BIT;
       }
+    }
+
+
+    template <> triton::uint80 fromBufferToUint<>(const triton::uint8* buffer) {
+      triton::uint80 value = 0;
+      for (triton::sint32 i = FWORD_SIZE-1; i >= 0; i--)
+        value = ((value << BYTE_SIZE_BIT) | buffer[i]);
+      return value;
     }
 
 

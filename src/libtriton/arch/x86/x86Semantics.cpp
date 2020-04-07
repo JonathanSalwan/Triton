@@ -5293,14 +5293,14 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  FWORD_SIZE));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  FWORD_SIZE));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  FWORD_SIZE));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  FWORD_SIZE));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  FWORD_SIZE));
-        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, FWORD_SIZE));
-        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, FWORD_SIZE));
-        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, FWORD_SIZE));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  mm0.getSize()));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  mm1.getSize()));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  mm2.getSize()));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  mm3.getSize()));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  mm4.getSize()));
+        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
+        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
+        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
         auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
         auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
         auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
@@ -5543,16 +5543,6 @@ namespace triton {
           this->astCtxt->concat(db_5_4,
           this->astCtxt->concat(db_3_2, db_1_0)))))));
 
-        /* Zero extend the MMX registers to 128 bits */
-        mm0_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm0_ast);
-        mm1_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm1_ast);
-        mm2_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm2_ast);
-        mm3_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm3_ast);
-        mm4_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm4_ast);
-        mm5_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm5_ast);
-        mm6_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm6_ast);
-        mm7_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm7_ast);
-
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw, "FXRSTOR FCW operation");
         auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw, "FXRSTOR FSW operation");
@@ -5722,14 +5712,14 @@ namespace triton {
         auto fds_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 20, fds.getSize()));
         auto mxcsr_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 24, mxcsr.getSize()));
         auto mxcsr_mask_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 28, mxcsr_mask.getSize()));
-        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  FWORD_SIZE));
-        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  FWORD_SIZE));
-        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  FWORD_SIZE));
-        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  FWORD_SIZE));
-        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  FWORD_SIZE));
-        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, FWORD_SIZE));
-        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, FWORD_SIZE));
-        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, FWORD_SIZE));
+        auto mm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 32,  mm0.getSize()));
+        auto mm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 48,  mm1.getSize()));
+        auto mm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 64,  mm2.getSize()));
+        auto mm3_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 80,  mm3.getSize()));
+        auto mm4_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 96,  mm4.getSize()));
+        auto mm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 112, mm5.getSize()));
+        auto mm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 128, mm6.getSize()));
+        auto mm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 144, mm7.getSize()));
         auto xmm0_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 160, xmm0.getSize()));
         auto xmm1_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 176, xmm1.getSize()));
         auto xmm2_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 192, xmm2.getSize()));
@@ -5988,16 +5978,6 @@ namespace triton {
           this->astCtxt->concat(db_5_4,
           this->astCtxt->concat(db_3_2, db_1_0)))))));
 
-        /* Zero extend the MMX registers to 128 bits */
-        mm0_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm0_ast);
-        mm1_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm1_ast);
-        mm2_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm2_ast);
-        mm3_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm3_ast);
-        mm4_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm4_ast);
-        mm5_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm5_ast);
-        mm6_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm6_ast);
-        mm7_ast = this->astCtxt->zx(DQWORD_SIZE_BIT - FWORD_SIZE_BIT, mm7_ast);
-
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw, "FXRSTOR64 FCW operation");
         auto fsw_expr = this->symbolicEngine->createSymbolicExpression(inst, fsw_ast, fsw, "FXRSTOR64 FSW operation");
@@ -6212,25 +6192,6 @@ namespace triton {
         auto xmm5_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 240, xmm5.getSize()));
         auto xmm6_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 256, xmm6.getSize()));
         auto xmm7_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 272, xmm7.getSize()));
-
-        /* Write the correct 80 bits of the MMX registers */
-        auto mm0_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm0_addr));
-        auto mm1_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm1_addr));
-        auto mm2_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm2_addr));
-        auto mm3_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm3_addr));
-        auto mm4_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm4_addr));
-        auto mm5_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm5_addr));
-        auto mm6_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm6_addr));
-        auto mm7_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm7_addr));
-
-        mm0_ast = this->astCtxt->concat(mm0_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm0_ast));
-        mm1_ast = this->astCtxt->concat(mm1_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm1_ast));
-        mm2_ast = this->astCtxt->concat(mm2_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm2_ast));
-        mm3_ast = this->astCtxt->concat(mm3_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm3_ast));
-        mm4_ast = this->astCtxt->concat(mm4_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm4_ast));
-        mm5_ast = this->astCtxt->concat(mm5_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm5_ast));
-        mm6_ast = this->astCtxt->concat(mm6_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm6_ast));
-        mm7_ast = this->astCtxt->concat(mm7_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm7_ast));
 
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE FCW operation");
@@ -6499,25 +6460,6 @@ namespace triton {
         auto xmm13_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 368, xmm13.getSize()));
         auto xmm14_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 384, xmm14.getSize()));
         auto xmm15_addr = triton::arch::OperandWrapper(triton::arch::MemoryAccess(m512byte + 400, xmm15.getSize()));
-
-        /* Write the correct 80 bits of the MMX registers */
-        auto mm0_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm0_addr));
-        auto mm1_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm1_addr));
-        auto mm2_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm2_addr));
-        auto mm3_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm3_addr));
-        auto mm4_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm4_addr));
-        auto mm5_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm5_addr));
-        auto mm6_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm6_addr));
-        auto mm7_mem_ast = this->astCtxt->extract(127, 80, this->symbolicEngine->getOperandAst(inst, mm7_addr));
-
-        mm0_ast = this->astCtxt->concat(mm0_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm0_ast));
-        mm1_ast = this->astCtxt->concat(mm1_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm1_ast));
-        mm2_ast = this->astCtxt->concat(mm2_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm2_ast));
-        mm3_ast = this->astCtxt->concat(mm3_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm3_ast));
-        mm4_ast = this->astCtxt->concat(mm4_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm4_ast));
-        mm5_ast = this->astCtxt->concat(mm5_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm5_ast));
-        mm6_ast = this->astCtxt->concat(mm6_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm6_ast));
-        mm7_ast = this->astCtxt->concat(mm7_mem_ast, this->astCtxt->extract(FWORD_SIZE_BIT - 1, 0, mm7_ast));
 
         /* Craft the symbolic expressions */
         auto fcw_expr = this->symbolicEngine->createSymbolicExpression(inst, fcw_ast, fcw_addr, "FXSAVE64 FCW operation");

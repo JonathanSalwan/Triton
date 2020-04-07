@@ -103,14 +103,14 @@ REG_SPEC(EFLAGS, eflags, QWORD_SIZE_BIT-1, 0, EFLAGS, DWORD_SIZE_BIT-1, 0, EFLAG
 
 /* MMX */
 
-REG_SPEC(MM0, mm0, DQWORD_SIZE_BIT-1, 0, MM0, DQWORD_SIZE_BIT-1, 0, MM0, true) // mm0
-REG_SPEC(MM1, mm1, DQWORD_SIZE_BIT-1, 0, MM1, DQWORD_SIZE_BIT-1, 0, MM1, true) // mm1
-REG_SPEC(MM2, mm2, DQWORD_SIZE_BIT-1, 0, MM2, DQWORD_SIZE_BIT-1, 0, MM2, true) // mm2
-REG_SPEC(MM3, mm3, DQWORD_SIZE_BIT-1, 0, MM3, DQWORD_SIZE_BIT-1, 0, MM3, true) // mm3
-REG_SPEC(MM4, mm4, DQWORD_SIZE_BIT-1, 0, MM4, DQWORD_SIZE_BIT-1, 0, MM4, true) // mm4
-REG_SPEC(MM5, mm5, DQWORD_SIZE_BIT-1, 0, MM5, DQWORD_SIZE_BIT-1, 0, MM5, true) // mm5
-REG_SPEC(MM6, mm6, DQWORD_SIZE_BIT-1, 0, MM6, DQWORD_SIZE_BIT-1, 0, MM6, true) // mm6
-REG_SPEC(MM7, mm7, DQWORD_SIZE_BIT-1, 0, MM7, DQWORD_SIZE_BIT-1, 0, MM7, true) // mm7
+REG_SPEC(MM0, mm0, FWORD_SIZE_BIT-1, 0, MM0, FWORD_SIZE_BIT-1, 0, MM0, true) // mm0
+REG_SPEC(MM1, mm1, FWORD_SIZE_BIT-1, 0, MM1, FWORD_SIZE_BIT-1, 0, MM1, true) // mm1
+REG_SPEC(MM2, mm2, FWORD_SIZE_BIT-1, 0, MM2, FWORD_SIZE_BIT-1, 0, MM2, true) // mm2
+REG_SPEC(MM3, mm3, FWORD_SIZE_BIT-1, 0, MM3, FWORD_SIZE_BIT-1, 0, MM3, true) // mm3
+REG_SPEC(MM4, mm4, FWORD_SIZE_BIT-1, 0, MM4, FWORD_SIZE_BIT-1, 0, MM4, true) // mm4
+REG_SPEC(MM5, mm5, FWORD_SIZE_BIT-1, 0, MM5, FWORD_SIZE_BIT-1, 0, MM5, true) // mm5
+REG_SPEC(MM6, mm6, FWORD_SIZE_BIT-1, 0, MM6, FWORD_SIZE_BIT-1, 0, MM6, true) // mm6
+REG_SPEC(MM7, mm7, FWORD_SIZE_BIT-1, 0, MM7, FWORD_SIZE_BIT-1, 0, MM7, true) // mm7
 
 /* FPU */
 
@@ -224,6 +224,8 @@ REG_SPEC(DR0,  dr0,  QWORD_SIZE_BIT-1, 0, DR0,  DWORD_SIZE_BIT-1, 0, DR0,  true)
 REG_SPEC(DR1,  dr1,  QWORD_SIZE_BIT-1, 0, DR1,  DWORD_SIZE_BIT-1, 0, DR1,  true)  // dr1
 REG_SPEC(DR2,  dr2,  QWORD_SIZE_BIT-1, 0, DR2,  DWORD_SIZE_BIT-1, 0, DR2,  true)  // dr2
 REG_SPEC(DR3,  dr3,  QWORD_SIZE_BIT-1, 0, DR3,  DWORD_SIZE_BIT-1, 0, DR3,  true)  // dr3
+REG_SPEC(DR4,  dr4,  QWORD_SIZE_BIT-1, 0, DR4,  DWORD_SIZE_BIT-1, 0, DR4,  true)  // dr3
+REG_SPEC(DR5,  dr5,  QWORD_SIZE_BIT-1, 0, DR5,  DWORD_SIZE_BIT-1, 0, DR5,  true)  // dr3
 REG_SPEC(DR6,  dr6,  QWORD_SIZE_BIT-1, 0, DR6,  DWORD_SIZE_BIT-1, 0, DR6,  true)  // dr6
 REG_SPEC(DR7,  dr7,  QWORD_SIZE_BIT-1, 0, DR7,  DWORD_SIZE_BIT-1, 0, DR7,  true)  // dr7
 
@@ -291,6 +293,18 @@ REG_SPEC_NO_CAPSTONE(FSW_C2,  fsw_c2,  0, 0, FSW_C2,  0, 0, FSW_C2,  true)  // c
 REG_SPEC_NO_CAPSTONE(FSW_TOP, fsw_top, 2, 0, FSW_TOP, 2, 0, FSW_TOP, true)  // top (Top of Stack Pointer)
 REG_SPEC_NO_CAPSTONE(FSW_C3,  fsw_c3,  0, 0, FSW_C3,  0, 0, FSW_C3,  true)  // c3 (Condition Code 3)
 REG_SPEC_NO_CAPSTONE(FSW_B,   fsw_b,   0, 0, FSW_B,   0, 0, FSW_B,   true)  // b (FPU Busy)
+
+/* EFER */
+
+REG_SPEC_NO_CAPSTONE(EFER, efer, QWORD_SIZE_BIT-1, 0, EFER, QWORD_SIZE_BIT-1, 0, EFER, true) // efer
+REG_SPEC_NO_CAPSTONE(EFER_TCE,   efer_tce,   0, 0, EFER_TCE,   0, 0, EFER_TCE,   true) // efer_tce
+REG_SPEC_NO_CAPSTONE(EFER_FFXSR, efer_ffxsr, 0, 0, EFER_FFXSR, 0, 0, EFER_FFXSR, true) // efer_ffxsr
+REG_SPEC_NO_CAPSTONE(EFER_LMSLE, efer_lmsle, 0, 0, EFER_LMSLE, 0, 0, EFER_LMSLE, true) // efer_lmsle
+REG_SPEC_NO_CAPSTONE(EFER_SVME,  efer_svme,  0, 0, EFER_SVME,  0, 0, EFER_SVME,  true) // efer_svme
+REG_SPEC_NO_CAPSTONE(EFER_NXE,   efer_nxe,   0, 0, EFER_NXE,   0, 0, EFER_NXE,   true) // efer_nxe
+REG_SPEC_NO_CAPSTONE(EFER_LMA,   efer_lma,   0, 0, EFER_LMA,   0, 0, EFER_LMA,   true) // efer_lma
+REG_SPEC_NO_CAPSTONE(EFER_LME,   efer_lme,   0, 0, EFER_LME,   0, 0, EFER_LME,   true) // efer_lme
+REG_SPEC_NO_CAPSTONE(EFER_SCE,   efer_sce,   0, 0, EFER_SCE,   0, 0, EFER_SCE,   true) // efer_sce
 
 /* Segments */
 

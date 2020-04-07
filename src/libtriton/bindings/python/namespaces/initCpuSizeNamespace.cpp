@@ -86,6 +86,8 @@ namespace triton {
         xPyDict_SetItemString(cpuSizeDict, "DWORD_BIT",   PyLong_FromUint32(DWORD_SIZE_BIT));
         xPyDict_SetItemString(cpuSizeDict, "QWORD",       PyLong_FromUint32(QWORD_SIZE));
         xPyDict_SetItemString(cpuSizeDict, "QWORD_BIT",   PyLong_FromUint32(QWORD_SIZE_BIT));
+        xPyDict_SetItemString(cpuSizeDict, "FWORD",       PyLong_FromUint32(FWORD_SIZE));
+        xPyDict_SetItemString(cpuSizeDict, "FWORD_BIT",   PyLong_FromUint32(FWORD_SIZE_BIT));
         xPyDict_SetItemString(cpuSizeDict, "DQWORD",      PyLong_FromUint32(DQWORD_SIZE));
         xPyDict_SetItemString(cpuSizeDict, "DQWORD_BIT",  PyLong_FromUint32(DQWORD_SIZE_BIT));
         xPyDict_SetItemString(cpuSizeDict, "QQWORD",      PyLong_FromUint32(QQWORD_SIZE));

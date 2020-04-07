@@ -287,6 +287,7 @@ namespace tracer {
           case WORD_SIZE:    value = *(reinterpret_cast<triton::uint16*>(addr)); break;
           case DWORD_SIZE:   value = *(reinterpret_cast<triton::uint32*>(addr)); break;
           case QWORD_SIZE:   value = *(reinterpret_cast<triton::uint64*>(addr)); break;
+          case FWORD_SIZE:   value = *(reinterpret_cast<triton::uint80*>(addr)); break;
           case DQWORD_SIZE:  value = triton::utils::fromBufferToUint<triton::uint128>(reinterpret_cast<triton::uint8*>(addr)); break;
           case QQWORD_SIZE:  value = triton::utils::fromBufferToUint<triton::uint256>(reinterpret_cast<triton::uint8*>(addr)); break;
           case DQQWORD_SIZE: value = triton::utils::fromBufferToUint<triton::uint512>(reinterpret_cast<triton::uint8*>(addr)); break;
