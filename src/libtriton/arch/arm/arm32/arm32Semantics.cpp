@@ -3049,7 +3049,7 @@ namespace triton {
            *   - STRD <Rt>, <Rt2>, [<Rn>], +/-<Rm>
            */
           if (inst.operands.size() == 4) {
-            if (inst.operands[2].getType() == OP_IMM) {
+            if (inst.operands[3].getType() == OP_IMM) {
               auto& imm  = inst.operands[3].getImmediate();
               auto& base = inst.operands[2].getMemory().getBaseRegister();
 
