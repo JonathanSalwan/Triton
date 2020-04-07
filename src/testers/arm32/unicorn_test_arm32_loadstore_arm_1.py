@@ -44,12 +44,16 @@ CODE  = [
     (b"\x03\x01\x51\xe7", "ldrb r0, [r1, -r3, lsl #2]"),
     (b"\x03\x01\x71\xe7", "ldrb r0, [r1, -r3, lsl #2]!"),
     (b"\x04\x00\x51\xe4", "ldrb r0, [r1], #-4"),
+    # (b"\x64\x00\x51\xe7", "ldrb r0, [r1, -r4, rrx]"), # FIXME: UC throws "Invalid memory read (UC_ERR_READ_UNMAPPED)" for some runs.
 
 
     (b"\x08\x00\xa1\xe8", "stm r1!, {r3}"),
     (b"\x18\x50\xa1\xe8", "stm r1!, {r3, r4, ip, lr}"),
 
     (b"\xf0\x00\xa1\xe8", "stmia r1!, {r4, r5, r6, r7}"),
+
+    (b"\xf0\x00\x81\xe9", "stmib r1, {r4, r5, r6, r7}"),
+    (b"\xf0\x00\xa1\xe9", "stmib r1!, {r4, r5, r6, r7}"),
 
     (b"\x03\x00\x8d\xe9", "stmib sp, {r0, r1}"),
 
@@ -62,6 +66,9 @@ CODE  = [
     (b"\x04\x10\x41\xe5", "strb r1, [r1, #-4]"),
 
     (b"\xf4\x00\xcd\xe1", "strd r0, r1, [sp, #4]"),
+    (b"\xf4\x00\x4d\xe1", "strd r0, r1, [sp, #-4]"),
+    (b"\xf3\x00\x8d\xe1", "strd r0, r1, [sp, r3]"),
+    (b"\xf3\x00\x0d\xe1", "strd r0, r1, [sp, -r3]"),
 
     (b"\xb4\x00\x41\x00", "strheq r0, [r1], #-4"),
     (b"\xb3\x00\x01\x00", "strheq r0, [r1], -r3"),
@@ -878,8 +885,8 @@ if __name__ == '__main__':
         "r0":    0xdeadbeef,
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
-        "r3":    4, # random.randint(0x0, 0xffffffff), # TODO: CHECK.
-        "r4":    random.randint(0x0, 0xffffffff),
+        "r3":    4,
+        "r4":    4 << 1,                                    # NOTE: For testing: "ldrb r0, [r1, -r4, rrx]".
         "r5":    random.randint(0x0, 0xffffffff),
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),

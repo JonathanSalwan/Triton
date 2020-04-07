@@ -8,6 +8,7 @@ from unicorn.arm_const   import *
 
 import pprint
 import random
+import struct
 import sys
 
 ADDR  = 0x100000
@@ -47,6 +48,9 @@ CODE  = [
 
     # CBZ -------------------------------------------------------------------- #
     (b"\xf5\xb3", "cbz r5, #0x200000"),
+
+    # LDR -------------------------------------------------------------------- #
+    (b"\xd5\xf8\x00\xf0", "ldr pc, [r5]"),
 ]
 
 
@@ -217,7 +221,7 @@ if __name__ == '__main__':
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
-        "r5":    random.randint(0x0, 0xffffffff),
+        "r5":    HEAP + 5 * 0x4,
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),
         "r8":    random.randint(0x0, 0xffffffff),
@@ -233,6 +237,9 @@ if __name__ == '__main__':
         "c":     random.randint(0x0, 0x1),
         "v":     random.randint(0x0, 0x1),
     }
+
+    # Set TARGET value to test LDR instructions.
+    state["heap"][5*0x4:5*0x4*3] = struct.pack("<I", 0x300000)
 
     # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
