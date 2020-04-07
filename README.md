@@ -28,6 +28,10 @@ Full documentation is available on our [doxygen page](http://triton.quarkslab.co
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
     <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/dev-v0.7/graph/badge.svg" alt="Codecov" />
   </a>
+  &nbsp;
+  <a href="https://lgtm.com/projects/g/JonathanSalwan/Triton/alerts/">
+    <img src="https://img.shields.io/lgtm/alerts/g/JonathanSalwan/Triton.svg?logo=lgtm&logoWidth=18"/>
+  </a>
 </p>
 
 ### Quick start
