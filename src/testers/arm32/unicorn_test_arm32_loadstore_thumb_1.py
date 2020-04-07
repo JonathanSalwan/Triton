@@ -16,6 +16,12 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
+    # LDM - Pre-indexed addressing ------------------------------------------- #
+    (b"\x91\xe8\x3c\x00", "ldm r1, {r2, r3, r4, r5}"),
+
+    # LDM - Post-indexed addressing ------------------------------------------ #
+    (b"\x3c\xc9",         "ldm r1!, {r2, r3, r4, r5}"),
+
     # LDR - Offset addressing ------------------------------------------------ #
     (b"\x08\x68",         "ldr r0, [r1]"),
     (b"\x48\x68",         "ldr r0, [r1, #0x4]"),
@@ -63,6 +69,12 @@ CODE  = [
     (b"\xf1\xe8\x01\x02", "ldrd r0, r2, [r1], #0x4"),
     (b"\x71\xe8\x01\x02", "ldrd r0, r2, [r1], #-0x4"),
 
+    # STM - Pre-indexed addressing ------------------------------------------- #
+    (b"\x81\xe8\x3c\x00", "stm r1, {r2, r3, r4, r5}"),
+
+    # STM - Post-indexed addressing ------------------------------------------- #
+    (b"\x3c\xc1",         "stm r1!, {r2, r3, r4, r5}"),
+
     # STR - Offset addressing ------------------------------------------------ #
     (b"\x08\x60",         "str r0, [r1]"),
     (b"\x48\x60",         "str r0, [r1, #0x4]"),
@@ -107,8 +119,22 @@ CODE  = [
     (b"\x61\xe9\x01\x02", "strd r0, r2, [r1, #-0x4]!"),
 
     # STRD - Post-indexed addressing  ----------------------------------------- #
-    # (b"\xe1\xe8\x01\x02", "strd r0, r2, [r1], #0x4"),  # FIXME Arm32Cpu::getConcreteRegisterValue(): Invalid register.
-    # (b"\x61\xe8\x01\x02", "strd r0, r2, [r1], #-0x4"), # FIXME Arm32Cpu::getConcreteRegisterValue(): Invalid register.
+    (b"\xe1\xe8\x01\x02", "strd r0, r2, [r1], #0x4"),
+    (b"\x61\xe8\x01\x02", "strd r0, r2, [r1], #-0x4"),
+
+    # STRH - Offset addressing ----------------------------------------------- #
+    (b"\x08\x80",         "strh r0, [r1]"),
+    (b"\x88\x80",         "strh r0, [r1, #0x4]"),
+    (b"\x21\xf8\x04\x0c", "strh r0, [r1, #-0x4]"),
+
+    # STRH - Pre-indexed addressing ------------------------------------------ #
+    (b"\x21\xf8\x00\x0f", "strh r0, [r1]!"),
+    (b"\x21\xf8\x04\x0f", "strh r0, [r1, #0x4]!"),
+    (b"\x21\xf8\x04\x0d", "strh r0, [r1, #-0x4]!"),
+
+    # STRH - Post-indexed addressing  ---------------------------------------- #
+    (b"\x21\xf8\x04\x0b", "strh r0, [r1], #0x4"),
+    (b"\x21\xf8\x04\x09", "strh r0, [r1], #-0x4"),
 
     # TODO: Test with PC as source register.
 ]
