@@ -69,6 +69,10 @@ CODE  = [
     (b"\xf4\x00\x4d\xe1", "strd r0, r1, [sp, #-4]"),
     (b"\xf3\x00\x8d\xe1", "strd r0, r1, [sp, r3]"),
     (b"\xf3\x00\x0d\xe1", "strd r0, r1, [sp, -r3]"),
+    (b"\xf3\x00\x8d\xe0", "strd r0, r1, [sp], r3"),
+    (b"\xf3\x00\x0d\xe0", "strd r0, r1, [sp], -r3"),
+    (b"\xf4\x00\xcd\xe0", "strd r0, r1, [sp], #0x4"),
+    (b"\xf4\x00\x4d\xe0", "strd r0, r1, [sp], #-0x4"),
 
     (b"\xb4\x00\x41\x00", "strheq r0, [r1], #-4"),
     (b"\xb3\x00\x01\x00", "strheq r0, [r1], -r3"),
