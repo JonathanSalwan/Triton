@@ -429,7 +429,7 @@ namespace triton {
                   }
 
                   default:
-                    /* FIXME: What about FP, C-IMM ? */
+                    /* NOTE: FP, CIMM, and missing one are not supported yet. */
                     throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid operand.");
                 } // switch
               } // for operand
@@ -460,10 +460,11 @@ namespace triton {
 
         void Arm32Cpu::postDisassembly(triton::arch::Instruction& inst) const {
           /* Fix update flag */
-          /* FIXME: Quick (and super ugly) hack. Capstone is reporting
+          /* NOTE: Quick (and super ugly) hack. Capstone is reporting
            * update_flags equals true for ADC, RSC and SBC instruction when
            * it shouldn't (it should only report true when the S suffix is
-           * present).
+           * present). This will be removed once Capstone is fixed. For more
+           * information, see: https://github.com/aquynh/capstone/issues/1568.
            */
           switch (inst.getType()) {
             case ID_INS_ADC:
