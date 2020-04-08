@@ -16,7 +16,7 @@ DEBUG  = False
 TARGET = os.path.join(os.path.dirname(__file__), './bin/crypto_test-nothumb-Oz.bin')
 STOP_ADDR = None
 MAX_INSTRS = 100000
-RET_VALUE = -1
+
 
 # The debug function
 def debug(s):
@@ -106,8 +106,6 @@ def aeabi_memcpyHandler(ctx):
 
 # Simulate the puts() function
 def putsHandler(ctx):
-    global RET_VALUE
-
     print('[+] puts hooked')
 
     # Get arguments
@@ -116,10 +114,6 @@ def putsHandler(ctx):
     print('\targ1: "{}" ({:08x})'.format(arg1, ctx.getConcreteRegisterValue(ctx.registers.r0)))
 
     sys.stdout.write(arg1 + '\n')
-
-    # FIXME: Find a better way to check for success.
-    if arg1 == "ok":
-        RET_VALUE = 0
 
     # Return value
     return len(arg1) + 1
@@ -218,6 +212,7 @@ def hookingHandler(ctx):
 def emulate(ctx, pc):
     ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
 
+    ret_value = None
     count = 0
     while pc and count < MAX_INSTRS:
         if STOP_ADDR and pc == STOP_ADDR:
@@ -227,6 +222,11 @@ def emulate(ctx, pc):
         if count >= MAX_INSTRS:
             print("[-] Emulation exceeded max number of instructions!")
             break
+
+        if pc == 0x884:
+            r0 = ctx.getConcreteRegisterValue(ctx.registers.r0)
+            debug("[+] Return value: {:#x}".format(r0))
+            ret_value = r0
 
         # Fetch opcodes
         opcodes = ctx.getConcreteMemoryAreaValue(pc, 4)
@@ -259,7 +259,10 @@ def emulate(ctx, pc):
 
     debug('[+] Instruction executed: %d' %(count))
 
-    return
+    if ret_value == None:
+        raise Exception("Invalid return code.")
+
+    return ret_value
 
 
 def loadBinary(ctx, binary):
@@ -333,10 +336,8 @@ def main():
     # Perform our own relocations
     makeRelocation(ctx, binary)
 
-    # First emulation
-    run(ctx, binary)
-
-    return RET_VALUE
+    # Run emulation
+    return run(ctx, binary)
 
 
 if __name__ == '__main__':

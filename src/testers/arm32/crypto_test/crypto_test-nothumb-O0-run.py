@@ -16,7 +16,7 @@ DEBUG  = False
 TARGET = os.path.join(os.path.dirname(__file__), './bin/crypto_test-nothumb-O0.bin')
 STOP_ADDR = None
 MAX_INSTRS = 100000
-RET_VALUE = -1
+
 
 # The debug function
 def debug(s):
@@ -160,8 +160,6 @@ def strlenHandler(ctx):
 
 # Simulate the printf() function
 def printfHandler(ctx):
-    global RET_VALUE
-
     print('[+] printf hooked')
 
     # Get arguments
@@ -176,10 +174,6 @@ def printfHandler(ctx):
     s      = arg1.format(*args)
 
     sys.stdout.write(s)
-
-    # FIXME: Find a better way to check for success.
-    if arg1 == "ok\n":
-        RET_VALUE = 0
 
     # Return value
     return len(s)
@@ -280,6 +274,7 @@ def hookingHandler(ctx):
 def emulate(ctx, pc):
     ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
 
+    ret_value = None
     count = 0
     while pc and count < MAX_INSTRS:
         if STOP_ADDR and pc == STOP_ADDR:
@@ -289,6 +284,11 @@ def emulate(ctx, pc):
         if count >= MAX_INSTRS:
             print("[-] Emulation exceeded max number of instructions!")
             break
+
+        if pc == 0xa68:
+            r0 = ctx.getConcreteRegisterValue(ctx.registers.r0)
+            debug("[+] Return value: {:#x}".format(r0))
+            ret_value = r0
 
         # Fetch opcodes
         opcodes = ctx.getConcreteMemoryAreaValue(pc, 4)
@@ -321,7 +321,10 @@ def emulate(ctx, pc):
 
     debug('[+] Instruction executed: %d' %(count))
 
-    return
+    if ret_value == None:
+        raise Exception("Invalid return code.")
+
+    return ret_value
 
 
 def loadBinary(ctx, binary):
@@ -395,10 +398,8 @@ def main():
     # Perform our own relocations
     makeRelocation(ctx, binary)
 
-    # First emulation
-    run(ctx, binary)
-
-    return RET_VALUE
+    # Run emulation
+    return run(ctx, binary)
 
 
 if __name__ == '__main__':
