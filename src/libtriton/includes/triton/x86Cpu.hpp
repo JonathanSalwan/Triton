@@ -97,7 +97,6 @@ namespace triton {
           triton::uint8 eip[DWORD_SIZE];
           //! Concrete value of eflags
           triton::uint8 eflags[DWORD_SIZE];
-          // TODO @fvrmatteo: use an 80-bit type for MMX registers
           //! Concrete value of mm0
           triton::uint8 mm0[FWORD_SIZE];
           //! Concrete value of mm1
