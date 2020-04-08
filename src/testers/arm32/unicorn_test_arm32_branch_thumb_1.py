@@ -51,6 +51,15 @@ CODE  = [
 
     # LDR -------------------------------------------------------------------- #
     (b"\xd5\xf8\x00\xf0", "ldr pc, [r5]"),
+    (b"\xd6\xf8\x04\xf0", "ldr pc, [r6, #0x4]"),
+    (b"\x57\xf8\x04\xfc", "ldr pc, [r7, #-0x4]"),
+
+    (b"\x55\xf8\x00\xff", "ldr pc, [r5]!"),
+    (b"\x56\xf8\x04\xff", "ldr pc, [r6, #0x4]!"),
+    (b"\x57\xf8\x04\xfd", "ldr pc, [r7, #-0x4]!"),
+
+    (b"\x95\xe8\x00\x80", "ldm r5, {pc}"),
+    (b"\x55\xf8\x04\xfb", "ldm r5!, {pc}"),
 ]
 
 
@@ -222,8 +231,8 @@ if __name__ == '__main__':
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
         "r5":    HEAP + 5 * 0x4,
-        "r6":    random.randint(0x0, 0xffffffff),
-        "r7":    random.randint(0x0, 0xffffffff),
+        "r6":    HEAP + 5 * 0x4 - 0x4,
+        "r7":    HEAP + 5 * 0x4 + 0x4,
         "r8":    random.randint(0x0, 0xffffffff),
         "r9":    random.randint(0x0, 0xffffffff),
         "r10":   random.randint(0x0, 0xffffffff),

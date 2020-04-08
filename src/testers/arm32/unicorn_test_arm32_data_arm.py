@@ -19,8 +19,8 @@ CODE  = [
     # MISC ------------------------------------------------------------------- #
     (b"\x41\x01\xb0\xe1", "asrs r0, r1, #2"),
 
-    (b"\xde\x0f\x10\xe3", "tst r0, #888"),      # r0 = 0x694b8a87
-    (b"\xde\x0f\x00\xe2", "and r0, #888"),      # r0 = 0x694b8a87
+    (b"\xde\x0f\x10\xe3", "tst r0, #888"),
+    (b"\xde\x0f\x00\xe2", "and r0, #888"),
 
     (b"\xde\x0f\x20\xe2", "eor r0, #888"),
 
@@ -37,10 +37,10 @@ CODE  = [
 
     (b"\x00\x00\xa0\xe1", "asr r0, #0"),
     (b"\xc0\x0f\xa0\xe1", "asr r0, #31"),
-    (b"\xc1\x0f\xa0\xe1", "asr r0, r1, #31"),       # It is interpreted as a shift
+    (b"\xc1\x0f\xa0\xe1", "asr r0, r1, #31"),       # NOTE: The constant #31 is interpreted as a shift.
     (b"\x51\x02\xa0\xe1", "asr r0, r1, r2"),
-    (b"\x51\x03\xa0\xe1", "mov r0, r1, asr r3"),    # -> asr r0, r1, r3
-    (b"\x00\x00\xb0\xe1", "asrs r0, #0"),           # -> movs r0, r0
+    (b"\x51\x03\xa0\xe1", "mov r0, r1, asr r3"),    # NOTE: It an alias for 'asr r0, r1, r3'.
+    (b"\x00\x00\xb0\xe1", "asrs r0, #0"),           # NOTE: It an alias for 'movs r0, r0'.
     (b"\xc0\x0f\xb0\xe1", "asrs r0, #31"),
     (b"\xc1\x0f\xb0\xe1", "asrs r0, r1, #31"),      # NOTE: The 2nd operand is interpreted as a register-shifted register (namely, 'r1, #31')
     (b"\xc1\x1f\xb0\xe1", "asrs r1, r1, #31"),      # NOTE: Same as previous. However, in THUMB the 2nd operand is interpreted as a registera and the 3rd as an immediate (namely, 'r1' and '#31', respectively)
@@ -2142,7 +2142,6 @@ CODE  = [
     (b"\x31\x03\xb0\xd1", "lsrsle r0, r1, r3"),
     (b"\x31\x03\xb0\xe1", "lsrsal r0, r1, r3"),
 
-    # TODO: Test with PC and SP as operands (both destination and source).
     # NOTE: MOV (shifted register) is a pseudo-instruction for ASR, LSL, LSR,
     # ROR, and RRX.
     # MOV -------------------------------------------------------------------- #

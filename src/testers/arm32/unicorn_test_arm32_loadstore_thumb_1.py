@@ -135,8 +135,6 @@ CODE  = [
     # STRH - Post-indexed addressing  ---------------------------------------- #
     (b"\x21\xf8\x04\x0b", "strh r0, [r1], #0x4"),
     (b"\x21\xf8\x04\x09", "strh r0, [r1], #-0x4"),
-
-    # TODO: Test with PC as source register.
 ]
 
 

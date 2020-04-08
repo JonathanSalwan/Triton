@@ -702,8 +702,6 @@ CODE  = [
     (b"\x04\x00\x41\xc4", "strbgt r0, [r1], #-0x4"),
     (b"\x04\x00\x41\xd4", "strble r0, [r1], #-0x4"),
     (b"\x04\x00\x41\xe4", "strbal r0, [r1], #-0x4"),
-
-    # TODO: Test with PC as source register.
 ]
 
 

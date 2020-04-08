@@ -26,6 +26,16 @@ CODE2 = [
 CODE  = [
     # MISC ------------------------------------------------------------------- #
     (b"\x00\xf0\x95\xe5", "ldr pc, [r5]"),
+    (b"\x04\xf0\x96\xe5", "ldr pc, [r6, #0x4]"),
+    (b"\x04\xf0\x17\xe5", "ldr pc, [r7, #-0x4]"),
+    (b"\x08\xf0\x96\xe7", "ldr pc, [r6, r8]"),
+    (b"\x08\xf0\x17\xe7", "ldr pc, [r7, -r8]"),
+
+    (b"\x00\xf0\xb5\xe5", "ldr pc, [r5]!"),
+    (b"\x04\xf0\xb6\xe5", "ldr pc, [r6, #0x4]!"),
+    (b"\x04\xf0\x37\xe5", "ldr pc, [r7, #-0x4]!"),
+    (b"\x08\xf0\xb6\xe7", "ldr pc, [r6, r8]!"),
+    (b"\x08\xf0\x37\xe7", "ldr pc, [r7, -r8]!"),
 
     (b"\x00\x80\x95\xe8", "ldm r5, {pc}"),
     (b"\x00\x80\xb5\xe8", "ldm r5!, {pc}"),
@@ -352,9 +362,9 @@ if __name__ == '__main__':
         "r3":    0x100000,
         "r4":    0x300000,
         "r5":    HEAP + 5 * 0x4,
-        "r6":    random.randint(0x0, 0xffffffff),
-        "r7":    random.randint(0x0, 0xffffffff),
-        "r8":    random.randint(0x0, 0xffffffff),
+        "r6":    HEAP + 5 * 0x4 - 0x4,
+        "r7":    HEAP + 5 * 0x4 + 0x4,
+        "r8":    4,
         "r9":    random.randint(0x0, 0xffffffff),
         "r10":   random.randint(0x0, 0xffffffff),
         "r11":   random.randint(0x0, 0xffffffff),
