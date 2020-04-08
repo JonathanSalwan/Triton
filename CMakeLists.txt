@@ -21,6 +21,11 @@ option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocompl
 option(STATICLIB "Build a static library" OFF)
 option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
 
+if(STATICLIB)
+    # We can't use Python bindings with a static library
+    set(PYTHON_BINDINGS OFF)
+endif()
+
 if(PINTOOL AND NOT PYTHON_BINDINGS)
     MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
 endif()
