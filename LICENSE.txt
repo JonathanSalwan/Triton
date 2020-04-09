@@ -187,14 +187,7 @@
       same "printed page" as the copyright notice for easier
       identification within third-party archives.
 
-   Copyright:
-
-        * Jonathan Salwan (Quarkslab)
-        * Pierrick Brunet (Quarkslab)
-        * Romain Thomas (Quarkslab)
-        * Florent Saudel (Bordeaux University)
-
-   See http://triton.quarkslab.com/about/ for further information.
+   Copyright: http://triton.quarkslab.com/about
 
    Licensed under the Apache License, Version 2.0 (the "License");
    you may not use this file except in compliance with the License.
