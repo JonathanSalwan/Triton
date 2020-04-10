@@ -5242,6 +5242,9 @@ namespace triton {
         /* Fetch the current architecture */
         auto arch = this->architecture->getArchitecture();
 
+        /* Determine if we are executing in 64 bit mode */
+        auto is64bits = arch == triton::arch::architecture_e::ARCH_X86_64;
+
         /* Fetch the memory operand */
         auto& dst = inst.operands[0];
         auto& mem = dst.getMemory();
@@ -5353,7 +5356,8 @@ namespace triton {
         /* Check if we are running in CPL = 0 (ring 0) and if the FFXSR bit is set in EFER */
         auto cpl = this->astCtxt->equal(this->astCtxt->extract(1, 0, cs_ast), this->astCtxt->bv(0, 2));
         auto ffx = this->astCtxt->equal(ffxsr_ast, this->astCtxt->bv(1, 1));
-        auto is_fast = this->astCtxt->land(cpl, ffx);
+        auto b64 = this->astCtxt->equal(this->astCtxt->bv(is64bits, 1), this->astCtxt->bv(1, 1));
+        auto is_fast = this->astCtxt->land(this->astCtxt->land(cpl, ffx), b64);
 
         /* Apply the fast restore logic if needed */
         xmm0_ast = this->astCtxt->ite(is_fast, xmm0_orig, xmm0_ast);
@@ -5627,7 +5631,7 @@ namespace triton {
         xmm7_expr->isTainted = this->taintEngine->taintAssignment(xmm7, xmm7_addr);
 
         /* Additional semantics, symbolic expressions and tainting for the '64-bit Mode Layout (with REX.W = 0)' */
-        if (arch == triton::arch::architecture_e::ARCH_X86_64) {
+        if (is64bits) {
           auto xmm8 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
           auto xmm9 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
           auto xmm10 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM10));
@@ -6149,6 +6153,9 @@ namespace triton {
         /* Fetch the current architecture */
         auto arch = this->architecture->getArchitecture();
 
+        /* Determine if we are executing in 64 bit mode */
+        auto is64bits = arch == triton::arch::architecture_e::ARCH_X86_64;
+
         /* Fetch the memory operand */
         auto& dst = inst.operands[0];
         auto& mem = dst.getMemory();
@@ -6298,7 +6305,8 @@ namespace triton {
         /* Check if we are running in CPL = 0 (ring 0) and if the FFXSR bit is set in EFER */
         auto cpl = this->astCtxt->equal(this->astCtxt->extract(1, 0, cs_ast), this->astCtxt->bv(0, 2));
         auto ffx = this->astCtxt->equal(ffxsr_ast, this->astCtxt->bv(1, 1));
-        auto is_fast = this->astCtxt->land(cpl, ffx);
+        auto b64 = this->astCtxt->equal(this->astCtxt->bv(is64bits, 1), this->astCtxt->bv(1, 1));
+        auto is_fast = this->astCtxt->land(this->astCtxt->land(cpl, ffx), b64);
 
         /* Apply the fast save logic if needed */
         xmm0_ast  = this->astCtxt->ite(is_fast, xmm0_orig,  xmm0_ast);
@@ -6367,7 +6375,7 @@ namespace triton {
         xmm7_expr->isTainted = this->taintEngine->taintAssignment(xmm7_addr, xmm7);
 
         /* Additional semantics, symbolic expressions and tainting for the '64-bit Mode Layout (with REX.W = 0)' */
-        if (arch == triton::arch::architecture_e::ARCH_X86_64) {
+        if (is64bits) {
           auto xmm8  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM8));
           auto xmm9  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM9));
           auto xmm10 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_XMM10));
