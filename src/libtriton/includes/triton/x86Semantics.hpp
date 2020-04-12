@@ -637,6 +637,18 @@ namespace triton {
           //! The EXTRACTPS semantics.
           void extractps_s(triton::arch::Instruction& inst);
 
+          //! The FXRSTOR semantics.
+          void fxrstor_s(triton::arch::Instruction& inst);
+
+          //! The FXRSTOR64 semantics.
+          void fxrstor64_s(triton::arch::Instruction& inst);
+
+          //! The FXSAVE semantics.
+          void fxsave_s(triton::arch::Instruction& inst);
+
+          //! The FXSAVE64 semantics.
+          void fxsave64_s(triton::arch::Instruction& inst);
+
           //! The IDIV semantics.
           void idiv_s(triton::arch::Instruction& inst);
 

@@ -186,6 +186,7 @@ namespace triton {
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::word));
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dword));
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qword));
+          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::fword));
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqword));
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qqword));
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqqword));
@@ -196,6 +197,7 @@ namespace triton {
           if (index < triton::size::word)    this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::word));
           if (index < triton::size::dword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dword));
           if (index < triton::size::qword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qword));
+          if (index < triton::size::qword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::fword));
           if (index < triton::size::dqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqword));
           if (index < triton::size::qqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qqword));
           if (index < triton::size::dqqword) this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqqword));
@@ -971,6 +973,7 @@ namespace triton {
           /* ----------------------------------------------------------------*/
           case triton::size::dword:
           case triton::size::qword:
+          case triton::size::fword:
           case triton::size::dqword:
           case triton::size::qqword:
           case triton::size::dqqword: {

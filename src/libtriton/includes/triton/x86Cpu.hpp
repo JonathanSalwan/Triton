@@ -98,21 +98,21 @@ namespace triton {
           //! Concrete value of eflags
           triton::uint8 eflags[triton::size::dword];
           //! Concrete value of mm0
-          triton::uint8 mm0[triton::size::qword];
+          triton::uint8 mm0[triton::size::fword];
           //! Concrete value of mm1
-          triton::uint8 mm1[triton::size::qword];
+          triton::uint8 mm1[triton::size::fword];
           //! Concrete value of mm2
-          triton::uint8 mm2[triton::size::qword];
+          triton::uint8 mm2[triton::size::fword];
           //! Concrete value of mm3
-          triton::uint8 mm3[triton::size::qword];
+          triton::uint8 mm3[triton::size::fword];
           //! Concrete value of mm4
-          triton::uint8 mm4[triton::size::qword];
+          triton::uint8 mm4[triton::size::fword];
           //! Concrete value of mm5
-          triton::uint8 mm5[triton::size::qword];
+          triton::uint8 mm5[triton::size::fword];
           //! Concrete value of mm6
-          triton::uint8 mm6[triton::size::qword];
+          triton::uint8 mm6[triton::size::fword];
           //! Concrete value of mm7
-          triton::uint8 mm7[triton::size::qword];
+          triton::uint8 mm7[triton::size::fword];
           //! Concrete value of ymm0
           triton::uint8 ymm0[triton::size::qqword];
           //! Concrete value of ymm1
@@ -129,8 +129,6 @@ namespace triton {
           triton::uint8 ymm6[triton::size::qqword];
           //! Concrete value of ymm7
           triton::uint8 ymm7[triton::size::qqword];
-          //! Concrete value of mxcsr
-          triton::uint8 mxcsr[triton::size::dword];
           //! Concrete value of cr0
           triton::uint8 cr0[triton::size::dword];
           //! Concrete value of cr1
@@ -183,10 +181,36 @@ namespace triton {
           triton::uint8 dr2[triton::size::dword];
           //! Condete value of dr3
           triton::uint8 dr3[triton::size::dword];
+          //! Condete value of dr4
+          triton::uint8 dr4[triton::size::dword];
+          //! Condete value of dr5
+          triton::uint8 dr5[triton::size::dword];
           //! Condete value of dr6
           triton::uint8 dr6[triton::size::dword];
           //! Condete value of dr7
           triton::uint8 dr7[triton::size::dword];
+          //! Concrete value of the x87 FPU Control Word
+          triton::uint8 fcw[triton::size::word];
+          //! Concrete value of the x87 FPU Status Word
+          triton::uint8 fsw[triton::size::word];
+          //! Concrete value of the x87 FPU Tag Word
+          triton::uint8 ftw[triton::size::word];
+          //! Concrete value of the x87 FPU Opcode
+          triton::uint8 fop[triton::size::word];
+          //! Concrete value of the x87 FPU Instruction Pointer Offset
+          triton::uint8 fip[triton::size::qword];
+          //! Concrete value of the x87 FPU Instruction Pointer Selector
+          triton::uint8 fcs[triton::size::word];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Offset
+          triton::uint8 fdp[triton::size::qword];
+          //! Concrete value of the x87 FPU Instruction Operand Pointer Selector
+          triton::uint8 fds[triton::size::word];
+          //! Concrete value of the EFER MSR Register
+          triton::uint8 efer[triton::size::qword];
+          //! Concrete value of the SSE Register State
+          triton::uint8 mxcsr[triton::size::dword];
+          //! Concrete value of the SSE Register State Mask
+          triton::uint8 mxcsr_mask[triton::size::dword];
 
         public:
           //! Constructor.
@@ -209,6 +233,12 @@ namespace triton {
 
           //! Returns true if regId is a SSE register.
           TRITON_EXPORT bool isSSE(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is a FPU register.
+          TRITON_EXPORT bool isFPU(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is an EFER register
+          TRITON_EXPORT bool isEFER(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;

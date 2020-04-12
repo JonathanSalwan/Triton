@@ -32,6 +32,7 @@ namespace triton {
           size != triton::size::word     &&
           size != triton::size::dword    &&
           size != triton::size::qword    &&
+          size != triton::size::fword    &&
           size != triton::size::dqword   &&
           size != triton::size::qqword   &&
           size != triton::size::dqqword)
