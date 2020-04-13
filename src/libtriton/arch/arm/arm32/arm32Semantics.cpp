@@ -2059,15 +2059,18 @@ namespace triton {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
 
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, dst);
+          auto op2 = this->getArm32SourceOperandAst(inst, src);
+
           /* Create the semantics */
-          auto node1 = this->getArm32SourceOperandAst(inst, src);
-          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+          auto node = this->buildConditionalSemantics(inst, dst, op2);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOV(s) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV(s) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = node->getChildren()[0];
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2076,6 +2079,17 @@ namespace triton {
           if (inst.isUpdateFlag() == true) {
             this->nf_s(inst, cond, expr, dst);
             this->zf_s(inst, cond, expr, dst);
+
+            /* NOTE: The following if statement was added to properly handle
+            * the case when PC is the destination register when the S suffix is
+            * present (e.g.: 'movseq pc, r4'). The manual is not clear in this
+            * case. We arrived to this solution after testing and comparing the
+            * behavior against UC.
+            */
+            if (dst.getRegister().getId() == ID_REG_ARM32_PC) {
+              this->cfAdd_s(inst, cond, expr, dst, op1, op2);
+              this->vfAdd_s(inst, cond, expr, dst, op1, op2);
+            }
           }
 
           /* Update condition flag */
@@ -2083,7 +2097,7 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update execution mode accordingly. */
-            this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, op2);
           }
 
           /* Update the symbolic control flow */
