@@ -2687,7 +2687,15 @@ namespace triton {
 
           /* Update symbolic flags */
           if (inst.isUpdateFlag() == true) {
-            this->cfSub_s(inst, cond, expr, dst, op1, op2);
+            /* NOTE: The following if statement was added to properly handle
+            * the case when PC is the destination register when the S suffix is
+            * present (e.g.: 'subseq pc, r4'). The manual is not clear in this
+            * case. We arrived to this solution after testing and comparing the
+            * behavior against UC.
+            */
+            if (dst.getRegister().getId() != ID_REG_ARM32_PC) {
+              this->cfSub_s(inst, cond, expr, dst, op1, op2);
+            }
             this->nf_s(inst, cond, expr, dst);
             this->vfSub_s(inst, cond, expr, dst, op1, op2);
             this->zf_s(inst, cond, expr, dst);
