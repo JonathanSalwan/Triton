@@ -44,7 +44,6 @@ CODE  = [
     (b"\x03\x01\x51\xe7", "ldrb r0, [r1, -r3, lsl #2]"),
     (b"\x03\x01\x71\xe7", "ldrb r0, [r1, -r3, lsl #2]!"),
     (b"\x04\x00\x51\xe4", "ldrb r0, [r1], #-4"),
-    # (b"\x64\x00\x51\xe7", "ldrb r0, [r1, -r4, rrx]"), # FIXME: UC throws "Invalid memory read (UC_ERR_READ_UNMAPPED)" for some runs.
 
 
     (b"\x08\x00\xa1\xe8", "stm r1!, {r3}"),
@@ -888,7 +887,7 @@ if __name__ == '__main__':
         "r1":    HEAP + 10 * 4,
         "r2":    random.randint(0x0, 0xffffffff),
         "r3":    4,
-        "r4":    4 << 1,                                    # NOTE: For testing: "ldrb r0, [r1, -r4, rrx]".
+        "r4":    random.randint(0x0, 0xffffffff),
         "r5":    random.randint(0x0, 0xffffffff),
         "r6":    random.randint(0x0, 0xffffffff),
         "r7":    random.randint(0x0, 0xffffffff),
