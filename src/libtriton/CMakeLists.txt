@@ -171,6 +171,7 @@ set(LIBTRITON_RESOURCE_FILES
     includes/triton/arm32.spec
     includes/triton/x86.spec
     includes/triton/version.hpp.in
+    includes/triton/config.hpp.in
 )
 
 if(Z3_INTERFACE)
@@ -300,6 +301,13 @@ endif()
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/version.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp
+    IMMEDIATE @ONLY
+)
+
+# We generate the config header based on configuation of CMake
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/config.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/config.hpp
     IMMEDIATE @ONLY
 )
 

@@ -6,6 +6,7 @@
 */
 
 #include <triton/api.hpp>
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 
 #include <list>
@@ -1095,7 +1096,7 @@ namespace triton {
 
   triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    #ifdef Z3_INTERFACE
+    #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
@@ -1106,7 +1107,7 @@ namespace triton {
 
   triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    #ifdef Z3_INTERFACE
+    #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }

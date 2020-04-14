@@ -5,6 +5,7 @@
 **  This program is under the terms of the BSD License.
 */
 
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/solverEngine.hpp>
 
@@ -16,7 +17,7 @@ namespace triton {
 
       SolverEngine::SolverEngine() {
         this->kind = triton::engines::solver::SOLVER_INVALID;
-        #ifdef Z3_INTERFACE
+        #ifdef TRITON_Z3_INTERFACE
         /* By default we initialized the z3 solver */
         this->setSolver(triton::engines::solver::SOLVER_Z3);
         #endif
@@ -38,7 +39,7 @@ namespace triton {
       void SolverEngine::setSolver(triton::engines::solver::solver_e kind) {
         /* Allocate and init the good solver */
         switch (kind) {
-          #ifdef Z3_INTERFACE
+          #ifdef TRITON_Z3_INTERFACE
           case triton::engines::solver::SOLVER_Z3:
             /* init the new instance */
             this->solver.reset(new(std::nothrow) triton::engines::solver::Z3Solver());

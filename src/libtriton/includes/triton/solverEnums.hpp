@@ -8,6 +8,8 @@
 #ifndef TRITON_SOLVERENUMS_HPP
 #define TRITON_SOLVERENUMS_HPP
 
+#include <triton/config.hpp>
+
 
 
 //! The Triton namespace
@@ -37,7 +39,7 @@ namespace triton {
       enum solver_e {
         SOLVER_INVALID = 0, /*!< invalid solver. */
         SOLVER_CUSTOM,      /*!< custom solver. */
-        #ifdef Z3_INTERFACE
+        #ifdef TRITON_Z3_INTERFACE
         SOLVER_Z3,          /*!< z3 solver. */
         #endif
       };

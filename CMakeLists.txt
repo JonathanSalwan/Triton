@@ -12,7 +12,6 @@ project(triton)
 # Define cmake options
 option(ASAN "Enable the ASAN linking" OFF)
 option(GCOV "Enable code coverage" OFF)
-option(INCBUILD "Increment the build number" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
 option(PYTHON36 "Python 36" ON)
@@ -114,14 +113,6 @@ if(${TARGET} MATCHES "ia32")
     set(ARCHITECTURE i386)
 endif()
 
-# Triton version
-if(INCBUILD)
-    # Get and increment the build number
-    file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
-    math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
-    file(WRITE ${TRITON_ROOT}/.build_number ${NEW_BUILD_NUMBER})
-endif()
-
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
@@ -167,6 +158,7 @@ if(Z3_INTERFACE)
         endif()
     endif()
     include_directories(${Z3_INCLUDE_DIRS})
+    set(TRITON_Z3_INTERFACE ON)
 endif()
 
 # Find Capstone

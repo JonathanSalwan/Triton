@@ -9,9 +9,10 @@
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/astContext.hpp>
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
-#ifdef Z3_INTERFACE
+#ifdef TRITON_Z3_INTERFACE
   #include <triton/tritonToZ3Ast.hpp>
   #include <triton/z3ToTritonAst.hpp>
 #endif
@@ -1561,7 +1562,7 @@ namespace triton {
 
       // *********************************************************************
 
-      #ifdef Z3_INTERFACE
+      #ifdef TRITON_Z3_INTERFACE
       static PyObject* AstContext_tritonToZ3(PyObject* self, PyObject* node) {
         triton::ast::TritonToZ3Ast tritonToZ3Ast{false};
 
@@ -1708,7 +1709,7 @@ namespace triton {
         {"unroll",          AstContext_unroll,          METH_O,           ""},
         {"variable",        AstContext_variable,        METH_O,           ""},
         {"zx",              AstContext_zx,              METH_VARARGS,     ""},
-        #ifdef Z3_INTERFACE
+        #ifdef TRITON_Z3_INTERFACE
         {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
         {"z3ToTriton",      AstContext_z3ToTriton,      METH_O,           ""},
         #endif

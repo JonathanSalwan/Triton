@@ -14,12 +14,13 @@
 #include <vector>
 
 #include <triton/ast.hpp>
+#include <triton/config.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/tritonTypes.hpp>
-#ifdef Z3_INTERFACE
+#ifdef TRITON_Z3_INTERFACE
   #include <triton/z3Solver.hpp>
 #endif
 
