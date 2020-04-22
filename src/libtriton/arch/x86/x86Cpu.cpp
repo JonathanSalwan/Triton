@@ -96,26 +96,20 @@
 
 #define MMX_READ(index, reg) {                                          \
   case triton::arch::ID_REG_X86_MM ## index: {                          \
-    triton::uint80 val = 0;                                             \
-    std::memcpy(&val, (triton::uint80*)this->reg, triton::size::fword); \
-    return val;                                                         \
+    return triton::utils::fromBufferToUint<triton::uint80>(this->reg);  \
   }                                                                     \
 }
 
-#define XMM_READ(index, reg) {                                            \
-  case triton::arch::ID_REG_X86_XMM ## index: {                           \
-    triton::uint128 val = 0;                                              \
-    std::memcpy(&val, (triton::uint128*)this->reg, triton::size::dqword); \
-    return val;                                                           \
-  }                                                                       \
+#define XMM_READ(index, reg) {                                          \
+  case triton::arch::ID_REG_X86_XMM ## index: {                         \
+    return triton::utils::fromBufferToUint<triton::uint128>(this->reg); \
+  }                                                                     \
 }
 
-#define YMM_READ(index, reg) {                                            \
-  case triton::arch::ID_REG_X86_YMM ## index: {                           \
-    triton::uint256 val = 0;                                              \
-    std::memcpy(&val, (triton::uint256*)this->reg, triton::size::qqword); \
-    return val;                                                           \
-  }                                                                       \
+#define YMM_READ(index, reg) {                                          \
+  case triton::arch::ID_REG_X86_YMM ## index: {                         \
+    return triton::utils::fromBufferToUint<triton::uint256>(this->reg); \
+  }                                                                     \
 }
 
 #define GR_READ(name, reg, size) {                                      \
@@ -202,25 +196,22 @@
   } break;                                                              \
 }
 
-#define MMX_WRITE(index, reg) {                                         \
-  case triton::arch::ID_REG_X86_MM ## index: {                          \
-    auto val = value.convert_to<triton::uint80>();                      \
-    std::memcpy((triton::uint80*)this->reg, &val, triton::size::fword); \
-  } break;                                                              \
+#define MMX_WRITE(index, reg) {                                                     \
+  case triton::arch::ID_REG_X86_MM ## index: {                                      \
+    triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->reg); \
+  } break;                                                                          \
 }
 
-#define XMM_WRITE(index, reg) {                                           \
-  case triton::arch::ID_REG_X86_XMM ## index: {                           \
-    auto val = value.convert_to<triton::uint128>();                       \
-    std::memcpy((triton::uint128*)this->reg, &val, triton::size::dqword); \
-  } break;                                                                \
+#define XMM_WRITE(index, reg) {                                                       \
+  case triton::arch::ID_REG_X86_XMM ## index: {                                       \
+    triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->reg);  \
+  } break;                                                                            \
 }
 
-#define YMM_WRITE(index, reg) {                                           \
-  case triton::arch::ID_REG_X86_YMM ## index: {                           \
-    auto val = value.convert_to<triton::uint256>();                       \
-    std::memcpy((triton::uint256*)this->reg, &val, triton::size::qqword); \
-  } break;                                                                \
+#define YMM_WRITE(index, reg) {                                                       \
+  case triton::arch::ID_REG_X86_YMM ## index: {                                       \
+    triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->reg);  \
+  } break;                                                                            \
 }
 
 #define GR_WRITE(name, reg, size) {                                    \
@@ -834,8 +825,6 @@ namespace triton {
           DRR_READ(1, dr1)
           DRR_READ(2, dr2)
           DRR_READ(3, dr3)
-          DRR_READ(4, dr4)
-          DRR_READ(5, dr5)
           DRR_READ(6, dr6)
           DRR_READ(7, dr7)
 
@@ -1049,8 +1038,6 @@ namespace triton {
           DRR_WRITE(1, dr1)
           DRR_WRITE(2, dr2)
           DRR_WRITE(3, dr3)
-          DRR_WRITE(4, dr4)
-          DRR_WRITE(5, dr5)
           DRR_WRITE(6, dr6)
           DRR_WRITE(7, dr7)
 

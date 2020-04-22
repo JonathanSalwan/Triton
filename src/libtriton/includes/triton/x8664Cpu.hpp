@@ -245,10 +245,6 @@ namespace triton {
           triton::uint8 dr2[triton::size::qword];
           //! Condete value of dr3
           triton::uint8 dr3[triton::size::qword];
-          //! Condete value of dr4
-          triton::uint8 dr4[triton::size::qword];
-          //! Condete value of dr5
-          triton::uint8 dr5[triton::size::qword];
           //! Condete value of dr6
           triton::uint8 dr6[triton::size::qword];
           //! Condete value of dr7

@@ -90,6 +90,10 @@ namespace triton {
           //! Control flow semantics. Used to represent IP.
           void controlFlow_s(triton::arch::Instruction& inst);
 
+          //! Update the FPU x87 Tag Word (whenever an MMX register changes)
+          void updateFTW(triton::arch::Instruction& inst,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent);
+
           //! The AF semantics.
           void af_s(triton::arch::Instruction& inst,
                     const triton::engines::symbolic::SharedSymbolicExpression& parent,

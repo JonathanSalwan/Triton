@@ -224,8 +224,6 @@ REG_SPEC(DR0,  dr0,  triton::bitsize::qword-1, 0, DR0,  triton::bitsize::dword-1
 REG_SPEC(DR1,  dr1,  triton::bitsize::qword-1, 0, DR1,  triton::bitsize::dword-1, 0, DR1,  true)  // dr1
 REG_SPEC(DR2,  dr2,  triton::bitsize::qword-1, 0, DR2,  triton::bitsize::dword-1, 0, DR2,  true)  // dr2
 REG_SPEC(DR3,  dr3,  triton::bitsize::qword-1, 0, DR3,  triton::bitsize::dword-1, 0, DR3,  true)  // dr3
-REG_SPEC(DR4,  dr4,  triton::bitsize::qword-1, 0, DR4,  triton::bitsize::dword-1, 0, DR4,  true)  // dr4
-REG_SPEC(DR5,  dr5,  triton::bitsize::qword-1, 0, DR5,  triton::bitsize::dword-1, 0, DR5,  true)  // dr5
 REG_SPEC(DR6,  dr6,  triton::bitsize::qword-1, 0, DR6,  triton::bitsize::dword-1, 0, DR6,  true)  // dr6
 REG_SPEC(DR7,  dr7,  triton::bitsize::qword-1, 0, DR7,  triton::bitsize::dword-1, 0, DR7,  true)  // dr7
 

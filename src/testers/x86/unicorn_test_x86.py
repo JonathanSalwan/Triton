@@ -17,6 +17,7 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
+
     (None, b"\x48\xb8\xaf\xbe\xad\xde\xaf\xbe\xad\xde",   "mov rax, 0xdeadbeafdeadbeaf"),
     (None, b"\x48\xff\xc0",                               "inc rax"),
     (None, b"\x48\xc7\xc3\x00\x00\x20\x00",               "mov rbx, 0x200000"),
@@ -745,10 +746,66 @@ CODE  = [
     (None, b"\x48\xc7\xc3\x00\x00\x00\x00",               "mov rbx, 0x0"),
     (None, b"\xf3\x0f\xbc\xd8",                           "tzcnt ebx, eax"),
 
-    (None, b"\x0f\xae\x04\x24",                           "fxsave [rsp]"),
-    (None, b"\x0f\xae\x0c\x24",                           "fxrstor [rsp]"),
-    (None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 [rsp]"),
-    (None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 [rsp]"),
+    (None, b"\x48\xb8\x11\x11\x11\x11\x11\x11\x11\x11",   "movabs rax, 0x1111111111111111"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr [rsp], rax"),
+    (None, b"\x48\xb8\x11\x11\x11\x11\x11\x11\x11\x11",   "movabs rax, 0x1111111111111111"),
+    (None, b"\x48\x89\x44\x24\x08",                       "mov qword ptr [rsp+0x8], rax"),
+    (None, b"\x66\x0f\x6f\x0c\x24",                       "movdqa xmm1, xmmword ptr [rsp]"),
+    (None, b"\x48\xb8\x22\x22\x22\x22\x22\x22\x22\x22",   "movabs rax, 0x2222222222222222"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr [rsp], rax"),
+    (None, b"\x48\xb8\x22\x22\x22\x22\x22\x22\x22\x22",   "movabs rax, 0x2222222222222222"),
+    (None, b"\x48\x89\x44\x24\x08",                       "mov qword ptr [rsp+0x8], rax"),
+    (None, b"\x66\x0f\x6f\x14\x24",                       "movdqa xmm2, xmmword ptr [rsp]"),
+    (None, b"\xc5\xf1\xeb\xc2",                           "vpor xmm0, xmm1, xmm2"),
+
+    (None, b"\x48\xB8\xEC\xE3\x96\xE1\x44\x6F\xE9\xBD",   "mov rax,BDE96F44E196E3EC"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x48\xB8\xB2\x7D\xB6\x97\xE7\xB8\x50\xA5",   "mov rax,A550B8E797B67DB2"),
+    (None, b"\x48\x89\x44\x24\x08",                       "mov qword ptr ss:[rsp+8],rax"),
+    (None, b"\x48\xB8\x02\x70\xE7\xC5\xF4\x9F\x47\xD8",   "mov rax,D8479FF4C5E77002"),
+    (None, b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10],rax"),
+    (None, b"\x48\xB8\x44\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax,C68B060DA9E05644"),
+    (None, b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18],rax"),
+    (None, b"\xC5\xFD\x6F\x0C\x24",                       "vmovdqa ymm1,yword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x8D\x8D\xB6\x84\x3C\x1B\x9B\xDC",   "mov rax,DC9B1B3C84B68D8D"),
+    (None, b"\x48\x89\x44\x24\x20",                       "mov qword ptr ss:[rsp+20],rax"),
+    (None, b"\x48\xB8\x92\x11\xD9\xF9\x80\x98\x38\xC0",   "mov rax,C0389880F9D91192"),
+    (None, b"\x48\x89\x44\x24\x28",                       "mov qword ptr ss:[rsp+28],rax"),
+    (None, b"\x48\xB8\x6E\x1C\x88\x9A\x83\xF0\x35\xB4",   "mov rax,B435F0839A881C6E"),
+    (None, b"\x48\x89\x44\x24\x30",                       "mov qword ptr ss:[rsp+30],rax"),
+    (None, b"\x48\xB8\x20\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax,C68B060DA9E05620"),
+    (None, b"\x48\x89\x44\x24\x38",                       "mov qword ptr ss:[rsp+38],rax"),
+    (None, b"\xC5\xF5\xEF\x44\x24\x20",                   "vpxor ymm0,ymm1,yword ptr ss:[rsp+20]"),
+    (None, b"\xC5\xFD\x7F\x04\x24",                       "vmovdqa yword ptr ss:[rsp],ymm0"),
+
+    (None, b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "mov rax,1111111111111111"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x04\x24",                           "movq mm0,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "mov rax,2222222222222222"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x0C\x24",                           "movq mm1,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x33\x33\x33\x33\x33\x33\x33\x33",   "mov rax,3333333333333333"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x14\x24",                           "movq mm2,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x44\x44\x44\x44\x44\x44\x44\x44",   "mov rax,4444444444444444"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x1C\x24",                           "movq mm3,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x55\x55\x55\x55\x55\x55\x55\x55",   "mov rax,5555555555555555"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x24\x24",                           "movq mm4,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x66\x66\x66\x66\x66\x66\x66\x66",   "mov rax,6666666666666666"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x2C\x24",                           "movq mm5,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x77\x77\x77\x77\x77\x77\x77\x77",   "mov rax,7777777777777777"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x34\x24",                           "movq mm6,qword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x88\x88\x88\x88\x88\x88\x88\x88",   "mov rax,8888888888888888"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp],rax"),
+    (None, b"\x0F\x6F\x3C\x24",                           "movq mm7,qword ptr ss:[rsp]"),
+    (None, b"\x0F\xAE\x04\x24",                           "fxsave ss:[rsp]"),
+    (None, b"\x0F\xAE\x0C\x24",                           "fxrstor ss:[rsp]"),
+    (None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 ss:[rsp]"),
+    (None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 ss:[rsp]"),
 ]
 
 
@@ -929,8 +986,8 @@ def emu_with_triton(opcode, istate):
     ctx.setConcreteRegisterValue(ctx.registers.ftw,          istate['ftw'])
 
     ctx.processing(inst)
-    #print(inst)
-    #for se in inst.getSymbolicExpressions():
+    # print(inst)
+    # for se in inst.getSymbolicExpressions():
     #    print(se)
 
     ostate = {
@@ -983,6 +1040,7 @@ def emu_with_triton(opcode, istate):
         "fcw":         ctx.getSymbolicRegisterValue(ctx.registers.fcw),
         "fsw":         ctx.getSymbolicRegisterValue(ctx.registers.fsw),
         "ftw":         ctx.getSymbolicRegisterValue(ctx.registers.ftw),
+
     }
     return ostate
 
@@ -1088,22 +1146,22 @@ if __name__ == '__main__':
         "r13":        0,
         "r14":        0,
         "r15":        0,
-        "xmm0":       0x11,
-        "xmm1":       0x12,
-        "xmm2":       0x13,
-        "xmm3":       0x14,
-        "xmm4":       0x15,
-        "xmm5":       0x16,
-        "xmm6":       0x17,
-        "xmm7":       0x18,
-        "xmm8":       0x19,
-        "xmm9":       0x20,
-        "xmm10":      0x21,
-        "xmm11":      0x22,
-        "xmm12":      0x23,
-        "xmm13":      0x24,
-        "xmm14":      0x25,
-        "xmm15":      0x26,
+        "xmm0":       0x0,
+        "xmm1":       0x0,
+        "xmm2":       0x0,
+        "xmm3":       0x0,
+        "xmm4":       0x0,
+        "xmm5":       0x0,
+        "xmm6":       0x0,
+        "xmm7":       0x0,
+        "xmm8":       0x0,
+        "xmm9":       0x0,
+        "xmm10":      0x0,
+        "xmm11":      0x0,
+        "xmm12":      0x0,
+        "xmm13":      0x0,
+        "xmm14":      0x0,
+        "xmm15":      0x0,
         "mm0":        0x0,      # Unsupported by Unicorn
         "mm1":        0x0,      # Unsupported by Unicorn
         "mm2":        0x0,      # Unsupported by Unicorn
@@ -1142,5 +1200,8 @@ if __name__ == '__main__':
 
         print('[OK] %s' %(disassembly))
         state = tt_state
+
+    ctx = TritonContext()
+    ctx.setArchitecture(ARCH.X86_64)
 
     sys.exit(0)
