@@ -148,22 +148,15 @@ namespace triton {
 
 
       /* Gets an aligned entry. */
-      inline SharedSymbolicExpression SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        return this->alignedMemoryReference[std::make_pair(address, size)].lock();
+      const SharedSymbolicExpression& SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
+        return this->alignedMemoryReference[std::make_pair(address, size)];
       }
 
 
       /* Checks if the aligned memory is recored. */
       bool SymbolicEngine::isAlignedMemory(triton::uint64 address, triton::uint32 size) {
         if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end()) {
-          /* Also check if the symbolic expression is alive */
-          if (this->alignedMemoryReference[std::make_pair(address, size)].lock()) {
-            return true;
-          }
-          /* Also check if the symbolic expression is alive */
-          else {
-            this->removeAlignedMemory(address, size);
-          }
+          return true;
         }
         return false;
       }
@@ -783,8 +776,7 @@ namespace triton {
          * If the memory access is aligned, don't split the memory.
          */
         if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
-          triton::ast::SharedAbstractNode anode = this->getAlignedMemory(address, size)->getAst();
-          return anode;
+          return this->getAlignedMemory(address, size)->getAst();
         }
 
         /* If the memory access is 1 byte long, just return the appropriate 8-bit vector */

@@ -45,10 +45,13 @@ namespace triton {
 
     SharedAbstractNode AstContext::collect(const SharedAbstractNode& node) {
       /*
-       * We keep a shared reference of nodes in a deep AST. Instead of keeping
-       * each node (which does not scales), we only keep one reference at each
-       * deep step of 10000. Thus, it will avoid the stack recursion on destructor
-       * calls of shared_ptr.
+       * We keep references to nodes which belong to a depth in the AST which is
+       * a multiple of 10000. Thus, when the root node is destroyed, the stack recursivity
+       * stops when the depth level of 10000 is reached, because the nodes there still
+       * have a reference to them in the AST manager. The destruction will continue at the
+       * next allocation of nodes and so on. So, it means that ASTs are destroyed by steps
+       * of depth of 10000 which avoids the overflow while keeping a good scale.
+       *
        * See: #753.
        */
       triton::uint32 lvl = node->getLevel();

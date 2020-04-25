@@ -95,7 +95,7 @@ namespace triton {
            * **item1**: <addr:size><br>
            * **item2**: shared symbolic expression
            */
-          std::map<std::pair<triton::uint64, triton::uint32>, WeakSymbolicExpression> alignedMemoryReference;
+          std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedMemoryReference;
 
           /*! \brief map of address -> symbolic expression
            *
@@ -128,7 +128,7 @@ namespace triton {
           triton::usize getUniqueSymVarId(void);
 
           //! Gets an aligned entry.
-          inline SharedSymbolicExpression getAlignedMemory(triton::uint64 address, triton::uint32 size);
+          const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds an aligned entry.
           void addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr);
