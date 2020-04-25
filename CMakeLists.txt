@@ -116,7 +116,7 @@ endif()
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 8)
+set(VERSION_MINOR 9)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 # Custom cmake search
