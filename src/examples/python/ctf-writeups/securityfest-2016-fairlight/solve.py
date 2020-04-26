@@ -1,38 +1,75 @@
 #!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 ##
-##  Jonathan Salwan - 2018-10-26
+##  Jonathan Salwan - 2020-04-26
 ##
-##  Description: Solution of the unbreakable challenge from the Google 2016 CTF.
-##  In this solution, we fully emulate the binary and we solve each branch
-##  to go through the good path.
 ##
 ##  Output:
 ##
 ##  $ time python ./solve.py
-##  [+] Loading 0x400040 - 0x400200
-##  [+] Loading 0x400200 - 0x40021c
-##  [+] Loading 0x400000 - 0x403df4
-##  [+] Loading 0x604000 - 0x604258
-##  [+] Loading 0x604018 - 0x6041e8
-##  [+] Loading 0x40021c - 0x400260
-##  [+] Loading 0x403590 - 0x40378c
+##  [+] Loading 0x400040 - 0x400238
+##  [+] Loading 0x400238 - 0x400254
+##  [+] Loading 0x400000 - 0x401ecc
+##  [+] Loading 0x602e10 - 0x6030b7
+##  [+] Loading 0x602e28 - 0x602ff8
+##  [+] Loading 0x400254 - 0x400298
+##  [+] Loading 0x401b44 - 0x401bf0
 ##  [+] Loading 0x000000 - 0x000000
+##  [+] Loading 0x602e10 - 0x603000
 ##  [+] Hooking strncpy
-##  [+] Hooking puts
-##  [+] Hooking printf
+##  [+] Hooking strlen
 ##  [+] Hooking __libc_start_main
-##  [+] Hooking exit
+##  [+] Hooking rand
 ##  [+] Starting emulation.
 ##  [+] __libc_start_main hooked
-##  [+] argv[0] = ./unbreakable-enterprise-product-activation
-##  [+] argv[1] = aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+##  [+] argv[0] = b'fairlight'
+##  [+] argv[1] = b'aaaaaaaaaaaaaa'
+##  [+] strlen hooked
 ##  [+] strncpy hooked
-##  [+] puts hooked
-##  Thank you - product activated!
-##  [+] exit hooked
-##  Flag: CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}
-##  python ./solve.py  14.32s user 0.03s system 99% cpu 14.363 total
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 40089b
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 4009d7
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 400b14
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 400c51
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 400d8b
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 400ec5
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 401002
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 40113c
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 401279
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 4013b3
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 4014f0
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 401645
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 40179c
+##  [+] rand hooked
+##  [+] rand hooked
+##  [+] Solve constraint at 4018f3
+##  [+] OK - ACCESS GRANTED: CODE{b'4ngrman4gem3nt'}
+##  python solve.py  21.63s user 0.03s system 99% cpu 21.690 total
 ##
 
 from __future__ import print_function
@@ -44,7 +81,7 @@ import sys
 import lief
 import os
 
-TARGET = os.path.join(os.path.dirname(__file__), 'unbreakable-enterprise-product-activation')
+TARGET = os.path.join(os.path.dirname(__file__), 'fairlight')
 DEBUG  = True
 
 # The debug function
@@ -56,59 +93,22 @@ BASE_PLT   = 0x10000000
 BASE_ARGV  = 0x20000000
 BASE_STACK = 0x9fffffff
 
-# These instruction conditions must set zf to 1.
+# conditions where ZF must be equal to 1
 conditions = [
-    0x402819,
-    0x402859,
-    0x4028A3,
-    0x4028F3,
-    0x402927,
-    0x402969,
-    0x4029A9,
-    0x4029E0,
-    0x402A1F,
-    0x402A56,
-    0x402A99,
-    0x402AD9,
-    0x402B07,
-    0x402B37,
-    0x402B79,
-    0x402BA7,
-    0x402BD7,
-    0x402C22,
-    0x402C69,
-    0x402CA9,
-    0x402CD7,
-    0x402D22,
-    0x402D73,
-    0x402DB0,
-    0x402DF9,
-    0x402E43,
-    0x402E89,
-    0x402EC9,
-    0x402EF7,
-    0x402F30,
-    0x402F79,
-    0x402FB9,
-    0x402FF9,
-    0x403039,
-    0x403079,
-    0x4030C5,
-    0x403109,
-    0x403149,
-    0x403189,
-    0x4031B7,
-    0x4031F9,
-    0x403239,
-    0x403270,
-    0x4032B0,
-    0x403302,
-    0x403337,
-    0x403379,
-    0x4033B9,
-    0x4033F0,
-    0x403427,
-    0x403472,
+    0x40089B, # solve check_0
+    0x4009D7, # solve check_1
+    0x400B14, # solve check_2
+    0x400C51, # solve check_3
+    0x400D8B, # solve check_4
+    0x400EC5, # solve check_5
+    0x401002, # solve check_6
+    0x40113C, # solve check_7
+    0x401279, # solve check_8
+    0x4013B3, # solve check_9
+    0x4014F0, # solve check_10
+    0x401645, # solve check_11
+    0x40179C, # solve check_12
+    0x4018F3, # solve check_13
 ]
 
 
@@ -125,62 +125,6 @@ def getMemoryString(ctx, addr):
     return s
 
 
-def getFormatString(ctx, addr):
-    return getMemoryString(ctx, addr)                                               \
-           .replace("%s", "{}").replace("%d", "{:d}").replace("%#02x", "{:#02x}")   \
-           .replace("%#x", "{:#x}").replace("%x", "{:x}").replace("%02X", "{:02x}") \
-           .replace("%c", "{:c}").replace("%02x", "{:02x}").replace("%ld", "{:d}")  \
-           .replace("%*s", "").replace("%lX", "{:x}").replace("%08x", "{:08x}")     \
-           .replace("%u", "{:d}").replace("%lu", "{:d}")                            \
-
-
-# Simulate the printf() function
-def printfHandler(ctx):
-    debug('[+] printf hooked')
-
-    # Get arguments
-    arg1   = getFormatString(ctx, ctx.getConcreteRegisterValue(ctx.registers.rdi))
-    arg2   = ctx.getConcreteRegisterValue(ctx.registers.rsi)
-    arg3   = ctx.getConcreteRegisterValue(ctx.registers.rdx)
-    arg4   = ctx.getConcreteRegisterValue(ctx.registers.rcx)
-    arg5   = ctx.getConcreteRegisterValue(ctx.registers.r8)
-    arg6   = ctx.getConcreteRegisterValue(ctx.registers.r9)
-    nbArgs = arg1.count("{")
-    args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
-    s      = arg1.format(*args)
-
-    if DEBUG:
-        sys.stdout.write(s)
-
-    # Return value
-    return len(s)
-
-
-# Simulate the putchar() function
-def putcharHandler(ctx):
-    debug('[+] putchar hooked')
-
-    # Get arguments
-    arg1 = ctx.getConcreteRegisterValue(ctx.registers.rdi)
-    sys.stdout.write(chr(arg1) + '\n')
-
-    # Return value
-    return 2
-
-
-# Simulate the puts() function
-def putsHandler(ctx):
-    debug('[+] puts hooked')
-
-    # Get arguments
-    arg1 = getMemoryString(ctx, ctx.getConcreteRegisterValue(ctx.registers.rdi))
-    sys.stdout.write(arg1 + '\n')
-
-    # Return value
-    return len(arg1) + 1
-
-
-# Simulate the strncpy() function
 def strncpyHandler(ctx):
     debug('[+] strncpy hooked')
 
@@ -198,31 +142,15 @@ def strncpyHandler(ctx):
     return dst
 
 
-def exitHandler(ctx):
-    debug('[+] exit hooked')
+def strlenHandler(ctx):
+    debug('[+] strlen hooked')
+    arg1 = getMemoryString(ctx, ctx.getConcreteRegisterValue(ctx.registers.rdi))
+    return len(arg1)
 
-    ret = ctx.getConcreteRegisterValue(ctx.registers.rdi)
-    ast = ctx.getAstContext()
-    pco = ctx.getPathPredicate()
-    # Ask for a new model which set all symbolic variables to ascii printable characters
-    mod = ctx.getModel(ast.land(
-            [pco] +
-            [ast.variable(ctx.getSymbolicVariable(0))  == ord('C')] +
-            [ast.variable(ctx.getSymbolicVariable(1))  == ord('T')] +
-            [ast.variable(ctx.getSymbolicVariable(2))  == ord('F')] +
-            [ast.variable(ctx.getSymbolicVariable(3))  == ord('{')] +
-            [ast.variable(ctx.getSymbolicVariable(50)) == ord('}')] +
-            [ast.variable(ctx.getSymbolicVariable(x))  >= 0x30 for x in range(4, 49)] +
-            [ast.variable(ctx.getSymbolicVariable(x))  <= 0x7a for x in range(4, 49)] +
-            [ast.variable(ctx.getSymbolicVariable(x))  != 0x00 for x in range(4, 49)]
-          ))
 
-    flag = str()
-    for k, v in sorted(mod.items()):
-        flag += chr(v.getValue())
-    print('Flag: %s' %(flag))
-
-    sys.exit(not (flag == 'CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}'))
+def randHandler(ctx):
+    debug('[+] rand hooked')
+    return random.randrange(0xffffffff)
 
 
 def libcMainHandler(ctx):
@@ -243,7 +171,7 @@ def libcMainHandler(ctx):
 
     argvs = [
         bytes(TARGET.encode('utf-8')),  # argv[0]
-        bytes(b'a' * 70),               # argv[1]
+        bytes(b'a' * 14),               # argv[1]
     ]
 
     # Define argc / argv
@@ -267,9 +195,9 @@ def libcMainHandler(ctx):
     ctx.setConcreteRegisterValue(ctx.registers.rdi, argc)
     ctx.setConcreteRegisterValue(ctx.registers.rsi, argv)
 
-    # Symbolize the first 51 bytes of the argv[1]
+    # Symbolize argv[1]
     argv1 = ctx.getConcreteMemoryValue(MemoryAccess(ctx.getConcreteRegisterValue(ctx.registers.rsi) + 8, CPUSIZE.QWORD))
-    for index in range(51):
+    for index in range(len(argvs[1])):
         var = ctx.symbolizeMemory(MemoryAccess(argv1+index, CPUSIZE.BYTE))
 
     return 0
@@ -278,11 +206,9 @@ def libcMainHandler(ctx):
 # Functions to emulate
 customRelocation = [
     ('__libc_start_main', libcMainHandler, BASE_PLT + 0),
-    ('exit',              exitHandler,     BASE_PLT + 1),
-    ('printf',            printfHandler,   BASE_PLT + 2),
-    ('putchar',           putcharHandler,  BASE_PLT + 3),
-    ('puts',              putsHandler,     BASE_PLT + 4),
-    ('strncpy',           strncpyHandler,  BASE_PLT + 5),
+    ('rand',              randHandler,     BASE_PLT + 1),
+    ('strlen',            strlenHandler,   BASE_PLT + 2),
+    ('strncpy',           strncpyHandler,  BASE_PLT + 3),
 ]
 
 
@@ -306,10 +232,13 @@ def hookingHandler(ctx):
     return
 
 
+def denied_access():
+    debug('NOPE - ACCESS DENIED!')
+    sys.exit(-1)
+
+
 # Emulate the binary.
 def emulate(ctx, pc):
-    global conditions
-
     count = 0
     while pc:
         # Fetch opcodes
@@ -320,20 +249,39 @@ def emulate(ctx, pc):
         instruction.setOpcode(opcodes)
         instruction.setAddress(pc)
 
-        # Process
+        # In this challenge there are a lot of instructions which are not
+        # supported by Triton, like:
+        #
+        #   .text:00000000004008D4 cvtsi2ss xmm0, eax
+        #   .text:00000000004008D8 movss   xmm1, cs:dword_401B40
+        #   .text:00000000004008E0 divss   xmm0, xmm1
+        #   .text:00000000004008E4 movss   [rbp+var_4], xmm0
+        #   .text:00000000004008E9 movss   xmm0, [rbp+var_4]
+        #   .text:00000000004008EE mulss   xmm0, [rbp+var_8]
+        #   .text:00000000004008F3 movss   [rbp+var_4], xmm0
+        #   .text:00000000004008F8 movss   xmm0, [rbp+var_8]
+        #   .text:00000000004008FD addss   xmm0, [rbp+var_4]
+        #
+        # Luckily, these instructions do not infer in constraints to solve the
+        # challenge. So, in this case we just skip them :).
         if ctx.processing(instruction) == False:
-            debug('[-] Instruction not supported: %s' %(str(instruction)))
-            break
+            pc = instruction.getNextAddress()
+            continue
 
-        count += 1
+        if instruction.getAddress() == 0x40074D:
+            denied_access()
 
-        #print(instruction)
+        if instruction.getAddress() == 0x401A55:
+            code = getMemoryString(ctx, ctx.getConcreteRegisterValue(ctx.registers.edx))
+            code = bytearray(14)
+            for k, v in sorted(ctx.getSymbolicVariables().items()):
+                code[k] = ctx.getConcreteVariableValue(v) & 0xff
 
-        if instruction.getType() == OPCODE.X86.HLT:
-            break
-
-        # Simulate routines
-        hookingHandler(ctx)
+            if code == b'4ngrman4gem3nt':
+                debug('[+] OK - ACCESS GRANTED: CODE{%s}' %(bytes(code)))
+                sys.exit(0)
+            else:
+                denied_access()
 
         if instruction.getAddress() in conditions:
             zf  = ctx.getSymbolicRegister(ctx.registers.zf).getAst()
@@ -342,9 +290,19 @@ def emulate(ctx, pc):
             mod = ctx.getModel(ctx.getPathPredicate())
             for k,v in list(mod.items()):
                 ctx.setConcreteVariableValue(ctx.getSymbolicVariable(v.getId()), v.getValue())
+            debug('[+] Solve constraint at %x' %(instruction.getAddress()))
+
+        if instruction.getType() == OPCODE.X86.HLT:
+            break
+
+        # Simulate routines
+        hookingHandler(ctx)
 
         # Next
         pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
+
+        count += 1
+
 
     debug('[+] Instruction executed: %d' %(count))
     return
@@ -414,9 +372,6 @@ def main():
     # Set optimization
     ctx.setMode(MODE.ALIGNED_MEMORY, True)
     ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
-
-    # AST representation as Python syntax
-    ctx.setAstRepresentationMode(AST_REPRESENTATION.SMT)
 
     # Parse the binary
     binary = lief.parse(TARGET)
