@@ -6,7 +6,6 @@
 *.nam
 *.o
 *.pyc
-*.so
 *.swp
 *.til
 .DS_Store
