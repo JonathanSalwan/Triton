@@ -440,6 +440,60 @@ int test_8(void) {
 }
 
 
+int test_9(void) {
+  triton::API api;
+
+  api.setArchitecture(triton::arch::ARCH_X86_64);
+
+  triton::engines::symbolic::PathConstraint pco;
+  auto node = api.getAstContext()->equal(
+      api.getAstContext()->bvtrue(), api.getAstContext()->bvtrue());
+  pco.addBranchConstraint(false, 0x123, 0x100, node);
+  pco.addBranchConstraint(true,  0x123, 0x200, node);
+  pco.addBranchConstraint(false, 0x123, 0x300, node);
+  api.pushPathConstraint(pco);
+
+  if (api.getPathConstraints().size() != 1) {
+    std::cerr << "test_9: KO (pathConstraints size != 1)" << std::endl;
+    return 1;
+  }
+
+  auto branches = api.getPathConstraints().at(0).getBranchConstraints();
+  if (branches.size() != 3) {
+    std::cerr << "test_9: KO (branches size != 3)" << std::endl;
+    return 1;
+  }
+
+  auto br1 = branches.at(0);
+  if ((std::get<0>(br1) != false) ||
+      (std::get<1>(br1) != 0x123) ||
+      (std::get<2>(br1) != 0x100) ||
+      (std::get<3>(br1)->getHash() != node->getHash())) {
+    std::cerr << "test_9: KO (wrong br1)" << std::endl;
+    return 1;
+  }
+  auto br2 = branches.at(1);
+  if ((std::get<0>(br2) != true)  ||
+      (std::get<1>(br2) != 0x123) ||
+      (std::get<2>(br2) != 0x200) ||
+      (std::get<3>(br2)->getHash() != node->getHash())) {
+    std::cerr << "test_9: KO (wrong br2)" << std::endl;
+    return 1;
+  }
+  auto br3 = branches.at(2);
+  if ((std::get<0>(br3) != false) ||
+      (std::get<1>(br3) != 0x123) ||
+      (std::get<2>(br3) != 0x300) ||
+      (std::get<3>(br3)->getHash() != node->getHash())) {
+    std::cerr << "test_9: KO (wrong br3)" << std::endl;
+    return 1;
+  }
+
+  std::cout << "test_9: OK" << std::endl;
+  return 0;
+}
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -463,6 +517,9 @@ int main(int ac, const char **av) {
     return 1;
 
   if (test_8())
+    return 1;
+
+  if (test_9())
     return 1;
 
   return 0;

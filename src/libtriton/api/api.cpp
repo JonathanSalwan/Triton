@@ -941,6 +941,12 @@ namespace triton {
   }
 
 
+  void API::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco) {
+    this->checkSymbolic();
+    this->symbolic->pushPathConstraint(pco);
+  }
+
+
   void API::popPathConstraint(void) {
     this->checkSymbolic();
     this->symbolic->popPathConstraint();

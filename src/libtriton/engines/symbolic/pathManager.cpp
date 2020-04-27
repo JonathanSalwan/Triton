@@ -181,7 +181,7 @@ namespace triton {
       }
 
 
-      /* Pushs constraints to the current path predicate. */
+      /* Pushes constraint created from node to the current path predicate. */
       void PathManager::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
         triton::engines::symbolic::PathConstraint pco;
 
@@ -195,6 +195,12 @@ namespace triton {
           node  /* expr which must be true to take the branch */
         );
 
+        this->pathConstraints.push_back(pco);
+      }
+
+
+      /* Pushes constraint to the current path predicate. */
+      void PathManager::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco) {
         this->pathConstraints.push_back(pco);
       }
 
