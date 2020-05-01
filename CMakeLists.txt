@@ -109,8 +109,17 @@ else()
     set(ARCHITECTURE i386)
 endif()
 
-if(${TARGET} MATCHES "ia32")
+if(NOT ${ARCHITECTURE} STREQUAL "i386" AND "${TARGET}" MATCHES "ia32")
     set(ARCHITECTURE i386)
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # Set appropriate compile and linker flags
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+        if(NOT STATICLIB)
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32")
+        endif()
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
+    endif()
 endif()
 
 # Read the build version
