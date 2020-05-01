@@ -1588,7 +1588,7 @@ namespace triton {
         Z3_ast ast    = Z3_translate(expr.ctx(), expr, z3Ctx);
 
         // Check that everything went fine
-        if (Z3_get_error_code(expr.ctx()) != Z3_OK) {
+        if (Z3_get_error_code(z3Ctx) != Z3_OK) {
           Py_DECREF(z3mod);
           return PyErr_Format(PyExc_RuntimeError, "tritonToZ3(): Z3 AST translation failed.");
         }
