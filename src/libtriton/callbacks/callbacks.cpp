@@ -15,7 +15,7 @@ namespace triton {
   namespace callbacks {
 
     Callbacks::Callbacks(triton::API& api) : api(api) {
-      this->isDefined = false;
+      this->defined   = false;
       this->mget      = false;
       this->mload     = false;
       this->mput      = false;
@@ -25,31 +25,31 @@ namespace triton {
 
     void Callbacks::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
       this->getConcreteMemoryValueCallbacks.push_back(cb);
-      this->isDefined = true;
+      this->defined = true;
     }
 
 
     void Callbacks::addCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
       this->getConcreteRegisterValueCallbacks.push_back(cb);
-      this->isDefined = true;
+      this->defined = true;
     }
 
 
     void Callbacks::addCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
       this->setConcreteMemoryValueCallbacks.push_back(cb);
-      this->isDefined = true;
+      this->defined = true;
     }
 
 
     void Callbacks::addCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
       this->setConcreteRegisterValueCallbacks.push_back(cb);
-      this->isDefined = true;
+      this->defined = true;
     }
 
 
     void Callbacks::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
       this->symbolicSimplificationCallbacks.push_back(cb);
-      this->isDefined = true;
+      this->defined = true;
     }
 
 
@@ -59,41 +59,47 @@ namespace triton {
       this->setConcreteMemoryValueCallbacks.clear();
       this->setConcreteRegisterValueCallbacks.clear();
       this->symbolicSimplificationCallbacks.clear();
+      this->defined = false;
     }
 
 
     void Callbacks::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
       this->getConcreteMemoryValueCallbacks.remove(cb);
-      if (this->countCallbacks() == 0)
-        this->isDefined = false;
+      if (this->countCallbacks() == 0) {
+        this->defined = false;
+      }
     }
 
 
     void Callbacks::removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
       this->getConcreteRegisterValueCallbacks.remove(cb);
-      if (this->countCallbacks() == 0)
-        this->isDefined = false;
+      if (this->countCallbacks() == 0) {
+        this->defined = false;
+      }
     }
 
 
     void Callbacks::removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
       this->setConcreteMemoryValueCallbacks.remove(cb);
-      if (this->countCallbacks() == 0)
-        this->isDefined = false;
+      if (this->countCallbacks() == 0) {
+        this->defined = false;
+      }
     }
 
 
     void Callbacks::removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
       this->setConcreteRegisterValueCallbacks.remove(cb);
-      if (this->countCallbacks() == 0)
-        this->isDefined = false;
+      if (this->countCallbacks() == 0) {
+        this->defined = false;
+      }
     }
 
 
     void Callbacks::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
       this->symbolicSimplificationCallbacks.remove(cb);
-      if (this->countCallbacks() == 0)
-        this->isDefined = false;
+      if (this->countCallbacks() == 0) {
+        this->defined = false;
+      }
     }
 
 
@@ -127,8 +133,9 @@ namespace triton {
           for (auto& function: this->getConcreteMemoryValueCallbacks) {
             this->mload = true;
             function(this->api, mem);
-            if (mem.getLeaAst() != nullptr)
-                this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem));
+            if (mem.getLeaAst() != nullptr) {
+              this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem));
+            }
             this->mload = false;
           }
 
@@ -220,6 +227,25 @@ namespace triton {
       count += this->symbolicSimplificationCallbacks.size();
 
       return count;
+    }
+
+
+    bool Callbacks::isDefined(triton::callbacks::callback_e kind) const {
+      switch (kind) {
+        case GET_CONCRETE_MEMORY_VALUE:   return !this->getConcreteMemoryValueCallbacks.empty();
+        case GET_CONCRETE_REGISTER_VALUE: return !this->getConcreteRegisterValueCallbacks.empty();
+        case SET_CONCRETE_MEMORY_VALUE:   return !this->setConcreteMemoryValueCallbacks.empty();
+        case SET_CONCRETE_REGISTER_VALUE: return !this->setConcreteRegisterValueCallbacks.empty();
+        case SYMBOLIC_SIMPLIFICATION:     return !this->symbolicSimplificationCallbacks.empty();
+        default: {
+          return false;
+        }
+      }
+    }
+
+
+    bool Callbacks::isDefined(void) const {
+      return this->defined;
     }
 
   }; /* callbacks namespace */

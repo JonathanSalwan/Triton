@@ -179,7 +179,7 @@ namespace triton {
         if (node == nullptr)
           throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
-        if (this->callbacks) {
+        if (this->callbacks && this->callbacks->isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION)) {
           snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
           /*
            *  We use a worklist strategy to avoid recursive calls

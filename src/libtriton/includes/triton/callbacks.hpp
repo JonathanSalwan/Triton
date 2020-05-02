@@ -93,6 +93,9 @@ namespace triton {
         //! Mutex for the setConcreteMemoryValue callback
         std::atomic<bool> mstore;
 
+        //! True if there is at least one callback defined.
+        std::atomic<bool> defined;
+
       protected:
         //! [c++] Callbacks for all concrete memory needs (LOAD).
         std::list<triton::callbacks::getConcreteMemoryValueCallback> getConcreteMemoryValueCallbacks;
@@ -113,9 +116,6 @@ namespace triton {
         triton::usize countCallbacks(void) const;
 
       public:
-        //! True if there is at least one callback defined.
-        std::atomic<bool> isDefined;
-
         //! Constructor.
         TRITON_EXPORT Callbacks(triton::API& api);
 
@@ -166,6 +166,12 @@ namespace triton {
 
         //! Processes callbacks according to the kind and the C++ polymorphism.
         TRITON_EXPORT void processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg, const triton::uint512& value);
+
+        //! Returns true if the callback is defined.
+        TRITON_EXPORT bool isDefined(triton::callbacks::callback_e kind) const;
+
+        //! Returns true if at least one callback is defined.
+        TRITON_EXPORT bool isDefined(void) const;
     };
 
   /*! @} End of callbacks namespace */
