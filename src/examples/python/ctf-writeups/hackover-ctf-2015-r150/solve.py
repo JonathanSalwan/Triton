@@ -11,8 +11,9 @@
 ##
 ##  Output:
 ##
-##   $ ./solve.py ./rvs
+##   $ time ./solve.py
 ##   PASSWORD:hackover15{I_USE_GOTO_WHEREEVER_I_W4NT}
+##   python ./solve.py  0.11s user 0.00s system 99% cpu 0.111 total
 ##
 
 from __future__ import print_function
@@ -225,6 +226,7 @@ def hookingHandler():
 
 # Emulate the binary.
 def emulate(pc):
+    flag  = bytearray(39)
     count = 0
     while pc:
         # Fetch opcode
@@ -237,7 +239,6 @@ def emulate(pc):
 
         # Process
         Triton.processing(instruction)
-        count += 1
 
         #print(instruction)
 
@@ -246,8 +247,10 @@ def emulate(pc):
         # 1 byte.
         for mem, memAst in instruction.getStoreAccess():
             if mem.getSize() == CPUSIZE.BYTE:
-                sys.stdout.write(chr(Triton.getConcreteMemoryValue(mem)))
-        # End of solution
+                value = Triton.getConcreteMemoryValue(mem)
+                if value:
+                    flag[count] = value
+                    count += 1
 
         if instruction.getType() == OPCODE.X86.HLT:
             break
@@ -258,8 +261,11 @@ def emulate(pc):
         # Next
         pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
 
-    debug('Instruction executed: %d' %(count))
-    return
+    print(' %s' % flag)
+    if flag == b"hackover15{I_USE_GOTO_WHEREEVER_I_W4NT}":
+        return 0
+
+    return -1
 
 
 def loadBinary(filename):
@@ -314,7 +320,7 @@ if __name__ == '__main__':
 
     # Let's emulate the binary from the entry point
     debug('Starting emulation')
-    emulate(binary.entrypoint)
+    ret = emulate(binary.entrypoint)
     debug('Emulation done')
 
-    sys.exit(0)
+    sys.exit(ret)

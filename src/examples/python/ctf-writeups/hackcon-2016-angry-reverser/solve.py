@@ -62,7 +62,7 @@
 ##  [+] Instruction executed: 4453
 ##  [+] Emulation done.
 ##
-##  python solve.py  279.91s user 0.13s system 99% cpu 4:40.07 total
+##  python solve.py  113.53s user 0.09s system 99% cpu 1:53.79 total
 ##
 
 from __future__ import print_function

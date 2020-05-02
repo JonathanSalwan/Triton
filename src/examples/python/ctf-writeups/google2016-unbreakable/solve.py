@@ -32,7 +32,7 @@
 ##  Thank you - product activated!
 ##  [+] exit hooked
 ##  Flag: CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}
-##  python ./solve.py  14.32s user 0.03s system 99% cpu 14.363 total
+##  python solve.py  8.04s user 0.02s system 99% cpu 8.060 total
 ##
 
 from __future__ import print_function
