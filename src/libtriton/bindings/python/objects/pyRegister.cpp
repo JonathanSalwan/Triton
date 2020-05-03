@@ -290,8 +290,8 @@ namespace triton {
       }
 
 
-      static Py_hash_t Register_hash(PyObject* self) {
-        return static_cast<Py_hash_t>(PyRegister_AsRegister(self)->getId());
+      static long Register_hash(PyObject* self) {
+        return static_cast<long>(PyRegister_AsRegister(self)->getId());
       }
 
 

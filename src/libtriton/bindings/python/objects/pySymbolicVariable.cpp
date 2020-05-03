@@ -216,8 +216,9 @@ namespace triton {
       }
 
 
-      static Py_hash_t SymbolicVariable_hash(PyObject* self) {
-        return static_cast<Py_hash_t>(PySymbolicVariable_AsSymbolicVariable(self)->getId());
+      static long SymbolicVariable_hash(PyObject* self) {
+        /* NOTE: Should be a problem if there is more than 0xffffffff variables (casting from usize to long). */
+        return static_cast<long>(PySymbolicVariable_AsSymbolicVariable(self)->getId());
       }
 
 
