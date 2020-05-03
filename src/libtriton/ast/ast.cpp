@@ -2917,7 +2917,7 @@ namespace triton {
 
       this->hash = this->type;
       for (char c : this->symVar->getName()) {
-        this->hash = triton::ast::rotl(c ^ this->hash ^ triton::ast::hash2n(this->hash, index++), id);
+        this->hash = triton::ast::rotl(c ^ this->hash ^ triton::ast::hash2n(this->hash, index++), (id & 511));
       }
 
       this->hash = triton::ast::rotl(this->hash, this->level);
@@ -3029,7 +3029,7 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    triton::uint512 hash2n(triton::uint512 hash, triton::usize n) {
+    triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n) {
       triton::uint512 mask = -1;
       for (triton::uint32 i = 0; i < n; i++)
         hash = ((hash * hash) & mask);
