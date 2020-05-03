@@ -394,7 +394,6 @@ namespace triton {
 
 
       static long AstNode_hash(PyObject* self) {
-        /* NOTE: Should be a problem if LSB are identical (casting from void* to long). */
         return static_cast<long>(reinterpret_cast<intptr_t>(PyAstNode_AsAstNode(self).get()) & 0xffffffff);
       }
 
