@@ -59,8 +59,6 @@ namespace triton {
         this->callbacks = other.callbacks;
         this->memory    = other.memory;
 
-        this->disassInit();
-
         std::memcpy(this->eax,     other.eax,    sizeof(this->eax));
         std::memcpy(this->ebx,     other.ebx,    sizeof(this->ebx));
         std::memcpy(this->ecx,     other.ecx,    sizeof(this->ecx));

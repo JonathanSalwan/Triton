@@ -19,7 +19,10 @@
 
 
 int test_1(void) {
-  triton::arch::x86::x8664Cpu   cpy;
+  triton::arch::x86::x8664Cpu   cpy1;
+  triton::arch::x86::x8664Cpu*  cpy2;
+  triton::arch::x86::x8664Cpu*  cpy3;
+  triton::arch::x86::x8664Cpu   cpu;
   triton::API                   api;
 
   api.setArchitecture(triton::arch::ARCH_X86_64);
@@ -28,9 +31,29 @@ int test_1(void) {
   if (api.getConcreteRegisterValue(api.registers.x86_rax) != 12345)
     return 1;
 
-  cpy = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
+  cpy1 = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
+  if (cpy1.getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
     std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+    return 1;
+  }
+
+  cpy2 = new triton::arch::x86::x8664Cpu(*reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance()));
+  if (cpy2->getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
+    std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+    return 1;
+  }
+
+  cpy3 = new triton::arch::x86::x8664Cpu();
+  *cpy3 = *cpy2;
+  if (cpy3->getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
+    std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+    return 1;
+  }
+
+  triton::arch::Instruction inst((const unsigned char*)"\x48\x89\xd8", 3); // mov rax, rbx
+  cpu.disassembly(inst);
+  if (inst.getType() != triton::arch::x86::ID_INS_MOV) {
+    std::cerr << "test_1: KO (getType != ID_INS_MOV)" << std::endl;
     return 1;
   }
 
