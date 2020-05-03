@@ -7,7 +7,10 @@
 ##  In this solution, we fully emulate the binary and we solve each branch
 ##  to go through the good path and print the serial. The particularity of this
 ##  challenge is that we need to emulate the real behavior of srand and rand of
-##  the libc. Thus, we use ctypes to load those two functions.
+##  the libc. Thus, we use ctypes to load those two functions. However, in order
+##  to be able to use this example as unittest on Linux, Winwdows and OSX, I've
+##  hardcoded the return values of rand() with known inputs. If you want to use
+##  the ctypes verion, just set the UNITTEST flag to False.
 ##
 ##  Output:
 ##
@@ -32,10 +35,11 @@ import string
 import sys
 import lief
 import os
+import platform
 
-TARGET = os.path.join(os.path.dirname(__file__), 'catalyst')
-LIBC   = os.path.join(os.path.dirname(__file__), 'libc.so.6')
-DEBUG  = False
+TARGET   = os.path.join(os.path.dirname(__file__), 'catalyst')
+DEBUG    = False
+UNITTEST = True
 
 # The debug function
 def debug(s):
@@ -54,7 +58,11 @@ mallocBase = BASE_ALLOC
 # Used for srand and rand. Those two functions are
 # used for the flag computation and cannot be simulated
 # in Python
-libc = ctypes.CDLL(LIBC)
+if not UNITTEST:
+    assert(platform.system() == 'Linux')
+    libc = ctypes.CDLL('libc.so.6')
+
+# The flag at the end of the analysis
 flag = str()
 
 scanf_inputs = [
@@ -212,14 +220,33 @@ def fflushHandler(ctx):
 def srandHandler(ctx):
     debug('[+] srand hooked')
     arg1 = ctx.getConcreteRegisterValue(ctx.registers.rdi)
-    libc.srand(arg1)
+    if not UNITTEST:
+        libc.srand(arg1)
     return None
 
 
 def randHandler(ctx):
     debug('[+] rand hooked')
-    ret = libc.rand()
-    return ret
+    if not UNITTEST:
+        return libc.rand()
+    else:
+        rax = ctx.getConcreteRegisterValue(ctx.registers.rax)
+        oracles = {
+            # in rax   :  out rax
+            0x030003e8 : 0x00684749,
+            0x030003ec : 0x673ce537,
+            0x030003f0 : 0x7b4505e7,
+            0x030003f4 : 0x70a0b262,
+            0x030003f8 : 0x33d5253c,
+            0x030003fc : 0x515a7675,
+            0x03000400 : 0x596d7d5d,
+            0x03000404 : 0x7cd29049,
+            0x03000408 : 0x59e72db6,
+            0x0300040c : 0x4654600d,
+        }
+        if rax in oracles:
+            return oracles[rax]
+    return 0
 
 
 def scanfHandler(ctx):
