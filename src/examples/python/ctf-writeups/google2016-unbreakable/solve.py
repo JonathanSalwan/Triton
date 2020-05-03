@@ -389,10 +389,6 @@ def makeRelocation(ctx, binary):
 
 
 def run(ctx, binary):
-    # Concretize previous context
-    ctx.concretizeAllMemory()
-    ctx.concretizeAllRegister()
-
     # Define a fake stack
     ctx.setConcreteRegisterValue(ctx.registers.rbp, BASE_STACK)
     ctx.setConcreteRegisterValue(ctx.registers.rsp, BASE_STACK)
@@ -429,7 +425,7 @@ def main():
 
     # Init and emulate
     run(ctx, binary)
-    return 0
+    return -1
 
 
 if __name__ == '__main__':
