@@ -76,7 +76,7 @@ namespace triton {
 
           private:
             //! Rotates right.
-            uint32_t ror(uint32_t value, unsigned int count);
+            triton::uint32 ror(triton::uint32 value, triton::uint32 count);
 
             //! Execution state update semantics.
             void updateExecutionState(triton::arch::OperandWrapper& dst, const triton::ast::SharedAbstractNode& node);

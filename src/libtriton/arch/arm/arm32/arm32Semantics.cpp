@@ -217,10 +217,10 @@ namespace triton {
         }
 
 
-        uint32_t Arm32Semantics::ror(uint32_t value, unsigned int count) {
-          const unsigned int mask = 8 * sizeof(value) - 1;
-          unsigned int sr_count = count & mask;
-          unsigned int sl_count = (-count) & mask;
+        triton::uint32 Arm32Semantics::ror(triton::uint32 value, triton::uint32 count) {
+          const triton::uint32 mask = 0x1f;
+          triton::uint32 sr_count = count & mask;
+          triton::uint32 sl_count = 32 - count;
           return (value >> sr_count) | (value << sl_count);
         }
 
@@ -891,8 +891,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -958,8 +958,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -1021,8 +1021,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -1187,8 +1187,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -1475,8 +1475,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -2203,8 +2203,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -2312,12 +2312,13 @@ namespace triton {
         void Arm32Semantics::push_s(triton::arch::Instruction& inst) {
           auto stack          = this->architecture->getStackPointer();
           triton::uint32 size = stack.getSize();
+          triton::usize  nuop = inst.operands.size() - 1;
 
           /* Create the semantics */
           auto cond = this->getCodeConditionAst(inst);
 
-          for (int i = inst.operands.size()-1; i >= 0; i--) {
-            auto& src = inst.operands[i];
+          for (triton::uint32 i = 0; i <= nuop; i++) {
+            auto& src = inst.operands[nuop - i];
 
             /* Create symbolic operands */
             auto op = this->getArm32SourceOperandAst(inst, src);
@@ -2522,8 +2523,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -2586,8 +2587,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -2654,8 +2655,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
@@ -3262,8 +3263,8 @@ namespace triton {
 
             if (src2.getType() == OP_IMM && src3.getType() == OP_IMM) {
               auto size  = src2.getSize();
-              auto value = src2.getImmediate().getValue();
-              auto shift = src3.getImmediate().getValue();
+              auto value = static_cast<triton::uint32>(src2.getImmediate().getValue());
+              auto shift = static_cast<triton::uint32>(src3.getImmediate().getValue());
 
               /* Replace src2 with the expanded immediate */
               src2 = triton::arch::OperandWrapper(triton::arch::Immediate(this->ror(value, shift), size));
