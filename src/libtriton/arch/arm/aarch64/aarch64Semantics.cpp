@@ -1099,9 +1099,8 @@ namespace triton {
           auto& src1  = inst.operands[1]; // Reg
           auto& src2  = inst.operands[2]; // Imm (Lsb)
           auto& src3  = inst.operands[3]; // Imm (Width)
-
-          auto  lsb   = src2.getImmediate().getValue();
-          auto  width = src3.getImmediate().getValue();
+          auto  lsb   = static_cast<uint32>(src2.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src3.getImmediate().getValue());
 
           if (lsb + width > dst.getBitSize())
             throw triton::exceptions::Semantics("AArch64Semantics::bfi_s(): Invalid lsb and width.");
@@ -1673,7 +1672,7 @@ namespace triton {
           auto& src1 = inst.operands[1];
           auto& src2 = inst.operands[2];
           auto& src3 = inst.operands[3];
-          auto  lsb  = src3.getImmediate().getValue();
+          auto  lsb  = static_cast<uint32>(src3.getImmediate().getValue());
 
           /* Create symbolic operands */
           auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
@@ -2965,8 +2964,8 @@ namespace triton {
           auto& src1  = inst.operands[1];
           auto& src2  = inst.operands[2];
           auto& src3  = inst.operands[3];
-          auto  lsb   = src2.getImmediate().getValue();
-          auto  width = src3.getImmediate().getValue();
+          auto  lsb   = static_cast<uint32>(src2.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src3.getImmediate().getValue());
 
           if (lsb + width > dst.getBitSize())
             throw triton::exceptions::Semantics("AArch64Semantics::sbfx_s(): Invalid lsb and width.");
@@ -3685,8 +3684,8 @@ namespace triton {
           auto& src1  = inst.operands[1];
           auto& src2  = inst.operands[2];
           auto& src3  = inst.operands[3];
-          auto  lsb   = src2.getImmediate().getValue();
-          auto  width = src3.getImmediate().getValue();
+          auto  lsb   = static_cast<uint32>(src2.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src3.getImmediate().getValue());
 
           if (lsb + width > dst.getBitSize())
             throw triton::exceptions::Semantics("AArch64Semantics::ubfiz_s(): Invalid lsb and width.");
@@ -3726,8 +3725,8 @@ namespace triton {
           auto& src1  = inst.operands[1];
           auto& src2  = inst.operands[2];
           auto& src3  = inst.operands[3];
-          auto  lsb   = src2.getImmediate().getValue();
-          auto  width = src3.getImmediate().getValue();
+          auto  lsb   = static_cast<uint32>(src2.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src3.getImmediate().getValue());
 
           if (lsb + width > dst.getBitSize())
             throw triton::exceptions::Semantics("AArch64Semantics::ubfx_s(): Invalid lsb and width.");

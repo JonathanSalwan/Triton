@@ -796,7 +796,7 @@ namespace triton {
     };
 
     //! Custom hash2n function for hash routine.
-    triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n);
+    triton::uint512 hash2n(triton::uint512 hash, triton::usize n);
 
     //! Custom rotate left function for hash routine.
     triton::uint512 rotl(const triton::uint512& value, triton::uint32 shift);

@@ -393,8 +393,8 @@ namespace triton {
       #endif
 
 
-      static long AstNode_hash(PyObject* self) {
-        return reinterpret_cast<long>(reinterpret_cast<void*>(PyAstNode_AsAstNode(self).get()));
+      static Py_hash_t AstNode_hash(PyObject* self) {
+        return reinterpret_cast<Py_hash_t>(reinterpret_cast<void*>(PyAstNode_AsAstNode(self).get()));
       }
 
 

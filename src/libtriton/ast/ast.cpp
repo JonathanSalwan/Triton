@@ -3029,7 +3029,7 @@ namespace triton {
 namespace triton {
   namespace ast {
 
-    triton::uint512 hash2n(triton::uint512 hash, triton::uint32 n) {
+    triton::uint512 hash2n(triton::uint512 hash, triton::usize n) {
       triton::uint512 mask = -1;
       for (triton::uint32 i = 0; i < n; i++)
         hash = ((hash * hash) & mask);
