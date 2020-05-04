@@ -1076,7 +1076,7 @@ namespace triton {
 
       static PyObject* AstContext_declare(PyObject* self, PyObject* var) {
         if (!PyAstNode_Check(var))
-          return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
+          return PyErr_Format(PyExc_TypeError, "declare(): expected a AstNode as argument");
 
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->declare(PyAstNode_AsAstNode(var)));
