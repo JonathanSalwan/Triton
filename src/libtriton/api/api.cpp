@@ -1034,6 +1034,12 @@ namespace triton {
   }
 
 
+  std::ostream& API::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+    this->checkSymbolic();
+    return this->symbolic->printSlicedExpressions(stream, expr, assert_);
+  }
+
+
   std::vector<triton::engines::symbolic::SharedSymbolicExpression> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();

@@ -487,6 +487,9 @@ namespace triton {
         //! [**symbolic api**] - Slices all expressions from a given one.
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
+        //! [**symbolic api**] - Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
+        TRITON_EXPORT std::ostream& printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_=false);
+
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
