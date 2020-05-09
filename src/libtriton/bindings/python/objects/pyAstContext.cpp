@@ -1618,7 +1618,7 @@ namespace triton {
         triton::ast::Z3ToTritonAst  z3ToTritonAst{PyAstContext_AsAstContext(self)};
         z3::context                 z3Ctx;
 
-        if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef"))
+        if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef") && std::strcmp(Py_TYPE(expr)->tp_name, "BitVecRef"))
           return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");
 
         PyObject* z3AstPtr = PyObject_GetAttrString(expr, "ast");
