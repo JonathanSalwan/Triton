@@ -5365,13 +5365,14 @@ namespace triton {
                 auto dx    = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, ax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::word, op1), this->astCtxt->sx(triton::bitsize::word, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::word-1, 0, node), ax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dword-1, triton::bitsize::word, node), dx, "IMUL operation");
+                auto node1 = this->astCtxt->bvmul(op1, op2);
+                auto node2 = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::word, op1), this->astCtxt->sx(triton::bitsize::word, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, ax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dword-1, triton::bitsize::word, node2), dx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(ax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(dx, ax);
-                this->cfImul_s(inst, expr1, ax, this->astCtxt->bvmul(op1, op2), node);
-                this->ofImul_s(inst, expr1, ax, this->astCtxt->bvmul(op1, op2), node);
+                this->cfImul_s(inst, expr1, ax, node1, node2);
+                this->ofImul_s(inst, expr1, ax, node1, node2);
                 break;
               }
 
@@ -5381,13 +5382,14 @@ namespace triton {
                 auto edx   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, eax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::dword, op1), this->astCtxt->sx(triton::bitsize::dword, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dword-1, 0, node), eax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, node), edx, "IMUL operation");
+                auto node1 = this->astCtxt->bvmul(op1, op2);
+                auto node2 = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::dword, op1), this->astCtxt->sx(triton::bitsize::dword, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, eax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, node2), edx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(eax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(edx, eax);
-                this->cfImul_s(inst, expr1, eax, this->astCtxt->bvmul(op1, op2), node);
-                this->ofImul_s(inst, expr1, eax, this->astCtxt->bvmul(op1, op2), node);
+                this->cfImul_s(inst, expr1, eax, node1, node2);
+                this->ofImul_s(inst, expr1, eax, node1, node2);
                 break;
               }
 
@@ -5397,13 +5399,14 @@ namespace triton {
                 auto rdx   = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RDX));
                 auto op1   = this->symbolicEngine->getOperandAst(inst, rax);
                 auto op2   = this->symbolicEngine->getOperandAst(inst, src);
-                auto node  = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::qword, op1), this->astCtxt->sx(triton::bitsize::qword, op2));
-                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::qword-1, 0, node), rax, "IMUL operation");
-                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, node), rdx, "IMUL operation");
+                auto node1 = this->astCtxt->bvmul(op1, op2);
+                auto node2 = this->astCtxt->bvmul(this->astCtxt->sx(triton::bitsize::qword, op1), this->astCtxt->sx(triton::bitsize::qword, op2));
+                auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, rax, "IMUL operation");
+                auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, node2), rdx, "IMUL operation");
                 expr1->isTainted = this->taintEngine->taintUnion(rax, src);
                 expr2->isTainted = this->taintEngine->taintUnion(rdx, rax);
-                this->cfImul_s(inst, expr1, rax, this->astCtxt->bvmul(op1, op2), node);
-                this->ofImul_s(inst, expr1, rax, this->astCtxt->bvmul(op1, op2), node);
+                this->cfImul_s(inst, expr1, rax, node1, node2);
+                this->ofImul_s(inst, expr1, rax, node1, node2);
                 break;
               }
 
@@ -5417,11 +5420,19 @@ namespace triton {
             auto& src  = inst.operands[1];
             auto  op1  = this->symbolicEngine->getOperandAst(inst, dst);
             auto  op2  = this->symbolicEngine->getOperandAst(inst, src);
-            auto  node = this->astCtxt->bvmul(this->astCtxt->sx(dst.getBitSize(), op1), this->astCtxt->sx(src.getBitSize(), op2));
-            auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
+            auto  node1 = this->astCtxt->bvmul(op1, op2);
+            auto  node2 = this->astCtxt->bvmul(this->astCtxt->sx(dst.getBitSize(), op1), this->astCtxt->sx(src.getBitSize(), op2));
+            auto  node3 = (dst.getBitSize() == src.getBitSize()) ? node1 : this->astCtxt->extract(dst.getBitSize()-1, 0, node2);
+            // if(dst.getBitSize() == src.getBitSize()) {
+            //   auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "IMUL operation");
+            // }
+            // else {
+            //   auto expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(dst.getBitSize()-1, 0, node2), dst, "IMUL operation");
+            // }
+            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "IMUL operation");
             expr->isTainted = this->taintEngine->taintUnion(dst, src);
-            this->cfImul_s(inst, expr, dst, this->astCtxt->bvmul(op1, op2), node);
-            this->ofImul_s(inst, expr, dst, this->astCtxt->bvmul(op1, op2), node);
+            this->cfImul_s(inst, expr, dst, node1, node2);
+            this->ofImul_s(inst, expr, dst, node1, node2);
             break;
           }
 
@@ -5432,11 +5443,13 @@ namespace triton {
             auto& src2 = inst.operands[2];
             auto  op2  = this->symbolicEngine->getOperandAst(inst, src1);
             auto  op3  = this->symbolicEngine->getOperandAst(inst, src2);
-            auto  node = this->astCtxt->bvmul(this->astCtxt->sx(src1.getBitSize(), op2), this->astCtxt->sx(src2.getBitSize(), op3));
-            auto  expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(dst.getBitSize()-1, 0, node), dst, "IMUL operation");
+            auto  node1 = this->astCtxt->bvmul(op2, op3);
+            auto  node2 = this->astCtxt->bvmul(this->astCtxt->sx(src1.getBitSize(), op2), this->astCtxt->sx(src2.getBitSize(), op3));
+            auto  node3 = (dst.getBitSize() == (src1.getBitSize() == src2.getBitSize())) ? node1 : this->astCtxt->extract(dst.getBitSize()-1, 0, node2);
+            auto  expr = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "IMUL operation");
             expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
-            this->cfImul_s(inst, expr, dst, this->astCtxt->bvmul(op2, op3), node);
-            this->ofImul_s(inst, expr, dst, this->astCtxt->bvmul(op2, op3), node);
+            this->cfImul_s(inst, expr, dst, node1, node2);
+            this->ofImul_s(inst, expr, dst, node1, node2);
             break;
           }
 
@@ -7725,15 +7738,14 @@ namespace triton {
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
-            /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::word, op1), this->astCtxt->zx(triton::bitsize::word, op2));
             /* Create symbolic expression for ax */
-            auto ax = this->astCtxt->extract((triton::bitsize::word - 1), 0, node);
+            auto ax    = this->astCtxt->bvmul(op1, op2);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, ax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for dx */
-            auto dx = this->astCtxt->extract((triton::bitsize::dword - 1), triton::bitsize::word, node);
+            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::word, op1), this->astCtxt->zx(triton::bitsize::word, op2));
+            auto dx    = this->astCtxt->extract((triton::bitsize::dword - 1), triton::bitsize::word, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, dx, dst2, "MUL operation");
             /* Apply the taint */
             expr2->isTainted = this->taintEngine->taintUnion(dst2, src2);
@@ -7752,15 +7764,14 @@ namespace triton {
             /* Create symbolic operands */
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
-            /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::dword, op1), this->astCtxt->zx(triton::bitsize::dword, op2));
             /* Create symbolic expression for eax */
-            auto eax = this->astCtxt->extract((triton::bitsize::dword - 1), 0, node);
+            auto eax   = this->astCtxt->bvmul(op1, op2);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, eax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for edx */
-            auto edx = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, node);
+            auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::dword, op1), this->astCtxt->zx(triton::bitsize::dword, op2));
+            auto edx   = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, edx, dst2, "MUL operation");
             /* Apply the taint */
             expr2->isTainted = this->taintEngine->taintUnion(dst2, src2);
@@ -7780,13 +7791,13 @@ namespace triton {
             auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
             auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
             /* Create the semantics */
-            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::qword, op1), this->astCtxt->zx(triton::bitsize::qword, op2));
             /* Create symbolic expression for eax */
-            auto rax = this->astCtxt->extract((triton::bitsize::qword - 1), 0, node);
+            auto rax = this->astCtxt->bvmul(op1, op2);
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, rax, dst1, "MUL operation");
             /* Apply the taint */
             expr1->isTainted = this->taintEngine->taintUnion(dst1, src2);
             /* Create symbolic expression for rdx */
+            auto node = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::qword, op1), this->astCtxt->zx(triton::bitsize::qword, op2));
             auto rdx = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, node);
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, rdx, dst2, "MUL operation");
             /* Apply the taint */
@@ -7827,10 +7838,10 @@ namespace triton {
 
             /* Create the semantics */
             auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::dword, op1), this->astCtxt->zx(triton::bitsize::dword, op2));
-            auto node1 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, node);
+            auto node1 = this->astCtxt->bvmul(op1, op2);
             auto node2 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, node);
 
-            /* Create symbolic expression for eax */
+            /* Create symbolic expression */
             auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst2, "MULX operation");
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst1, "MULX operation");
 
@@ -7856,7 +7867,7 @@ namespace triton {
 
             /* Create the semantics */
             auto node  = this->astCtxt->bvmul(this->astCtxt->zx(triton::bitsize::qword, op1), this->astCtxt->zx(triton::bitsize::qword, op2));
-            auto node1 = this->astCtxt->extract((triton::bitsize::qword - 1), 0, node);
+            auto node1 = this->astCtxt->bvmul(op1, op2);
             auto node2 = this->astCtxt->extract((triton::bitsize::dqword - 1), triton::bitsize::qword, node);
 
             /* Create symbolic expression for eax */
