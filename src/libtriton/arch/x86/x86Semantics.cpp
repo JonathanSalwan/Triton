@@ -5423,12 +5423,6 @@ namespace triton {
             auto  node1 = this->astCtxt->bvmul(op1, op2);
             auto  node2 = this->astCtxt->bvmul(this->astCtxt->sx(dst.getBitSize(), op1), this->astCtxt->sx(src.getBitSize(), op2));
             auto  node3 = (dst.getBitSize() == src.getBitSize()) ? node1 : this->astCtxt->extract(dst.getBitSize()-1, 0, node2);
-            // if(dst.getBitSize() == src.getBitSize()) {
-            //   auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "IMUL operation");
-            // }
-            // else {
-            //   auto expr = this->symbolicEngine->createSymbolicExpression(inst, this->astCtxt->extract(dst.getBitSize()-1, 0, node2), dst, "IMUL operation");
-            // }
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "IMUL operation");
             expr->isTainted = this->taintEngine->taintUnion(dst, src);
             this->cfImul_s(inst, expr, dst, node1, node2);
