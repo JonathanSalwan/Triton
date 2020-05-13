@@ -203,6 +203,13 @@ namespace triton {
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
+
+          if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+            if (node->isSymbolized() == false) {
+              return this->bv(node->evaluate(), node->getBitvectorSize());
+            }
+          }
+
           return this->collect(node);
         }
 
