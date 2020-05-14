@@ -386,10 +386,12 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3_8) || !IS_PY3_8
       static int MemoryAccess_print(PyObject* self, void* io, int s) {
         std::cout << PyMemoryAccess_AsMemoryAccess(self);
         return 0;
       }
+      #endif
 
 
       static PyObject* MemoryAccess_str(PyObject* self) {
@@ -433,7 +435,11 @@ namespace triton {
         sizeof(MemoryAccess_Object),                /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)MemoryAccess_dealloc,           /* tp_dealloc */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall_offset */
+        #else
         (printfunc)MemoryAccess_print,              /* tp_print */
+        #endif
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -477,6 +483,9 @@ namespace triton {
         #if IS_PY3
         0,                                          /* tp_version_tag */
         0,                                          /* tp_finalize */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall */
+        #endif
         #else
         0                                           /* tp_version_tag */
         #endif
