@@ -5416,14 +5416,13 @@ namespace triton {
 
           /* two operands */
           case 2: {
-            auto& dst  = inst.operands[0];
-            auto& src  = inst.operands[1];
-            auto  op1  = this->symbolicEngine->getOperandAst(inst, dst);
-            auto  op2  = this->symbolicEngine->getOperandAst(inst, src);
+            auto& dst   = inst.operands[0];
+            auto& src   = inst.operands[1];
+            auto  op1   = this->symbolicEngine->getOperandAst(inst, dst);
+            auto  op2   = this->symbolicEngine->getOperandAst(inst, src);
             auto  node1 = this->astCtxt->bvmul(op1, op2);
             auto  node2 = this->astCtxt->bvmul(this->astCtxt->sx(dst.getBitSize(), op1), this->astCtxt->sx(src.getBitSize(), op2));
-            auto  node3 = (dst.getBitSize() == src.getBitSize()) ? node1 : this->astCtxt->extract(dst.getBitSize()-1, 0, node2);
-            auto expr = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "IMUL operation");
+            auto  expr  = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "IMUL operation");
             expr->isTainted = this->taintEngine->taintUnion(dst, src);
             this->cfImul_s(inst, expr, dst, node1, node2);
             this->ofImul_s(inst, expr, dst, node1, node2);
@@ -5432,15 +5431,14 @@ namespace triton {
 
           /* three operands */
           case 3: {
-            auto& dst  = inst.operands[0];
-            auto& src1 = inst.operands[1];
-            auto& src2 = inst.operands[2];
-            auto  op2  = this->symbolicEngine->getOperandAst(inst, src1);
-            auto  op3  = this->symbolicEngine->getOperandAst(inst, src2);
+            auto& dst   = inst.operands[0];
+            auto& src1  = inst.operands[1];
+            auto& src2  = inst.operands[2];
+            auto  op2   = this->symbolicEngine->getOperandAst(inst, src1);
+            auto  op3   = this->astCtxt->sx(src1.getBitSize() - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
             auto  node1 = this->astCtxt->bvmul(op2, op3);
             auto  node2 = this->astCtxt->bvmul(this->astCtxt->sx(src1.getBitSize(), op2), this->astCtxt->sx(src2.getBitSize(), op3));
-            auto  node3 = (dst.getBitSize() == (src1.getBitSize() == src2.getBitSize())) ? node1 : this->astCtxt->extract(dst.getBitSize()-1, 0, node2);
-            auto  expr = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "IMUL operation");
+            auto  expr  = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "IMUL operation");
             expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
             this->cfImul_s(inst, expr, dst, node1, node2);
             this->ofImul_s(inst, expr, dst, node1, node2);
