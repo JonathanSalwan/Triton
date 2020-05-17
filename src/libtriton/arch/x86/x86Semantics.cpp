@@ -8535,7 +8535,9 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVD operation");
 
         /* Update the x87 FPU Tag Word */
-        this->updateFTW(inst, expr);
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
@@ -9052,7 +9054,9 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVQ operation");
 
         /* Update the x87 FPU Tag Word */
-        this->updateFTW(inst, expr);
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         if (dst.getBitSize() == triton::bitsize::dqword && src.getBitSize() == triton::bitsize::dqword)
@@ -9777,6 +9781,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PADDB operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -9820,6 +9829,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PADDD operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -9860,6 +9874,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PADDQ operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -9908,6 +9927,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PADDW operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -9930,6 +9954,9 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PAND operation");
 
+        /* Update the x87 FPU Tag Word */
+        this->updateFTW(inst, expr);
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -9951,6 +9978,9 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PANDN operation");
+
+        /* Update the x87 FPU Tag Word */
+        this->updateFTW(inst, expr);
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -11808,6 +11838,9 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POR operation");
 
+        /* Update the x87 FPU Tag Word */
+        this->updateFTW(inst, expr);
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12150,6 +12183,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLD operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12225,6 +12263,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLQ operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12269,6 +12312,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLW operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -12357,6 +12405,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSUBB operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12400,6 +12453,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSUBD operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12440,6 +12498,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSUBQ operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -12487,6 +12550,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSUBW operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -12584,6 +12652,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKHBW operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12628,6 +12701,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKHDQ operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -12717,6 +12795,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKHWD operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12780,6 +12863,11 @@ namespace triton {
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKLBW operation");
 
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
+
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
@@ -12824,6 +12912,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKLDQ operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -12912,6 +13005,11 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PUNPCKLWD operation");
+
+        /* Update the x87 FPU Tag Word */
+        if (dst.getBitSize() == triton::bitsize::qword) {
+          this->updateFTW(inst, expr);
+        }
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
@@ -13216,6 +13314,9 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PXOR operation");
+
+        /* Update the x87 FPU Tag Word */
+        this->updateFTW(inst, expr);
 
         /* Spread taint */
         if (dst.getType() == OP_REG && src.getRegister() == dst.getRegister())
