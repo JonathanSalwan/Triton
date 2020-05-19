@@ -140,14 +140,17 @@ namespace triton {
 
         /* Multiple branches */
         if (pc->getType() == triton::ast::ITE_NODE) {
+          /* Condition */
+          triton::ast::SharedAbstractNode cond = pc->getChildren()[0];
+
+          /* Then */
           triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
+          triton::ast::SharedAbstractNode bb1pc = cond;
+
+          /* Else */
           triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
+          triton::ast::SharedAbstractNode bb2pc = this->astCtxt->lnot(cond);
 
-          triton::ast::SharedAbstractNode bb1pc = (bb1 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
-                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
-
-          triton::ast::SharedAbstractNode bb2pc = (bb2 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
-                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
           /* Branch A */
           pco.addBranchConstraint(
             bb1 == dstAddr, /* is taken ? */
