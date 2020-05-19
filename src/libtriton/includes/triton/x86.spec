@@ -275,7 +275,7 @@ REG_SPEC_NO_CAPSTONE(FCW_UM,  fcw_um,  0, 0, FCW_UM,  0, 0, FCW_UM,  true)  // u
 REG_SPEC_NO_CAPSTONE(FCW_PM,  fcw_pm,  0, 0, FCW_PM,  0, 0, FCW_PM,  true)  // pm (Precision Mask)
 REG_SPEC_NO_CAPSTONE(FCW_PC,  fcw_pc,  1, 0, FCW_PC,  1, 0, FCW_PC,  true)  // pc (Precision Control)
 REG_SPEC_NO_CAPSTONE(FCW_RC,  fcw_rc,  1, 0, FCW_RC,  1, 0, FCW_RC,  true)  // rc (Rounding Control)
-REG_SPEC_NO_CAPSTONE(FCW_X,   fcw_x,   1, 0, FCW_X,   1, 0, FCW_X,   true)  // x  (Infinity Control)
+REG_SPEC_NO_CAPSTONE(FCW_X,   fcw_x,   0, 0, FCW_X,   0, 0, FCW_X,   true)  // x  (Infinity Control)
 
 REG_SPEC_NO_CAPSTONE(FSW_IE,  fsw_ie,  0, 0, FSW_IE,  0, 0, FSW_IE,  true)  // ie (Invalid Operation Mask)
 REG_SPEC_NO_CAPSTONE(FSW_DE,  fsw_de,  0, 0, FSW_DE,  0, 0, FSW_DE,  true)  // de (Denormal Mask)

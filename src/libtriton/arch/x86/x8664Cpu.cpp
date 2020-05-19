@@ -854,8 +854,8 @@ namespace triton {
           case triton::arch::ID_REG_X86_FCW_OM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 3) & 1);  }
           case triton::arch::ID_REG_X86_FCW_UM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 4) & 1);  }
           case triton::arch::ID_REG_X86_FCW_PM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 5) & 1);  }
-          case triton::arch::ID_REG_X86_FCW_PC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 8) & 1);  }
-          case triton::arch::ID_REG_X86_FCW_RC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 10) & 1); }
+          case triton::arch::ID_REG_X86_FCW_PC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 8) & 3);  }
+          case triton::arch::ID_REG_X86_FCW_RC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 10) & 3); }
           case triton::arch::ID_REG_X86_FCW_X:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 12) & 1); }
 
           case triton::arch::ID_REG_X86_FSW_IE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 0) & 1);  }
@@ -869,7 +869,7 @@ namespace triton {
           case triton::arch::ID_REG_X86_FSW_C0:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 8) & 1);  }
           case triton::arch::ID_REG_X86_FSW_C1:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 9) & 1);  }
           case triton::arch::ID_REG_X86_FSW_C2:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 10) & 1); }
-          case triton::arch::ID_REG_X86_FSW_TOP: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 11) & 1); }
+          case triton::arch::ID_REG_X86_FSW_TOP: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 11) & 7); }
           case triton::arch::ID_REG_X86_FSW_C3:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 14) & 1); }
           case triton::arch::ID_REG_X86_FSW_B:   { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 15) & 1); }
 
@@ -1374,13 +1374,13 @@ namespace triton {
           case triton::arch::ID_REG_X86_FCW_PC: {
             triton::uint16 flag = 0;
             std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
-            flag = !value.is_zero() ? (flag | (1 << 8)) : (flag & ~(1 << 8));
+            flag = (flag & 0xFCFF) | (value.convert_to<triton::uint16>() << 8);
             std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
           } break;
           case triton::arch::ID_REG_X86_FCW_RC: {
             triton::uint16 flag = 0;
             std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
-            flag = !value.is_zero() ? (flag | (1 << 10)) : (flag & ~(1 << 10));
+            flag = (flag & 0xF3FF) | (value.convert_to<triton::uint16>() << 10);
             std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
           } break;
           case triton::arch::ID_REG_X86_FCW_X:  {
@@ -1459,7 +1459,7 @@ namespace triton {
           case triton::arch::ID_REG_X86_FSW_TOP: {
             triton::uint16 flag = 0;
             std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
-            flag = !value.is_zero() ? (flag | (1 << 11)) : (flag & ~(1 << 11));
+            flag = (flag & 0xC7FF) | (value.convert_to<triton::uint16>() << 11);
             std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
           } break;
           case triton::arch::ID_REG_X86_FSW_C3:  {

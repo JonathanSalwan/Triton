@@ -20,11 +20,11 @@ class TestX86ConcreteRegisterValue(unittest.TestCase):
 
     def test_all_registers(self):
         """Check all registers"""
-        self.assertEqual(len(self.ar), 148)
+        self.assertEqual(len(self.ar), 157)
 
     def test_parent_registers(self):
         """Check parent registers"""
-        self.assertEqual(len(self.pr), 127)
+        self.assertEqual(len(self.pr), 128)
 
     def test_set_get_concrete_value(self):
         """Check setting concrete values"""
@@ -74,11 +74,11 @@ class TestX8664ConcreteRegisterValue(unittest.TestCase):
 
     def test_all_registers(self):
         """Check all registers"""
-        self.assertEqual(len(self.ar), 237)
+        self.assertEqual(len(self.ar), 246)
 
     def test_parent_registers(self):
         """Check parent registers"""
-        self.assertEqual(len(self.pr), 183)
+        self.assertEqual(len(self.pr), 192)
 
     def test_set_get_concrete_value(self):
         """Check setting concrete values"""
