@@ -1123,7 +1123,7 @@ def dump_state(state):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack":      bytearray(b"".join([pack('B', 0xFF) for i in range(512)])), #bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "stack":      bytearray(b"".join([pack('B', 0) for i in range(512)])), #bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
         "heap":       bytearray(b"".join([pack('B', i) for i in range(256)])),
         "eflags":     2, # bit 2 is always 1
         "rax":        0,

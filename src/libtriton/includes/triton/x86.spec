@@ -103,14 +103,25 @@ REG_SPEC(EFLAGS, eflags, triton::bitsize::qword-1, 0, EFLAGS, triton::bitsize::d
 
 /* MMX */
 
-REG_SPEC(MM0, mm0, triton::bitsize::fword-1, 0, MM0, triton::bitsize::fword-1, 0, MM0, true) // mm0
-REG_SPEC(MM1, mm1, triton::bitsize::fword-1, 0, MM1, triton::bitsize::fword-1, 0, MM1, true) // mm1
-REG_SPEC(MM2, mm2, triton::bitsize::fword-1, 0, MM2, triton::bitsize::fword-1, 0, MM2, true) // mm2
-REG_SPEC(MM3, mm3, triton::bitsize::fword-1, 0, MM3, triton::bitsize::fword-1, 0, MM3, true) // mm3
-REG_SPEC(MM4, mm4, triton::bitsize::fword-1, 0, MM4, triton::bitsize::fword-1, 0, MM4, true) // mm4
-REG_SPEC(MM5, mm5, triton::bitsize::fword-1, 0, MM5, triton::bitsize::fword-1, 0, MM5, true) // mm5
-REG_SPEC(MM6, mm6, triton::bitsize::fword-1, 0, MM6, triton::bitsize::fword-1, 0, MM6, true) // mm6
-REG_SPEC(MM7, mm7, triton::bitsize::fword-1, 0, MM7, triton::bitsize::fword-1, 0, MM7, true) // mm7
+REG_SPEC(MM0, mm0, triton::bitsize::qword-1, 0, ST0, triton::bitsize::qword-1, 0, ST0, true) // mm0
+REG_SPEC(MM1, mm1, triton::bitsize::qword-1, 0, ST1, triton::bitsize::qword-1, 0, ST1, true) // mm1
+REG_SPEC(MM2, mm2, triton::bitsize::qword-1, 0, ST2, triton::bitsize::qword-1, 0, ST2, true) // mm2
+REG_SPEC(MM3, mm3, triton::bitsize::qword-1, 0, ST3, triton::bitsize::qword-1, 0, ST3, true) // mm3
+REG_SPEC(MM4, mm4, triton::bitsize::qword-1, 0, ST4, triton::bitsize::qword-1, 0, ST4, true) // mm4
+REG_SPEC(MM5, mm5, triton::bitsize::qword-1, 0, ST5, triton::bitsize::qword-1, 0, ST5, true) // mm5
+REG_SPEC(MM6, mm6, triton::bitsize::qword-1, 0, ST6, triton::bitsize::qword-1, 0, ST6, true) // mm6
+REG_SPEC(MM7, mm7, triton::bitsize::qword-1, 0, ST7, triton::bitsize::qword-1, 0, ST7, true) // mm7
+
+/* STX */
+
+REG_SPEC(ST0, st0, triton::bitsize::fword-1, 0, ST0, triton::bitsize::fword-1, 0, ST0, true) // st0
+REG_SPEC(ST1, st1, triton::bitsize::fword-1, 0, ST1, triton::bitsize::fword-1, 0, ST1, true) // st1
+REG_SPEC(ST2, st2, triton::bitsize::fword-1, 0, ST2, triton::bitsize::fword-1, 0, ST2, true) // st2
+REG_SPEC(ST3, st3, triton::bitsize::fword-1, 0, ST3, triton::bitsize::fword-1, 0, ST3, true) // st3
+REG_SPEC(ST4, st4, triton::bitsize::fword-1, 0, ST4, triton::bitsize::fword-1, 0, ST4, true) // st4
+REG_SPEC(ST5, st5, triton::bitsize::fword-1, 0, ST5, triton::bitsize::fword-1, 0, ST5, true) // st5
+REG_SPEC(ST6, st6, triton::bitsize::fword-1, 0, ST6, triton::bitsize::fword-1, 0, ST6, true) // st6
+REG_SPEC(ST7, st7, triton::bitsize::fword-1, 0, ST7, triton::bitsize::fword-1, 0, ST7, true) // st7
 
 /* FPU */
 
