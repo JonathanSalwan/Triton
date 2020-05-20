@@ -7,6 +7,7 @@
 // REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X84_84_LOWER, x86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)
 
 /* GPR 64-bits. */
+
 REG_SPEC(RAX, rax, triton::bitsize::qword-1, 0, RAX, 0, 0, RAX, false) // rax
 REG_SPEC(RBX, rbx, triton::bitsize::qword-1, 0, RBX, 0, 0, RBX, false) // rbx
 REG_SPEC(RCX, rcx, triton::bitsize::qword-1, 0, RCX, 0, 0, RCX, false) // rcx
@@ -58,6 +59,7 @@ REG_SPEC(R15W, r15w, triton::bitsize::word-1,  0, R15, 0, 0, R15, false)  // r15
 REG_SPEC(R15B, r15b, triton::bitsize::byte-1,  0, R15, 0, 0, R15, false)  // r15b
 
 /* GPR 32-bits */
+
 REG_SPEC(EAX, eax, triton::bitsize::dword-1, 0,                     RAX, triton::bitsize::dword-1, 0,                     EAX, true)  // eax
 REG_SPEC(AX,  ax,  triton::bitsize::word-1,  0,                     RAX, triton::bitsize::word-1,  0,                     EAX, true)  // ax
 REG_SPEC(AH,  ah,  triton::bitsize::word-1,  triton::bitsize::byte, RAX, triton::bitsize::word-1,  triton::bitsize::byte, EAX, true)  // ah
@@ -100,17 +102,42 @@ REG_SPEC(IP,  ip,  triton::bitsize::word-1,  0, RIP, triton::bitsize::word-1,  0
 REG_SPEC(EFLAGS, eflags, triton::bitsize::qword-1, 0, EFLAGS, triton::bitsize::dword-1, 0, EFLAGS, true) // eflags
 
 /* MMX */
-REG_SPEC(MM0, mm0, triton::bitsize::qword-1, 0, MM0, triton::bitsize::qword-1, 0, MM0, true) // mm0
-REG_SPEC(MM1, mm1, triton::bitsize::qword-1, 0, MM1, triton::bitsize::qword-1, 0, MM1, true) // mm1
-REG_SPEC(MM2, mm2, triton::bitsize::qword-1, 0, MM2, triton::bitsize::qword-1, 0, MM2, true) // mm2
-REG_SPEC(MM3, mm3, triton::bitsize::qword-1, 0, MM3, triton::bitsize::qword-1, 0, MM3, true) // mm3
-REG_SPEC(MM4, mm4, triton::bitsize::qword-1, 0, MM4, triton::bitsize::qword-1, 0, MM4, true) // mm4
-REG_SPEC(MM5, mm5, triton::bitsize::qword-1, 0, MM5, triton::bitsize::qword-1, 0, MM5, true) // mm5
-REG_SPEC(MM6, mm6, triton::bitsize::qword-1, 0, MM6, triton::bitsize::qword-1, 0, MM6, true) // mm6
-REG_SPEC(MM7, mm7, triton::bitsize::qword-1, 0, MM7, triton::bitsize::qword-1, 0, MM7, true) // mm7
+
+REG_SPEC(MM0, mm0, triton::bitsize::qword-1, 0, ST0, triton::bitsize::qword-1, 0, ST0, true) // mm0
+REG_SPEC(MM1, mm1, triton::bitsize::qword-1, 0, ST1, triton::bitsize::qword-1, 0, ST1, true) // mm1
+REG_SPEC(MM2, mm2, triton::bitsize::qword-1, 0, ST2, triton::bitsize::qword-1, 0, ST2, true) // mm2
+REG_SPEC(MM3, mm3, triton::bitsize::qword-1, 0, ST3, triton::bitsize::qword-1, 0, ST3, true) // mm3
+REG_SPEC(MM4, mm4, triton::bitsize::qword-1, 0, ST4, triton::bitsize::qword-1, 0, ST4, true) // mm4
+REG_SPEC(MM5, mm5, triton::bitsize::qword-1, 0, ST5, triton::bitsize::qword-1, 0, ST5, true) // mm5
+REG_SPEC(MM6, mm6, triton::bitsize::qword-1, 0, ST6, triton::bitsize::qword-1, 0, ST6, true) // mm6
+REG_SPEC(MM7, mm7, triton::bitsize::qword-1, 0, ST7, triton::bitsize::qword-1, 0, ST7, true) // mm7
+
+/* STX */
+
+REG_SPEC(ST0, st0, triton::bitsize::fword-1, 0, ST0, triton::bitsize::fword-1, 0, ST0, true) // st0
+REG_SPEC(ST1, st1, triton::bitsize::fword-1, 0, ST1, triton::bitsize::fword-1, 0, ST1, true) // st1
+REG_SPEC(ST2, st2, triton::bitsize::fword-1, 0, ST2, triton::bitsize::fword-1, 0, ST2, true) // st2
+REG_SPEC(ST3, st3, triton::bitsize::fword-1, 0, ST3, triton::bitsize::fword-1, 0, ST3, true) // st3
+REG_SPEC(ST4, st4, triton::bitsize::fword-1, 0, ST4, triton::bitsize::fword-1, 0, ST4, true) // st4
+REG_SPEC(ST5, st5, triton::bitsize::fword-1, 0, ST5, triton::bitsize::fword-1, 0, ST5, true) // st5
+REG_SPEC(ST6, st6, triton::bitsize::fword-1, 0, ST6, triton::bitsize::fword-1, 0, ST6, true) // st6
+REG_SPEC(ST7, st7, triton::bitsize::fword-1, 0, ST7, triton::bitsize::fword-1, 0, ST7, true) // st7
+
+/* FPU */
+
+REG_SPEC_NO_CAPSTONE(FTW, ftw, triton::bitsize::word-1,  0, FTW, triton::bitsize::word-1,  0, FTW, true) // ftw
+REG_SPEC_NO_CAPSTONE(FCW, fcw, triton::bitsize::word-1,  0, FCW, triton::bitsize::word-1,  0, FCW, true) // fcw
+REG_SPEC_NO_CAPSTONE(FSW, fsw, triton::bitsize::word-1,  0, FSW, triton::bitsize::word-1,  0, FSW, true) // fsw
+REG_SPEC_NO_CAPSTONE(FOP, fop, triton::bitsize::word-1,  0, FOP, triton::bitsize::word-1,  0, FOP, true) // fop
+REG_SPEC_NO_CAPSTONE(FCS, fcs, triton::bitsize::word-1,  0, FCS, triton::bitsize::word-1,  0, FCS, true) // fcs
+REG_SPEC_NO_CAPSTONE(FDS, fds, triton::bitsize::word-1,  0, FDS, triton::bitsize::word-1,  0, FDS, true) // fds
+REG_SPEC_NO_CAPSTONE(FIP, fip, triton::bitsize::qword-1, 0, FIP, triton::bitsize::qword-1, 0, FIP, true) // fip
+REG_SPEC_NO_CAPSTONE(FDP, fdp, triton::bitsize::qword-1, 0, FDP, triton::bitsize::qword-1, 0, FDP, true) // fdp
 
 /* SSE */
-REG_SPEC_NO_CAPSTONE(MXCSR, mxcsr, triton::bitsize::qword-1, 0, MXCSR, triton::bitsize::dword-1, 0, MXCSR, true) // mxcsr
+
+REG_SPEC_NO_CAPSTONE(MXCSR, mxcsr, triton::bitsize::dword-1, 0, MXCSR, triton::bitsize::dword-1, 0, MXCSR, true) // mxcsr
+REG_SPEC_NO_CAPSTONE(MXCSR_MASK, mxcsr_mask, triton::bitsize::dword-1, 0, MXCSR_MASK, triton::bitsize::dword-1, 0, MXCSR_MASK, true) // mxcsr
 
 REG_SPEC(XMM0,  xmm0,  triton::bitsize::dqword-1, 0, ZMM0,  triton::bitsize::dqword-1, 0, YMM0,  true)  // xmm0
 REG_SPEC(XMM1,  xmm1,  triton::bitsize::dqword-1, 0, ZMM1,  triton::bitsize::dqword-1, 0, YMM1,  true)  // xmm1
@@ -130,6 +157,7 @@ REG_SPEC(XMM14, xmm14, triton::bitsize::dqword-1, 0, ZMM14, 0,                  
 REG_SPEC(XMM15, xmm15, triton::bitsize::dqword-1, 0, ZMM15, 0,                         0, XMM15, false) // xmm15
 
 /* AVX-256 */
+
 REG_SPEC(YMM0,  ymm0,  triton::bitsize::qqword-1, 0, ZMM0,  triton::bitsize::qqword-1, 0, YMM0,  true)  // ymm0
 REG_SPEC(YMM1,  ymm1,  triton::bitsize::qqword-1, 0, ZMM1,  triton::bitsize::qqword-1, 0, YMM1,  true)  // ymm1
 REG_SPEC(YMM2,  ymm2,  triton::bitsize::qqword-1, 0, ZMM2,  triton::bitsize::qqword-1, 0, YMM2,  true)  // ymm2
@@ -148,6 +176,7 @@ REG_SPEC(YMM14, ymm14, triton::bitsize::qqword-1, 0, ZMM14, 0,                  
 REG_SPEC(YMM15, ymm15, triton::bitsize::qqword-1, 0, ZMM15, 0,                         0, YMM15, false) // ymm15
 
 /* AVX-512 */
+
 REG_SPEC(ZMM0,  zmm0,  triton::bitsize::dqqword-1, 0, ZMM0,  0, 0, ZMM0,  false)  // zmm0
 REG_SPEC(ZMM1,  zmm1,  triton::bitsize::dqqword-1, 0, ZMM1,  0, 0, ZMM1,  false)  // zmm1
 REG_SPEC(ZMM2,  zmm2,  triton::bitsize::dqqword-1, 0, ZMM2,  0, 0, ZMM2,  false)  // zmm2
@@ -182,6 +211,7 @@ REG_SPEC(ZMM30, zmm30, triton::bitsize::dqqword-1, 0, ZMM30, 0, 0, ZMM30, false)
 REG_SPEC(ZMM31, zmm31, triton::bitsize::dqqword-1, 0, ZMM31, 0, 0, ZMM31, false)  // zmm31
 
 /* Control */
+
 REG_SPEC(CR0,  cr0,  triton::bitsize::qword-1, 0, CR0,  triton::bitsize::dword-1, 0, CR0,  true)  // cr0
 REG_SPEC(CR1,  cr1,  triton::bitsize::qword-1, 0, CR1,  triton::bitsize::dword-1, 0, CR1,  true)  // cr1
 REG_SPEC(CR2,  cr2,  triton::bitsize::qword-1, 0, CR2,  triton::bitsize::dword-1, 0, CR2,  true)  // cr2
@@ -200,6 +230,7 @@ REG_SPEC(CR14, cr14, triton::bitsize::qword-1, 0, CR14, triton::bitsize::dword-1
 REG_SPEC(CR15, cr15, triton::bitsize::qword-1, 0, CR15, triton::bitsize::dword-1, 0, CR15, true)  // cr15
 
 /* Debug */
+
 REG_SPEC(DR0,  dr0,  triton::bitsize::qword-1, 0, DR0,  triton::bitsize::dword-1, 0, DR0,  true)  // dr0
 REG_SPEC(DR1,  dr1,  triton::bitsize::qword-1, 0, DR1,  triton::bitsize::dword-1, 0, DR1,  true)  // dr1
 REG_SPEC(DR2,  dr2,  triton::bitsize::qword-1, 0, DR2,  triton::bitsize::dword-1, 0, DR2,  true)  // dr2
@@ -208,6 +239,7 @@ REG_SPEC(DR6,  dr6,  triton::bitsize::qword-1, 0, DR6,  triton::bitsize::dword-1
 REG_SPEC(DR7,  dr7,  triton::bitsize::qword-1, 0, DR7,  triton::bitsize::dword-1, 0, DR7,  true)  // dr7
 
 /* Flags ID used in the Taint and Symbolic Engines */
+
 REG_SPEC_NO_CAPSTONE(AC,  ac,  0, 0, AC,  0, 0, AC,  true)  // ac
 REG_SPEC_NO_CAPSTONE(AF,  af,  0, 0, AF,  0, 0, AF,  true)  // af
 REG_SPEC_NO_CAPSTONE(CF,  cf,  0, 0, CF,  0, 0, CF,  true)  // cf
@@ -226,24 +258,66 @@ REG_SPEC_NO_CAPSTONE(VM,  vm,  0, 0, VM,  0, 0, VM,  true)  // vm
 REG_SPEC_NO_CAPSTONE(ZF,  zf,  0, 0, ZF,  0, 0, ZF,  true)  // zf
 
 /* SSE flags */
-REG_SPEC_NO_CAPSTONE(IE,  ie,  0, 0, IE,  0, 0, IE,  true)  // ie (Invalid Operation Flag)
-REG_SPEC_NO_CAPSTONE(DE,  de,  0, 0, DE,  0, 0, DE,  true)  // de (Denormal Flag)
-REG_SPEC_NO_CAPSTONE(ZE,  ze,  0, 0, ZE,  0, 0, ZE,  true)  // ze (Divide By Zero Flag)
-REG_SPEC_NO_CAPSTONE(OE,  oe,  0, 0, OE,  0, 0, OE,  true)  // oe (Overflow Flag)
-REG_SPEC_NO_CAPSTONE(UE,  ue,  0, 0, UE,  0, 0, UE,  true)  // ue (Underflow Flag)
-REG_SPEC_NO_CAPSTONE(PE,  pe,  0, 0, PE,  0, 0, PE,  true)  // pe (Precision Flag)
-REG_SPEC_NO_CAPSTONE(DAZ, daz, 0, 0, DAZ, 0, 0, DAZ, true)  // daz (Invalid Operation Flag)
-REG_SPEC_NO_CAPSTONE(IM,  im,  0, 0, IM,  0, 0, IM,  true)  // im (Invalid Operation Mask)
-REG_SPEC_NO_CAPSTONE(DM,  dm,  0, 0, DM,  0, 0, DM,  true)  // dm (Denormal Mask)
-REG_SPEC_NO_CAPSTONE(ZM,  zm,  0, 0, ZM,  0, 0, ZM,  true)  // zm (Divide By Zero Mask)
-REG_SPEC_NO_CAPSTONE(OM,  om,  0, 0, OM,  0, 0, OM,  true)  // om (Overflow Mask)
-REG_SPEC_NO_CAPSTONE(UM,  um,  0, 0, UM,  0, 0, UM,  true)  // um (Underflow Mask)
-REG_SPEC_NO_CAPSTONE(PM,  pm,  0, 0, PM,  0, 0, PM,  true)  // pm (Precision Mask)
-REG_SPEC_NO_CAPSTONE(RL,  rl,  0, 0, RL,  0, 0, RL,  true)  // rl (Round Negative)
-REG_SPEC_NO_CAPSTONE(RH,  rh,  0, 0, RH,  0, 0, RH,  true)  // rh (Round Positive)
-REG_SPEC_NO_CAPSTONE(FZ,  fz,  0, 0, FZ,  0, 0, FZ,  true)  // fz (Flush To Zero)
+
+REG_SPEC_NO_CAPSTONE(SSE_IE,  sse_ie,  0, 0, SSE_IE,  0, 0, SSE_IE,  true)  // ie (Invalid Operation Flag)
+REG_SPEC_NO_CAPSTONE(SSE_DE,  sse_de,  0, 0, SSE_DE,  0, 0, SSE_DE,  true)  // de (Denormal Flag)
+REG_SPEC_NO_CAPSTONE(SSE_ZE,  sse_ze,  0, 0, SSE_ZE,  0, 0, SSE_ZE,  true)  // ze (Divide By Zero Flag)
+REG_SPEC_NO_CAPSTONE(SSE_OE,  sse_oe,  0, 0, SSE_OE,  0, 0, SSE_OE,  true)  // oe (Overflow Flag)
+REG_SPEC_NO_CAPSTONE(SSE_UE,  sse_ue,  0, 0, SSE_UE,  0, 0, SSE_UE,  true)  // ue (Underflow Flag)
+REG_SPEC_NO_CAPSTONE(SSE_PE,  sse_pe,  0, 0, SSE_PE,  0, 0, SSE_PE,  true)  // pe (Precision Flag)
+REG_SPEC_NO_CAPSTONE(SSE_DAZ, sse_daz, 0, 0, SSE_DAZ, 0, 0, SSE_DAZ, true)  // daz (Invalid Operation Flag)
+REG_SPEC_NO_CAPSTONE(SSE_IM,  sse_im,  0, 0, SSE_IM,  0, 0, SSE_IM,  true)  // im (Invalid Operation Mask)
+REG_SPEC_NO_CAPSTONE(SSE_DM,  sse_dm,  0, 0, SSE_DM,  0, 0, SSE_DM,  true)  // dm (Denormal Mask)
+REG_SPEC_NO_CAPSTONE(SSE_ZM,  sse_zm,  0, 0, SSE_ZM,  0, 0, SSE_ZM,  true)  // zm (Divide By Zero Mask)
+REG_SPEC_NO_CAPSTONE(SSE_OM,  sse_om,  0, 0, SSE_OM,  0, 0, SSE_OM,  true)  // om (Overflow Mask)
+REG_SPEC_NO_CAPSTONE(SSE_UM,  sse_um,  0, 0, SSE_UM,  0, 0, SSE_UM,  true)  // um (Underflow Mask)
+REG_SPEC_NO_CAPSTONE(SSE_PM,  sse_pm,  0, 0, SSE_PM,  0, 0, SSE_PM,  true)  // pm (Precision Mask)
+REG_SPEC_NO_CAPSTONE(SSE_RL,  sse_rl,  0, 0, SSE_RL,  0, 0, SSE_RL,  true)  // rl (Round Negative)
+REG_SPEC_NO_CAPSTONE(SSE_RH,  sse_rh,  0, 0, SSE_RH,  0, 0, SSE_RH,  true)  // rh (Round Positive)
+REG_SPEC_NO_CAPSTONE(SSE_FZ,  sse_fz,  0, 0, SSE_FZ,  0, 0, SSE_FZ,  true)  // fz (Flush To Zero)
+
+/* FPU flags */
+
+REG_SPEC_NO_CAPSTONE(FCW_IM,  fcw_im,  0, 0, FCW_IM,  0, 0, FCW_IM,  true)  // im (Invalid Operation Mask)
+REG_SPEC_NO_CAPSTONE(FCW_DM,  fcw_dm,  0, 0, FCW_DM,  0, 0, FCW_DM,  true)  // dm (Denormal Mask)
+REG_SPEC_NO_CAPSTONE(FCW_ZM,  fcw_zm,  0, 0, FCW_ZM,  0, 0, FCW_ZM,  true)  // zm (Divide By Zero Mask)
+REG_SPEC_NO_CAPSTONE(FCW_OM,  fcw_om,  0, 0, FCW_OM,  0, 0, FCW_OM,  true)  // om (Overflow Mask)
+REG_SPEC_NO_CAPSTONE(FCW_UM,  fcw_um,  0, 0, FCW_UM,  0, 0, FCW_UM,  true)  // um (Underflow Mask)
+REG_SPEC_NO_CAPSTONE(FCW_PM,  fcw_pm,  0, 0, FCW_PM,  0, 0, FCW_PM,  true)  // pm (Precision Mask)
+REG_SPEC_NO_CAPSTONE(FCW_PC,  fcw_pc,  1, 0, FCW_PC,  1, 0, FCW_PC,  true)  // pc (Precision Control)
+REG_SPEC_NO_CAPSTONE(FCW_RC,  fcw_rc,  1, 0, FCW_RC,  1, 0, FCW_RC,  true)  // rc (Rounding Control)
+REG_SPEC_NO_CAPSTONE(FCW_X,   fcw_x,   0, 0, FCW_X,   0, 0, FCW_X,   true)  // x  (Infinity Control)
+
+REG_SPEC_NO_CAPSTONE(FSW_IE,  fsw_ie,  0, 0, FSW_IE,  0, 0, FSW_IE,  true)  // ie (Invalid Operation Mask)
+REG_SPEC_NO_CAPSTONE(FSW_DE,  fsw_de,  0, 0, FSW_DE,  0, 0, FSW_DE,  true)  // de (Denormal Mask)
+REG_SPEC_NO_CAPSTONE(FSW_ZE,  fsw_ze,  0, 0, FSW_ZE,  0, 0, FSW_ZE,  true)  // ze (Divide By Zero Mask)
+REG_SPEC_NO_CAPSTONE(FSW_OE,  fsw_oe,  0, 0, FSW_OE,  0, 0, FSW_OE,  true)  // oe (Overflow Mask)
+REG_SPEC_NO_CAPSTONE(FSW_UE,  fsw_ue,  0, 0, FSW_UE,  0, 0, FSW_UE,  true)  // ue (Underflow Mask)
+REG_SPEC_NO_CAPSTONE(FSW_PE,  fsw_pe,  0, 0, FSW_PE,  0, 0, FSW_PE,  true)  // pe (Precision Mask)
+REG_SPEC_NO_CAPSTONE(FSW_SF,  fsw_sf,  0, 0, FSW_SF,  0, 0, FSW_SF,  true)  // sf (Stack Fault)
+REG_SPEC_NO_CAPSTONE(FSW_ES,  fsw_es,  0, 0, FSW_ES,  0, 0, FSW_ES,  true)  // ef (Error Summary Status)
+REG_SPEC_NO_CAPSTONE(FSW_C0,  fsw_c0,  0, 0, FSW_C0,  0, 0, FSW_C0,  true)  // c0 (Condition Code 0)
+REG_SPEC_NO_CAPSTONE(FSW_C1,  fsw_c1,  0, 0, FSW_C1,  0, 0, FSW_C1,  true)  // c1 (Condition Code 1)
+REG_SPEC_NO_CAPSTONE(FSW_C2,  fsw_c2,  0, 0, FSW_C2,  0, 0, FSW_C2,  true)  // c2 (Condition Code 2)
+REG_SPEC_NO_CAPSTONE(FSW_TOP, fsw_top, 2, 0, FSW_TOP, 2, 0, FSW_TOP, true)  // top (Top of Stack Pointer)
+REG_SPEC_NO_CAPSTONE(FSW_C3,  fsw_c3,  0, 0, FSW_C3,  0, 0, FSW_C3,  true)  // c3 (Condition Code 3)
+REG_SPEC_NO_CAPSTONE(FSW_B,   fsw_b,   0, 0, FSW_B,   0, 0, FSW_B,   true)  // b (FPU Busy)
+
+/* EFER */
+
+REG_SPEC_NO_CAPSTONE(EFER, efer, triton::bitsize::qword-1, 0, EFER, triton::bitsize::qword-1, 0, EFER, true) // efer
+
+REG_SPEC_NO_CAPSTONE(EFER_TCE,   efer_tce,   0, 0, EFER_TCE,   0, 0, EFER_TCE,   true) // efer_tce
+REG_SPEC_NO_CAPSTONE(EFER_FFXSR, efer_ffxsr, 0, 0, EFER_FFXSR, 0, 0, EFER_FFXSR, true) // efer_ffxsr
+REG_SPEC_NO_CAPSTONE(EFER_LMSLE, efer_lmsle, 0, 0, EFER_LMSLE, 0, 0, EFER_LMSLE, true) // efer_lmsle
+REG_SPEC_NO_CAPSTONE(EFER_SVME,  efer_svme,  0, 0, EFER_SVME,  0, 0, EFER_SVME,  true) // efer_svme
+REG_SPEC_NO_CAPSTONE(EFER_NXE,   efer_nxe,   0, 0, EFER_NXE,   0, 0, EFER_NXE,   true) // efer_nxe
+REG_SPEC_NO_CAPSTONE(EFER_LMA,   efer_lma,   0, 0, EFER_LMA,   0, 0, EFER_LMA,   true) // efer_lma
+REG_SPEC_NO_CAPSTONE(EFER_LME,   efer_lme,   0, 0, EFER_LME,   0, 0, EFER_LME,   true) // efer_lme
+REG_SPEC_NO_CAPSTONE(EFER_SCE,   efer_sce,   0, 0, EFER_SCE,   0, 0, EFER_SCE,   true) // efer_sce
 
 /* Segments */
+
 REG_SPEC(CS, cs, triton::bitsize::qword-1, 0, CS, triton::bitsize::dword-1, 0, CS, true) // Code Segment
 REG_SPEC(DS, ds, triton::bitsize::qword-1, 0, DS, triton::bitsize::dword-1, 0, DS, true) // Data Segment
 REG_SPEC(ES, es, triton::bitsize::qword-1, 0, ES, triton::bitsize::dword-1, 0, ES, true) // Extra Segment

@@ -90,6 +90,10 @@ namespace triton {
           //! Control flow semantics. Used to represent IP.
           void controlFlow_s(triton::arch::Instruction& inst);
 
+          //! Update the FPU x87 Tag Word (whenever an MMX register changes)
+          void updateFTW(triton::arch::Instruction& inst,
+                       const triton::engines::symbolic::SharedSymbolicExpression& parent);
+
           //! The AF semantics.
           void af_s(triton::arch::Instruction& inst,
                     const triton::engines::symbolic::SharedSymbolicExpression& parent,
@@ -636,6 +640,18 @@ namespace triton {
 
           //! The EXTRACTPS semantics.
           void extractps_s(triton::arch::Instruction& inst);
+
+          //! The FXRSTOR semantics.
+          void fxrstor_s(triton::arch::Instruction& inst);
+
+          //! The FXRSTOR64 semantics.
+          void fxrstor64_s(triton::arch::Instruction& inst);
+
+          //! The FXSAVE semantics.
+          void fxsave_s(triton::arch::Instruction& inst);
+
+          //! The FXSAVE64 semantics.
+          void fxsave64_s(triton::arch::Instruction& inst);
 
           //! The IDIV semantics.
           void idiv_s(triton::arch::Instruction& inst);

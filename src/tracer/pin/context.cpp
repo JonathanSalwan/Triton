@@ -155,7 +155,7 @@ namespace tracer {
             default:
               if (reg.getId() >= triton::arch::ID_REG_X86_AC && reg.getId() <= triton::arch::ID_REG_X86_ZF)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_RFLAGS, reinterpret_cast<triton::uint8*>(buffer));
-              else if (reg.getId() >= triton::arch::ID_REG_X86_IE && reg.getId() <= triton::arch::ID_REG_X86_FZ)
+              else if (reg.getId() >= triton::arch::ID_REG_X86_SSE_IE && reg.getId() <= triton::arch::ID_REG_X86_SSE_FZ)
                 PIN_GetContextRegval(tracer::pintool::context::lastContext, LEVEL_BASE::REG_MXCSR, reinterpret_cast<triton::uint8*>(buffer));
               else
                 throw std::runtime_error("tracer::pintool::context::getCurrentRegisterValue(): Invalid register.");
@@ -166,7 +166,7 @@ namespace tracer {
         const triton::arch::Register* syncReg = nullptr;
         if (reg.getId() >= triton::arch::ID_REG_X86_AC && reg.getId() <= triton::arch::ID_REG_X86_ZF)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_X86_EFLAGS);
-        else if (reg.getId() >= triton::arch::ID_REG_X86_IE && reg.getId() <= triton::arch::ID_REG_X86_FZ)
+        else if (reg.getId() >= triton::arch::ID_REG_X86_SSE_IE && reg.getId() <= triton::arch::ID_REG_X86_SSE_FZ)
           syncReg = &tracer::pintool::api.getRegister(triton::arch::ID_REG_X86_MXCSR);
         else
           syncReg = &tracer::pintool::api.getParentRegister(reg.getId());
@@ -287,6 +287,7 @@ namespace tracer {
           case triton::size::word:    value = *(reinterpret_cast<triton::uint16*>(addr)); break;
           case triton::size::dword:   value = *(reinterpret_cast<triton::uint32*>(addr)); break;
           case triton::size::qword:   value = *(reinterpret_cast<triton::uint64*>(addr)); break;
+          case triton::size::fword:   value = *(reinterpret_cast<triton::uint80*>(addr)); break;
           case triton::size::dqword:  value = triton::utils::fromBufferToUint<triton::uint128>(reinterpret_cast<triton::uint8*>(addr)); break;
           case triton::size::qqword:  value = triton::utils::fromBufferToUint<triton::uint256>(reinterpret_cast<triton::uint8*>(addr)); break;
           case triton::size::dqqword: value = triton::utils::fromBufferToUint<triton::uint512>(reinterpret_cast<triton::uint8*>(addr)); break;

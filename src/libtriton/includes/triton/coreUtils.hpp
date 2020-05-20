@@ -27,6 +27,9 @@ namespace triton {
    *  @{
    */
 
+    //! Inject the value into the buffer. Make sure that the `buffer` contains at least 10 allocated bytes.
+    TRITON_EXPORT void fromUintToBuffer(triton::uint80 value, triton::uint8* buffer);
+
     //! Inject the value into the buffer. Make sure that the `buffer` contains at least 16 allocated bytes.
     TRITON_EXPORT void fromUintToBuffer(triton::uint128 value, triton::uint8* buffer);
 
@@ -44,6 +47,7 @@ namespace triton {
       return {};
     }
 
+    template <> TRITON_EXPORT triton::uint80 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint128 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint256 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint512 fromBufferToUint(const triton::uint8* buffer);

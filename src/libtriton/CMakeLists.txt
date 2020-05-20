@@ -49,6 +49,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     endif()
 endif()
 
+# Enable preprocessor output
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --save-temps")
+
 # 32-bits
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     if(${ARCHITECTURE} STREQUAL "i386")

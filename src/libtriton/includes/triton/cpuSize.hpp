@@ -34,6 +34,8 @@ namespace triton {
     constexpr triton::uint32 dword         = 4;
     //! qword size in byte
     constexpr triton::uint32 qword         = 8;
+    //! fword size in byte
+    constexpr triton::uint32 fword         = 10;
     //! dqword size in byte
     constexpr triton::uint32 dqword        = 16;
     //! qqword size in byte
@@ -62,6 +64,8 @@ namespace triton {
     constexpr triton::uint32 dword         = 32;
     //! qword size in bit
     constexpr triton::uint32 qword         = 64;
+    //! fword size in bit
+    constexpr triton::uint32 fword         = 80;
     //! dqword size in bit
     constexpr triton::uint32 dqword        = 128;
     //! qqword size in bit
