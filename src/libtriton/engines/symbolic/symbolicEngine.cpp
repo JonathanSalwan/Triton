@@ -435,6 +435,43 @@ namespace triton {
       }
 
 
+      /* Prints symbolic expression with used references and symbolic variables */
+      std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+        auto symVars = this->getSymbolicVariables();
+        auto ssa = this->sliceExpressions(expr);
+        std::vector<usize> ids;
+        ids.reserve(std::max(symVars.size(), ssa.size()));
+        for (const auto& symVar : symVars) {
+          ids.push_back(symVar.first);
+        }
+        std::sort(ids.begin(), ids.end());
+        for (const auto& id : ids) {
+          auto n = this->astCtxt->declare(this->astCtxt->variable(symVars[id]));
+          this->astCtxt->print(stream, n.get());
+          stream << std::endl;
+        }
+        ids.clear();
+        for (const auto& se : ssa) {
+          ids.push_back(se.first);
+        }
+        std::sort(ids.begin(), ids.end());
+        if (assert_)
+          ids.pop_back();
+        for (const auto& id : ids) {
+          stream << ssa[id]->getFormattedExpression() << std::endl;
+        }
+        if (assert_) {
+          this->astCtxt->print(stream, this->astCtxt->assert_(expr->getAst()).get());
+          stream << std::endl;
+          if (this->astCtxt->getRepresentationMode() == ast::representations::SMT_REPRESENTATION) {
+            stream << "(check-sat)" << std::endl;
+            stream << "(get-model)" << std::endl;
+          }
+        }
+        return stream;
+      }
+
+
       /* Returns a list which contains all tainted expressions */
       std::vector<SharedSymbolicExpression> SymbolicEngine::getTaintedSymbolicExpressions(void) const {
         std::vector<SharedSymbolicExpression> taintedExprs;

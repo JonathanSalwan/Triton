@@ -338,6 +338,9 @@ set to True, Triton will use z3 to simplify the given `node` before calling its 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
+- <b>void printSlicedExpressions(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
+Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
+
 - <b>\ref py_SymbolicVariable_page symbolizeExpression(integer symExprId, integer symVarSize, string symVarAlias)</b><br>
 Converts a symbolic expression to a symbolic variable. `symVarSize` must be in bits. This function returns the new symbolic variable created.
 
@@ -2631,6 +2634,39 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_printSlicedExpressions(PyObject* self, PyObject* args) {
+        PyObject* expr        = nullptr;
+        PyObject* assertFlag  = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &expr, &assertFlag) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Invalid number of arguments");
+        }
+
+        if (expr == nullptr || !PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Expects a SymbolicExpression as first argument.");
+
+        if (assertFlag != nullptr && !PyBool_Check(assertFlag))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Expects a boolean as second argument.");
+
+        if (assertFlag == nullptr)
+          assertFlag = PyLong_FromUint32(false);
+
+        try {
+          PyTritonContext_AsTritonContext(self)->printSlicedExpressions(std::cout, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_symbolizeExpression(PyObject* self, PyObject* args) {
         PyObject* exprId        = nullptr;
         PyObject* symVarSize    = nullptr;
@@ -3038,6 +3074,7 @@ namespace triton {
         {"setThumb",                            (PyCFunction)TritonContext_setThumb,                               METH_O,             ""},
         {"simplify",                            (PyCFunction)TritonContext_simplify,                               METH_VARARGS,       ""},
         {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                       METH_O,             ""},
+        {"printSlicedExpressions",              (PyCFunction)TritonContext_printSlicedExpressions,                 METH_VARARGS,       ""},
         {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                    METH_VARARGS,       ""},
         {"symbolizeMemory",                     (PyCFunction)TritonContext_symbolizeMemory,                        METH_VARARGS,       ""},
         {"symbolizeRegister",                   (PyCFunction)TritonContext_symbolizeRegister,                      METH_VARARGS,       ""},
