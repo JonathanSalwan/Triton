@@ -113,22 +113,6 @@ namespace triton {
           triton::uint8 r15[triton::size::qword];
           //! Concrete value of eflags
           triton::uint8 eflags[triton::size::qword];
-          //! Concrete value of mm0
-          triton::uint8 mm0[triton::size::qword];
-          //! Concrete value of mm1
-          triton::uint8 mm1[triton::size::qword];
-          //! Concrete value of mm2
-          triton::uint8 mm2[triton::size::qword];
-          //! Concrete value of mm3
-          triton::uint8 mm3[triton::size::qword];
-          //! Concrete value of mm4
-          triton::uint8 mm4[triton::size::qword];
-          //! Concrete value of mm5
-          triton::uint8 mm5[triton::size::qword];
-          //! Concrete value of mm6
-          triton::uint8 mm6[triton::size::qword];
-          //! Concrete value of mm7
-          triton::uint8 mm7[triton::size::qword];
           //! Concrete value of st0
           triton::uint8 st0[triton::size::fword];
           //! Concrete value of st1

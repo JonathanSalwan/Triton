@@ -5590,7 +5590,7 @@ namespace triton {
         auto eb_13_12 = this->astCtxt->extract(6, 6, ftw_ast);
         auto eb_15_14 = this->astCtxt->extract(7, 7, ftw_ast);
 
-        /* Extract the fraction from the MMX registers */
+        /* Extract the fraction from the STX registers */
         auto fraction_st0 = this->astCtxt->extract(62, 0, st0_ast);
         auto fraction_st1 = this->astCtxt->extract(62, 0, st1_ast);
         auto fraction_st2 = this->astCtxt->extract(62, 0, st2_ast);
