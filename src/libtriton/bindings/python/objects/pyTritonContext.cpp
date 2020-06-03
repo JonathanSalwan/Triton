@@ -3095,7 +3095,7 @@ namespace triton {
         sizeof(TritonContext_Object),               /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)TritonContext_dealloc,          /* tp_dealloc */
-        0,                                          /* tp_print */
+        0,                                          /* tp_print or tp_vectorcall_offset */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -3139,6 +3139,9 @@ namespace triton {
         #if IS_PY3
         0,                                          /* tp_version_tag */
         0,                                          /* tp_finalize */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall */
+        #endif
         #else
         0                                           /* tp_version_tag */
         #endif

@@ -188,10 +188,12 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3_8) || !IS_PY3_8
       static int SymbolicVariable_print(PyObject* self, void* io, int s) {
         std::cout << PySymbolicVariable_AsSymbolicVariable(self);
         return 0;
       }
+      #endif
 
 
       static PyObject* SymbolicVariable_str(PyObject* self) {
@@ -281,7 +283,11 @@ namespace triton {
         sizeof(SymbolicVariable_Object),            /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)SymbolicVariable_dealloc,       /* tp_dealloc */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall_offset */
+        #else
         (printfunc)SymbolicVariable_print,          /* tp_print */
+        #endif
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -325,6 +331,9 @@ namespace triton {
         #if IS_PY3
         0,                                          /* tp_version_tag */
         0,                                          /* tp_finalize */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall */
+        #endif
         #else
         0                                           /* tp_version_tag */
         #endif
