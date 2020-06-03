@@ -115,6 +115,7 @@ namespace triton {
         }
       }
 
+
       #if !defined(IS_PY3_8) || !IS_PY3_8
       static int BitsVector_print(PyObject* self, void* io, int s) {
         std::cout << PyBitsVector_AsBitsVector(self);
@@ -201,6 +202,7 @@ namespace triton {
         0,                                          /* tp_finalize */
         #if IS_PY3_8
         0,                                          /* tp_vectorcall */
+        0,                                          /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
         #endif
         #else
         0                                           /* tp_version_tag */

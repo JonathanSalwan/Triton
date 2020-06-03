@@ -383,6 +383,7 @@ namespace triton {
         0,                                          /* tp_finalize */
         #if IS_PY3_8
         0,                                          /* tp_vectorcall */
+        0,                                          /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
         #endif
         #else
         0                                           /* tp_version_tag */
