@@ -998,7 +998,7 @@ namespace triton {
         }
       }
       else {
-        throw triton::exceptions::Ast("AstContext::updateVariable(): Variable does not exist.");
+        throw triton::exceptions::Ast("AstContext::updateVariable(): This symbolic variable is not assigned at any AbstractNode or does not exist.");
       }
     }
 
