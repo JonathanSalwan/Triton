@@ -656,6 +656,7 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(32, 32)),
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
+            self.astCtxt.bvror(self.astCtxt.bv(11258300193617241473, 64), self.astCtxt.bv(11258300193617241473, 64))
         ]
         self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
         self.check_ast(tests)
