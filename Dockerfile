@@ -1,22 +1,24 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 LABEL maintainer="David Manouchehri"
+
+ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update && apt-get dist-upgrade -y && \
     apt-get install -y git cmake build-essential clang ca-certificates curl \
-    unzip libboost-dev python-dev python-pip && apt-get clean
+    unzip libboost-dev python3-dev python3-pip && apt-get clean
 
 # get and install the latest z3 relesae
 RUN cd /tmp && \
-    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.6.0.tar.gz && \
-    tar zxf z3.tgz && cd z3-z3-4.6.0 && \
-    CC=clang CXX=clang++ python scripts/mk_make.py && cd build && make \
-    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.6.0
+    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.8.8.tar.gz && \
+    tar zxf z3.tgz && cd z3-z3-4.8.8 && \
+    mkdir build && cd build && CC=clang CXX=clang++ cmake .. && make \
+    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.8.8
 
 # Install capstone
 RUN cd /tmp && \
-    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.1.tar.gz && \
-    tar xvf cap.tgz && cd capstone-4.0.1/ && ./make.sh && make install && cd /tmp && \
-    rm -rf /tmp/capstone-4.0.1
+    curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.2.tar.gz && \
+    tar xvf cap.tgz && cd capstone-4.0.2/ && ./make.sh && make install && cd /tmp && \
+    rm -rf /tmp/capstone-4.0.2
 
 
 # Install pintool
