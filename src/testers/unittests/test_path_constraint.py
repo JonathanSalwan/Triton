@@ -52,7 +52,7 @@ class TestPathConstraint(unittest.TestCase):
 
     def test_getTakenAddress(self):
         pc = self.ctx.getPathConstraints()[0]
-        self.assertEqual(pc.getTakenAddress(), 91)
+        self.assertEqual(pc.getTakenAddress(), 108)
 
     def test_getBranchConstraints(self):
         pc = self.ctx.getPathConstraints()[0].getBranchConstraints()
@@ -62,7 +62,7 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['srcAddr'], pc[1]['srcAddr'])
 
-        self.assertEqual(pc[0]['dstAddr'], 91)
+        self.assertEqual(pc[0]['dstAddr'], 108)
         self.assertEqual(pc[1]['dstAddr'], 23)
 
     def test_pushpop(self):
@@ -81,7 +81,7 @@ class TestPathConstraint(unittest.TestCase):
         self.assertEqual(str(pc), str(opc))
 
     def test_reachingBB(self):
-        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(91)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(108)), 1)
         self.assertEqual(len(self.ctx.getPredicatesToReachAddress(23)), 1)
         self.assertEqual(len(self.ctx.getPredicatesToReachAddress(20)), 0)
 

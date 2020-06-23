@@ -432,3 +432,24 @@ class TestIssue862(unittest.TestCase):
     def test_issue(self):
         v = self.ctx.symbolizeRegister(self.ctx.registers.zf)
         self.assertEqual(v.getName(), "SymVar_0")
+
+
+class TestIssue924(unittest.TestCase):
+    """Testing #924."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+
+    def test_issue1(self):
+        ctx = TritonContext(ARCH.X86_64)
+        ctx.setConcreteRegisterValue(ctx.registers.rip, 0x4006e7)
+        inst = Instruction(b"\xeb\x02")
+        ctx.processing(inst)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rip), 0x4006eb)
+
+    def test_issue2(self):
+        ctx = TritonContext(ARCH.X86_64)
+        inst = Instruction(b"\xeb\x02")
+        inst.setAddress(0x4006e7)
+        ctx.processing(inst)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rip), 0x4006eb)

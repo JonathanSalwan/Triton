@@ -115,8 +115,9 @@ namespace triton {
       inst.getWrittenRegisters().clear();
 
       /* Update instruction address if undefined */
-      if (!inst.getAddress())
+      if (!inst.getAddress()) {
         inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter()).convert_to<triton::uint64>());
+      }
 
       /* Backup the symbolic engine in the case where only the taint is available. */
       if (!this->symbolicEngine->isEnabled()) {

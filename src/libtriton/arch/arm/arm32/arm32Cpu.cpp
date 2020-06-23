@@ -239,6 +239,11 @@ namespace triton {
           /* Clear instructicon's operands if alredy defined */
           inst.operands.clear();
 
+          /* Update instruction address if undefined */
+          if (!inst.getAddress()) {
+            inst.setAddress(this->getConcreteRegisterValue(this->getProgramCounter()).convert_to<triton::uint64>());
+          }
+
           /* Let's disass and build our operands */
           count = triton::extlibs::capstone::cs_disasm(handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
           if (count > 0) {
