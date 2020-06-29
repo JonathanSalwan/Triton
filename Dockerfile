@@ -22,6 +22,6 @@ RUN cd /tmp && \
 
 # Install Triton
 RUN cd /opt && git clone https://github.com/JonathanSalwan/Triton.git && \
-    cd Triton && mkdir build && cd build && cmake .. && make install && make check
+    cd Triton && mkdir build && cd build && cmake .. && make install
 
 ENTRYPOINT /bin/bash
