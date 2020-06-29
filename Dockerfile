@@ -20,17 +20,8 @@ RUN cd /tmp && \
     tar xvf cap.tgz && cd capstone-4.0.2/ && ./make.sh && make install && cd /tmp && \
     rm -rf /tmp/capstone-4.0.2
 
-
-# Install pintool
-RUN cd /opt && curl -o pin.tgz -L http://software.intel.com/sites/landingpage/pintool/downloads/pin-2.14-71313-gcc.4.4.7-linux.tar.gz && tar zxf pin.tgz
-
-# now install Triton
-# uncomment below to pull form git
-# RUN cd /opt/pin-2.14-71313-gcc.4.4.7-linux/source/tools/ && git clone https://github.com/JonathanSalwan/Triton.git && \
-#     cd Triton && mkdir build && cd build && cmake -G "Unix Makefiles" -DPINTOOL=on -DKERNEL4=on .. && \
-#     make install && cd .. && python setup.py install
-RUN cd /opt/pin-2.14-71313-gcc.4.4.7-linux/source/tools/ && \
-   curl -o master.zip -L https://github.com/JonathanSalwan/Triton/archive/master.zip && unzip master.zip && cd Triton-master/ && mkdir build && cd build && \
-   cmake -G "Unix Makefiles" -DPINTOOL=on -DKERNEL4=on .. && make install && cd ..
+# Install Triton
+RUN cd /opt && git clone https://github.com/JonathanSalwan/Triton.git && \
+    cd Triton && mkdir build && cd build && cmake .. && make install && make check
 
 ENTRYPOINT /bin/bash
