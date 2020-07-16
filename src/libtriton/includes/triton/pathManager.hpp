@@ -9,6 +9,7 @@
 #define TRITON_PATHMANAGER_H
 
 #include <vector>
+#include <map>
 
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
@@ -53,8 +54,8 @@ namespace triton {
           triton::ast::SharedAstContext astCtxt;
 
         protected:
-          //! \brief The logical conjunction vector of path constraints.
-          std::vector<triton::engines::symbolic::PathConstraint> pathConstraints;
+          //! The logical conjunction vector of path constraints mapped by thread id.
+          std::map<triton::uint32, std::vector<triton::engines::symbolic::PathConstraint>> pathConstraints;
 
         public:
           //! Constructor.
@@ -67,28 +68,28 @@ namespace triton {
           TRITON_EXPORT PathManager& operator=(const PathManager& other);
 
           //! Returns the logical conjunction vector of path constraints.
-          TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
+          TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraints(triton::uint32 tid=0) const;
 
           //! Returns the current path predicate as an AST of logical conjunction of each taken branch.
-          TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void) const;
+          TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(triton::uint32 tid=0) const;
 
           //! Returns path predicates which may reach the targeted address.
-          TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr) const;
+          TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr, triton::uint32 tid=0) const;
 
           //! Pushs constraints of a branch instruction to the path predicate.
           TRITON_EXPORT void pushPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
           //! Pushes constraint created from node to the current path predicate.
-          TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
+          TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node, triton::uint32 tid=0);
 
           //! Pushes constraint to the current path predicate.
-          TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco);
+          TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco, triton::uint32 tid=0);
 
           //! Pops the last constraints added to the path predicate.
-          TRITON_EXPORT void popPathConstraint(void);
+          TRITON_EXPORT void popPathConstraint(triton::uint32 tid=0);
 
           //! Clears the current path predicate.
-          TRITON_EXPORT void clearPathConstraints(void);
+          TRITON_EXPORT void clearPathConstraints(triton::uint32 tid=0);
       };
 
     /*! @} End of symbolic namespace */
