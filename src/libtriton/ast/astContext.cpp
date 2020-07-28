@@ -777,11 +777,83 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr) {
+      auto node = expr;
+      auto size = expr->getBitvectorSize();
+
       /* Optimization: If we extract the full size of expr, just return expr */
-      if (low == 0 && (high + 1) == expr->getBitvectorSize())
+      if (low == 0 && (high + 1) == size)
         return expr;
 
-      SharedAbstractNode node = std::make_shared<ExtractNode>(high, low, expr);
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) &&
+          high > low && high < size) {
+        while (true) {
+          auto n = node;
+          while (n->getType() == REFERENCE_NODE) {
+            auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+            n = ref->getSymbolicExpression()->getAst();
+          }
+          if (n->getType() == CONCAT_NODE) {
+            /* Optimization: If we extract the full part of concatenation, just
+             * return the part */
+            auto hi = n->getBitvectorSize() - 1;
+            bool found = false;
+            for (const auto& part : n->getChildren()) {
+              if (hi < high) {
+                break;
+              }
+              auto sz = part->getBitvectorSize();
+              auto lo = hi + 1 - sz;
+              if (hi == high && lo == low) {
+                return part;
+              }
+              if (hi >= high && lo <= low) {
+                node = part;
+                high -= lo;
+                low -= lo;
+                found = true;
+                break;
+              }
+              hi -= sz;
+            }
+            if (found) {
+              continue;
+            }
+          }
+          else if (n->getType() == ZX_NODE || n->getType() == SX_NODE) {
+            /* Optimization: If we extract from the node being extended, just
+             * return the node */
+            n = n->getChildren()[1];
+            auto sz = n->getBitvectorSize();
+            if (low == 0 && high + 1 == sz) {
+              return n;
+            }
+            if (high < sz) {
+              node = n;
+              continue;
+            }
+          }
+          break;
+        }
+
+        /* Optimization: extract from extract is one extract */
+        auto n = node;
+        while (n->getType() == REFERENCE_NODE) {
+          auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+          n = ref->getSymbolicExpression()->getAst();
+        }
+        if (n->getType() == EXTRACT_NODE) {
+          const auto& childs = n->getChildren();
+          auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<triton::uint32>();
+          auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<triton::uint32>();
+          if (lo + high <= hi) {
+            node = childs[2];
+            high += lo;
+            low += lo;
+          }
+        }
+      }
+
+      node = std::make_shared<ExtractNode>(high, low, node);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::extract(): Not enough memory.");
       node->init();
