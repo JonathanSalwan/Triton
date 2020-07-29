@@ -44,6 +44,10 @@ namespace triton {
       //! \class Z3Solver
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
+        private:
+          //! The SMT solver timeout. By default, unlimited.
+          triton::uint32 timeout;
+
         public:
           //! Constructor.
           TRITON_EXPORT Z3Solver();
@@ -77,6 +81,9 @@ namespace triton {
 
           //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;
+
+          //! Defines a solver timeout (in milliseconds).
+          TRITON_EXPORT void setTimeout(triton::uint32 ms);
       };
 
     /*! @} End of solver namespace */

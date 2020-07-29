@@ -36,6 +36,7 @@ namespace triton {
 
 
       Z3Solver::Z3Solver() {
+        this->timeout = 0;
       }
 
 
@@ -61,6 +62,13 @@ namespace triton {
 
           /* Create a solver and add the expression */
           solver.add(expr);
+
+          /* Define the timeout */
+          if (this->timeout) {
+            z3::params p(ctx);
+            p.set(":timeout", this->timeout);
+            solver.set(p);
+          }
 
           /* Check if it is sat */
           while (solver.check() == z3::sat && limit >= 1) {
@@ -139,6 +147,13 @@ namespace triton {
           /* Create a solver and add the expression */
           solver.add(expr);
 
+          /* Define the timeout */
+          if (this->timeout) {
+            z3::params p(ctx);
+            p.set(":timeout", this->timeout);
+            solver.set(p);
+          }
+
           /* Check if it is sat */
           return solver.check() == z3::sat;
         }
@@ -211,6 +226,11 @@ namespace triton {
 
       std::string Z3Solver::getName(void) const {
         return "z3";
+      }
+
+
+      void Z3Solver::setTimeout(triton::uint32 ms) {
+        this->timeout = ms;
       }
 
     };

@@ -2630,6 +2630,22 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_setSolverTimeout(PyObject* self, PyObject* ms) {
+        if (ms == nullptr || (!PyLong_Check(ms) && !PyInt_Check(ms)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setSolverTimeout(): Expects an integer as argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->setSolverTimeout(PyLong_AsUint32(ms));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_setTaintMemory(PyObject* self, PyObject* args) {
         PyObject* mem  = nullptr;
         PyObject* flag = nullptr;
@@ -3161,6 +3177,7 @@ namespace triton {
         {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,               METH_VARARGS,       ""},
         {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,               METH_VARARGS,       ""},
         {"setMode",                             (PyCFunction)TritonContext_setMode,                                METH_VARARGS,       ""},
+        {"setSolverTimeout",                    (PyCFunction)TritonContext_setSolverTimeout,                       METH_O,             ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                         METH_VARARGS,       ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                       METH_VARARGS,       ""},
         {"setThumb",                            (PyCFunction)TritonContext_setThumb,                               METH_O,             ""},

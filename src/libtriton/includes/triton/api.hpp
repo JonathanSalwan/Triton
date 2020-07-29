@@ -551,6 +551,9 @@ namespace triton {
         //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
 
+        //! [**solver api**] - Defines a solver timeout (in milliseconds).
+        TRITON_EXPORT void setSolverTimeout(triton::uint32 ms);
+
 
 
         /* Taint engine API ============================================================================== */
