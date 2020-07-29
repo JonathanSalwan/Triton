@@ -73,6 +73,9 @@ Returns the hash (signature) of the AST.
 - <b>integer getInteger(void)</b><br>
 Returns the integer of the node. Only available on `INTEGER_NODE`, raises an exception otherwise.
 
+- <b>integer getLevel(void)</b><br>
+Returns the deep level of the AST.
+
 - <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
 Returns the parents list nodes. The list is empty if there is no parent defined yet.
 
@@ -226,6 +229,16 @@ namespace triton {
 
         try {
           return PyLong_FromUint512(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstNode_getLevel(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getLevel());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -806,6 +819,7 @@ namespace triton {
         {"getChildren",             AstNode_getChildren,            METH_NOARGS,     ""},
         {"getHash",                 AstNode_getHash,                METH_NOARGS,     ""},
         {"getInteger",              AstNode_getInteger,             METH_NOARGS,     ""},
+        {"getLevel",                AstNode_getLevel,               METH_NOARGS,     ""},
         {"getParents",              AstNode_getParents,             METH_NOARGS,     ""},
         {"getString",               AstNode_getString,              METH_NOARGS,     ""},
         {"getSymbolicExpression",   AstNode_getSymbolicExpression,  METH_NOARGS,     ""},
