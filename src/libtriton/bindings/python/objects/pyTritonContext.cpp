@@ -65,8 +65,8 @@ Clears concrete values assigned to the memory cells.
 - <b>void clearConcreteMemoryValue(integer addr, integer size)</b><br>
 Clears concrete values assigned to the memory cells from `addr` to `addr + size`.
 
-- <b>void clearPathConstraints(integer tid=0)</b><br>
-Clears the current path predicate of a thread id.
+- <b>void clearPathConstraints(void)</b><br>
+Clears the current path predicate.
 
 - <b>void concretizeAllMemory(void)</b><br>
 Concretizes all symbolic memory references.
@@ -155,14 +155,14 @@ Returns the parent \ref py_Register_page from a \ref py_Register_page.
 - <b>[\ref py_Register_page, ...] getParentRegisters(void)</b><br>
 Returns the list of parent registers. Each item of this list is a \ref py_Register_page.
 
-- <b>[\ref py_PathConstraint_page, ...] getPathConstraints(integer tid=0)</b><br>
-Returns the logical conjunction vector of path constraints of a thread id as a list of \ref py_PathConstraint_page.
+- <b>[\ref py_PathConstraint_page, ...] getPathConstraints(void)</b><br>
+Returns the logical conjunction vector of path constraints as a list of \ref py_PathConstraint_page.
 
-- <b>\ref py_AstNode_page getPathPredicate(integer tid=0)</b><br>
-Returns the current path predicate of a thread id as an AST of logical conjunction of each taken branch.
+- <b>\ref py_AstNode_page getPathPredicate(void)</b><br>
+Returns the current path predicate as an AST of logical conjunction of each taken branch.
 
-- <b>[\ref py_AstNode_page, ...] getPredicatesToReachAddress(integer addr, integer tid=0)</b><br>
-Returns path predicates of a thread id which may reach the targeted address.
+- <b>[\ref py_AstNode_page, ...] getPredicatesToReachAddress(integer addr)</b><br>
+Returns path predicates which may reach the targeted address.
 
 - <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
 Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
@@ -275,8 +275,8 @@ Returns a new symbolic expression. Note that if there are simplification passes 
 - <b>\ref py_SymbolicVariable_page newSymbolicVariable(integer varSize, string alias)</b><br>
 Returns a new symbolic variable.
 
-- <b>void popPathConstraint(integer tid=0)</b><br>
-Pops the last constraints added to the path predicate of a thread id.
+- <b>void popPathConstraint(void)</b><br>
+Pops the last constraints added to the path predicate.
 
 - <b>void printSlicedExpressions(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
 Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
@@ -284,8 +284,8 @@ Prints symbolic expression with used references and symbolic variables in AST re
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>void pushPathConstraint(\ref py_AstNode_page node, integer tid=0)</b><br>
-Pushs constraints to the current path predicate of a thread id.
+- <b>void pushPathConstraint(\ref py_AstNode_page node)</b><br>
+Pushs constraints to the current path predicate.
 
 - <b>void removeCallback(function cb, \ref py_CALLBACK_page kind)</b><br>
 Removes a recorded callback.
@@ -814,24 +814,9 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_clearPathConstraints(PyObject* self, PyObject* args) {
-        PyObject* tid = nullptr;
-
-        if (PyArg_ParseTuple(args, "|O", &tid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::clearPathConstraints(): Invalid number of arguments");
-        }
-
-        if (tid != nullptr && (!PyLong_Check(tid) && !PyInt_Check(tid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::clearPathConstraints(): Expects an integer as thread id.");
-        }
-
+      static PyObject* TritonContext_clearPathConstraints(PyObject* self, PyObject* noarg) {
         try {
-          if (tid == nullptr) {
-            PyTritonContext_AsTritonContext(self)->clearPathConstraints();
-          }
-          else {
-            PyTritonContext_AsTritonContext(self)->clearPathConstraints(PyLong_AsUint32(tid));
-          }
+          PyTritonContext_AsTritonContext(self)->clearPathConstraints();
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1422,26 +1407,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getPathConstraints(PyObject* self, PyObject* args) {
-        PyObject* pytid    = nullptr;
-        PyObject* ret      = nullptr;
-        triton::uint32 tid = 0;
-
-        if (PyArg_ParseTuple(args, "|O", &pytid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPathConstraints(): Invalid number of arguments");
-        }
-
-        if (pytid != nullptr && (!PyLong_Check(pytid) && !PyInt_Check(pytid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPathConstraints(): Expects an integer as thread id.");
-        }
-
-        if (pytid != nullptr) {
-          tid = PyLong_AsUint32(pytid);
-        }
+      static PyObject* TritonContext_getPathConstraints(PyObject* self, PyObject* noarg) {
+        PyObject* ret = nullptr;
 
         try {
           triton::uint32 index = 0;
-          auto pc = PyTritonContext_AsTritonContext(self)->getPathConstraints(tid);
+          const auto& pc = PyTritonContext_AsTritonContext(self)->getPathConstraints();
 
           ret = xPyList_New(pc.size());
           for (auto it = pc.begin(); it != pc.end(); it++) {
@@ -1459,22 +1430,9 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getPathPredicate(PyObject* self, PyObject* args) {
-        PyObject* pytid = nullptr;
-
-        if (PyArg_ParseTuple(args, "|O", &pytid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPathPredicate(): Invalid number of arguments");
-        }
-
-        if (pytid != nullptr && (!PyLong_Check(pytid) && !PyInt_Check(pytid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPathPredicate(): Expects an integer as thread id.");
-        }
-
+      static PyObject* TritonContext_getPathPredicate(PyObject* self, PyObject* noarg) {
         try {
-          if (pytid == nullptr) {
-            return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathPredicate());
-          }
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathPredicate(PyLong_AsUint32(pytid)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathPredicate());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1485,33 +1443,15 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getPredicatesToReachAddress(PyObject* self, PyObject* args) {
-        PyObject* ret    = nullptr;
-        PyObject* pytid  = nullptr;
-        PyObject* pyaddr = nullptr;
+      static PyObject* TritonContext_getPredicatesToReachAddress(PyObject* self, PyObject* addr) {
+        PyObject* ret = nullptr;
 
-        if (PyArg_ParseTuple(args, "|OO", &pyaddr, &pytid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPredicatesToReachAddress(): Invalid number of arguments");
-        }
-
-        if (pyaddr == nullptr || (!PyLong_Check(pyaddr) && !PyInt_Check(pyaddr))) {
+        if (addr == nullptr || (!PyLong_Check(addr) && !PyInt_Check(addr)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::getPredicatesToReachAddress(): Expects an address as argument.");
-        }
-
-        if (pytid != nullptr && (!PyLong_Check(pytid) && !PyInt_Check(pytid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getPredicatesToReachAddress(): Expects an integer as thread id.");
-        }
 
         try {
           triton::uint32 index = 0;
-          triton::uint32 tid   = 0;
-          triton::uint64 addr  = PyLong_AsUint64(pyaddr);
-
-          if (pytid != nullptr) {
-            tid = PyLong_AsUint32(pytid);
-          }
-
-          auto preds = PyTritonContext_AsTritonContext(self)->getPredicatesToReachAddress(addr, tid);
+          auto preds = PyTritonContext_AsTritonContext(self)->getPredicatesToReachAddress(PyLong_AsUint64(addr));
 
           ret = xPyList_New(preds.size());
           for (auto it = preds.begin(); it != preds.end(); it++) {
@@ -2179,29 +2119,16 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_popPathConstraint(PyObject* self, PyObject* args) {
-        PyObject* tid = nullptr;
-
-        if (PyArg_ParseTuple(args, "|O", &tid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::popPathConstraint(): Invalid number of arguments");
-        }
-
-        if (tid != nullptr && (!PyLong_Check(tid) && !PyInt_Check(tid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::popPathConstraint(): Expects an integer as thread id.");
-        }
-
+      static PyObject* TritonContext_popPathConstraint(PyObject* self, PyObject* noarg) {
         try {
-          if (tid == nullptr) {
-            PyTritonContext_AsTritonContext(self)->popPathConstraint();
-          }
-          else {
-            PyTritonContext_AsTritonContext(self)->popPathConstraint(PyLong_AsUint32(tid));
-          }
+          PyTritonContext_AsTritonContext(self)->popPathConstraint();
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
         Py_INCREF(Py_None);
         return Py_None;
       }
@@ -2258,30 +2185,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* args) {
-        PyObject* node = nullptr;
-        PyObject* tid  = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &node, &tid) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Invalid number of arguments");
-        }
-
-        if (!PyAstNode_Check(node)) {
+      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an AstNode as argument.");
-        }
-
-        if (tid != nullptr && (!PyLong_Check(tid) && !PyInt_Check(tid))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an integer as thread id.");
-        }
 
         try {
-          if (tid == nullptr) {
-            PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node));
-          }
-          else {
-            PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node), PyLong_AsUint32(tid));
-          }
+          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3102,7 +3011,7 @@ namespace triton {
         {"clearCallbacks",                      (PyCFunction)TritonContext_clearCallbacks,                         METH_NOARGS,        ""},
         {"clearModes",                          (PyCFunction)TritonContext_clearModes,                             METH_NOARGS,        ""},
         {"clearConcreteMemoryValue",            (PyCFunction)TritonContext_clearConcreteMemoryValue,               METH_VARARGS,       ""},
-        {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_VARARGS,       ""},
+        {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                   METH_NOARGS,        ""},
         {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                    METH_NOARGS,        ""},
         {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                  METH_NOARGS,        ""},
         {"concretizeMemory",                    (PyCFunction)TritonContext_concretizeMemory,                       METH_O,             ""},
@@ -3130,9 +3039,9 @@ namespace triton {
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
-        {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_VARARGS,       ""},
-        {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                       METH_VARARGS,       ""},
-        {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,            METH_VARARGS,       ""},
+        {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,        ""},
+        {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                       METH_NOARGS,        ""},
+        {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,            METH_O,             ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,             ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,             ""},
         {"getSymbolicExpression",               (PyCFunction)TritonContext_getSymbolicExpression,                  METH_O,             ""},
@@ -3164,10 +3073,10 @@ namespace triton {
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                METH_NOARGS,        ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                  METH_VARARGS,       ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                    METH_VARARGS,       ""},
-        {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                      METH_VARARGS,       ""},
+        {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                      METH_NOARGS,        ""},
         {"printSlicedExpressions",              (PyCFunction)TritonContext_printSlicedExpressions,                 METH_VARARGS,       ""},
         {"processing",                          (PyCFunction)TritonContext_processing,                             METH_O,             ""},
-        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                     METH_VARARGS,       ""},
+        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                     METH_O,             ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                         METH_VARARGS,       ""},
         {"reset",                               (PyCFunction)TritonContext_reset,                                  METH_NOARGS,        ""},
         {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                        METH_O,             ""},

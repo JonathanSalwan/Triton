@@ -920,45 +920,45 @@ namespace triton {
   }
 
 
-  std::vector<triton::engines::symbolic::PathConstraint> API::getPathConstraints(triton::uint32 tid) const {
+  const std::vector<triton::engines::symbolic::PathConstraint>& API::getPathConstraints(void) const {
     this->checkSymbolic();
-    return this->symbolic->getPathConstraints(tid);
+    return this->symbolic->getPathConstraints();
   }
 
 
-  triton::ast::SharedAbstractNode API::getPathPredicate(triton::uint32 tid) {
+  triton::ast::SharedAbstractNode API::getPathPredicate(void) {
     this->checkSymbolic();
-    return this->symbolic->getPathPredicate(tid);
+    return this->symbolic->getPathPredicate();
   }
 
 
-  std::vector<triton::ast::SharedAbstractNode> API::getPredicatesToReachAddress(triton::uint64 addr, triton::uint32 tid) {
+  std::vector<triton::ast::SharedAbstractNode> API::getPredicatesToReachAddress(triton::uint64 addr) {
     this->checkSymbolic();
-    return this->symbolic->getPredicatesToReachAddress(addr, tid);
+    return this->symbolic->getPredicatesToReachAddress(addr);
   }
 
 
-  void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node, triton::uint32 tid) {
+  void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
     this->checkSymbolic();
-    this->symbolic->pushPathConstraint(node, tid);
+    this->symbolic->pushPathConstraint(node);
   }
 
 
-  void API::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco, triton::uint32 tid) {
+  void API::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco) {
     this->checkSymbolic();
-    this->symbolic->pushPathConstraint(pco, tid);
+    this->symbolic->pushPathConstraint(pco);
   }
 
 
-  void API::popPathConstraint(triton::uint32 tid) {
+  void API::popPathConstraint(void) {
     this->checkSymbolic();
-    this->symbolic->popPathConstraint(tid);
+    this->symbolic->popPathConstraint();
   }
 
 
-  void API::clearPathConstraints(triton::uint32 tid) {
+  void API::clearPathConstraints(void) {
     this->checkSymbolic();
-    this->symbolic->clearPathConstraints(tid);
+    this->symbolic->clearPathConstraints();
   }
 
 

@@ -422,25 +422,25 @@ namespace triton {
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable getSymbolicVariable(const std::string& symVarName) const;
 
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
-        TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraints(triton::uint32 tid=0) const;
+        TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
         //! [**symbolic api**] - Returns the current path predicate as an AST of logical conjunction of each taken branch.
-        TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(triton::uint32 tid=0);
+        TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void);
 
         //! [**symbolic api**] - Returns path predicates which may reach the targeted address.
-        TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr, triton::uint32 tid=0);
+        TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr);
 
         //! [**symbolic api**] - Pushes constraint created from node to the current path predicate.
-        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node, triton::uint32 tid=0);
+        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
 
         //! [**symbolic api**] - Pushes constraint to the current path predicate.
-        TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco, triton::uint32 tid=0);
+        TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco);
 
         //! [**symbolic api**] - Pops the last constraints added to the path predicate.
-        TRITON_EXPORT void popPathConstraint(triton::uint32 tid=0);
+        TRITON_EXPORT void popPathConstraint(void);
 
         //! [**symbolic api**] - Clears the current path predicate.
-        TRITON_EXPORT void clearPathConstraints(triton::uint32 tid=0);
+        TRITON_EXPORT void clearPathConstraints(void);
 
         //! [**symbolic api**] - Enables or disables the symbolic execution engine.
         TRITON_EXPORT void enableSymbolicEngine(bool flag);
