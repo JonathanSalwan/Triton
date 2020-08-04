@@ -577,6 +577,14 @@ class TestAstSimplification4(unittest.TestCase):
         n = self.ast.extract(4, 2, self.ast.extract(18, 5, a))
         self.assertEqual(str(n), "((_ extract 9 7) SymVar_0)")
 
+    def test_extract_ref(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(8))
+        c = self.ast.concat([self.ast.bv(0, 24), a])
+        r1 = self.ast.reference(self.ctx.newSymbolicExpression(c, "r1"))
+        r2 = self.ast.reference(self.ctx.newSymbolicExpression(r1, "r2"))
+        n = self.ast.extract(7, 0, r2)
+        self.assertEqual(str(n), "SymVar_0")
+
 
 class TestAstSimplification5(unittest.TestCase):
 

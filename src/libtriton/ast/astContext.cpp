@@ -788,7 +788,7 @@ namespace triton {
           high > low && high < size) {
         while (true) {
           auto n = node;
-          if (n->getType() == REFERENCE_NODE) {
+          while (n->getType() == REFERENCE_NODE) {
             auto ref = reinterpret_cast<ReferenceNode*>(n.get());
             n = ref->getSymbolicExpression()->getAst();
           }
@@ -837,7 +837,7 @@ namespace triton {
 
         /* Optimization: extract from extract is one extract */
         auto n = node;
-        if (n->getType() == REFERENCE_NODE) {
+        while (n->getType() == REFERENCE_NODE) {
           auto ref = reinterpret_cast<ReferenceNode*>(n.get());
           n = ref->getSymbolicExpression()->getAst();
         }
