@@ -4403,8 +4403,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -4465,8 +4464,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -4527,8 +4525,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -4589,8 +4586,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -6303,8 +6299,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -6343,8 +6338,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -6383,8 +6377,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -6423,8 +6416,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -7380,8 +7372,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -7429,8 +7420,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -7545,8 +7535,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -7594,8 +7583,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -12071,8 +12059,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -12124,8 +12111,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -12177,8 +12163,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -12230,8 +12215,7 @@ namespace triton {
           inst.setPrefix(triton::arch::x86::ID_PREFIX_REPE);
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -13181,8 +13165,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -13221,8 +13204,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -13261,8 +13243,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
@@ -13301,8 +13282,7 @@ namespace triton {
         auto  df     = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_DF));
 
         /* Check if there is a REP prefix and a counter to zero */
-        auto cnt = this->symbolicEngine->getOperandAst(cx);
-        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && cnt->evaluate().is_zero()) {
+        if (inst.getPrefix() != triton::arch::x86::ID_PREFIX_INVALID && this->symbolicEngine->getOperandAst(cx)->evaluate().is_zero()) {
           this->controlFlow_s(inst);
           return;
         }
