@@ -5,6 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <bitset>
 #include <list>
 #include <memory>
 #include <vector>
@@ -749,6 +750,15 @@ namespace triton {
         }
       }
 
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) &&
+          node->getBitvectorSize() <= 512) {
+        /* Optimization: concatenate extractions in one if possible */
+        auto n = this->simplify_concat(std::vector<SharedAbstractNode>({expr1, expr2}));
+        if (n) {
+          node = n;
+        }
+      }
+
       return this->collect(node);
     }
 
@@ -1121,6 +1131,64 @@ namespace triton {
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
       return this->astRepresentation.print(stream, node);
+    }
+
+    SharedAbstractNode AstContext::simplify_concat(std::vector<SharedAbstractNode> exprs) const {
+      /* Optimization: concatenate extractions in one if possible */
+      SharedAbstractNode ret = 0;
+      SharedAbstractNode e = 0;
+      std::bitset<512> b;
+      while (!exprs.empty()) {
+        auto n = exprs.back();
+        exprs.pop_back();
+        while (n->getType() == REFERENCE_NODE) {
+          auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+          n = ref->getSymbolicExpression()->getAst();
+        }
+        if (n->getType() == CONCAT_NODE) {
+          for (const auto& part : n->getChildren()) {
+            exprs.push_back(part);
+          }
+          continue;
+        }
+        if (n->getType() != EXTRACT_NODE) {
+          return 0;
+        }
+        const auto& childs = n->getChildren();
+        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        if (hi < lo) {
+          return 0;
+        }
+        auto r = childs[2];
+        n = r;
+        while (n->getType() == REFERENCE_NODE) {
+          auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+          n = ref->getSymbolicExpression()->getAst();
+        }
+        if (!ret) {
+          ret = r;
+          e = n;
+        }
+        if (!n->equalTo(e)) {
+          return 0;
+        }
+        for (uint32 i = lo; i <= hi; ++i) {
+          b.set(i);
+        }
+      }
+
+      uint32 hi, lo;
+      for (lo = 0; !b.test(lo); ++lo) {}
+      for (hi = lo; b.test(hi); ++hi) {}
+      --hi;
+      if (hi < lo || b.count() != hi + 1 - lo) {
+        return 0;
+      }
+      if (!lo && hi + 1 == ret->getBitvectorSize()) {
+        return ret;
+      }
+      return std::make_shared<ExtractNode>(hi, lo, ret);
     }
 
   }; /* ast namespace */

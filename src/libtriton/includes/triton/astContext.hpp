@@ -210,6 +210,15 @@ namespace triton {
             }
           }
 
+          if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) &&
+              node->getBitvectorSize() <= 512) {
+            /* Optimization: concatenate extractions in one if possible */
+            auto n = this->simplify_concat(std::vector<SharedAbstractNode>(exprs.begin(), exprs.end()));
+            if (n) {
+              node = n;
+            }
+          }
+
           return this->collect(node);
         }
 
@@ -320,6 +329,10 @@ namespace triton {
 
         //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
+
+      private:
+        //! Return simplified concatenation.
+        SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs) const;
     };
 
     //! Shared AST context
