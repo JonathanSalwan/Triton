@@ -83,7 +83,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
           /*! \brief vector of map of symbolic variable id -> model
@@ -92,10 +92,10 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Returns the name of the solver.
           TRITON_EXPORT std::string getName(void) const;

@@ -77,24 +77,24 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node) const {
+      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
         if (!this->solver)
           return std::unordered_map<triton::usize, SolverModel>{};
-        return this->solver->getModel(node);
+        return this->solver->getModel(node, status);
       }
 
 
-      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
         if (!this->solver)
           return std::vector<std::unordered_map<triton::usize, SolverModel>>{};
-        return this->solver->getModels(node, limit);
+        return this->solver->getModels(node, limit, status);
       }
 
 
-      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node) const {
+      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
         if (!this->solver)
           return false;
-        return this->solver->isSat(node);
+        return this->solver->isSat(node, status);
       }
 
 

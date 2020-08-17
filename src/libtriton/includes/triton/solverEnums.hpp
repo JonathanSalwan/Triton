@@ -44,6 +44,14 @@ namespace triton {
         #endif
       };
 
+      /*! The different kind of status */
+      enum status_e {
+        SAT,      /*!< SAT */
+        TIMEOUT,  /*!< TIMEOUT */
+        UNKNOWN,  /*!< UNKNOWN */
+        UNSAT     /*!< UNSAT */
+      };
+
     /*! @} End of solver namespace */
     };
   /*! @} End of engines namespace */
