@@ -432,6 +432,14 @@ class TestAstSimplification4(unittest.TestCase):
         n = self.ast.bvmul(b, a)
         self.assertTrue(self.proof(n == 0))
 
+    def test_mul3(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.bv(1, 32)
+        n = self.ast.bvmul(b, a)
+        self.assertEqual(str(n), "SymVar_0")
+        n = self.ast.bvmul(a, b)
+        self.assertEqual(str(n), "SymVar_0")
+
     def test_or1(self):
         a = self.ast.variable(self.ctx.newSymbolicVariable(32))
         b = self.ast.bv(0, 32)
