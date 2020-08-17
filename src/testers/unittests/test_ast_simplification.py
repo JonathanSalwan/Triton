@@ -621,14 +621,21 @@ class TestAstSimplification4(unittest.TestCase):
         n = self.ast.concat([self.ast.extract(23, 16, a), self.ast.extract(15, 8, a)])
         self.assertEqual(str(n), "((_ extract 23 8) SymVar_0)")
 
-    def test_concat_extract_5(self):
+    def test_concat_extract_intersection(self):
         a = self.ast.variable(self.ctx.newSymbolicVariable(32))
-        e = self.ast.extract(15, 8, a)
-        r = self.ast.reference(self.ctx.newSymbolicExpression(e, "r"))
-        c1 = self.ast.concat([self.ast.extract(31, 24, a), r])
-        c2 = self.ast.concat([self.ast.extract(17, 16, a), self.ast.extract(23, 17, a)])
-        n = self.ast.concat([c1, c2])
-        self.assertEqual(str(n), "((_ extract 31 8) SymVar_0)")
+        n = self.ast.concat([self.ast.extract(31, 24, a), self.ast.extract(27, 26, a),
+                             self.ast.extract(23, 16, a), self.ast.extract(15, 8, a),
+                             self.ast.extract(7, 0, a)])
+        self.assertEqual(str(n), ("(concat ((_ extract 31 24) SymVar_0) "
+                                  "((_ extract 27 26) SymVar_0) "
+                                  "((_ extract 23 16) SymVar_0) "
+                                  "((_ extract 15 8) SymVar_0) "
+                                  "((_ extract 7 0) SymVar_0))"))
+
+    def test_concat_extract_order(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.concat([self.ast.extract(15, 0, a), self.ast.extract(31, 16, a)])
+        self.assertEqual(str(n), "(concat ((_ extract 15 0) SymVar_0) ((_ extract 31 16) SymVar_0))")
 
 
 class TestAstSimplification5(unittest.TestCase):

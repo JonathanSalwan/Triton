@@ -5,7 +5,6 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <bitset>
 #include <list>
 #include <memory>
 #include <vector>
@@ -1135,9 +1134,10 @@ namespace triton {
 
     SharedAbstractNode AstContext::simplify_concat(std::vector<SharedAbstractNode> exprs) const {
       /* Optimization: concatenate extractions in one if possible */
+      uint32 high = 0;
+      uint32 low = 1;
       SharedAbstractNode ret = 0;
       SharedAbstractNode e = 0;
-      std::bitset<512> b;
       while (!exprs.empty()) {
         auto n = exprs.back();
         exprs.pop_back();
@@ -1167,28 +1167,25 @@ namespace triton {
           n = ref->getSymbolicExpression()->getAst();
         }
         if (!ret) {
+          high = hi;
+          low = lo;
           ret = r;
           e = n;
+          continue;
         }
-        if (!n->equalTo(e)) {
+        if (high + 1 != lo || !n->equalTo(e)) {
           return 0;
         }
-        for (uint32 i = lo; i <= hi; ++i) {
-          b.set(i);
-        }
+        high = hi;
       }
 
-      uint32 hi, lo;
-      for (lo = 0; !b.test(lo); ++lo) {}
-      for (hi = lo; b.test(hi); ++hi) {}
-      --hi;
-      if (hi < lo || b.count() != hi + 1 - lo) {
+      if (high < low) {
         return 0;
       }
-      if (!lo && hi + 1 == ret->getBitvectorSize()) {
+      if (!low && high + 1 == ret->getBitvectorSize()) {
         return ret;
       }
-      return std::make_shared<ExtractNode>(hi, lo, ret);
+      return std::make_shared<ExtractNode>(high, low, ret);
     }
 
   }; /* ast namespace */
