@@ -1291,11 +1291,17 @@ namespace triton {
           //! The UNPCKLPS semantics.
           void unpcklps_s(triton::arch::Instruction& inst);
 
+          //! The VMOVD semantics.
+          void vmovd_s(triton::arch::Instruction& inst);
+
           //! The VMOVDQA semantics.
           void vmovdqa_s(triton::arch::Instruction& inst);
 
           //! The VMOVDQU semantics.
           void vmovdqu_s(triton::arch::Instruction& inst);
+
+          //! The VMOVQ semantics.
+          void vmovq_s(triton::arch::Instruction& inst);
 
           //! The VPAND semantics.
           void vpand_s(triton::arch::Instruction& inst);
