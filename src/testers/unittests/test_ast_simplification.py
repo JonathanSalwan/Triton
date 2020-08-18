@@ -596,11 +596,6 @@ class TestAstSimplification5(unittest.TestCase):
         self.ast = self.ctx.getAstContext()
         self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
-    def proof(self, n):
-        if self.ctx.isSat(self.ast.lnot(n)) == True:
-            return False
-        return True
-
     def test_extract_zx(self):
         a = self.ast.variable(self.ctx.newSymbolicVariable(32))
         zx = self.ast.zx(32, a)
