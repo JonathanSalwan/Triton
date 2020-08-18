@@ -787,26 +787,40 @@ namespace triton {
       if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) &&
           high > low && high < size) {
         while (true) {
+          /* Unroll references, n will contain unrolled node */
           auto n = node;
           while (n->getType() == REFERENCE_NODE) {
             auto ref = reinterpret_cast<ReferenceNode*>(n.get());
             n = ref->getSymbolicExpression()->getAst();
           }
+
           if (n->getType() == CONCAT_NODE) {
-            /* Optimization: If we extract the full part of concatenation, just
-             * return the part */
+            /*
+             * Optimization: If we extract the full part of concatenation, just
+             * return the part. We are trying to find a part of concatenation
+             * that we can extract from. Thus, we can extract from only one part
+             * of concatenation.
+             *
+             * ((_ extract 11 9) (concat (_ bv1 8) (_ bv2 8) (_ bv3 8) (_ bv4 8))) =>
+             * ((_ extract 3 1) (_ bv3 8))
+             */
             auto hi = n->getBitvectorSize() - 1;
             bool found = false;
+            /* Search for part of concatenation we can extract from. Iterate
+             * from the left to the right. */
             for (const auto& part : n->getChildren()) {
               if (hi < high) {
+                /* Did not find a part we can extract from */
                 break;
               }
               auto sz = part->getBitvectorSize();
               auto lo = hi + 1 - sz;
               if (hi == high && lo == low) {
+                /* We are extracting the full part, just return it */
                 return part;
               }
               if (hi >= high && lo <= low) {
+                /* Extract from part: ((_ extract high-lo low-lo) part) */
                 node = part;
                 high -= lo;
                 low -= lo;
@@ -816,18 +830,28 @@ namespace triton {
               hi -= sz;
             }
             if (found) {
+              /* Optimize ((_ extract high low) node) one more time */
               continue;
             }
           }
           else if (n->getType() == ZX_NODE || n->getType() == SX_NODE) {
-            /* Optimization: If we extract from the node being extended, just
-             * return the node */
+            /*
+             * Optimization: If we extract from the node being extended, just
+             * return the node
+             *
+             * ((_ extract 31 0) ((_ zero_extend 32) (_ bv1 32))) => (_ bv1 32)
+             *
+             * ((_ extract 7 0) ((_ sign_extend 32) (_ bv1 32))) =>
+             * ((_ extract 7 0) (_ bv1 32))
+             **/
             n = n->getChildren()[1];
             auto sz = n->getBitvectorSize();
             if (low == 0 && high + 1 == sz) {
+              /* Just return the node being extended */
               return n;
             }
             if (high < sz) {
+              /* Optimize ((_ extract high low) n) one more time */
               node = n;
               continue;
             }
@@ -835,16 +859,23 @@ namespace triton {
           break;
         }
 
-        /* Optimization: extract from extract is one extract */
+        /* Unroll references, n will contain unrolled node */
         auto n = node;
         while (n->getType() == REFERENCE_NODE) {
           auto ref = reinterpret_cast<ReferenceNode*>(n.get());
           n = ref->getSymbolicExpression()->getAst();
         }
+
+        /*
+         * Optimization: extract from extract is one extract
+         *
+         * ((_ extract high low) ((_ extract hi lo) a)) =>
+         * ((_ extract high+lo low+lo) a)
+         **/
         if (n->getType() == EXTRACT_NODE) {
           const auto& childs = n->getChildren();
-          auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<triton::uint32>();
-          auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<triton::uint32>();
+          auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+          auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
           if (lo + high <= hi) {
             node = childs[2];
             high += lo;
