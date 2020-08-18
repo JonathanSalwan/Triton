@@ -227,6 +227,14 @@ namespace triton {
         /* Optimization: A * 0 = 0 */
         if (!expr2->isSymbolized() && expr2->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: 1 * A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 1)
+          return expr2;
+
+        /* Optimization: A * 1 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 1)
+          return expr1;
       }
 
       SharedAbstractNode node = std::make_shared<BvmulNode>(expr1, expr2);
