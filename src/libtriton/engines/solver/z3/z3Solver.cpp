@@ -68,11 +68,14 @@ namespace triton {
             solver.set(p);
           }
 
+          /* Get first model */
+          z3::check_result res = solver.check();
+
           /* Write back the status code of the first constraint */
-          this->writeBackStatus(solver, solver.check(), status);
+          this->writeBackStatus(solver, res, status);
 
           /* Check if it is sat */
-          while (solver.check() == z3::sat && limit >= 1) {
+          for (; res == z3::sat && limit >= 1; res = solver.check()) {
 
             /* Get model */
             z3::model m = solver.get_model();
