@@ -22,16 +22,17 @@ namespace triton {
           if (arch != triton::arch::ARCH_ARM32)
               throw triton::exceptions::Architecture("ARM32Specifications::ARM32Specifications(): Invalid architecture.");
 
-            // Fill registers_ with those available in Arm32 from spec
+            // Fill id2reg and name2id with those available in Arm32 from spec
             #define REG_SPEC(UPPER_NAME, LOWER_NAME, ARM32_UPPER, ARM32_LOWER, ARM32_PARENT, MUTABLE) \
-              registers_.emplace(ID_REG_ARM32_##UPPER_NAME,                                           \
+              id2reg.emplace(ID_REG_ARM32_##UPPER_NAME,                                               \
                                  triton::arch::Register(triton::arch::ID_REG_ARM32_##UPPER_NAME,      \
                                                         #LOWER_NAME,                                  \
                                                         triton::arch::ID_REG_ARM32_##ARM32_PARENT,    \
                                                         ARM32_UPPER,                                  \
                                                         ARM32_LOWER,                                  \
                                                         MUTABLE)                                      \
-                                );
+                                );                                                                    \
+              name2id.emplace(#LOWER_NAME, ID_REG_ARM32_##UPPER_NAME);
             // Handle register not available in capstone as normal registers
             #define REG_SPEC_NO_CAPSTONE REG_SPEC
             #include "triton/arm32.spec"

@@ -5,6 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <algorithm>
 #include <cstring>
 
 #include <triton/architecture.hpp>
@@ -171,14 +172,14 @@ namespace triton {
 
 
         const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& Arm32Cpu::getAllRegisters(void) const {
-          return this->registers_;
+          return this->id2reg;
         }
 
 
         std::set<const triton::arch::Register*> Arm32Cpu::getParentRegisters(void) const {
           std::set<const triton::arch::Register*> ret;
 
-          for (const auto& kv: this->registers_) {
+          for (const auto& kv: this->id2reg) {
             auto regId = kv.first;
             const auto& reg = kv.second;
 
@@ -197,7 +198,18 @@ namespace triton {
 
         const triton::arch::Register& Arm32Cpu::getRegister(triton::arch::register_e id) const {
           try {
-            return this->registers_.at(id);
+            return this->id2reg.at(id);
+          } catch (const std::out_of_range&) {
+            throw triton::exceptions::Cpu("Arm32Cpu::getRegister(): Invalid register for this architecture.");
+          }
+        }
+
+
+        const triton::arch::Register& Arm32Cpu::getRegister(const std::string& name) const {
+        std::string lower = name;
+        std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char c){ return std::tolower(c); });
+          try {
+            return this->getRegister(this->name2id.at(lower));
           } catch (const std::out_of_range&) {
             throw triton::exceptions::Cpu("Arm32Cpu::getRegister(): Invalid register for this architecture.");
           }

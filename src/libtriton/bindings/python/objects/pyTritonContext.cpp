@@ -167,6 +167,9 @@ Returns path predicates which may reach the targeted address.
 - <b>\ref py_Register_page getRegister(\ref py_REG_page id)</b><br>
 Returns the \ref py_Register_page class corresponding to a \ref py_REG_page id.
 
+- <b>\ref py_Register_page getRegister(string name)</b><br>
+Returns the \ref py_Register_page class corresponding to a string.
+
 - <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
 Returns the AST corresponding to the \ref py_Register_page with the SSA form.
 
@@ -1470,15 +1473,22 @@ namespace triton {
 
 
       static PyObject* TritonContext_getRegister(PyObject* self, PyObject* regIn) {
-        triton::arch::register_e rid = triton::arch::ID_REG_INVALID;
-
-        if (regIn == nullptr || (!PyLong_Check(regIn) && !PyInt_Check(regIn)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getRegister(): Expects an id as argument.");
-
         try {
-          rid = static_cast<triton::arch::register_e>(PyLong_AsUint32(regIn));
-          triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
-          return PyRegister(regOut);
+          if (regIn != nullptr && (PyLong_Check(regIn) || PyInt_Check(regIn))) {
+            triton::arch::register_e rid = static_cast<triton::arch::register_e>(PyLong_AsUint32(regIn));
+            triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(rid));
+            return PyRegister(regOut);
+          }
+
+          else if (regIn != nullptr && (PyStr_Check(regIn))) {
+            std::string name = std::string(PyStr_AsString(regIn));
+            triton::arch::Register regOut(PyTritonContext_AsTritonContext(self)->getRegister(name));
+            return PyRegister(regOut);
+          }
+
+          else {
+            return PyErr_Format(PyExc_TypeError, "TritonContext::getRegister(): Expects an integer or a string as argument.");
+          }
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;

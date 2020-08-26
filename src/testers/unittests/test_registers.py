@@ -18,9 +18,13 @@ class TestRAXRegister(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.X86_64)
         self.reg = self.ctx.registers.rax
 
-    def test_name(self):
+    def test_name1(self):
         """Check register name."""
         self.assertEqual(self.reg.getName(), "rax")
+
+    def test_name2(self):
+        """Check register name."""
+        self.assertEqual(self.reg.getName(), self.ctx.getRegister("rAx").getName())
 
     def test_size(self):
         """Check register size."""
@@ -245,3 +249,20 @@ class TestArm32Registers(unittest.TestCase):
         self.assertEqual(self.ctx.getConcreteRegisterValue(reg), i & ~0x1)
         self.ctx.setConcreteRegisterValue(reg, 0)
         self.assertEqual(self.ctx.getConcreteRegisterValue(reg), 0)
+
+
+class TestRegisterObject(unittest.TestCase):
+    """Test register object"""
+
+    def setUp(self):
+        """Define the arch."""
+        self.x86 = TritonContext(ARCH.X86)
+        self.x64 = TritonContext(ARCH.X86_64)
+        self.arm = TritonContext(ARCH.ARM32)
+        self.aarch = TritonContext(ARCH.AARCH64)
+
+    def test_object(self):
+        self.assertEqual(self.x86.registers.eax, self.x86.getRegister('eax'))
+        self.assertEqual(self.x64.registers.rax, self.x64.getRegister('RaX'))
+        self.assertEqual(self.arm.registers.r0, self.arm.getRegister('R0'))
+        self.assertEqual(self.aarch.registers.x9, self.aarch.getRegister('x9'))

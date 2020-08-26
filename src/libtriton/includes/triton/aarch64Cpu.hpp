@@ -9,6 +9,7 @@
 #define TRITON_AARCH64CPU_HPP
 
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -180,6 +181,7 @@ namespace triton {
             TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
             TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
             TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
+            TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
             TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
             TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
             TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;

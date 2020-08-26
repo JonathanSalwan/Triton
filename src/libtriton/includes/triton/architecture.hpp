@@ -8,9 +8,10 @@
 #ifndef TRITON_ARCHITECTURE_H
 #define TRITON_ARCHITECTURE_H
 
-#include <set>
-#include <vector>
 #include <memory>
+#include <set>
+#include <string>
+#include <vector>
 
 #include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
@@ -115,6 +116,9 @@ namespace triton {
 
         //! Returns register from id.
         TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
+
+        //! Returns register from name.
+        TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
 
         //! Returns parent register from id.
         TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;

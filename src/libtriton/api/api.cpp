@@ -341,6 +341,11 @@ namespace triton {
   }
 
 
+  const triton::arch::Register& API::getRegister(const std::string& name) const {
+    return this->arch.getRegister(name);
+  }
+
+
   const triton::arch::Register& API::getParentRegister(const triton::arch::Register& reg) const {
     return this->arch.getParentRegister(reg);
   }

@@ -133,6 +133,9 @@ namespace triton {
         //! [**architecture api**] - Returns Register from regId.
         TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
 
+        //! [**architecture api**] - Returns Register from its name.
+        TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
+
         //! [**architecture api**] - Returns parent Register from a register.
         TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
 
