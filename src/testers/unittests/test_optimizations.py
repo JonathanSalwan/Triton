@@ -13,6 +13,12 @@ class TestOptimizations(unittest.TestCase):
     """Test optimizations on the qemu test suite."""
 
     def setUp(self):
+        self.ctx1 = TritonContext(ARCH.X86_64)
+        self.ctx2 = TritonContext(ARCH.X86_64)
+
+        self.ctx1.setMode(MODE.ALIGNED_MEMORY, True)
+        self.ctx2.setMode(MODE.AST_OPTIMIZATIONS, True)
+
         self.BASE_PLT  = 0x10000000
         self.BASE_ARGV = 0x20000000
         self.RELO = [
@@ -27,26 +33,14 @@ class TestOptimizations(unittest.TestCase):
         main2 = self.ctx2.getConcreteRegisterValue(self.ctx2.registers.rdi)
 
         # Push the return value to jump into the main() function
-        self.ctx1.concretizeRegister(self.ctx1.registers.rsp)
         self.ctx1.setConcreteRegisterValue(self.ctx1.registers.rsp, self.ctx1.getConcreteRegisterValue(self.ctx1.registers.rsp)-CPUSIZE.QWORD)
-
-        self.ctx2.concretizeRegister(self.ctx2.registers.rsp)
         self.ctx2.setConcreteRegisterValue(self.ctx2.registers.rsp, self.ctx2.getConcreteRegisterValue(self.ctx2.registers.rsp)-CPUSIZE.QWORD)
 
         ret2main1 = MemoryAccess(self.ctx1.getConcreteRegisterValue(self.ctx1.registers.rsp), CPUSIZE.QWORD)
-        self.ctx1.concretizeMemory(ret2main1)
         self.ctx1.setConcreteMemoryValue(ret2main1, main1)
 
         ret2main2 = MemoryAccess(self.ctx2.getConcreteRegisterValue(self.ctx2.registers.rsp), CPUSIZE.QWORD)
-        self.ctx2.concretizeMemory(ret2main2)
         self.ctx2.setConcreteMemoryValue(ret2main2, main2)
-
-        # Setup argc / argv
-        self.ctx1.concretizeRegister(self.ctx1.registers.rdi)
-        self.ctx1.concretizeRegister(self.ctx1.registers.rsi)
-
-        self.ctx2.concretizeRegister(self.ctx2.registers.rdi)
-        self.ctx2.concretizeRegister(self.ctx2.registers.rsi)
 
         # Setup target argvs
         argvs = list()
@@ -135,10 +129,7 @@ class TestOptimizations(unittest.TestCase):
             if rel[2] == pc:
                 # Emulate the routine and the return value
                 ret_value = rel[1]()
-                self.ctx1.concretizeRegister(self.ctx1.registers.rax)
                 self.ctx1.setConcreteRegisterValue(self.ctx1.registers.rax, ret_value)
-
-                self.ctx2.concretizeRegister(self.ctx2.registers.rax)
                 self.ctx2.setConcreteRegisterValue(self.ctx2.registers.rax, ret_value)
 
                 # Get the return address
@@ -146,17 +137,11 @@ class TestOptimizations(unittest.TestCase):
                 ret_addr2 = self.ctx2.getConcreteMemoryValue(MemoryAccess(self.ctx2.getConcreteRegisterValue(self.ctx2.registers.rsp), CPUSIZE.QWORD))
 
                 # Hijack RIP to skip the call
-                self.ctx1.concretizeRegister(self.ctx1.registers.rip)
                 self.ctx1.setConcreteRegisterValue(self.ctx1.registers.rip, ret_addr1)
-
-                self.ctx2.concretizeRegister(self.ctx2.registers.rip)
                 self.ctx2.setConcreteRegisterValue(self.ctx2.registers.rip, ret_addr2)
 
                 # Restore RSP (simulate the ret)
-                self.ctx1.concretizeRegister(self.ctx1.registers.rsp)
                 self.ctx1.setConcreteRegisterValue(self.ctx1.registers.rsp, self.ctx1.getConcreteRegisterValue(self.ctx1.registers.rsp)+CPUSIZE.QWORD)
-
-                self.ctx2.concretizeRegister(self.ctx2.registers.rsp)
                 self.ctx2.setConcreteRegisterValue(self.ctx2.registers.rsp, self.ctx2.getConcreteRegisterValue(self.ctx2.registers.rsp)+CPUSIZE.QWORD)
         return
 
@@ -190,15 +175,6 @@ class TestOptimizations(unittest.TestCase):
 
     def test(self):
         """Load binary, setup environment and emulate the ir test suite."""
-        self.ctx1 = TritonContext()
-        self.ctx2 = TritonContext()
-
-        self.ctx1.setArchitecture(ARCH.X86_64)
-        self.ctx2.setArchitecture(ARCH.X86_64)
-
-        self.ctx1.setMode(MODE.ALIGNED_MEMORY, True)
-        self.ctx2.setMode(MODE.AST_OPTIMIZATIONS, True)
-
         # Load the binary
         binary_file = os.path.join(os.path.dirname(__file__), "misc", "qemu", "ir-test-suite-qemu-light.bin")
         binary = self.load_binary(binary_file)
