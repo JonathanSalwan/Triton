@@ -416,10 +416,10 @@ namespace triton {
                 const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
                 triton::uint32 immsize = (
-                                          this->isRegisterValid(base.getId()) ? base.getSize() :
-                                          this->isRegisterValid(index.getId()) ? index.getSize() :
-                                          this->gprSize()
-                                        );
+                  this->isRegisterValid(base.getId()) ? base.getSize() :
+                  this->isRegisterValid(index.getId()) ? index.getSize() :
+                  this->gprSize()
+                );
 
                 triton::arch::Immediate disp(op->mem.disp, immsize);
                 triton::arch::Immediate scale(op->mem.scale, immsize);

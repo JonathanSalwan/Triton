@@ -453,3 +453,19 @@ class TestIssue924(unittest.TestCase):
         inst.setAddress(0x4006e7)
         ctx.processing(inst)
         self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.rip), 0x4006eb)
+
+
+class TestIssue945(unittest.TestCase):
+    """Testing #945."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.ARM32)
+        self.inst1 = Instruction(b"\x70\x00\xbd\xe8") # pop {r4, r5, r6}
+        self.inst2 = Instruction(b"\x70\x80\xbd\xe8") # pop {r4, r5, r6, pc}
+
+    def test_issue(self):
+        self.ctx.processing(self.inst1)
+        self.ctx.processing(self.inst2)
+
+        self.assertEqual(self.inst1.isControlFlow(), False)
+        self.assertEqual(self.inst2.isControlFlow(), True)

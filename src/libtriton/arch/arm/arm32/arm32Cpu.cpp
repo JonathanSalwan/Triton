@@ -358,14 +358,15 @@ namespace triton {
                         throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Invalid shift type.");
                     }
 
-                    if (op->subtracted)
+                    if (op->subtracted) {
                       index.setSubtracted(true);
+                    }
 
                     triton::uint32 immsize = (
-                                              this->isRegisterValid(base.getId()) ? base.getSize() :
-                                              this->isRegisterValid(index.getId()) ? index.getSize() :
-                                              this->gprSize()
-                                            );
+                      this->isRegisterValid(base.getId()) ? base.getSize() :
+                      this->isRegisterValid(index.getId()) ? index.getSize() :
+                      this->gprSize()
+                    );
 
                     triton::arch::Immediate disp(op->mem.disp, immsize);
 
@@ -517,6 +518,20 @@ namespace triton {
               case ID_INS_SUB:
                 inst.operands.insert(inst.operands.begin(), op);
                 break;
+            }
+          }
+
+          /* NOTE: If the instruction is POP and contains a PC register,
+           * we have to define the instruction as modifiying the control
+           * flow. See #945.
+           */
+          if (inst.getType() == ID_INS_POP) {
+            /* FIXME: Maybe the loop is useless if PC is always the last operand? */
+            for (auto& op : inst.operands) {
+              if (op.getType() == triton::arch::OP_REG && op.getConstRegister().getId() == this->pcId) {
+                inst.setControlFlow(true);
+                break;
+              }
             }
           }
         }
