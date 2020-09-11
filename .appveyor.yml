@@ -23,9 +23,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
       LIEF_VERSION: 0.7.0
       LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x86-win
       PYTHON_36: OFF
       PYTHON_37: OFF
 
@@ -35,9 +35,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
       LIEF_VERSION: 0.10.1
       LIEF_ZIP: lief-0.10.1-cp36-cp36m-win32.whl
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x86-win
       PYTHON_36: ON
       PYTHON_37: OFF
 
@@ -47,9 +47,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\%configuration%\capstone.lib
       LIEF_VERSION: 0.10.1
       LIEF_ZIP: lief-0.10.1-cp37-cp37m-win32.whl
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x86-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x86-win
       PYTHON_36: OFF
       PYTHON_37: ON
 
@@ -59,9 +59,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.7.0
       LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
       PYTHON_36: OFF
       PYTHON_37: OFF
 
@@ -71,9 +71,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.10.1
       LIEF_ZIP: lief-0.10.1-cp36-cp36m-win_amd64.whl
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
       PYTHON_36: ON
       PYTHON_37: OFF
 
@@ -83,9 +83,9 @@ environment:
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.1\msvc\x64\%configuration%\capstone.lib
       LIEF_VERSION: 0.10.1
       LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.7-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.7-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.7-x64-win
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
       PYTHON_36: OFF
       PYTHON_37: ON
 
@@ -96,7 +96,7 @@ install:
   - cmd: mkdir build
   - cmd: cd build
   - cmd: echo Downloading z3...
-  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.8.7/%Z3_PKG_NAME%.zip
+  - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.8.9/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
     # Install z3 in the path
   - set PATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin;%PATH%
