@@ -9,10 +9,10 @@ RUN apt-get update && apt-get dist-upgrade -y && \
 
 # get and install the latest z3 relesae
 RUN cd /tmp && \
-    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.8.8.tar.gz && \
-    tar zxf z3.tgz && cd z3-z3-4.8.8 && \
+    curl -o z3.tgz -L  https://github.com/Z3Prover/z3/archive/z3-4.8.9.tar.gz && \
+    tar zxf z3.tgz && cd z3-z3-4.8.9 && \
     mkdir build && cd build && CC=clang CXX=clang++ cmake .. && make \
-    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.8.8
+    && make install && cd /tmp && rm -rf /tmp/z3-z3-4.8.9
 
 # Install capstone
 RUN cd /tmp && \
