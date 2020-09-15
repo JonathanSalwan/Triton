@@ -64,6 +64,12 @@ namespace triton {
         //! The list of nodes
         std::deque<SharedAbstractNode> nodes;
 
+        //! Returns simplified concatenation.
+        SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs);
+
+        //! Returns simplified extraction.
+        SharedAbstractNode simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
+
       public:
         //! Constructor
         TRITON_EXPORT AstContext(const triton::modes::SharedModes& modes);
@@ -328,13 +334,6 @@ namespace triton {
 
         //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
-
-      private:
-        //! Return simplified concatenation.
-        SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs);
-
-        //! Return simplified extraction.
-        SharedAbstractNode simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
     };
 
     //! Shared AST context
