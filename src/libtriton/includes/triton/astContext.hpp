@@ -320,6 +320,10 @@ namespace triton {
 
         //! Prints the given node with this context representation
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
+
+      private:
+        //! Return simplified extraction.
+        SharedAbstractNode simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
     };
 
     //! Shared AST context

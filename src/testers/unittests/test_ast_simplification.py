@@ -532,3 +532,104 @@ class TestAstSimplification4(unittest.TestCase):
         a = self.ast.variable(self.ctx.newSymbolicVariable(32))
         n = self.ast.bvxor(a, a)
         self.assertTrue(self.proof(n == 0))
+
+    def test_extract_concat(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(8))
+        n = self.ast.extract(7, 0, self.ast.concat([self.ast.bv(0, 24), a]))
+        self.assertEqual(str(n), "SymVar_0")
+
+    def test_extract_concat_2(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(8))
+        c = [self.ast.bv(1, 8), self.ast.bv(2, 8), self.ast.bv(3, 8), a]
+        n = self.ast.extract(7, 0, self.ast.concat(c))
+        self.assertEqual(str(n), "SymVar_0")
+        n = self.ast.extract(15, 8, self.ast.concat(c))
+        self.assertEqual(str(n), "(_ bv3 8)")
+        n = self.ast.extract(23, 16, self.ast.concat(c))
+        self.assertEqual(str(n), "(_ bv2 8)")
+        n = self.ast.extract(31, 24, self.ast.concat(c))
+        self.assertEqual(str(n), "(_ bv1 8)")
+        n = self.ast.extract(8, 0, self.ast.concat(c))
+        self.assertEqual(str(n), "((_ extract 8 0) (concat (_ bv1 8) (_ bv2 8) (_ bv3 8) SymVar_0))")
+        n = self.ast.extract(12, 9, self.ast.concat(c))
+        self.assertEqual(str(n), "((_ extract 4 1) (_ bv3 8))")
+        n = self.ast.extract(17, 16, self.ast.concat(c))
+        self.assertEqual(str(n), "((_ extract 1 0) (_ bv2 8))")
+        n = self.ast.extract(31, 30, self.ast.concat(c))
+        self.assertEqual(str(n), "((_ extract 7 6) (_ bv1 8))")
+
+    def test_extract_concat_3(self):
+        c1 = self.ast.concat([self.ast.bv(1, 8), self.ast.bv(2, 24)])
+        c2 = self.ast.concat([c1, self.ast.bv(3, 32)])
+        c = [self.ast.bv(4, 8), c2, self.ast.bv(5, 8)]
+        n = self.ast.extract(43, 41, self.ast.concat(c))
+        self.assertEqual(str(n), "((_ extract 3 1) (_ bv2 24))")
+
+    def test_extract_concat_real(self):
+        self.ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+        self.ctx.symbolizeRegister(self.ctx.getRegister(REG.X86.EAX), "eax")
+        code = [
+            b"\xb0\x00",                  # mov al, 0x00
+            b"\x84\xc0",                  # test al, al
+            b"\x0f\x84\xe9\xbe\xad\xde",  # jz 0xdeadbeef
+        ]
+        addr = 0x400000
+        for opcode in code:
+            inst = Instruction(addr, opcode)
+            self.ctx.processing(inst)
+            addr += len(opcode)
+        self.assertEqual(len(self.ctx.getPathConstraints()), 0)
+
+    def test_extract_extract(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        n = self.ast.extract(4, 2, self.ast.extract(18, 5, a))
+        self.assertEqual(str(n), "((_ extract 9 7) SymVar_0)")
+
+    def test_extract_ref(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(8))
+        c = self.ast.concat([self.ast.bv(0, 24), a])
+        r1 = self.ast.reference(self.ctx.newSymbolicExpression(c, "r1"))
+        r2 = self.ast.reference(self.ctx.newSymbolicExpression(r1, "r2"))
+        n = self.ast.extract(7, 0, r2)
+        self.assertEqual(str(n), "SymVar_0")
+
+
+class TestAstSimplification5(unittest.TestCase):
+
+    """Testing AST simplification"""
+
+    def setUp(self):
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+        self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
+
+    def test_extract_zx(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        zx = self.ast.zx(32, a)
+        n = self.ast.extract(31, 0, zx)
+        self.assertEqual(str(n), "SymVar_0")
+        n = self.ast.extract(30, 0, zx)
+        self.assertEqual(str(n), "((_ extract 30 0) SymVar_0)")
+
+    def test_extract_zx_real(self):
+        self.ctx.symbolizeRegister(self.ctx.getRegister(REG.X86_64.EAX), "eax")
+        addr = 0x400000
+        code = [
+            b"\x89\xc3",  # mov ebx, eax
+            b"\x89\xd9",  # mov ecx, ebx
+        ]
+        for opcode in code:
+            inst = Instruction(addr, opcode)
+            self.ctx.processing(inst)
+            addr += len(opcode)
+        ecx = self.ctx.getRegister(REG.X86_64.ECX)
+        self.assertEqual(str(self.ctx.getRegisterAst(ecx)), "eax")
+
+    def test_extract_sx(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        sx = self.ast.sx(32, a)
+        n = self.ast.extract(31, 0, sx)
+        self.assertEqual(str(n), "SymVar_0")
+        n = self.ast.extract(30, 0, sx)
+        self.assertEqual(str(n), "((_ extract 30 0) SymVar_0)")
