@@ -749,6 +749,14 @@ namespace triton {
         }
       }
 
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: concatenate extractions in one if possible */
+        auto n = this->simplify_concat(std::vector<SharedAbstractNode>({expr1, expr2}));
+        if (n) {
+          return n;
+        }
+      }
+
       return this->collect(node);
     }
 
@@ -1056,6 +1064,93 @@ namespace triton {
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
       return this->astRepresentation.print(stream, node);
+    }
+
+
+    SharedAbstractNode AstContext::simplify_concat(std::vector<SharedAbstractNode> exprs) {
+      /*
+       * Optimization: concatenate extractions in one if possible. We are
+       * trying to find out whether this is a concatenation of sequential
+       * extractions from the same AST. Thus, we can make only one extraction.
+       *
+       * (concat ((_ extract 31 24) a) ((_ extract 23 16) a)
+       *         ((_ extract 15 8) a) ((_ extract 7 0) a)) =>
+       * ((_ extract 31 0) a)
+       *
+       * So, we are examining whether we can replace concatenation with one
+       * extraction ((_ extract high low) ast_ref).
+       **/
+      uint32 high = 0;                  // target extraction upper bound
+      uint32 low = 1;                   // target extraction lower bound
+      SharedAbstractNode ast_ref = 0;   // target AST to extract from
+      SharedAbstractNode ast_node = 0;  // ast_ref with unrolled references
+
+      /* Try to join all extractions into one from the right to the left */
+      while (!exprs.empty()) {
+        /* Get the right most node */
+        auto n = exprs.back();
+        exprs.pop_back();
+
+        /* Unroll references */
+        while (n->getType() == REFERENCE_NODE) {
+          auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+          n = ref->getSymbolicExpression()->getAst();
+        }
+
+        if (n->getType() == CONCAT_NODE) {
+          /* Append concatenation children to the right */
+          for (const auto& part : n->getChildren()) {
+            exprs.push_back(part);
+          }
+          continue;
+        }
+
+        if (n->getType() != EXTRACT_NODE) {
+          /* We cannot optimize if at least one node is not an extract */
+          return 0;
+        }
+
+        /* Get extraction arguments */
+        const auto& childs = n->getChildren();
+        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        if (hi < lo) {
+          return 0;
+        }
+        n = childs[2];
+
+        /* Unroll references */
+        while (n->getType() == REFERENCE_NODE) {
+          auto ref = reinterpret_cast<ReferenceNode*>(n.get());
+          n = ref->getSymbolicExpression()->getAst();
+        }
+
+        if (!ast_ref) {
+          /* First found extraction node */
+          high = hi;
+          low = lo;
+          ast_ref = childs[2];
+          ast_node = n;
+          continue;
+        }
+
+        /*
+         * Check that unrolled target AST is equal to extraction node child.
+         * Also, check that extraction lower bound connects with target
+         * extraction upper bound.
+         **/
+        if (high + 1 != lo || !n->equalTo(ast_node)) {
+          return 0;
+        }
+        high = hi;
+      }
+
+      if (high < low) {
+        return 0;
+      }
+
+      /* Perform target extraction */
+      return this->extract(high, low, ast_ref);
     }
 
 
