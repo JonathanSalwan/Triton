@@ -483,6 +483,7 @@ namespace triton {
           case ID_INS_MOVABS:         this->movabs_s(inst);       break;
           case ID_INS_MOVAPD:         this->movapd_s(inst);       break;
           case ID_INS_MOVAPS:         this->movaps_s(inst);       break;
+          case ID_INS_MOVBE:          this->movbe_s(inst);        break;
           case ID_INS_MOVD:           this->movd_s(inst);         break;
           case ID_INS_MOVDDUP:        this->movddup_s(inst);      break;
           case ID_INS_MOVDQ2Q:        this->movdq2q_s(inst);      break;
@@ -507,12 +508,13 @@ namespace triton {
           case ID_INS_MOVSD:          this->movsd_s(inst);        break;
           case ID_INS_MOVSHDUP:       this->movshdup_s(inst);     break;
           case ID_INS_MOVSLDUP:       this->movsldup_s(inst);     break;
+          case ID_INS_MOVUPD:         this->movupd_s(inst);       break;
+          case ID_INS_MOVUPS:         this->movups_s(inst);       break;
+          case ID_INS_MOVSS:          this->movss_s(inst);        break;
           case ID_INS_MOVSQ:          this->movsq_s(inst);        break;
           case ID_INS_MOVSW:          this->movsw_s(inst);        break;
           case ID_INS_MOVSX:          this->movsx_s(inst);        break;
           case ID_INS_MOVSXD:         this->movsxd_s(inst);       break;
-          case ID_INS_MOVUPD:         this->movupd_s(inst);       break;
-          case ID_INS_MOVUPS:         this->movups_s(inst);       break;
           case ID_INS_MOVZX:          this->movzx_s(inst);        break;
           case ID_INS_MUL:            this->mul_s(inst);          break;
           case ID_INS_MULX:           this->mulx_s(inst);         break;
@@ -6793,6 +6795,31 @@ namespace triton {
       }
 
 
+      void x86Semantics::movbe_s(triton::arch::Instruction& inst) {
+        auto &dst = inst.operands[0];
+        auto &src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> exprs;
+        for (size_t i = 0; i < src.getSize(); ++i) {
+          exprs.push_back(this->astCtxt->extract(8*i + 7, 8*i, op2));
+        }
+        auto node = this->astCtxt->concat(exprs);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVBE operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::movd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -7521,6 +7548,35 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVUPS operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::movss_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = op2;
+        if (src.getType() == OP_REG) {
+          node = this->astCtxt->extract(triton::bitsize::dword-1, 0, node);
+          if (dst.getType() == OP_REG) {
+            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto upper = this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::dword, op1);
+            node = this->astCtxt->concat(upper, node);
+          }
+        }
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVSS operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
@@ -13785,7 +13841,6 @@ namespace triton {
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
       }
-
 
       void x86Semantics::vpand_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
