@@ -1312,6 +1312,9 @@ namespace triton {
           //! The VPAND semantics.
           void vpand_s(triton::arch::Instruction& inst);
 
+          //! The VPBROADCASTB semantics.
+          void vpbroadcastb_s(triton::arch::Instruction& inst);
+
           //! The VPCMPEQB semantics.
           void vpcmpeqb_s(triton::arch::Instruction& inst);
 

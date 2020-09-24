@@ -683,6 +683,7 @@ namespace triton {
           case ID_INS_VPEXTRD:        this->vpextrd_s(inst);      break;
           case ID_INS_VPEXTRQ:        this->vpextrq_s(inst);      break;
           case ID_INS_VPEXTRW:        this->vpextrw_s(inst);      break;
+          case ID_INS_VPBROADCASTB:   this->vpbroadcastb_s(inst); break;
           case ID_INS_VPCMPEQB:       this->vpcmpeqb_s(inst);     break;
           case ID_INS_VPCMPEQD:       this->vpcmpeqd_s(inst);     break;
           case ID_INS_VPCMPEQQ:       this->vpcmpeqq_s(inst);     break;
@@ -6810,12 +6811,12 @@ namespace triton {
         auto &src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         std::vector<triton::ast::SharedAbstractNode> exprs;
         for (size_t i = 0; i < src.getSize(); ++i) {
-          exprs.push_back(this->astCtxt->extract(8*i + 7, 8*i, op2));
+          exprs.push_back(this->astCtxt->extract(8*i + 7, 8*i, op));
         }
         auto node = this->astCtxt->concat(exprs);
 
@@ -7572,10 +7573,10 @@ namespace triton {
         auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node = op2;
+        auto node = op;
         if (src.getType() == OP_REG) {
           node = this->astCtxt->extract(triton::bitsize::dword-1, 0, node);
           if (dst.getType() == OP_REG) {
@@ -13852,6 +13853,7 @@ namespace triton {
         this->controlFlow_s(inst);
       }
 
+
       void x86Semantics::vpand_s(triton::arch::Instruction& inst) {
         auto& dst  = inst.operands[0];
         auto& src1 = inst.operands[1];
@@ -14018,6 +14020,29 @@ namespace triton {
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpbroadcastb_s(triton::arch::Instruction& inst) {
+        auto &dst = inst.operands[0];
+        auto &src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto src_node = this->astCtxt->extract(triton::bitsize::byte - 1, 0, op);
+        std::vector<triton::ast::SharedAbstractNode> exprs(dst.getSize(), src_node);
+        auto node = this->astCtxt->concat(exprs);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPBROADCASTB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
