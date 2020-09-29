@@ -332,11 +332,12 @@ VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
 VPEXTRW                      | avx/avx2   | VEX Extract Word
-VPCMPEQB                     | avx/avx2   | VEX Compare packed Bytes for equality.
-VPCMPEQD                     | avx/avx2   | VEX Compare packed Doublewords for equality.
-VPCMPEQQ                     | avx/avx2   | VEX Compare packed Quadwords for equality.
-VPCMPEQW                     | avx/avx2   | VEX Compare packed Words for equality.
+VPCMPEQB                     | avx/avx2   | VEX Compare packed Bytes for equality
+VPCMPEQD                     | avx/avx2   | VEX Compare packed Doublewords for equality
+VPCMPEQQ                     | avx/avx2   | VEX Compare packed Quadwords for equality
+VPCMPEQW                     | avx/avx2   | VEX Compare packed Words for equality
 VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
+VPMINUB                      | avx/avx2   | VEX Minimum of Packed Unsigned Byte Integers
 VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
@@ -689,6 +690,7 @@ namespace triton {
           case ID_INS_VPCMPEQQ:       this->vpcmpeqq_s(inst);     break;
           case ID_INS_VPCMPEQW:       this->vpcmpeqw_s(inst);     break;
           case ID_INS_VPMOVMSKB:      this->vpmovmskb_s(inst);    break;
+          case ID_INS_VPMINUB:        this->vpminub_s(inst);      break;
           case ID_INS_VPOR:           this->vpor_s(inst);         break;
           case ID_INS_VPSHUFD:        this->vpshufd_s(inst);      break;
           case ID_INS_VPTEST:         this->vptest_s(inst);       break;
@@ -14268,6 +14270,45 @@ namespace triton {
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpminub_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize());
+
+        for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->bvuge(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->extract(high, low, op2),
+                          this->astCtxt->extract(high, low, op1))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPMINUB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
