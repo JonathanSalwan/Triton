@@ -461,8 +461,24 @@ namespace triton {
           stream << ssa[id]->getFormattedExpression() << std::endl;
         }
         if (assert_) {
-          this->astCtxt->print(stream, this->astCtxt->assert_(expr->getAst()).get());
-          stream << std::endl;
+          /* Print conjuncts in separate asserts */
+          std::vector<triton::ast::SharedAbstractNode> exprs;
+          std::vector<triton::ast::SharedAbstractNode> wl{expr->getAst()};
+          while (!wl.empty()) {
+            auto n = wl.back();
+            wl.pop_back();
+            if (n->getType() != triton::ast::LAND_NODE) {
+              exprs.push_back(n);
+              continue;
+            }
+            for (const auto& child : n->getChildren()) {
+              wl.push_back(child);
+            }
+          }
+          for (auto it = exprs.crbegin(); it != exprs.crend(); ++it) {
+            this->astCtxt->print(stream, this->astCtxt->assert_(*it).get());
+            stream << std::endl;
+          }
           if (this->astCtxt->getRepresentationMode() == ast::representations::SMT_REPRESENTATION) {
             stream << "(check-sat)" << std::endl;
             stream << "(get-model)" << std::endl;
