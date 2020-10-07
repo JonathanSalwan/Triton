@@ -336,6 +336,21 @@ namespace triton {
 
       /* Creates a new symbolic expression with comment */
       SharedSymbolicExpression SymbolicEngine::newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment) {
+        if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+          if (node->getType() == triton::ast::ZX_NODE ||
+              node->getType() == triton::ast::SX_NODE) {
+            auto n = node->getChildren()[1];
+            if (n->getType() != triton::ast::REFERENCE_NODE &&
+                n->getType() != triton::ast::VARIABLE_NODE) {
+              /* Create volatile expression for extended part to avoid long
+               * formulas while printing. */
+              auto e = this->newSymbolicExpression(n, VOLATILE_EXPRESSION, "Extended part - " + comment);
+
+              node->setChild(1, this->astCtxt->reference(e));
+            }
+          }
+        }
+
         /* Each symbolic expression must have an unique id */
         triton::usize id = this->getUniqueSymExprId();
 
