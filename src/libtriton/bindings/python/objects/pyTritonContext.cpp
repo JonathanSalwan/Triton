@@ -2163,7 +2163,9 @@ namespace triton {
           assertFlag = PyLong_FromUint32(false);
 
         try {
-          PyTritonContext_AsTritonContext(self)->printSlicedExpressions(std::cout, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
+          std::ostringstream stream;
+          PyTritonContext_AsTritonContext(self)->printSlicedExpressions(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
+          return xPyString_FromString(stream.str().c_str());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
