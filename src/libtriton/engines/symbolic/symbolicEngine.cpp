@@ -337,15 +337,15 @@ namespace triton {
       /* Creates a new symbolic expression with comment */
       SharedSymbolicExpression SymbolicEngine::newSymbolicExpression(const triton::ast::SharedAbstractNode& node, triton::engines::symbolic::expression_e type, const std::string& comment) {
         if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
-          if (node->getType() == triton::ast::ZX_NODE ||
-              node->getType() == triton::ast::SX_NODE) {
+          /*
+           * Create volatile expression for extended part to avoid long
+           * formulas while printing. Long formulas are introduced by
+           * optimizations of AstContext::concat and AstContext::extract
+           */
+          if (node->getType() == triton::ast::ZX_NODE || node->getType() == triton::ast::SX_NODE) {
             auto n = node->getChildren()[1];
-            if (n->getType() != triton::ast::REFERENCE_NODE &&
-                n->getType() != triton::ast::VARIABLE_NODE) {
-              /* Create volatile expression for extended part to avoid long
-               * formulas while printing. */
+            if (n->getType() != triton::ast::REFERENCE_NODE && n->getType() != triton::ast::VARIABLE_NODE) {
               auto e = this->newSymbolicExpression(n, VOLATILE_EXPRESSION, "Extended part - " + comment);
-
               node->setChild(1, this->astCtxt->reference(e));
             }
           }
@@ -454,51 +454,64 @@ namespace triton {
       std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
         auto symVars = this->getSymbolicVariables();
         auto ssa = this->sliceExpressions(expr);
+
         std::vector<usize> ids;
         ids.reserve(std::max(symVars.size(), ssa.size()));
         for (const auto& symVar : symVars) {
           ids.push_back(symVar.first);
         }
+
         std::sort(ids.begin(), ids.end());
         for (const auto& id : ids) {
           auto n = this->astCtxt->declare(this->astCtxt->variable(symVars[id]));
           this->astCtxt->print(stream, n.get());
           stream << std::endl;
         }
+
         ids.clear();
         for (const auto& se : ssa) {
           ids.push_back(se.first);
         }
+
         std::sort(ids.begin(), ids.end());
-        if (assert_)
+        if (assert_) {
           ids.pop_back();
+        }
+
         for (const auto& id : ids) {
           stream << ssa[id]->getFormattedExpression() << std::endl;
         }
+
         if (assert_) {
           /* Print conjuncts in separate asserts */
           std::vector<triton::ast::SharedAbstractNode> exprs;
           std::vector<triton::ast::SharedAbstractNode> wl{expr->getAst()};
+
           while (!wl.empty()) {
             auto n = wl.back();
             wl.pop_back();
+
             if (n->getType() != triton::ast::LAND_NODE) {
               exprs.push_back(n);
               continue;
             }
+
             for (const auto& child : n->getChildren()) {
               wl.push_back(child);
             }
           }
+
           for (auto it = exprs.crbegin(); it != exprs.crend(); ++it) {
             this->astCtxt->print(stream, this->astCtxt->assert_(*it).get());
             stream << std::endl;
           }
+
           if (this->astCtxt->getRepresentationMode() == ast::representations::SMT_REPRESENTATION) {
             stream << "(check-sat)" << std::endl;
             stream << "(get-model)" << std::endl;
           }
         }
+
         return stream;
       }
 
