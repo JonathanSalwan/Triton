@@ -138,6 +138,9 @@ namespace triton {
         if (pc->getType() == triton::ast::ZX_NODE)
           pc = pc->getChildren()[1];
 
+        /* Setting the thread id */
+        pco.setThreadId(inst.getThreadId());
+
         /* Multiple branches */
         if (pc->getType() == triton::ast::ITE_NODE) {
           /* Condition */

@@ -84,6 +84,9 @@ Returns the address of the taken branch.
 - <b>\ref py_AstNode_page getTakenPredicate(void)</b><br>
 Returns the predicate of the taken branch.
 
+- <b>integer getThreadId(void)</b><br>
+Returns the thread id of the constraint. Returns -1 if thread id is undefined.
+
 - <b>bool isMultipleBranches(void)</b><br>
 Returns true if it is not a direct jump.
 
@@ -146,6 +149,16 @@ namespace triton {
       }
 
 
+      static PyObject* PathConstraint_getThreadId(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyPathConstraint_AsPathConstraint(self)->getThreadId());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* PathConstraint_isMultipleBranches(PyObject* self, PyObject* noarg) {
         try {
           if (PyPathConstraint_AsPathConstraint(self)->isMultipleBranches())
@@ -163,6 +176,7 @@ namespace triton {
         {"getBranchConstraints",        PathConstraint_getBranchConstraints,      METH_NOARGS,    ""},
         {"getTakenAddress",             PathConstraint_getTakenAddress,           METH_NOARGS,    ""},
         {"getTakenPredicate",           PathConstraint_getTakenPredicate,         METH_NOARGS,    ""},
+        {"getThreadId",                 PathConstraint_getThreadId,               METH_NOARGS,    ""},
         {"isMultipleBranches",          PathConstraint_isMultipleBranches,        METH_NOARGS,    ""},
         {nullptr,                       nullptr,                                  0,              nullptr}
       };

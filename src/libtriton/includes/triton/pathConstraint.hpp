@@ -54,6 +54,9 @@ namespace triton {
            */
           std::vector<std::tuple<bool, triton::uint64, triton::uint64, triton::ast::SharedAbstractNode>> branches;
 
+          //! The thread id of the constraint. -1 if it's undefined.
+          triton::uint32 tid;
+
         public:
           //! Constructor.
           TRITON_EXPORT PathConstraint();
@@ -81,6 +84,12 @@ namespace triton {
 
           //! Returns true if it is not a direct jump.
           TRITON_EXPORT bool isMultipleBranches(void) const;
+
+          //! Returns the thread id of the constraint. Returns -1 if thread id is undefined.
+          TRITON_EXPORT triton::uint32 getThreadId(void) const;
+
+          //! Sets the thread id of the constraint.
+          TRITON_EXPORT void setThreadId(triton::uint32 tid);
       };
 
     /*! @} End of symbolic namespace */
