@@ -744,6 +744,15 @@ CODE  = [
     (None, b"\x48\xc7\xc0\xff\xff\xff\xff",               "mov rax, 0xffffffffffffffff"),
     (None, b"\x48\xc7\xc3\x00\x00\x00\x00",               "mov rbx, 0x0"),
     (None, b"\xf3\x0f\xbc\xd8",                           "tzcnt ebx, eax"),
+
+    (None, b"\xbb\x10\x00\x30\x00",                       "mov ebx, 0x300010"),
+    (None, b"\xb8\x20\x00\x30\x00",                       "mov eax, 0x300020"),
+    (None, b"\xc7\x03\x10\x00\x00\x00",                   "mov [ebx], 0x10"),
+    (None, b"\x66\x0f\xef\xc0",                           "pxor xmm0, xmm0"),
+    (None, b"\x66\x0f\xef\xc9",                           "pxor xmm1, xmm1"),
+    (None, b"\xf3\x0f\x10\xc1",                           "movss xmm1, xmm0"),
+    (None, b"\xf3\x0f\x11\x03",                           "movss xmm0, [ebx]"),
+    (None, b"\xf3\x0f\x10\x03",                           "movss [eax], xmm0"),
 ]
 
 
