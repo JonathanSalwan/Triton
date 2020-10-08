@@ -763,6 +763,9 @@ namespace triton {
           //! The MOVAPS semantics.
           void movaps_s(triton::arch::Instruction& inst);
 
+          //! The MOVBE semantics.
+          void movbe_s(triton::arch::Instruction& inst);
+
           //! The MOVD semantics.
           void movd_s(triton::arch::Instruction& inst);
 
@@ -840,6 +843,9 @@ namespace triton {
 
           //! The MOVUPS semantics.
           void movups_s(triton::arch::Instruction& inst);
+
+          //! The MOVSS semantics.
+          void movss_s(triton::arch::Instruction& inst);
 
           //! The MOVSQ semantics.
           void movsq_s(triton::arch::Instruction& inst);
@@ -1306,8 +1312,26 @@ namespace triton {
           //! The VPAND semantics.
           void vpand_s(triton::arch::Instruction& inst);
 
+          //! The VPBROADCASTB semantics.
+          void vpbroadcastb_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPEQB semantics.
+          void vpcmpeqb_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPEQD semantics.
+          void vpcmpeqd_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPEQQ semantics.
+          void vpcmpeqq_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPEQW semantics.
+          void vpcmpeqw_s(triton::arch::Instruction& inst);
+
           //! The VPMOVMSKB semantics.
           void vpmovmskb_s(triton::arch::Instruction& inst);
+
+          //! The VPMINUB semantics.
+          void vpminub_s(triton::arch::Instruction& inst);
 
           //! The VPANDN semantics.
           void vpandn_s(triton::arch::Instruction& inst);

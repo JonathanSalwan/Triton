@@ -138,6 +138,7 @@ MOV                          |            | Move
 MOVABS                       |            | Move
 MOVAPD                       | sse2       | Move Aligned Packed Double-Precision Floating-Point Values
 MOVAPS                       | sse1       | Move Aligned Packed Single-Precision Floating-Point Values
+MOVBE                        | mmx/sse2   | Move Data After Swapping Bytes
 MOVD                         | mmx/sse2   | Move Doubleword
 MOVDDUP                      | sse3       | Move One Double-FP and Duplicate
 MOVDQ2Q                      | sse2       | Move Quadword from XMM to MMX Technology Register
@@ -168,6 +169,7 @@ MOVSX                        |            | Move with Sign-Extension
 MOVSXD                       |            | Move with Sign-Extension
 MOVUPD                       | see2       | Move Unaligned Packed Double-Precision Floating- Point Values
 MOVUPS                       | see1       | Move Unaligned Packed Single-Precision Floating- Point Values
+MOVSS                        | sse1       | Move Scalar Single-Precision Floating- Point Values
 MOVZX                        |            | Move with Zero-Extend
 MUL                          |            | Unsigned Multiply
 MULX                         | bmi2       | Unsigned Multiply Without Affecting Flags
@@ -330,7 +332,12 @@ VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
 VPEXTRW                      | avx/avx2   | VEX Extract Word
+VPCMPEQB                     | avx/avx2   | VEX Compare packed Bytes for equality
+VPCMPEQD                     | avx/avx2   | VEX Compare packed Doublewords for equality
+VPCMPEQQ                     | avx/avx2   | VEX Compare packed Quadwords for equality
+VPCMPEQW                     | avx/avx2   | VEX Compare packed Words for equality
 VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
+VPMINUB                      | avx/avx2   | VEX Minimum of Packed Unsigned Byte Integers
 VPOR                         | avx/avx2   | VEX Logical OR
 VPSHUFD                      | avx/avx2   | VEX Shuffle Packed Doublewords
 VPTEST                       | avx        | VEX Logical Compare
@@ -483,6 +490,7 @@ namespace triton {
           case ID_INS_MOVABS:         this->movabs_s(inst);       break;
           case ID_INS_MOVAPD:         this->movapd_s(inst);       break;
           case ID_INS_MOVAPS:         this->movaps_s(inst);       break;
+          case ID_INS_MOVBE:          this->movbe_s(inst);        break;
           case ID_INS_MOVD:           this->movd_s(inst);         break;
           case ID_INS_MOVDDUP:        this->movddup_s(inst);      break;
           case ID_INS_MOVDQ2Q:        this->movdq2q_s(inst);      break;
@@ -507,12 +515,13 @@ namespace triton {
           case ID_INS_MOVSD:          this->movsd_s(inst);        break;
           case ID_INS_MOVSHDUP:       this->movshdup_s(inst);     break;
           case ID_INS_MOVSLDUP:       this->movsldup_s(inst);     break;
+          case ID_INS_MOVUPD:         this->movupd_s(inst);       break;
+          case ID_INS_MOVUPS:         this->movups_s(inst);       break;
+          case ID_INS_MOVSS:          this->movss_s(inst);        break;
           case ID_INS_MOVSQ:          this->movsq_s(inst);        break;
           case ID_INS_MOVSW:          this->movsw_s(inst);        break;
           case ID_INS_MOVSX:          this->movsx_s(inst);        break;
           case ID_INS_MOVSXD:         this->movsxd_s(inst);       break;
-          case ID_INS_MOVUPD:         this->movupd_s(inst);       break;
-          case ID_INS_MOVUPS:         this->movups_s(inst);       break;
           case ID_INS_MOVZX:          this->movzx_s(inst);        break;
           case ID_INS_MUL:            this->mul_s(inst);          break;
           case ID_INS_MULX:           this->mulx_s(inst);         break;
@@ -675,7 +684,13 @@ namespace triton {
           case ID_INS_VPEXTRD:        this->vpextrd_s(inst);      break;
           case ID_INS_VPEXTRQ:        this->vpextrq_s(inst);      break;
           case ID_INS_VPEXTRW:        this->vpextrw_s(inst);      break;
+          case ID_INS_VPBROADCASTB:   this->vpbroadcastb_s(inst); break;
+          case ID_INS_VPCMPEQB:       this->vpcmpeqb_s(inst);     break;
+          case ID_INS_VPCMPEQD:       this->vpcmpeqd_s(inst);     break;
+          case ID_INS_VPCMPEQQ:       this->vpcmpeqq_s(inst);     break;
+          case ID_INS_VPCMPEQW:       this->vpcmpeqw_s(inst);     break;
           case ID_INS_VPMOVMSKB:      this->vpmovmskb_s(inst);    break;
+          case ID_INS_VPMINUB:        this->vpminub_s(inst);      break;
           case ID_INS_VPOR:           this->vpor_s(inst);         break;
           case ID_INS_VPSHUFD:        this->vpshufd_s(inst);      break;
           case ID_INS_VPTEST:         this->vptest_s(inst);       break;
@@ -6793,6 +6808,31 @@ namespace triton {
       }
 
 
+      void x86Semantics::movbe_s(triton::arch::Instruction& inst) {
+        auto &dst = inst.operands[0];
+        auto &src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> exprs;
+        for (size_t i = 0; i < src.getSize(); ++i) {
+          exprs.push_back(this->astCtxt->extract(8*i + 7, 8*i, op));
+        }
+        auto node = this->astCtxt->concat(exprs);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVBE operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::movd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -7521,6 +7561,35 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVUPS operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::movss_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = op;
+        if (src.getType() == OP_REG) {
+          node = this->astCtxt->extract(triton::bitsize::dword-1, 0, node);
+          if (dst.getType() == OP_REG) {
+            auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+            auto upper = this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::dword, op1);
+            node = this->astCtxt->concat(upper, node);
+          }
+        }
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVSS operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
@@ -8375,7 +8444,7 @@ namespace triton {
 
         /* Create the semantics */
         std::vector<triton::ast::SharedAbstractNode> pck;
-        pck.reserve(dst.getSize());
+        pck.reserve(dst.getSize() / triton::size::dword);
 
         for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
@@ -8412,7 +8481,7 @@ namespace triton {
 
         /* Create the semantics */
         std::vector<triton::ast::SharedAbstractNode> pck;
-        pck.reserve(dst.getSize());
+        pck.reserve(dst.getSize() / triton::size::word);
 
         for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
@@ -13959,6 +14028,185 @@ namespace triton {
       }
 
 
+      void x86Semantics::vpbroadcastb_s(triton::arch::Instruction& inst) {
+        auto &dst = inst.operands[0];
+        auto &src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto src_node = this->astCtxt->extract(triton::bitsize::byte - 1, 0, op);
+        std::vector<triton::ast::SharedAbstractNode> exprs(dst.getSize(), src_node);
+        auto node = this->astCtxt->concat(exprs);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPBROADCASTB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpcmpeqb_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize());
+
+        for (triton::uint32 index = 0; index < src1.getSize(); index++) {
+          uint32 high = (src1.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (src1.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->bv(0xff, triton::bitsize::byte),
+                          this->astCtxt->bv(0x00, triton::bitsize::byte))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPCMPEQB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpcmpeqd_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
+
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::dword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->bv(0xffffffff, triton::bitsize::dword),
+                          this->astCtxt->bv(0x00000000, triton::bitsize::dword))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPCMPEQD operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpcmpeqq_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::qword);
+
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::qword; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::qword);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::qword) - (index * triton::bitsize::qword);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->bv(0xffffffffffffffff, triton::bitsize::qword),
+                          this->astCtxt->bv(0x0000000000000000, triton::bitsize::qword))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPCMPEQQ operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpcmpeqw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
+
+        for (triton::uint32 index = 0; index < dst.getSize() / triton::size::word; index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->equal(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->bv(0xffff, triton::bitsize::word),
+                          this->astCtxt->bv(0x0000, triton::bitsize::word))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPCMPEQW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::vpmovmskb_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -14022,6 +14270,45 @@ namespace triton {
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpminub_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize());
+
+        for (triton::uint32 index = 0; index < dst.getSize(); index++) {
+          uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
+          pck.push_back(this->astCtxt->ite(
+                          this->astCtxt->bvuge(
+                            this->astCtxt->extract(high, low, op1),
+                            this->astCtxt->extract(high, low, op2)),
+                          this->astCtxt->extract(high, low, op2),
+                          this->astCtxt->extract(high, low, op1))
+                       );
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPMINUB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
