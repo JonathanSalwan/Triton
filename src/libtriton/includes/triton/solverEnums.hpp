@@ -46,10 +46,10 @@ namespace triton {
 
       /*! The different kind of status */
       enum status_e {
-        SAT,      /*!< SAT */
-        TIMEOUT,  /*!< TIMEOUT */
-        UNKNOWN,  /*!< UNKNOWN */
-        UNSAT     /*!< UNSAT */
+        UNSAT = 0, /*!< UNSAT */
+        SAT = 1,   /*!< SAT */
+        TIMEOUT,   /*!< TIMEOUT */
+        UNKNOWN    /*!< UNKNOWN */
       };
 
     /*! @} End of solver namespace */
