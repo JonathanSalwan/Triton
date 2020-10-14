@@ -8980,7 +8980,7 @@ namespace triton {
         // TEMP = ((SRC << (SEL ∗ 16)) AND MASK);
         auto temp = this->astCtxt->bvand(
                       this->astCtxt->bvshl(
-                        this->astCtxt->zx(96, this->astCtxt->extract(31, 0, op2)),
+                        this->astCtxt->zx(112, this->astCtxt->extract(15, 0, op2)),
                         this->astCtxt->bv(sel * 16, 128)
                       ),
                       this->astCtxt->bv(mask, 128)
