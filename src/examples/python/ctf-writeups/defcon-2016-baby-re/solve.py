@@ -268,7 +268,7 @@ def initialize():
     ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
     # Define internal callbacks.
-    ctx.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+    ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, memoryCaching)
 
     # Load the meory dump
     load_dump(ctx, os.path.join(os.path.dirname(__file__), "baby-re.dump"))

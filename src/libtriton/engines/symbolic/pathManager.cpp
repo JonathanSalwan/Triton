@@ -35,9 +35,52 @@ namespace triton {
       }
 
 
+      triton::usize PathManager::getSizeOfPathConstraints(void) const {
+        return this->pathConstraints.size();
+      }
+
+
       /* Returns the logical conjunction vector of path constraint */
       const std::vector<triton::engines::symbolic::PathConstraint>& PathManager::getPathConstraints(void) const {
         return this->pathConstraints;
+      }
+
+
+      /* Returns the logical conjunction vector of path constraint of a given thread */
+      std::vector<triton::engines::symbolic::PathConstraint> PathManager::getPathConstraintsOfThread(triton::uint32 threadId) const {
+        std::vector<triton::engines::symbolic::PathConstraint> ret;
+
+        for (auto& pc : this->pathConstraints) {
+          if (pc.getThreadId() == threadId) {
+            ret.push_back(pc);
+          }
+        }
+
+        return ret;
+      }
+
+
+      /* Returns the logical conjunction vector of path constraint from a given range */
+      std::vector<triton::engines::symbolic::PathConstraint> PathManager::getPathConstraints(triton::usize start, triton::usize end) const {
+        triton::usize pcsize = this->getSizeOfPathConstraints();
+
+        if (start > pcsize) {
+          return {};
+        }
+
+        if (start < pcsize && end > pcsize) {
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator first = this->pathConstraints.begin() + start;
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator last  = this->pathConstraints.end();
+          return {first, last};
+        }
+
+        if (start < pcsize && end < pcsize && end > start) {
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator first = this->pathConstraints.begin() + start;
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator last  = this->pathConstraints.begin() + end;
+          return {first, last};
+        }
+
+        throw triton::exceptions::PathManager("PathManager::getPathConstraints(): Invalid items extraction.");
       }
 
 
