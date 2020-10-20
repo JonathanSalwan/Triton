@@ -1343,7 +1343,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
         }
 
-        if (wb == nullptr || !PyBool_Check(wb)) {
+        if (wb != nullptr && !PyBool_Check(wb)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
@@ -1397,7 +1397,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
         }
 
-        if (wb == nullptr || !PyBool_Check(wb)) {
+        if (wb != nullptr && !PyBool_Check(wb)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
