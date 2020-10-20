@@ -1321,34 +1321,18 @@ namespace triton {
         }
       }
 
+      static PyObject* TritonContext_getModel(PyObject* self, PyObject* node) {
+        PyObject* ret = nullptr;
 
-      static PyObject* TritonContext_getModel(PyObject* self, PyObject* args) {
-        triton::engines::solver::status_e status;
-        PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
-        PyObject* dict  = triton::bindings::python::xPyDict_New();
-        PyObject* node  = nullptr;
-        PyObject* wb    = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "O|O", &node, &wb) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid arguments.");
-        }
-
-        if (node == nullptr || !PyAstNode_Check(node)) {
+        if (!PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
-        }
-
-        if (wb != nullptr && !PyBool_Check(wb)) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
-        }
 
         try {
-          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node), &status);
+          ret = xPyDict_New();
+          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node));
           for (auto it = model.begin(); it != model.end(); it++) {
-            xPyDict_SetItem(dict, PyLong_FromUsize(it->first), PySolverModel(it->second));
+            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySolverModel(it->second));
           }
-          PyTuple_SetItem(tuple, 0, dict);
-          PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1357,44 +1341,31 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        if (wb != nullptr && PyLong_AsBool(wb) == true) {
-          return tuple;
-        }
-
-        return dict;
+        return ret;
       }
 
 
       static PyObject* TritonContext_getModels(PyObject* self, PyObject* args) {
-        triton::engines::solver::status_e status;
-        PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
-        PyObject* list  = nullptr;
+        PyObject* ret   = nullptr;
         PyObject* node  = nullptr;
         PyObject* limit = nullptr;
-        PyObject* wb    = nullptr;
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "OO|O", &node, &limit, &wb) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid arguments.");
+        if (PyArg_ParseTuple(args, "|OO", &node, &limit) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Invalid number of arguments");
         }
 
-        if (node == nullptr || !PyAstNode_Check(node)) {
+        if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a AstNode as first argument.");
-        }
 
-        if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit))) {
+        if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
-        }
-
-        if (wb != nullptr && !PyBool_Check(wb)) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
-        }
 
         try {
-          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit), &status);
+          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
           triton::uint32 index = 0;
 
-          list = xPyList_New(models.size());
+          ret = xPyList_New(models.size());
           for (auto it = models.begin(); it != models.end(); it++) {
             PyObject* mdict = xPyDict_New();
             auto model = *it;
@@ -1403,10 +1374,8 @@ namespace triton {
               xPyDict_SetItem(mdict, PyLong_FromUsize(it2->first), PySolverModel(it2->second));
             }
             if (model.size() > 0)
-              PyList_SetItem(list, index++, mdict);
+              PyList_SetItem(ret, index++, mdict);
           }
-          PyTuple_SetItem(tuple, 0, list);
-          PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1415,11 +1384,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        if (wb != nullptr && PyLong_AsBool(wb) == true) {
-          return tuple;
-        }
-
-        return list;
+        return ret;
       }
 
 
@@ -3083,7 +3048,7 @@ namespace triton {
         {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                             METH_NOARGS,        ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
-        {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_VARARGS,       ""},
+        {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
