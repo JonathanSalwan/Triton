@@ -1372,16 +1372,23 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getModels(PyObject* self, PyObject* args) {
+      static PyObject* TritonContext_getModels(PyObject* self, PyObject* args, PyObject* kwargs) {
         triton::engines::solver::status_e status;
         PyObject* ret   = nullptr;
         PyObject* node  = nullptr;
         PyObject* limit = nullptr;
         PyObject* wb    = nullptr;
 
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OOO", &node, &limit, &wb) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Invalid number of arguments");
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"limit",
+          (char*)"status",
+          nullptr
+        };
+
+        /* Extract Keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &limit, &wb) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
         if (node == nullptr || !PyAstNode_Check(node)) {
@@ -3091,7 +3098,7 @@ namespace triton {
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,                        ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,                        ""},
         {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_VARARGS | METH_KEYWORDS,  ""},
-        {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,                  ""},
+        {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS | METH_KEYWORDS,  ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,                        ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,                   ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,                   ""},
