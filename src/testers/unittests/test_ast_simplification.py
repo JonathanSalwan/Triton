@@ -14,8 +14,8 @@ class TestAstSimplification1(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-        self.ctx.addCallback(self.xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
-        self.ctx.addCallback(self.xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.xor_1)
+        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.xor_2)
         self.astCtxt = self.ctx.getAstContext()
 
     def test_simplification(self):
@@ -103,7 +103,7 @@ class TestAstSimplification2(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-        self.ctx.addCallback(self.simplification_0, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.simplification_0)
         self.astCtxt = self.ctx.getAstContext()
 
     def test_simplification(self):

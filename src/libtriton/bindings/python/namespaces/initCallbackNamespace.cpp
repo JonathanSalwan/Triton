@@ -25,7 +25,7 @@ The CALLBACK namespace contains all kinds of callbacks.
 \subsection CALLBACK_py_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> addCallback(your_function, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+>>> addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, your_function)
 ~~~~~~~~~~~~~
 
 \section CALLBACK_py_api Python API - Items of the CALLBACK namespace
