@@ -1367,23 +1367,31 @@ namespace triton {
 
 
       static PyObject* TritonContext_getModels(PyObject* self, PyObject* args) {
+        triton::engines::solver::status_e status;
         PyObject* ret   = nullptr;
         PyObject* node  = nullptr;
         PyObject* limit = nullptr;
+        PyObject* wb    = nullptr;
 
         /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &node, &limit) == false) {
+        if (PyArg_ParseTuple(args, "|OOO", &node, &limit, &wb) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Invalid number of arguments");
         }
 
-        if (node == nullptr || !PyAstNode_Check(node))
+        if (node == nullptr || !PyAstNode_Check(node)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a AstNode as first argument.");
+        }
 
-        if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit)))
+        if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit))) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
+        }
+
+        if (wb != nullptr && !PyBool_Check(wb)) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
+        }
 
         try {
-          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit));
+          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit), &status);
           triton::uint32 index = 0;
 
           ret = xPyList_New(models.size());
@@ -1403,6 +1411,13 @@ namespace triton {
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        if (wb != nullptr && PyLong_AsBool(wb) == true) {
+          PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
+          PyTuple_SetItem(tuple, 0, ret);
+          PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
+          return tuple;
         }
 
         return ret;
