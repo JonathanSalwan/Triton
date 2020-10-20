@@ -685,7 +685,7 @@ namespace tracer {
         tracer::pintool::api.setArchitecture(triton::arch::ARCH_X86);
 
       /* During the execution provide concrete values only if Triton needs them - cf #376, #632 and #645 */
-      tracer::pintool::api.addCallback(triton::callbacks::GET_CONCRETE_MEMORY_VALUE, tracer::pintool::context::needConcreteMemoryValue);
+      tracer::pintool::api.addCallback(tracer::pintool::context::needConcreteMemoryValue);
 
       /* Image callback */
       IMG_AddInstrumentFunction(IMG_Instrumentation, nullptr);
