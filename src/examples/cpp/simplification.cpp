@@ -50,7 +50,7 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   /* Record a simplification callback */
-  api.addCallback(callbacks::SYMBOLIC_SIMPLIFICATION, xor_simplification);
+  api.addCallback(xor_simplification);
 
   /* optional - Update register state */
   api.setConcreteRegisterValue(api.registers.x86_rax, 12345);

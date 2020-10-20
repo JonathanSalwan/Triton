@@ -66,17 +66,8 @@ namespace triton {
           //! Copies a PathManager.
           TRITON_EXPORT PathManager& operator=(const PathManager& other);
 
-          //! Returns the size of the path constraints
-          TRITON_EXPORT triton::usize getSizeOfPathConstraints(void) const;
-
           //! Returns the logical conjunction vector of path constraints.
           TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
-
-          //! Returns the logical conjunction vector of path constraints from a given range.
-          TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraints(triton::usize start, triton::usize end) const;
-
-          //! Returns the logical conjunction vector of path constraint of a given thread.
-          TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraintsOfThread(triton::uint32 threadId) const;
 
           //! Returns the current path predicate as an AST of logical conjunction of each taken branch.
           TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void) const;

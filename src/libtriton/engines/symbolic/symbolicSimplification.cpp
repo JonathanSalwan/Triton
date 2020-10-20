@@ -94,7 +94,7 @@ if __name__ == "__main__":
     ctx.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    ctx.addCallback(SYMBOLIC_SIMPLIFICATION, xor_bitwise)
+    ctx.addCallback(xor_bitwise, SYMBOLIC_SIMPLIFICATION)
 
     a = bv(1, 8)
     b = bv(2, 8)

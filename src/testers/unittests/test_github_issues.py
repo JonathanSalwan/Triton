@@ -224,8 +224,8 @@ class TestIssue789(unittest.TestCase):
 
 
     def test_issue(self):
-        self.ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.handle_mem_read)
-        self.ctx.addCallback(CALLBACK.GET_CONCRETE_REGISTER_VALUE, self.handle_reg_read)
+        self.ctx.addCallback(self.handle_mem_read, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.ctx.addCallback(self.handle_reg_read, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
         self.emulate(0x400000)
         ast = self.ctx.getAstContext()
         rax = self.ctx.getSymbolicRegister(self.ctx.registers.rax)

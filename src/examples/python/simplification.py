@@ -77,8 +77,8 @@ if __name__ == "__main__":
     Triton.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    Triton.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, xor_1)
-    Triton.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, xor_2)
+    Triton.addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    Triton.addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
 
     astCtxt = Triton.getAstContext()
 

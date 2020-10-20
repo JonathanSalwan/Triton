@@ -613,21 +613,58 @@ namespace triton {
 
   /* Callbacks API ================================================================================= */
 
-  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb);
-  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb);
-  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb);
-  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb);
-  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb);
+  void API::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
+    this->callbacks.addCallback(cb);
+  }
 
-  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb);
-  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb);
-  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb);
-  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb);
-  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb);
+
+  void API::addCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
+    this->callbacks.addCallback(cb);
+  }
+
+
+  void API::addCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
+    this->callbacks.addCallback(cb);
+  }
+
+
+  void API::addCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
+    this->callbacks.addCallback(cb);
+  }
+
+
+  void API::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+    this->callbacks.addCallback(cb);
+  }
 
 
   void API::clearCallbacks(void) {
     this->callbacks.clearCallbacks();
+  }
+
+
+  void API::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
+    this->callbacks.removeCallback(cb);
+  }
+
+
+  void API::removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
+    this->callbacks.removeCallback(cb);
+  }
+
+
+  void API::removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
+    this->callbacks.removeCallback(cb);
+  }
+
+
+  void API::removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
+    this->callbacks.removeCallback(cb);
+  }
+
+
+  void API::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
+    this->callbacks.removeCallback(cb);
   }
 
 
@@ -891,24 +928,6 @@ namespace triton {
   const std::vector<triton::engines::symbolic::PathConstraint>& API::getPathConstraints(void) const {
     this->checkSymbolic();
     return this->symbolic->getPathConstraints();
-  }
-
-
-  std::vector<triton::engines::symbolic::PathConstraint> API::getPathConstraints(triton::usize start, triton::usize end) const {
-    this->checkSymbolic();
-    return this->symbolic->getPathConstraints(start, end);
-  }
-
-
-  std::vector<triton::engines::symbolic::PathConstraint> API::getPathConstraintsOfThread(triton::uint32 threadId) const {
-    this->checkSymbolic();
-    return this->symbolic->getPathConstraintsOfThread(threadId);
-  }
-
-
-  triton::usize API::getSizeOfPathConstraints(void) const {
-    this->checkSymbolic();
-    return this->symbolic->getSizeOfPathConstraints();
   }
 
 
