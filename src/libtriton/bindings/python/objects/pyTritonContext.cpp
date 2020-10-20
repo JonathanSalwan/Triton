@@ -1335,15 +1335,15 @@ namespace triton {
         PyObject* wb    = nullptr;
 
         /* Extract Keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "O|O", keywords, &node, &wb) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &wb) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
-        if (!PyAstNode_Check(node)) {
+        if (node == nullptr || !PyAstNode_Check(node)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
         }
 
-        if (wb != nullptr && !PyBool_Check(wb)) {
+        if (wb == nullptr || !PyBool_Check(wb)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
@@ -1385,7 +1385,7 @@ namespace triton {
         PyObject* wb    = nullptr;
 
         /* Extract Keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "OO|O", keywords, &node, &limit, &wb) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &limit, &wb) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
@@ -1397,7 +1397,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
         }
 
-        if (wb != nullptr && !PyBool_Check(wb)) {
+        if (wb == nullptr || !PyBool_Check(wb)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
