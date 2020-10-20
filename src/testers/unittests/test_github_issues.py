@@ -344,9 +344,10 @@ class TestIssue818(unittest.TestCase):
         self.ctx.processing(inst)
 
         ref1 = self.ctx.getSymbolicExpression(2) # res of 'inc rax'
-        m = self.ctx.getModel(ref1.getAst() == 0xdead)
+        m, status = self.ctx.getModel(ref1.getAst() == 0xdead, status=True)
         self.assertEqual(m[0].getValue(), 0xac)
         self.assertEqual(m[1].getValue(), 0xde)
+        self.assertEqual(status, SOLVER.SAT)
 
 
 class TestIssue823(unittest.TestCase):
