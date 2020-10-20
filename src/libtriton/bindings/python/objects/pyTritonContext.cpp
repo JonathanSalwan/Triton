@@ -1321,17 +1321,31 @@ namespace triton {
         }
       }
 
-      static PyObject* TritonContext_getModel(PyObject* self, PyObject* node) {
-        PyObject* ret = nullptr;
 
-        if (!PyAstNode_Check(node))
+      static PyObject* TritonContext_getModel(PyObject* self, PyObject* args) {
+        triton::engines::solver::status_e status;
+        PyObject* dict = nullptr;
+        PyObject* node = nullptr;
+        PyObject* wb   = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &node, &wb) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid arguments.");
+        }
+
+        if (node == nullptr || !PyAstNode_Check(node)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
+        }
+
+        if (wb != nullptr && !PyBool_Check(wb)) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
+        }
 
         try {
-          ret = xPyDict_New();
-          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node));
+          dict = triton::bindings::python::xPyDict_New();
+          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node), &status);
           for (auto it = model.begin(); it != model.end(); it++) {
-            xPyDict_SetItem(ret, PyLong_FromUsize(it->first), PySolverModel(it->second));
+            xPyDict_SetItem(dict, PyLong_FromUsize(it->first), PySolverModel(it->second));
           }
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -1341,7 +1355,14 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        return ret;
+        if (wb != nullptr && PyLong_AsBool(wb) == true) {
+          PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
+          PyTuple_SetItem(tuple, 0, dict);
+          PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
+          return tuple;
+        }
+
+        return dict;
       }
 
 
@@ -3048,7 +3069,7 @@ namespace triton {
         {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                             METH_NOARGS,        ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                        METH_O,             ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                           METH_O,             ""},
-        {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_O,             ""},
+        {"getModel",                            (PyCFunction)TritonContext_getModel,                               METH_VARARGS,       ""},
         {"getModels",                           (PyCFunction)TritonContext_getModels,                              METH_VARARGS,       ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                      METH_O,             ""},
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,        ""},
