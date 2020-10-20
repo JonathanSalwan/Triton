@@ -1339,7 +1339,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
-        if (node == nullptr || !PyAstNode_Check(node)) {
+        if (node == nullptr || node == Py_None || !PyAstNode_Check(node)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
         }
 
@@ -1389,11 +1389,11 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
-        if (node == nullptr || !PyAstNode_Check(node)) {
+        if (node == nullptr || node == Py_None || !PyAstNode_Check(node)) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a AstNode as first argument.");
         }
 
-        if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit))) {
+        if (limit == nullptr || limit == Py_None || (!PyLong_Check(limit) && !PyInt_Check(limit))) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
         }
 
