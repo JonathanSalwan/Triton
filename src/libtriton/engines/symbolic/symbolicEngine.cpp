@@ -1261,11 +1261,29 @@ namespace triton {
           mem.setLeaAst(leaAst);
 
           /* Initialize the address only if it is not already defined */
-          if (!mem.getAddress() || force)
-            mem.setAddress(leaAst->evaluate().convert_to<triton::uint64>());
+          if (!mem.getAddress() || force) {
+            if (!(this->modes->isModeEnabled(triton::modes::CONCRETIZE_ADDRESS))) {
+              mem.setAddress(leaAst->evaluate().convert_to<triton::uint64>());
+            }
+            else {
+              triton::uint64 baseValue = this->architecture->isRegisterValid(base) ? this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>() : 0;
+              triton::uint64 indexValue = this->architecture->isRegisterValid(index) ? this->architecture->getConcreteRegisterValue(index).convert_to<triton::uint64>() : 0;
+
+              baseValue += segmentValue;
+              if (mem.getPcRelative()) {
+                baseValue = mem.getPcRelative();
+              }
+              triton::uint64 concreteAddress = baseValue + indexValue * scaleValue + dispValue;
+
+              auto regSize = this->architecture->gprBitSize();
+              if (regSize != 64) {
+                concreteAddress &= (1ULL << regSize) - 1;
+              }
+              mem.setAddress(concreteAddress);
+            }
+          }
         }
       }
-
 
       triton::uint512 SymbolicEngine::getConcreteVariableValue(const SharedSymbolicVariable& symVar) const {
         return this->astCtxt->getVariableValue(symVar->getName());
