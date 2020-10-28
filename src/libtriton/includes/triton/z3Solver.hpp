@@ -51,6 +51,9 @@ namespace triton {
           //! The SMT solver timeout. By default, unlimited.
           triton::uint32 timeout;
 
+          //! The SMT solver memory limit. By default, unlimited.
+          triton::uint32 memoryLimit;
+
           //! Writes back the status code of the solver into the pointer pointed by status.
           void writeBackStatus(z3::solver& solver, z3::check_result res, triton::engines::solver::status_e* status) const;
 
@@ -90,6 +93,9 @@ namespace triton {
 
           //! Defines a solver timeout (in milliseconds).
           TRITON_EXPORT void setTimeout(triton::uint32 ms);
+
+          //! Defines a solver memory consumption limit (in Megabytes).
+          TRITON_EXPORT void setMemoryLimit(triton::uint32 mem);
       };
 
     /*! @} End of solver namespace */

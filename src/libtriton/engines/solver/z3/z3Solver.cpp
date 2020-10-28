@@ -35,6 +35,7 @@ namespace triton {
 
       Z3Solver::Z3Solver() {
         this->timeout = 0;
+        this->memoryLimit = 0;
       }
 
 
@@ -61,12 +62,19 @@ namespace triton {
           /* Create a solver and add the expression */
           solver.add(expr);
 
+          z3::params p(ctx);
+
           /* Define the timeout */
           if (this->timeout) {
-            z3::params p(ctx);
             p.set(":timeout", this->timeout);
-            solver.set(p);
           }
+
+          /* Define memory limit */
+          if (this->memoryLimit) {
+            p.set(":max_memory", this->memoryLimit);
+          }
+
+          solver.set(p);
 
           /* Get first model */
           z3::check_result res = solver.check();
@@ -151,12 +159,19 @@ namespace triton {
           /* Create a solver and add the expression */
           solver.add(expr);
 
+          z3::params p(ctx);
+
           /* Define the timeout */
           if (this->timeout) {
-            z3::params p(ctx);
             p.set(":timeout", this->timeout);
-            solver.set(p);
           }
+
+          /* Define memory limit */
+          if (this->memoryLimit) {
+            p.set(":max_memory", this->memoryLimit);
+          }
+
+          solver.set(p);
 
           z3::check_result res = solver.check();
           this->writeBackStatus(solver, res, status);
@@ -244,6 +259,10 @@ namespace triton {
               if (solver.reason_unknown() == "timeout") {
                 *status = triton::engines::solver::TIMEOUT;
               }
+              else if (solver.reason_unknown() == "max. memory exceeded")
+              {
+                *status = triton::engines::solver::OUTOFMEM;
+              }
               else {
                 *status = triton::engines::solver::UNKNOWN;
               }
@@ -260,6 +279,10 @@ namespace triton {
 
       void Z3Solver::setTimeout(triton::uint32 ms) {
         this->timeout = ms;
+      }
+
+      void Z3Solver::setMemoryLimit(triton::uint32 mem) {
+        this->memoryLimit = mem;
       }
 
     };
