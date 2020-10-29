@@ -1269,7 +1269,13 @@ namespace triton {
             if (mem.getPcRelative()) {
               baseValue = mem.getPcRelative();
             }
-            triton::uint64 concreteAddress = baseValue + indexValue * scaleValue + dispValue;
+            triton::uint64 concreteAddress = baseValue + dispValue;
+            if (index.isSubtracted()) {
+              concreteAddress -= indexValue * scaleValue;
+            }
+            else {
+              concreteAddress += indexValue * scaleValue;
+            }
 
             auto regSize = this->architecture->gprBitSize();
             if (regSize != 64) {
