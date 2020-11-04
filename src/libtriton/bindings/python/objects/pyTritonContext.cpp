@@ -163,6 +163,9 @@ Returns the logical conjunction vector of path constraints as a list of \ref py_
 - <b>\ref py_AstNode_page getPathPredicate(void)</b><br>
 Returns the current path predicate as an AST of logical conjunction of each taken branch.
 
+- <b>integer getPathPredicateSize(void)</b><br>
+Returns the size of the path predicate (number of constraints).
+
 - <b>[\ref py_AstNode_page, ...] getPredicatesToReachAddress(integer addr)</b><br>
 Returns path predicates which may reach the targeted address.
 
@@ -1486,6 +1489,20 @@ namespace triton {
       static PyObject* TritonContext_getPathPredicate(PyObject* self, PyObject* noarg) {
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getPathPredicate());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getPathPredicateSize(PyObject* self, PyObject* noarg) {
+        try {
+          const auto& pc = PyTritonContext_AsTritonContext(self)->getPathConstraints();
+          return PyLong_FromUsize(pc.size());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3103,6 +3120,7 @@ namespace triton {
         {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                     METH_NOARGS,                   ""},
         {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                     METH_NOARGS,                   ""},
         {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                       METH_NOARGS,                   ""},
+        {"getPathPredicateSize",                (PyCFunction)TritonContext_getPathPredicateSize,                   METH_NOARGS,                   ""},
         {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,            METH_O,                        ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                            METH_O,                        ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                         METH_O,                        ""},
