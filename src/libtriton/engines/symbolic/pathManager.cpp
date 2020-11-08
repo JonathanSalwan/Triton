@@ -237,6 +237,10 @@ namespace triton {
         if (node->isLogical() == false)
           throw triton::exceptions::PathManager("PathManager::pushPathConstraint(): The node must be a logical node.");
 
+        /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
+        if (this->modes->isModeEnabled(triton::modes::PC_TRACKING_SYMBOLIC) && !node->isSymbolized())
+          return;
+
         pco.addBranchConstraint(
           true, /* always taken   */
           0,    /* from: not used */
