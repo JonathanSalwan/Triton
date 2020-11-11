@@ -16,3 +16,4 @@ peda-session*
 pin.log
 pintool.log
 private/*
+*.so
