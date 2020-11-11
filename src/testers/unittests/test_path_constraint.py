@@ -70,6 +70,8 @@ class TestPathConstraint(unittest.TestCase):
         pc  = self.ctx.getPathPredicate()
         opc = pc
 
+        self.ctx.setMode(MODE.PC_TRACKING_SYMBOLIC, False)
+
         self.assertEqual(str(pc), "(and (= (_ bv1 1) (_ bv1 1)) (= ref!35 (_ bv1 1)))")
         self.ctx.pushPathConstraint(ast.equal(ast.bvtrue(), ast.bvtrue()))
 
