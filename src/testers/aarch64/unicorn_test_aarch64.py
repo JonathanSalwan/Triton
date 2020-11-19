@@ -1840,6 +1840,9 @@ CODE  = [
     (b"\x22\xf8\x7e\x92", "bic x2, x1, #2"),
     (b"\x22\xf4\x7e\x92", "bic x2, x1, #3"),
     (b"\x22\xf8\x7d\x92", "bic x2, x1, #4"),
+
+    (b"\x28\x00\x00\x37", "tbnz w8, #0, #4"),
+    (b"\x48\x00\x00\x36", "tbz w8, #0, #0"),
 ]
 
 def emu_with_unicorn(opcode, istate):

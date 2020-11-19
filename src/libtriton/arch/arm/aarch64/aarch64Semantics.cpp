@@ -3608,7 +3608,7 @@ namespace triton {
                           this->astCtxt->extract(0, 0, this->astCtxt->bvlshr(op1, op2)),
                           this->astCtxt->bvtrue()
                         ),
-                        op3,
+                        this->astCtxt->zx(dst.getBitSize() - op3->getBitvectorSize(), op3),
                         this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize())
                       );
 
@@ -3637,7 +3637,7 @@ namespace triton {
                           this->astCtxt->extract(0, 0, this->astCtxt->bvlshr(op1, op2)),
                           this->astCtxt->bvfalse()
                         ),
-                        op3,
+                        this->astCtxt->zx(dst.getBitSize() - op3->getBitvectorSize(), op3),
                         this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize())
                       );
 
