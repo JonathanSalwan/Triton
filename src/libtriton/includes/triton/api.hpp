@@ -236,6 +236,8 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
+        //! [**architecture api**] - Manually clears the instruction. Should be used if MANUAL_CLEAN_INSTRUCION mode is on. You must define an architecture before. \sa processing().
+        TRITON_EXPORT void manualClearInstruction(triton::arch::Instruction& inst);
 
 
         /* Processing API ================================================================================ */

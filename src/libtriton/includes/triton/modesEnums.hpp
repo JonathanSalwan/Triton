@@ -33,6 +33,7 @@ namespace triton {
       CONSTANT_FOLDING,               //!< [symbolic] Perform a constant folding optimization of sub ASTs which do not contain symbolic variables.
       ONLY_ON_SYMBOLIZED,             //!< [symbolic] Perform symbolic execution only on symbolized expressions.
       ONLY_ON_TAINTED,                //!< [symbolic] Perform symbolic execution only on tainted instructions.
+      MANUAL_CLEAN_INSTRUCTION,       //!< [symbolic] Require manual cleaning of instructions after processing.
       PC_TRACKING_SYMBOLIC,           //!< [symbolic] Track path constraints only if they are symbolized.
       SYMBOLIZE_INDEX_ROTATION,       //!< [symbolic] Symbolize index rotation for bvrol and bvror (see #751). This mode increases the complexity of solving.
       TAINT_THROUGH_POINTERS,         //!< [taint] Spread the taint if an index pointer is already tainted (see #725).
