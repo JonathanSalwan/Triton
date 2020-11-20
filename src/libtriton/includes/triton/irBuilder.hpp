@@ -94,11 +94,14 @@ namespace triton {
         //! Builds the semantics of the instruction. Returns true if the instruction is supported.
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 
-        //! Everything which must be done before buiding the semantics
+        //! Everything which must be done before buiding the semantics.
         TRITON_EXPORT void preIrInit(triton::arch::Instruction& inst);
 
         //! Everything which must be done after building the semantics.
         TRITON_EXPORT void postIrInit(triton::arch::Instruction& inst);
+
+        //! Cleans the instruction of unneeded data after processing.
+        TRITON_EXPORT void clearIrInst(triton::arch::Instruction& inst);
     };
 
   /*! @} End of arch namespace */

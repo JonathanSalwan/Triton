@@ -49,6 +49,9 @@ Enabled, Triton will perform symbolic execution only on symbolized expressions.
 - **MODE.ONLY_ON_TAINTED**<br>
 Enabled, Triton will perform symbolic execution only on tainted instructions.
 
+- **MODE.MANUAL_CLEAN_INSTRUCTION**<br>
+Enabled, Triton will require manual cleaning of instructions after processing.
+
 - **MODE.PC_TRACKING_SYMBOLIC**<br>
 Enabled, Triton will track path constraints only if they are symbolized. This mode is enabled by default.
 
@@ -72,6 +75,7 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "CONSTANT_FOLDING",               PyLong_FromUint32(triton::modes::CONSTANT_FOLDING));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",             PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",                PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
+        xPyDict_SetItemString(modeDict, "MANUAL_CLEAN_INSTRUCTION",       PyLong_FromUint32(triton::modes::MANUAL_CLEAN_INSTRUCTION));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",           PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
         xPyDict_SetItemString(modeDict, "SYMBOLIZE_INDEX_ROTATION",       PyLong_FromUint32(triton::modes::SYMBOLIZE_INDEX_ROTATION));
         xPyDict_SetItemString(modeDict, "TAINT_THROUGH_POINTERS",         PyLong_FromUint32(triton::modes::TAINT_THROUGH_POINTERS));

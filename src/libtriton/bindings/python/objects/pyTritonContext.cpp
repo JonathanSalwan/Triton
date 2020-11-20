@@ -95,6 +95,10 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
+- <b>void manualClearInstruction(triton::arch::Instruction& inst)</b><br>
+Manually clears the instruction. Should be used if MANUAL_CLEAN_INSTRUCION mode is on. You must define an architecture before. \sa processing().
+        TRITON_EXPORT 
+
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
 
@@ -1047,6 +1051,25 @@ namespace triton {
 
         try {
           PyTritonContext_AsTritonContext(self)->disassembly(*PyInstruction_AsInstruction(inst));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
+      static PyObject* TritonContext_manualClearInstruction(PyObject* self, PyObject* inst) {
+        if (!PyInstruction_Check(inst))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::manualClearInstruction(): Expects an Instruction as argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->manualClearInstruction(*PyInstruction_AsInstruction(inst));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3032,6 +3055,7 @@ namespace triton {
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,       METH_VARARGS,       ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,       METH_VARARGS,       ""},
         {"disassembly",                         (PyCFunction)TritonContext_disassembly,                            METH_O,             ""},
+        {"manualClearInstruction",              (PyCFunction)TritonContext_manualClearInstruction,                 METH_O,             ""},
         {"enableSymbolicEngine",                (PyCFunction)TritonContext_enableSymbolicEngine,                   METH_O,             ""},
         {"enableTaintEngine",                   (PyCFunction)TritonContext_enableTaintEngine,                      METH_O,             ""},
         {"evaluateAstViaZ3",                    (PyCFunction)TritonContext_evaluateAstViaZ3,                       METH_O,             ""},

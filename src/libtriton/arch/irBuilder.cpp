@@ -127,6 +127,16 @@ namespace triton {
 
 
     void IrBuilder::postIrInit(triton::arch::Instruction& inst) {
+      /* Set the taint */
+      inst.setTaint();
+
+      if (!this->modes->isModeEnabled(triton::modes::MANUAL_CLEAN_INSTRUCTION)) {
+        this->clearIrInst(inst);
+      }
+    }
+
+
+    void IrBuilder::clearIrInst(triton::arch::Instruction& inst) {
       std::vector<triton::engines::symbolic::SharedSymbolicExpression> newVector;
 
       auto& loadAccess        = inst.getLoadAccess();
@@ -134,9 +144,6 @@ namespace triton {
       auto& readImmediates    = inst.getReadImmediates();
       auto& storeAccess       = inst.getStoreAccess();
       auto& writtenRegisters  = inst.getWrittenRegisters();
-
-      /* Set the taint */
-      inst.setTaint();
 
       // ----------------------------------------------------------------------
 

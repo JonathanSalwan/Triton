@@ -515,6 +515,10 @@ namespace triton {
     this->arch.disassembly(inst);
   }
 
+  void API::manualClearInstruction(triton::arch::Instruction& inst) {
+    this->irBuilder->clearIrInst(inst);
+  }
+
 
 
   /* Processing API ================================================================================ */
