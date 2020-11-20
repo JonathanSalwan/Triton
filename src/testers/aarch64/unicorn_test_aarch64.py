@@ -17,6 +17,12 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
+    (b"\x08\x08\x00\x90", "adrp x8, #0x100000"),
+    (b"\x08\x59\x00\x91", "add x8, x8, #0x16"),
+    (b"\x2b\x00\x80\xd2", "mov x11, 1"),
+    (b"\x0a\x79\xab\xb8", "ldrsw x10, [x8, x11, lsl #2]"),
+    (b"\x09\x01\x0a\x8b", "add x9, x8, x10"),
+
     (b"\x80\x46\x82\xd2", "movz x0, #0x1234"),
     (b"\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
     (b"\x80\x46\xc2\xd2", "movz x0, #0x1234, lsl #32"),

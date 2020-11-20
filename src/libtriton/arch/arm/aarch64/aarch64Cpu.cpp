@@ -347,6 +347,10 @@ namespace triton {
                     mem.setPcRelative(inst.getNextAddress());
                   }
 
+                  /* Set Shift type and value */
+                  index.setShiftType(this->capstoneShiftToTritonShift(op->shift.type));
+                  index.setShiftValue(op->shift.value);
+
                   /* Set extend type and size */
                   index.setExtendType(this->capstoneExtendToTritonExtend(op->ext));
                   if (op->ext != triton::extlibs::capstone::ARM64_EXT_INVALID) {
