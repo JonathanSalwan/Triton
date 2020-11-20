@@ -188,6 +188,9 @@ namespace triton {
             //! The BFI semantics.
             void bfi_s(triton::arch::Instruction& inst);
 
+            //! The BFXIL semantics.
+            void bfxil_s(triton::arch::Instruction& inst);
+
             //! The BIC semantics.
             void bic_s(triton::arch::Instruction& inst);
 
