@@ -281,8 +281,9 @@ namespace triton {
         this->timeout = ms;
       }
 
-      void Z3Solver::setMemoryLimit(triton::uint32 mem) {
-        this->memoryLimit = mem;
+
+      void Z3Solver::setMemoryLimit(triton::uint32 limit) {
+        this->memoryLimit = limit;
       }
 
     };
