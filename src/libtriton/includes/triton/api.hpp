@@ -547,6 +547,9 @@ namespace triton {
         //! [**solver api**] - Defines a solver timeout (in milliseconds).
         TRITON_EXPORT void setSolverTimeout(triton::uint32 ms);
 
+        //! [**solver api**] - Defines a solver timeout (in milliseconds).
+        TRITON_EXPORT void setSolverMemoryLimit(triton::uint32 mem);
+
 
 
         /* Taint engine API ============================================================================== */

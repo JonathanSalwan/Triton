@@ -102,6 +102,9 @@ namespace triton {
 
           //! Defines a solver timeout (in milliseconds).
           TRITON_EXPORT void setTimeout(triton::uint32 ms);
+
+          //! Defines a solver memory consumption limit (in Megabytes).
+          TRITON_EXPORT void setMemoryLimit(triton::uint32 mem);
       };
 
     /*! @} End of solver namespace */

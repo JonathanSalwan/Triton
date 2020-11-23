@@ -49,6 +49,7 @@ namespace triton {
         UNSAT = 0, /*!< UNSAT */
         SAT = 1,   /*!< SAT */
         TIMEOUT,   /*!< TIMEOUT */
+        OUTOFMEM,  /*!< MEMORY LIMIT REACHED */
         UNKNOWN    /*!< UNKNOWN */
       };
 

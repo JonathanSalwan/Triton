@@ -1123,6 +1123,12 @@ namespace triton {
   }
 
 
+  void API::setSolverMemoryLimit(triton::uint32 mem) {
+    this->checkSolver();
+    this->solver->setMemoryLimit(mem);
+  }
+
+
 
   /* Taint engine API ============================================================================== */
 
