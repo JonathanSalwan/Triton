@@ -148,6 +148,70 @@ namespace triton {
             triton::uint8 x29[triton::size::qword];
             //! Concrete value of x30
             triton::uint8 x30[triton::size::qword];
+            //! Concrete value of q0
+            triton::uint8 q0[triton::size::dqword];
+            //! Concrete value of q1
+            triton::uint8 q1[triton::size::dqword];
+            //! Concrete value of q2
+            triton::uint8 q2[triton::size::dqword];
+            //! Concrete value of q3
+            triton::uint8 q3[triton::size::dqword];
+            //! Concrete value of q4
+            triton::uint8 q4[triton::size::dqword];
+            //! Concrete value of q5
+            triton::uint8 q5[triton::size::dqword];
+            //! Concrete value of q6
+            triton::uint8 q6[triton::size::dqword];
+            //! Concrete value of q7
+            triton::uint8 q7[triton::size::dqword];
+            //! Concrete value of q8
+            triton::uint8 q8[triton::size::dqword];
+            //! Concrete value of q9
+            triton::uint8 q9[triton::size::dqword];
+            //! Concrete value of q10
+            triton::uint8 q10[triton::size::dqword];
+            //! Concrete value of q11
+            triton::uint8 q11[triton::size::dqword];
+            //! Concrete value of q12
+            triton::uint8 q12[triton::size::dqword];
+            //! Concrete value of q13
+            triton::uint8 q13[triton::size::dqword];
+            //! Concrete value of q14
+            triton::uint8 q14[triton::size::dqword];
+            //! Concrete value of q15
+            triton::uint8 q15[triton::size::dqword];
+            //! Concrete value of q16
+            triton::uint8 q16[triton::size::dqword];
+            //! Concrete value of q17
+            triton::uint8 q17[triton::size::dqword];
+            //! Concrete value of q18
+            triton::uint8 q18[triton::size::dqword];
+            //! Concrete value of q19
+            triton::uint8 q19[triton::size::dqword];
+            //! Concrete value of q20
+            triton::uint8 q20[triton::size::dqword];
+            //! Concrete value of q21
+            triton::uint8 q21[triton::size::dqword];
+            //! Concrete value of q22
+            triton::uint8 q22[triton::size::dqword];
+            //! Concrete value of q23
+            triton::uint8 q23[triton::size::dqword];
+            //! Concrete value of q24
+            triton::uint8 q24[triton::size::dqword];
+            //! Concrete value of q25
+            triton::uint8 q25[triton::size::dqword];
+            //! Concrete value of q26
+            triton::uint8 q26[triton::size::dqword];
+            //! Concrete value of q27
+            triton::uint8 q27[triton::size::dqword];
+            //! Concrete value of q28
+            triton::uint8 q28[triton::size::dqword];
+            //! Concrete value of q29
+            triton::uint8 q29[triton::size::dqword];
+            //! Concrete value of q30
+            triton::uint8 q30[triton::size::dqword];
+            //! Concrete value of q31
+            triton::uint8 q31[triton::size::dqword];
             //! Concrete value of sp
             triton::uint8 sp[triton::size::qword];
             //! Concrete value of pc
@@ -170,6 +234,9 @@ namespace triton {
 
             //! Returns true if regId is a GRP.
             TRITON_EXPORT bool isGPR(triton::arch::register_e regId) const;
+
+            //! Returns true if regId is a scalar register.
+            TRITON_EXPORT bool isScalarRegister(triton::arch::register_e regId) const;
 
             /* Virtual pure inheritance ================================================= */
             TRITON_EXPORT bool isFlag(triton::arch::register_e regId) const;
