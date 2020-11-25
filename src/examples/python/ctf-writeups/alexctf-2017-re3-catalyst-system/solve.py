@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2020-05-03
@@ -14,7 +14,7 @@
 ##
 ##  Output:
 ##
-##  $ time python ./solve.py
+##  $ time python3 ./solve.py
 ##  Loading..............................
 ##  Username: Password: Logging in..............................
 ##  your flag is: ALEXCTF{1_t41d_y0u_y0u_ar3__gr34t__reverser__s33
@@ -22,7 +22,7 @@
 ##  [+] The password is : sLSVpQ4vK3cGWyW86AiZhggwLHBjmx9CRspVGggj
 ##  [+] The flag is : 1_t41d_y0u_y0u_ar3__gr34t__reverser__s33
 ##  Success!
-##  python ./solve.py  2.68s user 0.02s system 99% cpu 2.709 total
+##  python3 ./solve.py  2.68s user 0.02s system 99% cpu 2.709 total
 ##  $
 ##
 

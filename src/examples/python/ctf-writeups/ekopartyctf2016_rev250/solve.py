@@ -1,11 +1,11 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2020-04-26
 ##
 ##  Output:
 ##
-##  $ time python ./solve.py
+##  $ time python3 ./solve.py
 ##  [+] Loading 0x400040 - 0x400238
 ##  [+] Loading 0x400238 - 0x400254
 ##  [+] Loading 0x400000 - 0x405804
@@ -30,7 +30,7 @@
 ##  Valid input is: ''@ (G @@ ^@v@  @/5vC\p D AC`P `  $  @#@   X  @@@P h@?@  WAU" A( Lq@ @p@ F$tH w60 * B k[Qn @@NCp@0I@@'
 ##  [+] Instruction executed: 2220
 ##  [+] Emulation done.
-##  python solve.py  2.60s user 0.02s system 99% cpu 2.626 total
+##  python3 solve.py  2.60s user 0.02s system 99% cpu 2.626 total
 ##
 ##  $ ./FUck_binary
 ##  Hello, what's your team name? '@ (G @@ ^@v@  @/5vC\p D AC`P `  $  @#@   X  @@@P h@?@  WAU" A( Lq@ @p@ F$tH w60 * B k[Qn @@NCp@0I@@

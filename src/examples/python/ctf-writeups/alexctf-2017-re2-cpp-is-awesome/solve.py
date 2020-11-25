@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2020-05-01
@@ -8,9 +8,9 @@
 ##
 ##  Output:
 ##
-##  $ time python solve2.py
+##  $ time python3 solve2.py
 ##  [+] Good flag: ALEXCTF{W3_L0v3_C_W1th_CL45535}
-##  python solve2.py  0.32s user 0.00s system 99% cpu 0.322 total
+##  python3 solve2.py  0.32s user 0.00s system 99% cpu 0.322 total
 ##
 
 from __future__ import print_function

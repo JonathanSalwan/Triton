@@ -1,4 +1,4 @@
-#! /usr/bin/env python
+#! /usr/bin/env python3
 #
 # This script is used to generate the files src/utils/syscalls{32,64}.cpp.
 # As the list of syscalls depends of your Kernel version. We must

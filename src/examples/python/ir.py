@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ## Output
 ##
-##  $ python ir.py
+##  $ python3 ir.py
 ##  400000: mov rax, qword ptr [rip + 0x13b8]
 ##          ref!0 = (concat ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv49 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv50 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv51 8)) ((_ extract 7 0) (_ bv0 8)) ((_ extract 7 0) (_ bv52 8))) ; MOV operation
 ##          ref!1 = (_ bv4194311 64) ; Program Counter
