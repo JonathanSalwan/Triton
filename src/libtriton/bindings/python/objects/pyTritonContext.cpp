@@ -96,8 +96,7 @@ Returns the new symbolic volatile expression and links this expression to the in
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
 - <b>void manualClearInstruction(triton::arch::Instruction& inst)</b><br>
-Manually clears the instruction. Should be used if MANUAL_CLEAN_INSTRUCION mode is on. You must define an architecture before. \sa processing().
-        TRITON_EXPORT 
+Manually clears the instruction. Should be used if MANUAL_CLEAN_INSTRUCION mode is on. You must define an architecture before. \sa processing(). 
 
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
