@@ -3229,6 +3229,7 @@ namespace triton {
         {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                             METH_O,                        ""},
         {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                           METH_O,                        ""},
         {nullptr,                               nullptr,                                                              0,                             nullptr}
+        {"manualClearInstruction",              (PyCFunction)TritonContext_manualClearInstruction,                 METH_O,             ""},
       };
 
 
