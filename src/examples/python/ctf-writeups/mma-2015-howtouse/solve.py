@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2018-11-03
@@ -10,7 +10,7 @@
 ##
 ##  Output:
 ##
-##  $ time python solve.py
+##  $ time python3 solve.py
 ##  [+] Loading 0x10001000 - 0x10001b10
 ##  [+] Loading 0x10002000 - 0x10002573
 ##  [+] Loading 0x10003000 - 0x10003364
@@ -62,7 +62,7 @@
 ##  [+] Starting emulation of the function howtouse(43)
 ##  [+] Starting emulation of the function howtouse(44)
 ##  Flag is: MMA{fc7d90ca001fc8712497d88d9ee7efa9e9b32ed8}
-##  python solve.py  0.18s user 0.02s system 99% cpu 0.200 total
+##  python3 solve.py  0.18s user 0.02s system 99% cpu 0.200 total
 ##
 
 from __future__ import print_function

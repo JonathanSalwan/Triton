@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ## Output:
 ##
-##  $ python ./src/examples/python/hooking_libc.py
+##  $ python3 ./src/examples/python/hooking_libc.py
 ##  [+] Loading 0x400040 - 0x400270
 ##  [+] Loading 0x400270 - 0x40028c
 ##  [+] Loading 0x400000 - 0x4007a4
