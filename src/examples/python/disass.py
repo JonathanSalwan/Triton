@@ -1,9 +1,9 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ## Output:
 ##
-##  $ python src/examples/python/disass.py
+##  $ python3 src/examples/python/disass.py
 ##  40000: imul sil
 ##      ---------------
 ##      Is memory read : False

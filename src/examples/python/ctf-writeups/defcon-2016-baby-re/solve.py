@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2016-08-01
@@ -11,7 +11,7 @@
 ##
 ##  Output:
 ##
-##   $ time python ./solve.py
+##   $ time python3 ./solve.py
 ##   [...]
 ##   0x4025a0: imul eax, edx
 ##   0x4025a3: add ecx, eax
@@ -27,7 +27,7 @@
 ##   [+] Win
 ##   [+] Emulation done.
 ##   [+] Final solution: bytearray(b'Math is hard!')
-##   python solve.py  310.81s user 0.19s system 99% cpu 5:11.46 total
+##   python3 solve.py  310.81s user 0.19s system 99% cpu 5:11.46 total
 ##
 
 from __future__ import print_function

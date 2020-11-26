@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
-## $ python ./backward_slicing.py
+## $ python3 ./backward_slicing.py
 ## [slicing] 0x40058b: movzx eax, byte ptr [rax]
 ## [slicing] 0x40058e: movsx eax, al
 ## [slicing] 0x400591: sub eax, 1

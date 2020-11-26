@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2016-08-02
@@ -9,7 +9,7 @@
 ##
 ##  Output:
 ##
-##  $ time python ./solve.py
+##  $ time python3 ./solve.py
 ##  [...]
 ##  400784: movsx eax, al
 ##  400787: sub edx, eax
@@ -37,7 +37,7 @@
 ##  4007a7: ret
 ##  [+] Emulation done.
 ##  [+] Flag found: bytearray(b'Code_Talkers')
-##  python solve.py  0.27s user 0.01s system 99% cpu 0.276 total
+##  python3 solve.py  0.27s user 0.01s system 99% cpu 0.276 total
 ##
 
 from __future__ import print_function

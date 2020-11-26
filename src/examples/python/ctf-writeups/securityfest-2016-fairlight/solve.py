@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2020-04-26
@@ -6,7 +6,7 @@
 ##
 ##  Output:
 ##
-##  $ time python ./solve.py
+##  $ time python3 ./solve.py
 ##  [+] Loading 0x400040 - 0x400238
 ##  [+] Loading 0x400238 - 0x400254
 ##  [+] Loading 0x400000 - 0x401ecc
@@ -69,7 +69,7 @@
 ##  [+] rand hooked
 ##  [+] Solve constraint at 4018f3
 ##  [+] OK - ACCESS GRANTED: CODE{b'4ngrman4gem3nt'}
-##  python solve.py  21.63s user 0.03s system 99% cpu 21.690 total
+##  python3 solve.py  21.63s user 0.03s system 99% cpu 21.690 total
 ##
 
 from __future__ import print_function

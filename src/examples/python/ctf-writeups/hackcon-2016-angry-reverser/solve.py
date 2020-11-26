@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2018-11-02
@@ -13,7 +13,7 @@
 ##
 ##  Output:
 ##
-##  $ time python solve.py
+##  $ time python3 solve.py
 ##  [+] Loading 0x400040 - 0x400200
 ##  [+] Loading 0x400200 - 0x40021c
 ##  [+] Loading 0x400000 - 0x405d04
@@ -62,7 +62,7 @@
 ##  [+] Instruction executed: 4453
 ##  [+] Emulation done.
 ##
-##  python solve.py  113.53s user 0.09s system 99% cpu 1:53.79 total
+##  python3 solve.py  113.53s user 0.09s system 99% cpu 1:53.79 total
 ##
 
 from __future__ import print_function
