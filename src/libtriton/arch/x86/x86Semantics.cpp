@@ -11421,7 +11421,7 @@ namespace triton {
         eflags.push_back(op3);
         eflags.push_back(this->astCtxt->bvfalse()); /* Reserved */
         eflags.push_back(op2);
-        eflags.push_back(this->astCtxt->bvfalse()); /* Reserved */
+        eflags.push_back(this->astCtxt->bvtrue()); /* Reserved */
         eflags.push_back(op1);
 
         auto node = this->astCtxt->zx(
@@ -11514,7 +11514,7 @@ namespace triton {
         eflags.push_back(op3);
         eflags.push_back(this->astCtxt->bvfalse()); /* Reserved */
         eflags.push_back(op2);
-        eflags.push_back(this->astCtxt->bvfalse()); /* Reserved */
+        eflags.push_back(this->astCtxt->bvtrue()); /* Reserved */
         eflags.push_back(op1);
 
         auto node = this->astCtxt->zx(
