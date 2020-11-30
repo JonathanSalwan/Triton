@@ -1,7 +1,7 @@
 // Test cases for Triton
 // gcc -O0 -masm=intel ./ir.c -o ir
 
-void init(int *tab1, int *tab2, int *tab3, int *tab4) {
+void init(int *tab1, int *tab2, int *tab3, int *tab4, int *tab5, int *tab6, int *tab7) {
   tab1[0] = 0x11111111;
   tab1[1] = 0x22222222;
   tab1[2] = 0x33333333;
@@ -21,6 +21,29 @@ void init(int *tab1, int *tab2, int *tab3, int *tab4) {
   tab4[1] = 0x8bbbbbbb;
   tab4[2] = 0x12345678;
   tab4[3] = 0xfedcba98;
+
+  tab5[0] = 0x00050001;
+  tab5[1] = 0x000b000a;
+  tab5[2] = 0x00fe0016;
+  tab5[3] = 0x010000ff;
+
+  tab6[0] = 0x11111111;
+  tab6[1] = 0x22222222;
+  tab6[2] = 0x33333333;
+  tab6[3] = 0x44444444;
+  tab6[4] = 0x55555555;
+  tab6[5] = 0x66666666;
+  tab6[6] = 0x77777777;
+  tab6[7] = 0x88888888;
+
+  tab7[0] = 0x12010101;
+  tab7[1] = 0xff112290;
+  tab7[2] = 0x12345678;
+  tab7[3] = 0x11111111;
+  tab7[4] = 0x010101dd;
+  tab7[5] = 0x88885555;
+  tab7[6] = 0x905588b2;
+  tab7[7] = 0xffff2222;
 }
 
 void check(void)
@@ -29,6 +52,9 @@ void check(void)
   int tab2[4];
   int tab3[4];
   int tab4[4];
+  int tab5[4];
+  int tab6[8];
+  int tab7[8];
 
   int _utab1[5];
   int _utab2[5];
@@ -40,7 +66,7 @@ void check(void)
   int* utab3 = (int*)((char*)_utab3 + 1);
   int* utab4 = (int*)((char*)_utab4 + 1);
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
 
   // Check concat symbolic expression
   asm("mov sil, 0x99");
@@ -235,7 +261,7 @@ void check(void)
   asm("or ah, 0x8");
   asm("or al, byte ptr [rsp+0xf]");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
 
   asm("mov rax, 0x99");
   asm("mov rbx, 0xaa");
@@ -318,7 +344,7 @@ void check(void)
   asm("mov rax, 0x8000000000000000");
   asm("tzcnt ebx, eax");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
 
   asm("mov rax, 0x1111111111111111");
   asm("mov rbx, 0xffffffffffffffff");
@@ -350,7 +376,7 @@ void check(void)
   asm("mov rbx, 0x99");
   asm("cmpxchg ebx, ecx");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
 
   asm("cmpxchg8b qword ptr [%0]" :: "r"(tab1));
 
@@ -2826,7 +2852,7 @@ void check(void)
   asm("adcx rdi, rdx");
   asm("adcx rbx, rdi");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
 
   // SSE
   asm("movapd xmm0, xmmword ptr [%0]" :: "r"(tab1));
@@ -3499,7 +3525,7 @@ void check(void)
   asm("paddq xmm1, xmm2");
   asm("paddq xmm2, xmm4");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
   asm("lddqu xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("lddqu xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("lddqu xmm3, xmmword ptr [%0]" :: "r"(tab3));
@@ -3641,7 +3667,7 @@ void check(void)
   asm("pavgw xmm4, xmm3");
   asm("pavgw xmm4, xmm4");
 
-  init(tab1, tab2, tab3, tab4);
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
   asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab3));
@@ -3674,7 +3700,7 @@ void check(void)
   asm("vpshufd xmm1, xmm4, 0xff");
   asm("vpshufd xmm3, xmm1, 0xaa");
 
-  init(utab1, utab2, utab3, utab4);
+  init(utab1, utab2, utab3, utab4, tab5, tab6, tab7);
   asm("vmovdqu xmm1, xmmword ptr [%0]" :: "r"(utab1));
   asm("vmovdqu xmm2, xmmword ptr [%0]" :: "r"(utab2));
   asm("vmovdqu xmm3, xmmword ptr [%0]" :: "r"(utab3));
@@ -3801,6 +3827,158 @@ void check(void)
   asm("psllq mm1, mm1");
   asm("psllq mm1, mm2");
   asm("psllq mm1, mm3");
+
+  // vpslldq
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vpslldq xmm1, xmm1, 1");
+  asm("vpslldq xmm4, xmm2, 10");
+  asm("vpslldq xmm1, xmm3, 16");
+
+  asm("vmovdqa ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vpslldq ymm1, ymm1, 1");
+  asm("vpslldq ymm4, ymm2, 15");
+  asm("vpslldq ymm5, ymm3, 16");
+
+  // vpcmpgtb, vpcmpgtw, vpcmpgtd
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vpcmpgtb xmm1, xmm2, xmm3");
+  asm("vpcmpgtb xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vpcmpgtw xmm1, xmm2, xmm3");
+  asm("vpcmpgtw xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vpcmpgtd xmm1, xmm2, xmm3");
+  asm("vpcmpgtd xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpcmpgtb ymm1, ymm2, ymm3");
+  asm("vpcmpgtb ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpcmpgtw ymm1, ymm2, ymm3");
+  asm("vpcmpgtw ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpcmpgtd ymm1, ymm2, ymm3");
+  asm("vpcmpgtd ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  // vpsubb, vpsubw, vpsubd, vpsubq
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vpsubb xmm1, xmm2, xmm3");
+  asm("vpsubb xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vpsubw xmm1, xmm2, xmm3");
+  asm("vpsubw xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vpsubd xmm1, xmm2, xmm3");
+  asm("vpsubd xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vpsubq xmm1, xmm2, xmm3");
+  asm("vpsubq xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
+
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpsubb ymm1, ymm2, ymm3");
+  asm("vpsubb ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpsubw ymm1, ymm2, ymm3");
+  asm("vpsubw ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpsubd ymm1, ymm2, ymm3");
+  asm("vpsubd ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpsubq ymm1, ymm2, ymm3");
+  asm("vpsubq ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  // vxorps
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vxorps xmm1, xmm2, xmm3");
+  asm("vxorps xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab2));
+
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vxorps ymm1, ymm2, ymm3");
+  asm("vxorps ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  // vmovaps
+  asm("vmovaps xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vmovaps xmm1, xmm2");
+
+  asm("vmovaps ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovaps ymm1, ymm2");
+
+  // vmovups
+  asm("vmovups xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vmovups xmm1, xmm2");
+
+  asm("vmovups ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovups ymm1, ymm2");
+
+  // vmovsd
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vmovsd xmm1, xmm2, xmm3");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovsd xmm1, qword ptr [%0]" :: "r"(tab2));
+  asm("vmovsd qword ptr [%0], xmm1" :: "r"(tab1));
+
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
+
+  // packuswb
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("packuswb xmm1, xmm2");
+  asm("packuswb xmm2, xmmword ptr [%0]" :: "r"(tab5));
+
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("packuswb mm1, mm2");
+  asm("packuswb mm2, qword ptr [%0]" :: "r"(tab1));
+
+  // palignr
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("palignr xmm1, xmm2, 0x1");
+  asm("palignr xmm2, xmmword ptr [%0], 0x1" :: "r"(tab1));
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("palignr xmm1, xmm2, 0x5");
+  asm("palignr xmm2, xmmword ptr [%0], 0x5" :: "r"(tab1));
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("palignr xmm1, xmm2, 0x1f");
+  asm("palignr xmm2, xmmword ptr [%0], 0x1f" :: "r"(tab1));
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("palignr xmm1, xmm2, 0x20");
+  asm("palignr xmm2, xmmword ptr [%0], 0x20" :: "r"(tab1));
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("palignr xmm1, xmm2, 0x25");
+  asm("palignr xmm2, xmmword ptr [%0], 0x25" :: "r"(tab1));
+
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("palignr mm1, mm2, 0x1");
+  asm("palignr mm2, qword ptr [%0], 0x1" :: "r"(tab1));
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("palignr mm1, mm2, 0x5");
+  asm("palignr mm2, qword ptr [%0], 0x5" :: "r"(tab1));
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("palignr mm1, mm2, 0xf");
+  asm("palignr mm2, qword ptr [%0], 0xf" :: "r"(tab1));
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("palignr mm1, mm2, 0x10");
+  asm("palignr mm2, qword ptr [%0], 0x10" :: "r"(tab1));
+  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
+  asm("palignr mm1, mm2, 0x15");
+  asm("palignr mm2, qword ptr [%0], 0x15" :: "r"(tab1));
+
 }
 
 int main(){
