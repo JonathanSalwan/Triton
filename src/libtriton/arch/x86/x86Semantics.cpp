@@ -337,6 +337,7 @@ VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
 VPEXTRW                      | avx/avx2   | VEX Extract Word
+VPBROADCASTB                 | avx2       | VEX Load Byte Integer and broadcast
 VPCMPEQB                     | avx/avx2   | VEX Compare packed Bytes for equality
 VPCMPEQD                     | avx/avx2   | VEX Compare packed Doublewords for equality
 VPCMPEQQ                     | avx/avx2   | VEX Compare packed Quadwords for equality
@@ -6846,7 +6847,9 @@ namespace triton {
         /* Create the semantics */
         std::vector<triton::ast::SharedAbstractNode> exprs;
         for (size_t i = 0; i < src.getSize(); ++i) {
-          exprs.push_back(this->astCtxt->extract(8*i + 7, 8*i, op));
+          exprs.push_back(this->astCtxt->extract(triton::bitsize::byte * i + (triton::bitsize::byte - 1),
+                                                 triton::bitsize::byte * i,
+                                                 op));
         }
         auto node = this->astCtxt->concat(exprs);
 
@@ -7607,10 +7610,10 @@ namespace triton {
         /* Create the semantics */
         auto node = op;
         if (src.getType() == OP_REG) {
-          node = this->astCtxt->extract(triton::bitsize::dword-1, 0, node);
+          node = this->astCtxt->extract(triton::bitsize::dword - 1, 0, node);
           if (dst.getType() == OP_REG) {
             auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
-            auto upper = this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::dword, op1);
+            auto upper = this->astCtxt->extract(triton::bitsize::dqword - 1, triton::bitsize::dword, op1);
             node = this->astCtxt->concat(upper, node);
           }
         }

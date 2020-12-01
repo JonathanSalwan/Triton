@@ -3828,6 +3828,98 @@ void check(void)
   asm("psllq mm1, mm2");
   asm("psllq mm1, mm3");
 
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
+
+  // movss
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
+  asm("movss xmm1, xmm2");
+  asm("movss xmm2, dword ptr [%0]" :: "r"(tab1));
+  asm("movss dword ptr [%0], xmm2" :: "r"(tab2));
+
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
+
+  // movbe
+  asm("xor rbx, rbx");
+  asm("movbe bx, word ptr [%0]" :: "r"(tab5));
+  asm("xor rbx, rbx");
+  asm("movbe ebx, dword ptr [%0]" :: "r"(tab5));
+  asm("xor rbx, rbx");
+  asm("movbe rbx, qword ptr [%0]" :: "r"(tab5));
+
+  asm("mov qword ptr [%0], rbx" :: "r"(tab5));
+  asm("movbe word ptr [%0], bx" :: "r"(tab1));
+  asm("movbe dword ptr [%0], ebx" :: "r"(tab1));
+  asm("movbe qword ptr [%0], rbx" :: "r"(tab1));
+
+  init(tab1, tab2, tab3, tab4, tab5, tab6, tab7);
+
+  // vpbroadcastb
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vpbroadcastb xmm2, xmm1");
+  asm("vpbroadcastb xmm3, byte ptr [%0]" :: "r"(tab2));
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vpbroadcastb ymm2, xmm1");
+  asm("vpbroadcastb ymm3, byte ptr [%0]" :: "r"(tab2));
+
+  // vpminub
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab3));
+  asm("vpminub xmm3, xmm1, xmm2");
+  asm("vpminub xmm4, xmm1, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vmovdqu ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpminub ymm3, ymm1, ymm2");
+  asm("vpminub ymm4, ymm1, ymmword ptr [%0]" :: "r"(tab7));
+
+  // vpcmpeqb, vpcmpeqw, vpcmpeqd, vpcmpeqq
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab2));
+  asm("vpcmpeqb xmm1, xmm2, xmm3");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqb xmm1, xmm3, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqw xmm1, xmm2, xmm3");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqw xmm1, xmm3, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqd xmm1, xmm2, xmm3");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqd xmm1, xmm3, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab6));
+  asm("vpcmpeqq xmm1, xmm2, xmm3");
+  asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab4));
+  asm("vpcmpeqq xmm1, xmm3, xmmword ptr [%0]" :: "r"(tab3));
+
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vpcmpeqb ymm1, ymm2, ymm3");
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqb ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqw ymm1, ymm2, ymm3");
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqw ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqd ymm1, ymm2, ymm3");
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqd ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqq ymm1, ymm2, ymm3");
+  asm("vpxor ymm1, ymm1, ymm1");
+  asm("vpcmpeqq ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
+
   // vpslldq
   asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
   asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
@@ -3836,9 +3928,9 @@ void check(void)
   asm("vpslldq xmm4, xmm2, 10");
   asm("vpslldq xmm1, xmm3, 16");
 
-  asm("vmovdqa ymm1, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm3, ymmword ptr [%0]" :: "r"(tab6));
   asm("vpslldq ymm1, ymm1, 1");
   asm("vpslldq ymm4, ymm2, 15");
   asm("vpslldq ymm5, ymm3, 16");
@@ -3853,8 +3945,8 @@ void check(void)
   asm("vpcmpgtd xmm1, xmm2, xmm3");
   asm("vpcmpgtd xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab3));
 
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm3, ymmword ptr [%0]" :: "r"(tab7));
   asm("vpcmpgtb ymm1, ymm2, ymm3");
   asm("vpcmpgtb ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
   asm("vpcmpgtw ymm1, ymm2, ymm3");
@@ -3863,8 +3955,8 @@ void check(void)
   asm("vpcmpgtd ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
 
   // vpsubb, vpsubw, vpsubd, vpsubq
-  asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab1));
-  asm("vmovdqa xmm3, xmmword ptr [%0]" :: "r"(tab5));
+  asm("vmovdqu xmm2, xmmword ptr [%0]" :: "r"(tab1));
+  asm("vmovdqu xmm3, xmmword ptr [%0]" :: "r"(tab5));
   asm("vpsubb xmm1, xmm2, xmm3");
   asm("vpsubb xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
   asm("vpsubw xmm1, xmm2, xmm3");
@@ -3874,8 +3966,8 @@ void check(void)
   asm("vpsubq xmm1, xmm2, xmm3");
   asm("vpsubq xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab5));
 
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm3, ymmword ptr [%0]" :: "r"(tab7));
   asm("vpsubb ymm1, ymm2, ymm3");
   asm("vpsubb ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
   asm("vpsubw ymm1, ymm2, ymm3");
@@ -3891,8 +3983,8 @@ void check(void)
   asm("vxorps xmm1, xmm2, xmm3");
   asm("vxorps xmm1, xmm2, xmmword ptr [%0]" :: "r"(tab2));
 
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm3, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm3, ymmword ptr [%0]" :: "r"(tab7));
   asm("vxorps ymm1, ymm2, ymm3");
   asm("vxorps ymm1, ymm2, ymmword ptr [%0]" :: "r"(tab7));
 
@@ -3901,8 +3993,8 @@ void check(void)
   asm("vmovdqa xmm2, xmmword ptr [%0]" :: "r"(tab2));
   asm("vmovaps xmm1, xmm2");
 
-  asm("vmovaps ymm1, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  //asm("vmovaps ymm1, ymmword ptr [%0]" :: "r"(tab6));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab7));
   asm("vmovaps ymm1, ymm2");
 
   // vmovups
@@ -3911,7 +4003,7 @@ void check(void)
   asm("vmovups xmm1, xmm2");
 
   asm("vmovups ymm1, ymmword ptr [%0]" :: "r"(tab6));
-  asm("vmovdqa ymm2, ymmword ptr [%0]" :: "r"(tab7));
+  asm("vmovdqu ymm2, ymmword ptr [%0]" :: "r"(tab7));
   asm("vmovups ymm1, ymm2");
 
   // vmovsd
@@ -3931,10 +4023,10 @@ void check(void)
   asm("packuswb xmm1, xmm2");
   asm("packuswb xmm2, xmmword ptr [%0]" :: "r"(tab5));
 
-  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  /*asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
   asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
   asm("packuswb mm1, mm2");
-  asm("packuswb mm2, qword ptr [%0]" :: "r"(tab1));
+  asm("packuswb mm2, qword ptr [%0]" :: "r"(tab1));*/
 
   // palignr
   asm("vmovdqa xmm1, xmmword ptr [%0]" :: "r"(tab1));
@@ -3958,7 +4050,7 @@ void check(void)
   asm("palignr xmm1, xmm2, 0x25");
   asm("palignr xmm2, xmmword ptr [%0], 0x25" :: "r"(tab1));
 
-  asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
+  /*asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
   asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
   asm("palignr mm1, mm2, 0x1");
   asm("palignr mm2, qword ptr [%0], 0x1" :: "r"(tab1));
@@ -3977,7 +4069,7 @@ void check(void)
   asm("movq mm1, qword ptr [%0]" :: "r"(tab1));
   asm("movq mm2, qword ptr [%0]" :: "r"(tab2));
   asm("palignr mm1, mm2, 0x15");
-  asm("palignr mm2, qword ptr [%0], 0x15" :: "r"(tab1));
+  asm("palignr mm2, qword ptr [%0], 0x15" :: "r"(tab1));*/
 
 }
 
