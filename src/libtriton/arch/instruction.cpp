@@ -514,7 +514,9 @@ namespace triton {
       this->updateFlag      = false;
       this->writeBack       = false;
 
+      /* Clear the stringstream (See #975) */
       std::stringstream().swap(this->disassembly);
+
       this->loadAccess.clear();
       this->operands.clear();
       this->readImmediates.clear();
