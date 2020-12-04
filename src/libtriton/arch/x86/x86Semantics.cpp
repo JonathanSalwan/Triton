@@ -8340,8 +8340,7 @@ namespace triton {
         auto size = 2 * dst.getBitSize();
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op3 = this->astCtxt->zx(size - src2.getBitSize(),
-                                      this->symbolicEngine->getOperandAst(inst, src2));
+        auto op3 = this->astCtxt->zx(size - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
         auto node = this->astCtxt->extract(
@@ -14013,7 +14012,8 @@ namespace triton {
           /* Create the semantics */
           auto node = this->astCtxt->concat(
                         this->astCtxt->extract(triton::bitsize::dqword - 1, triton::bitsize::qword, op2),
-                        this->astCtxt->extract(triton::bitsize::qword - 1, 0, op3));
+                        this->astCtxt->extract(triton::bitsize::qword - 1, 0, op3)
+                      );
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VMOVSD operation");
@@ -14789,8 +14789,7 @@ namespace triton {
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->astCtxt->zx(triton::bitsize::dqword - src2.getBitSize(),
-                                      this->symbolicEngine->getOperandAst(inst, src2));
+        auto op2 = this->astCtxt->zx(triton::bitsize::dqword - src2.getBitSize(), this->symbolicEngine->getOperandAst(inst, src2));
 
         /* Create the semantics */
         triton::ast::SharedAbstractNode node;
@@ -14844,8 +14843,8 @@ namespace triton {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::byte);
           uint32 low  = (dst.getBitSize() - triton::bitsize::byte) - (index * triton::bitsize::byte);
           pck.push_back(this->astCtxt->bvsub(
-                            this->astCtxt->extract(high, low, op1),
-                            this->astCtxt->extract(high, low, op2))
+                          this->astCtxt->extract(high, low, op1),
+                          this->astCtxt->extract(high, low, op2))
                        );
         }
 
@@ -14879,8 +14878,8 @@ namespace triton {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::dword);
           uint32 low  = (dst.getBitSize() - triton::bitsize::dword) - (index * triton::bitsize::dword);
           pck.push_back(this->astCtxt->bvsub(
-                            this->astCtxt->extract(high, low, op1),
-                            this->astCtxt->extract(high, low, op2))
+                         this->astCtxt->extract(high, low, op1),
+                         this->astCtxt->extract(high, low, op2))
                        );
         }
 
@@ -14914,8 +14913,8 @@ namespace triton {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::qword);
           uint32 low  = (dst.getBitSize() - triton::bitsize::qword) - (index * triton::bitsize::qword);
           pck.push_back(this->astCtxt->bvsub(
-                            this->astCtxt->extract(high, low, op1),
-                            this->astCtxt->extract(high, low, op2))
+                         this->astCtxt->extract(high, low, op1),
+                         this->astCtxt->extract(high, low, op2))
                        );
         }
 
@@ -14949,8 +14948,8 @@ namespace triton {
           uint32 high = (dst.getBitSize() - 1) - (index * triton::bitsize::word);
           uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (index * triton::bitsize::word);
           pck.push_back(this->astCtxt->bvsub(
-                            this->astCtxt->extract(high, low, op1),
-                            this->astCtxt->extract(high, low, op2))
+                         this->astCtxt->extract(high, low, op1),
+                         this->astCtxt->extract(high, low, op2))
                        );
         }
 
