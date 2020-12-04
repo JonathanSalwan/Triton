@@ -886,6 +886,9 @@ namespace triton {
           //! The ORPS semantics.
           void orps_s(triton::arch::Instruction& inst);
 
+          //! The PACKUSWB semantics.
+          void packuswb_s(triton::arch::Instruction& inst);
+
           //! The PADDB semantics.
           void paddb_s(triton::arch::Instruction& inst);
 
@@ -897,6 +900,9 @@ namespace triton {
 
           //! The PADDW semantics.
           void paddw_s(triton::arch::Instruction& inst);
+
+          //! The PALIGNR semantics.
+          void palignr_s(triton::arch::Instruction& inst);
 
           //! The PAND semantics.
           void pand_s(triton::arch::Instruction& inst);
@@ -1309,6 +1315,15 @@ namespace triton {
           //! The VMOVQ semantics.
           void vmovq_s(triton::arch::Instruction& inst);
 
+          //! The VMOVSD semantics.
+          void vmovsd_s(triton::arch::Instruction& inst);
+
+          //! The VMOVAPS semantics.
+          void vmovaps_s(triton::arch::Instruction& inst);
+
+          //! The VMOVUPS semantics.
+          void vmovups_s(triton::arch::Instruction& inst);
+
           //! The VPAND semantics.
           void vpand_s(triton::arch::Instruction& inst);
 
@@ -1326,6 +1341,15 @@ namespace triton {
 
           //! The VPCMPEQW semantics.
           void vpcmpeqw_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPGTB semantics.
+          void vpcmpgtb_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPGTD semantics.
+          void vpcmpgtd_s(triton::arch::Instruction& inst);
+
+          //! The VPCMPGTW semantics.
+          void vpcmpgtw_s(triton::arch::Instruction& inst);
 
           //! The VPMOVMSKB semantics.
           void vpmovmskb_s(triton::arch::Instruction& inst);
@@ -1354,11 +1378,29 @@ namespace triton {
           //! The VPSHUFD semantics.
           void vpshufd_s(triton::arch::Instruction& inst);
 
+          //! The VPSLLDQ semantics.
+          void vpslldq_s(triton::arch::Instruction& inst);
+
+          //! The VPSUBB semantics.
+          void vpsubb_s(triton::arch::Instruction& inst);
+
+          //! The VPSUBD semantics.
+          void vpsubd_s(triton::arch::Instruction& inst);
+
+          //! The VPSUBQ semantics.
+          void vpsubq_s(triton::arch::Instruction& inst);
+
+          //! The VPSUBW semantics.
+          void vpsubw_s(triton::arch::Instruction& inst);
+
           //! The VPTEST semantics.
           void vptest_s(triton::arch::Instruction& inst);
 
           //! The VPXOR semantics.
           void vpxor_s(triton::arch::Instruction& inst);
+
+          //! The VXORPS semantics.
+          void vxorps_s(triton::arch::Instruction& inst);
 
           //! The WAIT semantics.
           void wait_s(triton::arch::Instruction& inst);
