@@ -1116,8 +1116,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(node).get()));
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(node).get(), true));
         }
+
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }

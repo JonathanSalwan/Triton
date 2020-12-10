@@ -761,12 +761,15 @@ namespace triton {
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
-          if (size)
+          if (size) {
             other = PyAstNode(PyAstNode_AsAstNode(self)->getContext()->bv(value, size));
+          }
         }
 
-        if (!PyAstNode_Check(other)) {
+        if (PyAstNode_Check(other) == false) {
           result = Py_NotImplemented;
+          Py_INCREF(result);
+          return result;
         }
 
         else {
@@ -792,10 +795,14 @@ namespace triton {
             case Py_GE:
                 result = PyAstNode(node1->getContext()->bvuge(node1, node2));
                 break;
+            default:
+              result = Py_NotImplemented;
+              Py_INCREF(result);
+              Py_DECREF(other);
+              return result;
           }
         }
 
-        Py_INCREF(result);
         return result;
       }
 
