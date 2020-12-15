@@ -1,7 +1,7 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
-## $ python forward_tainting.py
+## $ python3 forward_tainting.py
 ## [tainted] 0x40058e: movsx eax, al
 ## [tainted] 0x400591: sub eax, 1
 ## [tainted] 0x400594: xor eax, 0x55

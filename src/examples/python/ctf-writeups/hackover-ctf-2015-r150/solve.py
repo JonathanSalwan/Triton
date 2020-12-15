@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2017-02-06
@@ -13,7 +13,7 @@
 ##
 ##   $ time ./solve.py
 ##   PASSWORD:hackover15{I_USE_GOTO_WHEREEVER_I_W4NT}
-##   python ./solve.py  0.11s user 0.00s system 99% cpu 0.111 total
+##   python3 ./solve.py  0.11s user 0.00s system 99% cpu 0.111 total
 ##
 
 from __future__ import print_function
