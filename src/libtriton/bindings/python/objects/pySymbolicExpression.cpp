@@ -379,14 +379,16 @@ namespace triton {
         0,                                          /* tp_weaklist */
         0,                                          /* tp_del */
         #if IS_PY3
-        0,                                          /* tp_version_tag */
-        0,                                          /* tp_finalize */
-        #if IS_PY3_8
-        0,                                          /* tp_vectorcall */
-        0,                                          /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
-        #endif
+          0,                                        /* tp_version_tag */
+          0,                                        /* tp_finalize */
+          #if IS_PY3_8
+            0,                                      /* tp_vectorcall */
+            #if !IS_PY3_9
+              0,                                    /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
+            #endif
+          #endif
         #else
-        0                                           /* tp_version_tag */
+          0                                         /* tp_version_tag */
         #endif
       };
 
