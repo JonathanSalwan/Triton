@@ -790,28 +790,28 @@ namespace triton {
 
         switch (extend.getExtendType()) {
           case triton::arch::arm::ID_EXTEND_UXTB:
-            return this->astCtxt->zx(size, this->astCtxt->extract(7, 0, node));
+            return this->astCtxt->zx(size, this->astCtxt->bvshl(this->astCtxt->extract(7, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 8)));
 
           case triton::arch::arm::ID_EXTEND_UXTH:
-            return this->astCtxt->zx(size, this->astCtxt->extract(15, 0, node));
+            return this->astCtxt->zx(size, this->astCtxt->bvshl(this->astCtxt->extract(15, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 16)));
 
           case triton::arch::arm::ID_EXTEND_UXTW:
-            return this->astCtxt->zx(size, this->astCtxt->extract(31, 0, node));
+            return this->astCtxt->zx(size, this->astCtxt->bvshl(this->astCtxt->extract(31, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 32)));
 
           case triton::arch::arm::ID_EXTEND_UXTX:
-            return this->astCtxt->zx(size, this->astCtxt->extract(63, 0, node));
+            return this->astCtxt->zx(size, this->astCtxt->bvshl(this->astCtxt->extract(63, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 64)));
 
           case triton::arch::arm::ID_EXTEND_SXTB:
-            return this->astCtxt->sx(size, this->astCtxt->extract(7, 0, node));
+            return this->astCtxt->sx(size, this->astCtxt->bvshl(this->astCtxt->extract(7, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 8)));
 
           case triton::arch::arm::ID_EXTEND_SXTH:
-            return this->astCtxt->sx(size, this->astCtxt->extract(15, 0, node));
+            return this->astCtxt->sx(size, this->astCtxt->bvshl(this->astCtxt->extract(15, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 16)));
 
           case triton::arch::arm::ID_EXTEND_SXTW:
-            return this->astCtxt->sx(size, this->astCtxt->extract(31, 0, node));
+            return this->astCtxt->sx(size, this->astCtxt->bvshl(this->astCtxt->extract(31, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 32)));
 
           case triton::arch::arm::ID_EXTEND_SXTX:
-            return this->astCtxt->sx(size, this->astCtxt->extract(63, 0, node));
+            return this->astCtxt->sx(size, this->astCtxt->bvshl(this->astCtxt->extract(63, 0, node), this->astCtxt->bv(extend.getShiftImmediate(), 64)));
 
           default:
             throw triton::exceptions::SymbolicEngine("SymbolicEngine::getExtendAst(): Invalid extend operand.");

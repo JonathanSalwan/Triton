@@ -358,6 +358,8 @@ CODE  = [
     (b"\x02\x02\x80\xd2", "movz x2, #0x90"),
     (b"\x2d\x48\x62\x38", "ldrb w13, [x1, w2, uxtw]"),
     (b"\x2d\xc8\x62\x78", "ldrh w13, [x1, w2, sxtw]"),
+    (b"\x2d\x58\x62\xf8", "ldr x13, [x1, w2, uxtw #3]"),
+    (b"\x2d\xd8\x62\xf8", "ldr x13, [x1, w2, sxtw #3]"),
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x02\x02\x80\xd2", "movz x2, #16"),
