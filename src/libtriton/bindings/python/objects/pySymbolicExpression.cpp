@@ -46,17 +46,17 @@ True
 >>> for expr in inst.getSymbolicExpressions():
 ...     print(expr)
 ...
-(define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
-(define-fun ref!1 () (_ BitVec 1) (_ bv0 1)) ; Clears carry flag
-(define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Clears overflow flag
-(define-fun ref!3 () (_ BitVec 1) (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv7 8))))) ; Parity flag
-(define-fun ref!4 () (_ BitVec 1) ((_ extract 63 63) ref!0)) ; Sign flag
-(define-fun ref!5 () (_ BitVec 1) (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))) ; Zero flag
-(define-fun ref!6 () (_ BitVec 64) (_ bv4194307 64)) ; Program Counter
+(define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation - 0x400000: xor rax, rdx
+(define-fun ref!1 () (_ BitVec 1) (_ bv0 1)) ; Clears carry flag - 0x400000: xor rax, rdx
+(define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Clears overflow flag - 0x400000: xor rax, rdx
+(define-fun ref!3 () (_ BitVec 1) (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv7 8))))) ; Parity flag - 0x400000: xor rax, rdx
+(define-fun ref!4 () (_ BitVec 1) ((_ extract 63 63) ref!0)) ; Sign flag - 0x400000: xor rax, rdx
+(define-fun ref!5 () (_ BitVec 1) (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))) ; Zero flag - 0x400000: xor rax, rdx
+(define-fun ref!6 () (_ BitVec 64) (_ bv4194307 64)) ; Program Counter - 0x400000: xor rax, rdx
 
 >>> expr_1 = inst.getSymbolicExpressions()[0]
 >>> print(expr_1)
-(define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
+(define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation - 0x400000: xor rax, rdx
 
 >>> print(expr_1.getId())
 0
