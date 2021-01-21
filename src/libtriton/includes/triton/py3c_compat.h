@@ -12,7 +12,7 @@
 
 #define IS_PY3 1
 
-#if PY_MINOR_VERSION >= 8
+#if PY_MINOR_VERSION == 8
 #define IS_PY3_8 1
 #else
 #define IS_PY3_8 0
