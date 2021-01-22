@@ -59,6 +59,7 @@ to wrap more generic concepts.
 - \ref py_PREFIX_page
 - \ref py_REG_page
 - \ref py_SHIFT_page
+- \ref py_SOLVER_page
 - \ref py_SYMBOLIC_page
 - \ref py_SYSCALL_page
 - \ref py_VERSION_page
