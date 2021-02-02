@@ -86,6 +86,16 @@ namespace triton {
         this->tid = tid;
       }
 
+
+      const std::string& PathConstraint::getComment(void) const {
+        return this->comment;
+      }
+
+
+      void PathConstraint::setComment(const std::string& comment) {
+        this->comment = comment;
+      }
+
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */
