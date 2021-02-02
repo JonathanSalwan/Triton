@@ -3291,5 +3291,14 @@ namespace triton {
       return result;
     }
 
+
+    SharedAbstractNode refUnroll(SharedAbstractNode node) {
+      while (node->getType() == REFERENCE_NODE) {
+        auto ref = reinterpret_cast<ReferenceNode*>(node.get());
+        node = ref->getSymbolicExpression()->getAst();
+      }
+      return node;
+    }
+
   }; /* ast namespace */
 }; /* triton namespace */

@@ -822,6 +822,9 @@ namespace triton {
     //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
     TRITON_EXPORT std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
+    //! Unroll references for a given AST.
+    TRITON_EXPORT SharedAbstractNode refUnroll(SharedAbstractNode node);
+
   /*! @} End of ast namespace */
   };
 /*! @} End of triton namespace */
