@@ -22,6 +22,7 @@ namespace triton {
       PathConstraint::PathConstraint(const PathConstraint &other) {
         this->branches = other.branches;
         this->tid = other.tid;
+        this->comment = other.comment;
       }
 
 
@@ -34,6 +35,7 @@ namespace triton {
       PathConstraint& PathConstraint::operator=(const PathConstraint &other) {
         this->branches = other.branches;
         this->tid = other.tid;
+        this->comment = other.comment;
         return *this;
       }
 
