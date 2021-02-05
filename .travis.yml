@@ -11,16 +11,6 @@ cache:
 jobs:
     include:
         - os: linux
-          name: "Linux Xenial with gcc 5.0, Python2.7 and the Pin tracer"
-          dist: xenial
-          compiler: gcc
-          addons:
-            apt:
-              sources: ['ubuntu-toolchain-r-test']
-              packages: ['g++-5', 'ccache', 'libboost1.58-all-dev', 'cmake', 'cmake-data', 'libpython2.7']
-          env: [ PINTOOL=ON, KERNEL4=ON, PYTHON36=OFF, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.8.9-x64-ubuntu-16.04, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/bin/python2.7 ]
-
-        - os: linux
           name: "Linux Xenial with gcc 5.0 and Python3.6"
           dist: xenial
           compiler: gcc
@@ -51,10 +41,10 @@ jobs:
           env: [ CXX_COMPILER=clang++-6.0, C_COMPILER=clang-6.0, Z3_PKG=z3-4.8.9-x64-ubuntu-16.04, PYTHON36=ON, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
         - os: osx
-          name: "OSX with xcode 11.3 and Python2.7"
+          name: "OSX with xcode 11.3 and Python3.6"
           osx_image: xcode11.3
           compiler: clang
-          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, Z3_PKG=z3-4.8.9-x64-osx-10.14.6, PYTHON36=OFF, PYTHON_VERSION=2.7, PYTHON_BINARY=/usr/local/bin/python2 ]
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, Z3_PKG=z3-4.8.9-x64-osx-10.14.6, PYTHON36=ON, PYTHON_VERSION=3.6, PYTHON_BINARY=/usr/local/bin/python3 ]
 
 before_install:
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install python-setuptools; fi
