@@ -132,7 +132,7 @@ namespace triton {
 
       /* bvneg representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvnegNode* node) {
-        stream << "-" << node->getChildren()[0];
+        stream << "(-(" << node->getChildren()[0] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 
