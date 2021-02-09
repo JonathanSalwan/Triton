@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <new>
+#include <set>
 
 #include <triton/exceptions.hpp>
 #include <triton/coreUtils.hpp>
@@ -451,47 +452,49 @@ namespace triton {
 
 
       /* Prints symbolic expression with used references and symbolic variables */
-      std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
-        auto symVars = this->getSymbolicVariables();
+      std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_) {
         auto ssa = this->sliceExpressions(expr);
-
-        std::vector<usize> ids;
-        ids.reserve(std::max(symVars.size(), ssa.size()));
-        for (const auto& symVar : symVars) {
-          ids.push_back(symVar.first);
+        std::vector<usize> symExprs;
+        std::set<usize> symVars;
+        for (const auto& se : ssa) {
+          symExprs.push_back(se.first);
+          auto children = ast::childrenExtraction(se.second->getAst(), false, false);
+          for (const auto& child : children) {
+            if (child->getType() == ast::VARIABLE_NODE) {
+              auto id = reinterpret_cast<ast::VariableNode *>(child.get())->getSymbolicVariable()->getId();
+              symVars.insert(id);
+            }
+          }
         }
 
-        std::sort(ids.begin(), ids.end());
-        for (const auto& id : ids) {
-          auto n = this->astCtxt->declare(this->astCtxt->variable(symVars[id]));
+        /* Print symbolic variables */
+        for (const auto& id : symVars) {
+          auto symVar = this->getSymbolicVariable(id);
+          auto n = this->astCtxt->declare(this->astCtxt->variable(symVar));
           this->astCtxt->print(stream, n.get());
           stream << std::endl;
         }
 
-        ids.clear();
-        for (const auto& se : ssa) {
-          ids.push_back(se.first);
-        }
-
-        std::sort(ids.begin(), ids.end());
+        std::sort(symExprs.begin(), symExprs.end());
         if (assert_) {
-          ids.pop_back();
+          symExprs.pop_back();
         }
 
-        for (const auto& id : ids) {
+        /* Print symbolic expressions */
+        for (const auto& id : symExprs) {
           stream << ssa[id]->getFormattedExpression() << std::endl;
         }
 
         if (assert_) {
           /* Print conjuncts in separate asserts */
-          std::vector<triton::ast::SharedAbstractNode> exprs;
-          std::vector<triton::ast::SharedAbstractNode> wl{expr->getAst()};
+          std::vector<ast::SharedAbstractNode> exprs;
+          std::vector<ast::SharedAbstractNode> wl{expr->getAst()};
 
           while (!wl.empty()) {
             auto n = wl.back();
             wl.pop_back();
 
-            if (n->getType() != triton::ast::LAND_NODE) {
+            if (n->getType() != ast::LAND_NODE) {
               exprs.push_back(n);
               continue;
             }
