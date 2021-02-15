@@ -261,6 +261,11 @@ namespace triton {
 
 
       void SymbolicEngine::setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem) {
+        /* Set implicit read of the segment register (LEA) */
+        if (this->architecture->isRegisterValid(mem.getConstSegmentRegister())) {
+          (void)this->getRegisterAst(inst, mem.getConstSegmentRegister());
+        }
+
         /* Set implicit read of the base register (LEA) */
         if (this->architecture->isRegisterValid(mem.getConstBaseRegister())) {
           (void)this->getRegisterAst(inst, mem.getConstBaseRegister());
@@ -1228,7 +1233,6 @@ namespace triton {
           const triton::arch::Register& base  = mem.getConstBaseRegister();
           const triton::arch::Register& index = mem.getConstIndexRegister();
           const triton::arch::Register& seg   = mem.getConstSegmentRegister();
-          triton::uint64 segmentValue         = (this->architecture->isRegisterValid(seg) ? this->architecture->getConcreteRegisterValue(seg).convert_to<triton::uint64>() : 0);
           triton::uint64 scaleValue           = mem.getConstScale().getValue();
           triton::uint64 dispValue            = mem.getConstDisplacement().getValue();
           triton::uint32 bitSize              = (this->architecture->isRegisterValid(base) ? base.getBitSize() :
@@ -1257,9 +1261,9 @@ namespace triton {
                                   );
 
           /* Use segments as base address instead of selector into the GDT. */
-          if (segmentValue) {
+          if (this->architecture->isRegisterValid(seg)) {
             leaAst = this->astCtxt->bvadd(
-                       this->astCtxt->bv(segmentValue, seg.getBitSize()),
+                       this->getRegisterAst(seg),
                        this->astCtxt->sx((seg.getBitSize() - bitSize), leaAst)
                      );
           }
