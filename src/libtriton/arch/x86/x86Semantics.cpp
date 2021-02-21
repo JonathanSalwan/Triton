@@ -9934,13 +9934,13 @@ namespace triton {
          * the ESP register.
          */
         if (dst.getType() == triton::arch::OP_MEM) {
-          if (this->architecture->getParentRegister(dst.getMemory().getBaseRegister()) == stack) {
+          const triton::arch::Register& base = dst.getMemory().getConstBaseRegister();
+          /* Check if the base register is the stack pointer */
+          if (this->architecture->isRegisterValid(base) && this->architecture->getParentRegister(base) == stack) {
             /* Align the stack */
             alignAddStack_s(inst, src.getSize());
-
             /* Re-initialize the memory access */
             this->symbolicEngine->initLeaAst(dst.getMemory());
-
             stackRelative = true;
           }
         }

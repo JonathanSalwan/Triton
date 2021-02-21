@@ -1243,7 +1243,6 @@ namespace triton {
                                                   )
                                                 );
 
-
           /* Initialize the AST of the memory access (LEA) -> ((pc + base) + (index * scale) + disp) */
           auto pcPlusBaseAst    = mem.getPcRelative() ? this->astCtxt->bv(mem.getPcRelative(), bitSize) :
                                     (this->architecture->isRegisterValid(base) ? this->getRegisterAst(base) :

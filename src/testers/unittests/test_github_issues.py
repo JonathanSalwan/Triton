@@ -470,3 +470,23 @@ class TestIssue945(unittest.TestCase):
 
         self.assertEqual(self.inst1.isControlFlow(), False)
         self.assertEqual(self.inst2.isControlFlow(), True)
+
+
+class TestIssue992(unittest.TestCase):
+    """Testing #992."""
+
+    def push_stack_value(self, value):
+        esp = self.ctx.getConcreteRegisterValue(self.ctx.registers.esp)
+        self.ctx.setConcreteMemoryValue(MemoryAccess(esp, self.ctx.getGprSize()), value)
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86)
+        self.push_stack_value(0xdeadbeef)
+        self.inst = Instruction(b'\x8F\x05\x48\x31\x24\x00') # pop dword ptr [0x243148]
+
+    def test_issue(self):
+        mem = MemoryAccess(0x243148, CPUSIZE.DWORD)
+
+        self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0)
+        self.ctx.processing(self.inst)
+        self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0xdeadbeef)
