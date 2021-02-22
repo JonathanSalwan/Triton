@@ -397,8 +397,11 @@ def makeRelocation(binary):
     for pltIndex in range(len(customRelocation)):
         customRelocation[pltIndex][2] = BASE_PLT + pltIndex
 
+    relocations = [x for x in binary.pltgot_relocations]
+    relocations.extend([x for x in binary.dynamic_relocations])
+
     # Perform our own relocations
-    for rel in binary.pltgot_relocations:
+    for rel in relocations:
         symbolName = rel.symbol.name
         symbolRelo = rel.address
         for crel in customRelocation:
