@@ -268,8 +268,8 @@ Unrolls the SSA form of a given AST.
 - <b>\ref py_AstNode_page z3ToTriton(z3::expr expr)</b><br>
 Convert a Z3 AST to a Triton AST.
 
-- <b>\ref py_AstNode_page refUnroll(\ref py_AstNode_page node)</b><br>
-Unroll references for a given AST.
+- <b>\ref py_AstNode_page dereference(\ref py_AstNode_page node)</b><br>
+Unroll reference node.
 
 
 \section ast_py_examples_page_3 Python API - Operators
@@ -1656,12 +1656,12 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_refUnroll(PyObject* self, PyObject* node) {
+      static PyObject* AstContext_dereference(PyObject* self, PyObject* node) {
         if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "refUnroll(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "dereference(): Expects a AstNode as argument.");
 
         try {
-          return PyAstNode(triton::ast::refUnroll(PyAstNode_AsAstNode(node)));
+          return PyAstNode(triton::ast::dereference(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1730,7 +1730,7 @@ namespace triton {
         {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
         {"z3ToTriton",      AstContext_z3ToTriton,      METH_O,           ""},
         #endif
-        {"refUnroll",       AstContext_refUnroll,       METH_O,           ""},
+        {"dereference",     AstContext_dereference,     METH_O,           ""},
         {nullptr,           nullptr,                    0,                nullptr}
       };
 

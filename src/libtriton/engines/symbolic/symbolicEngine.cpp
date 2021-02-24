@@ -455,22 +455,18 @@ namespace triton {
       std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_) {
         auto ssa = this->sliceExpressions(expr);
         std::vector<usize> symExprs;
-        std::set<usize> symVars;
+        std::map<usize, SharedSymbolicVariable> symVars;
         for (const auto& se : ssa) {
           symExprs.push_back(se.first);
-          auto children = ast::childrenExtraction(se.second->getAst(), false, false);
-          for (const auto& child : children) {
-            if (child->getType() == ast::VARIABLE_NODE) {
-              auto id = reinterpret_cast<ast::VariableNode *>(child.get())->getSymbolicVariable()->getId();
-              symVars.insert(id);
-            }
+          for (const auto& n : ast::search(se.second->getAst(), ast::VARIABLE_NODE)) {
+            auto var = reinterpret_cast<ast::VariableNode *>(n.get())->getSymbolicVariable();
+            symVars[var->getId()] = var;
           }
         }
 
         /* Print symbolic variables */
-        for (const auto& id : symVars) {
-          auto symVar = this->getSymbolicVariable(id);
-          auto n = this->astCtxt->declare(this->astCtxt->variable(symVar));
+        for (const auto& var : symVars) {
+          auto n = this->astCtxt->declare(this->astCtxt->variable(var.second));
           this->astCtxt->print(stream, n.get());
           stream << std::endl;
         }

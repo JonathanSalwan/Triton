@@ -1092,7 +1092,7 @@ namespace triton {
         exprs.pop_back();
 
         /* Unroll references */
-        n = refUnroll(n);
+        n = dereference(n);
 
         if (n->getType() == CONCAT_NODE) {
           /* Append concatenation children to the right */
@@ -1117,7 +1117,7 @@ namespace triton {
         n = childs[2];
 
         /* Unroll references */
-        n = refUnroll(n);
+        n = dereference(n);
 
         if (!ast_ref) {
           /* First found extraction node */
@@ -1158,7 +1158,7 @@ namespace triton {
       auto node = expr;
       while (true) {
         /* Unroll references, n will contain unrolled node */
-        auto n = refUnroll(node);
+        auto n = dereference(node);
 
         if (n->getType() == CONCAT_NODE) {
           /*
@@ -1226,7 +1226,7 @@ namespace triton {
       }
 
       /* Unroll references, n will contain unrolled node */
-      auto n = refUnroll(node);
+      auto n = dereference(node);
 
       /*
        * Optimization: extract from extract is one extract

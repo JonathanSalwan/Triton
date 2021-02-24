@@ -3292,7 +3292,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode refUnroll(SharedAbstractNode node) {
+    SharedAbstractNode dereference(SharedAbstractNode node) {
       while (node->getType() == REFERENCE_NODE) {
         auto ref = reinterpret_cast<ReferenceNode*>(node.get());
         node = ref->getSymbolicExpression()->getAst();
