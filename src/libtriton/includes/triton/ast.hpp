@@ -823,7 +823,7 @@ namespace triton {
     TRITON_EXPORT std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
 
     //! Unroll reference node.
-    TRITON_EXPORT SharedAbstractNode dereference(SharedAbstractNode node);
+    TRITON_EXPORT SharedAbstractNode dereference(const SharedAbstractNode& node);
 
   /*! @} End of ast namespace */
   };

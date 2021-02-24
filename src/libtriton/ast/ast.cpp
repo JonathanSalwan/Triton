@@ -3292,12 +3292,13 @@ namespace triton {
     }
 
 
-    SharedAbstractNode dereference(SharedAbstractNode node) {
-      while (node->getType() == REFERENCE_NODE) {
-        auto ref = reinterpret_cast<ReferenceNode*>(node.get());
-        node = ref->getSymbolicExpression()->getAst();
+    SharedAbstractNode dereference(const SharedAbstractNode& node) {
+      AbstractNode *n = node.get();
+      while (n->getType() == REFERENCE_NODE) {
+        auto ref = reinterpret_cast<ReferenceNode*>(n);
+        n = ref->getSymbolicExpression()->getAst().get();
       }
-      return node;
+      return n->shared_from_this();
     }
 
   }; /* ast namespace */
