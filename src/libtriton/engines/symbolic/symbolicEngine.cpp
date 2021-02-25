@@ -458,15 +458,18 @@ namespace triton {
 
       /* Prints symbolic expression with used references and symbolic variables */
       std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_) {
+        /* Collect SSA form */
         auto ssa = this->sliceExpressions(expr);
         std::vector<usize> symExprs;
-        std::map<usize, SharedSymbolicVariable> symVars;
         for (const auto& se : ssa) {
           symExprs.push_back(se.first);
-          for (const auto& n : ast::search(se.second->getAst(), ast::VARIABLE_NODE)) {
-            auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
-            symVars[var->getId()] = var;
-          }
+        }
+
+        /* Collect used symbolic variables */
+        std::map<usize, SharedSymbolicVariable> symVars;
+        for (const auto& n : ast::search(expr->getAst(), ast::VARIABLE_NODE)) {
+          auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
+          symVars[var->getId()] = var;
         }
 
         /* Print symbolic variables */
@@ -476,6 +479,7 @@ namespace triton {
           stream << std::endl;
         }
 
+        /* Sort SSA */
         std::sort(symExprs.begin(), symExprs.end());
         if (assert_) {
           symExprs.pop_back();
