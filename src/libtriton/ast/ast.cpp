@@ -3291,5 +3291,15 @@ namespace triton {
       return result;
     }
 
+
+    SharedAbstractNode dereference(const SharedAbstractNode& node) {
+      AbstractNode *n = node.get();
+      while (n->getType() == REFERENCE_NODE) {
+        auto ref = reinterpret_cast<ReferenceNode*>(n);
+        n = ref->getSymbolicExpression()->getAst().get();
+      }
+      return n->shared_from_this();
+    }
+
   }; /* ast namespace */
 }; /* triton namespace */

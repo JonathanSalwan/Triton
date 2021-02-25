@@ -8,6 +8,7 @@
 #ifndef TRITON_PATHCONSTRAINT_H
 #define TRITON_PATHCONSTRAINT_H
 
+#include <string>
 #include <tuple>
 #include <vector>
 
@@ -57,6 +58,9 @@ namespace triton {
           //! The thread id of the constraint. -1 if it's undefined.
           triton::uint32 tid;
 
+          //! The comment of the path constraint.
+          std::string comment;
+
         public:
           //! Constructor.
           TRITON_EXPORT PathConstraint();
@@ -90,6 +94,12 @@ namespace triton {
 
           //! Sets the thread id of the constraint.
           TRITON_EXPORT void setThreadId(triton::uint32 tid);
+
+          //! Returns the comment of the path constraint.
+          TRITON_EXPORT const std::string& getComment(void) const;
+
+          //! Sets a comment to the path constraint.
+          TRITON_EXPORT void setComment(const std::string& comment);
       };
 
     /*! @} End of symbolic namespace */
