@@ -460,13 +460,13 @@ namespace triton {
       std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_) {
         /* Collect SSA form */
         auto ssa = this->sliceExpressions(expr);
-        std::vector<usize> symExprs;
+        std::vector<triton::usize> symExprs;
         for (const auto& se : ssa) {
           symExprs.push_back(se.first);
         }
 
         /* Collect used symbolic variables */
-        std::map<usize, SharedSymbolicVariable> symVars;
+        std::map<triton::usize, SharedSymbolicVariable> symVars;
         for (const auto& n : ast::search(expr->getAst(), ast::VARIABLE_NODE)) {
           auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
           symVars[var->getId()] = var;
