@@ -464,7 +464,7 @@ namespace triton {
         for (const auto& se : ssa) {
           symExprs.push_back(se.first);
           for (const auto& n : ast::search(se.second->getAst(), ast::VARIABLE_NODE)) {
-            auto var = reinterpret_cast<ast::VariableNode *>(n.get())->getSymbolicVariable();
+            auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
             symVars[var->getId()] = var;
           }
         }

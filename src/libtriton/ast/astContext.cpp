@@ -1091,8 +1091,8 @@ namespace triton {
         auto n = exprs.back();
         exprs.pop_back();
 
-        /* Unroll references */
-        n = dereference(n);
+        /* Returns the first non referene node encountered */
+        n = triton::ast::dereference(n);
 
         if (n->getType() == CONCAT_NODE) {
           /* Append concatenation children to the right */
@@ -1116,8 +1116,8 @@ namespace triton {
         }
         n = childs[2];
 
-        /* Unroll references */
-        n = dereference(n);
+        /* Returns the first non referene node encountered */
+        n = triton::ast::dereference(n);
 
         if (!ast_ref) {
           /* First found extraction node */
@@ -1157,8 +1157,8 @@ namespace triton {
 
       auto node = expr;
       while (true) {
-        /* Unroll references, n will contain unrolled node */
-        auto n = dereference(node);
+        /* Returns the first non referene node encountered */
+        auto n = triton::ast::dereference(node);
 
         if (n->getType() == CONCAT_NODE) {
           /*
@@ -1225,8 +1225,8 @@ namespace triton {
         break;
       }
 
-      /* Unroll references, n will contain unrolled node */
-      auto n = dereference(node);
+      /* Returns the first non referene node encountered */
+      auto n = triton::ast::dereference(node);
 
       /*
        * Optimization: extract from extract is one extract

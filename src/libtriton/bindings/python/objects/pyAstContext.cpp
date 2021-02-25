@@ -253,6 +253,9 @@ e.g: `((_ zero_extend sizeExt) node1)`.
 \section AstContext_convert_py_api Python API - Utility methods of the AstContext class
 <hr>
 
+- <b>\ref py_AstNode_page dereference(\ref py_AstNode_page node)</b><br>
+Returns the first non referene node encountered.
+
 - <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page node)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
 
@@ -267,9 +270,6 @@ Unrolls the SSA form of a given AST.
 
 - <b>\ref py_AstNode_page z3ToTriton(z3::expr expr)</b><br>
 Convert a Z3 AST to a Triton AST.
-
-- <b>\ref py_AstNode_page dereference(\ref py_AstNode_page node)</b><br>
-Unroll reference node.
 
 
 \section ast_py_examples_page_3 Python API - Operators
@@ -1090,6 +1090,19 @@ namespace triton {
       }
 
 
+      static PyObject* AstContext_dereference(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "dereference(): Expects a AstNode as argument.");
+
+        try {
+          return PyAstNode(triton::ast::dereference(PyAstNode_AsAstNode(node)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstContext_distinct(PyObject* self, PyObject* args) {
         PyObject* op1 = nullptr;
         PyObject* op2 = nullptr;
@@ -1656,19 +1669,6 @@ namespace triton {
       }
 
 
-      static PyObject* AstContext_dereference(PyObject* self, PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "dereference(): Expects a AstNode as argument.");
-
-        try {
-          return PyAstNode(triton::ast::dereference(PyAstNode_AsAstNode(node)));
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
         {"assert_",         AstContext_assert,          METH_O,           ""},
@@ -1707,6 +1707,7 @@ namespace triton {
         {"compound",        AstContext_compound,        METH_O,           ""},
         {"concat",          AstContext_concat,          METH_O,           ""},
         {"declare",         AstContext_declare,         METH_O,           ""},
+        {"dereference",     AstContext_dereference,     METH_O,           ""},
         {"distinct",        AstContext_distinct,        METH_VARARGS,     ""},
         {"duplicate",       AstContext_duplicate,       METH_O,           ""},
         {"equal",           AstContext_equal,           METH_VARARGS,     ""},
@@ -1730,7 +1731,6 @@ namespace triton {
         {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
         {"z3ToTriton",      AstContext_z3ToTriton,      METH_O,           ""},
         #endif
-        {"dereference",     AstContext_dereference,     METH_O,           ""},
         {nullptr,           nullptr,                    0,                nullptr}
       };
 
