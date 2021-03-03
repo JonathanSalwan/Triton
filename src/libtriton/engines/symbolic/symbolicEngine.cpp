@@ -174,12 +174,15 @@ namespace triton {
 
       /* Removes an aligned memory */
       void SymbolicEngine::removeAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        // Avoid accessing the alignedMemoryReference array when empty. This usually happens when
-        // you initialize the symbolic engine and concretize whole sections of an executable using
-        // setConcreteMemoryValue. No symbolic memory has been created yet but this function will
-        // still try to rougly erase (size * 7) elements.
+        /*
+         * Avoid accessing the alignedMemoryReference array when empty. This usually happens when
+         * you initialize the symbolic engine and concretize whole sections of an executable using
+         * setConcreteMemoryValue. No symbolic memory has been created yet but this function will
+         * still try to rougly erase (size * 7) elements.
+         */
         if(this->alignedMemoryReference.empty())
           return;
+
         /* Remove overloaded positive ranges */
         for (triton::uint32 index = 0; index < size; index++) {
           this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::byte));
