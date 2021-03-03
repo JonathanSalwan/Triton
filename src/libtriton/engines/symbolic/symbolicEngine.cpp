@@ -180,7 +180,7 @@ namespace triton {
          * setConcreteMemoryValue. No symbolic memory has been created yet but this function will
          * still try to rougly erase (size * 7) elements.
          */
-        if(this->alignedMemoryReference.empty())
+        if (this->alignedMemoryReference.empty())
           return;
 
         /* Remove overloaded positive ranges */
