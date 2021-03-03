@@ -26,8 +26,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x86-win
-      PYTHON_36: OFF
-      PYTHON_37: OFF
+      PYTHON_VERSION: 2.7
 
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -38,8 +37,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x86-win
-      PYTHON_36: ON
-      PYTHON_37: OFF
+      PYTHON_VERSION: 3.6
 
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -50,8 +48,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x86-win
-      PYTHON_36: OFF
-      PYTHON_37: ON
+      PYTHON_VERSION: 3.7
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -62,8 +59,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x64-win
-      PYTHON_36: OFF
-      PYTHON_37: OFF
+      PYTHON_VERSION: 2.7
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -74,8 +70,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x64-win
-      PYTHON_36: ON
-      PYTHON_37: OFF
+      PYTHON_VERSION: 3.6
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -86,8 +81,7 @@ environment:
       Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x64-win
-      PYTHON_36: OFF
-      PYTHON_37: ON
+      PYTHON_VERSION: 3.7
 
 
 install:
@@ -119,7 +113,7 @@ install:
   - cmd: python -m pip install %LIEF_ZIP%
     # Running cmake for Triton
   - cmd: echo Running cmake for Triton...
-  - cmd: cmake -DPYTHON36=%PYTHON_36% -DPYTHON37=%PYTHON_37% .. -A %platform% -G "%CMAKE_TEMPLATE%"
+  - cmd: cmake -DPYTHON_VERSION=%PYTHON_VERSION% .. -A %platform% -G "%CMAKE_TEMPLATE%"
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python

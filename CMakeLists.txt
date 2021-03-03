@@ -14,10 +14,6 @@ option(ASAN "Enable the ASAN linking" OFF)
 option(GCOV "Enable code coverage" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(PYTHON36 "Python 36" ON)
-option(PYTHON37 "Python 37" OFF)
-option(PYTHON38 "Python 38" OFF)
-option(PYTHON39 "Python 39" OFF)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
@@ -28,14 +24,6 @@ if(STATICLIB)
     set(PYTHON_BINDINGS OFF)
 endif()
 
-if(PINTOOL AND NOT PYTHON_BINDINGS)
-    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
-endif()
-
-if(PINTOOL AND (PYTHON36 OR PYTHON37 OR PYTHON38))
-    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
-endif()
-
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 #Enable ctest
@@ -44,16 +32,8 @@ include(CTest)
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
 if(PYTHON_BINDINGS)
-    if(PYTHON39)
-        set(PYTHON_VERSION 3.9)
-    elseif(PYTHON38)
-        set(PYTHON_VERSION 3.8)
-    elseif(PYTHON37)
-        set(PYTHON_VERSION 3.7)
-    elseif(PYTHON36)
+    if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
-    else()
-        set(PYTHON_VERSION 2.7)
     endif()
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     add_custom_target(test-python
@@ -64,6 +44,14 @@ else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
     )
+endif()
+
+if(PINTOOL AND NOT PYTHON_BINDINGS)
+    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
+endif()
+
+if(PINTOOL AND NOT ${PYTHON_VERSION_STRING} MATCHES "2.7")
+    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
