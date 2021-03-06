@@ -37,7 +37,7 @@ namespace triton {
           size != triton::size::dqqword)
         throw triton::exceptions::MemoryAccess("MemoryAccess::MemoryAccess(): size must be aligned.");
 
-      this->setPair(std::make_pair(((size * triton::bitsize::byte) - 1), 0));
+      this->setPair(((size * triton::bitsize::byte) - 1), 0);
     }
 
 

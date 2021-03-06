@@ -1748,7 +1748,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1769,7 +1769,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1808,7 +1808,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1829,7 +1829,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1851,7 +1851,7 @@ namespace triton {
           triton::arch::OperandWrapper& src  = inst.operands[2];
 
           /* Special behavior: Define that the size of the memory access is dst1.size + dst2.size */
-          src.getMemory().setPair(std::make_pair((dst1.getBitSize() + dst2.getBitSize()) - 1, 0));
+          src.getMemory().setPair((dst1.getBitSize() + dst2.getBitSize()) - 1, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -1964,7 +1964,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create the semantics of the LOAD */
           auto node1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -2019,7 +2019,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create the semantics of the LOAD */
           auto node1 = this->symbolicEngine->getOperandAst(inst, src);
@@ -2074,7 +2074,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2132,7 +2132,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2190,7 +2190,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 32 bits */
-          src.getMemory().setPair(std::make_pair(31, 0));
+          src.getMemory().setPair(31, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2266,7 +2266,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2290,7 +2290,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2314,7 +2314,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2338,7 +2338,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2362,7 +2362,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 32 bits */
-          src.getMemory().setPair(std::make_pair(31, 0));
+          src.getMemory().setPair(31, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2404,7 +2404,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(std::make_pair(7, 0));
+          src.getMemory().setPair(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2428,7 +2428,7 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setPair(std::make_pair(15, 0));
+          src.getMemory().setPair(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -3191,7 +3191,7 @@ namespace triton {
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setPair(std::make_pair(7, 0));
+          dst.getMemory().setPair(7, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRB operation - STORE access");
@@ -3212,7 +3212,7 @@ namespace triton {
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setPair(std::make_pair(15, 0));
+          dst.getMemory().setPair(15, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRH operation - STORE access");
@@ -3238,7 +3238,7 @@ namespace triton {
           auto node = this->astCtxt->concat(op2, op1);
 
           /* Special behavior: Define that the size of the memory access is src1.size + src2.size */
-          dst.getMemory().setPair(std::make_pair(node->getBitvectorSize()-1, 0));
+          dst.getMemory().setPair(node->getBitvectorSize()-1, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STP operation - STORE access");
@@ -3348,7 +3348,7 @@ namespace triton {
           auto node1 = this->astCtxt->extract(7, 0, op);
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setPair(std::make_pair(7, 0));
+          dst.getMemory().setPair(7, 0);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRB operation - STORE access");
@@ -3406,7 +3406,7 @@ namespace triton {
           auto node1 = this->astCtxt->extract(15, 0, op);
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setPair(std::make_pair(15, 0));
+          dst.getMemory().setPair(15, 0);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRH operation - STORE access");
@@ -3482,7 +3482,7 @@ namespace triton {
           auto node = this->astCtxt->extract(7, 0, op);
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setPair(std::make_pair(7, 0));
+          dst.getMemory().setPair(7, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURB operation");
@@ -3506,7 +3506,7 @@ namespace triton {
           auto node = this->astCtxt->extract(15, 0, op);
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setPair(std::make_pair(15, 0));
+          dst.getMemory().setPair(15, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURH operation");

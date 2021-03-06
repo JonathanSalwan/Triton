@@ -21,7 +21,7 @@ namespace triton {
 
 
     BitsVector::BitsVector(triton::uint32 high /* bits */, triton::uint32 low /* bits */) {
-      this->setPair(std::make_pair(high, low));
+      this->setPair(high, low);
     }
 
 
@@ -75,9 +75,9 @@ namespace triton {
     }
 
 
-    void BitsVector::setPair(std::pair<triton::uint32, triton::uint32> p) {
-      this->high = std::get<0>(p);
-      this->low  = std::get<1>(p);
+    void BitsVector::setPair(triton::uint32 high, triton::uint32 low) {
+      this->high = high;
+      this->low = low;
 
       if (this->high >= triton::bitsize::max_supported)
         throw triton::exceptions::BitsVector("BitsVector::setPair(): The highest bit cannot be greater than triton::bitsize::max_supported.");
