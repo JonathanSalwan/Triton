@@ -24,7 +24,8 @@
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 
-
+#include <triton/hash.hpp>
+#include <tsl/robin_map.h>
 
 //! The Triton namespace
 namespace triton {
@@ -84,7 +85,7 @@ namespace triton {
              * **item1**: memory address<br>
              * **item2**: concrete value
              */
-            std::unordered_map<triton::uint64, triton::uint8> memory;
+            tsl::robin_map<triton::uint64, triton::uint8, IdentityHash<uint64>> memory;
 
             //! Concrete value of x0
             triton::uint8 x0[triton::size::qword];

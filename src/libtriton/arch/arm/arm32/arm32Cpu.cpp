@@ -645,6 +645,7 @@ namespace triton {
 
 
         void Arm32Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+          this->memory.reserve(values.size() + this->memory.size());
           for (triton::usize index = 0; index < values.size(); index++) {
             this->setConcreteMemoryValue(baseAddr+index, values[index]);
           }
@@ -652,6 +653,7 @@ namespace triton {
 
 
         void Arm32Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+          this->memory.reserve(size + this->memory.size());
           for (triton::usize index = 0; index < size; index++) {
             this->setConcreteMemoryValue(baseAddr+index, area[index]);
           }
