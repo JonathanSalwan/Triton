@@ -3,16 +3,24 @@
 
 #include <triton/tritonTypes.hpp>
 
+//! The Triton namespace
 namespace triton
 {
+/*!
+ *  \addtogroup triton
+ *  @{
+ */
 
-template<typename T>
-class IdentityHash
-{
-public:
-  // KEy is unique and are be returned as is
-  T operator()(const T& key) const { return key; }
-};
+  /*! \class IdentityHash
+   *  \brief This class can be used as a hash function in hash tables containers.
+   */
+  template<typename T>
+  class IdentityHash
+  {
+  public:
+    //! Returns the key as is.
+    T operator()(const T& key) const { return key; }
+  };
 
 } // end of triton namespace
 

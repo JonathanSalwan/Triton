@@ -24,8 +24,8 @@
 #include <triton/tritonTypes.hpp>
 #include <triton/x86Specifications.hpp>
 
-#include <triton/hash.hpp> // For UniqueHash function
-#include <tsl/robin_map.h> // Using instead of std::unordered_map
+#include <triton/hash.hpp> // For IdentityHash function
+#include <tsl/robin_map.h> // For tsl::robin_map
 
 //! The Triton namespace
 namespace triton {
@@ -80,7 +80,7 @@ namespace triton {
            * Since addresses are used as key, we have good entropy on the lower bits.
            * We will also have low entropy on the higher bits. robin_map uses power of two modulo,
            * which is much faster than the original modulo used in unordered_map.
-           * This means we can use the identity has a hash function without worrying to much about collision.
+           * This means we can use the identity as a hash function without worrying to much about collision.
            */
           tsl::robin_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
 

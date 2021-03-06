@@ -15,8 +15,6 @@
 #include <triton/immediate.hpp>
 #include <triton/x8664Cpu.hpp>
 
-#include <iterator>
-
 
 namespace triton {
   namespace arch {
