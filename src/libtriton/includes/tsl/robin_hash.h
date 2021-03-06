@@ -1082,7 +1082,10 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
   }
 
   void reserve(size_type count_) {
-    rehash(size_type(std::ceil(float(count_) / max_load_factor())));
+    // ek0: Don't force rehash on every reserve.
+    auto need_rehash = count_ > (bucket_count() * max_load_factor());
+    if(need_rehash)
+      rehash(size_type(std::ceil(float(count_) / max_load_factor())));
   }
 
   /*
