@@ -24,7 +24,6 @@
 #include <triton/tritonTypes.hpp>
 #include <triton/arm32Specifications.hpp>
 
-#include <triton/hash.hpp> // For IdentityHash
 #include <tsl/robin_map.h> // For tsl::robin_map
 
 //! The Triton namespace
