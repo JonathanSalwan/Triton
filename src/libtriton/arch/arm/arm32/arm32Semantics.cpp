@@ -1713,7 +1713,7 @@ namespace triton {
           auto& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setPair(7, 0);
+          src.getMemory().setBits(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2969,7 +2969,7 @@ namespace triton {
           auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setPair(7, 0);
+          dst.getMemory().setBits(7, 0);
 
           /* Create the semantics */
           auto node  = this->astCtxt->extract(7, 0, op);
@@ -3155,7 +3155,7 @@ namespace triton {
           auto op = this->getArm32SourceOperandAst(inst, src);
 
           /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setPair(15, 0);
+          dst.getMemory().setBits(15, 0);
 
           /* Create the semantics */
           auto node1 = this->astCtxt->extract(15, 0, op);

@@ -400,7 +400,7 @@ namespace triton {
                   triton::arch::MemoryAccess mem;
 
                   /* Set the size of the memory access */
-                  mem.setPair(size ? ((size * triton::bitsize::byte) - 1) : triton::bitsize::qword - 1, 0);
+                  mem.setBits(size ? ((size * triton::bitsize::byte) - 1) : triton::bitsize::qword - 1, 0);
 
                   /* LEA if exists */
                   triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));

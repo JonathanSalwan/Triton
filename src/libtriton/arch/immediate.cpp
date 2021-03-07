@@ -72,7 +72,7 @@ namespace triton {
           this->value = value;
       }
 
-      this->setPair(((size * triton::bitsize::byte) - 1), 0);
+      this->setBits(((size * triton::bitsize::byte) - 1), 0);
     }
 
 
