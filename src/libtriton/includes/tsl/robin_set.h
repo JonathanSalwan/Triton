@@ -33,6 +33,10 @@
 
 #include "robin_hash.h"
 
+namespace triton
+{
+namespace extlibs
+{
 namespace tsl {
 
 /**
@@ -656,5 +660,7 @@ using robin_pg_set = robin_set<Key, Hash, KeyEqual, Allocator, StoreHash,
                                tsl::rh::prime_growth_policy>;
 
 }  // end namespace tsl
+}  // end namespace extlibs
+}  // end namespace triton
 
 #endif

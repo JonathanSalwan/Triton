@@ -71,6 +71,10 @@
 
 #define TSL_RH_UNUSED(x) static_cast<void>(x)
 
+namespace triton
+{
+namespace extlibs
+{
 namespace tsl {
 namespace rh {
 
@@ -402,5 +406,7 @@ class prime_growth_policy {
 
 }  // namespace rh
 }  // namespace tsl
+}  // namespace extlibs
+}  // namespace triton
 
 #endif

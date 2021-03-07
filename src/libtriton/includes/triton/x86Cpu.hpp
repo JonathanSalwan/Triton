@@ -76,7 +76,11 @@ namespace triton {
            * **item1**: memory address<br>
            * **item2**: concrete value
            */
-          tsl::robin_map<triton::uint64, triton::uint8, IdentityHash<uint64>> memory;
+#ifdef USE_ROBIN_MAP
+          extlibs::tsl::robin_map<triton::uint64, triton::uint8, IdentityHash<uint64>> memory;
+#else
+          std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
+#endif
 
           //! Concrete value of eax
           triton::uint8 eax[triton::size::dword];

@@ -41,6 +41,10 @@
 
 #include "robin_growth_policy.h"
 
+namespace triton
+{
+namespace extlibs
+{
 namespace tsl {
 
 namespace detail_robin_hash {
@@ -1624,5 +1628,9 @@ class robin_hash : private Hash, private KeyEqual, private GrowthPolicy {
 }  // namespace detail_robin_hash
 
 }  // namespace tsl
+
+}  // namespace extlibs
+
+}  // namespace triton
 
 #endif

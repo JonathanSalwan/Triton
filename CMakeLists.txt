@@ -18,6 +18,7 @@ option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
 option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
+option(USE_ROBIN_MAP "Use tsl::robin_map instead of std::unordered_map for concrete memory management" OFF)
 
 if(STATICLIB)
     # We can't use Python bindings with a static library
