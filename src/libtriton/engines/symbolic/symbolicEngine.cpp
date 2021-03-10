@@ -291,7 +291,9 @@ namespace triton {
       const SharedSymbolicExpression& SymbolicEngine::addSymbolicExpressions(triton::arch::Instruction& inst, triton::usize id) const {
         /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
         for (triton::usize i = id; i != this->uniqueSymExprId; ++i) {
-          inst.addSymbolicExpression(this->getSymbolicExpression(i));
+          if (this->isSymbolicExpressionExists(i)) {
+            inst.addSymbolicExpression(this->getSymbolicExpression(i));
+          }
         }
         return inst.symbolicExpressions.back();
       }
