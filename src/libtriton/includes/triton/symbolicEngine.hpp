@@ -151,6 +151,9 @@ namespace triton {
           //! Sets implicit read registers (base and index) from an effective address.
           void setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
 
+          //! Adds new symbolic expressions to the instruction starting with given symbolic expression id. Returns last added expression.
+          const SharedSymbolicExpression& addSymbolicExpressions(triton::arch::Instruction& inst, triton::usize id) const;
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicEngine(triton::arch::Architecture* architecture,

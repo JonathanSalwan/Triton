@@ -288,6 +288,15 @@ namespace triton {
       }
 
 
+      const SharedSymbolicExpression& SymbolicEngine::addSymbolicExpressions(triton::arch::Instruction& inst, triton::usize id) const {
+        /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
+        for (triton::usize i = id; i != this->uniqueSymExprId; ++i) {
+          inst.addSymbolicExpression(this->getSymbolicExpression(i));
+        }
+        return inst.symbolicExpressions.back();
+      }
+
+
       /* Returns the shared symbolic expression corresponding to the register */
       const SharedSymbolicExpression& SymbolicEngine::getSymbolicRegister(const triton::arch::Register& reg) const {
         triton::arch::register_e parentId = reg.getParent();
@@ -963,7 +972,7 @@ namespace triton {
         SharedSymbolicExpression se         = nullptr;
         triton::uint64 address              = mem.getAddress();
         triton::uint32 writeSize            = mem.getSize();
-        auto id                             = this->uniqueSymExprId;
+        triton::usize id                    = this->uniqueSymExprId;
 
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
@@ -1006,12 +1015,7 @@ namespace triton {
         if (ret.size() == 1) {
           /* Synchronize the concrete state */
           this->architecture->setConcreteMemoryValue(mem, tmp->evaluate());
-          /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
-          for (auto i = id; i != this->uniqueSymExprId; ++i) {
-            inst.addSymbolicExpression(this->getSymbolicExpression(i));
-          }
-          /* It will return se */
-          return inst.symbolicExpressions.back();
+          return this->addSymbolicExpressions(inst, id);
         }
 
         /* Otherwise, we return the concatenation of all symbolic expressions */
@@ -1023,11 +1027,7 @@ namespace triton {
         se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Temporary concatenation reference - " + s.str());
         se->setOriginMemory(triton::arch::MemoryAccess(address, mem.getSize()));
 
-        /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
-        for (auto i = id; i != this->uniqueSymExprId; ++i) {
-          inst.addSymbolicExpression(this->getSymbolicExpression(i));
-        }
-        return inst.symbolicExpressions.back();
+        return this->addSymbolicExpressions(inst, id);
       }
 
 
@@ -1101,16 +1101,12 @@ namespace triton {
 
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
-        auto id = this->uniqueSymExprId;
+        triton::usize id = this->uniqueSymExprId;
         se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, s.str());
         this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
 
         inst.setWrittenRegister(reg, node);
-        /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
-        for (auto i = id; i != this->uniqueSymExprId; ++i) {
-          inst.addSymbolicExpression(this->getSymbolicExpression(i));
-        }
-        return inst.symbolicExpressions.back();
+        return this->addSymbolicExpressions(inst, id);
       }
 
 
@@ -1118,13 +1114,9 @@ namespace triton {
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment) {
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
-        auto id = this->uniqueSymExprId;
+        triton::usize id = this->uniqueSymExprId;
         const SharedSymbolicExpression& se = this->newSymbolicExpression(node, VOLATILE_EXPRESSION, s.str());
-        /* See #1002: There may be multiple new symbolic expressions when AST_OPTIMIZATIONS are on */
-        for (auto i = id; i != this->uniqueSymExprId; ++i) {
-          inst.addSymbolicExpression(this->getSymbolicExpression(i));
-        }
-        return inst.symbolicExpressions.back();
+        return this->addSymbolicExpressions(inst, id);
       }
 
 
