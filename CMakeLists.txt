@@ -50,7 +50,7 @@ if(PINTOOL AND NOT PYTHON_BINDINGS)
     MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
 endif()
 
-if(PINTOOL AND NOT ${PYTHON_VERSION_STRING} MATCHES "2.7")
+if(PINTOOL AND NOT "${PYTHON_VERSION_STRING}" MATCHES "2.7")
     MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
 endif()
 
