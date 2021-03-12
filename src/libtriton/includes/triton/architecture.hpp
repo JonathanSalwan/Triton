@@ -135,6 +135,9 @@ namespace triton {
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
+        //! Disassembles a concrete memory area and returns a set of `count` disassembled instructions.
+        TRITON_EXPORT std::list<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
+
         //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
 

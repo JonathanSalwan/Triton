@@ -233,6 +233,21 @@ namespace triton {
     }
 
 
+    std::list<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr, triton::usize count) const {
+      std::list<triton::arch::Instruction> ret;
+
+      while (count--) {
+        auto opcodes = this->getConcreteMemoryAreaValue(addr, 16);
+        auto inst = triton::arch::Instruction(addr, reinterpret_cast<triton::uint8*>(opcodes.data()), opcodes.size());
+        this->disassembly(inst);
+        ret.push_back(inst);
+        addr += inst.getSize();
+      }
+
+      return ret;
+    }
+
+
     triton::uint8 Architecture::getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getConcreteMemoryValue(): You must define an architecture.");

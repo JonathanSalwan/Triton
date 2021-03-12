@@ -516,6 +516,12 @@ namespace triton {
   }
 
 
+  std::list<triton::arch::Instruction> API::disassembly(triton::uint64 addr, triton::usize count) const {
+    this->checkArchitecture();
+    return this->arch.disassembly(addr, count);
+  }
+
+
 
   /* Processing API ================================================================================ */
 

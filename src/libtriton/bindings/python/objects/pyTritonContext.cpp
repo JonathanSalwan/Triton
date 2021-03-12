@@ -95,6 +95,9 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
+- <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
+Disassembles a concrete memory area from `addr` and returns a set of `count` disassembled instructions.
+
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
 
@@ -1052,12 +1055,36 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_disassembly(PyObject* self, PyObject* inst) {
-        if (!PyInstruction_Check(inst))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::disassembly(): Expects an Instruction as argument.");
+      static PyObject* TritonContext_disassembly(PyObject* self, PyObject* args) {
+        PyObject* arg0 = nullptr;
+        PyObject* arg1 = nullptr;
+        PyObject* ret  = nullptr;
+        triton::usize index = 0;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &arg0, &arg1) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::disassembly(): Invalid number of arguments.");
+        }
 
         try {
-          PyTritonContext_AsTritonContext(self)->disassembly(*PyInstruction_AsInstruction(inst));
+          if (arg0 != nullptr && PyInstruction_Check(arg0)) {
+            PyTritonContext_AsTritonContext(self)->disassembly(*PyInstruction_AsInstruction(arg0));
+            Py_INCREF(Py_None);
+            return Py_None;
+          }
+          if ((arg0 != nullptr && (PyLong_Check(arg0) || PyInt_Check(arg0))) &&
+              (arg1 != nullptr && (PyLong_Check(arg1) || PyInt_Check(arg1)))) {
+
+            auto insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0), PyLong_AsUsize(arg1));
+            ret = xPyList_New(insts.size());
+            for (auto& inst : insts)
+              PyList_SetItem(ret, index++, PyInstruction(inst));
+
+            return ret;
+          }
+          else {
+            return PyErr_Format(PyExc_TypeError, "TritonContext::disassembly(): Expects an Instruction or two integers as arguments.");
+          }
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -1065,9 +1092,6 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-
-        Py_INCREF(Py_None);
-        return Py_None;
       }
 
 
@@ -3120,7 +3144,7 @@ namespace triton {
         {"createSymbolicMemoryExpression",      (PyCFunction)TritonContext_createSymbolicMemoryExpression,            METH_VARARGS,                  ""},
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,          METH_VARARGS,                  ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,          METH_VARARGS,                  ""},
-        {"disassembly",                         (PyCFunction)TritonContext_disassembly,                               METH_O,                        ""},
+        {"disassembly",                         (PyCFunction)TritonContext_disassembly,                               METH_VARARGS,                  ""},
         {"enableSymbolicEngine",                (PyCFunction)TritonContext_enableSymbolicEngine,                      METH_O,                        ""},
         {"enableTaintEngine",                   (PyCFunction)TritonContext_enableTaintEngine,                         METH_O,                        ""},
         {"evaluateAstViaZ3",                    (PyCFunction)TritonContext_evaluateAstViaZ3,                          METH_O,                        ""},

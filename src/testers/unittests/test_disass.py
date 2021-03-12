@@ -248,3 +248,29 @@ class TestArm32Disass(unittest.TestCase):
         self.assertEqual(op1.getSize(), CPUSIZE.DWORD)
         self.assertEqual(op2.getValue(), 0x4)
         self.assertEqual(op2.getSize(), CPUSIZE.DWORD)
+
+class TestX64Disass(unittest.TestCase):
+
+    """Testing the X64 Architecture diassembly."""
+
+    def setUp(self):
+        """Define the arch."""
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+
+    def test_inst1(self):
+        code = [
+            b"\x48\xb9\x88\x77\x66\x55\x44\x33\x22\x11", # mov rcx, 0x1122334455667788
+            b"\x48\xff\xc1",                             # inc rcx
+            b"\x48\x89\xc8",                             # mov rax, rcx
+            b"\xc9",                                     # leave
+            b"\xc3",                                     # ret
+        ]
+        raw = b"".join(code)
+        self.ctx.setConcreteMemoryAreaValue(0x1000, raw)
+        insts = self.ctx.disassembly(0x1000, 5)
+        self.assertEqual(str(insts), '[0x1000: movabs rcx, 0x1122334455667788, '
+                                      '0x100a: inc rcx, '
+                                      '0x100d: mov rax, rcx, '
+                                      '0x1010: leave, '
+                                      '0x1011: ret]')
