@@ -31,14 +31,14 @@ jobs:
           env: [ GCOV=ON, CXX_COMPILER=g++-5, C_COMPILER=gcc-5, Z3_PKG=z3-4.8.9-x64-ubuntu-16.04, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
         - os: linux
-          name: "Linux Xenial with clang 6.0 and Python3.6"
+          name: "Linux Xenial with clang and Python3.6"
           dist: xenial
           compiler: clang
           addons:
             apt:
-              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-xenial-6.0', 'deadsnakes']
-              packages: ['clang-6.0', 'ccache', 'libboost1.58-all-dev', 'cmake', 'cmake-data', 'python3.6-dev']
-          env: [ CXX_COMPILER=clang++-6.0, C_COMPILER=clang-6.0, Z3_PKG=z3-4.8.9-x64-ubuntu-16.04, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
+              sources: ['ubuntu-toolchain-r-test', 'llvm-toolchain-xenial', 'deadsnakes']
+              packages: ['clang', 'ccache', 'libboost1.58-all-dev', 'cmake', 'cmake-data', 'python3.6-dev']
+          env: [ CXX_COMPILER=clang++, C_COMPILER=clang, Z3_PKG=z3-4.8.9-x64-ubuntu-16.04, PYTHON_VERSION=3.6, PYTHON_INCLUDE_DIR=/usr/include/python3.6m, PYTHON_LIBRARY=/usr/lib/libpython3.6m.so, PYTHON_BINARY=/usr/bin/python3.6 ]
 
         - os: osx
           name: "OSX with xcode 11.3 and Python3.7"
