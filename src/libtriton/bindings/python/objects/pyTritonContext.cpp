@@ -96,7 +96,10 @@ Returns the new symbolic volatile expression and links this expression to the in
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
-Disassembles a concrete memory area from `addr` and returns a list of `count` disassembled instructions.
+Disassembles a concrete memory area from `addr` and returns a list of at most `count` disassembled instructions.
+
+- <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr)</b><br>
+Disassembles a concrete memory area from `addr` to control flow instruction and returns a list of disassembled instructions.
 
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.
@@ -1073,9 +1076,15 @@ namespace triton {
             return Py_None;
           }
           if ((arg0 != nullptr && (PyLong_Check(arg0) || PyInt_Check(arg0))) &&
-              (arg1 != nullptr && (PyLong_Check(arg1) || PyInt_Check(arg1)))) {
+              (arg1 == nullptr || PyLong_Check(arg1) || PyInt_Check(arg1))) {
 
-            auto insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0), PyLong_AsUsize(arg1));
+            std::vector<triton::arch::Instruction> insts;
+            if (arg1) {
+              insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0), PyLong_AsUsize(arg1));
+            }
+            else {
+              insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0));
+            }
             ret = xPyList_New(insts.size());
             for (auto& inst : insts)
               PyList_SetItem(ret, index++, PyInstruction(inst));
