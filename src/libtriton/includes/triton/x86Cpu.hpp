@@ -71,8 +71,14 @@ namespace triton {
           /*! \brief map of address -> concrete value
            *
            * \details
+           *
            * **item1**: memory address<br>
            * **item2**: concrete value
+           *
+           * Since addresses are used as key, we have good entropy on the lower bits.
+           * We will also have low entropy on the higher bits. robin_map uses power of two modulo,
+           * which is much faster than the original modulo used in unordered_map.
+           * This means we can use the identity as a hash function without worrying to much about collision.
            */
           std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
 
