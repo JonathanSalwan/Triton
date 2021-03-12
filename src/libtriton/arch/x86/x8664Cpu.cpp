@@ -16,7 +16,6 @@
 #include <triton/x8664Cpu.hpp>
 
 
-
 namespace triton {
   namespace arch {
     namespace x86 {
@@ -481,7 +480,7 @@ namespace triton {
                 triton::arch::MemoryAccess mem;
 
                 /* Set the size of the memory access */
-                mem.setPair(std::make_pair(((op->size * triton::bitsize::byte) - 1), 0));
+                mem.setBits(((op->size * triton::bitsize::byte) - 1), 0);
 
                 /* LEA if exists */
                 const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
@@ -860,6 +859,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+        // Pre-reserving the memory. We modified the original robin_map to not force rehash on reserve.
+        this->memory.reserve(values.size() + this->memory.size());
         for (triton::usize index = 0; index < values.size(); index++) {
           this->setConcreteMemoryValue(baseAddr+index, values[index]);
         }
@@ -867,6 +868,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+        // Pre-reserving the memory. We modified the original robin_map to not force rehash on every reserve if not needed.
+        this->memory.reserve(size + this->memory.size());
         for (triton::usize index = 0; index < size; index++) {
           this->setConcreteMemoryValue(baseAddr+index, area[index]);
         }

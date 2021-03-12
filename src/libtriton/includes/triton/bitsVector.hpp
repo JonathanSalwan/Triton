@@ -72,8 +72,8 @@ namespace triton {
         //! Sets the lower bit position
         TRITON_EXPORT void setLow(triton::uint32 v);
 
-        //! Sets the pair<high, low> position
-        TRITON_EXPORT void setPair(std::pair<triton::uint32, triton::uint32> p);
+        //! Sets the bits (high, low) position
+        TRITON_EXPORT void setBits(triton::uint32 high, triton::uint32 low);
     };
 
     //! Displays a BitsVector.

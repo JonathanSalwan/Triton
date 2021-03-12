@@ -82,6 +82,17 @@ namespace triton {
     typedef signed int __sint;
     #endif
 
+    /*! \class IdentityHash
+    *   \brief Used as a hash function in hash tables containers (std::unordered_map, robin_map).
+    */
+    template<typename T>
+    class IdentityHash
+    {
+    public:
+      //! Returns the key as is.
+      T operator()(const T& key) const { return key; }
+    };
+
 /*! @} End of triton namespace */
 }; /* triton namespace */
 

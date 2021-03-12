@@ -314,7 +314,7 @@ namespace triton {
                     triton::arch::MemoryAccess mem;
 
                     /* Set the size of the memory access */
-                    mem.setPair(std::make_pair(triton::bitsize::dword-1, 0));
+                    mem.setBits(triton::bitsize::dword-1, 0);
 
                     /* LEA if exists */
                     const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
@@ -645,6 +645,7 @@ namespace triton {
 
 
         void Arm32Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+          this->memory.reserve(values.size() + this->memory.size());
           for (triton::usize index = 0; index < values.size(); index++) {
             this->setConcreteMemoryValue(baseAddr+index, values[index]);
           }
@@ -652,6 +653,7 @@ namespace triton {
 
 
         void Arm32Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+          this->memory.reserve(size + this->memory.size());
           for (triton::usize index = 0; index < size; index++) {
             this->setConcreteMemoryValue(baseAddr+index, area[index]);
           }
