@@ -1099,11 +1099,12 @@ namespace triton {
 
       /* Returns the new symbolic register expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicRegisterExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::Register& reg, const std::string& comment) {
+        triton::usize id = this->uniqueSymExprId;
         SharedSymbolicExpression se = nullptr;
 
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
-        triton::usize id = this->uniqueSymExprId;
+
         se = this->newSymbolicExpression(this->insertSubRegisterInParent(reg, node), REGISTER_EXPRESSION, s.str());
         this->assignSymbolicExpressionToRegister(se, this->architecture->getParentRegister(reg));
 
@@ -1114,10 +1115,12 @@ namespace triton {
 
       /* Returns the new symbolic volatile expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicVolatileExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const std::string& comment) {
+        triton::usize id = this->uniqueSymExprId;
+
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
-        triton::usize id = this->uniqueSymExprId;
-        const SharedSymbolicExpression& se = this->newSymbolicExpression(node, VOLATILE_EXPRESSION, s.str());
+
+        this->newSymbolicExpression(node, VOLATILE_EXPRESSION, s.str());
         return this->addSymbolicExpressions(inst, id);
       }
 
