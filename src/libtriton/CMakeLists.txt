@@ -335,9 +335,6 @@ add_library(
 add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
 target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/includes")
 target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/includes")
-if(USE_ROBIN_MAP)
-    target_compile_definitions(${PROJECT_LIBTRITON} PRIVATE USE_ROBIN_MAP)
-endif()
 add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies

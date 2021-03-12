@@ -24,8 +24,6 @@
 #include <triton/tritonTypes.hpp>
 #include <triton/x86Specifications.hpp>
 
-#include <tsl/robin_map.h> // For tsl::robin_map
-
 //! The Triton namespace
 namespace triton {
 /*!
@@ -81,11 +79,7 @@ namespace triton {
            * which is much faster than the original modulo used in unordered_map.
            * This means we can use the identity as a hash function without worrying to much about collision.
            */
-#ifdef USE_ROBIN_MAP
-          extlibs::tsl::robin_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
-#else
           std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
-#endif
 
           //! Concrete value of rax
           triton::uint8 rax[triton::size::qword];
