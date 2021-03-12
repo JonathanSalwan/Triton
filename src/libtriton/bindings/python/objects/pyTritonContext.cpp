@@ -96,7 +96,7 @@ Returns the new symbolic volatile expression and links this expression to the in
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
-Disassembles a concrete memory area from `addr` and returns a set of `count` disassembled instructions.
+Disassembles a concrete memory area from `addr` and returns a list of `count` disassembled instructions.
 
 - <b>void enableSymbolicEngine(bool flag)</b><br>
 Enables or disables the symbolic execution engine.

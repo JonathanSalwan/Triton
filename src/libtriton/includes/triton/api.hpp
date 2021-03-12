@@ -236,7 +236,7 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
-        //! [**architecture api**] - Disassembles a concrete memory area and returns a set of `count` disassembled instructions.
+        //! [**architecture api**] - Disassembles a concrete memory area and returns a list of `count` disassembled instructions.
         TRITON_EXPORT std::list<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
 
 
