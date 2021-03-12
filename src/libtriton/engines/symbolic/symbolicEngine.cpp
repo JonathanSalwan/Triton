@@ -1120,7 +1120,7 @@ namespace triton {
         std::stringstream s;
         s << comment << (comment.empty() ? "" : " - ") << inst;
 
-        this->newSymbolicExpression(node, VOLATILE_EXPRESSION, s.str());
+        const SharedSymbolicExpression& se = this->newSymbolicExpression(node, VOLATILE_EXPRESSION, s.str());
         return this->addSymbolicExpressions(inst, id);
       }
 
