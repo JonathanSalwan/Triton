@@ -233,16 +233,38 @@ namespace triton {
     }
 
 
-    std::list<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr, triton::usize count) const {
-      std::list<triton::arch::Instruction> ret;
+    std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr, triton::usize count) const {
+      std::vector<triton::arch::Instruction> ret;
+      ret.reserve(count);
 
       while (count--) {
+        if (!this->isConcreteMemoryValueDefined(addr)) {
+          break;
+        }
         auto opcodes = this->getConcreteMemoryAreaValue(addr, 16);
         auto inst = triton::arch::Instruction(addr, reinterpret_cast<triton::uint8*>(opcodes.data()), opcodes.size());
         this->disassembly(inst);
         ret.push_back(inst);
         addr += inst.getSize();
       }
+
+      return ret;
+    }
+
+
+    std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr) const {
+      std::vector<triton::arch::Instruction> ret;
+
+      do {
+        if (!this->isConcreteMemoryValueDefined(addr)) {
+          break;
+        }
+        auto opcodes = this->getConcreteMemoryAreaValue(addr, 16);
+        auto inst = triton::arch::Instruction(addr, reinterpret_cast<triton::uint8*>(opcodes.data()), opcodes.size());
+        this->disassembly(inst);
+        ret.push_back(inst);
+        addr += inst.getSize();
+      } while (!ret.back().isControlFlow());
 
       return ret;
     }
