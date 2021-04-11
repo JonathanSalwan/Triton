@@ -17,3 +17,5 @@ pin.log
 pintool.log
 private/*
 *.so
+.cache
+.vscode
