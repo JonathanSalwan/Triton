@@ -336,6 +336,9 @@ namespace triton {
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 
+            //! The MOVT semantics.
+            void movt_s(triton::arch::Instruction& inst);
+
             //! The MUL semantics.
             void mul_s(triton::arch::Instruction& inst);
 
