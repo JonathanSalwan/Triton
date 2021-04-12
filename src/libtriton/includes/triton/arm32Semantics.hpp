@@ -297,7 +297,7 @@ namespace triton {
             //! The CLZ semantics.
             void clz_s(triton::arch::Instruction& inst);
 
-            //! The CMP semantics.
+            //! The CMN semantics.
             void cmn_s(triton::arch::Instruction& inst);
 
             //! The CMP semantics.

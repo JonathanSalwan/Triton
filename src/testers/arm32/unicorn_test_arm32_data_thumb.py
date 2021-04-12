@@ -136,6 +136,17 @@ CODE  = [
     (b"\xb1\xeb\x92\x00", "subs r0, r1, r2, lsr #2"),
     (b"\xb1\xeb\xb2\x00", "subs r0, r1, r2, ror #2"),
     (b"\xb1\xeb\x32\x00", "subs r0, r1, r2, rrx"),
+
+    # ORN  ------------------------------------------------------------------- #
+    (b"\x60\xf0\x02\x00", "orn r0, #2"),
+    (b"\x60\xf0\x02\x00", "orn r0, r0, #2"),
+    (b"\x61\xf0\x02\x00", "orn r0, r1, #2"),
+    (b"\x61\xea\x02\x00", "orn r0, r1, r2"),
+    (b"\x61\xea\xa2\x00", "orn r0, r1, r2, asr #2"),
+    (b"\x61\xea\x82\x00", "orn r0, r1, r2, lsl #2"),
+    (b"\x61\xea\x92\x00", "orn r0, r1, r2, lsr #2"),
+    (b"\x61\xea\xb2\x00", "orn r0, r1, r2, ror #2"),
+    (b"\x61\xea\x32\x00", "orn r0, r1, r2, rrx"),
 ]
 
 
