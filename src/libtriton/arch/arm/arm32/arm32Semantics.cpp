@@ -2952,7 +2952,7 @@ namespace triton {
           auto cond = node2->getChildren()[0];
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "REV16 operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "REV16 operation");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
