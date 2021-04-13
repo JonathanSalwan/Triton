@@ -2232,11 +2232,21 @@ namespace triton {
             auto immNode  = this->symbolicEngine->getOperandAst(inst, imm);
 
             /* Create the semantics of the base register */
-            auto node2 = this->astCtxt->ite(
-                           cond,
-                           this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
-                           baseNode
-                         );
+            triton::ast::SharedAbstractNode node2;
+
+            if(imm.isSubtracted()) {
+              node2 = this->astCtxt->ite(
+                            cond,
+                            this->astCtxt->bvsub(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
+                            baseNode
+                          );
+            } else {
+              node2 = this->astCtxt->ite(
+                            cond,
+                            this->astCtxt->bvadd(baseNode, this->astCtxt->sx(base.getBitSize() - imm.getBitSize(), immNode)),
+                            baseNode
+                          );
+            }
 
             /* Create symbolic expression */
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRD operation - Post-indexed base register computation");
@@ -2589,19 +2599,21 @@ namespace triton {
           auto& src = inst.operands[1];
 
           /* Special behavior: Define that the size of the register access is 16 bits */
-          dst.getRegister().setBits(31, 16);
+          src.getImmediate().setBits(15, 0);
 
           /* Create symbolic operands */
-          auto op = this->getArm32SourceOperandAst(inst, src);
+          auto srcOp = this->getArm32SourceOperandAst(inst, src);
+          auto dstOp = this->getArm32SourceOperandAst(inst, dst);
 
           /* Create the semantics */
-          auto node = this->buildConditionalSemantics(inst, dst, op);
+          auto node1 = this->astCtxt->concat(srcOp, this->astCtxt->extract(15, 0, dstOp));
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVT operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOVT operation");
 
           /* Get condition code node */
-          auto cond = node->getChildren()[0];
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
