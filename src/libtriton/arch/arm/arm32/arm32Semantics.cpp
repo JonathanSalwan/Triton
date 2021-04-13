@@ -2598,7 +2598,7 @@ namespace triton {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the register access is 16 bits */
+          /* Special behavior: Define that the size of the imm access is 16 bits */
           src.getImmediate().setBits(15, 0);
 
           /* Create symbolic operands */
