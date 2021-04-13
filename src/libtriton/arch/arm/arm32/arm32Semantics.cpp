@@ -4173,7 +4173,7 @@ namespace triton {
           auto node1 = this->astCtxt->ite(
                         this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
                         this->astCtxt->bv(0, dst.getBitSize()),
-                        this->astCtxt->bvsdiv(op1, op2)
+                        this->astCtxt->bvudiv(op1, op2)
                       );
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
