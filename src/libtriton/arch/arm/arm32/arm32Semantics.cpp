@@ -2096,7 +2096,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRB operation - LOAD access");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRSB operation - LOAD access");
 
           /* Get condition code node */
           auto cond = node2->getChildren()[0];
@@ -2128,7 +2128,7 @@ namespace triton {
               auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
-              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRSB operation - Post-indexed base register computation");
 
               /* Spread taint */
               this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
@@ -2150,7 +2150,7 @@ namespace triton {
               auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
-              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRSB operation - Post-indexed base register computation");
 
               /* Spread taint */
               this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
@@ -2300,7 +2300,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRB operation - LOAD access");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRSH operation - LOAD access");
 
           /* Get condition code node */
           auto cond = node2->getChildren()[0];
@@ -2332,7 +2332,7 @@ namespace triton {
               auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
-              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRSH operation - Post-indexed base register computation");
 
               /* Spread taint */
               this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
@@ -2354,7 +2354,7 @@ namespace triton {
               auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
-              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRSH operation - Post-indexed base register computation");
 
               /* Spread taint */
               this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
