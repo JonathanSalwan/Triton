@@ -4170,17 +4170,21 @@ namespace triton {
           auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
           /* Create the semantics */
-          auto node = this->astCtxt->ite(
+          auto node1 = this->astCtxt->ite(
                         this->astCtxt->equal(op2, this->astCtxt->bv(0, op2->getBitvectorSize())),
                         this->astCtxt->bv(0, dst.getBitSize()),
                         this->astCtxt->bvsdiv(op1, op2)
                       );
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UDIV operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UDIV operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
-          expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
