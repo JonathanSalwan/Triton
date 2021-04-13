@@ -152,7 +152,6 @@ namespace triton {
             case ID_INS_STRD:      this->strd_s(inst);          break;
             case ID_INS_STRH:      this->strh_s(inst);          break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
-            //case ID_INS_SVC:       this->svc_s(inst);           break;
             case ID_INS_SXTB:      this->sxtb_s(inst);          break;
             case ID_INS_SXTH:      this->sxth_s(inst);          break;
             case ID_INS_TST:       this->tst_s(inst);           break;
@@ -4145,13 +4144,17 @@ namespace triton {
           auto op = this->symbolicEngine->getOperandAst(inst, src1);
 
           /* Create the semantics */
-          auto node = this->astCtxt->zx(dst.getBitSize() - width, this->astCtxt->extract(lsb+width-1, lsb, op));
+          auto node1 = this->astCtxt->zx(dst.getBitSize() - width, this->astCtxt->extract(lsb+width-1, lsb, op));
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "UBFX operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UBFX operation");
+
+          /* Get condition code node */
+          auto cond = node2->getChildren()[0];
 
           /* Spread taint */
-          expr->isTainted = this->taintEngine->taintAssignment(dst, src1);
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
@@ -4184,32 +4187,57 @@ namespace triton {
         }
 
         void Arm32Semantics::umull_s(triton::arch::Instruction& inst) {
-          auto& dst  = inst.operands[0];
-          auto& src1 = inst.operands[1];
-          auto& src2 = inst.operands[2];
+          auto& dst1 = inst.operands[0];
+          auto& dst2 = inst.operands[1];
+          auto& src1 = inst.operands[2];
+          auto& src2 = inst.operands[3];
 
           /* Create symbolic operands */
-          auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
 
           /* Create the semantics */
-          auto node1 = this->astCtxt->bvmul(
-                        this->astCtxt->zx(triton::bitsize::dword, op1),
-                        this->astCtxt->zx(triton::bitsize::dword, op2)
-                      );
-          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+          auto cond  = this->getCodeConditionAst(inst);
+          auto mul   = this->astCtxt->bvmul(
+                         this->astCtxt->zx(triton::bitsize::qword, op1),
+                         this->astCtxt->zx(triton::bitsize::qword, op2)
+                       );
+          auto lower = this->astCtxt->extract(triton::bitsize::dword-1, 0, mul);
+          auto upper = this->astCtxt->extract(triton::bitsize::qword-1, triton::bitsize::dword, mul);
+          auto node1 = this->astCtxt->ite(cond, lower, this->symbolicEngine->getOperandAst(inst, dst1));
+          auto node2 = this->astCtxt->ite(cond, upper, this->symbolicEngine->getOperandAst(inst, dst2));
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UMULL operation");
-
-          /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "SMULL(S) operation - Lower 32 bits of the result.");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "SMULL(S) operation - Upper 32 bits of the result.");
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr1, dst1, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+          this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->nfSmull_s(inst, cond, expr1, expr2, dst1, dst2);
+            this->zfSmull_s(inst, cond, expr1, expr2, dst1, dst2);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update execution mode accordingly. */
+            /* NOTE: The invocations are done in the order the manual says
+             * the instruction updates each register. Examples for this case
+             * could be:
+             *   - smull pc, r1, r2, r3
+             *   - smull pc, pc, r2, r3
+             */
+            this->updateExecutionState(dst2, upper);
+            this->updateExecutionState(dst1, lower);
+          }
 
           /* Update the symbolic control flow */
-          this->controlFlow_s(inst);
+          this->controlFlow_s(inst, cond, dst1, dst2);
         }
 
         void Arm32Semantics::uxtb_s(triton::arch::Instruction& inst) {
