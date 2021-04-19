@@ -2045,7 +2045,7 @@ namespace triton {
               auto node2 = this->astCtxt->ite(cond, thenNode, baseNode);
 
               /* Create symbolic expression */
-              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRB operation - Post-indexed base register computation");
+              auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, base, "LDRH operation - Post-indexed base register computation");
 
               /* Spread taint */
               this->spreadTaint(inst, cond, expr2, base, this->taintEngine->isTainted(base));
@@ -2064,7 +2064,7 @@ namespace triton {
             auto node3 = this->astCtxt->ite(cond, src.getMemory().getLeaAst(), baseNode);
 
             /* Create symbolic expression */
-            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRB operation - Pre-indexed base register computation");
+            auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, base, "LDRH operation - Pre-indexed base register computation");
 
             /* Spread taint */
             this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
