@@ -25,36 +25,50 @@ Mnemonic                      | Description
 ADC                           | Add with Carry
 ADD                           | Add
 ADDW                          | Add
+ADR                           | Form PC-relative address
 AND                           | Bitwise AND
 ASR                           | Arithmetic Shift Right
 B                             | Branch
+BFI                           | Bitfield Insert
 BIC                           | Bitwise Bit Clear
 BL                            | Branch with Link
 BLX                           | Branch with Link and Exchange
 BX                            | Branch and Exchange
+CBNZ                          | Compare and Branch on Nonzero
 CBZ                           | Compare and Branch on Zero
 CLZ                           | Count Leading Zeros
+CMN                           | Compare Negative
 CMP                           | Compare
 EOR                           | Bitwise Exclusive OR
 LDM                           | Load Multiple Registers
 LDR                           | Load Register
 LDRB                          | Load Register Byte
 LDRD                          | Load Register Dual
+LDRH                          | Load Register Halfword
+LDRSB                         | Load Register Signed Byte
+LDRSH                         | Load Register Signed Halfword
 LSL                           | Logical Shift Left
 LSR                           | Logical Shift Right
 MOV                           | Move Register
+MOVT                          | Move Top
 MOVW                          | Move Register
 MUL                           | Multiply
 MVN                           | Bitwise NOT
+NOP                           | No Operation
+ORN                           | Bitwise OR
 ORR                           | Bitwise OR
 POP                           | Pop Multiple Registers
 PUSH                          | Push Multiple Registers
+RBIT                          | Reverse Bits
 REV                           | Byte-Reverse Word
+REV16                         | Reverse bytes in 16-bit halfwords
 ROR                           | Rotate Right
 RRX                           | Rotate Right with Extend
 RSB                           | Reverse Subtract
 RSC                           | Reverse Subtract with Carry
 SBC                           | Subtract with Carry
+SBFX                          | Signed Bitfield Extract
+SDIV                          | Signed Divide
 SMULL                         | Signed Multiply Long
 STM                           | Store Multiple Registers
 STMIB                         | Store Multiple Increment Before
@@ -63,7 +77,15 @@ STRB                          | Store Register Byte
 STRD                          | Store Register Dual
 STRH                          | Store Register Halfword
 SUB                           | Substract
+SXTB                          | Signed Extend Byte
+SXTH                          | Sign Extend Halfword
+TEQ                           | Test Equivalence
 TST                           | Test
+UBFX                          | Unsigned Bitfield Extract
+UDIV                          | Unsigned Divide
+UMULL                         | Unsigned Multiply Long
+UXTB                          | Unsigned Extend Byte
+UXTH                          | Unsigned Extend Halfword
 
 */
 
@@ -118,9 +140,9 @@ namespace triton {
             case ID_INS_LDM:       this->ldm_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
+            case ID_INS_LDRD:      this->ldrd_s(inst);          break;
             case ID_INS_LDRH:      this->ldrh_s(inst);          break;
             case ID_INS_LDRSB:     this->ldrsb_s(inst);         break;
-            case ID_INS_LDRD:      this->ldrd_s(inst);          break;
             case ID_INS_LDRSH:     this->ldrsh_s(inst);         break;
             case ID_INS_LSL:       this->lsl_s(inst);           break;
             case ID_INS_LSR:       this->lsr_s(inst);           break;
@@ -154,8 +176,8 @@ namespace triton {
             case ID_INS_SUB:       this->sub_s(inst);           break;
             case ID_INS_SXTB:      this->sxtb_s(inst);          break;
             case ID_INS_SXTH:      this->sxth_s(inst);          break;
-            case ID_INS_TST:       this->tst_s(inst);           break;
             case ID_INS_TEQ:       this->teq_s(inst);           break;
+            case ID_INS_TST:       this->tst_s(inst);           break;
             case ID_INS_UBFX:      this->ubfx_s(inst);          break;
             case ID_INS_UDIV:      this->udiv_s(inst);          break;
             case ID_INS_UMULL:     this->umull_s(inst);         break;
@@ -1027,6 +1049,7 @@ namespace triton {
           this->controlFlow_s(inst, cond, dst);
         }
 
+
         void Arm32Semantics::adr_s(triton::arch::Instruction& inst) {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
@@ -1218,6 +1241,7 @@ namespace triton {
           /* Create the path constraint */
           this->symbolicEngine->pushPathConstraint(inst, expr);
         }
+
 
         void Arm32Semantics::bfi_s(triton::arch::Instruction& inst) {
           auto& dst   = inst.operands[0]; // Reg
@@ -2605,8 +2629,8 @@ namespace triton {
           src.getImmediate().setBits(15, 0);
 
           /* Create symbolic operands */
-          auto srcOp = this->getArm32SourceOperandAst(inst, src);
           auto dstOp = this->getArm32SourceOperandAst(inst, dst);
+          auto srcOp = this->getArm32SourceOperandAst(inst, src);
 
           /* Create the semantics */
           auto node1 = this->astCtxt->concat(srcOp, this->astCtxt->extract(15, 0, dstOp));
