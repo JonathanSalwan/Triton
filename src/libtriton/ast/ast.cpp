@@ -300,7 +300,7 @@ namespace triton {
     void AssertNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -351,7 +351,7 @@ namespace triton {
     void BvaddNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -402,7 +402,7 @@ namespace triton {
     void BvandNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -485,7 +485,7 @@ namespace triton {
     void BvashrNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -536,7 +536,7 @@ namespace triton {
     void BvlshrNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -587,7 +587,7 @@ namespace triton {
     void BvmulNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -638,7 +638,7 @@ namespace triton {
     void BvnandNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -685,7 +685,7 @@ namespace triton {
     void BvnegNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -736,7 +736,7 @@ namespace triton {
     void BvnorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -783,7 +783,7 @@ namespace triton {
     void BvnotNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -834,7 +834,7 @@ namespace triton {
     void BvorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -896,7 +896,7 @@ namespace triton {
     void BvrolNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -958,7 +958,7 @@ namespace triton {
     void BvrorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1022,7 +1022,7 @@ namespace triton {
     void BvsdivNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1080,7 +1080,7 @@ namespace triton {
     void BvsgeNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1138,7 +1138,7 @@ namespace triton {
     void BvsgtNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1189,7 +1189,7 @@ namespace triton {
     void BvshlNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1247,7 +1247,7 @@ namespace triton {
     void BvsleNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1305,7 +1305,7 @@ namespace triton {
     void BvsltNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1367,7 +1367,7 @@ namespace triton {
     void BvsmodNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1429,7 +1429,7 @@ namespace triton {
     void BvsremNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1480,7 +1480,7 @@ namespace triton {
     void BvsubNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1535,7 +1535,7 @@ namespace triton {
     void BvudivNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1586,7 +1586,7 @@ namespace triton {
     void BvugeNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1637,7 +1637,7 @@ namespace triton {
     void BvugtNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1688,7 +1688,7 @@ namespace triton {
     void BvuleNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1739,7 +1739,7 @@ namespace triton {
     void BvultNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1794,7 +1794,7 @@ namespace triton {
     void BvuremNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -1845,7 +1845,7 @@ namespace triton {
     void BvxnorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -1896,7 +1896,7 @@ namespace triton {
     void BvxorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -1960,7 +1960,7 @@ namespace triton {
     void BvNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2002,7 +2002,7 @@ namespace triton {
     void CompoundNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2059,7 +2059,7 @@ namespace triton {
     void ConcatNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2109,7 +2109,7 @@ namespace triton {
     void DeclareNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2160,7 +2160,7 @@ namespace triton {
     void DistinctNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2211,7 +2211,7 @@ namespace triton {
     void EqualNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2275,7 +2275,7 @@ namespace triton {
     void ExtractNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2326,7 +2326,7 @@ namespace triton {
     void ForallNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2383,7 +2383,7 @@ namespace triton {
     void IffNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2423,7 +2423,7 @@ namespace triton {
 
 
     void IntegerNode::initHash(void) {
-      this->hash = this->type ^ this->value;
+      this->hash = static_cast<triton::uint64>(this->type) ^ this->value;
     }
 
 
@@ -2476,7 +2476,7 @@ namespace triton {
     void IteNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2528,7 +2528,7 @@ namespace triton {
     void LandNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2580,7 +2580,7 @@ namespace triton {
     void LetNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2630,7 +2630,7 @@ namespace triton {
     void LnotNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2682,7 +2682,7 @@ namespace triton {
     void LorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2734,7 +2734,7 @@ namespace triton {
     void LxorNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * this->children[index]->getHash();
@@ -2814,7 +2814,7 @@ namespace triton {
     void StringNode::initHash(void) {
       triton::uint32 index = 1;
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       for (std::string::const_iterator it=this->value.cbegin(); it != this->value.cend(); it++) {
         this->hash = triton::ast::rotl(*it ^ this->hash ^ triton::ast::hash2n(this->hash, index++), *it);
       }
@@ -2872,7 +2872,7 @@ namespace triton {
     void SxNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
@@ -2915,7 +2915,7 @@ namespace triton {
       triton::uint32 index = 1;
       triton::usize  id    = this->symVar->getId();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       for (char c : this->symVar->getName()) {
         this->hash = triton::ast::rotl(c ^ this->hash ^ triton::ast::hash2n(this->hash, index++), (id & 511));
       }
@@ -2972,7 +2972,7 @@ namespace triton {
     void ZxNode::initHash(void) {
       triton::uint512 s = this->children.size();
 
-      this->hash = this->type;
+      this->hash = static_cast<triton::uint64>(this->type);
       if (s) this->hash = this->hash * s;
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
         this->hash = this->hash * triton::ast::hash2n(this->children[index]->getHash(), index+1);
