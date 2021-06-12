@@ -1,0 +1,44 @@
+name: Tests on OSX
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+      - name: Install dependencies
+        run: |
+          brew install boost
+      - name: Install Z3
+        run: |
+          brew install z3
+          sudo python3 -m pip install z3-solver
+      - name: Install Capstone
+        run: |
+          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
+          tar -xf ./4.0.2.tar.gz
+          cd ./capstone-4.0.2
+          bash ./make.sh
+          sudo make install
+          cd ../
+      - name: Install Unicorn
+        run: |
+          sudo python3 -m pip install unicorn==1.0.2rc2
+      - name: Install LIEF
+        run: |
+          sudo python3 -m pip install lief
+      - name: Compile Triton
+        run: |
+          mkdir ./build
+          cd ./build
+          cmake ..
+          sudo make -j3 install
+      - name: Unittests
+        run: |
+          make -C build check
