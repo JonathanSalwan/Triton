@@ -5,20 +5,23 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build:
     runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: [3.6, 3.7, 3.8, 3.9]
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-      - name: Set up Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v2
         with:
-          python-version: '3.9'
+          python-version: ${{ matrix.python-version }}
       - name: Install dependencies
         run: |
           brew install boost
       - name: Install Z3
         run: |
           brew install z3
-          sudo python3 -m pip install z3-solver
+          sudo python -m pip install z3-solver
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -29,10 +32,10 @@ jobs:
           cd ../
       - name: Install Unicorn
         run: |
-          sudo python3 -m pip install unicorn==1.0.2rc2
+          sudo python -m pip install unicorn==1.0.2rc2
       - name: Install LIEF
         run: |
-          sudo python3 -m pip install lief
+          sudo python -m pip install lief
       - name: Compile Triton
         run: |
           mkdir ./build
