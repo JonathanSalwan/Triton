@@ -4,17 +4,25 @@
 ## Output:
 ##
 ##  $ ./code_coverage_crackme_xor.py
-##  Seed injected: {4096: 1}
-##  Seed injected: {4096L: 101L}
-##  Seed injected: {4096L: 0L}
-##  Seed injected: {4096L: 101L, 4097L: 108L}
-##  Seed injected: {4096L: 101L, 4097L: 0L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 105L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 0L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 0L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L, 4100L: 101L}
-##  Seed injected: {4096L: 101L, 4097L: 108L, 4098L: 105L, 4099L: 116L, 4100L: 0L}
+##  Seed injected: {4096: '?'}
+##  Seed injected: {4096: 'e'}
+##  Seed injected: {4096: '\x00'}
+##  Seed injected: {4097: 'l', 4096: 'e'}
+##  Seed injected: {4097: 'p', 4096: 'e'}
+##  Seed injected: {4097: 'l', 4096: 'e', 4098: 'i'}
+##  Seed injected: {4097: '\x00', 4096: 'e'}
+##  Seed injected: {4097: 'l', 4096: 'e', 4098: '$'}
+##  Seed injected: {4097: 'l', 4096: 'e', 4098: 'i', 4099: 't'}
+##  Seed injected: {4096: 'e', 4097: '\x0c'}
+##  Seed injected: {4096: 'e', 4098: 'l', 4097: 'l'}
+##  Seed injected: {4096: 'e', 4099: '\x00', 4098: 'i', 4097: 'l'}
+##  Seed injected: {4096: 'e', 4099: 't', 4098: 'i', 4097: 'l', 4100: 'e'}
+##  Seed injected: {4097: 'l', 4096: 'e', 4098: '@'}
+##  Seed injected: {4098: 'i', 4099: 't', 4096: 'e', 4100: '\x00', 4097: 'l'}
+##  Seed injected: {4097: 'P', 4096: 'e'}
+##  Seed injected: {4097: 'l', 4098: 'L', 4096: 'e'}
+##  Seed injected: {4099: 'l', 4097: 'l', 4098: 'i', 4096: 'e'}
+##  Seed injected: {4098: '\x00', 4096: 'e', 4097: 'l'}
 ##
 
 from __future__ import print_function
@@ -162,7 +170,7 @@ def getNewInput():
                         # Get the symbolic variable assigned to the model
                         symVar = Triton.getSymbolicVariable(k)
                         # Save the new input as seed.
-                        seed.update({symVar.getOrigin(): v.getValue()})
+                        seed.update({symVar.getOrigin(): chr(v.getValue())})
                     if seed:
                         inputs.append(seed)
 
@@ -180,7 +188,7 @@ def symbolizeInputs(seed):
     Triton.concretizeAllRegister()
     Triton.concretizeAllMemory()
     for address, value in list(seed.items()):
-        Triton.setConcreteMemoryValue(address, value)
+        Triton.setConcreteMemoryValue(address, ord(value))
         Triton.symbolizeMemory(MemoryAccess(address, CPUSIZE.BYTE))
         Triton.symbolizeMemory(MemoryAccess(address+1, CPUSIZE.BYTE))
     return
@@ -199,7 +207,7 @@ if __name__ == '__main__':
 
     # We start the execution with a random value located at 0x1000.
     lastInput = list()
-    worklist  = list([{0x1000:1}])
+    worklist  = list([{0x1000: '?'}])
 
     while worklist:
         # Take the first seed
