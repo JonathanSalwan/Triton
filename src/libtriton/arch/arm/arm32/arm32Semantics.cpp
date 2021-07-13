@@ -961,7 +961,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADC(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
@@ -1024,7 +1024,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADD(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -1067,7 +1067,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ADR operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src) | this->taintEngine->isTainted(pc));
@@ -1114,7 +1114,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "AND(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -1180,7 +1180,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ASR(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           auto taint = this->taintEngine->isTainted(src1);
@@ -1275,7 +1275,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "BFI operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
@@ -1322,7 +1322,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "BIC(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -1558,7 +1558,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "CLZ operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -1682,7 +1682,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "EOR(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -1804,7 +1804,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDR operation - LOAD access");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -1911,7 +1911,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRB operation - LOAD access");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2018,7 +2018,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRH operation - LOAD access");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2125,7 +2125,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRSB operation - LOAD access");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2330,7 +2330,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LDRSH operation - LOAD access");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2460,7 +2460,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LSL(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           auto taint = this->taintEngine->isTainted(src1);
@@ -2536,7 +2536,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "LSR(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           auto taint = this->taintEngine->isTainted(src1);
@@ -2586,7 +2586,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOV(s) operation");
 
           /* Get condition code node */
-          auto cond = node->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2640,7 +2640,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MOVT operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2683,7 +2683,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MUL(S) operation");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -2719,7 +2719,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "MVN(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -2764,7 +2764,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ORN operation");
@@ -2814,7 +2814,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "OOR(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -2950,7 +2950,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "RBIT operation");
@@ -2990,7 +2990,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "REV16 operation");
@@ -3025,7 +3025,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "REV operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -3084,7 +3084,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "ROR(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           auto taint = this->taintEngine->isTainted(src1);
@@ -3144,7 +3144,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "RRX(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -3206,7 +3206,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "RSB(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -3274,7 +3274,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "RSB(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
@@ -3342,7 +3342,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SBC(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2) | this->taintEngine->isTainted(cf));
@@ -3398,7 +3398,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SBFX operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
@@ -3429,7 +3429,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SDIV operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -3626,7 +3626,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STR operation - STORE access");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -3703,7 +3703,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRB operation - STORE access");
 
           /* Get condition code node */
-          auto cond = node1->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -3889,7 +3889,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "STRH operation - STORE access");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -4009,7 +4009,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SUB(S) operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -4058,7 +4058,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SXTB operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -4083,7 +4083,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "SXTH operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -4185,7 +4185,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UBFX operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
@@ -4216,7 +4216,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UDIV operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
@@ -4296,7 +4296,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UXTB operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
@@ -4321,7 +4321,7 @@ namespace triton {
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "UXTH operation");
 
           /* Get condition code node */
-          auto cond = node2->getChildren()[0];
+          auto cond = this->getCodeConditionAst(inst);
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
