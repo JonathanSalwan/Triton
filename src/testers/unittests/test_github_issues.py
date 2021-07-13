@@ -490,3 +490,15 @@ class TestIssue992(unittest.TestCase):
         self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0)
         self.ctx.processing(self.inst)
         self.assertEqual(self.ctx.getConcreteMemoryValue(mem), 0xdeadbeef)
+
+
+class TestIssue1029(unittest.TestCase):
+    """Testing #1029."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.ARM32)
+        self.ctx.setThumb(True)
+        self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
+
+    def test_issue(self):
+        self.ctx.processing(Instruction(b"\x00#")) # movs r3, #0
