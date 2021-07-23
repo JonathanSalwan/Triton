@@ -842,6 +842,13 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: False ? A : B => B, True ? A : B => A */
+        if (!ifExpr->isSymbolized()) {
+          return ifExpr->evaluate() ? thenExpr : elseExpr;
+        }
+      }
+
       SharedAbstractNode node = std::make_shared<IteNode>(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::ite(): Not enough memory.");

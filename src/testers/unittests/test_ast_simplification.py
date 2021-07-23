@@ -678,6 +678,16 @@ class TestAstSimplification5(unittest.TestCase):
         n = self.ast.concat([self.ast.extract(15, 0, a), self.ast.extract(31, 16, a)])
         self.assertEqual(str(n), "(concat ((_ extract 15 0) SymVar_0) ((_ extract 31 16) SymVar_0))")
 
+    def test_ite(self):
+        a = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        b = self.ast.variable(self.ctx.newSymbolicVariable(32))
+        c = self.ast.bv(0, 1)
+        n = self.ast.ite(c, a, b)
+        self.assertEqual(str(n), "SymVar_1")
+        c = self.ast.bv(1, 1)
+        n = self.ast.ite(c, a, b)
+        self.assertEqual(str(n), "SymVar_0")
+
     def test_issue_1002(self):
         # See #1002
         inst = Instruction(b"\x29\xca")
@@ -685,12 +695,12 @@ class TestAstSimplification5(unittest.TestCase):
         self.assertEqual("\n".join(str(e) for e in inst.getSymbolicExpressions()),
             ("(define-fun ref!0 () (_ BitVec 32) (_ bv0 32)) ; Extended part - SUB operation - 0x0: sub edx, ecx\n"
              "(define-fun ref!1 () (_ BitVec 64) ((_ zero_extend 32) ref!0)) ; SUB operation - 0x0: sub edx, ecx\n"
-             "(define-fun ref!2 () (_ BitVec 1) (ite (= (_ bv16 32) (_ bv0 32)) (_ bv1 1) (_ bv0 1))) ; Adjust flag - 0x0: sub edx, ecx\n"
+             "(define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag - 0x0: sub edx, ecx\n"
              "(define-fun ref!3 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Carry flag - 0x0: sub edx, ecx\n"
              "(define-fun ref!4 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Overflow flag - 0x0: sub edx, ecx\n"
              "(define-fun ref!5 () (_ BitVec 1) (_ bv1 1)) ; Parity flag - 0x0: sub edx, ecx\n"
              "(define-fun ref!6 () (_ BitVec 1) ((_ extract 31 31) ref!1)) ; Sign flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!7 () (_ BitVec 1) (ite (= ref!0 (_ bv0 32)) (_ bv1 1) (_ bv0 1))) ; Zero flag - 0x0: sub edx, ecx\n"
+             "(define-fun ref!7 () (_ BitVec 1) (_ bv1 1)) ; Zero flag - 0x0: sub edx, ecx\n"
              "(define-fun ref!8 () (_ BitVec 64) (_ bv2 64)) ; Program Counter - 0x0: sub edx, ecx"))
 
     def test_issue_1002_2(self):
@@ -707,10 +717,10 @@ class TestAstSimplification5(unittest.TestCase):
              "(define-fun ref!6 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!7 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!8 () (_ BitVec 64) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8))) ; Temporary concatenation reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!9 () (_ BitVec 1) (ite (= (_ bv16 64) (_ bv0 64)) (_ bv1 1) (_ bv0 1))) ; Adjust flag - 0x0: sub qword ptr [rdx], rcx\n"
+             "(define-fun ref!9 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!10 () (_ BitVec 1) ((_ extract 63 63) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8)))) ; Carry flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!11 () (_ BitVec 1) ((_ extract 63 63) (_ bv0 64))) ; Overflow flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!12 () (_ BitVec 1) (_ bv1 1)) ; Parity flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!13 () (_ BitVec 1) ((_ extract 63 63) ref!8)) ; Sign flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!14 () (_ BitVec 1) (ite (= ref!8 (_ bv0 64)) (_ bv1 1) (_ bv0 1))) ; Zero flag - 0x0: sub qword ptr [rdx], rcx\n"
+             "(define-fun ref!14 () (_ BitVec 1) (_ bv1 1)) ; Zero flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!15 () (_ BitVec 64) (_ bv3 64)) ; Program Counter - 0x0: sub qword ptr [rdx], rcx"))
