@@ -842,7 +842,8 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr) {
-      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) ||
+          this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
         /* Optimization: False ? A : B => B, True ? A : B => A */
         if (!ifExpr->isSymbolized()) {
           return ifExpr->evaluate() ? thenExpr : elseExpr;
@@ -853,12 +854,6 @@ namespace triton {
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::ite(): Not enough memory.");
       node->init();
-
-      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
-        if (node->isSymbolized() == false && node->isLogical() == false) {
-          return this->bv(node->evaluate(), node->getBitvectorSize());
-        }
-      }
 
       return this->collect(node);
     }
