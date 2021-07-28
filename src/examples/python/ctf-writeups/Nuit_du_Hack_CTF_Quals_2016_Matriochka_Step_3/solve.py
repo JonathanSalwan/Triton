@@ -115,7 +115,8 @@ if __name__ == '__main__':
 
     # Define symbolic optimizations
     ctx.setMode(MODE.ALIGNED_MEMORY, True)
-    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.CONSTANT_FOLDING, True)
+    ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
     # Load the binary
     loadBinary(os.path.join(os.path.dirname(__file__), 'stage3.bin'))
