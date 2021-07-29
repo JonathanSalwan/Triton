@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <list>
@@ -45,10 +45,13 @@ namespace triton {
 
     SharedAbstractNode AstContext::collect(const SharedAbstractNode& node) {
       /*
-       * We keep a shared reference of nodes in a deep AST. Instead of keeping
-       * each node (which does not scales), we only keep one reference at each
-       * deep step of 10000. Thus, it will avoid the stack recursion on destructor
-       * calls of shared_ptr.
+       * We keep references to nodes which belong to a depth in the AST which is
+       * a multiple of 10000. Thus, when the root node is destroyed, the stack recursivity
+       * stops when the depth level of 10000 is reached, because the nodes there still
+       * have a reference to them in the AST manager. The destruction will continue at the
+       * next allocation of nodes and so on. So, it means that ASTs are destroyed by steps
+       * of depth of 10000 which avoids the overflow while keeping a good scale.
+       *
        * See: #753.
        */
       triton::uint32 lvl = node->getLevel();
@@ -224,6 +227,14 @@ namespace triton {
         /* Optimization: A * 0 = 0 */
         if (!expr2->isSymbolized() && expr2->evaluate() == 0)
           return this->bv(0, expr1->getBitvectorSize());
+
+        /* Optimization: 1 * A = A */
+        if (!expr1->isSymbolized() && expr1->evaluate() == 1)
+          return expr2;
+
+        /* Optimization: A * 1 = A */
+        if (!expr2->isSymbolized() && expr2->evaluate() == 1)
+          return expr1;
       }
 
       SharedAbstractNode node = std::make_shared<BvmulNode>(expr1, expr2);
@@ -738,6 +749,14 @@ namespace triton {
         }
       }
 
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        /* Optimization: concatenate extractions in one if possible */
+        auto n = this->simplify_concat(std::vector<SharedAbstractNode>({expr1, expr2}));
+        if (n) {
+          return n;
+        }
+      }
+
       return this->collect(node);
     }
 
@@ -778,6 +797,13 @@ namespace triton {
       if (low == 0 && (high + 1) == expr->getBitvectorSize())
         return expr;
 
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+        auto n = this->simplify_extract(high, low, expr);
+        if (n) {
+          return n;
+        }
+      }
+
       SharedAbstractNode node = std::make_shared<ExtractNode>(high, low, expr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::extract(): Not enough memory.");
@@ -816,16 +842,18 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::ite(const SharedAbstractNode& ifExpr, const SharedAbstractNode& thenExpr, const SharedAbstractNode& elseExpr) {
+      if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS) ||
+          this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+        /* Optimization: False ? A : B => B, True ? A : B => A */
+        if (!ifExpr->isSymbolized()) {
+          return ifExpr->evaluate() ? thenExpr : elseExpr;
+        }
+      }
+
       SharedAbstractNode node = std::make_shared<IteNode>(ifExpr, thenExpr, elseExpr);
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::ite(): Not enough memory.");
       node->init();
-
-      if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
-        if (node->isSymbolized() == false && node->isLogical() == false) {
-          return this->bv(node->evaluate(), node->getBitvectorSize());
-        }
-      }
 
       return this->collect(node);
     }
@@ -995,7 +1023,7 @@ namespace triton {
         }
       }
       else {
-        throw triton::exceptions::Ast("AstContext::updateVariable(): Variable does not exist.");
+        throw triton::exceptions::Ast("AstContext::updateVariable(): This symbolic variable is not assigned at any AbstractNode or does not exist.");
       }
     }
 
@@ -1038,6 +1066,188 @@ namespace triton {
 
     std::ostream& AstContext::print(std::ostream& stream, AbstractNode* node) {
       return this->astRepresentation.print(stream, node);
+    }
+
+
+    SharedAbstractNode AstContext::simplify_concat(std::vector<SharedAbstractNode> exprs) {
+      /*
+       * Optimization: concatenate extractions in one if possible. We are
+       * trying to find out whether this is a concatenation of sequential
+       * extractions from the same AST. Thus, we can make only one extraction.
+       *
+       * (concat ((_ extract 31 24) a) ((_ extract 23 16) a)
+       *         ((_ extract 15 8) a) ((_ extract 7 0) a)) =>
+       * ((_ extract 31 0) a)
+       *
+       * So, we are examining whether we can replace concatenation with one
+       * extraction ((_ extract high low) ast_ref).
+       **/
+      uint32 high = 0;                  // target extraction upper bound
+      uint32 low = 1;                   // target extraction lower bound
+      SharedAbstractNode ast_ref = 0;   // target AST to extract from
+      SharedAbstractNode ast_node = 0;  // ast_ref with unrolled references
+
+      /* Try to join all extractions into one from the right to the left */
+      while (!exprs.empty()) {
+        /* Get the right most node */
+        auto n = exprs.back();
+        exprs.pop_back();
+
+        /* Returns the first non referene node encountered */
+        n = triton::ast::dereference(n);
+
+        if (n->getType() == CONCAT_NODE) {
+          /* Append concatenation children to the right */
+          for (const auto& part : n->getChildren()) {
+            exprs.push_back(part);
+          }
+          continue;
+        }
+
+        if (n->getType() != EXTRACT_NODE) {
+          /* We cannot optimize if at least one node is not an extract */
+          return 0;
+        }
+
+        /* Get extraction arguments */
+        const auto& childs = n->getChildren();
+        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        if (hi < lo) {
+          return 0;
+        }
+        n = childs[2];
+
+        /* Returns the first non referene node encountered */
+        n = triton::ast::dereference(n);
+
+        if (!ast_ref) {
+          /* First found extraction node */
+          high = hi;
+          low = lo;
+          ast_ref = childs[2];
+          ast_node = n;
+          continue;
+        }
+
+        /*
+         * Check that unrolled target AST is equal to extraction node child.
+         * Also, check that extraction lower bound connects with target
+         * extraction upper bound.
+         **/
+        if (high + 1 != lo || !n->equalTo(ast_node)) {
+          return 0;
+        }
+        high = hi;
+      }
+
+      if (high < low) {
+        return 0;
+      }
+
+      /* Perform target extraction */
+      return this->extract(high, low, ast_ref);
+    }
+
+
+    SharedAbstractNode AstContext::simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr) {
+      auto size = expr->getBitvectorSize();
+
+      if (high <= low || high >= size) {
+        return 0;
+      }
+
+      auto node = expr;
+      while (true) {
+        /* Returns the first non referene node encountered */
+        auto n = triton::ast::dereference(node);
+
+        if (n->getType() == CONCAT_NODE) {
+          /*
+           * Optimization: If we extract the full part of concatenation, just
+           * return the part. We are trying to find a part of concatenation
+           * that we can extract from. Thus, we can extract from only one part
+           * of concatenation.
+           *
+           * ((_ extract 11 9) (concat (_ bv1 8) (_ bv2 8) (_ bv3 8) (_ bv4 8))) =>
+           * ((_ extract 3 1) (_ bv3 8))
+           */
+          auto hi = n->getBitvectorSize() - 1;
+          bool found = false;
+          /* Search for part of concatenation we can extract from. Iterate
+           * from the left to the right. */
+          for (const auto& part : n->getChildren()) {
+            if (hi < high) {
+              /* Did not find a part we can extract from */
+              break;
+            }
+            auto sz = part->getBitvectorSize();
+            auto lo = hi + 1 - sz;
+            if (hi == high && lo == low) {
+              /* We are extracting the full part, just return it */
+              return part;
+            }
+            if (hi >= high && lo <= low) {
+              /* Extract from part: ((_ extract high-lo low-lo) part) */
+              node = part;
+              high -= lo;
+              low -= lo;
+              found = true;
+              break;
+            }
+            hi -= sz;
+          }
+          if (found) {
+            /* Optimize ((_ extract high low) node) one more time */
+            continue;
+          }
+        }
+        else if (n->getType() == ZX_NODE || n->getType() == SX_NODE) {
+          /*
+           * Optimization: If we extract from the node being extended, just
+           * return the node
+           *
+           * ((_ extract 31 0) ((_ zero_extend 32) (_ bv1 32))) => (_ bv1 32)
+           *
+           * ((_ extract 7 0) ((_ sign_extend 32) (_ bv1 32))) =>
+           * ((_ extract 7 0) (_ bv1 32))
+           **/
+          n = n->getChildren()[1];
+          auto sz = n->getBitvectorSize();
+          if (low == 0 && high + 1 == sz) {
+            /* Just return the node being extended */
+            return n;
+          }
+          if (high < sz) {
+            /* Optimize ((_ extract high low) n) one more time */
+            node = n;
+            continue;
+          }
+        }
+        break;
+      }
+
+      /* Returns the first non referene node encountered */
+      auto n = triton::ast::dereference(node);
+
+      /*
+       * Optimization: extract from extract is one extract
+       *
+       * ((_ extract high low) ((_ extract hi lo) a)) =>
+       * ((_ extract high+lo low+lo) a)
+       **/
+      if (n->getType() == EXTRACT_NODE) {
+        const auto& childs = n->getChildren();
+        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        if (lo + high <= hi) {
+          node = childs[2];
+          high += lo;
+          low += lo;
+        }
+      }
+
+      return node == expr ? 0 : this->extract(high, low, node);
     }
 
   }; /* ast namespace */

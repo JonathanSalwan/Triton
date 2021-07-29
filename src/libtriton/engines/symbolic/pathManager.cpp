@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/astContext.hpp>
@@ -35,9 +35,52 @@ namespace triton {
       }
 
 
+      triton::usize PathManager::getSizeOfPathConstraints(void) const {
+        return this->pathConstraints.size();
+      }
+
+
       /* Returns the logical conjunction vector of path constraint */
       const std::vector<triton::engines::symbolic::PathConstraint>& PathManager::getPathConstraints(void) const {
         return this->pathConstraints;
+      }
+
+
+      /* Returns the logical conjunction vector of path constraint of a given thread */
+      std::vector<triton::engines::symbolic::PathConstraint> PathManager::getPathConstraintsOfThread(triton::uint32 threadId) const {
+        std::vector<triton::engines::symbolic::PathConstraint> ret;
+
+        for (auto& pc : this->pathConstraints) {
+          if (pc.getThreadId() == threadId) {
+            ret.push_back(pc);
+          }
+        }
+
+        return ret;
+      }
+
+
+      /* Returns the logical conjunction vector of path constraint from a given range */
+      std::vector<triton::engines::symbolic::PathConstraint> PathManager::getPathConstraints(triton::usize start, triton::usize end) const {
+        triton::usize pcsize = this->getSizeOfPathConstraints();
+
+        if (start > pcsize) {
+          return {};
+        }
+
+        if (start < pcsize && end > pcsize) {
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator first = this->pathConstraints.begin() + start;
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator last  = this->pathConstraints.end();
+          return {first, last};
+        }
+
+        if (start < pcsize && end < pcsize && end > start) {
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator first = this->pathConstraints.begin() + start;
+          std::vector<triton::engines::symbolic::PathConstraint>::const_iterator last  = this->pathConstraints.begin() + end;
+          return {first, last};
+        }
+
+        throw triton::exceptions::PathManager("PathManager::getPathConstraints(): Invalid items extraction.");
       }
 
 
@@ -138,16 +181,22 @@ namespace triton {
         if (pc->getType() == triton::ast::ZX_NODE)
           pc = pc->getChildren()[1];
 
+        /* Setting the thread id */
+        pco.setThreadId(inst.getThreadId());
+
         /* Multiple branches */
         if (pc->getType() == triton::ast::ITE_NODE) {
+          /* Condition */
+          triton::ast::SharedAbstractNode cond = pc->getChildren()[0];
+
+          /* Then */
           triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
+          triton::ast::SharedAbstractNode bb1pc = cond;
+
+          /* Else */
           triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
+          triton::ast::SharedAbstractNode bb2pc = this->astCtxt->lnot(cond);
 
-          triton::ast::SharedAbstractNode bb1pc = (bb1 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
-                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
-
-          triton::ast::SharedAbstractNode bb2pc = (bb2 == dstAddr) ? this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)) :
-                                                                     this->astCtxt->lnot(this->astCtxt->equal(pc, this->astCtxt->bv(dstAddr, size)));
           /* Branch A */
           pco.addBranchConstraint(
             bb1 == dstAddr, /* is taken ? */
@@ -181,12 +230,16 @@ namespace triton {
       }
 
 
-      /* Pushs constraints to the current path predicate. */
+      /* Pushes constraint created from node to the current path predicate. */
       void PathManager::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
         triton::engines::symbolic::PathConstraint pco;
 
         if (node->isLogical() == false)
           throw triton::exceptions::PathManager("PathManager::pushPathConstraint(): The node must be a logical node.");
+
+        /* If PC_TRACKING_SYMBOLIC is enabled, Triton will track path constraints only if they are symbolized. */
+        if (this->modes->isModeEnabled(triton::modes::PC_TRACKING_SYMBOLIC) && !node->isSymbolized())
+          return;
 
         pco.addBranchConstraint(
           true, /* always taken   */
@@ -195,6 +248,12 @@ namespace triton {
           node  /* expr which must be true to take the branch */
         );
 
+        this->pathConstraints.push_back(pco);
+      }
+
+
+      /* Pushes constraint to the current path predicate. */
+      void PathManager::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco) {
         this->pathConstraints.push_back(pco);
       }
 

@@ -45,19 +45,12 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
         set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
     endif()
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register -Wno-parentheses-equality")
     endif()
 endif()
 
 # Enable preprocessor output
 # set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --save-temps")
-
-# 32-bits
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    if(${ARCHITECTURE} STREQUAL "i386")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-    endif()
-endif()
 
 # Add Triton includes
 include_directories("${CMAKE_CURRENT_LIST_DIR}/includes")
@@ -174,6 +167,7 @@ set(LIBTRITON_RESOURCE_FILES
     includes/triton/arm32.spec
     includes/triton/x86.spec
     includes/triton/version.hpp.in
+    includes/triton/config.hpp.in
 )
 
 if(Z3_INTERFACE)
@@ -203,6 +197,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initPrefixesNamespace.cpp
         bindings/python/namespaces/initRegNamespace.cpp
         bindings/python/namespaces/initShiftsNamespace.cpp
+        bindings/python/namespaces/initSolverNamespace.cpp
         bindings/python/namespaces/initSymbolicNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
@@ -236,8 +231,17 @@ endif()
 # Triton have to generate a syscalls table from the kernel source
 # This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
-    FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
+    if(EXISTS "/usr/include/*unistd_32.h")
+       FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
+    else()
+       FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd.h)
+    endif()
+
+    if(EXISTS "/usr/include/*unistd_32.h")
+        FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
+    else()
+       FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd.h)
+    endif()
 endif()
 
 macro(find_osx_syscall path)
@@ -303,6 +307,13 @@ endif()
 configure_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/version.hpp.in
     ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp
+    IMMEDIATE @ONLY
+)
+
+# We generate the config header based on configuation of CMake
+configure_file(
+    ${CMAKE_CURRENT_SOURCE_DIR}/includes/triton/config.hpp.in
+    ${CMAKE_CURRENT_BINARY_DIR}/includes/triton/config.hpp
     IMMEDIATE @ONLY
 )
 

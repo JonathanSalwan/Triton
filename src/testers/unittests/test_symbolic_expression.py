@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 """Test Symbolic Expression."""
 
@@ -37,7 +37,7 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_getComment(self):
         """Test getComment"""
-        self.assertEqual(self.expr1.getComment(), "XOR operation")
+        self.assertEqual(self.expr1.getComment(), "XOR operation - 0x0: xor rax, rbx")
 
     def test_getId(self):
         """Test getId"""

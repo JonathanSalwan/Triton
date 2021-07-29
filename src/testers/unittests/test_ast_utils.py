@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 """Test AST utils."""
 
@@ -48,3 +48,10 @@ class TestAstUtils(unittest.TestCase):
 
         l = self.astCtxt.search(n, AST_NODE.BV)
         self.assertEqual(len(l), 2)
+
+    def test_dereference(self):
+        r1 = self.astCtxt.reference(self.ctx.newSymbolicExpression(self.v1, "r1"))
+        r2 = self.astCtxt.reference(self.ctx.newSymbolicExpression(r1, "r2"))
+        self.assertEqual(str(self.astCtxt.dereference(r2)), "SymVar_0")
+        self.assertEqual(str(self.astCtxt.dereference(r1)), "SymVar_0")
+        self.assertEqual(str(self.astCtxt.dereference(self.v1)), "SymVar_0")

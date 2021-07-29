@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_API_H
@@ -23,6 +23,7 @@
 #include <triton/register.hpp>
 #include <triton/shortcutRegister.hpp>
 #include <triton/solverEngine.hpp>
+#include <triton/solverEnums.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
@@ -132,6 +133,9 @@ namespace triton {
         //! [**architecture api**] - Returns Register from regId.
         TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
 
+        //! [**architecture api**] - Returns Register from its name.
+        TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
+
         //! [**architecture api**] - Returns parent Register from a register.
         TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
 
@@ -232,6 +236,12 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
+        //! [**architecture api**] - Disassembles a concrete memory area and returns a list of at most `count` disassembled instructions.
+        TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
+
+        //! [**architecture api**] - Disassembles a concrete memory area from `addr` to control flow instruction and returns a list of disassembled instructions.
+        TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr) const;
+
 
 
         /* Processing API ================================================================================ */
@@ -272,38 +282,18 @@ namespace triton {
 
         /* Callbacks API ================================================================================= */
 
-        //! [**callbacks api**] - Adds a GET_CONCRETE_MEMORY_VALUE callback (LOAD).
-        TRITON_EXPORT void addCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
+        //! [**callbacks api**] - Adds a callback.
+        template <typename T> void addCallback(triton::callbacks::callback_e kind, T cb) {
+          this->callbacks.addCallback(kind, cb);
+        }
 
-        //! [**callbacks api**] - Adds a GET_CONCRETE_REGISTER_VALUE callback (GET).
-        TRITON_EXPORT void addCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
-
-        //! [**callbacks api**] - Adds a SET_CONCRETE_MEMORY_VALUE callback (STORE).
-        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
-
-        //! [**callbacks api**] - Adds a SET_CONCRETE_REGISTER_VALUE callback (PUT).
-        TRITON_EXPORT void addCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
-
-        //! [**callbacks api**] - Adds a SYMBOLIC_SIMPLIFICATION callback.
-        TRITON_EXPORT void addCallback(triton::callbacks::symbolicSimplificationCallback cb);
+        //! [**callbacks api**] - Removes a callback.
+        template <typename T> void removeCallback(triton::callbacks::callback_e kind, T cb) {
+          this->callbacks.removeCallback(kind, cb);
+        }
 
         //! [**callbacks api**] - Clears recorded callbacks.
         TRITON_EXPORT void clearCallbacks(void);
-
-        //! [**callbacks api**] - Deletes a GET_CONCRETE_MEMORY_VALUE callback (LOAD).
-        TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb);
-
-        //! [**callbacks api**] - Deletes a GET_CONCRETE_REGISTER_VALUE callback (GET).
-        TRITON_EXPORT void removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb);
-
-        //! [**callbacks api**] - Deletes a SET_CONCRETE_MEMORY_VALUE callback (STORE).
-        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb);
-
-        //! [**callbacks api**] - Deletes a SET_CONCRETE_REGISTER_VALUE callback (PUT).
-        TRITON_EXPORT void removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb);
-
-        //! [**callbacks api**] - Deletes a SYMBOLIC_SIMPLIFICATION callback.
-        TRITON_EXPORT void removeCallback(triton::callbacks::symbolicSimplificationCallback cb);
 
         //! [**callbacks api**] - Processes callbacks according to the kind and the C++ polymorphism.
         TRITON_EXPORT triton::ast::SharedAbstractNode processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node);
@@ -424,14 +414,26 @@ namespace triton {
         //! [**symbolic api**] - Returns the logical conjunction vector of path constraints.
         TRITON_EXPORT const std::vector<triton::engines::symbolic::PathConstraint>& getPathConstraints(void) const;
 
+        //! [**symbolic api**] - Returns the logical conjunction vector of path constraints from a given range.
+        TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraints(triton::usize start, triton::usize end) const;
+
+        //! [**symbolic api**] - Returns the logical conjunction vector of path constraint of a given thread.
+        TRITON_EXPORT std::vector<triton::engines::symbolic::PathConstraint> getPathConstraintsOfThread(triton::uint32 threadId) const;
+
         //! [**symbolic api**] - Returns the current path predicate as an AST of logical conjunction of each taken branch.
         TRITON_EXPORT triton::ast::SharedAbstractNode getPathPredicate(void);
 
         //! [**symbolic api**] - Returns path predicates which may reach the targeted address.
         TRITON_EXPORT std::vector<triton::ast::SharedAbstractNode> getPredicatesToReachAddress(triton::uint64 addr);
 
-        //! [**symbolic api**] - Pushs constraints to the current path predicate.
+        //! [**symbolic api**] - Returns the size of the path constraints
+        TRITON_EXPORT triton::usize getSizeOfPathConstraints(void) const;
+
+        //! [**symbolic api**] - Pushes constraint created from node to the current path predicate.
         TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
+
+        //! [**symbolic api**] - Pushes constraint to the current path predicate.
+        TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco);
 
         //! [**symbolic api**] - Pops the last constraints added to the path predicate.
         TRITON_EXPORT void popPathConstraint(void);
@@ -484,6 +486,9 @@ namespace triton {
         //! [**symbolic api**] - Slices all expressions from a given one.
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
+        //! [**symbolic api**] - Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
+        TRITON_EXPORT std::ostream& printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_=false);
+
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
@@ -510,7 +515,7 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::solver::SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const;
+        TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::solver::SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
         /*!
          * \brief [**solver api**] - Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
@@ -519,10 +524,10 @@ namespace triton {
          * **item1**: symbolic variable id<br>
          * **item2**: model
          */
-        TRITON_EXPORT std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+        TRITON_EXPORT std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const;
 
         //! Returns true if an expression is satisfiable.
-        TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
+        TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
         //! Returns the kind of solver as triton::engines::solver::solver_e.
         TRITON_EXPORT triton::engines::solver::solver_e getSolver(void) const;
@@ -544,6 +549,12 @@ namespace triton {
 
         //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
+
+        //! [**solver api**] - Defines a solver timeout (in milliseconds).
+        TRITON_EXPORT void setSolverTimeout(triton::uint32 ms);
+
+        //! [**solver api**] - Defines a solver memory consumption limit (in megabytes).
+        TRITON_EXPORT void setSolverMemoryLimit(triton::uint32 limit);
 
 
 

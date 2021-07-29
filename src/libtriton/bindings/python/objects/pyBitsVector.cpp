@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/pythonObjects.hpp>
@@ -116,10 +116,12 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3_8) || !IS_PY3_8
       static int BitsVector_print(PyObject* self, void* io, int s) {
         std::cout << PyBitsVector_AsBitsVector(self);
         return 0;
       }
+      #endif
 
 
       static PyObject* BitsVector_str(PyObject* self) {
@@ -150,7 +152,11 @@ namespace triton {
         sizeof(BitsVector_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)BitsVector_dealloc,             /* tp_dealloc */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall_offset */
+        #else
         (printfunc)BitsVector_print,                /* tp_print */
+        #endif
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -192,10 +198,16 @@ namespace triton {
         0,                                          /* tp_weaklist */
         0,                                          /* tp_del */
         #if IS_PY3
-        0,                                          /* tp_version_tag */
-        0,                                          /* tp_finalize */
+          0,                                        /* tp_version_tag */
+          0,                                        /* tp_finalize */
+          #if IS_PY3_8
+            0,                                      /* tp_vectorcall */
+            #if !IS_PY3_9
+              0,                                    /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
+            #endif
+          #endif
         #else
-        0                                           /* tp_version_tag */
+          0                                         /* tp_version_tag */
         #endif
       };
 

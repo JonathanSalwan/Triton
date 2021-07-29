@@ -2,15 +2,16 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_ARCHITECTURE_H
 #define TRITON_ARCHITECTURE_H
 
-#include <set>
-#include <vector>
 #include <memory>
+#include <set>
+#include <string>
+#include <vector>
 
 #include <triton/archEnums.hpp>
 #include <triton/callbacks.hpp>
@@ -116,6 +117,9 @@ namespace triton {
         //! Returns register from id.
         TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
 
+        //! Returns register from name.
+        TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
+
         //! Returns parent register from id.
         TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
 
@@ -130,6 +134,12 @@ namespace triton {
 
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
+
+        //! Disassembles a concrete memory area and returns a list of at most `count` disassembled instructions.
+        TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
+
+        //! Disassembles a concrete memory area from `addr` to control flow instruction and returns a list of disassembled instructions.
+        TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr) const;
 
         //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);

@@ -2,13 +2,14 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_X86CPU_HPP
 #define TRITON_X86CPU_HPP
 
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -22,8 +23,6 @@
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
 #include <triton/x86Specifications.hpp>
-
-
 
 //! The Triton namespace
 namespace triton {
@@ -72,10 +71,11 @@ namespace triton {
           /*! \brief map of address -> concrete value
            *
            * \details
+           *
            * **item1**: memory address<br>
            * **item2**: concrete value
            */
-          std::unordered_map<triton::uint64, triton::uint8> memory;
+          std::unordered_map<triton::uint64, triton::uint8, IdentityHash<triton::uint64>> memory;
 
           //! Concrete value of eax
           triton::uint8 eax[triton::size::dword];
@@ -261,6 +261,7 @@ namespace triton {
           TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
           TRITON_EXPORT const triton::arch::Register& getProgramCounter(void) const;
           TRITON_EXPORT const triton::arch::Register& getRegister(triton::arch::register_e id) const;
+          TRITON_EXPORT const triton::arch::Register& getRegister(const std::string& name) const;
           TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
           TRITON_EXPORT std::set<const triton::arch::Register*> getParentRegisters(void) const;
           TRITON_EXPORT std::vector<triton::uint8> getConcreteMemoryAreaValue(triton::uint64 baseAddr, triton::usize size, bool execCallbacks=true) const;

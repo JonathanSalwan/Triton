@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_AST_H
@@ -821,6 +821,9 @@ namespace triton {
 
     //! Returns a deque of collected matched nodes via a depth-first pre order traversal.
     TRITON_EXPORT std::deque<SharedAbstractNode> search(const SharedAbstractNode& node, triton::ast::ast_e match=ANY_NODE);
+
+    //! Returns the first non referene node encountered.
+    TRITON_EXPORT SharedAbstractNode dereference(const SharedAbstractNode& node);
 
   /*! @} End of ast namespace */
   };

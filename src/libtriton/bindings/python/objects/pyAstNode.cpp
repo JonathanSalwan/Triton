@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/pythonObjects.hpp>
@@ -72,6 +72,9 @@ Returns the hash (signature) of the AST.
 
 - <b>integer getInteger(void)</b><br>
 Returns the integer of the node. Only available on `INTEGER_NODE`, raises an exception otherwise.
+
+- <b>integer getLevel(void)</b><br>
+Returns the deep level of the AST.
 
 - <b>[\ref py_AstNode_page, ...] getParents(void)</b><br>
 Returns the parents list nodes. The list is empty if there is no parent defined yet.
@@ -233,6 +236,16 @@ namespace triton {
       }
 
 
+      static PyObject* AstNode_getLevel(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getLevel());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* AstNode_getParents(PyObject* self, PyObject* noarg) {
         try {
           PyObject* ret = nullptr;
@@ -370,10 +383,12 @@ namespace triton {
       }
 
 
+      #if !defined(IS_PY3_8) || !IS_PY3_8
       static int AstNode_print(PyObject* self, void* io, int s) {
         std::cout << PyAstNode_AsAstNode(self);
         return 0;
       }
+      #endif
 
 
       #if !defined(IS_PY3) || !IS_PY3
@@ -394,7 +409,7 @@ namespace triton {
 
 
       static long AstNode_hash(PyObject* self) {
-        return reinterpret_cast<long>(reinterpret_cast<void*>(PyAstNode_AsAstNode(self).get()));
+        return static_cast<long>(reinterpret_cast<intptr_t>(PyAstNode_AsAstNode(self).get()) & 0xffffffff);
       }
 
 
@@ -741,46 +756,54 @@ namespace triton {
 
 
       static PyObject* AstNode_richcompare(PyObject* self, PyObject* other, int op) {
+        triton::ast::SharedAbstractNode node1 = PyAstNode_AsAstNode(self);
+        triton::ast::SharedAbstractNode node2 = nullptr;
         PyObject* result = nullptr;
 
         if (PyLong_Check(other) || PyInt_Check(other)) {
           triton::uint512 value = PyLong_AsUint512(other);
           triton::uint32 size   = PyAstNode_AsAstNode(self)->getBitvectorSize();
-          if (size)
-            other = PyAstNode(PyAstNode_AsAstNode(self)->getContext()->bv(value, size));
-        }
-
-        if (!PyAstNode_Check(other)) {
-          result = Py_NotImplemented;
-        }
-
-        else {
-          auto node1 = PyAstNode_AsAstNode(self);
-          auto node2 = PyAstNode_AsAstNode(other);
-
-          switch (op) {
-            case Py_LT:
-                result = PyAstNode(node1->getContext()->bvult(node1, node2));
-                break;
-            case Py_LE:
-                result = PyAstNode(node1->getContext()->bvule(node1, node2));
-                break;
-            case Py_EQ:
-                result = PyAstNode(node1->getContext()->equal(node1, node2));
-                break;
-            case Py_NE:
-                result = PyAstNode(node1->getContext()->lnot(node1->getContext()->equal(node1, node2)));
-                break;
-            case Py_GT:
-                result = PyAstNode(node1->getContext()->bvugt(node1, node2));
-                break;
-            case Py_GE:
-                result = PyAstNode(node1->getContext()->bvuge(node1, node2));
-                break;
+          if (size) {
+            node2 = PyAstNode_AsAstNode(self)->getContext()->bv(value, size);
           }
         }
 
-        Py_INCREF(result);
+        else if (PyAstNode_Check(other)) {
+          node2 = PyAstNode_AsAstNode(other);
+        }
+
+        else {
+          result = Py_NotImplemented;
+          Py_INCREF(result);
+          return result;
+        }
+
+        switch (op) {
+          case Py_LT:
+              result = PyAstNode(node1->getContext()->bvult(node1, node2));
+              break;
+          case Py_LE:
+              result = PyAstNode(node1->getContext()->bvule(node1, node2));
+              break;
+          case Py_EQ:
+              result = PyAstNode(node1->getContext()->equal(node1, node2));
+              break;
+          case Py_NE:
+              result = PyAstNode(node1->getContext()->lnot(node1->getContext()->equal(node1, node2)));
+              break;
+          case Py_GT:
+              result = PyAstNode(node1->getContext()->bvugt(node1, node2));
+              break;
+          case Py_GE:
+              result = PyAstNode(node1->getContext()->bvuge(node1, node2));
+              break;
+          default:
+            result = Py_NotImplemented;
+            Py_INCREF(result);
+            Py_DECREF(other);
+            return result;
+        }
+
         return result;
       }
 
@@ -804,6 +827,7 @@ namespace triton {
         {"getChildren",             AstNode_getChildren,            METH_NOARGS,     ""},
         {"getHash",                 AstNode_getHash,                METH_NOARGS,     ""},
         {"getInteger",              AstNode_getInteger,             METH_NOARGS,     ""},
+        {"getLevel",                AstNode_getLevel,               METH_NOARGS,     ""},
         {"getParents",              AstNode_getParents,             METH_NOARGS,     ""},
         {"getString",               AstNode_getString,              METH_NOARGS,     ""},
         {"getSymbolicExpression",   AstNode_getSymbolicExpression,  METH_NOARGS,     ""},
@@ -879,7 +903,11 @@ namespace triton {
         sizeof(AstNode_Object),                     /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)AstNode_dealloc,                /* tp_dealloc */
+        #if IS_PY3_8
+        0,                                          /* tp_vectorcall_offset */
+        #else
         (printfunc)AstNode_print,                   /* tp_print */
+        #endif
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         #if defined(IS_PY3) && IS_PY3
@@ -925,10 +953,16 @@ namespace triton {
         0,                                          /* tp_weaklist */
         0,                                          /* tp_del */
         #if IS_PY3
-        0,                                          /* tp_version_tag */
-        0,                                          /* tp_finalize */
+          0,                                        /* tp_version_tag */
+          0,                                        /* tp_finalize */
+          #if IS_PY3_8
+            0,                                      /* tp_vectorcall */
+            #if !IS_PY3_9
+              0,                                    /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
+            #endif
+          #endif
         #else
-        0                                           /* tp_version_tag */
+          0                                         /* tp_version_tag */
         #endif
       };
 

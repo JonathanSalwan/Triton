@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 
 from __future__        import print_function
@@ -754,6 +754,14 @@ CODE  = [
     (None, b"\x66\x48\x0F\x3A\x22\xC8\x01",               "pinsrq xmm1, rax, 1"),
     (None, b"\xC5\xF9\xEB\xC1",                           "vpor xmm0, xmm0, xmm1"),
 
+    (None, b"\xbb\x10\x00\x30\x00",                       "mov ebx, 0x300010"),
+    (None, b"\xb8\x20\x00\x30\x00",                       "mov eax, 0x300020"),
+    (None, b"\xc7\x03\x10\x00\x00\x00",                   "mov [ebx], 0x10"),
+    (None, b"\x66\x0f\xef\xc0",                           "pxor xmm0, xmm0"),
+    (None, b"\x66\x0f\xef\xc9",                           "pxor xmm1, xmm1"),
+    (None, b"\xf3\x0f\x10\xc1",                           "movss xmm1, xmm0"),
+    (None, b"\xf3\x0f\x11\x03",                           "movss xmm0, [ebx]"),
+    (None, b"\xf3\x0f\x10\x03",                           "movss [eax], xmm0"),
     (None, b"\x48\xB8\xEC\xE3\x96\xE1\x44\x6F\xE9\xBD",   "mov rax, BDE96F44E196E3EC"),
     (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
     (None, b"\x48\xB8\xB2\x7D\xB6\x97\xE7\xB8\x50\xA5",   "mov rax, A550B8E797B67DB2"),

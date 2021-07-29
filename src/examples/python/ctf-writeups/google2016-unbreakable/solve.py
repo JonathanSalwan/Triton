@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2018-10-26
@@ -9,7 +9,7 @@
 ##
 ##  Output:
 ##
-##  $ time python ./solve.py
+##  $ time python3 ./solve.py
 ##  [+] Loading 0x400040 - 0x400200
 ##  [+] Loading 0x400200 - 0x40021c
 ##  [+] Loading 0x400000 - 0x403df4
@@ -32,7 +32,7 @@
 ##  Thank you - product activated!
 ##  [+] exit hooked
 ##  Flag: CTF{0The1Quick2Brown3Fox4Jumped5Over6The7Lazy8Fox9}
-##  python ./solve.py  14.32s user 0.03s system 99% cpu 14.363 total
+##  python3 solve.py  8.04s user 0.02s system 99% cpu 8.060 total
 ##
 
 from __future__ import print_function
@@ -389,10 +389,6 @@ def makeRelocation(ctx, binary):
 
 
 def run(ctx, binary):
-    # Concretize previous context
-    ctx.concretizeAllMemory()
-    ctx.concretizeAllRegister()
-
     # Define a fake stack
     ctx.setConcreteRegisterValue(ctx.registers.rbp, BASE_STACK)
     ctx.setConcreteRegisterValue(ctx.registers.rsp, BASE_STACK)
@@ -429,7 +425,7 @@ def main():
 
     # Init and emulate
     run(ctx, binary)
-    return 0
+    return -1
 
 
 if __name__ == '__main__':

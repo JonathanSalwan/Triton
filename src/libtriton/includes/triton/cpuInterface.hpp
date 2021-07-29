@@ -2,13 +2,14 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_CPUINTERFACE_HPP
 #define TRITON_CPUINTERFACE_HPP
 
 #include <set>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
@@ -87,6 +88,9 @@ namespace triton {
 
         //! Returns register from id
         TRITON_EXPORT virtual const triton::arch::Register& getRegister(triton::arch::register_e id) const = 0;
+
+        //! Returns register from name.
+        TRITON_EXPORT virtual const triton::arch::Register& getRegister(const std::string& name) const = 0;
 
         //! Returns the program counter register
         TRITON_EXPORT virtual const triton::arch::Register& getProgramCounter(void) const = 0;

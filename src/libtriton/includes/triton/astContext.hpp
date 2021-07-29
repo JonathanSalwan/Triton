@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_AST_CONTEXT_H
@@ -63,6 +63,12 @@ namespace triton {
 
         //! The list of nodes
         std::deque<SharedAbstractNode> nodes;
+
+        //! Returns simplified concatenation.
+        SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs);
+
+        //! Returns simplified extraction.
+        SharedAbstractNode simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr);
 
       public:
         //! Constructor
@@ -203,6 +209,21 @@ namespace triton {
           if (node == nullptr)
             throw triton::exceptions::Ast("Node builders - Not enough memory");
           node->init();
+
+          if (this->modes->isModeEnabled(triton::modes::CONSTANT_FOLDING)) {
+            if (node->isSymbolized() == false) {
+              return this->bv(node->evaluate(), node->getBitvectorSize());
+            }
+          }
+
+          if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
+            /* Optimization: concatenate extractions in one if possible */
+            auto n = this->simplify_concat(std::vector<SharedAbstractNode>(exprs.begin(), exprs.end()));
+            if (n) {
+              return n;
+            }
+          }
+
           return this->collect(node);
         }
 

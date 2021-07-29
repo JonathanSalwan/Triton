@@ -12,10 +12,8 @@ project(triton)
 # Define cmake options
 option(ASAN "Enable the ASAN linking" OFF)
 option(GCOV "Enable code coverage" OFF)
-option(INCBUILD "Increment the build number" OFF)
 option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
 option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(PYTHON36 "Python 36" ON)
 option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
@@ -26,14 +24,6 @@ if(STATICLIB)
     set(PYTHON_BINDINGS OFF)
 endif()
 
-if(PINTOOL AND NOT PYTHON_BINDINGS)
-    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
-endif()
-
-if(PINTOOL AND PYTHON36)
-    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
-endif()
-
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 #Enable ctest
@@ -42,10 +32,8 @@ include(CTest)
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
 if(PYTHON_BINDINGS)
-    if(PYTHON36)
+    if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
-    else()
-        set(PYTHON_VERSION 2.7)
     endif()
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     add_custom_target(test-python
@@ -56,6 +44,14 @@ else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
     )
+endif()
+
+if(PINTOOL AND NOT PYTHON_BINDINGS)
+    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
+endif()
+
+if(PINTOOL AND NOT "${PYTHON_VERSION_STRING}" MATCHES "2.7")
+    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
@@ -110,22 +106,23 @@ else()
     set(ARCHITECTURE i386)
 endif()
 
-if(${TARGET} MATCHES "ia32")
+if(NOT ${ARCHITECTURE} STREQUAL "i386" AND "${TARGET}" MATCHES "ia32")
     set(ARCHITECTURE i386)
-endif()
-
-# Triton version
-if(INCBUILD)
-    # Get and increment the build number
-    file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
-    math(EXPR NEW_BUILD_NUMBER "${BUILD_NUMBER} + 1")
-    file(WRITE ${TRITON_ROOT}/.build_number ${NEW_BUILD_NUMBER})
+    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+        # Set appropriate compile and linker flags
+        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
+        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
+        if(NOT STATICLIB)
+            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32")
+        endif()
+        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
+    endif()
 endif()
 
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
 set(VERSION_MAJOR 0)
-set(VERSION_MINOR 8)
+set(VERSION_MINOR 9)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 # Custom cmake search
@@ -167,6 +164,7 @@ if(Z3_INTERFACE)
         endif()
     endif()
     include_directories(${Z3_INCLUDE_DIRS})
+    set(TRITON_Z3_INTERFACE ON)
 endif()
 
 # Find Capstone

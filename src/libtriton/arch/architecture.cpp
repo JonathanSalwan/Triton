@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <new>
@@ -205,6 +205,13 @@ namespace triton {
     }
 
 
+    const triton::arch::Register& Architecture::getRegister(const std::string& name) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getRegister(): You must define an architecture.");
+      return this->cpu->getRegister(name);
+    }
+
+
     const triton::arch::Register& Architecture::getParentRegister(const triton::arch::Register& reg) const {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::getParentRegister(): You must define an architecture.");
@@ -223,6 +230,43 @@ namespace triton {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::disassembly(): You must define an architecture.");
       this->cpu->disassembly(inst);
+    }
+
+
+    std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr, triton::usize count) const {
+      std::vector<triton::arch::Instruction> ret;
+      ret.reserve(count);
+
+      while (count--) {
+        if (!this->isConcreteMemoryValueDefined(addr)) {
+          break;
+        }
+        auto opcodes = this->getConcreteMemoryAreaValue(addr, 16);
+        auto inst = triton::arch::Instruction(addr, reinterpret_cast<triton::uint8*>(opcodes.data()), opcodes.size());
+        this->disassembly(inst);
+        ret.push_back(inst);
+        addr += inst.getSize();
+      }
+
+      return ret;
+    }
+
+
+    std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr) const {
+      std::vector<triton::arch::Instruction> ret;
+
+      do {
+        if (!this->isConcreteMemoryValueDefined(addr)) {
+          break;
+        }
+        auto opcodes = this->getConcreteMemoryAreaValue(addr, 16);
+        auto inst = triton::arch::Instruction(addr, reinterpret_cast<triton::uint8*>(opcodes.data()), opcodes.size());
+        this->disassembly(inst);
+        ret.push_back(inst);
+        addr += inst.getSize();
+      } while (!ret.back().isControlFlow());
+
+      return ret;
     }
 
 

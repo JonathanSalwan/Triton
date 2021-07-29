@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_ARM32SEMANTICS_H
@@ -76,7 +76,7 @@ namespace triton {
 
           private:
             //! Rotates right.
-            uint32_t ror(uint32_t value, unsigned int count);
+            triton::uint32 ror(triton::uint32 value, triton::uint32 count);
 
             //! Execution state update semantics.
             void updateExecutionState(triton::arch::OperandWrapper& dst, const triton::ast::SharedAbstractNode& node);
@@ -264,6 +264,9 @@ namespace triton {
             //! The ADD semantics.
             void add_s(triton::arch::Instruction& inst);
 
+            //! The ADR semantics.
+            void adr_s(triton::arch::Instruction& inst);
+
             //! The AND semantics.
             void and_s(triton::arch::Instruction& inst);
 
@@ -272,6 +275,9 @@ namespace triton {
 
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
+
+            //! The BFI semantics.
+            void bfi_s(triton::arch::Instruction& inst);
 
             //! The BIC semantics.
             void bic_s(triton::arch::Instruction& inst);
@@ -285,8 +291,14 @@ namespace triton {
             //! The CBZ semantics.
             void cbz_s(triton::arch::Instruction& inst);
 
+            //! The CBNZ semantics.
+            void cbnz_s(triton::arch::Instruction& inst);
+
             //! The CLZ semantics.
             void clz_s(triton::arch::Instruction& inst);
+
+            //! The CMN semantics.
+            void cmn_s(triton::arch::Instruction& inst);
 
             //! The CMP semantics.
             void cmp_s(triton::arch::Instruction& inst);
@@ -303,6 +315,15 @@ namespace triton {
             //! The LDRB semantics.
             void ldrb_s(triton::arch::Instruction& inst);
 
+            //! The LDRH semantics.
+            void ldrh_s(triton::arch::Instruction& inst);
+
+            //! The LDRSB semantics.
+            void ldrsb_s(triton::arch::Instruction& inst);
+
+            //! The LDRSH semantics.
+            void ldrsh_s(triton::arch::Instruction& inst);
+
             //! The LDRD semantics.
             void ldrd_s(triton::arch::Instruction& inst);
 
@@ -315,11 +336,20 @@ namespace triton {
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 
+            //! The MOVT semantics.
+            void movt_s(triton::arch::Instruction& inst);
+
             //! The MUL semantics.
             void mul_s(triton::arch::Instruction& inst);
 
             //! The MVN semantics.
             void mvn_s(triton::arch::Instruction& inst);
+
+            //! The NOP semantics.
+            void nop_s(triton::arch::Instruction& inst);
+
+            //! The ORN semantics.
+            void orn_s(triton::arch::Instruction& inst);
 
             //! The ORR semantics.
             void orr_s(triton::arch::Instruction& inst);
@@ -329,6 +359,12 @@ namespace triton {
 
             //! The PUSH semantics.
             void push_s(triton::arch::Instruction& inst);
+
+            //! The RBIT semantics.
+            void rbit_s(triton::arch::Instruction& inst);
+
+            //! The REV16 semantics.
+            void rev16_s(triton::arch::Instruction& inst);
 
             //! The REV semantics.
             void rev_s(triton::arch::Instruction& inst);
@@ -347,6 +383,12 @@ namespace triton {
 
             //! The SBC semantics.
             void sbc_s(triton::arch::Instruction& inst);
+
+            //! The SBFX semantics.
+            void sbfx_s(triton::arch::Instruction& inst);
+
+            //! The SDIV semantics.
+            void sdiv_s(triton::arch::Instruction& inst);
 
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
@@ -372,8 +414,33 @@ namespace triton {
             //! The SUB semantics.
             void sub_s(triton::arch::Instruction& inst);
 
+            //! The SXTB semantics.
+            void sxtb_s(triton::arch::Instruction &inst);
+
+            //! The SXTH semantics.
+            void sxth_s(triton::arch::Instruction &inst);
+
             //! The TST semantics.
             void tst_s(triton::arch::Instruction& inst);
+
+            //! The TEQ semantics.
+            void teq_s(triton::arch::Instruction& inst);
+
+            //! The UBFX semantics.
+            void ubfx_s(triton::arch::Instruction &inst);
+
+            //! The UDIV semantics.
+            void udiv_s(triton::arch::Instruction& inst);
+
+            //! The UMULL semantics.
+            void umull_s(triton::arch::Instruction& inst);
+
+            //! The UXTB semantics.
+            void uxtb_s(triton::arch::Instruction & inst);
+
+            //! The UXTH semantics.
+            void uxth_s(triton::arch::Instruction & inst);
+
         };
 
       /*! @} End of arm32 namespace */

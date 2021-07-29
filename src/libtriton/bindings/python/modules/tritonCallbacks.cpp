@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/pythonBindings.hpp>
@@ -59,6 +59,7 @@ to wrap more generic concepts.
 - \ref py_PREFIX_page
 - \ref py_REG_page
 - \ref py_SHIFT_page
+- \ref py_SOLVER_page
 - \ref py_SYMBOLIC_page
 - \ref py_SYSCALL_page
 - \ref py_VERSION_page

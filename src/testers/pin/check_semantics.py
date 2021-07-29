@@ -4,6 +4,7 @@ from triton     import *
 
 import pintool as Pintool
 import os
+import sys
 
 BLUE  = "\033[94m"
 ENDC  = "\033[0m"
@@ -69,14 +70,12 @@ def cafter(instruction):
 
     for reg in regs:
 
-        cvalue = Pintool.getCurrentRegisterValue(reg)
-        se     = Triton.getSymbolicRegister(reg)
-
-        if se is None:
+        # Skip unsupported registers
+        if reg.getName().startswith("dr"):
             continue
 
-        expr   = se.getAst()
-        svalue = expr.evaluate()
+        cvalue = Pintool.getCurrentRegisterValue(reg)
+        svalue = Triton.getSymbolicRegisterValue(reg)
 
         # Check register
         if cvalue != svalue:
@@ -129,14 +128,14 @@ def cafter(instruction):
         return
     else:
         #time.sleep(2)
-        pass
+        sys.exit(-1)
 
     return
 
 
 if __name__ == '__main__':
     Pintool.startAnalysisFromEntry()
-    #Pintool.startAnalysisFromSymbol('check')
+    Pintool.startAnalysisFromSymbol('check')
     Pintool.insertCall(cafter,  Pintool.INSERT_POINT.AFTER)
     Pintool.insertCall(sbefore, Pintool.INSERT_POINT.BEFORE_SYMPROC)
     Pintool.runProgram()

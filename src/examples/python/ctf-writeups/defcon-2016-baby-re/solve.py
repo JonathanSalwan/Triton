@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2016-08-01
@@ -11,24 +11,23 @@
 ##
 ##  Output:
 ##
-##   $ python ./solve.py
+##   $ time python3 ./solve.py
 ##   [...]
+##   0x4025a0: imul eax, edx
+##   0x4025a3: add ecx, eax
+##   0x4025a5: mov edx, dword ptr [rbp - 0x10]
+##   0x4025a8: mov rax, qword ptr [rbp - 0x2b8]
+##   0x4025af: add rax, 0x30
+##   0x4025b3: mov eax, dword ptr [rax]
+##   0x4025b5: imul eax, edx
+##   0x4025b8: add eax, ecx
+##   0x4025ba: cmp eax, 0x1b4945
+##   0x4025bf: je 0x4025cc
+##   0x4025cc: mov eax, 1
 ##   [+] Win
 ##   [+] Emulation done.
-##   [+] Final solution:
-##   [+] Symbolic variable 0 = 4d (M)
-##   [+] Symbolic variable 1 = 61 (a)
-##   [+] Symbolic variable 2 = 74 (t)
-##   [+] Symbolic variable 3 = 68 (h)
-##   [+] Symbolic variable 4 = 20 ( )
-##   [+] Symbolic variable 5 = 69 (i)
-##   [+] Symbolic variable 6 = 73 (s)
-##   [+] Symbolic variable 7 = 20 ( )
-##   [+] Symbolic variable 8 = 68 (h)
-##   [+] Symbolic variable 9 = 61 (a)
-##   [+] Symbolic variable 10 = 72 (r)
-##   [+] Symbolic variable 11 = 64 (d)
-##   [+] Symbolic variable 12 = 21 (!)
+##   [+] Final solution: bytearray(b'Math is hard!')
+##   python3 solve.py  310.81s user 0.19s system 99% cpu 5:11.46 total
 ##
 
 from __future__ import print_function
@@ -165,10 +164,16 @@ def symbolizeInputs(ctx):
 # Print the final solution.
 def solution():
     global variables
-    print('[+] Final solution:')
-    for k, v in list(variables.items()):
-        print('[+] Symbolic variable %d = %02x (%c)' %(k, v, chr(v)))
-    return
+
+    flag = bytearray(13)
+    for k, v in sorted(variables.items()):
+        flag[k] = v
+    print('[+] Final solution: %s' % flag)
+
+    if flag == b'Math is hard!':
+        return 0
+
+    return -1
 
 
 # Emulate the CheckSolution() function.
@@ -263,7 +268,7 @@ def initialize():
     ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
     # Define internal callbacks.
-    ctx.addCallback(memoryCaching,   CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+    ctx.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, memoryCaching)
 
     # Load the meory dump
     load_dump(ctx, os.path.join(os.path.dirname(__file__), "baby-re.dump"))
@@ -281,7 +286,5 @@ if __name__ == '__main__':
     # Emulate from the dump
     emulate(ctx, ctx.getConcreteRegisterValue(ctx.registers.rip))
 
-    # Print the final solution
-    solution()
-
-    sys.exit(0)
+    # Print the final solution and exit
+    sys.exit(solution())

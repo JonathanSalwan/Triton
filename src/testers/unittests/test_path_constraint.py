@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 """Test Path Constraint."""
 
@@ -52,7 +52,7 @@ class TestPathConstraint(unittest.TestCase):
 
     def test_getTakenAddress(self):
         pc = self.ctx.getPathConstraints()[0]
-        self.assertEqual(pc.getTakenAddress(), 91)
+        self.assertEqual(pc.getTakenAddress(), 108)
 
     def test_getBranchConstraints(self):
         pc = self.ctx.getPathConstraints()[0].getBranchConstraints()
@@ -62,7 +62,7 @@ class TestPathConstraint(unittest.TestCase):
 
         self.assertEqual(pc[0]['srcAddr'], pc[1]['srcAddr'])
 
-        self.assertEqual(pc[0]['dstAddr'], 91)
+        self.assertEqual(pc[0]['dstAddr'], 108)
         self.assertEqual(pc[1]['dstAddr'], 23)
 
     def test_pushpop(self):
@@ -70,18 +70,20 @@ class TestPathConstraint(unittest.TestCase):
         pc  = self.ctx.getPathPredicate()
         opc = pc
 
-        self.assertEqual(str(pc), "(and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32)))")
+        self.ctx.setMode(MODE.PC_TRACKING_SYMBOLIC, False)
+
+        self.assertEqual(str(pc), "(and (= (_ bv1 1) (_ bv1 1)) (= ref!35 (_ bv1 1)))")
         self.ctx.pushPathConstraint(ast.equal(ast.bvtrue(), ast.bvtrue()))
 
         pc  = self.ctx.getPathPredicate()
-        self.assertEqual(str(pc), "(and (and (= (_ bv1 1) (_ bv1 1)) (= (ite (= ref!35 (_ bv1 1)) (_ bv91 32) (_ bv23 32)) (_ bv91 32))) (= (_ bv1 1) (_ bv1 1)))")
+        self.assertEqual(str(pc), "(and (and (= (_ bv1 1) (_ bv1 1)) (= ref!35 (_ bv1 1))) (= (_ bv1 1) (_ bv1 1)))")
 
         self.ctx.popPathConstraint()
         pc  = self.ctx.getPathPredicate()
         self.assertEqual(str(pc), str(opc))
 
     def test_reachingBB(self):
-        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(91)), 1)
+        self.assertEqual(len(self.ctx.getPredicatesToReachAddress(108)), 1)
         self.assertEqual(len(self.ctx.getPredicatesToReachAddress(23)), 1)
         self.assertEqual(len(self.ctx.getPredicatesToReachAddress(20)), 0)
 

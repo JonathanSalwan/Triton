@@ -2,16 +2,17 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/astContext.hpp>
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
-#ifdef Z3_INTERFACE
+#ifdef TRITON_Z3_INTERFACE
   #include <triton/tritonToZ3Ast.hpp>
   #include <triton/z3ToTritonAst.hpp>
 #endif
@@ -251,6 +252,9 @@ e.g: `((_ zero_extend sizeExt) node1)`.
 
 \section AstContext_convert_py_api Python API - Utility methods of the AstContext class
 <hr>
+
+- <b>\ref py_AstNode_page dereference(\ref py_AstNode_page node)</b><br>
+Returns the first non referene node encountered.
 
 - <b>\ref py_AstNode_page duplicate(\ref py_AstNode_page node)</b><br>
 Duplicates the node and returns a new instance as \ref py_AstNode_page.
@@ -1075,10 +1079,23 @@ namespace triton {
 
       static PyObject* AstContext_declare(PyObject* self, PyObject* var) {
         if (!PyAstNode_Check(var))
-          return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
+          return PyErr_Format(PyExc_TypeError, "declare(): expected a AstNode as argument");
 
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->declare(PyAstNode_AsAstNode(var)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstContext_dereference(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node))
+          return PyErr_Format(PyExc_TypeError, "dereference(): Expects a AstNode as argument.");
+
+        try {
+          return PyAstNode(triton::ast::dereference(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1115,8 +1132,9 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "duplicate(): expected a AstNode as argument");
 
         try {
-          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(node).get()));
+          return PyAstNode(triton::ast::newInstance(PyAstNode_AsAstNode(node).get(), true));
         }
+
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
@@ -1561,7 +1579,7 @@ namespace triton {
 
       // *********************************************************************
 
-      #ifdef Z3_INTERFACE
+      #ifdef TRITON_Z3_INTERFACE
       static PyObject* AstContext_tritonToZ3(PyObject* self, PyObject* node) {
         triton::ast::TritonToZ3Ast tritonToZ3Ast{false};
 
@@ -1587,7 +1605,7 @@ namespace triton {
         Z3_ast ast    = Z3_translate(expr.ctx(), expr, z3Ctx);
 
         // Check that everything went fine
-        if (Z3_get_error_code(expr.ctx()) != Z3_OK) {
+        if (Z3_get_error_code(z3Ctx) != Z3_OK) {
           Py_DECREF(z3mod);
           return PyErr_Format(PyExc_RuntimeError, "tritonToZ3(): Z3 AST translation failed.");
         }
@@ -1617,7 +1635,7 @@ namespace triton {
         triton::ast::Z3ToTritonAst  z3ToTritonAst{PyAstContext_AsAstContext(self)};
         z3::context                 z3Ctx;
 
-        if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef"))
+        if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef") && std::strcmp(Py_TYPE(expr)->tp_name, "BitVecRef"))
           return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");
 
         PyObject* z3AstPtr = PyObject_GetAttrString(expr, "ast");
@@ -1689,6 +1707,7 @@ namespace triton {
         {"compound",        AstContext_compound,        METH_O,           ""},
         {"concat",          AstContext_concat,          METH_O,           ""},
         {"declare",         AstContext_declare,         METH_O,           ""},
+        {"dereference",     AstContext_dereference,     METH_O,           ""},
         {"distinct",        AstContext_distinct,        METH_VARARGS,     ""},
         {"duplicate",       AstContext_duplicate,       METH_O,           ""},
         {"equal",           AstContext_equal,           METH_VARARGS,     ""},
@@ -1708,7 +1727,7 @@ namespace triton {
         {"unroll",          AstContext_unroll,          METH_O,           ""},
         {"variable",        AstContext_variable,        METH_O,           ""},
         {"zx",              AstContext_zx,              METH_VARARGS,     ""},
-        #ifdef Z3_INTERFACE
+        #ifdef TRITON_Z3_INTERFACE
         {"tritonToZ3",      AstContext_tritonToZ3,      METH_O,           ""},
         {"z3ToTriton",      AstContext_z3ToTriton,      METH_O,           ""},
         #endif
@@ -1723,7 +1742,7 @@ namespace triton {
         sizeof(AstContext_Object),                  /* tp_basicsize */
         0,                                          /* tp_itemsize */
         (destructor)AstContext_dealloc,             /* tp_dealloc */
-        0,                                          /* tp_print */
+        0,                                          /* tp_print or tp_vectorcall_offset */
         0,                                          /* tp_getattr */
         0,                                          /* tp_setattr */
         0,                                          /* tp_compare */
@@ -1765,10 +1784,16 @@ namespace triton {
         0,                                          /* tp_weaklist */
         0,                                          /* tp_del */
         #if IS_PY3
-        0,                                          /* tp_version_tag */
-        0,                                          /* tp_finalize */
+          0,                                        /* tp_version_tag */
+          0,                                        /* tp_finalize */
+          #if IS_PY3_8
+            0,                                      /* tp_vectorcall */
+            #if !IS_PY3_9
+              0,                                    /* bpo-37250: kept for backwards compatibility in CPython 3.8 only */
+            #endif
+          #endif
         #else
-        0                                           /* tp_version_tag */
+          0                                         /* tp_version_tag */
         #endif
       };
 

@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <cstring>
@@ -514,7 +514,9 @@ namespace triton {
       this->updateFlag      = false;
       this->writeBack       = false;
 
-      this->disassembly.clear();
+      /* Clear the stringstream (See #975) */
+      std::stringstream().swap(this->disassembly);
+
       this->loadAccess.clear();
       this->operands.clear();
       this->readImmediates.clear();

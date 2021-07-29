@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/bitsVector.hpp>
@@ -21,7 +21,7 @@ namespace triton {
 
 
     BitsVector::BitsVector(triton::uint32 high /* bits */, triton::uint32 low /* bits */) {
-      this->setPair(std::make_pair(high, low));
+      this->setBits(high, low);
     }
 
 
@@ -77,19 +77,19 @@ namespace triton {
     }
 
 
-    void BitsVector::setPair(std::pair<triton::uint32, triton::uint32> p) {
-      this->high = std::get<0>(p);
-      this->low  = std::get<1>(p);
+    void BitsVector::setBits(triton::uint32 high, triton::uint32 low) {
+      this->high = high;
+      this->low = low;
 
       if (this->high >= triton::bitsize::max_supported)
-        throw triton::exceptions::BitsVector("BitsVector::setPair(): The highest bit cannot be greater than triton::bitsize::max_supported.");
+        throw triton::exceptions::BitsVector("BitsVector::setBits(): The highest bit cannot be greater than triton::bitsize::max_supported.");
 
       // FIXME djo fpu: Can we really ignore that?
       // if (this->low % triton::bitsize::byte)
       //  throw triton::exceptions::BitsVector("BitsVector::setPair(): The lower bit must be a multiple of 8.");
 
       if (this->low > this->high)
-        throw triton::exceptions::BitsVector("BitsVector::setPair(): The lower bit cannot be greater than highest.");
+        throw triton::exceptions::BitsVector("BitsVector::setBits(): The lower bit cannot be greater than highest.");
 
       // FIXME djo fpu: Can we really ignore that?
       // if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)

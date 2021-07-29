@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/exceptions.hpp>
@@ -15,11 +15,14 @@ namespace triton {
     namespace symbolic {
 
       PathConstraint::PathConstraint() {
+        this->tid = static_cast<triton::uint32>(-1);
       }
 
 
       PathConstraint::PathConstraint(const PathConstraint &other) {
-        this->branches = other.branches;
+        this->branches  = other.branches;
+        this->comment   = other.comment;
+        this->tid       = other.tid;
       }
 
 
@@ -30,7 +33,9 @@ namespace triton {
 
 
       PathConstraint& PathConstraint::operator=(const PathConstraint &other) {
-        this->branches = other.branches;
+        this->branches  = other.branches;
+        this->comment   = other.comment;
+        this->tid       = other.tid;
         return *this;
       }
 
@@ -71,6 +76,26 @@ namespace triton {
         else if (this->branches.size() == 1)
           return false;
         return true;
+      }
+
+
+      triton::uint32 PathConstraint::getThreadId(void) const {
+        return this->tid;
+      }
+
+
+      void PathConstraint::setThreadId(triton::uint32 tid) {
+        this->tid = tid;
+      }
+
+
+      const std::string& PathConstraint::getComment(void) const {
+        return this->comment;
+      }
+
+
+      void PathConstraint::setComment(const std::string& comment) {
+        this->comment = comment;
       }
 
     }; /* symbolic namespace */

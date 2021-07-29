@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/architecture.hpp>
@@ -22,33 +22,35 @@ namespace triton {
             throw triton::exceptions::Architecture("x86Specifications::x86Specifications(): Invalid architecture.");
 
         if (arch == triton::arch::ARCH_X86_64) {
-          // Fill registers_ with those available in X86_64 from spec
+          // Fill id2reg and name2id with those available in X86_64 from spec
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, X86_64_UPPER, X86_64_LOWER, X86_64_PARENT, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL)  \
-            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                       \
-                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                  \
-                                                      #LOWER_NAME,                                            \
-                                                      triton::arch::ID_REG_X86_##X86_64_PARENT,               \
-                                                      X86_64_UPPER,                                           \
-                                                      X86_64_LOWER,                                           \
-                                                      true)                                                   \
-                              );
+            id2reg.emplace(ID_REG_X86_##UPPER_NAME,                                                       \
+                               triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,              \
+                                                      #LOWER_NAME,                                        \
+                                                      triton::arch::ID_REG_X86_##X86_64_PARENT,           \
+                                                      X86_64_UPPER,                                       \
+                                                      X86_64_LOWER,                                       \
+                                                      true)                                               \
+                              );                                                                          \
+            name2id.emplace(#LOWER_NAME, ID_REG_X86_##UPPER_NAME);
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/x86.spec"
         }
         else {
           assert(arch == triton::arch::ARCH_X86);
-          // Fill registers_ with those available in X86 from spec
+          // Fill id2reg and name2id with those available in X86 from spec
           #define REG_SPEC(UPPER_NAME, LOWER_NAME, _1, _2, _3, X86_UPPER, X86_LOWER, X86_PARENT, X86_AVAIL) \
           if (X86_AVAIL)                                                                                    \
-            registers_.emplace(ID_REG_X86_##UPPER_NAME,                                                     \
+            id2reg.emplace(ID_REG_X86_##UPPER_NAME,                                                         \
                                triton::arch::Register(triton::arch::ID_REG_X86_##UPPER_NAME,                \
                                                       #LOWER_NAME,                                          \
                                                       triton::arch::ID_REG_X86_##X86_PARENT,                \
                                                       X86_UPPER,                                            \
                                                       X86_LOWER,                                            \
                                                       true)                                                 \
-                              );
+                              );                                                                            \
+            name2id.emplace(#LOWER_NAME, ID_REG_X86_##UPPER_NAME);
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/x86.spec"

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -141,22 +141,21 @@ CODE  = [
     (b"\x04\xf0\xa0\xd1", "movle pc, r4"),
     (b"\x04\xf0\xa0\xe1", "moval pc, r4"),
 
-    # FIXME
-    # (b"\x04\xf0\xb0\x01", "movseq pc, r4"),
-    # (b"\x04\xf0\xb0\x11", "movsne pc, r4"),
-    # (b"\x04\xf0\xb0\x21", "movscs pc, r4"),
-    # (b"\x04\xf0\xb0\x31", "movscc pc, r4"),
-    # (b"\x04\xf0\xb0\x41", "movsmi pc, r4"),
-    # (b"\x04\xf0\xb0\x51", "movspl pc, r4"),
-    # (b"\x04\xf0\xb0\x61", "movsvs pc, r4"),
-    # (b"\x04\xf0\xb0\x71", "movsvc pc, r4"),
-    # (b"\x04\xf0\xb0\x81", "movshi pc, r4"),
-    # (b"\x04\xf0\xb0\x91", "movsls pc, r4"),
-    # (b"\x04\xf0\xb0\xa1", "movsge pc, r4"),
-    # (b"\x04\xf0\xb0\xb1", "movslt pc, r4"),
-    # (b"\x04\xf0\xb0\xc1", "movsgt pc, r4"),
-    # (b"\x04\xf0\xb0\xd1", "movsle pc, r4"),
-    # (b"\x04\xf0\xb0\xe1", "movsal pc, r4"),
+    (b"\x04\xf0\xb0\x01", "movseq pc, r4"),
+    (b"\x04\xf0\xb0\x11", "movsne pc, r4"),
+    (b"\x04\xf0\xb0\x21", "movscs pc, r4"),
+    (b"\x04\xf0\xb0\x31", "movscc pc, r4"),
+    (b"\x04\xf0\xb0\x41", "movsmi pc, r4"),
+    (b"\x04\xf0\xb0\x51", "movspl pc, r4"),
+    (b"\x04\xf0\xb0\x61", "movsvs pc, r4"),
+    (b"\x04\xf0\xb0\x71", "movsvc pc, r4"),
+    (b"\x04\xf0\xb0\x81", "movshi pc, r4"),
+    (b"\x04\xf0\xb0\x91", "movsls pc, r4"),
+    (b"\x04\xf0\xb0\xa1", "movsge pc, r4"),
+    (b"\x04\xf0\xb0\xb1", "movslt pc, r4"),
+    (b"\x04\xf0\xb0\xc1", "movsgt pc, r4"),
+    (b"\x04\xf0\xb0\xd1", "movsle pc, r4"),
+    (b"\x04\xf0\xb0\xe1", "movsal pc, r4"),
 
     # SUB(S) ----------------------------------------------------------------- #
     (b"\x03\xf0\x42\x00", "subeq pc, r2, r3"),
@@ -175,22 +174,21 @@ CODE  = [
     (b"\x03\xf0\x42\xd0", "suble pc, r2, r3"),
     (b"\x03\xf0\x42\xe0", "subal pc, r2, r3"),
 
-    # FIXME
-    # (b"\x03\xf0\x52\x00", "subseq pc, r2, r3"),
-    # (b"\x03\xf0\x52\x10", "subsne pc, r2, r3"),
-    # (b"\x03\xf0\x52\x20", "subscs pc, r2, r3"),
-    # (b"\x03\xf0\x52\x30", "subscc pc, r2, r3"),
-    # (b"\x03\xf0\x52\x40", "subsmi pc, r2, r3"),
-    # (b"\x03\xf0\x52\x50", "subspl pc, r2, r3"),
-    # (b"\x03\xf0\x52\x60", "subsvs pc, r2, r3"),
-    # (b"\x03\xf0\x52\x70", "subsvc pc, r2, r3"),
-    # (b"\x03\xf0\x52\x80", "subshi pc, r2, r3"),
-    # (b"\x03\xf0\x52\x90", "subsls pc, r2, r3"),
-    # (b"\x03\xf0\x52\xa0", "subsge pc, r2, r3"),
-    # (b"\x03\xf0\x52\xb0", "subslt pc, r2, r3"),
-    # (b"\x03\xf0\x52\xc0", "subsgt pc, r2, r3"),
-    # (b"\x03\xf0\x52\xd0", "subsle pc, r2, r3"),
-    # (b"\x03\xf0\x52\xe0", "subsal pc, r2, r3"),
+    (b"\x03\xf0\x52\x00", "subseq pc, r2, r3"),
+    (b"\x03\xf0\x52\x10", "subsne pc, r2, r3"),
+    (b"\x03\xf0\x52\x20", "subscs pc, r2, r3"),
+    (b"\x03\xf0\x52\x30", "subscc pc, r2, r3"),
+    (b"\x03\xf0\x52\x40", "subsmi pc, r2, r3"),
+    (b"\x03\xf0\x52\x50", "subspl pc, r2, r3"),
+    (b"\x03\xf0\x52\x60", "subsvs pc, r2, r3"),
+    (b"\x03\xf0\x52\x70", "subsvc pc, r2, r3"),
+    (b"\x03\xf0\x52\x80", "subshi pc, r2, r3"),
+    (b"\x03\xf0\x52\x90", "subsls pc, r2, r3"),
+    (b"\x03\xf0\x52\xa0", "subsge pc, r2, r3"),
+    (b"\x03\xf0\x52\xb0", "subslt pc, r2, r3"),
+    (b"\x03\xf0\x52\xc0", "subsgt pc, r2, r3"),
+    (b"\x03\xf0\x52\xd0", "subsle pc, r2, r3"),
+    (b"\x03\xf0\x52\xe0", "subsal pc, r2, r3"),
 ]
 
 

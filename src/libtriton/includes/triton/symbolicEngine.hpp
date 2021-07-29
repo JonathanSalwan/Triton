@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_SYMBOLICENGINE_H
@@ -95,7 +95,7 @@ namespace triton {
            * **item1**: <addr:size><br>
            * **item2**: shared symbolic expression
            */
-          std::map<std::pair<triton::uint64, triton::uint32>, WeakSymbolicExpression> alignedMemoryReference;
+          std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedMemoryReference;
 
           /*! \brief map of address -> symbolic expression
            *
@@ -128,7 +128,7 @@ namespace triton {
           triton::usize getUniqueSymVarId(void);
 
           //! Gets an aligned entry.
-          inline SharedSymbolicExpression getAlignedMemory(triton::uint64 address, triton::uint32 size);
+          const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);
 
           //! Adds an aligned entry.
           void addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr);
@@ -150,6 +150,9 @@ namespace triton {
 
           //! Sets implicit read registers (base and index) from an effective address.
           void setImplicitReadRegisterFromEffectiveAddress(triton::arch::Instruction& inst, const triton::arch::MemoryAccess& mem);
+
+          //! Adds new symbolic expressions to the instruction starting with given symbolic expression id. Returns last added expression.
+          const SharedSymbolicExpression& addSymbolicExpressions(triton::arch::Instruction& inst, triton::usize id) const;
 
         public:
           //! Constructor.
@@ -256,6 +259,9 @@ namespace triton {
 
           //! Slices all expressions from a given one.
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
+
+          //! Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
+          TRITON_EXPORT std::ostream& printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_=false);
 
           //! Returns the vector of the tainted symbolic expressions.
           TRITON_EXPORT std::vector<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;

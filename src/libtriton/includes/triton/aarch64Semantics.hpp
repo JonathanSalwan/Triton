@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_AARCH64SEMANTICS_H
@@ -187,6 +187,9 @@ namespace triton {
 
             //! The BFI semantics.
             void bfi_s(triton::arch::Instruction& inst);
+
+            //! The BFXIL semantics.
+            void bfxil_s(triton::arch::Instruction& inst);
 
             //! The BIC semantics.
             void bic_s(triton::arch::Instruction& inst);

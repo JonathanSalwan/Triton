@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ## Output:
@@ -77,8 +77,8 @@ if __name__ == "__main__":
     Triton.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    Triton.addCallback(xor_1, CALLBACK.SYMBOLIC_SIMPLIFICATION)
-    Triton.addCallback(xor_2, CALLBACK.SYMBOLIC_SIMPLIFICATION)
+    Triton.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, xor_1)
+    Triton.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, xor_2)
 
     astCtxt = Triton.getAstContext()
 

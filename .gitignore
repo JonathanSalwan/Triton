@@ -6,7 +6,6 @@
 *.nam
 *.o
 *.pyc
-*.so
 *.swp
 *.til
 .DS_Store
@@ -17,3 +16,6 @@ peda-session*
 pin.log
 pintool.log
 private/*
+*.so
+.cache
+.vscode

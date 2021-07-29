@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 
 import unittest
@@ -15,12 +15,12 @@ class TestInstanceMethodCallback(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
 
         self.flag = False
-        self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.Triton.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.cb_flag)
         self.Triton.processing(Instruction(b"\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00")) # movabs rax, qword ptr [0x1000]
         self.assertTrue(self.flag)
 
         self.flag = False
-        self.Triton.removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+        self.Triton.removeCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.cb_flag)
         self.Triton.processing(Instruction(b"\x48\xa1\x00\x10\x00\x00\x00\x00\x00\x00")) # movabs rax, qword ptr [0x1000]
         self.assertFalse(self.flag)
 
@@ -29,12 +29,12 @@ class TestInstanceMethodCallback(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
 
         self.flag = False
-        self.Triton.addCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+        self.Triton.addCallback(CALLBACK.GET_CONCRETE_REGISTER_VALUE, self.cb_flag)
         self.Triton.processing(Instruction(b"\x48\x89\xd8")) # mov rax, rbx
         self.assertTrue(self.flag)
 
         self.flag = False
-        self.Triton.removeCallback(self.cb_flag, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+        self.Triton.removeCallback(CALLBACK.GET_CONCRETE_REGISTER_VALUE, self.cb_flag)
         self.Triton.processing(Instruction(b"\x48\x89\xd8")) # mov rax, rbx
         self.assertFalse(self.flag)
 

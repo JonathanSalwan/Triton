@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_Z3SOLVER_H
@@ -11,9 +11,12 @@
 #include <string>
 #include <unordered_map>
 #include <vector>
+#include <z3++.h>
+#include <z3_api.h>
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/tritonTypes.hpp>
@@ -44,6 +47,16 @@ namespace triton {
       //! \class Z3Solver
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
+        private:
+          //! The SMT solver timeout. By default, unlimited.
+          triton::uint32 timeout;
+
+          //! The SMT solver memory limit. By default, unlimited.
+          triton::uint32 memoryLimit;
+
+          //! Writes back the status code of the solver into the pointer pointed by status.
+          void writeBackStatus(z3::solver& solver, z3::check_result res, triton::engines::solver::status_e* status) const;
+
         public:
           //! Constructor.
           TRITON_EXPORT Z3Solver();
@@ -55,7 +68,7 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
           /*! \brief vector of map of symbolic variable id -> model
@@ -64,10 +77,10 @@ namespace triton {
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const;
+          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
 
           //! Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
           TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
@@ -77,6 +90,12 @@ namespace triton {
 
           //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;
+
+          //! Defines a solver timeout (in milliseconds).
+          TRITON_EXPORT void setTimeout(triton::uint32 ms);
+
+          //! Defines a solver memory consumption limit (in megabytes).
+          TRITON_EXPORT void setMemoryLimit(triton::uint32 mem);
       };
 
     /*! @} End of solver namespace */

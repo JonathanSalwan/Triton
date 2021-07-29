@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ## Example to detect opaque predicates. This example is based
@@ -6,7 +6,7 @@
 ##
 ## Output:
 ##
-##  $ python proving_opaque_predicates.py
+##  $ python3 proving_opaque_predicates.py
 ##  xor eax, eax
 ##  jo 7
 ##  opaque predicate: never taken

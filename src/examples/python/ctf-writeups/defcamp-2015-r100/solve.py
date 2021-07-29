@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 ##
 ##  Jonathan Salwan - 2016-08-02
@@ -9,7 +9,7 @@
 ##
 ##  Output:
 ##
-##  $ python ./solve.py
+##  $ time python3 ./solve.py
 ##  [...]
 ##  400784: movsx eax, al
 ##  400787: sub edx, eax
@@ -36,6 +36,8 @@
 ##  4007a6: pop rbp
 ##  4007a7: ret
 ##  [+] Emulation done.
+##  [+] Flag found: bytearray(b'Code_Talkers')
+##  python3 solve.py  0.27s user 0.01s system 99% cpu 0.276 total
 ##
 
 from __future__ import print_function
@@ -44,48 +46,46 @@ from triton     import ARCH, TritonContext, Instruction, MODE, MemoryAccess, CPU
 import os
 import sys
 
-Triton = TritonContext()
-
 
 # Emulate the CheckSolution() function.
-def emulate(pc):
-    astCtxt = Triton.getAstContext()
+def emulate(ctx, pc):
+    astCtxt = ctx.getAstContext()
     print('[+] Starting emulation.')
     while pc:
         # Fetch opcode
-        opcode = Triton.getConcreteMemoryAreaValue(pc, 16)
+        opcode = ctx.getConcreteMemoryAreaValue(pc, 16)
 
-        # Create the Triton instruction
+        # Create the ctx instruction
         instruction = Instruction()
         instruction.setOpcode(opcode)
         instruction.setAddress(pc)
 
         # Process
-        Triton.processing(instruction)
+        ctx.processing(instruction)
         print(instruction)
 
         # 40078B: cmp eax, 1
         # eax must be equal to 1 at each round.
         if instruction.getAddress() == 0x40078B:
             # Slice expressions
-            rax   = Triton.getSymbolicRegister(Triton.registers.rax)
+            rax   = ctx.getSymbolicRegister(ctx.registers.rax)
             eax   = astCtxt.extract(31, 0, rax.getAst())
 
             # Define constraint
             cstr  = astCtxt.land([
-                        Triton.getPathPredicate(),
+                        ctx.getPathPredicate(),
                         astCtxt.equal(eax, astCtxt.bv(1, 32))
                     ])
 
             print('[+] Asking for a model, please wait...')
-            model = Triton.getModel(cstr)
+            model = ctx.getModel(cstr)
             for k, v in list(sorted(model.items())):
                 value = v.getValue()
-                Triton.setConcreteVariableValue(Triton.getSymbolicVariable(k), value)
+                ctx.setConcreteVariableValue(ctx.getSymbolicVariable(k), value)
                 print('[+] Symbolic variable %02d = %02x (%c)' %(k, value, chr(value)))
 
         # Next
-        pc = Triton.getConcreteRegisterValue(Triton.registers.rip)
+        pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
 
     print('[+] Emulation done.')
     return
@@ -100,34 +100,46 @@ def loadBinary(path):
         size   = phdr.physical_size
         vaddr  = phdr.virtual_address
         print('[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
-        Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+        ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
     return
+
+
+def solution(ctx):
+    flag = bytearray(12)
+
+    for k, v in sorted(ctx.getSymbolicVariables().items())[:len(flag)]:
+        flag[k] = ctx.getConcreteVariableValue(v)
+
+    if flag == b'Code_Talkers':
+        print('[+] Flag found: %s' %flag)
+        return 0
+
+    return -1
 
 
 if __name__ == '__main__':
     # Define the target architecture
-    Triton.setArchitecture(ARCH.X86_64)
+    ctx = TritonContext(ARCH.X86_64)
 
     # Define symbolic optimizations
-    Triton.setMode(MODE.ALIGNED_MEMORY, True)
-    Triton.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
+    ctx.setMode(MODE.ALIGNED_MEMORY, True)
+    ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
     # Load the binary
     loadBinary(os.path.join(os.path.dirname(__file__), 'r100.bin'))
 
     # Define a fake stack
-    Triton.setConcreteRegisterValue(Triton.registers.rbp, 0x7fffffff)
-    Triton.setConcreteRegisterValue(Triton.registers.rsp, 0x6fffffff)
+    ctx.setConcreteRegisterValue(ctx.registers.rbp, 0x7fffffff)
+    ctx.setConcreteRegisterValue(ctx.registers.rsp, 0x6fffffff)
 
     # Define an user input
-    Triton.setConcreteRegisterValue(Triton.registers.rdi, 0x10000000)
+    ctx.setConcreteRegisterValue(ctx.registers.rdi, 0x10000000)
 
     # Symbolize user inputs (30 bytes)
     for index in range(30):
-        Triton.symbolizeMemory(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
+        ctx.symbolizeMemory(MemoryAccess(0x10000000+index, CPUSIZE.BYTE))
 
     # Emulate from the verification function
-    emulate(0x4006FD)
+    emulate(ctx, 0x4006FD)
 
-    sys.exit(0)
-
+    sys.exit(solution(ctx))

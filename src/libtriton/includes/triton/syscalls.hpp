@@ -2,29 +2,13 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_SYSCALLS_H
 #define TRITON_SYSCALLS_H
 
 #if defined(__unix__) || defined(__APPLE__)
-
-#ifdef __APPLE__
-  #include <sys/syscall.h>
-#elif defined(__ANDROID___)
-  #if defined(__aarch64__)
-    #include <aarch64-linux-android/asm/unistd.h>
-  #endif
-#else
-  #if defined(__x86_64__) || defined(_M_X64)
-    #include <asm/unistd_64.h>
-  #endif
-  #if defined(__i386) || defined(_M_IX86)
-    #include <asm/unistd_32.h>
-  #endif
-#endif
-
 
 
 //! The Triton namespace

@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <list>
@@ -94,7 +94,7 @@ if __name__ == "__main__":
     ctx.setArchitecture(ARCH.X86_64)
 
     # Record simplifications
-    ctx.addCallback(xor_bitwise, SYMBOLIC_SIMPLIFICATION)
+    ctx.addCallback(SYMBOLIC_SIMPLIFICATION, xor_bitwise)
 
     a = bv(1, 8)
     b = bv(2, 8)
@@ -179,7 +179,7 @@ namespace triton {
         if (node == nullptr)
           throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
 
-        if (this->callbacks) {
+        if (this->callbacks && this->callbacks->isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION)) {
           snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);
           /*
            *  We use a worklist strategy to avoid recursive calls

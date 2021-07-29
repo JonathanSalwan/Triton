@@ -2,13 +2,14 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITON_X86SPECIFICATIONS_H
 #define TRITON_X86SPECIFICATIONS_H
 
 #include <unordered_map>
+#include <string>
 
 #include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
@@ -45,7 +46,8 @@ namespace triton {
       class x86Specifications {
         protected:
           //! List of registers specification available for this architecture.
-          std::unordered_map<triton::arch::register_e, const triton::arch::Register> registers_;
+          std::unordered_map<triton::arch::register_e, const triton::arch::Register> id2reg;
+          std::unordered_map<std::string, triton::arch::register_e> name2id;
 
         public:
           //! Constructor.

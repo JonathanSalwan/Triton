@@ -25,17 +25,10 @@ REG_SPEC(R11, r11, triton::bitsize::dword-1, 0, R11, TT_MUTABLE_REG) // r11
 REG_SPEC(R12, r12, triton::bitsize::dword-1, 0, R12, TT_MUTABLE_REG) // r12
 
 // Three 32-bit registers with special uses, SP, LR, and PC, that can be described as R13 to R15.
-// Stack pointer register
-REG_SPEC(SP, sp, triton::bitsize::dword-1, 0, SP, TT_MUTABLE_REG) // SP
-
-// Link register
-REG_SPEC(R14, r14, triton::bitsize::dword-1, 0, R14, TT_MUTABLE_REG) // LR (r14)
-
-// Program counter register
-REG_SPEC(PC, pc, triton::bitsize::dword-1, 0, PC, TT_MUTABLE_REG) // PC
-
-// Flag register
-REG_SPEC(APSR, apsr, 31, 0, APSR, TT_MUTABLE_REG) // APSR
+REG_SPEC(SP,   sp,   triton::bitsize::dword-1, 0, SP,   TT_MUTABLE_REG) // SP
+REG_SPEC(R14,  r14,  triton::bitsize::dword-1, 0, R14,  TT_MUTABLE_REG) // LR (r14)
+REG_SPEC(PC,   pc,   triton::bitsize::dword-1, 0, PC,   TT_MUTABLE_REG) // PC
+REG_SPEC(APSR, apsr, triton::bitsize::dword-1, 0, APSR, TT_MUTABLE_REG) // APSR
 
 // Unique flag registers
 REG_SPEC_NO_CAPSTONE(C, c, 0, 0, C, TT_MUTABLE_REG) // C (Carry)

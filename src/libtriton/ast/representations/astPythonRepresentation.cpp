@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/astPythonRepresentation.hpp>
@@ -132,7 +132,7 @@ namespace triton {
 
       /* bvneg representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvnegNode* node) {
-        stream << "-" << node->getChildren()[0];
+        stream << "(-(" << node->getChildren()[0] << ") & 0x" << std::hex << node->getBitvectorMask() << std::dec << ")";
         return stream;
       }
 

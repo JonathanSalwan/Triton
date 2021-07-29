@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITONTYPES_H
@@ -82,6 +82,17 @@ namespace triton {
     //! signed int if the arch is 32-bits.
     typedef signed int __sint;
     #endif
+
+    /*! \class IdentityHash
+    *   \brief Used as a hash function in hash tables containers (std::unordered_map, robin_map).
+    */
+    template<typename T>
+    class IdentityHash
+    {
+    public:
+      //! Returns the key as is.
+      T operator()(const T& key) const { return key; }
+    };
 
 /*! @} End of triton namespace */
 }; /* triton namespace */

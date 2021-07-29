@@ -2,10 +2,11 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/api.hpp>
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 
 #include <list>
@@ -340,6 +341,11 @@ namespace triton {
   }
 
 
+  const triton::arch::Register& API::getRegister(const std::string& name) const {
+    return this->arch.getRegister(name);
+  }
+
+
   const triton::arch::Register& API::getParentRegister(const triton::arch::Register& reg) const {
     return this->arch.getParentRegister(reg);
   }
@@ -510,6 +516,18 @@ namespace triton {
   }
 
 
+  std::vector<triton::arch::Instruction> API::disassembly(triton::uint64 addr, triton::usize count) const {
+    this->checkArchitecture();
+    return this->arch.disassembly(addr, count);
+  }
+
+
+  std::vector<triton::arch::Instruction> API::disassembly(triton::uint64 addr) const {
+    this->checkArchitecture();
+    return this->arch.disassembly(addr);
+  }
+
+
 
   /* Processing API ================================================================================ */
 
@@ -607,29 +625,17 @@ namespace triton {
 
   /* Callbacks API ================================================================================= */
 
-  void API::addCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
-    this->callbacks.addCallback(cb);
-  }
+  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb);
+  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb);
+  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb);
+  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb);
+  template TRITON_EXPORT void API::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb);
 
-
-  void API::addCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
-    this->callbacks.addCallback(cb);
-  }
-
-
-  void API::addCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
-    this->callbacks.addCallback(cb);
-  }
-
-
-  void API::addCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
-    this->callbacks.addCallback(cb);
-  }
-
-
-  void API::addCallback(triton::callbacks::symbolicSimplificationCallback cb) {
-    this->callbacks.addCallback(cb);
-  }
+  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb);
+  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb);
+  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb);
+  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb);
+  template TRITON_EXPORT void API::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb);
 
 
   void API::clearCallbacks(void) {
@@ -637,47 +643,25 @@ namespace triton {
   }
 
 
-  void API::removeCallback(triton::callbacks::getConcreteMemoryValueCallback cb) {
-    this->callbacks.removeCallback(cb);
-  }
-
-
-  void API::removeCallback(triton::callbacks::getConcreteRegisterValueCallback cb) {
-    this->callbacks.removeCallback(cb);
-  }
-
-
-  void API::removeCallback(triton::callbacks::setConcreteMemoryValueCallback cb) {
-    this->callbacks.removeCallback(cb);
-  }
-
-
-  void API::removeCallback(triton::callbacks::setConcreteRegisterValueCallback cb) {
-    this->callbacks.removeCallback(cb);
-  }
-
-
-  void API::removeCallback(triton::callbacks::symbolicSimplificationCallback cb) {
-    this->callbacks.removeCallback(cb);
-  }
-
-
   triton::ast::SharedAbstractNode API::processCallbacks(triton::callbacks::callback_e kind, triton::ast::SharedAbstractNode node) {
-    if (this->callbacks.isDefined)
+    if (this->callbacks.isDefined()) {
       return this->callbacks.processCallbacks(kind, node);
+    }
     return node;
   }
 
 
   void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::MemoryAccess& mem) {
-    if (this->callbacks.isDefined)
+    if (this->callbacks.isDefined()) {
       this->callbacks.processCallbacks(kind, mem);
+    }
   }
 
 
   void API::processCallbacks(triton::callbacks::callback_e kind, const triton::arch::Register& reg) {
-    if (this->callbacks.isDefined)
+    if (this->callbacks.isDefined()) {
       this->callbacks.processCallbacks(kind, reg);
+    }
   }
 
 
@@ -922,6 +906,24 @@ namespace triton {
   }
 
 
+  std::vector<triton::engines::symbolic::PathConstraint> API::getPathConstraints(triton::usize start, triton::usize end) const {
+    this->checkSymbolic();
+    return this->symbolic->getPathConstraints(start, end);
+  }
+
+
+  std::vector<triton::engines::symbolic::PathConstraint> API::getPathConstraintsOfThread(triton::uint32 threadId) const {
+    this->checkSymbolic();
+    return this->symbolic->getPathConstraintsOfThread(threadId);
+  }
+
+
+  triton::usize API::getSizeOfPathConstraints(void) const {
+    this->checkSymbolic();
+    return this->symbolic->getSizeOfPathConstraints();
+  }
+
+
   triton::ast::SharedAbstractNode API::getPathPredicate(void) {
     this->checkSymbolic();
     return this->symbolic->getPathPredicate();
@@ -937,6 +939,12 @@ namespace triton {
   void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
     this->checkSymbolic();
     this->symbolic->pushPathConstraint(node);
+  }
+
+
+  void API::pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco) {
+    this->checkSymbolic();
+    this->symbolic->pushPathConstraint(pco);
   }
 
 
@@ -1024,6 +1032,12 @@ namespace triton {
   }
 
 
+  std::ostream& API::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+    this->checkSymbolic();
+    return this->symbolic->printSlicedExpressions(stream, expr, assert_);
+  }
+
+
   std::vector<triton::engines::symbolic::SharedSymbolicExpression> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();
@@ -1075,27 +1089,27 @@ namespace triton {
   }
 
 
-  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node) const {
+  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
     this->checkSolver();
-    return this->solver->getModel(node);
+    return this->solver->getModel(node, status);
   }
 
 
-  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit) const {
+  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
     this->checkSolver();
-    return this->solver->getModels(node, limit);
+    return this->solver->getModels(node, limit, status);
   }
 
 
-  bool API::isSat(const triton::ast::SharedAbstractNode& node) const {
+  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
     this->checkSolver();
-    return this->solver->isSat(node);
+    return this->solver->isSat(node, status);
   }
 
 
   triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    #ifdef Z3_INTERFACE
+    #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
@@ -1106,12 +1120,24 @@ namespace triton {
 
   triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
-    #ifdef Z3_INTERFACE
+    #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }
     #endif
     throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
+  }
+
+
+  void API::setSolverTimeout(triton::uint32 ms) {
+    this->checkSolver();
+    this->solver->setTimeout(ms);
+  }
+
+
+  void API::setSolverMemoryLimit(triton::uint32 limit) {
+    this->checkSolver();
+    this->solver->setMemoryLimit(limit);
   }
 
 

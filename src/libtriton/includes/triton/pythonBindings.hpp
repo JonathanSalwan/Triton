@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #ifndef TRITONPYTHONBINDINGS_H
@@ -89,6 +89,9 @@ namespace triton {
 
       //! Initializes the MODE python namespace.
       void initModeNamespace(PyObject* modeDict);
+
+      //! Initializes the SOLVER python namespace.
+      void initSolverNamespace(PyObject* solverDict);
 
       //! Initializes the SYMBOLIC python namespace.
       void initSymbolicNamespace(PyObject* symbolicDict);

@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # coding: utf-8
 """Test AST representation."""
 
@@ -37,7 +37,7 @@ class TestAstRepresentation(unittest.TestCase):
             ((self.v1 << self.v2),                               "(bvshl SymVar_0 SymVar_1)",                                    "((SymVar_0 << SymVar_1) & 0xFF)"),
             ((self.v1 >> self.v2),                               "(bvlshr SymVar_0 SymVar_1)",                                   "(SymVar_0 >> SymVar_1)"),
             ((~self.v1),                                         "(bvnot SymVar_0)",                                             "(~(SymVar_0) & 0xFF)"),
-            ((-self.v1),                                         "(bvneg SymVar_0)",                                             "-SymVar_0"),
+            ((-self.v1),                                         "(bvneg SymVar_0)",                                             "(-(symvar_0) & 0xff)"),
             ((self.v1 == self.v2),                               "(= SymVar_0 SymVar_1)",                                        "(SymVar_0 == SymVar_1)"),
             ((self.v1 != self.v2),                               "(not (= SymVar_0 SymVar_1))",                                  "not (SymVar_0 == SymVar_1)"),
             ((self.v1 <= self.v2),                               "(bvule SymVar_0 SymVar_1)",                                    "(SymVar_0 <= SymVar_1)"),

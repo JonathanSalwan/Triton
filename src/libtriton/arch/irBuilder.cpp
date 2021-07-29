@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <new>
@@ -54,14 +54,16 @@ namespace triton {
     IrBuilder::~IrBuilder() {
       delete this->backupSymbolicEngine;
       delete this->aarch64Isa;
+      delete this->arm32Isa;
       delete this->x86Isa;
     }
 
 
     bool IrBuilder::buildSemantics(triton::arch::Instruction& inst) {
+      triton::arch::architecture_e arch = this->architecture->getArchitecture();
       bool ret = false;
 
-      if (this->architecture->getArchitecture() == triton::arch::ARCH_INVALID)
+      if (arch == triton::arch::ARCH_INVALID)
         throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): You must define an architecture.");
 
       /* Initialize the target address of memory operands */
@@ -75,7 +77,7 @@ namespace triton {
       this->preIrInit(inst);
 
       /* Processing */
-      switch (this->architecture->getArchitecture()) {
+      switch (arch) {
         case triton::arch::ARCH_AARCH64:
           ret = this->aarch64Isa->buildSemantics(inst);
           break;
@@ -113,8 +115,9 @@ namespace triton {
       inst.getWrittenRegisters().clear();
 
       /* Update instruction address if undefined */
-      if (!inst.getAddress())
+      if (!inst.getAddress()) {
         inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter()).convert_to<triton::uint64>());
+      }
 
       /* Backup the symbolic engine in the case where only the taint is available. */
       if (!this->symbolicEngine->isEnabled()) {

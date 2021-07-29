@@ -2,9 +2,10 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
+#include <algorithm>
 #include <cstring>
 
 #include <triton/architecture.hpp>
@@ -56,8 +57,6 @@ namespace triton {
       void x8664Cpu::copy(const x8664Cpu& other) {
         this->callbacks = other.callbacks;
         this->memory    = other.memory;
-
-        this->disassInit();
 
         std::memcpy(this->rax,        other.rax,        sizeof(this->rax));
         std::memcpy(this->rbx,        other.rbx,        sizeof(this->rbx));
@@ -379,14 +378,14 @@ namespace triton {
 
 
       const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& x8664Cpu::getAllRegisters(void) const {
-        return this->registers_;
+        return this->id2reg;
       }
 
 
       std::set<const triton::arch::Register*> x8664Cpu::getParentRegisters(void) const {
         std::set<const triton::arch::Register*> ret;
 
-        for (const auto& kv: this->registers_) {
+        for (const auto& kv: this->id2reg) {
           auto regId = kv.first;
           const auto& reg = kv.second;
 
@@ -441,7 +440,18 @@ namespace triton {
 
       const triton::arch::Register& x8664Cpu::getRegister(triton::arch::register_e id) const {
         try {
-          return this->registers_.at(id);
+          return this->id2reg.at(id);
+        } catch (const std::out_of_range&) {
+          throw triton::exceptions::Cpu("x8664Cpu::getRegister(): Invalid register for this architecture.");
+        }
+      }
+
+
+      const triton::arch::Register& x8664Cpu::getRegister(const std::string& name) const {
+        std::string lower = name;
+        std::transform(lower.begin(), lower.end(), lower.begin(), [](unsigned char c){ return std::tolower(c); });
+        try {
+          return this->getRegister(this->name2id.at(lower));
         } catch (const std::out_of_range&) {
           throw triton::exceptions::Cpu("x8664Cpu::getRegister(): Invalid register for this architecture.");
         }
@@ -478,6 +488,11 @@ namespace triton {
 
         /* Clear instructicon's operands if alredy defined */
         inst.operands.clear();
+
+        /* Update instruction address if undefined */
+        if (!inst.getAddress()) {
+          inst.setAddress(this->getConcreteRegisterValue(this->getProgramCounter()).convert_to<triton::uint64>());
+        }
 
         /* Let's disass and build our operands */
         count = triton::extlibs::capstone::cs_disasm(this->handle, inst.getOpcode(), inst.getSize(), inst.getAddress(), 0, &insn);
@@ -516,16 +531,18 @@ namespace triton {
                 triton::arch::MemoryAccess mem;
 
                 /* Set the size of the memory access */
-                mem.setPair(std::make_pair(((op->size * triton::bitsize::byte) - 1), 0));
+                mem.setBits(((op->size * triton::bitsize::byte) - 1), 0);
 
                 /* LEA if exists */
                 const triton::arch::Register segment(*this, this->capstoneRegisterToTritonRegister(op->mem.segment));
                 const triton::arch::Register base(*this, this->capstoneRegisterToTritonRegister(op->mem.base));
                 const triton::arch::Register index(*this, this->capstoneRegisterToTritonRegister(op->mem.index));
 
-                triton::uint32 immsize = (this->isRegisterValid(base.getId()) ? base.getSize() :
-                                          this->isRegisterValid(index.getId()) ? index.getSize() :
-                                          this->gprSize());
+                triton::uint32 immsize = (
+                  this->isRegisterValid(base.getId()) ? base.getSize() :
+                  this->isRegisterValid(index.getId()) ? index.getSize() :
+                  this->gprSize()
+                );
 
                 triton::arch::Immediate disp(op->mem.disp, immsize);
                 triton::arch::Immediate scale(op->mem.scale, immsize);
@@ -936,6 +953,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+        // Pre-reserving the memory. We modified the original robin_map to not force rehash on reserve.
+        this->memory.reserve(values.size() + this->memory.size());
         for (triton::usize index = 0; index < values.size(); index++) {
           this->setConcreteMemoryValue(baseAddr+index, values[index]);
         }
@@ -943,6 +962,8 @@ namespace triton {
 
 
       void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+        // Pre-reserving the memory. We modified the original robin_map to not force rehash on every reserve if not needed.
+        this->memory.reserve(size + this->memory.size());
         for (triton::usize index = 0; index < size; index++) {
           this->setConcreteMemoryValue(baseAddr+index, area[index]);
         }

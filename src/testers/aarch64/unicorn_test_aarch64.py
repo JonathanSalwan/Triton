@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
@@ -17,6 +17,37 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
+    (b"\x08\x08\x00\x90", "adrp x8, #0x100000"),
+    (b"\x08\x59\x00\x91", "add x8, x8, #0x16"),
+    (b"\x2b\x00\x80\xd2", "mov x11, 1"),
+    (b"\x0a\x79\xab\xb8", "ldrsw x10, [x8, x11, lsl #2]"),
+    (b"\x09\x01\x0a\x8b", "add x9, x8, x10"),
+
+    (b"\x41\x24\x82\xd2", "mov x1, 0x1122"),
+    (b"\x42\xf5\x8e\xd2", "mov x2, 0x77aa"),
+    (b"\x63\x40\x99\xd2", "mov x3, 0xca03"),
+    (b"\x21\x7c\x02\x9b", "mul x1, x1, x2"),
+    (b"\x21\x7c\x02\x9b", "mul x1, x1, x2"),
+    (b"\x21\x7c\x02\x9b", "mul x1, x1, x2"),
+    (b"\x43\x7c\x03\x9b", "mul x3, x2, x3"),
+    (b"\x43\x7c\x03\x9b", "mul x3, x2, x3"),
+    (b"\x41\x04\x41\xb3", "bfxil x1, x2, #1, #1"),
+    (b"\x41\x08\x41\xb3", "bfxil x1, x2, #1, #2"),
+    (b"\x41\x0c\x41\xb3", "bfxil x1, x2, #1, #3"),
+    (b"\x41\x10\x41\xb3", "bfxil x1, x2, #1, #4"),
+    (b"\x41\x14\x41\xb3", "bfxil x1, x2, #1, #5"),
+    (b"\x41\x18\x41\xb3", "bfxil x1, x2, #1, #6"),
+    (b"\x41\x1c\x41\xb3", "bfxil x1, x2, #1, #7"),
+    (b"\x41\x7c\x41\xb3", "bfxil x1, x2, #1, #31"),
+    (b"\x41\x04\x41\xb3", "bfxil x1, x2, #1, #1"),
+    (b"\x41\x0c\x42\xb3", "bfxil x1, x2, #2, #2"),
+    (b"\x41\x14\x43\xb3", "bfxil x1, x2, #3, #3"),
+    (b"\x41\x1c\x44\xb3", "bfxil x1, x2, #4, #4"),
+    (b"\x41\x24\x45\xb3", "bfxil x1, x2, #5, #5"),
+    (b"\x41\x2c\x46\xb3", "bfxil x1, x2, #6, #6"),
+    (b"\x41\x34\x47\xb3", "bfxil x1, x2, #7, #7"),
+    (b"\x41\x98\x48\xb3", "bfxil x1, x2, #8, #31"),
+
     (b"\x80\x46\x82\xd2", "movz x0, #0x1234"),
     (b"\x80\x46\xa2\xd2", "movz x0, #0x1234, lsl #16"),
     (b"\x80\x46\xc2\xd2", "movz x0, #0x1234, lsl #32"),
@@ -327,6 +358,8 @@ CODE  = [
     (b"\x02\x02\x80\xd2", "movz x2, #0x90"),
     (b"\x2d\x48\x62\x38", "ldrb w13, [x1, w2, uxtw]"),
     (b"\x2d\xc8\x62\x78", "ldrh w13, [x1, w2, sxtw]"),
+    (b"\x2d\x58\x62\xf8", "ldr x13, [x1, w2, uxtw #3]"),
+    (b"\x2d\xd8\x62\xf8", "ldr x13, [x1, w2, sxtw #3]"),
 
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
     (b"\x02\x02\x80\xd2", "movz x2, #16"),
@@ -1840,6 +1873,9 @@ CODE  = [
     (b"\x22\xf8\x7e\x92", "bic x2, x1, #2"),
     (b"\x22\xf4\x7e\x92", "bic x2, x1, #3"),
     (b"\x22\xf8\x7d\x92", "bic x2, x1, #4"),
+
+    (b"\x28\x00\x00\x37", "tbnz w8, #0, #4"),
+    (b"\x48\x00\x00\x36", "tbz w8, #0, #0"),
 ]
 
 def emu_with_unicorn(opcode, istate):

@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <vector>
@@ -205,7 +205,7 @@ namespace triton {
         }
 
         case FORALL_NODE: {
-          triton::usize size = node->getChildren().size() - 1;
+          triton::uint32 size = static_cast<triton::uint32>(node->getChildren().size() - 1);
           Z3_app* vars = new Z3_app[size];
 
           for (triton::uint32 i = 0; i != size; i++) {

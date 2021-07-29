@@ -9,6 +9,8 @@
 **  Lower  bit  : 8
 **  Parent      : rax
 **  operator<<  : ah:8 bitsvector[15..8]
+**  Object      : ah:8 bitsvector[15..8]
+**  Object      : ah:8 bitsvector[15..8]
 */
 
 #include <iostream>
@@ -33,6 +35,8 @@ int main(int ac, const char **av) {
   std::cout << "Lower  bit  : " << api.registers.x86_ah.getLow() << std::endl;
   std::cout << "Parent      : " << api.getParentRegister(ID_REG_X86_AH).getName() << std::endl;
   std::cout << "operator<<  : " << api.getRegister(ID_REG_X86_AH) << std::endl;
+  std::cout << "Object      : " << api.getRegister("ah") << std::endl;
+  std::cout << "Object      : " << api.getRegister("AH") << std::endl;
 
   std::cout << "----------------------------" << std::endl;
 

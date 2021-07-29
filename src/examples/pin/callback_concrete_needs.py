@@ -21,8 +21,8 @@ if __name__ == '__main__':
     # Start JIT at the entry point
     startAnalysisFromEntry()
 
-    getTritonContext().addCallback(mem_hit, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
-    getTritonContext().addCallback(reg_hit, CALLBACK.GET_CONCRETE_REGISTER_VALUE)
+    getTritonContext().addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, mem_hit)
+    getTritonContext().addCallback(CALLBACK.GET_CONCRETE_REGISTER_VALUE, reg_hit)
 
     # Add callback
     insertCall(mycb, INSERT_POINT.BEFORE)

@@ -2,7 +2,7 @@
 /*
 **  Copyright (C) - Triton
 **
-**  This program is under the terms of the BSD License.
+**  This program is under the terms of the Apache License 2.0.
 */
 
 #include <triton/pythonBindings.hpp>
@@ -25,7 +25,7 @@ The CALLBACK namespace contains all kinds of callbacks.
 \subsection CALLBACK_py_example Example
 
 ~~~~~~~~~~~~~{.py}
->>> addCallback(your_function, CALLBACK.GET_CONCRETE_MEMORY_VALUE)
+>>> addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, your_function)
 ~~~~~~~~~~~~~
 
 \section CALLBACK_py_api Python API - Items of the CALLBACK namespace
