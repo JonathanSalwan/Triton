@@ -32,7 +32,7 @@ namespace triton {
     typedef std::uint64_t uint64;
 
     //! unsigned 80-bits
-    typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<80, 80, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void> > uint80;
+    typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<80, 80, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void>> uint80;
 
     //! unsigned 128-bits
     typedef boost::multiprecision::uint128_t uint128;

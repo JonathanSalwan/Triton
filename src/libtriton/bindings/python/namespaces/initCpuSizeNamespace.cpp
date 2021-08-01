@@ -49,6 +49,12 @@ Returns `8`
 - **CPUSIZE.QWORD_BIT**<br>
 Returns `64`
 
+- **CPUSIZE.FWORD**<br>
+Returns `10`
+
+- **CPUSIZE.FWORD_BIT**<br>
+Returns `80`
+
 - **CPUSIZE.DQWORD**<br>
 Returns `16`
 

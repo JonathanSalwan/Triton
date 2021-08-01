@@ -937,9 +937,7 @@ namespace triton {
 
 
       //! Update the FPU x87 Tag Word (whenever an STX register changes)
-      void x86Semantics::updateFTW(triton::arch::Instruction& inst,
-                   const triton::engines::symbolic::SharedSymbolicExpression& parent) {
-
+      void x86Semantics::updateFTW(triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& parent) {
         /* Fetch the STX registers */
         auto st0 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST0));
         auto st1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ST1));
@@ -1041,7 +1039,7 @@ namespace triton {
         auto fa0_st7 = this->astCtxt->equal(fraction_st7, this->astCtxt->bv(0, 63));
 
         /* Determine the x87 FPU Tag Word (Diagram at page 379 of the AMD Architecture Programmer's Manual, Volume 2: System Programming) */
-        auto db_1_0   = this->astCtxt->ite(ea0_st0,
+        auto db_1_0 = this->astCtxt->ite(ea0_st0,
             this->astCtxt->ite(ib0_st0,
               this->astCtxt->ite(fa0_st0,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1052,7 +1050,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_3_2   = this->astCtxt->ite(ea0_st1,
+        auto db_3_2 = this->astCtxt->ite(ea0_st1,
             this->astCtxt->ite(ib0_st1,
               this->astCtxt->ite(fa0_st1,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1063,7 +1061,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_5_4   = this->astCtxt->ite(ea0_st2,
+        auto db_5_4 = this->astCtxt->ite(ea0_st2,
             this->astCtxt->ite(ib0_st2,
               this->astCtxt->ite(fa0_st2,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1074,7 +1072,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_7_6   = this->astCtxt->ite(ea0_st3,
+        auto db_7_6 = this->astCtxt->ite(ea0_st3,
             this->astCtxt->ite(ib0_st3,
               this->astCtxt->ite(fa0_st3,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1085,7 +1083,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_9_8   = this->astCtxt->ite(ea0_st4,
+        auto db_9_8 = this->astCtxt->ite(ea0_st4,
             this->astCtxt->ite(ib0_st4,
               this->astCtxt->ite(fa0_st4,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1096,7 +1094,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_11_10   = this->astCtxt->ite(ea0_st5,
+        auto db_11_10 = this->astCtxt->ite(ea0_st5,
             this->astCtxt->ite(ib0_st5,
               this->astCtxt->ite(fa0_st5,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1107,7 +1105,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_13_12   = this->astCtxt->ite(ea0_st6,
+        auto db_13_12 = this->astCtxt->ite(ea0_st6,
             this->astCtxt->ite(ib0_st6,
               this->astCtxt->ite(fa0_st6,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1118,7 +1116,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
-        auto db_15_14   = this->astCtxt->ite(ea0_st7,
+        auto db_15_14 = this->astCtxt->ite(ea0_st7,
             this->astCtxt->ite(ib0_st7,
               this->astCtxt->ite(fa0_st7,
                 this->astCtxt->bv(1, 2),    // 'Exponent All 0' + 'Integer Bit 0' + 'Fraction All 0'
@@ -1143,7 +1141,19 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, this->architecture->getRegister(ID_REG_X86_FTW), "x87 FPU Tag Word");
 
         /* Spread the taint from the parent to the child */
-        // expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_FTW), parent->isTainted);
+        auto st0_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST0));
+        auto st1_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST1));
+        auto st2_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST2));
+        auto st3_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST3));
+        auto st4_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST4));
+        auto st5_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST5));
+        auto st6_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST6));
+        auto st7_taint = this->taintEngine->isRegisterTainted(this->architecture->getRegister(ID_REG_X86_ST7));
+
+        auto is_ftw_tainted = st0_taint | st1_taint | st2_taint | st3_taint |
+                              st4_taint | st5_taint | st6_taint | st7_taint;
+
+        expr->isTainted = this->taintEngine->setTaintRegister(this->architecture->getRegister(ID_REG_X86_FTW), is_ftw_tainted);
       }
 
 
@@ -5715,7 +5725,7 @@ namespace triton {
         auto fa0_st7 = this->astCtxt->equal(fraction_st7, this->astCtxt->bv(0, 63));
 
         /* Determine the x87 FPU Tag Word (Diagram at page 379 of the AMD Architecture Programmer's Manual, Volume 2: System Programming) */
-        auto db_1_0   = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
+        auto db_1_0 = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st0,
             this->astCtxt->ite(ib0_st0,
@@ -5728,7 +5738,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_3_2   = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
+        auto db_3_2 = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st1,
             this->astCtxt->ite(ib0_st1,
@@ -5741,7 +5751,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_5_4   = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
+        auto db_5_4 = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st2,
             this->astCtxt->ite(ib0_st2,
@@ -5754,7 +5764,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_7_6   = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
+        auto db_7_6 = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st3,
             this->astCtxt->ite(ib0_st3,
@@ -5767,7 +5777,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_9_8   = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
+        auto db_9_8 = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st4,
             this->astCtxt->ite(ib0_st4,
@@ -5780,7 +5790,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_11_10   = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
+        auto db_11_10 = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st5,
             this->astCtxt->ite(ib0_st5,
@@ -5793,7 +5803,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_13_12   = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
+        auto db_13_12 = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st6,
             this->astCtxt->ite(ib0_st6,
@@ -5806,7 +5816,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_15_14   = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
+        auto db_15_14 = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st7,
             this->astCtxt->ite(ib0_st7,
@@ -6097,7 +6107,7 @@ namespace triton {
         auto xmm12_orig = this->symbolicEngine->getOperandAst(inst, xmm12);
         auto xmm13_orig = this->symbolicEngine->getOperandAst(inst, xmm13);
         auto xmm14_orig = this->symbolicEngine->getOperandAst(inst, xmm14);
-        auto xmm15_orig = this->symbolicEngine->getOperandAst(inst, xmm15);          
+        auto xmm15_orig = this->symbolicEngine->getOperandAst(inst, xmm15);
 
         /* Check if we are running in CPL = 0 (ring 0) and if the FFXSR bit is set in EFER */
         auto cpl = this->astCtxt->equal(this->astCtxt->extract(1, 0, cs_ast), this->astCtxt->bv(0, 2));
@@ -6213,7 +6223,7 @@ namespace triton {
         auto fa0_st7 = this->astCtxt->equal(fraction_st7, this->astCtxt->bv(0, 63));
 
         /* Determine the x87 FPU Tag Word (Diagram at page 379 of the AMD Architecture Programmer's Manual, Volume 2: System Programming) */
-        auto db_1_0   = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
+        auto db_1_0 = this->astCtxt->ite(this->astCtxt->equal(eb_1_0, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st0,
             this->astCtxt->ite(ib0_st0,
@@ -6226,7 +6236,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_3_2   = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
+        auto db_3_2 = this->astCtxt->ite(this->astCtxt->equal(eb_3_2, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st1,
             this->astCtxt->ite(ib0_st1,
@@ -6239,7 +6249,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_5_4   = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
+        auto db_5_4 = this->astCtxt->ite(this->astCtxt->equal(eb_5_4, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st2,
             this->astCtxt->ite(ib0_st2,
@@ -6252,7 +6262,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_7_6   = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
+        auto db_7_6 = this->astCtxt->ite(this->astCtxt->equal(eb_7_6, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st3,
             this->astCtxt->ite(ib0_st3,
@@ -6265,7 +6275,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_9_8   = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
+        auto db_9_8 = this->astCtxt->ite(this->astCtxt->equal(eb_9_8, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st4,
             this->astCtxt->ite(ib0_st4,
@@ -6278,7 +6288,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_11_10   = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
+        auto db_11_10 = this->astCtxt->ite(this->astCtxt->equal(eb_11_10, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st5,
             this->astCtxt->ite(ib0_st5,
@@ -6291,7 +6301,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_13_12   = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
+        auto db_13_12 = this->astCtxt->ite(this->astCtxt->equal(eb_13_12, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st6,
             this->astCtxt->ite(ib0_st6,
@@ -6304,7 +6314,7 @@ namespace triton {
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
               this->astCtxt->bv(2, 2))));   // 'Exponent All 1'
-        auto db_15_14   = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
+        auto db_15_14 = this->astCtxt->ite(this->astCtxt->equal(eb_15_14, this->astCtxt->bv(0, 1)),
           this->astCtxt->bv(3, 2),          // Encoded x87 FPU Tag Bit = 0
           this->astCtxt->ite(ea0_st7,
             this->astCtxt->ite(ib0_st7,
