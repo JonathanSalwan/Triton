@@ -5,6 +5,7 @@
 import unittest
 
 from triton import ARCH, TritonContext
+from random import randrange
 
 
 class TestX86ConcreteRegisterValue(unittest.TestCase):
@@ -60,6 +61,14 @@ class TestX86ConcreteRegisterValue(unittest.TestCase):
         """Check if everything is equal to zero"""
         for r in self.ar:
             self.assertEqual(self.Triton.getConcreteRegisterValue(r), 0)
+
+    def test_rand_set_get_concrete_value(self):
+        """Check setting concrete values"""
+        for _ in range(100):
+            for reg in self.ar:
+                v = randrange(0, reg.getBitvector().getMaxValue() + 1)
+                self.Triton.setConcreteRegisterValue(reg, v)
+                self.assertEqual(self.Triton.getConcreteRegisterValue(reg), v)
 
 class TestX8664ConcreteRegisterValue(unittest.TestCase):
 
