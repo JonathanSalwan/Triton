@@ -59,8 +59,9 @@ namespace triton {
       if (this->high >= triton::bitsize::max_supported)
         throw triton::exceptions::BitsVector("BitsVector::setHigh(): The highest bit cannot be greater than triton::bitsize::max_supported.");
 
-      if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
-        throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
+      // FIXME djo fpu: Can we really ignore that?
+      // if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
+      //  throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 
 
@@ -70,8 +71,9 @@ namespace triton {
       if (this->low > this->high)
         throw triton::exceptions::BitsVector("BitsVector::setLow(): The lower bit cannot be greater than highest.");
 
-      if (this->low % triton::bitsize::byte)
-        throw triton::exceptions::BitsVector("BitsVector::setLow(): The lower bit must be a multiple of 8.");
+      // FIXME djo fpu: Can we really ignore that?
+      // if (this->low % triton::bitsize::byte)
+      //  throw triton::exceptions::BitsVector("BitsVector::setLow(): The lower bit must be a multiple of 8.");
     }
 
 
@@ -82,14 +84,16 @@ namespace triton {
       if (this->high >= triton::bitsize::max_supported)
         throw triton::exceptions::BitsVector("BitsVector::setBits(): The highest bit cannot be greater than triton::bitsize::max_supported.");
 
-      if (this->low % triton::bitsize::byte)
-        throw triton::exceptions::BitsVector("BitsVector::setBits(): The lower bit must be a multiple of 8.");
+      // FIXME djo fpu: Can we really ignore that?
+      // if (this->low % triton::bitsize::byte)
+      //  throw triton::exceptions::BitsVector("BitsVector::setPair(): The lower bit must be a multiple of 8.");
 
       if (this->low > this->high)
         throw triton::exceptions::BitsVector("BitsVector::setBits(): The lower bit cannot be greater than highest.");
 
-      if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
-        throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
+      // FIXME djo fpu: Can we really ignore that?
+      // if (this->getVectorSize() % triton::bitsize::byte && this->getVectorSize() != triton::bitsize::flag)
+      //  throw triton::exceptions::BitsVector("BitsVector::setHigh(): The vector size must be a multiple of 8.");
     }
 
 

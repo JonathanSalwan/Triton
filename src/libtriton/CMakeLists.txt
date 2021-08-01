@@ -49,6 +49,9 @@ if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
     endif()
 endif()
 
+# Enable preprocessor output
+# set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} --save-temps")
+
 # Add Triton includes
 include_directories("${CMAKE_CURRENT_LIST_DIR}/includes")
 include_directories("${CMAKE_CURRENT_BINARY_DIR}/includes")

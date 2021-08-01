@@ -17,6 +17,7 @@ HEAP  = 0x300000
 SIZE  = 5 * 1024 * 1024
 
 CODE  = [
+
     (None, b"\x48\xb8\xaf\xbe\xad\xde\xaf\xbe\xad\xde",   "mov rax, 0xdeadbeafdeadbeaf"),
     (None, b"\x48\xff\xc0",                               "inc rax"),
     (None, b"\x48\xc7\xc3\x00\x00\x20\x00",               "mov rbx, 0x200000"),
@@ -745,6 +746,14 @@ CODE  = [
     (None, b"\x48\xc7\xc3\x00\x00\x00\x00",               "mov rbx, 0x0"),
     (None, b"\xf3\x0f\xbc\xd8",                           "tzcnt ebx, eax"),
 
+    (None, b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "movabs rax, 1111111111111111"),
+    (None, b"\x66\x48\x0F\x6E\xC0",                       "movq xmm0, rax"),
+    (None, b"\x66\x48\x0F\x3A\x22\xC0\x01",               "pinsrq xmm0, rax, 1"),
+    (None, b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "movabs rax, 2222222222222222"),
+    (None, b"\x66\x48\x0F\x6E\xC8",                       "movq xmm1, rax"),
+    (None, b"\x66\x48\x0F\x3A\x22\xC8\x01",               "pinsrq xmm1, rax, 1"),
+    (None, b"\xC5\xF9\xEB\xC1",                           "vpor xmm0, xmm0, xmm1"),
+
     (None, b"\xbb\x10\x00\x30\x00",                       "mov ebx, 0x300010"),
     (None, b"\xb8\x20\x00\x30\x00",                       "mov eax, 0x300020"),
     (None, b"\xc7\x03\x10\x00\x00\x00",                   "mov [ebx], 0x10"),
@@ -753,6 +762,55 @@ CODE  = [
     (None, b"\xf3\x0f\x10\xc1",                           "movss xmm1, xmm0"),
     (None, b"\xf3\x0f\x11\x03",                           "movss xmm0, [ebx]"),
     (None, b"\xf3\x0f\x10\x03",                           "movss [eax], xmm0"),
+    (None, b"\x48\xB8\xEC\xE3\x96\xE1\x44\x6F\xE9\xBD",   "mov rax, BDE96F44E196E3EC"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    (None, b"\x48\xB8\xB2\x7D\xB6\x97\xE7\xB8\x50\xA5",   "mov rax, A550B8E797B67DB2"),
+    (None, b"\x48\x89\x44\x24\x08",                       "mov qword ptr ss:[rsp+8], rax"),
+    (None, b"\x48\xB8\x02\x70\xE7\xC5\xF4\x9F\x47\xD8",   "mov rax, D8479FF4C5E77002"),
+    (None, b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10], rax"),
+    (None, b"\x48\xB8\x44\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05644"),
+    (None, b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
+    (None, b"\xC5\xFD\x6F\x04\x24",                       "vmovdqa ymm0, yword ptr ss:[rsp]"),
+    (None, b"\x48\xB8\x8D\x8D\xB6\x84\x3C\x1B\x9B\xDC",   "mov rax, DC9B1B3C84B68D8D"),
+    (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    (None, b"\x48\xB8\x92\x11\xD9\xF9\x80\x98\x38\xC0",   "mov rax, C0389880F9D91192"),
+    (None, b"\x48\x89\x44\x24\x08",                       "mov qword ptr ss:[rsp+8], rax"),
+    (None, b"\x48\xB8\x6E\x1C\x88\x9A\x83\xF0\x35\xB4",   "mov rax, B435F0839A881C6E"),
+    (None, b"\x48\x89\x44\x24\x10",                       "mov qword ptr ss:[rsp+10], rax"),
+    (None, b"\x48\xB8\x20\x56\xE0\xA9\x0D\x06\x8B\xC6",   "mov rax, C68B060DA9E05620"),
+    (None, b"\x48\x89\x44\x24\x18",                       "mov qword ptr ss:[rsp+18], rax"),
+    (None, b"\xC5\xFD\x6F\x0C\x24",                       "vmovdqa ymm1, yword ptr ss:[rsp]"),
+    (None, b"\xC5\xFD\xEF\xC1",                           "vpxor ymm0, ymm0, ymm1"),
+
+    # (None, b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "mov rax,1111111111111111"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x04\x24",                           "movq mm0, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "mov rax, 2222222222222222"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x0C\x24",                           "movq mm1, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x33\x33\x33\x33\x33\x33\x33\x33",   "mov rax, 3333333333333333"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x14\x24",                           "movq mm2, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x44\x44\x44\x44\x44\x44\x44\x44",   "mov rax, 4444444444444444"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x1C\x24",                           "movq mm3, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x55\x55\x55\x55\x55\x55\x55\x55",   "mov rax, 5555555555555555"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x24\x24",                           "movq mm4, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x66\x66\x66\x66\x66\x66\x66\x66",   "mov rax, 6666666666666666"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x2C\x24",                           "movq mm5, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x77\x77\x77\x77\x77\x77\x77\x77",   "mov rax, 7777777777777777"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x34\x24",                           "movq mm6, qword ptr ss:[rsp]"),
+    # (None, b"\x48\xB8\x88\x88\x88\x88\x88\x88\x88\x88",   "mov rax, 8888888888888888"),
+    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    # (None, b"\x0F\x6F\x3C\x24",                           "movq mm7, qword ptr ss:[rsp]"),
+
+    # (None, b"\x0F\xAE\x04\x24",                           "fxsave ss:[rsp]"),
+    # (None, b"\x0F\xAE\x0C\x24",                           "fxrstor ss:[rsp]"),
+    # (None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 ss:[rsp]"),
+    # (None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 ss:[rsp]"),
 ]
 
 
@@ -799,6 +857,12 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_X86_REG_XMM7,   istate['xmm7'])
     mu.reg_write(UC_X86_REG_XMM8,   istate['xmm8'])
     mu.reg_write(UC_X86_REG_XMM9,   istate['xmm9'])
+    mu.reg_write(UC_X86_REG_XMM10,  istate['xmm10'])
+    mu.reg_write(UC_X86_REG_XMM11,  istate['xmm11'])
+    mu.reg_write(UC_X86_REG_XMM12,  istate['xmm12'])
+    mu.reg_write(UC_X86_REG_XMM13,  istate['xmm13'])
+    mu.reg_write(UC_X86_REG_XMM14,  istate['xmm14'])
+    mu.reg_write(UC_X86_REG_XMM15,  istate['xmm15'])
     mu.reg_write(UC_X86_REG_MM0,    istate['mm0'])
     mu.reg_write(UC_X86_REG_MM1,    istate['mm1'])
     mu.reg_write(UC_X86_REG_MM2,    istate['mm2'])
@@ -807,49 +871,64 @@ def emu_with_unicorn(opcode, istate):
     mu.reg_write(UC_X86_REG_MM5,    istate['mm5'])
     mu.reg_write(UC_X86_REG_MM6,    istate['mm6'])
     mu.reg_write(UC_X86_REG_MM7,    istate['mm7'])
+    mu.reg_write(UC_X86_REG_MXCSR,  istate['mxcsr'])
+    mu.reg_write(UC_X86_REG_FPCW,   istate['fcw'])
+    mu.reg_write(UC_X86_REG_FPSW,   istate['fsw'])
+    mu.reg_write(UC_X86_REG_FPTAG,  istate['ftw'])
 
     # emulate code in infinite time & unlimited instructions
     mu.emu_start(istate['rip'], istate['rip'] + len(opcode))
 
     ostate = {
-        "stack":   mu.mem_read(STACK, 0x100),
-        "heap":    mu.mem_read(HEAP, 0x100),
-        "eflags":  mu.reg_read(UC_X86_REG_EFLAGS),
-        "rax":     mu.reg_read(UC_X86_REG_RAX),
-        "rbx":     mu.reg_read(UC_X86_REG_RBX),
-        "rcx":     mu.reg_read(UC_X86_REG_RCX),
-        "rdx":     mu.reg_read(UC_X86_REG_RDX),
-        "rsi":     mu.reg_read(UC_X86_REG_RSI),
-        "rdi":     mu.reg_read(UC_X86_REG_RDI),
-        "rip":     mu.reg_read(UC_X86_REG_RIP),
-        "rsp":     mu.reg_read(UC_X86_REG_RSP),
-        "rbp":     mu.reg_read(UC_X86_REG_RBP),
-        "r8":      mu.reg_read(UC_X86_REG_R8),
-        "r9":      mu.reg_read(UC_X86_REG_R9),
-        "r10":     mu.reg_read(UC_X86_REG_R10),
-        "r11":     mu.reg_read(UC_X86_REG_R11),
-        "r12":     mu.reg_read(UC_X86_REG_R12),
-        "r13":     mu.reg_read(UC_X86_REG_R13),
-        "r14":     mu.reg_read(UC_X86_REG_R14),
-        "r15":     mu.reg_read(UC_X86_REG_R15),
-        "xmm0":    mu.reg_read(UC_X86_REG_XMM0),
-        "xmm1":    mu.reg_read(UC_X86_REG_XMM1),
-        "xmm2":    mu.reg_read(UC_X86_REG_XMM2),
-        "xmm3":    mu.reg_read(UC_X86_REG_XMM3),
-        "xmm4":    mu.reg_read(UC_X86_REG_XMM4),
-        "xmm5":    mu.reg_read(UC_X86_REG_XMM5),
-        "xmm6":    mu.reg_read(UC_X86_REG_XMM6),
-        "xmm7":    mu.reg_read(UC_X86_REG_XMM7),
-        "xmm8":    mu.reg_read(UC_X86_REG_XMM8),
-        "xmm9":    mu.reg_read(UC_X86_REG_XMM9),
-        "mm0":     mu.reg_read(UC_X86_REG_MM0),
-        "mm1":     mu.reg_read(UC_X86_REG_MM1),
-        "mm2":     mu.reg_read(UC_X86_REG_MM2),
-        "mm3":     mu.reg_read(UC_X86_REG_MM3),
-        "mm4":     mu.reg_read(UC_X86_REG_MM4),
-        "mm5":     mu.reg_read(UC_X86_REG_MM5),
-        "mm6":     mu.reg_read(UC_X86_REG_MM6),
-        "mm7":     mu.reg_read(UC_X86_REG_MM7),
+        "stack":        mu.mem_read(STACK, 0x200),
+        "heap":         mu.mem_read(HEAP, 0x200),
+        "eflags":       mu.reg_read(UC_X86_REG_EFLAGS),
+        "rax":          mu.reg_read(UC_X86_REG_RAX),
+        "rbx":          mu.reg_read(UC_X86_REG_RBX),
+        "rcx":          mu.reg_read(UC_X86_REG_RCX),
+        "rdx":          mu.reg_read(UC_X86_REG_RDX),
+        "rsi":          mu.reg_read(UC_X86_REG_RSI),
+        "rdi":          mu.reg_read(UC_X86_REG_RDI),
+        "rip":          mu.reg_read(UC_X86_REG_RIP),
+        "rsp":          mu.reg_read(UC_X86_REG_RSP),
+        "rbp":          mu.reg_read(UC_X86_REG_RBP),
+        "r8":           mu.reg_read(UC_X86_REG_R8),
+        "r9":           mu.reg_read(UC_X86_REG_R9),
+        "r10":          mu.reg_read(UC_X86_REG_R10),
+        "r11":          mu.reg_read(UC_X86_REG_R11),
+        "r12":          mu.reg_read(UC_X86_REG_R12),
+        "r13":          mu.reg_read(UC_X86_REG_R13),
+        "r14":          mu.reg_read(UC_X86_REG_R14),
+        "r15":          mu.reg_read(UC_X86_REG_R15),
+        "xmm0":         mu.reg_read(UC_X86_REG_XMM0),
+        "xmm1":         mu.reg_read(UC_X86_REG_XMM1),
+        "xmm2":         mu.reg_read(UC_X86_REG_XMM2),
+        "xmm3":         mu.reg_read(UC_X86_REG_XMM3),
+        "xmm4":         mu.reg_read(UC_X86_REG_XMM4),
+        "xmm5":         mu.reg_read(UC_X86_REG_XMM5),
+        "xmm6":         mu.reg_read(UC_X86_REG_XMM6),
+        "xmm7":         mu.reg_read(UC_X86_REG_XMM7),
+        "xmm8":         mu.reg_read(UC_X86_REG_XMM8),
+        "xmm9":         mu.reg_read(UC_X86_REG_XMM9),
+        "xmm10":        mu.reg_read(UC_X86_REG_XMM10),
+        "xmm11":        mu.reg_read(UC_X86_REG_XMM11),
+        "xmm12":        mu.reg_read(UC_X86_REG_XMM12),
+        "xmm13":        mu.reg_read(UC_X86_REG_XMM13),
+        "xmm14":        mu.reg_read(UC_X86_REG_XMM14),
+        "xmm15":        mu.reg_read(UC_X86_REG_XMM15),
+        "mm0":          mu.reg_read(UC_X86_REG_MM0),
+        "mm1":          mu.reg_read(UC_X86_REG_MM1),
+        "mm2":          mu.reg_read(UC_X86_REG_MM2),
+        "mm3":          mu.reg_read(UC_X86_REG_MM3),
+        "mm4":          mu.reg_read(UC_X86_REG_MM4),
+        "mm5":          mu.reg_read(UC_X86_REG_MM5),
+        "mm6":          mu.reg_read(UC_X86_REG_MM6),
+        "mm7":          mu.reg_read(UC_X86_REG_MM7),
+        "mxcsr":        mu.reg_read(UC_X86_REG_MXCSR),
+        "mxcsr_mask":   0xFFBF,  # Unsupported by Unicorn
+        "fcw":          mu.reg_read(UC_X86_REG_FPCW),
+        "fsw":          mu.reg_read(UC_X86_REG_FPSW),
+        "ftw":          mu.reg_read(UC_X86_REG_FPTAG),
     }
     return ostate
 
@@ -861,89 +940,112 @@ def emu_with_triton(opcode, istate):
     inst = Instruction(opcode)
     inst.setAddress(istate['rip'])
 
-    ctx.setConcreteMemoryAreaValue(STACK,               bytes(istate['stack']))
-    ctx.setConcreteMemoryAreaValue(HEAP,                bytes(istate['heap']))
-    ctx.setConcreteRegisterValue(ctx.registers.eflags,  istate['eflags'])
-    ctx.setConcreteRegisterValue(ctx.registers.rax,     istate['rax'])
-    ctx.setConcreteRegisterValue(ctx.registers.rbx,     istate['rbx'])
-    ctx.setConcreteRegisterValue(ctx.registers.rcx,     istate['rcx'])
-    ctx.setConcreteRegisterValue(ctx.registers.rdx,     istate['rdx'])
-    ctx.setConcreteRegisterValue(ctx.registers.rsi,     istate['rsi'])
-    ctx.setConcreteRegisterValue(ctx.registers.rdi,     istate['rdi'])
-    ctx.setConcreteRegisterValue(ctx.registers.rip,     istate['rip'])
-    ctx.setConcreteRegisterValue(ctx.registers.rsp,     istate['rsp'])
-    ctx.setConcreteRegisterValue(ctx.registers.rbp,     istate['rbp'])
-    ctx.setConcreteRegisterValue(ctx.registers.r8,      istate['r8'])
-    ctx.setConcreteRegisterValue(ctx.registers.r9,      istate['r9'])
-    ctx.setConcreteRegisterValue(ctx.registers.r10,     istate['r10'])
-    ctx.setConcreteRegisterValue(ctx.registers.r11,     istate['r11'])
-    ctx.setConcreteRegisterValue(ctx.registers.r12,     istate['r12'])
-    ctx.setConcreteRegisterValue(ctx.registers.r13,     istate['r13'])
-    ctx.setConcreteRegisterValue(ctx.registers.r14,     istate['r14'])
-    ctx.setConcreteRegisterValue(ctx.registers.r15,     istate['r15'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm0,    istate['xmm0'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm1,    istate['xmm1'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm2,    istate['xmm2'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm3,    istate['xmm3'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm4,    istate['xmm4'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm5,    istate['xmm5'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm6,    istate['xmm6'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm7,    istate['xmm7'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm8,    istate['xmm8'])
-    ctx.setConcreteRegisterValue(ctx.registers.xmm9,    istate['xmm9'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm0,     istate['mm0'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm1,     istate['mm1'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm2,     istate['mm2'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm3,     istate['mm3'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm4,     istate['mm4'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm5,     istate['mm5'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm6,     istate['mm6'])
-    ctx.setConcreteRegisterValue(ctx.registers.mm7,     istate['mm7'])
+    ctx.setConcreteMemoryAreaValue(STACK,                    bytes(istate['stack']))
+    ctx.setConcreteMemoryAreaValue(HEAP,                     bytes(istate['heap']))
+    ctx.setConcreteRegisterValue(ctx.registers.eflags,       istate['eflags'])
+    ctx.setConcreteRegisterValue(ctx.registers.rax,          istate['rax'])
+    ctx.setConcreteRegisterValue(ctx.registers.rbx,          istate['rbx'])
+    ctx.setConcreteRegisterValue(ctx.registers.rcx,          istate['rcx'])
+    ctx.setConcreteRegisterValue(ctx.registers.rdx,          istate['rdx'])
+    ctx.setConcreteRegisterValue(ctx.registers.rsi,          istate['rsi'])
+    ctx.setConcreteRegisterValue(ctx.registers.rdi,          istate['rdi'])
+    ctx.setConcreteRegisterValue(ctx.registers.rip,          istate['rip'])
+    ctx.setConcreteRegisterValue(ctx.registers.rsp,          istate['rsp'])
+    ctx.setConcreteRegisterValue(ctx.registers.rbp,          istate['rbp'])
+    ctx.setConcreteRegisterValue(ctx.registers.r8,           istate['r8'])
+    ctx.setConcreteRegisterValue(ctx.registers.r9,           istate['r9'])
+    ctx.setConcreteRegisterValue(ctx.registers.r10,          istate['r10'])
+    ctx.setConcreteRegisterValue(ctx.registers.r11,          istate['r11'])
+    ctx.setConcreteRegisterValue(ctx.registers.r12,          istate['r12'])
+    ctx.setConcreteRegisterValue(ctx.registers.r13,          istate['r13'])
+    ctx.setConcreteRegisterValue(ctx.registers.r14,          istate['r14'])
+    ctx.setConcreteRegisterValue(ctx.registers.r15,          istate['r15'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm0,         istate['xmm0'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm1,         istate['xmm1'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm2,         istate['xmm2'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm3,         istate['xmm3'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm4,         istate['xmm4'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm5,         istate['xmm5'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm6,         istate['xmm6'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm7,         istate['xmm7'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm8,         istate['xmm8'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm9,         istate['xmm9'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm10,        istate['xmm10'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm11,        istate['xmm11'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm12,        istate['xmm12'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm13,        istate['xmm13'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm14,        istate['xmm14'])
+    ctx.setConcreteRegisterValue(ctx.registers.xmm15,        istate['xmm15'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm0,          istate['mm0'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm1,          istate['mm1'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm2,          istate['mm2'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm3,          istate['mm3'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm4,          istate['mm4'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm5,          istate['mm5'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm6,          istate['mm6'])
+    ctx.setConcreteRegisterValue(ctx.registers.mm7,          istate['mm7'])
+    ctx.setConcreteRegisterValue(ctx.registers.mxcsr,        istate['mxcsr'])
+    ctx.setConcreteRegisterValue(ctx.registers.mxcsr_mask,   istate['mxcsr_mask'])
+    ctx.setConcreteRegisterValue(ctx.registers.fcw,          istate['fcw'])
+    ctx.setConcreteRegisterValue(ctx.registers.fsw,          istate['fsw'])
+    ctx.setConcreteRegisterValue(ctx.registers.ftw,          istate['ftw'])
 
     ctx.processing(inst)
-    #print(inst)
-    #for se in inst.getSymbolicExpressions():
+    # print(inst)
+    # for se in inst.getSymbolicExpressions():
     #    print(se)
 
     ostate = {
-        "stack":  ctx.getConcreteMemoryAreaValue(STACK, 0x100),
-        "heap":   ctx.getConcreteMemoryAreaValue(HEAP, 0x100),
-        "eflags": ctx.getConcreteRegisterValue(ctx.registers.eflags),
-        "rax":    ctx.getSymbolicRegisterValue(ctx.registers.rax),
-        "rbx":    ctx.getSymbolicRegisterValue(ctx.registers.rbx),
-        "rcx":    ctx.getSymbolicRegisterValue(ctx.registers.rcx),
-        "rdx":    ctx.getSymbolicRegisterValue(ctx.registers.rdx),
-        "rsi":    ctx.getSymbolicRegisterValue(ctx.registers.rsi),
-        "rdi":    ctx.getSymbolicRegisterValue(ctx.registers.rdi),
-        "rip":    ctx.getSymbolicRegisterValue(ctx.registers.rip),
-        "rsp":    ctx.getSymbolicRegisterValue(ctx.registers.rsp),
-        "rbp":    ctx.getSymbolicRegisterValue(ctx.registers.rbp),
-        "r8":     ctx.getSymbolicRegisterValue(ctx.registers.r8),
-        "r9":     ctx.getSymbolicRegisterValue(ctx.registers.r9),
-        "r10":    ctx.getSymbolicRegisterValue(ctx.registers.r10),
-        "r11":    ctx.getSymbolicRegisterValue(ctx.registers.r11),
-        "r12":    ctx.getSymbolicRegisterValue(ctx.registers.r12),
-        "r13":    ctx.getSymbolicRegisterValue(ctx.registers.r13),
-        "r14":    ctx.getSymbolicRegisterValue(ctx.registers.r14),
-        "r15":    ctx.getSymbolicRegisterValue(ctx.registers.r15),
-        "xmm0":   ctx.getSymbolicRegisterValue(ctx.registers.xmm0),
-        "xmm1":   ctx.getSymbolicRegisterValue(ctx.registers.xmm1),
-        "xmm2":   ctx.getSymbolicRegisterValue(ctx.registers.xmm2),
-        "xmm3":   ctx.getSymbolicRegisterValue(ctx.registers.xmm3),
-        "xmm4":   ctx.getSymbolicRegisterValue(ctx.registers.xmm4),
-        "xmm5":   ctx.getSymbolicRegisterValue(ctx.registers.xmm5),
-        "xmm6":   ctx.getSymbolicRegisterValue(ctx.registers.xmm6),
-        "xmm7":   ctx.getSymbolicRegisterValue(ctx.registers.xmm7),
-        "xmm8":   ctx.getSymbolicRegisterValue(ctx.registers.xmm8),
-        "xmm9":   ctx.getSymbolicRegisterValue(ctx.registers.xmm9),
-        "mm0":    ctx.getSymbolicRegisterValue(ctx.registers.mm0),
-        "mm1":    ctx.getSymbolicRegisterValue(ctx.registers.mm1),
-        "mm2":    ctx.getSymbolicRegisterValue(ctx.registers.mm2),
-        "mm3":    ctx.getSymbolicRegisterValue(ctx.registers.mm3),
-        "mm4":    ctx.getSymbolicRegisterValue(ctx.registers.mm4),
-        "mm5":    ctx.getSymbolicRegisterValue(ctx.registers.mm5),
-        "mm6":    ctx.getSymbolicRegisterValue(ctx.registers.mm6),
-        "mm7":    ctx.getSymbolicRegisterValue(ctx.registers.mm7),
+        "stack":       ctx.getConcreteMemoryAreaValue(STACK, 0x200),
+        "heap":        ctx.getConcreteMemoryAreaValue(HEAP, 0x200),
+        "eflags":      ctx.getConcreteRegisterValue(ctx.registers.eflags),
+        "rax":         ctx.getSymbolicRegisterValue(ctx.registers.rax),
+        "rbx":         ctx.getSymbolicRegisterValue(ctx.registers.rbx),
+        "rcx":         ctx.getSymbolicRegisterValue(ctx.registers.rcx),
+        "rdx":         ctx.getSymbolicRegisterValue(ctx.registers.rdx),
+        "rsi":         ctx.getSymbolicRegisterValue(ctx.registers.rsi),
+        "rdi":         ctx.getSymbolicRegisterValue(ctx.registers.rdi),
+        "rip":         ctx.getSymbolicRegisterValue(ctx.registers.rip),
+        "rsp":         ctx.getSymbolicRegisterValue(ctx.registers.rsp),
+        "rbp":         ctx.getSymbolicRegisterValue(ctx.registers.rbp),
+        "r8":          ctx.getSymbolicRegisterValue(ctx.registers.r8),
+        "r9":          ctx.getSymbolicRegisterValue(ctx.registers.r9),
+        "r10":         ctx.getSymbolicRegisterValue(ctx.registers.r10),
+        "r11":         ctx.getSymbolicRegisterValue(ctx.registers.r11),
+        "r12":         ctx.getSymbolicRegisterValue(ctx.registers.r12),
+        "r13":         ctx.getSymbolicRegisterValue(ctx.registers.r13),
+        "r14":         ctx.getSymbolicRegisterValue(ctx.registers.r14),
+        "r15":         ctx.getSymbolicRegisterValue(ctx.registers.r15),
+        "xmm0":        ctx.getSymbolicRegisterValue(ctx.registers.xmm0),
+        "xmm1":        ctx.getSymbolicRegisterValue(ctx.registers.xmm1),
+        "xmm2":        ctx.getSymbolicRegisterValue(ctx.registers.xmm2),
+        "xmm3":        ctx.getSymbolicRegisterValue(ctx.registers.xmm3),
+        "xmm4":        ctx.getSymbolicRegisterValue(ctx.registers.xmm4),
+        "xmm5":        ctx.getSymbolicRegisterValue(ctx.registers.xmm5),
+        "xmm6":        ctx.getSymbolicRegisterValue(ctx.registers.xmm6),
+        "xmm7":        ctx.getSymbolicRegisterValue(ctx.registers.xmm7),
+        "xmm8":        ctx.getSymbolicRegisterValue(ctx.registers.xmm8),
+        "xmm9":        ctx.getSymbolicRegisterValue(ctx.registers.xmm9),
+        "xmm10":       ctx.getSymbolicRegisterValue(ctx.registers.xmm10),
+        "xmm11":       ctx.getSymbolicRegisterValue(ctx.registers.xmm11),
+        "xmm12":       ctx.getSymbolicRegisterValue(ctx.registers.xmm12),
+        "xmm13":       ctx.getSymbolicRegisterValue(ctx.registers.xmm13),
+        "xmm14":       ctx.getSymbolicRegisterValue(ctx.registers.xmm14),
+        "xmm15":       ctx.getSymbolicRegisterValue(ctx.registers.xmm15),
+        "mm0":         ctx.getSymbolicRegisterValue(ctx.registers.mm0),
+        "mm1":         ctx.getSymbolicRegisterValue(ctx.registers.mm1),
+        "mm2":         ctx.getSymbolicRegisterValue(ctx.registers.mm2),
+        "mm3":         ctx.getSymbolicRegisterValue(ctx.registers.mm3),
+        "mm4":         ctx.getSymbolicRegisterValue(ctx.registers.mm4),
+        "mm5":         ctx.getSymbolicRegisterValue(ctx.registers.mm5),
+        "mm6":         ctx.getSymbolicRegisterValue(ctx.registers.mm6),
+        "mm7":         ctx.getSymbolicRegisterValue(ctx.registers.mm7),
+        "mxcsr":       ctx.getSymbolicRegisterValue(ctx.registers.mxcsr),
+        "mxcsr_mask":  ctx.getSymbolicRegisterValue(ctx.registers.mxcsr_mask),
+        "fcw":         ctx.getSymbolicRegisterValue(ctx.registers.fcw),
+        "fsw":         ctx.getSymbolicRegisterValue(ctx.registers.fsw),
+        "ftw":         ctx.getSymbolicRegisterValue(ctx.registers.ftw),
+
     }
     return ostate
 
@@ -957,55 +1059,138 @@ def diff_state(state1, state2):
     return
 
 
+def dump_state(state):
+    # Stack dump (16-byte boundary)
+    print("stack:")
+    for i, b in enumerate(state['stack']):
+        if (i % 16) == 0:
+            print("")
+        print("%02X " % b, end='')
+    print("\n")
+    # Heap dump (16-byte boundary)
+    print("heap:")
+    for i, b in enumerate(state['heap']):
+        if (i % 16) == 0:
+            print("")
+        print("%02X " % b, end='')
+    print("\n")
+    # EFLAGS register
+    print("eflags: 0x%X" % state['eflags'])
+    # GP registers
+    print("rax: 0x%X" % state['rax'])
+    print("rbx: 0x%X" % state['rbx'])
+    print("rcx: 0x%X" % state['rcx'])
+    print("rdx: 0x%X" % state['rdx'])
+    print("rsi: 0x%X" % state['rsi'])
+    print("rdi: 0x%X" % state['rdi'])
+    print("rip: 0x%X" % state['rip'])
+    print("rsp: 0x%X" % state['rsp'])
+    print("rbp: 0x%X" % state['rbp'])
+    print("r8: 0x%X" % state['r8'])
+    print("r9: 0x%X" % state['r9'])
+    print("r10: 0x%X" % state['r10'])
+    print("r11: 0x%X" % state['r11'])
+    print("r12: 0x%X" % state['r12'])
+    print("r13: 0x%X" % state['r13'])
+    print("r14: 0x%X" % state['r14'])
+    print("r15: 0x%X" % state['r15'])
+    # XMM registers
+    print("xmm0: 0x%X" % state['xmm0'])
+    print("xmm1: 0x%X" % state['xmm1'])
+    print("xmm2: 0x%X" % state['xmm2'])
+    print("xmm3: 0x%X" % state['xmm3'])
+    print("xmm4: 0x%X" % state['xmm4'])
+    print("xmm5: 0x%X" % state['xmm5'])
+    print("xmm6: 0x%X" % state['xmm6'])
+    print("xmm7: 0x%X" % state['xmm7'])
+    print("xmm8: 0x%X" % state['xmm8'])
+    print("xmm9: 0x%X" % state['xmm9'])
+    print("xmm10: 0x%X" % state['xmm10'])
+    print("xmm11: 0x%X" % state['xmm11'])
+    print("xmm12: 0x%X" % state['xmm12'])
+    print("xmm13: 0x%X" % state['xmm13'])
+    print("xmm14: 0x%X" % state['xmm14'])
+    print("xmm15: 0x%X" % state['xmm15'])
+    # MMX registers
+    print("mm0: 0x%X" % state['mm0'])
+    print("mm1: 0x%X" % state['mm1'])
+    print("mm2: 0x%X" % state['mm2'])
+    print("mm3: 0x%X" % state['mm3'])
+    print("mm4: 0x%X" % state['mm4'])
+    print("mm5: 0x%X" % state['mm5'])
+    print("mm6: 0x%X" % state['mm6'])
+    print("mm7: 0x%X" % state['mm7'])
+    # SSE and x87 FPU registers
+    print("mxcsr: 0x%X" % state['mxcsr'])
+    print("mxcsr_mask: 0x%X" % state['mxcsr_mask'])
+    print("fcw: 0x%X" % state['fcw'])
+    print("fsw: 0x%X" % state['fsw'])
+    print("ftw: 0x%X" % state['ftw'])
+
+
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack":    bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
-        "heap":     bytearray(b"".join([pack('B', i) for i in range(256)])),
-        "eflags":   2, # bit 2 is always 1
-        "rax":      0,
-        "rbx":      0,
-        "rcx":      0,
-        "rdx":      0,
-        "rsi":      0,
-        "rdi":      0,
-        "rip":      ADDR,
-        "rsp":      STACK,
-        "rbp":      STACK,
-        "r8":       0,
-        "r9":       0,
-        "r10":      0,
-        "r11":      0,
-        "r12":      0,
-        "r13":      0,
-        "r14":      0,
-        "r15":      0,
-        "xmm0":     0,
-        "xmm1":     0,
-        "xmm2":     0,
-        "xmm3":     0,
-        "xmm4":     0,
-        "xmm5":     0,
-        "xmm6":     0,
-        "xmm7":     0,
-        "xmm8":     0,
-        "xmm9":     0,
-        "mm0":      0, # not supported by Uniorn
-        "mm1":      0, # not supported by Uniorn
-        "mm2":      0, # not supported by Uniorn
-        "mm3":      0, # not supported by Uniorn
-        "mm4":      0, # not supported by Uniorn
-        "mm5":      0, # not supported by Uniorn
-        "mm6":      0, # not supported by Uniorn
-        "mm7":      0, # not supported by Uniorn
+        "stack":      bytearray(b"".join([pack('B', 0) for i in range(512)])), #bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "heap":       bytearray(b"".join([pack('B', i) for i in range(256)])),
+        "eflags":     2, # bit 2 is always 1
+        "rax":        0,
+        "rbx":        0,
+        "rcx":        0,
+        "rdx":        0,
+        "rsi":        0,
+        "rdi":        0,
+        "rip":        ADDR,
+        "rsp":        STACK,
+        "rbp":        STACK,
+        "r8":         0,
+        "r9":         0,
+        "r10":        0,
+        "r11":        0,
+        "r12":        0,
+        "r13":        0,
+        "r14":        0,
+        "r15":        0,
+        "xmm0":       0x0,
+        "xmm1":       0x0,
+        "xmm2":       0x0,
+        "xmm3":       0x0,
+        "xmm4":       0x0,
+        "xmm5":       0x0,
+        "xmm6":       0x0,
+        "xmm7":       0x0,
+        "xmm8":       0x0,
+        "xmm9":       0x0,
+        "xmm10":      0x0,
+        "xmm11":      0x0,
+        "xmm12":      0x0,
+        "xmm13":      0x0,
+        "xmm14":      0x0,
+        "xmm15":      0x0,
+        "mm0":        0x0,      # Unsupported by Unicorn
+        "mm1":        0x0,      # Unsupported by Unicorn
+        "mm2":        0x0,      # Unsupported by Unicorn
+        "mm3":        0x0,      # Unsupported by Unicorn
+        "mm4":        0x0,      # Unsupported by Unicorn
+        "mm5":        0x0,      # Unsupported by Unicorn
+        "mm6":        0x0,      # Unsupported by Unicorn
+        "mm7":        0x0,      # Unsupported by Unicorn
+        "mxcsr":      0x1F80,   # Default value at program start
+        "mxcsr_mask": 0xFFBF,   # Default value at program start
+        "fcw":        0x027F,   # Default value at program start
+        "fsw":        0x0000,   # Default value at program start
+        "ftw":        0x5555    # Default value at program start
     }
 
     for st, opcode, disassembly in CODE:
         if st is not None:
             state.update(st)
         try:
+            print("> Unicorn emulation: %s" % disassembly)
             uc_state = emu_with_unicorn(opcode, state)
+            print("> Triton emulation: %s" % disassembly)
             tt_state = emu_with_triton(opcode, state)
+            print("> Emulation done")
         except Exception as e:
             print('[KO] %s' %(disassembly))
             print('\t%s' %(e))
@@ -1013,6 +1198,8 @@ if __name__ == '__main__':
 
         if uc_state != tt_state:
             print('[KO] %s' %(disassembly))
+            dump_state(uc_state)
+            dump_state(tt_state)
             diff_state(uc_state, tt_state)
             sys.exit(-1)
 

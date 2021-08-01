@@ -15,8 +15,6 @@
 #include <triton/immediate.hpp>
 #include <triton/x86Cpu.hpp>
 
-
-
 namespace triton {
   namespace arch {
     namespace x86 {
@@ -60,61 +58,71 @@ namespace triton {
         this->callbacks = other.callbacks;
         this->memory    = other.memory;
 
-        std::memcpy(this->eax,     other.eax,    sizeof(this->eax));
-        std::memcpy(this->ebx,     other.ebx,    sizeof(this->ebx));
-        std::memcpy(this->ecx,     other.ecx,    sizeof(this->ecx));
-        std::memcpy(this->edx,     other.edx,    sizeof(this->edx));
-        std::memcpy(this->edi,     other.edi,    sizeof(this->edi));
-        std::memcpy(this->esi,     other.esi,    sizeof(this->esi));
-        std::memcpy(this->esp,     other.esp,    sizeof(this->esp));
-        std::memcpy(this->ebp,     other.ebp,    sizeof(this->ebp));
-        std::memcpy(this->eip,     other.eip,    sizeof(this->eip));
-        std::memcpy(this->eflags,  other.eflags, sizeof(this->eflags));
-        std::memcpy(this->mm0,     other.mm0,    sizeof(this->mm0));
-        std::memcpy(this->mm1,     other.mm1,    sizeof(this->mm1));
-        std::memcpy(this->mm2,     other.mm2,    sizeof(this->mm2));
-        std::memcpy(this->mm3,     other.mm3,    sizeof(this->mm3));
-        std::memcpy(this->mm4,     other.mm4,    sizeof(this->mm4));
-        std::memcpy(this->mm5,     other.mm5,    sizeof(this->mm5));
-        std::memcpy(this->mm6,     other.mm6,    sizeof(this->mm6));
-        std::memcpy(this->mm7,     other.mm7,    sizeof(this->mm7));
-        std::memcpy(this->ymm0,    other.ymm0,   sizeof(this->ymm0));
-        std::memcpy(this->ymm1,    other.ymm1,   sizeof(this->ymm1));
-        std::memcpy(this->ymm2,    other.ymm2,   sizeof(this->ymm2));
-        std::memcpy(this->ymm3,    other.ymm3,   sizeof(this->ymm3));
-        std::memcpy(this->ymm4,    other.ymm4,   sizeof(this->ymm4));
-        std::memcpy(this->ymm5,    other.ymm5,   sizeof(this->ymm5));
-        std::memcpy(this->ymm6,    other.ymm6,   sizeof(this->ymm6));
-        std::memcpy(this->ymm7,    other.ymm7,   sizeof(this->ymm7));
-        std::memcpy(this->mxcsr,   other.mxcsr,  sizeof(this->mxcsr));
-        std::memcpy(this->cr0,     other.cr0,    sizeof(this->cr0));
-        std::memcpy(this->cr1,     other.cr1,    sizeof(this->cr1));
-        std::memcpy(this->cr2,     other.cr2,    sizeof(this->cr2));
-        std::memcpy(this->cr3,     other.cr3,    sizeof(this->cr3));
-        std::memcpy(this->cr4,     other.cr4,    sizeof(this->cr4));
-        std::memcpy(this->cr5,     other.cr5,    sizeof(this->cr5));
-        std::memcpy(this->cr6,     other.cr6,    sizeof(this->cr6));
-        std::memcpy(this->cr7,     other.cr7,    sizeof(this->cr7));
-        std::memcpy(this->cr8,     other.cr8,    sizeof(this->cr8));
-        std::memcpy(this->cr9,     other.cr9,    sizeof(this->cr9));
-        std::memcpy(this->cr10,    other.cr10,   sizeof(this->cr10));
-        std::memcpy(this->cr11,    other.cr11,   sizeof(this->cr11));
-        std::memcpy(this->cr12,    other.cr12,   sizeof(this->cr12));
-        std::memcpy(this->cr13,    other.cr13,   sizeof(this->cr13));
-        std::memcpy(this->cr14,    other.cr14,   sizeof(this->cr14));
-        std::memcpy(this->cr15,    other.cr15,   sizeof(this->cr15));
-        std::memcpy(this->cs,      other.cs,     sizeof(this->cs));
-        std::memcpy(this->ds,      other.ds,     sizeof(this->ds));
-        std::memcpy(this->es,      other.es,     sizeof(this->es));
-        std::memcpy(this->fs,      other.fs,     sizeof(this->fs));
-        std::memcpy(this->gs,      other.gs,     sizeof(this->gs));
-        std::memcpy(this->ss,      other.ss,     sizeof(this->ss));
-        std::memcpy(this->dr0,     other.dr0,    sizeof(this->dr0));
-        std::memcpy(this->dr1,     other.dr1,    sizeof(this->dr1));
-        std::memcpy(this->dr2,     other.dr2,    sizeof(this->dr2));
-        std::memcpy(this->dr3,     other.dr3,    sizeof(this->dr3));
-        std::memcpy(this->dr6,     other.dr6,    sizeof(this->dr6));
-        std::memcpy(this->dr7,     other.dr7,    sizeof(this->dr7));
+        std::memcpy(this->eax,        other.eax,        sizeof(this->eax));
+        std::memcpy(this->ebx,        other.ebx,        sizeof(this->ebx));
+        std::memcpy(this->ecx,        other.ecx,        sizeof(this->ecx));
+        std::memcpy(this->edx,        other.edx,        sizeof(this->edx));
+        std::memcpy(this->edi,        other.edi,        sizeof(this->edi));
+        std::memcpy(this->esi,        other.esi,        sizeof(this->esi));
+        std::memcpy(this->esp,        other.esp,        sizeof(this->esp));
+        std::memcpy(this->ebp,        other.ebp,        sizeof(this->ebp));
+        std::memcpy(this->eip,        other.eip,        sizeof(this->eip));
+        std::memcpy(this->eflags,     other.eflags,     sizeof(this->eflags));
+        std::memcpy(this->st0,        other.st0,        sizeof(this->st0));
+        std::memcpy(this->st1,        other.st1,        sizeof(this->st1));
+        std::memcpy(this->st2,        other.st2,        sizeof(this->st2));
+        std::memcpy(this->st3,        other.st3,        sizeof(this->st3));
+        std::memcpy(this->st4,        other.st4,        sizeof(this->st4));
+        std::memcpy(this->st5,        other.st5,        sizeof(this->st5));
+        std::memcpy(this->st6,        other.st6,        sizeof(this->st6));
+        std::memcpy(this->st7,        other.st7,        sizeof(this->st7));
+        std::memcpy(this->ymm0,       other.ymm0,       sizeof(this->ymm0));
+        std::memcpy(this->ymm1,       other.ymm1,       sizeof(this->ymm1));
+        std::memcpy(this->ymm2,       other.ymm2,       sizeof(this->ymm2));
+        std::memcpy(this->ymm3,       other.ymm3,       sizeof(this->ymm3));
+        std::memcpy(this->ymm4,       other.ymm4,       sizeof(this->ymm4));
+        std::memcpy(this->ymm5,       other.ymm5,       sizeof(this->ymm5));
+        std::memcpy(this->ymm6,       other.ymm6,       sizeof(this->ymm6));
+        std::memcpy(this->ymm7,       other.ymm7,       sizeof(this->ymm7));
+        std::memcpy(this->mxcsr,      other.mxcsr,      sizeof(this->mxcsr));
+        std::memcpy(this->cr0,        other.cr0,        sizeof(this->cr0));
+        std::memcpy(this->cr1,        other.cr1,        sizeof(this->cr1));
+        std::memcpy(this->cr2,        other.cr2,        sizeof(this->cr2));
+        std::memcpy(this->cr3,        other.cr3,        sizeof(this->cr3));
+        std::memcpy(this->cr4,        other.cr4,        sizeof(this->cr4));
+        std::memcpy(this->cr5,        other.cr5,        sizeof(this->cr5));
+        std::memcpy(this->cr6,        other.cr6,        sizeof(this->cr6));
+        std::memcpy(this->cr7,        other.cr7,        sizeof(this->cr7));
+        std::memcpy(this->cr8,        other.cr8,        sizeof(this->cr8));
+        std::memcpy(this->cr9,        other.cr9,        sizeof(this->cr9));
+        std::memcpy(this->cr10,       other.cr10,       sizeof(this->cr10));
+        std::memcpy(this->cr11,       other.cr11,       sizeof(this->cr11));
+        std::memcpy(this->cr12,       other.cr12,       sizeof(this->cr12));
+        std::memcpy(this->cr13,       other.cr13,       sizeof(this->cr13));
+        std::memcpy(this->cr14,       other.cr14,       sizeof(this->cr14));
+        std::memcpy(this->cr15,       other.cr15,       sizeof(this->cr15));
+        std::memcpy(this->cs,         other.cs,         sizeof(this->cs));
+        std::memcpy(this->ds,         other.ds,         sizeof(this->ds));
+        std::memcpy(this->es,         other.es,         sizeof(this->es));
+        std::memcpy(this->fs,         other.fs,         sizeof(this->fs));
+        std::memcpy(this->gs,         other.gs,         sizeof(this->gs));
+        std::memcpy(this->ss,         other.ss,         sizeof(this->ss));
+        std::memcpy(this->dr0,        other.dr0,        sizeof(this->dr0));
+        std::memcpy(this->dr1,        other.dr1,        sizeof(this->dr1));
+        std::memcpy(this->dr2,        other.dr2,        sizeof(this->dr2));
+        std::memcpy(this->dr3,        other.dr3,        sizeof(this->dr3));
+        std::memcpy(this->dr6,        other.dr6,        sizeof(this->dr6));
+        std::memcpy(this->dr7,        other.dr7,        sizeof(this->dr7));
+        std::memcpy(this->mxcsr_mask, other.mxcsr_mask, sizeof(this->mxcsr_mask));
+        std::memcpy(this->fcw,        other.fcw,        sizeof(this->fcw));
+        std::memcpy(this->fsw,        other.fsw,        sizeof(this->fsw));
+        std::memcpy(this->ftw,        other.ftw,        sizeof(this->ftw));
+        std::memcpy(this->fop,        other.fop,        sizeof(this->fop));
+        std::memcpy(this->fip,        other.fip,        sizeof(this->fip));
+        std::memcpy(this->fcs,        other.fcs,        sizeof(this->fcs));
+        std::memcpy(this->fdp,        other.fdp,        sizeof(this->fdp));
+        std::memcpy(this->fds,        other.fds,        sizeof(this->fds));
+        std::memcpy(this->efer,       other.efer,       sizeof(this->efer));
       }
 
 
@@ -123,61 +131,71 @@ namespace triton {
         this->memory.clear();
 
         /* Clear registers */
-        std::memset(this->eax,     0x00, sizeof(this->eax));
-        std::memset(this->ebx,     0x00, sizeof(this->ebx));
-        std::memset(this->ecx,     0x00, sizeof(this->ecx));
-        std::memset(this->edx,     0x00, sizeof(this->edx));
-        std::memset(this->edi,     0x00, sizeof(this->edi));
-        std::memset(this->esi,     0x00, sizeof(this->esi));
-        std::memset(this->esp,     0x00, sizeof(this->esp));
-        std::memset(this->ebp,     0x00, sizeof(this->ebp));
-        std::memset(this->eip,     0x00, sizeof(this->eip));
-        std::memset(this->eflags,  0x00, sizeof(this->eflags));
-        std::memset(this->mm0,     0x00, sizeof(this->mm0));
-        std::memset(this->mm1,     0x00, sizeof(this->mm1));
-        std::memset(this->mm2,     0x00, sizeof(this->mm2));
-        std::memset(this->mm3,     0x00, sizeof(this->mm3));
-        std::memset(this->mm4,     0x00, sizeof(this->mm4));
-        std::memset(this->mm5,     0x00, sizeof(this->mm5));
-        std::memset(this->mm6,     0x00, sizeof(this->mm6));
-        std::memset(this->mm7,     0x00, sizeof(this->mm7));
-        std::memset(this->ymm0,    0x00, sizeof(this->ymm0));
-        std::memset(this->ymm1,    0x00, sizeof(this->ymm1));
-        std::memset(this->ymm2,    0x00, sizeof(this->ymm2));
-        std::memset(this->ymm3,    0x00, sizeof(this->ymm3));
-        std::memset(this->ymm4,    0x00, sizeof(this->ymm4));
-        std::memset(this->ymm5,    0x00, sizeof(this->ymm5));
-        std::memset(this->ymm6,    0x00, sizeof(this->ymm6));
-        std::memset(this->ymm7,    0x00, sizeof(this->ymm7));
-        std::memset(this->mxcsr,   0x00, sizeof(this->mxcsr));
-        std::memset(this->cr0,     0x00, sizeof(this->cr0));
-        std::memset(this->cr1,     0x00, sizeof(this->cr1));
-        std::memset(this->cr2,     0x00, sizeof(this->cr2));
-        std::memset(this->cr3,     0x00, sizeof(this->cr3));
-        std::memset(this->cr4,     0x00, sizeof(this->cr4));
-        std::memset(this->cr5,     0x00, sizeof(this->cr5));
-        std::memset(this->cr6,     0x00, sizeof(this->cr6));
-        std::memset(this->cr7,     0x00, sizeof(this->cr7));
-        std::memset(this->cr8,     0x00, sizeof(this->cr8));
-        std::memset(this->cr9,     0x00, sizeof(this->cr9));
-        std::memset(this->cr10,    0x00, sizeof(this->cr10));
-        std::memset(this->cr11,    0x00, sizeof(this->cr11));
-        std::memset(this->cr12,    0x00, sizeof(this->cr12));
-        std::memset(this->cr13,    0x00, sizeof(this->cr13));
-        std::memset(this->cr14,    0x00, sizeof(this->cr14));
-        std::memset(this->cr15,    0x00, sizeof(this->cr15));
-        std::memset(this->cs,      0x00, sizeof(this->cs));
-        std::memset(this->ds,      0x00, sizeof(this->ds));
-        std::memset(this->es,      0x00, sizeof(this->es));
-        std::memset(this->fs,      0x00, sizeof(this->fs));
-        std::memset(this->gs,      0x00, sizeof(this->gs));
-        std::memset(this->ss,      0x00, sizeof(this->ss));
-        std::memset(this->dr0,     0x00, sizeof(this->dr0));
-        std::memset(this->dr1,     0x00, sizeof(this->dr1));
-        std::memset(this->dr2,     0x00, sizeof(this->dr2));
-        std::memset(this->dr3,     0x00, sizeof(this->dr3));
-        std::memset(this->dr6,     0x00, sizeof(this->dr6));
-        std::memset(this->dr7,     0x00, sizeof(this->dr7));
+        std::memset(this->eax,        0x00, sizeof(this->eax));
+        std::memset(this->ebx,        0x00, sizeof(this->ebx));
+        std::memset(this->ecx,        0x00, sizeof(this->ecx));
+        std::memset(this->edx,        0x00, sizeof(this->edx));
+        std::memset(this->edi,        0x00, sizeof(this->edi));
+        std::memset(this->esi,        0x00, sizeof(this->esi));
+        std::memset(this->esp,        0x00, sizeof(this->esp));
+        std::memset(this->ebp,        0x00, sizeof(this->ebp));
+        std::memset(this->eip,        0x00, sizeof(this->eip));
+        std::memset(this->eflags,     0x00, sizeof(this->eflags));
+        std::memset(this->st0,        0x00, sizeof(this->st0));
+        std::memset(this->st1,        0x00, sizeof(this->st1));
+        std::memset(this->st2,        0x00, sizeof(this->st2));
+        std::memset(this->st3,        0x00, sizeof(this->st3));
+        std::memset(this->st4,        0x00, sizeof(this->st4));
+        std::memset(this->st5,        0x00, sizeof(this->st5));
+        std::memset(this->st6,        0x00, sizeof(this->st6));
+        std::memset(this->st7,        0x00, sizeof(this->st7));
+        std::memset(this->ymm0,       0x00, sizeof(this->ymm0));
+        std::memset(this->ymm1,       0x00, sizeof(this->ymm1));
+        std::memset(this->ymm2,       0x00, sizeof(this->ymm2));
+        std::memset(this->ymm3,       0x00, sizeof(this->ymm3));
+        std::memset(this->ymm4,       0x00, sizeof(this->ymm4));
+        std::memset(this->ymm5,       0x00, sizeof(this->ymm5));
+        std::memset(this->ymm6,       0x00, sizeof(this->ymm6));
+        std::memset(this->ymm7,       0x00, sizeof(this->ymm7));
+        std::memset(this->mxcsr,      0x00, sizeof(this->mxcsr));
+        std::memset(this->cr0,        0x00, sizeof(this->cr0));
+        std::memset(this->cr1,        0x00, sizeof(this->cr1));
+        std::memset(this->cr2,        0x00, sizeof(this->cr2));
+        std::memset(this->cr3,        0x00, sizeof(this->cr3));
+        std::memset(this->cr4,        0x00, sizeof(this->cr4));
+        std::memset(this->cr5,        0x00, sizeof(this->cr5));
+        std::memset(this->cr6,        0x00, sizeof(this->cr6));
+        std::memset(this->cr7,        0x00, sizeof(this->cr7));
+        std::memset(this->cr8,        0x00, sizeof(this->cr8));
+        std::memset(this->cr9,        0x00, sizeof(this->cr9));
+        std::memset(this->cr10,       0x00, sizeof(this->cr10));
+        std::memset(this->cr11,       0x00, sizeof(this->cr11));
+        std::memset(this->cr12,       0x00, sizeof(this->cr12));
+        std::memset(this->cr13,       0x00, sizeof(this->cr13));
+        std::memset(this->cr14,       0x00, sizeof(this->cr14));
+        std::memset(this->cr15,       0x00, sizeof(this->cr15));
+        std::memset(this->cs,         0x00, sizeof(this->cs));
+        std::memset(this->ds,         0x00, sizeof(this->ds));
+        std::memset(this->es,         0x00, sizeof(this->es));
+        std::memset(this->fs,         0x00, sizeof(this->fs));
+        std::memset(this->gs,         0x00, sizeof(this->gs));
+        std::memset(this->ss,         0x00, sizeof(this->ss));
+        std::memset(this->dr0,        0x00, sizeof(this->dr0));
+        std::memset(this->dr1,        0x00, sizeof(this->dr1));
+        std::memset(this->dr2,        0x00, sizeof(this->dr2));
+        std::memset(this->dr3,        0x00, sizeof(this->dr3));
+        std::memset(this->dr6,        0x00, sizeof(this->dr6));
+        std::memset(this->dr7,        0x00, sizeof(this->dr7));
+        std::memset(this->mxcsr_mask, 0x00, sizeof(this->mxcsr_mask));
+        std::memset(this->fcw,        0x00, sizeof(this->fcw));
+        std::memset(this->fsw,        0x00, sizeof(this->fsw));
+        std::memset(this->ftw,        0x00, sizeof(this->ftw));
+        std::memset(this->fop,        0x00, sizeof(this->fop));
+        std::memset(this->fip,        0x00, sizeof(this->fip));
+        std::memset(this->fcs,        0x00, sizeof(this->fcs));
+        std::memset(this->fdp,        0x00, sizeof(this->fdp));
+        std::memset(this->fds,        0x00, sizeof(this->fds));
+        std::memset(this->efer,       0x00, sizeof(this->efer));
       }
 
 
@@ -193,7 +211,12 @@ namespace triton {
 
 
       bool x86Cpu::isFlag(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_AC && regId <= triton::arch::ID_REG_X86_FZ) ? true : false);
+        if (regId >= triton::arch::ID_REG_X86_AC && regId <= triton::arch::ID_REG_X86_FSW_B) { return true; }
+        if (regId >= triton::arch::ID_REG_X86_FTW && regId <= triton::arch::ID_REG_X86_FDP) { return true; }
+        if (regId >= triton::arch::ID_REG_X86_SSE_IE && regId <= triton::arch::ID_REG_X86_SSE_FZ) { return true; }
+        if (regId >= triton::arch::ID_REG_X86_FCW_IM && regId <= triton::arch::ID_REG_X86_FCW_X) { return true; }
+        if (regId >= triton::arch::ID_REG_X86_FSW_IE && regId <= triton::arch::ID_REG_X86_FSW_B) { return true; }
+        return false;
       }
 
 
@@ -201,7 +224,10 @@ namespace triton {
         return (
           this->isGPR(regId)      ||
           this->isMMX(regId)      ||
+          this->isSTX(regId)      ||
           this->isSSE(regId)      ||
+          this->isFPU(regId)      ||
+          this->isEFER(regId)     ||
           this->isAVX256(regId)   ||
           this->isControl(regId)  ||
           this->isDebug(regId)    ||
@@ -225,8 +251,23 @@ namespace triton {
       }
 
 
+      bool x86Cpu::isSTX(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_ST0 && regId <= triton::arch::ID_REG_X86_ST7) ? true : false);
+      }
+
+
       bool x86Cpu::isSSE(triton::arch::register_e regId) const {
         return ((regId >= triton::arch::ID_REG_X86_MXCSR && regId <= triton::arch::ID_REG_X86_XMM7) ? true : false);
+      }
+
+
+      bool x86Cpu::isFPU(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_FTW && regId <= triton::arch::ID_REG_X86_FDP) ? true : false);
+      }
+
+
+      bool x86Cpu::isEFER(triton::arch::register_e regId) const {
+        return ((regId >= triton::arch::ID_REG_X86_EFER && regId <= triton::arch::ID_REG_X86_EFER) ? true : false);
       }
 
 
@@ -286,12 +327,20 @@ namespace triton {
           else if (this->isFlag(regId))
             ret.insert(&reg);
 
-          /* Add MMX */
-          else if (this->isMMX(regId))
+          /* Add STX */
+          else if (this->isSTX(regId))
             ret.insert(&reg);
 
           /* Add SSE */
           else if (this->isSSE(regId))
+            ret.insert(&reg);
+
+          /* Add FPU */
+          else if (this->isFPU(regId))
+            ret.insert(&reg);
+
+          /* Add EFER */
+          else if (this->isEFER(regId))
             ret.insert(&reg);
 
           /* Add AVX-256 */
@@ -515,140 +564,196 @@ namespace triton {
           this->callbacks->processCallbacks(triton::callbacks::GET_CONCRETE_REGISTER_VALUE, reg);
 
         switch (reg.getId()) {
-          case triton::arch::ID_REG_X86_EAX: return (*((triton::uint32*)(this->eax)));
-          case triton::arch::ID_REG_X86_AX:  return (*((triton::uint16*)(this->eax)));
-          case triton::arch::ID_REG_X86_AH:  return (*((triton::uint8*)(this->eax+1)));
-          case triton::arch::ID_REG_X86_AL:  return (*((triton::uint8*)(this->eax)));
 
-          case triton::arch::ID_REG_X86_EBX: return (*((triton::uint32*)(this->ebx)));
-          case triton::arch::ID_REG_X86_BX:  return (*((triton::uint16*)(this->ebx)));
-          case triton::arch::ID_REG_X86_BH:  return (*((triton::uint8*)(this->ebx+1)));
-          case triton::arch::ID_REG_X86_BL:  return (*((triton::uint8*)(this->ebx)));
+          case triton::arch::ID_REG_X86_EAX: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->eax, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_AX:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->eax, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_AH:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->eax+1, triton::size::byte); return val; }
+          case triton::arch::ID_REG_X86_AL:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->eax, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_ECX: return (*((triton::uint32*)(this->ecx)));
-          case triton::arch::ID_REG_X86_CX:  return (*((triton::uint16*)(this->ecx)));
-          case triton::arch::ID_REG_X86_CH:  return (*((triton::uint8*)(this->ecx+1)));
-          case triton::arch::ID_REG_X86_CL:  return (*((triton::uint8*)(this->ecx)));
+          case triton::arch::ID_REG_X86_EBX: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->ebx, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_BX:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->ebx, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_BH:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->ebx+1, triton::size::byte); return val; }
+          case triton::arch::ID_REG_X86_BL:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->ebx, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_EDX: return (*((triton::uint32*)(this->edx)));
-          case triton::arch::ID_REG_X86_DX:  return (*((triton::uint16*)(this->edx)));
-          case triton::arch::ID_REG_X86_DH:  return (*((triton::uint8*)(this->edx+1)));
-          case triton::arch::ID_REG_X86_DL:  return (*((triton::uint8*)(this->edx)));
+          case triton::arch::ID_REG_X86_ECX: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->ecx, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CX:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->ecx, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_CH:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->ecx+1, triton::size::byte); return val; }
+          case triton::arch::ID_REG_X86_CL:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->ecx, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_EDI: return (*((triton::uint32*)(this->edi)));
-          case triton::arch::ID_REG_X86_DI:  return (*((triton::uint16*)(this->edi)));
-          case triton::arch::ID_REG_X86_DIL: return (*((triton::uint8*)(this->edi)));
+          case triton::arch::ID_REG_X86_EDX: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->edx, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DX:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->edx, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_DH:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->edx+1, triton::size::byte); return val; }
+          case triton::arch::ID_REG_X86_DL:  { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->edx, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_ESI: return (*((triton::uint32*)(this->esi)));
-          case triton::arch::ID_REG_X86_SI:  return (*((triton::uint16*)(this->esi)));
-          case triton::arch::ID_REG_X86_SIL: return (*((triton::uint8*)(this->esi)));
+          case triton::arch::ID_REG_X86_EDI: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->edi, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DI:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->edi, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_DIL: { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->edi, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_ESP: return (*((triton::uint32*)(this->esp)));
-          case triton::arch::ID_REG_X86_SP:  return (*((triton::uint16*)(this->esp)));
-          case triton::arch::ID_REG_X86_SPL: return (*((triton::uint8*)(this->esp)));
+          case triton::arch::ID_REG_X86_ESI: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->esi, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_SI:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->esi, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_SIL: { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->esi, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_EBP: return (*((triton::uint32*)(this->ebp)));
-          case triton::arch::ID_REG_X86_BP:  return (*((triton::uint16*)(this->ebp)));
-          case triton::arch::ID_REG_X86_BPL: return (*((triton::uint8*)(this->ebp)));
+          case triton::arch::ID_REG_X86_ESP: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->esp, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_SP:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->esp, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_SPL: { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->esp, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_EIP: return (*((triton::uint32*)(this->eip)));
-          case triton::arch::ID_REG_X86_IP:  return (*((triton::uint16*)(this->eip)));
+          case triton::arch::ID_REG_X86_EBP: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->ebp, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_BP:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->ebp, triton::size::word);  return val; }
+          case triton::arch::ID_REG_X86_BPL: { triton::uint8 val = 0;  std::memcpy(&val, (triton::uint8*)this->ebp, triton::size::byte);   return val; }
 
-          case triton::arch::ID_REG_X86_EFLAGS: return (*((triton::uint32*)(this->eflags)));
+          case triton::arch::ID_REG_X86_EIP: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->eip, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_IP:  { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->eip, triton::size::word);  return val; }
 
-          case triton::arch::ID_REG_X86_MM0:  return (*((triton::uint64*)(this->mm0)));
-          case triton::arch::ID_REG_X86_MM1:  return (*((triton::uint64*)(this->mm1)));
-          case triton::arch::ID_REG_X86_MM2:  return (*((triton::uint64*)(this->mm2)));
-          case triton::arch::ID_REG_X86_MM3:  return (*((triton::uint64*)(this->mm3)));
-          case triton::arch::ID_REG_X86_MM4:  return (*((triton::uint64*)(this->mm4)));
-          case triton::arch::ID_REG_X86_MM5:  return (*((triton::uint64*)(this->mm5)));
-          case triton::arch::ID_REG_X86_MM6:  return (*((triton::uint64*)(this->mm6)));
-          case triton::arch::ID_REG_X86_MM7:  return (*((triton::uint64*)(this->mm7)));
+          case triton::arch::ID_REG_X86_EFLAGS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return val; }
 
-          case triton::arch::ID_REG_X86_XMM0: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm0); return value;
-          case triton::arch::ID_REG_X86_XMM1: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm1); return value;
-          case triton::arch::ID_REG_X86_XMM2: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm2); return value;
-          case triton::arch::ID_REG_X86_XMM3: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm3); return value;
-          case triton::arch::ID_REG_X86_XMM4: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm4); return value;
-          case triton::arch::ID_REG_X86_XMM5: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm5); return value;
-          case triton::arch::ID_REG_X86_XMM6: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm6); return value;
-          case triton::arch::ID_REG_X86_XMM7: value = triton::utils::fromBufferToUint<triton::uint128>(this->ymm7); return value;
+          case triton::arch::ID_REG_X86_MM0: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st0, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM1: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st1, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM2: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st2, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM3: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st3, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM4: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st4, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM5: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st5, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM6: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st6, triton::size::qword); return val; }
+          case triton::arch::ID_REG_X86_MM7: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->st7, triton::size::qword); return val; }
 
-          case triton::arch::ID_REG_X86_YMM0: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm0); return value;
-          case triton::arch::ID_REG_X86_YMM1: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm1); return value;
-          case triton::arch::ID_REG_X86_YMM2: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm2); return value;
-          case triton::arch::ID_REG_X86_YMM3: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm3); return value;
-          case triton::arch::ID_REG_X86_YMM4: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm4); return value;
-          case triton::arch::ID_REG_X86_YMM5: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm5); return value;
-          case triton::arch::ID_REG_X86_YMM6: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm6); return value;
-          case triton::arch::ID_REG_X86_YMM7: value = triton::utils::fromBufferToUint<triton::uint256>(this->ymm7); return value;
+          case triton::arch::ID_REG_X86_ST0: { return triton::utils::fromBufferToUint<triton::uint80>(this->st0); }
+          case triton::arch::ID_REG_X86_ST1: { return triton::utils::fromBufferToUint<triton::uint80>(this->st1); }
+          case triton::arch::ID_REG_X86_ST2: { return triton::utils::fromBufferToUint<triton::uint80>(this->st2); }
+          case triton::arch::ID_REG_X86_ST3: { return triton::utils::fromBufferToUint<triton::uint80>(this->st3); }
+          case triton::arch::ID_REG_X86_ST4: { return triton::utils::fromBufferToUint<triton::uint80>(this->st4); }
+          case triton::arch::ID_REG_X86_ST5: { return triton::utils::fromBufferToUint<triton::uint80>(this->st5); }
+          case triton::arch::ID_REG_X86_ST6: { return triton::utils::fromBufferToUint<triton::uint80>(this->st6); }
+          case triton::arch::ID_REG_X86_ST7: { return triton::utils::fromBufferToUint<triton::uint80>(this->st7); }
 
-          case triton::arch::ID_REG_X86_MXCSR: return (*((triton::uint32*)(this->mxcsr)));
+          case triton::arch::ID_REG_X86_XMM0: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm0); }
+          case triton::arch::ID_REG_X86_XMM1: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm1); }
+          case triton::arch::ID_REG_X86_XMM2: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm2); }
+          case triton::arch::ID_REG_X86_XMM3: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm3); }
+          case triton::arch::ID_REG_X86_XMM4: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm4); }
+          case triton::arch::ID_REG_X86_XMM5: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm5); }
+          case triton::arch::ID_REG_X86_XMM6: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm6); }
+          case triton::arch::ID_REG_X86_XMM7: { return triton::utils::fromBufferToUint<triton::uint128>(this->ymm7); }
 
-          case triton::arch::ID_REG_X86_CR0:  return (*((triton::uint32*)(this->cr0)));
-          case triton::arch::ID_REG_X86_CR1:  return (*((triton::uint32*)(this->cr1)));
-          case triton::arch::ID_REG_X86_CR2:  return (*((triton::uint32*)(this->cr2)));
-          case triton::arch::ID_REG_X86_CR3:  return (*((triton::uint32*)(this->cr3)));
-          case triton::arch::ID_REG_X86_CR4:  return (*((triton::uint32*)(this->cr4)));
-          case triton::arch::ID_REG_X86_CR5:  return (*((triton::uint32*)(this->cr5)));
-          case triton::arch::ID_REG_X86_CR6:  return (*((triton::uint32*)(this->cr6)));
-          case triton::arch::ID_REG_X86_CR7:  return (*((triton::uint32*)(this->cr7)));
-          case triton::arch::ID_REG_X86_CR8:  return (*((triton::uint32*)(this->cr8)));
-          case triton::arch::ID_REG_X86_CR9:  return (*((triton::uint32*)(this->cr9)));
-          case triton::arch::ID_REG_X86_CR10: return (*((triton::uint32*)(this->cr10)));
-          case triton::arch::ID_REG_X86_CR11: return (*((triton::uint32*)(this->cr11)));
-          case triton::arch::ID_REG_X86_CR12: return (*((triton::uint32*)(this->cr12)));
-          case triton::arch::ID_REG_X86_CR13: return (*((triton::uint32*)(this->cr13)));
-          case triton::arch::ID_REG_X86_CR14: return (*((triton::uint32*)(this->cr14)));
-          case triton::arch::ID_REG_X86_CR15: return (*((triton::uint32*)(this->cr15)));
+          case triton::arch::ID_REG_X86_YMM0: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm0); }
+          case triton::arch::ID_REG_X86_YMM1: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm1); }
+          case triton::arch::ID_REG_X86_YMM2: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm2); }
+          case triton::arch::ID_REG_X86_YMM3: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm3); }
+          case triton::arch::ID_REG_X86_YMM4: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm4); }
+          case triton::arch::ID_REG_X86_YMM5: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm5); }
+          case triton::arch::ID_REG_X86_YMM6: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm6); }
+          case triton::arch::ID_REG_X86_YMM7: { return triton::utils::fromBufferToUint<triton::uint256>(this->ymm7); }
 
-          case triton::arch::ID_REG_X86_DR0: return (*((triton::uint32*)(this->dr0)));
-          case triton::arch::ID_REG_X86_DR1: return (*((triton::uint32*)(this->dr1)));
-          case triton::arch::ID_REG_X86_DR2: return (*((triton::uint32*)(this->dr2)));
-          case triton::arch::ID_REG_X86_DR3: return (*((triton::uint32*)(this->dr3)));
-          case triton::arch::ID_REG_X86_DR6: return (*((triton::uint32*)(this->dr6)));
-          case triton::arch::ID_REG_X86_DR7: return (*((triton::uint32*)(this->dr7)));
+          case triton::arch::ID_REG_X86_MXCSR: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return val; }
+          case triton::arch::ID_REG_X86_MXCSR_MASK: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->mxcsr_mask, sizeof(triton::uint32)); return val; }
 
-          case triton::arch::ID_REG_X86_IE:  return (((*((triton::uint32*)(this->mxcsr))) >> 0) & 1);
-          case triton::arch::ID_REG_X86_DE:  return (((*((triton::uint32*)(this->mxcsr))) >> 1) & 1);
-          case triton::arch::ID_REG_X86_ZE:  return (((*((triton::uint32*)(this->mxcsr))) >> 2) & 1);
-          case triton::arch::ID_REG_X86_OE:  return (((*((triton::uint32*)(this->mxcsr))) >> 3) & 1);
-          case triton::arch::ID_REG_X86_UE:  return (((*((triton::uint32*)(this->mxcsr))) >> 4) & 1);
-          case triton::arch::ID_REG_X86_PE:  return (((*((triton::uint32*)(this->mxcsr))) >> 5) & 1);
-          case triton::arch::ID_REG_X86_DAZ: return (((*((triton::uint32*)(this->mxcsr))) >> 6) & 1);
-          case triton::arch::ID_REG_X86_IM:  return (((*((triton::uint32*)(this->mxcsr))) >> 7) & 1);
-          case triton::arch::ID_REG_X86_DM:  return (((*((triton::uint32*)(this->mxcsr))) >> 8) & 1);
-          case triton::arch::ID_REG_X86_ZM:  return (((*((triton::uint32*)(this->mxcsr))) >> 9) & 1);
-          case triton::arch::ID_REG_X86_OM:  return (((*((triton::uint32*)(this->mxcsr))) >> 10) & 1);
-          case triton::arch::ID_REG_X86_UM:  return (((*((triton::uint32*)(this->mxcsr))) >> 11) & 1);
-          case triton::arch::ID_REG_X86_PM:  return (((*((triton::uint32*)(this->mxcsr))) >> 12) & 1);
-          case triton::arch::ID_REG_X86_RL:  return (((*((triton::uint32*)(this->mxcsr))) >> 13) & 1);
-          case triton::arch::ID_REG_X86_RH:  return (((*((triton::uint32*)(this->mxcsr))) >> 14) & 1);
-          case triton::arch::ID_REG_X86_FZ:  return (((*((triton::uint32*)(this->mxcsr))) >> 15) & 1);
+          case triton::arch::ID_REG_X86_CR0:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr0, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR1:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr1, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR2:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr2, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR3:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr3, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR4:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr4, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR5:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr5, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR6:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr6, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR7:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr7, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR8:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr8, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR9:  { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr9, triton::size::dword); return val;  }
+          case triton::arch::ID_REG_X86_CR10: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr10, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CR11: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr11, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CR12: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr12, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CR13: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr13, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CR14: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr14, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_CR15: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint64*)this->cr15, triton::size::dword); return val; }
 
-          case triton::arch::ID_REG_X86_CF:  return (((*((triton::uint64*)(this->eflags))) >> 0) & 1);
-          case triton::arch::ID_REG_X86_PF:  return (((*((triton::uint64*)(this->eflags))) >> 2) & 1);
-          case triton::arch::ID_REG_X86_AF:  return (((*((triton::uint64*)(this->eflags))) >> 4) & 1);
-          case triton::arch::ID_REG_X86_ZF:  return (((*((triton::uint64*)(this->eflags))) >> 6) & 1);
-          case triton::arch::ID_REG_X86_SF:  return (((*((triton::uint64*)(this->eflags))) >> 7) & 1);
-          case triton::arch::ID_REG_X86_TF:  return (((*((triton::uint64*)(this->eflags))) >> 8) & 1);
-          case triton::arch::ID_REG_X86_IF:  return (((*((triton::uint64*)(this->eflags))) >> 9) & 1);
-          case triton::arch::ID_REG_X86_DF:  return (((*((triton::uint64*)(this->eflags))) >> 10) & 1);
-          case triton::arch::ID_REG_X86_OF:  return (((*((triton::uint64*)(this->eflags))) >> 11) & 1);
-          case triton::arch::ID_REG_X86_NT:  return (((*((triton::uint64*)(this->eflags))) >> 14) & 1);
-          case triton::arch::ID_REG_X86_RF:  return (((*((triton::uint64*)(this->eflags))) >> 16) & 1);
-          case triton::arch::ID_REG_X86_VM:  return (((*((triton::uint64*)(this->eflags))) >> 17) & 1);
-          case triton::arch::ID_REG_X86_AC:  return (((*((triton::uint64*)(this->eflags))) >> 18) & 1);
-          case triton::arch::ID_REG_X86_VIF: return (((*((triton::uint64*)(this->eflags))) >> 19) & 1);
-          case triton::arch::ID_REG_X86_VIP: return (((*((triton::uint64*)(this->eflags))) >> 20) & 1);
-          case triton::arch::ID_REG_X86_ID:  return (((*((triton::uint64*)(this->eflags))) >> 21) & 1);
+          case triton::arch::ID_REG_X86_DR0: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr0, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DR1: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr1, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DR2: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr2, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DR3: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr3, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DR6: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr6, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DR7: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->dr7, triton::size::dword); return val; }
 
-          case triton::arch::ID_REG_X86_CS: return (*((triton::uint32*)(this->cs)));
-          case triton::arch::ID_REG_X86_DS: return (*((triton::uint32*)(this->ds)));
-          case triton::arch::ID_REG_X86_ES: return (*((triton::uint32*)(this->es)));
-          case triton::arch::ID_REG_X86_FS: return (*((triton::uint32*)(this->fs)));
-          case triton::arch::ID_REG_X86_GS: return (*((triton::uint32*)(this->gs)));
-          case triton::arch::ID_REG_X86_SS: return (*((triton::uint32*)(this->ss)));
+          case triton::arch::ID_REG_X86_SSE_IE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 0) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_DE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 1) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_ZE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 2) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_OE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 3) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_UE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 4) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_PE:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 5) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_DAZ: { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 6) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_IM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 7) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_DM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 8) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_ZM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 9) & 1);  }
+          case triton::arch::ID_REG_X86_SSE_OM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 10) & 1); }
+          case triton::arch::ID_REG_X86_SSE_UM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 11) & 1); }
+          case triton::arch::ID_REG_X86_SSE_PM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 12) & 1); }
+          case triton::arch::ID_REG_X86_SSE_RL:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 13) & 1); }
+          case triton::arch::ID_REG_X86_SSE_RH:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 14) & 1); }
+          case triton::arch::ID_REG_X86_SSE_FZ:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32)); return ((flag >> 15) & 1); }
+
+          case triton::arch::ID_REG_X86_CF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 0) & 1);  }
+          case triton::arch::ID_REG_X86_PF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 2) & 1);  }
+          case triton::arch::ID_REG_X86_AF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 4) & 1);  }
+          case triton::arch::ID_REG_X86_ZF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 6) & 1);  }
+          case triton::arch::ID_REG_X86_SF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 7) & 1);  }
+          case triton::arch::ID_REG_X86_TF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 8) & 1);  }
+          case triton::arch::ID_REG_X86_IF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 9) & 1);  }
+          case triton::arch::ID_REG_X86_DF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 10) & 1); }
+          case triton::arch::ID_REG_X86_OF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 11) & 1); }
+          case triton::arch::ID_REG_X86_NT:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 14) & 1); }
+          case triton::arch::ID_REG_X86_RF:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 16) & 1); }
+          case triton::arch::ID_REG_X86_VM:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 17) & 1); }
+          case triton::arch::ID_REG_X86_AC:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 18) & 1); }
+          case triton::arch::ID_REG_X86_VIF: { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 19) & 1); }
+          case triton::arch::ID_REG_X86_VIP: { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 20) & 1); }
+          case triton::arch::ID_REG_X86_ID:  { triton::uint32 flag = 0; std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32)); return ((flag >> 21) & 1); }
+
+          case triton::arch::ID_REG_X86_CS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->cs, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_DS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->ds, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_ES: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->es, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_FS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->fs, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_GS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->gs, triton::size::dword); return val; }
+          case triton::arch::ID_REG_X86_SS: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->ss, triton::size::dword); return val; }
+
+          case triton::arch::ID_REG_X86_FIP: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->fip, sizeof(triton::uint64)); return val; }
+          case triton::arch::ID_REG_X86_FDP: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->fdp, sizeof(triton::uint64)); return val; }
+          case triton::arch::ID_REG_X86_FCW: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return val; }
+          case triton::arch::ID_REG_X86_FSW: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return val; }
+          case triton::arch::ID_REG_X86_FOP: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->fop, sizeof(triton::uint16)); return val; }
+          case triton::arch::ID_REG_X86_FCS: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->fcs, sizeof(triton::uint16)); return val; }
+          case triton::arch::ID_REG_X86_FDS: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->fds, sizeof(triton::uint16)); return val; }
+          case triton::arch::ID_REG_X86_FTW: { triton::uint16 val = 0; std::memcpy(&val, (triton::uint16*)this->ftw, sizeof(triton::uint16)); return val; }
+
+          case triton::arch::ID_REG_X86_FCW_IM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 0) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_DM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 1) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_ZM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 2) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_OM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 3) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_UM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 4) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_PM: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 5) & 1);  }
+          case triton::arch::ID_REG_X86_FCW_PC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 8) & 3);  }
+          case triton::arch::ID_REG_X86_FCW_RC: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 10) & 3); }
+          case triton::arch::ID_REG_X86_FCW_X:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16)); return ((flag >> 12) & 1); }
+
+          case triton::arch::ID_REG_X86_FSW_IE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 0) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_DE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 1) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_ZE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 2) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_OE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 3) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_UE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 4) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_PE:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 5) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_SF:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 6) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_ES:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 7) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_C0:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 8) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_C1:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 9) & 1);  }
+          case triton::arch::ID_REG_X86_FSW_C2:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 10) & 1); }
+          case triton::arch::ID_REG_X86_FSW_TOP: { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 11) & 7); }
+          case triton::arch::ID_REG_X86_FSW_C3:  { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 14) & 1); }
+          case triton::arch::ID_REG_X86_FSW_B:   { triton::uint16 flag = 0; std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16)); return ((flag >> 15) & 1); }
+
+          case triton::arch::ID_REG_X86_EFER_SCE:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 0) & 1);  }
+          case triton::arch::ID_REG_X86_EFER_LME:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 8) & 1);  }
+          case triton::arch::ID_REG_X86_EFER_LMA:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 10) & 1); }
+          case triton::arch::ID_REG_X86_EFER_NXE:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 11) & 1); }
+          case triton::arch::ID_REG_X86_EFER_SVME:  { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 12) & 1); }
+          case triton::arch::ID_REG_X86_EFER_LMSLE: { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 13) & 1); }
+          case triton::arch::ID_REG_X86_EFER_FFXSR: { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 14) & 1); }
+          case triton::arch::ID_REG_X86_EFER_TCE:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 15) & 1); }
+
+          case triton::arch::ID_REG_X86_EFER: { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->efer, sizeof(triton::uint64)); return val; }
 
           default:
             throw triton::exceptions::Cpu("x86Cpu::getConcreteRegisterValue(): Invalid register.");
@@ -710,268 +815,497 @@ namespace triton {
           this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);
 
         switch (reg.getId()) {
-          case triton::arch::ID_REG_X86_EAX: (*((triton::uint32*)(this->eax)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_AX:  (*((triton::uint16*)(this->eax)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_AH:  (*((triton::uint8*)(this->eax+1))) = value.convert_to<triton::uint8>(); break;
-          case triton::arch::ID_REG_X86_AL:  (*((triton::uint8*)(this->eax)))   = value.convert_to<triton::uint8>(); break;
 
-          case triton::arch::ID_REG_X86_EBX: (*((triton::uint32*)(this->ebx)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_BX:  (*((triton::uint16*)(this->ebx)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_BH:  (*((triton::uint8*)(this->ebx+1))) = value.convert_to<triton::uint8>(); break;
-          case triton::arch::ID_REG_X86_BL:  (*((triton::uint8*)(this->ebx)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_EAX: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->eax, &val, triton::size::dword);   } break;
+          case triton::arch::ID_REG_X86_AX:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->eax, &val, triton::size::word);    } break;
+          case triton::arch::ID_REG_X86_AH:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)(this->eax+1), &val, triton::size::byte); } break;
+          case triton::arch::ID_REG_X86_AL:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->eax, &val, triton::size::byte);     } break;
 
-          case triton::arch::ID_REG_X86_ECX: (*((triton::uint32*)(this->ecx)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CX:  (*((triton::uint16*)(this->ecx)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_CH:  (*((triton::uint8*)(this->ecx+1))) = value.convert_to<triton::uint8>(); break;
-          case triton::arch::ID_REG_X86_CL:  (*((triton::uint8*)(this->ecx)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_EBX: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->ebx, &val, triton::size::dword);   } break;
+          case triton::arch::ID_REG_X86_BX:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->ebx, &val, triton::size::word);    } break;
+          case triton::arch::ID_REG_X86_BH:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)(this->ebx+1), &val, triton::size::byte); } break;
+          case triton::arch::ID_REG_X86_BL:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->ebx, &val, triton::size::byte);     } break;
 
-          case triton::arch::ID_REG_X86_EDX: (*((triton::uint32*)(this->edx)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DX:  (*((triton::uint16*)(this->edx)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_DH:  (*((triton::uint8*)(this->edx+1))) = value.convert_to<triton::uint8>(); break;
-          case triton::arch::ID_REG_X86_DL:  (*((triton::uint8*)(this->edx)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_ECX: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->ecx, &val, triton::size::dword);   } break;
+          case triton::arch::ID_REG_X86_CX:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->ecx, &val, triton::size::word);    } break;
+          case triton::arch::ID_REG_X86_CH:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)(this->ecx+1), &val, triton::size::byte); } break;
+          case triton::arch::ID_REG_X86_CL:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->ecx, &val, triton::size::byte);     } break;
 
-          case triton::arch::ID_REG_X86_EDI: (*((triton::uint32*)(this->edi)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DI:  (*((triton::uint16*)(this->edi)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_DIL: (*((triton::uint8*)(this->edi)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_EDX: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->edx, &val, triton::size::dword);   } break;
+          case triton::arch::ID_REG_X86_DX:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->edx, &val, triton::size::word);    } break;
+          case triton::arch::ID_REG_X86_DH:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)(this->edx+1), &val, triton::size::byte); } break;
+          case triton::arch::ID_REG_X86_DL:  { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->edx, &val, triton::size::byte);     } break;
 
-          case triton::arch::ID_REG_X86_ESI: (*((triton::uint32*)(this->esi)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_SI:  (*((triton::uint16*)(this->esi)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_SIL: (*((triton::uint8*)(this->esi)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_EDI: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->edi, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DI:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->edi, &val, triton::size::word);  } break;
+          case triton::arch::ID_REG_X86_DIL: { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->edi, &val, triton::size::byte);   } break;
 
-          case triton::arch::ID_REG_X86_ESP: (*((triton::uint32*)(this->esp)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_SP:  (*((triton::uint16*)(this->esp)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_SPL: (*((triton::uint8*)(this->esp)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_ESI: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->esi, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_SI:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->esi, &val, triton::size::word);  } break;
+          case triton::arch::ID_REG_X86_SIL: { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->esi, &val, triton::size::byte);   } break;
 
-          case triton::arch::ID_REG_X86_EBP: (*((triton::uint32*)(this->ebp)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_BP:  (*((triton::uint16*)(this->ebp)))  = value.convert_to<triton::uint16>(); break;
-          case triton::arch::ID_REG_X86_BPL: (*((triton::uint8*)(this->ebp)))   = value.convert_to<triton::uint8>(); break;
+          case triton::arch::ID_REG_X86_ESP: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->esp, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_SP:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->esp, &val, triton::size::word);  } break;
+          case triton::arch::ID_REG_X86_SPL: { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->esp, &val, triton::size::byte);   } break;
 
-          case triton::arch::ID_REG_X86_EIP: (*((triton::uint32*)(this->eip)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_IP:  (*((triton::uint16*)(this->eip)))  = value.convert_to<triton::uint16>(); break;
+          case triton::arch::ID_REG_X86_EBP: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->ebp, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_BP:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->ebp, &val, triton::size::word);  } break;
+          case triton::arch::ID_REG_X86_BPL: { auto val = value.convert_to<triton::uint8>();  std::memcpy((triton::uint8*)this->ebp, &val, triton::size::byte);   } break;
 
-          case triton::arch::ID_REG_X86_EFLAGS: (*((triton::uint32*)(this->eflags))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_X86_EIP: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->eip, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_IP:  { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->eip, &val, triton::size::word);  } break;
 
-          case triton::arch::ID_REG_X86_CF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
-            break;
-          }
-          case triton::arch::ID_REG_X86_PF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
-            break;
-          }
-          case triton::arch::ID_REG_X86_AF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
-            break;
-          }
-          case triton::arch::ID_REG_X86_ZF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
-            break;
-          }
-          case triton::arch::ID_REG_X86_SF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
-            break;
-          }
-          case triton::arch::ID_REG_X86_TF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
-            break;
-          }
-          case triton::arch::ID_REG_X86_IF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
-            break;
-          }
-          case triton::arch::ID_REG_X86_DF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
-            break;
-          }
-          case triton::arch::ID_REG_X86_OF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
-            break;
-          }
-          case triton::arch::ID_REG_X86_NT: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
-            break;
-          }
-          case triton::arch::ID_REG_X86_RF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 16) : b & ~(1 << 16);
-            break;
-          }
-          case triton::arch::ID_REG_X86_VM: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 17) : b & ~(1 << 17);
-            break;
-          }
-          case triton::arch::ID_REG_X86_AC: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 18) : b & ~(1 << 18);
-            break;
-          }
+          case triton::arch::ID_REG_X86_EFLAGS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->eflags, &val, sizeof(triton::uint32)); } break;
+
+          case triton::arch::ID_REG_X86_MM0: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st0, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM1: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st1, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM2: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st2, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM3: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st3, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM4: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st4, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM5: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st5, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM6: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st6, &val, triton::size::qword);  } break;
+          case triton::arch::ID_REG_X86_MM7: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->st7, &val, triton::size::qword);  } break;
+
+          case triton::arch::ID_REG_X86_ST0: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st0); } break;
+          case triton::arch::ID_REG_X86_ST1: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st1); } break;
+          case triton::arch::ID_REG_X86_ST2: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st2); } break;
+          case triton::arch::ID_REG_X86_ST3: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st3); } break;
+          case triton::arch::ID_REG_X86_ST4: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st4); } break;
+          case triton::arch::ID_REG_X86_ST5: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st5); } break;
+          case triton::arch::ID_REG_X86_ST6: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st6); } break;
+          case triton::arch::ID_REG_X86_ST7: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint80>(), this->st7); } break;
+
+          case triton::arch::ID_REG_X86_XMM0: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm0); } break;
+          case triton::arch::ID_REG_X86_XMM1: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm1); } break;
+          case triton::arch::ID_REG_X86_XMM2: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm2); } break;
+          case triton::arch::ID_REG_X86_XMM3: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm3); } break;
+          case triton::arch::ID_REG_X86_XMM4: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm4); } break;
+          case triton::arch::ID_REG_X86_XMM5: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm5); } break;
+          case triton::arch::ID_REG_X86_XMM6: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm6); } break;
+          case triton::arch::ID_REG_X86_XMM7: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm7); } break;
+
+          case triton::arch::ID_REG_X86_YMM0: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm0); } break;
+          case triton::arch::ID_REG_X86_YMM1: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm1); } break;
+          case triton::arch::ID_REG_X86_YMM2: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm2); } break;
+          case triton::arch::ID_REG_X86_YMM3: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm3); } break;
+          case triton::arch::ID_REG_X86_YMM4: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm4); } break;
+          case triton::arch::ID_REG_X86_YMM5: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm5); } break;
+          case triton::arch::ID_REG_X86_YMM6: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm6); } break;
+          case triton::arch::ID_REG_X86_YMM7: { triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm7); } break;
+
+          case triton::arch::ID_REG_X86_MXCSR: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->mxcsr, &val, sizeof(triton::uint32)); } break;
+          case triton::arch::ID_REG_X86_MXCSR_MASK: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->mxcsr_mask, &val, sizeof(triton::uint32)); } break;
+
+          case triton::arch::ID_REG_X86_CR0:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr0, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR1:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr1, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR2:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr2, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR3:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr3, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR4:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr4, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR5:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr5, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR6:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr6, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR7:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr7, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR8:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr8, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR9:  { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr9, &val, triton::size::dword);  } break;
+          case triton::arch::ID_REG_X86_CR10: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr10, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_CR11: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr11, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_CR12: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr12, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_CR13: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr13, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_CR14: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr14, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_CR15: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cr15, &val, triton::size::dword); } break;
+
+          case triton::arch::ID_REG_X86_DR0: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr0, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DR1: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr1, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DR2: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr2, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DR3: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr3, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DR6: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr6, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DR7: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->dr7, &val, triton::size::dword); } break;
+
+          case triton::arch::ID_REG_X86_SSE_IE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 0)) : (flag & ~(1 << 0));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_DE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 1)) : (flag & ~(1 << 1));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_ZE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 2)) : (flag & ~(1 << 2));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_OE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 3)) : (flag & ~(1 << 3));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_UE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 4)) : (flag & ~(1 << 4));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_PE:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 5)) : (flag & ~(1 << 5));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_DAZ: {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 6)) : (flag & ~(1 << 6));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_IM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 7)) : (flag & ~(1 << 7));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_DM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 8)) : (flag & ~(1 << 8));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_ZM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 9)) : (flag & ~(1 << 9));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_OM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 10)) : (flag & ~(1 << 10));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_UM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 11)) : (flag & ~(1 << 11));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_PM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 12)) : (flag & ~(1 << 12));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_RL:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 13)) : (flag & ~(1 << 13));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_RH:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 14)) : (flag & ~(1 << 14));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SSE_FZ:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->mxcsr, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 15)) : (flag & ~(1 << 15));
+            std::memcpy((triton::uint32*)this->mxcsr, &flag, sizeof(triton::uint32));
+          } break;
+
+          case triton::arch::ID_REG_X86_CF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 0)) : (flag & ~(1 << 0));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_PF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 2)) : (flag & ~(1 << 2));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_AF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 4)) : (flag & ~(1 << 4));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_ZF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 6)) : (flag & ~(1 << 6));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_SF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 7)) : (flag & ~(1 << 7));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_TF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 8)) : (flag & ~(1 << 8));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_IF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 9)) : (flag & ~(1 << 9));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_DF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 10)) : (flag & ~(1 << 10));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_OF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 11)) : (flag & ~(1 << 11));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_NT:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 14)) : (flag & ~(1 << 14));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_RF:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 16)) : (flag & ~(1 << 16));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_VM:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 17)) : (flag & ~(1 << 17));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_AC:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 18)) : (flag & ~(1 << 18));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
           case triton::arch::ID_REG_X86_VIF: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 19) : b & ~(1 << 19);
-            break;
-          }
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 19)) : (flag & ~(1 << 19));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
           case triton::arch::ID_REG_X86_VIP: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 20) : b & ~(1 << 20);
-            break;
-          }
-          case triton::arch::ID_REG_X86_ID: {
-            triton::uint32 b = (*((triton::uint32*)(this->eflags)));
-            (*((triton::uint32*)(this->eflags))) = !value.is_zero() ? b | (1 << 21) : b & ~(1 << 21);
-            break;
-          }
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 20)) : (flag & ~(1 << 20));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
+          case triton::arch::ID_REG_X86_ID:  {
+            triton::uint32 flag = 0;
+            std::memcpy(&flag, (triton::uint32*)this->eflags, sizeof(triton::uint32));
+            flag = !value.is_zero() ? (flag | (1 << 21)) : (flag & ~(1 << 21));
+            std::memcpy((triton::uint32*)this->eflags, &flag, sizeof(triton::uint32));
+          } break;
 
-          case triton::arch::ID_REG_X86_MM0:  (*((triton::uint64*)(this->mm0))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM1:  (*((triton::uint64*)(this->mm1))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM2:  (*((triton::uint64*)(this->mm2))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM3:  (*((triton::uint64*)(this->mm3))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM4:  (*((triton::uint64*)(this->mm4))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM5:  (*((triton::uint64*)(this->mm5))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM6:  (*((triton::uint64*)(this->mm6))) = value.convert_to<triton::uint64>(); break;
-          case triton::arch::ID_REG_X86_MM7:  (*((triton::uint64*)(this->mm7))) = value.convert_to<triton::uint64>(); break;
+          case triton::arch::ID_REG_X86_CS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->cs, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_DS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->ds, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_ES: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->es, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_FS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->fs, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_GS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->gs, &val, triton::size::dword); } break;
+          case triton::arch::ID_REG_X86_SS: { auto val = value.convert_to<triton::uint32>(); std::memcpy((triton::uint32*)this->ss, &val, triton::size::dword); } break;
 
-          case triton::arch::ID_REG_X86_XMM0: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm0); break;
-          case triton::arch::ID_REG_X86_XMM1: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm1); break;
-          case triton::arch::ID_REG_X86_XMM2: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm2); break;
-          case triton::arch::ID_REG_X86_XMM3: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm3); break;
-          case triton::arch::ID_REG_X86_XMM4: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm4); break;
-          case triton::arch::ID_REG_X86_XMM5: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm5); break;
-          case triton::arch::ID_REG_X86_XMM6: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm6); break;
-          case triton::arch::ID_REG_X86_XMM7: triton::utils::fromUintToBuffer(value.convert_to<triton::uint128>(), this->ymm7); break;
+          case triton::arch::ID_REG_X86_FIP: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->fip, &val, sizeof(triton::uint64)); } break;
+          case triton::arch::ID_REG_X86_FDP: { auto val = value.convert_to<triton::uint64>(); std::memcpy((triton::uint64*)this->fdp, &val, sizeof(triton::uint64)); } break;
+          case triton::arch::ID_REG_X86_FCW: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->fcw, &val, sizeof(triton::uint16)); } break;
+          case triton::arch::ID_REG_X86_FSW: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->fsw, &val, sizeof(triton::uint16)); } break;
+          case triton::arch::ID_REG_X86_FOP: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->fop, &val, sizeof(triton::uint16)); } break;
+          case triton::arch::ID_REG_X86_FCS: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->fcs, &val, sizeof(triton::uint16)); } break;
+          case triton::arch::ID_REG_X86_FDS: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->fds, &val, sizeof(triton::uint16)); } break;
+          case triton::arch::ID_REG_X86_FTW: { auto val = value.convert_to<triton::uint16>(); std::memcpy((triton::uint16*)this->ftw, &val, sizeof(triton::uint16)); } break;
 
-          case triton::arch::ID_REG_X86_YMM0: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm0); break;
-          case triton::arch::ID_REG_X86_YMM1: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm1); break;
-          case triton::arch::ID_REG_X86_YMM2: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm2); break;
-          case triton::arch::ID_REG_X86_YMM3: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm3); break;
-          case triton::arch::ID_REG_X86_YMM4: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm4); break;
-          case triton::arch::ID_REG_X86_YMM5: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm5); break;
-          case triton::arch::ID_REG_X86_YMM6: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm6); break;
-          case triton::arch::ID_REG_X86_YMM7: triton::utils::fromUintToBuffer(value.convert_to<triton::uint256>(), this->ymm7); break;
+          case triton::arch::ID_REG_X86_FCW_IM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 0)) : (flag & ~(1 << 0));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_DM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 1)) : (flag & ~(1 << 1));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_ZM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 2)) : (flag & ~(1 << 2));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_OM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 3)) : (flag & ~(1 << 3));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_UM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 4)) : (flag & ~(1 << 4));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_PM: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 5)) : (flag & ~(1 << 5));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_PC: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = (flag & 0xFCFF) | (value.convert_to<triton::uint16>() << 8);
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_RC: { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = (flag & 0xF3FF) | (value.convert_to<triton::uint16>() << 10);
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FCW_X:  { triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fcw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 12)) : (flag & ~(1 << 12));
+            std::memcpy((triton::uint16*)this->fcw, &flag, sizeof(triton::uint16));
+          } break;
 
-          case triton::arch::ID_REG_X86_MXCSR: (*((triton::uint32*)(this->mxcsr))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_X86_FSW_IE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 0)) : (flag & ~(1 << 0));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_DE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 1)) : (flag & ~(1 << 1));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_ZE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 2)) : (flag & ~(1 << 2));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_OE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 3)) : (flag & ~(1 << 3));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_UE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 4)) : (flag & ~(1 << 4));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_PE:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 5)) : (flag & ~(1 << 5));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_SF:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 6)) : (flag & ~(1 << 6));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_ES:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 7)) : (flag & ~(1 << 7));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_C0:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 8)) : (flag & ~(1 << 8));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_C1:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 9)) : (flag & ~(1 << 9));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_C2:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 10)) : (flag & ~(1 << 10));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_TOP: {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = (flag & 0xC7FF) | (value.convert_to<triton::uint16>() << 11);
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_C3:  {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 14)) : (flag & ~(1 << 14));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
+          case triton::arch::ID_REG_X86_FSW_B:   {
+            triton::uint16 flag = 0;
+            std::memcpy(&flag, (triton::uint16*)this->fsw, sizeof(triton::uint16));
+            flag = !value.is_zero() ? (flag | (1 << 15)) : (flag & ~(1 << 15));
+            std::memcpy((triton::uint16*)this->fsw, &flag, sizeof(triton::uint16));
+          } break;
 
-          case triton::arch::ID_REG_X86_IE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 0) : b & ~(1 << 0);
-            break;
-          }
-          case triton::arch::ID_REG_X86_DE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 1) : b & ~(1 << 1);
-            break;
-          }
-          case triton::arch::ID_REG_X86_ZE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 2) : b & ~(1 << 2);
-            break;
-          }
-          case triton::arch::ID_REG_X86_OE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 3) : b & ~(1 << 3);
-            break;
-          }
-          case triton::arch::ID_REG_X86_UE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 4) : b & ~(1 << 4);
-            break;
-          }
-          case triton::arch::ID_REG_X86_PE: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 5) : b & ~(1 << 5);
-            break;
-          }
-          case triton::arch::ID_REG_X86_DAZ: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 6) : b & ~(1 << 6);
-            break;
-          }
-          case triton::arch::ID_REG_X86_IM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 7) : b & ~(1 << 7);
-            break;
-          }
-          case triton::arch::ID_REG_X86_DM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 8) : b & ~(1 << 8);
-            break;
-          }
-          case triton::arch::ID_REG_X86_ZM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 9) : b & ~(1 << 9);
-            break;
-          }
-          case triton::arch::ID_REG_X86_OM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 10) : b & ~(1 << 10);
-            break;
-          }
-          case triton::arch::ID_REG_X86_UM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 11) : b & ~(1 << 11);
-            break;
-          }
-          case triton::arch::ID_REG_X86_PM: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 12) : b & ~(1 << 12);
-            break;
-          }
-          case triton::arch::ID_REG_X86_RL: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 13) : b & ~(1 << 13);
-            break;
-          }
-          case triton::arch::ID_REG_X86_RH: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 14) : b & ~(1 << 14);
-            break;
-          }
-          case triton::arch::ID_REG_X86_FZ: {
-            triton::uint32 b = (*((triton::uint32*)(this->mxcsr)));
-            (*((triton::uint32*)(this->mxcsr))) = !value.is_zero() ? b | (1 << 15) : b & ~(1 << 15);
-            break;
-          }
+          case triton::arch::ID_REG_X86_EFER_SCE:   { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 0)) : (flag & ~(1 << 0));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_LME:   { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 8)) : (flag & ~(1 << 8));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_LMA:   { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 10)) : (flag & ~(1 << 10));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_NXE:   { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 11)) : (flag & ~(1 << 11));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_SVME:  { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 12)) : (flag & ~(1 << 12));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_LMSLE: { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 13)) : (flag & ~(1 << 13));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_FFXSR: { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 14)) : (flag & ~(1 << 14));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
+          case triton::arch::ID_REG_X86_EFER_TCE:   { triton::uint64 flag = 0;
+            std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64));
+            flag = !value.is_zero() ? (flag | (1 << 15)) : (flag & ~(1 << 15));
+            std::memcpy((triton::uint64*)this->efer, &flag, sizeof(triton::uint64));
+          } break;
 
-          case triton::arch::ID_REG_X86_CR0:  (*((triton::uint32*)(this->cr0)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR1:  (*((triton::uint32*)(this->cr1)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR2:  (*((triton::uint32*)(this->cr2)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR3:  (*((triton::uint32*)(this->cr3)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR4:  (*((triton::uint32*)(this->cr4)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR5:  (*((triton::uint32*)(this->cr5)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR6:  (*((triton::uint32*)(this->cr6)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR7:  (*((triton::uint32*)(this->cr7)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR8:  (*((triton::uint32*)(this->cr8)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR9:  (*((triton::uint32*)(this->cr9)))  = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR10: (*((triton::uint32*)(this->cr10))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR11: (*((triton::uint32*)(this->cr11))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR12: (*((triton::uint32*)(this->cr12))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR13: (*((triton::uint32*)(this->cr13))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR14: (*((triton::uint32*)(this->cr14))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_CR15: (*((triton::uint32*)(this->cr15))) = value.convert_to<triton::uint32>(); break;
-
-          case triton::arch::ID_REG_X86_DR0:  (*((triton::uint32*)(this->dr0))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DR1:  (*((triton::uint32*)(this->dr1))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DR2:  (*((triton::uint32*)(this->dr2))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DR3:  (*((triton::uint32*)(this->dr3))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DR6:  (*((triton::uint32*)(this->dr6))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DR7:  (*((triton::uint32*)(this->dr7))) = value.convert_to<triton::uint32>(); break;
-
-          case triton::arch::ID_REG_X86_CS:  (*((triton::uint32*)(this->cs))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_DS:  (*((triton::uint32*)(this->ds))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_ES:  (*((triton::uint32*)(this->es))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_FS:  (*((triton::uint32*)(this->fs))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_GS:  (*((triton::uint32*)(this->gs))) = value.convert_to<triton::uint32>(); break;
-          case triton::arch::ID_REG_X86_SS:  (*((triton::uint32*)(this->ss))) = value.convert_to<triton::uint32>(); break;
+          case triton::arch::ID_REG_X86_EFER: {
+            auto val = value.convert_to<triton::uint64>();
+            std::memcpy((triton::uint64*)this->efer, &val, sizeof(triton::uint64));
+          } break;
 
           default:
             throw triton::exceptions::Cpu("x86Cpu:setConcreteRegisterValue() - Invalid register.");
