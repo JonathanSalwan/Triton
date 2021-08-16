@@ -635,6 +635,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyAstNode(node));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
