@@ -478,20 +478,22 @@ namespace triton {
         if (function == nullptr || !PyCallable_Check(function))
           return PyErr_Format(PyExc_TypeError, "TritonContext::addCallback(): Expects a function as second argument.");
 
-        Py_INCREF(function);
         if (PyMethod_Check(function)) {
           cb_self = PyMethod_GET_SELF(function);
           cb = PyMethod_GET_FUNCTION(function);
+
+          Py_INCREF(cb_self);
         }
         else {
           cb = function;
         }
+        Py_INCREF(cb);
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cb_self, cb, function](triton::API& api, const triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cb_self, cb](triton::API& api, const triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -501,6 +503,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
@@ -532,6 +535,7 @@ namespace triton {
                   PyTuple_SetItem(args, 0, cb_self);
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
@@ -564,6 +568,7 @@ namespace triton {
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
                   PyTuple_SetItem(args, 3, triton::bindings::python::PyLong_FromUint512(value));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(3);
@@ -597,6 +602,7 @@ namespace triton {
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
                   PyTuple_SetItem(args, 3, triton::bindings::python::PyLong_FromUint512(value));
+                  Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(3);
@@ -2315,6 +2321,7 @@ namespace triton {
 
       static PyObject* TritonContext_removeCallback(PyObject* self, PyObject* args) {
         PyObject* cb       = nullptr;
+        PyObject* cb_self  = nullptr;
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
 
@@ -2330,7 +2337,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::removeCallback(): Expects a function as second argument.");
 
         /* Get the callback (class or static) */
-        cb = (PyMethod_Check(function) ? PyMethod_GET_FUNCTION(function) : function);
+        if (PyMethod_Check(function)) {
+          cb_self = PyMethod_GET_SELF(function);
+          cb = PyMethod_GET_FUNCTION(function);
+        }
+        else {
+          cb = function;
+        }
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
@@ -2360,7 +2373,10 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
 
-        Py_DECREF(function);
+        Py_DECREF(cb);
+        if (cb_self != nullptr) {
+          Py_DECREF(cb_self);
+        }
 
         Py_INCREF(Py_None);
         return Py_None;

@@ -72,3 +72,16 @@ class TestCallback(unittest.TestCase):
         self.Triton.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
         self.Triton.removeCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
         self.assertTrue(cb_initial_refcnt == sys.getrefcount(cb))
+
+        cb = self.method_callback
+        cb_initial_refcnt = tuple(sys.getrefcount(x) for x in (cb, cb.__self__, cb.__func__))
+        self.Triton.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
+        self.Triton.removeCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
+        cb_new_refcnt = tuple(sys.getrefcount(x) for x in (cb, cb.__self__, cb.__func__))
+        self.assertTrue(cb_initial_refcnt == cb_new_refcnt)
+
+        self.Triton.addCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
+        self.Triton.getConcreteMemoryAreaValue(0x1000, 1)
+        self.Triton.removeCallback(CALLBACK.GET_CONCRETE_MEMORY_VALUE, self.method_callback)
+        cb_new_refcnt = tuple(sys.getrefcount(x) for x in (cb, cb.__self__, cb.__func__))
+        self.assertTrue(cb_initial_refcnt == cb_new_refcnt)
