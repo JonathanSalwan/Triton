@@ -481,10 +481,13 @@ namespace triton {
         if (PyMethod_Check(function)) {
           cb_self = PyMethod_GET_SELF(function);
           cb = PyMethod_GET_FUNCTION(function);
+
+          Py_INCREF(cb_self);
         }
         else {
           cb = function;
         }
+        Py_INCREF(cb);
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
@@ -509,7 +512,6 @@ namespace triton {
                 }
 
                 /* Call the callback */
-                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -542,7 +544,6 @@ namespace triton {
                 }
 
                 /* Call the callback */
-                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -577,7 +578,6 @@ namespace triton {
                 }
 
                 /* Call the callback */
-                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -612,7 +612,6 @@ namespace triton {
                 }
 
                 /* Call the callback */
-                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -645,7 +644,6 @@ namespace triton {
                 }
 
                 /* Call the callback */
-                Py_INCREF(cb);
                 PyObject* ret = PyObject_CallObject(cb, args);
 
                 /* Check the call */
@@ -2324,6 +2322,7 @@ namespace triton {
 
       static PyObject* TritonContext_removeCallback(PyObject* self, PyObject* args) {
         PyObject* cb       = nullptr;
+        PyObject* cb_self  = nullptr;
         PyObject* function = nullptr;
         PyObject* mode     = nullptr;
 
@@ -2339,7 +2338,13 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::removeCallback(): Expects a function as second argument.");
 
         /* Get the callback (class or static) */
-        cb = (PyMethod_Check(function) ? PyMethod_GET_FUNCTION(function) : function);
+        if (PyMethod_Check(function)) {
+          cb_self = PyMethod_GET_SELF(function);
+          cb = PyMethod_GET_FUNCTION(function);
+        }
+        else {
+          cb = function;
+        }
 
         try {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
@@ -2367,6 +2372,11 @@ namespace triton {
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_DECREF(cb);
+        if (cb_self != nullptr) {
+          Py_DECREF(cb_self);
         }
 
         Py_INCREF(Py_None);
