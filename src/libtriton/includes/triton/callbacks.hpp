@@ -116,7 +116,7 @@ namespace triton {
         triton::usize countCallbacks(void) const;
 
         //! Trys to find and remove the callback, raises an exception if not able
-        template <typename T> void removeSingleCallback(std::list<T> & container, T cb);
+        template <typename T> void removeSingleCallback(std::list<T>& container, T cb);
 
       public:
         //! Constructor.

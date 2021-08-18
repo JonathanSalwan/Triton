@@ -97,8 +97,9 @@ namespace triton {
       this->defined = false;
     }
 
+
     template <typename T>
-    void Callbacks::removeSingleCallback(std::list<T> & container, T cb) {
+    void Callbacks::removeSingleCallback(std::list<T>& container, T cb) {
       for (auto it = container.begin(); it != container.end(); ++it) {
         if (cb == *it) {
           container.erase(it);
@@ -107,6 +108,7 @@ namespace triton {
       }
       throw triton::exceptions::Exception("Unable to find callback for removal");
     }
+
 
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb) {
       switch (kind) {
