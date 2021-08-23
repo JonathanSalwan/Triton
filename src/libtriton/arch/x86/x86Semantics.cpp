@@ -13524,26 +13524,32 @@ namespace triton {
 
 
       void x86Semantics::syscall_s(triton::arch::Instruction& inst) {
-        auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RCX));
-        auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_R11));
-        auto src1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RIP));
-        auto src2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EFLAGS));
+        auto dst1 = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_CX));
+        auto src1 = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
 
         /* Create the semantics */
         auto node1 = this->astCtxt->bvadd(op1, this->astCtxt->bv(inst.getSize(), src1.getBitSize()));
-        auto node2 = op2;
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "SYSCALL RCX operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "SYSCALL R11 operation");
 
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintAssignment(dst1, src1);
-        expr2->isTainted = this->taintEngine->taintAssignment(dst2, src2);
+
+        /* 64-bit */
+        if (src1.getBitSize() == 64) {
+          auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_R11));
+          auto src2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EFLAGS));
+          /* Create symbolic operands */
+          auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+          /* Create symbolic expression */
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, op2, dst2, "SYSCALL R11 operation");
+          /* Spread taint */
+          expr2->isTainted = this->taintEngine->taintAssignment(dst2, src2);
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
