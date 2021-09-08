@@ -1089,21 +1089,21 @@ namespace triton {
   }
 
 
-  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
     this->checkSolver();
-    return this->solver->getModel(node, status);
+    return this->solver->getModel(node, status, timeout);
   }
 
 
-  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
+  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
     this->checkSolver();
-    return this->solver->getModels(node, limit, status);
+    return this->solver->getModels(node, limit, status, timeout);
   }
 
 
-  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
     this->checkSolver();
-    return this->solver->isSat(node, status);
+    return this->solver->isSat(node, status, timeout);
   }
 
 

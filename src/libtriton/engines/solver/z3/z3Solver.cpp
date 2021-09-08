@@ -39,7 +39,7 @@ namespace triton {
       }
 
 
-      std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
         std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
         triton::ast::TritonToZ3Ast z3Ast{false};
@@ -65,7 +65,10 @@ namespace triton {
           z3::params p(ctx);
 
           /* Define the timeout */
-          if (this->timeout) {
+          if (timeout) {
+            p.set(":timeout", timeout);
+          }
+          else if (this->timeout) {
             p.set(":timeout", this->timeout);
           }
 
@@ -142,7 +145,7 @@ namespace triton {
       }
 
 
-      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
         triton::ast::TritonToZ3Ast z3Ast{false};
 
         if (node == nullptr)
@@ -162,7 +165,10 @@ namespace triton {
           z3::params p(ctx);
 
           /* Define the timeout */
-          if (this->timeout) {
+          if (timeout) {
+            p.set(":timeout", timeout);
+          }
+          else if (this->timeout) {
             p.set(":timeout", this->timeout);
           }
 
@@ -183,11 +189,11 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::usize, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+      std::unordered_map<triton::usize, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
         std::unordered_map<triton::usize, SolverModel> ret;
         std::vector<std::unordered_map<triton::usize, SolverModel>> allModels;
 
-        allModels = this->getModels(node, 1, status);
+        allModels = this->getModels(node, 1, status, timeout);
         if (allModels.size() > 0)
           ret = allModels.front();
 
