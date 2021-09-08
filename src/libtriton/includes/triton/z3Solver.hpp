@@ -48,7 +48,7 @@ namespace triton {
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
         private:
-          //! The SMT solver timeout. By default, unlimited.
+          //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
           triton::uint32 timeout;
 
           //! The SMT solver memory limit. By default, unlimited.
