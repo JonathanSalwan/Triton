@@ -2,7 +2,7 @@
 ## -*- coding: utf-8 -*-
 ##
 ## According to the paper https://arxiv.org/pdf/2109.03698.pdf, they implemented
-## trhee ways (LIN, ITE and BST) to handle symbolic memory pointers. In this example,
+## three ways (LIN, ITE and BST) to handle symbolic memory pointers. In this example,
 ## we show you an example of their ITE implementation. The idea is to emulate the following
 ## piece of code where a table is used with a symbolic index. As you know, Triton
 ## does not handle memory array and so we have to deal with it. However, it's possible
@@ -10,7 +10,7 @@
 ## In this example we only handle symbolic LOAD (not STORE) of their ITE algorithm.
 ## Hope it can give some fresh ideas for interested people =).
 ##
-## Usecase:
+## Use case:
 ##
 ##      int table[7] = {3, 7, 14, 0, 5, 11, 9};
 ##
@@ -233,6 +233,9 @@ def emulate(ctx, pc):
     return
 
 
+# Note that this following function is very specific to our use case.
+# It's just used as a proof to see if we successfully managed to handle the
+# symbolic read at 0x115D.
 def ask_model(ctx):
     ast = ctx.getAstContext()
     # Pop the last constraint at 0x115D
