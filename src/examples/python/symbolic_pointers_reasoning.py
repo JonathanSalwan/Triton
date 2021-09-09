@@ -6,9 +6,9 @@
 ## we show you an example of their ITE implementation. The idea is to emulate the following
 ## piece of code where a table is used with a symbolic index. As you know, Triton
 ## does not handle memory array and so we have to deal with it. However, it's possible
-## to simulate the behavior of symbolic pointer by enumerating all its potential values.
-## In this example we only implemented symbolic LOAD (not STORE) on their ITE algorithm,
-## hope it can give some fresh ideas for interested people =).
+## to simulate the behavior of a symbolic pointer by enumerating all its potential values.
+## In this example we only handle symbolic LOAD (not STORE) of their ITE algorithm.
+## Hope it can give some fresh ideas for interested people =).
 ##
 ## Usecase:
 ##
