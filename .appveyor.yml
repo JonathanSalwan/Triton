@@ -18,17 +18,6 @@ environment:
   matrix:
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: C:\Python27
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\%configuration%\capstone.lib
-      LIEF_VERSION: 0.7.0
-      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.9-x86-win
-      PYTHON_VERSION: 2.7
-
-    - platform: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python36
       CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\%configuration%\capstone.lib
       LIEF_VERSION: 0.10.1
@@ -48,17 +37,6 @@ environment:
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x86-win
       PYTHON_VERSION: 3.7
-
-    - platform: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: C:\Python27-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
-      LIEF_VERSION: 0.7.0
-      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.9-x64-win
-      PYTHON_VERSION: 2.7
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
