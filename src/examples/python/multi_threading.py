@@ -56,7 +56,7 @@ if __name__ == "__main__":
     for inst in thread1:
         ctx.processing(Instruction(inst))
 
-    # Save the state of the thread 1 and restore the state of the thread 2
+    # Save the state of the thread 1 and restore the state of the thread 0
     th1.save(ctx)
     th0.restore(ctx)
 
