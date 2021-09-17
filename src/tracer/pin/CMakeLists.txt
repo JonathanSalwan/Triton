@@ -55,7 +55,6 @@ elseif("${CMAKE_CXX_COMPILER_ID}" MATCHES "Clang")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
 endif()
 
-
 # Includes directories (Pin)
 if(${ARCHITECTURE} STREQUAL "i386")
     include_directories("${PIN_ROOT}/extras/xed-ia32/include")
@@ -104,13 +103,13 @@ file(
 add_library(${PROJECT_PINTOOL} SHARED ${PINTOOL_SOURCE_FILES})
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    target_link_libraries(${PROJECT_PINTOOL} pin xed pindwarf dl ${PROJECT_LIBTRITON})
+    target_link_libraries(${PROJECT_PINTOOL} pin xed pindwarf dl triton)
 elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     if(${ARCHITECTURE} STREQUAL "i386")
-        target_link_libraries(${PROJECT_PINTOOL} pin pinvm xed ntdll-32 ${PROJECT_LIBTRITON})
+        target_link_libraries(${PROJECT_PINTOOL} pin pinvm xed ntdll-32 triton)
     endif()
     if(${ARCHITECTURE} STREQUAL "amd64")
-        target_link_libraries(${PROJECT_PINTOOL} pin pinvm xed ntdll-64 ${PROJECT_LIBTRITON})
+        target_link_libraries(${PROJECT_PINTOOL} pin pinvm xed ntdll-64 triton)
     endif()
 endif()
 

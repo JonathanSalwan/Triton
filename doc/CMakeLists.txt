@@ -43,10 +43,10 @@ if(PYTHON_BINDINGS_AUTOCOMPLETE)
         COMMAND ${PYTHON_EXECUTABLE} -c [[from __future__ import print_function; from distutils.sysconfig import get_python_lib; lib = get_python_lib(); print(lib.replace("\\", "/"))]]
         OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE
     )
-    install(
-        DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete
-        DESTINATION ${PYTHON_SITE_PACKAGES}
-    )
+    #install(
+    #    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/triton_autocomplete
+    #    DESTINATION ${PYTHON_SITE_PACKAGES}
+    #)
 endif()
 
 configure_file(

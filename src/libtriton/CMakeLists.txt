@@ -1,57 +1,8 @@
-# Define if the library will be STATIC or DYNAMIC
-if(STATICLIB)
-    set(LIBTRITON_KIND_LINK STATIC)
-else()
-    set(LIBTRITON_KIND_LINK SHARED)
-endif()
-
-# Default flags
-# To fix old python version bug http://bugs.python.org/issue21958
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DHAVE_ROUND /MT /MP")
-    set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -DHAVE_ROUND /MTd /MP")
-endif()
-
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBUILDING_DLL=1")
     set(PYTHON_SUFFIX .pyd)
 else()
     set(PYTHON_SUFFIX .so)
 endif()
-
-# Global UNIX CXX Flags
-if(CMAKE_COMPILER_IS_GNUCXX OR ${CMAKE_CXX_COMPILER_ID} MATCHES "Clang")
-    # Flags. -Werror triggers error on boost
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -Wno-unused-parameter -Wno-unknown-pragmas")
-    # set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
-    if(NOT GCOV)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-    endif()
-    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND ASAN)
-        MESSAGE("-- Compiling with ASAN")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g3 -ggdb3 -fsanitize=address -shared-libasan")
-        set(LIBTRITON_KIND_LINK SHARED)
-    endif()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fno-stack-protector -fomit-frame-pointer -fno-strict-aliasing")
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -std=c++11")
-    # Disable fall-through warnings
-    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 7.0)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fPIC -Wimplicit-fallthrough=0")
-    endif()
-    if (CMAKE_COMPILER_IS_GNUCXX AND CMAKE_CXX_COMPILER_VERSION VERSION_GREATER 8.1)
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-error=cast-function-type")
-    endif()
-    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0) # Really?
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-mismatched-tags")
-    endif()
-    if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND NOT(CMAKE_CXX_COMPILER_VERSION VERSION_LESS 6.0))
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wno-deprecated-register -Wno-parentheses-equality")
-    endif()
-endif()
-
-# Add Triton includes
-include_directories("${CMAKE_CURRENT_LIST_DIR}/includes")
-include_directories("${CMAKE_CURRENT_BINARY_DIR}/includes")
 
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
@@ -97,12 +48,14 @@ set(LIBTRITON_SOURCE_FILES
 
 # Define all header files
 set(LIBTRITON_HEADER_FILES
+    includes/triton/aarch64.spec
     includes/triton/aarch64Cpu.hpp
     includes/triton/aarch64Semantics.hpp
     includes/triton/aarch64Specifications.hpp
     includes/triton/api.hpp
     includes/triton/archEnums.hpp
     includes/triton/architecture.hpp
+    includes/triton/arm32.spec
     includes/triton/arm32Cpu.hpp
     includes/triton/arm32Semantics.hpp
     includes/triton/arm32Specifications.hpp
@@ -150,6 +103,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/tritonToZ3Ast.hpp
     includes/triton/tritonTypes.hpp
     includes/triton/unix.hpp
+    includes/triton/x86.spec
     includes/triton/x8664Cpu.hpp
     includes/triton/x86Cpu.hpp
     includes/triton/x86Semantics.hpp
@@ -314,46 +268,86 @@ configure_file(
     IMMEDIATE @ONLY
 )
 
-# Define gloabl shared linker flags
-set(LIBTRITON_SHARED_LINKER_FLAGS " ")
-
-# Special cases for MinGW
-if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
-    set(LIBTRITON_OTHER_LIBS "-lgomp")
-    if (NOT STATICLIB)
-        set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--export-all-symbols")
-    endif()
-endif()
-
 # Define library's properties
 add_library(
-    ${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK}
+    triton
     ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_HEADER_FILES} ${LIBTRITON_RESOURCE_FILES}
     ${Z3_INTERFACE_SOURCE_FILES}
     ${LIBTRITON_PYTHON_SOURCE_FILES} ${LIBTRITON_PYTHON_HEADER_FILES}
 )
-add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
-target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_LIST_DIR}/includes")
-target_include_directories(${PROJECT_LIBTRITON} PUBLIC "${CMAKE_CURRENT_BINARY_DIR}/includes")
-add_dependencies(${PROJECT_LIBTRITON} gen-syscall32 gen-syscall64)
-
-# Link Triton's dependencies
-target_link_libraries(
-    ${PROJECT_LIBTRITON}
-    ${PYTHON_LIBRARIES}
-    ${Boost_LIBRARIES}
-    ${Z3_LIBRARIES}
-    ${CAPSTONE_LIBRARIES}
-    ${LIBTRITON_OTHER_LIBS}
-)
 add_dependencies(check triton)
 
+set_target_properties(triton PROPERTIES PUBLIC_HEADER "${LIBTRITON_HEADER_FILES};${CMAKE_CURRENT_BINARY_DIR}/includes/triton/version.hpp;${CMAKE_CURRENT_BINARY_DIR}/includes/triton/config.hpp")
+
+target_include_directories(triton PUBLIC
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/includes>"
+    "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>"
+)
+add_dependencies(triton gen-syscall32 gen-syscall64)
+
+# Link Triton's dependencies
+target_link_libraries(triton PUBLIC
+    Boost::headers
+    z3::libz3
+    capstone::capstone
+    ${LIBTRITON_OTHER_LIBS}
+)
+
+if(PYTHON_BINDINGS)
+    target_link_libraries(triton PRIVATE
+        Python::Python
+    )
+endif()
+
+# Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
+if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
+    target_compile_options(triton PRIVATE -std=c++11)
+endif()
+
+if(WIN32 AND BUILD_SHARED_LIBS)
+    target_compile_definitions(triton PUBLIC TRITON_BUILDING_DLL)
+endif()
+
+# Installation
+install(
+        EXPORT tritonTargets
+        DESTINATION lib/cmake/triton
+        NAMESPACE triton::
+    )
+    install(
+        TARGETS triton
+        EXPORT tritonTargets
+        PUBLIC_HEADER DESTINATION include/triton
+        INCLUDES DESTINATION include
+    )
+
+    include(CMakePackageConfigHelpers)
+    configure_package_config_file(
+        Config.cmake.in
+        "${PROJECT_BINARY_DIR}/tritonConfig.cmake"
+        INSTALL_DESTINATION lib/cmake/triton
+        NO_SET_AND_CHECK_MACRO
+        NO_CHECK_REQUIRED_COMPONENTS_MACRO
+    )
+
+    write_basic_package_version_file("${PROJECT_BINARY_DIR}/tritonConfigVersion.cmake"
+        COMPATIBILITY SameMajorVersion
+    )
+
+    install(
+        FILES
+            "${PROJECT_BINARY_DIR}/tritonConfig.cmake"
+            "${PROJECT_BINARY_DIR}/tritonConfigVersion.cmake"
+        DESTINATION lib/cmake/triton
+    )
+
 # Add the install targets
-install (TARGETS ${PROJECT_LIBTRITON} DESTINATION lib)
-install (DIRECTORY ${TRITON_ROOT}/src/libtriton/includes/triton DESTINATION include)
-install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
+#install (TARGETS triton DESTINATION lib)
+#install (DIRECTORY ${TRITON_ROOT}/src/libtriton/includes/triton DESTINATION include)
+#install (DIRECTORY ${CMAKE_BINARY_DIR}/src/libtriton/includes/triton DESTINATION include)
 
 # Install Python bindings
+#[[
 if(PYTHON_BINDINGS)
     add_custom_target(python-triton ALL
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
@@ -367,3 +361,4 @@ if(PYTHON_BINDINGS)
         install (FILES ${CMAKE_CURRENT_BINARY_DIR}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})
     endif()
 endif()
+]]#
