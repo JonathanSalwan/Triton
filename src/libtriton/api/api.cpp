@@ -134,7 +134,7 @@ To be able to compile Triton, you must install these libraries before:
  lib name                                                                      | version
 -------------------------------------------------------------------------------|------------------
  [libboost](http://www.boost.org/)                                             | >= 1.68
- [libpython](https://www.python.org/)                                          | == 2.7.x or 3.6.x
+ [libpython](https://www.python.org/)                                          | >= 3.6
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
  [libcapstone](http://www.capstone-engine.org/)                                | >= 4.0.x
  [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
@@ -165,7 +165,7 @@ $ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
-$ cmake $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | python) ..
+$ cmake $(echo 'from os.path import abspath, join; from sysconfig import get_path; print("-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_path("include"), abspath(join(get_path("platlib"), "../../libpython3.7.dylib"))))' | python3) ..
 $ sudo make -j2 install
 ~~~~~~~~~~~~~
 
