@@ -1885,7 +1885,7 @@ namespace triton {
             inst.setConditionTaken(true);
 
             /* Update execution mode accordingly. */
-            this->updateExecutionState(dst, node1);
+            this->updateExecutionState(dst, op);
           }
 
           /* Update the symbolic control flow */
