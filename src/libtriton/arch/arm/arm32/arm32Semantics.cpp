@@ -49,6 +49,7 @@ LDRSB                         | Load Register Signed Byte
 LDRSH                         | Load Register Signed Halfword
 LSL                           | Logical Shift Left
 LSR                           | Logical Shift Right
+MLA                           | Multiply Accumulate
 MOV                           | Move Register
 MOVT                          | Move Top
 MOVW                          | Move Register
@@ -147,6 +148,7 @@ namespace triton {
             case ID_INS_LDRSH:     this->ldrsh_s(inst);         break;
             case ID_INS_LSL:       this->lsl_s(inst);           break;
             case ID_INS_LSR:       this->lsr_s(inst);           break;
+            case ID_INS_MLA:       this->mla_s(inst);           break;
             case ID_INS_MOV:       this->mov_s(inst);           break;
             case ID_INS_MOVT:      this->movt_s(inst);          break;
             case ID_INS_MOVW:      this->mov_s(inst);           break;
@@ -2617,6 +2619,54 @@ namespace triton {
 
             /* Update execution mode accordingly. */
             this->updateExecutionState(dst, node2);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::mla_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto& src3   = inst.operands[3];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, src3);
+
+          /* Create the semantics */
+          auto mla   = this->astCtxt->bvadd(
+                            this->astCtxt->bvmul(
+                                this->astCtxt->sx(2*bvSize, op1),
+                                this->astCtxt->sx(2*bvSize, op2)
+                            ),
+                            this->astCtxt->sx(2*bvSize, op3)
+                        );
+          auto lower = this->astCtxt->extract(bvSize-1, 0, mla);
+          auto node1 = this->buildConditionalSemantics(inst, dst, lower);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MLA(S) operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update symbolic flags */
+          if (inst.isUpdateFlag() == true) {
+            this->nf_s(inst, cond, expr, dst);
+            this->zf_s(inst, cond, expr, dst);
+          }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
           }
 
           /* Update the symbolic control flow */

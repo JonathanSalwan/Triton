@@ -336,6 +336,9 @@ namespace triton {
             //! The LSR semantics.
             void lsr_s(triton::arch::Instruction& inst);
 
+            //! The MLA semantics.
+            void mla_s(triton::arch::Instruction& inst);
+
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 

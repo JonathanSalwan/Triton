@@ -60,6 +60,7 @@ CODE  = [
     (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
     (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
     (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
+    (b"\x01\xfb\x03\x40", "mla r0, r1, r3, r4"),
 
     (b"\x6f\xf3\x1f\x04", "bfc r4, #0, #32"),
     (b"\x6f\xf3\x1e\x04", "bfc r4, #0, #31"),
