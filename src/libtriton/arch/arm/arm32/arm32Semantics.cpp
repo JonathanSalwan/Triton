@@ -29,6 +29,7 @@ ADR                           | Form PC-relative address
 AND                           | Bitwise AND
 ASR                           | Arithmetic Shift Right
 B                             | Branch
+BFC                           | Bitfield Clear
 BFI                           | Bitfield Insert
 BIC                           | Bitwise Bit Clear
 BL                            | Branch with Link
