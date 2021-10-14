@@ -79,6 +79,7 @@ STRB                          | Store Register Byte
 STRD                          | Store Register Dual
 STRH                          | Store Register Halfword
 SUB                           | Substract
+SUBW                          | Substract
 SXTB                          | Signed Extend Byte
 SXTH                          | Sign Extend Halfword
 TEQ                           | Test Equivalence
@@ -178,6 +179,7 @@ namespace triton {
             case ID_INS_STRD:      this->strd_s(inst);          break;
             case ID_INS_STRH:      this->strh_s(inst);          break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
+            case ID_INS_SUBW:      this->sub_s(inst);           break;
             case ID_INS_SXTB:      this->sxtb_s(inst);          break;
             case ID_INS_SXTH:      this->sxth_s(inst);          break;
             case ID_INS_TEQ:       this->teq_s(inst);           break;
