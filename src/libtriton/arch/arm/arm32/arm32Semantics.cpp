@@ -126,6 +126,7 @@ namespace triton {
             case ID_INS_AND:       this->and_s(inst);           break;
             case ID_INS_ASR:       this->asr_s(inst);           break;
             case ID_INS_B:         this->b_s(inst);             break;
+            case ID_INS_BFC:       this->bfc_s(inst);           break;
             case ID_INS_BFI:       this->bfi_s(inst);           break;
             case ID_INS_BIC:       this->bic_s(inst);           break;
             case ID_INS_BL:        this->bl_s(inst, false);     break;
@@ -1242,6 +1243,51 @@ namespace triton {
           this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
+        void Arm32Semantics::bfc_s(triton::arch::Instruction& inst) {
+          auto& dst   = inst.operands[0]; // Reg
+          auto& src1  = inst.operands[1]; // Imm (Lsb)
+          auto& src2  = inst.operands[2]; // Imm (Width)
+          auto  lsb   = static_cast<uint32>(src1.getImmediate().getValue());
+          auto  width = static_cast<uint32>(src2.getImmediate().getValue());
+
+          if (lsb + width > dst.getBitSize())
+            throw triton::exceptions::Semantics("Arm32Semantics::bfi_s(): Invalid lsb and width.");
+
+          /* Create symbolic operands */
+          auto opDst = this->symbolicEngine->getOperandAst(inst, dst);
+
+          /* Create the semantics */
+          std::vector<triton::ast::SharedAbstractNode> chunks;
+          chunks.reserve(3);
+
+          /* Upper chunk (from dst register). */
+          if (lsb + width < dst.getBitSize()) {
+            chunks.push_back(this->astCtxt->extract(dst.getBitSize() - 1, lsb + width, opDst));
+          }
+
+          /* Middle chunk (zeroes). */
+          chunks.push_back(this->astCtxt->bv(0, width));
+
+          /* Lower chunk (from dst register). */
+          if (lsb > 0) {
+            chunks.push_back(this->astCtxt->extract(lsb - 1, 0, opDst));
+          }
+
+          auto node1 = chunks.size() == 1 ? chunks[0] : this->astCtxt->concat(chunks);
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "BFI operation");
+
+          /* Get condition code node */
+          auto cond = this->getCodeConditionAst(inst);
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1));
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
 
         void Arm32Semantics::bfi_s(triton::arch::Instruction& inst) {
           auto& dst   = inst.operands[0]; // Reg

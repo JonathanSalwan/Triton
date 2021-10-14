@@ -276,6 +276,9 @@ namespace triton {
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
 
+            //! The BFC semantics.
+            void bfc_s(triton::arch::Instruction& inst);
+
             //! The BFI semantics.
             void bfi_s(triton::arch::Instruction& inst);
 
