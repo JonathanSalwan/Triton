@@ -1262,13 +1262,20 @@ namespace triton {
           std::vector<triton::ast::SharedAbstractNode> chunks;
           chunks.reserve(3);
 
+          /* Upper chunk (from dst register). */
           if (lsb + width < dst.getBitSize()) {
-            chunks.push_back(this->astCtxt->extract(dst.getBitSize() - 1, lsb + width, /* src */ opDst));
+            chunks.push_back(this->astCtxt->extract(dst.getBitSize() - 1, lsb + width, opDst));
           }
-          chunks.push_back(this->astCtxt->extract(width - 1, 0, /* src */ op));
-          chunks.push_back(this->astCtxt->extract(lsb - 1, 0, /* dst */ opDst));
 
-          auto node1 = this->astCtxt->concat(chunks);
+          /* Middle chunk (from src register). */
+          chunks.push_back(this->astCtxt->extract(width - 1, 0, op));
+
+          /* Lower chunk (from dst register). */
+          if (lsb > 0) {
+            chunks.push_back(this->astCtxt->extract(lsb - 1, 0, opDst));
+          }
+
+          auto node1 = chunks.size() == 1 ? chunks[0] : this->astCtxt->concat(chunks);
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
