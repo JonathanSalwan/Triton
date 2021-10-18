@@ -1248,6 +1248,7 @@ namespace triton {
           this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
+
         void Arm32Semantics::bfc_s(triton::arch::Instruction& inst) {
           auto& dst   = inst.operands[0]; // Reg
           auto& src1  = inst.operands[1]; // Imm (Lsb)
@@ -1256,7 +1257,7 @@ namespace triton {
           auto  width = static_cast<uint32>(src2.getImmediate().getValue());
 
           if (lsb + width > dst.getBitSize())
-            throw triton::exceptions::Semantics("Arm32Semantics::bfi_s(): Invalid lsb and width.");
+            throw triton::exceptions::Semantics("Arm32Semantics::bfc_s(): Invalid lsb and width.");
 
           /* Create symbolic operands */
           auto opDst = this->symbolicEngine->getOperandAst(inst, dst);
@@ -1282,7 +1283,7 @@ namespace triton {
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "BFI operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "BFC operation");
 
           /* Get condition code node */
           auto cond = this->getCodeConditionAst(inst);
@@ -1293,6 +1294,7 @@ namespace triton {
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
         }
+
 
         void Arm32Semantics::bfi_s(triton::arch::Instruction& inst) {
           auto& dst   = inst.operands[0]; // Reg
