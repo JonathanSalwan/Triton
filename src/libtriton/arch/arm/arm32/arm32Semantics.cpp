@@ -2713,7 +2713,7 @@ namespace triton {
           auto node1 = this->buildConditionalSemantics(inst, dst, lower);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MLS(S) operation");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "MLS operation");
 
           /* Get condition code node */
           auto cond = node1->getChildren()[0];
