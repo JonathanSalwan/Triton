@@ -399,6 +399,18 @@ namespace triton {
             //! The SDIV semantics.
             void sdiv_s(triton::arch::Instruction& inst);
 
+            //! The SMLABB semantics.
+            void smlabb_s(triton::arch::Instruction& inst);
+
+            //! The SMLABT semantics.
+            void smlabt_s(triton::arch::Instruction& inst);
+
+            //! The SMLATB semantics.
+            void smlatb_s(triton::arch::Instruction& inst);
+
+            //! The SMLATT semantics.
+            void smlatt_s(triton::arch::Instruction& inst);
+
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
 

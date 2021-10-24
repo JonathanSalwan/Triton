@@ -72,6 +72,10 @@ RSC                           | Reverse Subtract with Carry
 SBC                           | Subtract with Carry
 SBFX                          | Signed Bitfield Extract
 SDIV                          | Signed Divide
+SMLABB                        | Signed Multiply Accumulate
+SMLABT                        | Signed Multiply Accumulate
+SMLATB                        | Signed Multiply Accumulate
+SMLATT                        | Signed Multiply Accumulate
 SMULL                         | Signed Multiply Long
 STM                           | Store Multiple Registers
 STMIB                         | Store Multiple Increment Before
@@ -173,6 +177,10 @@ namespace triton {
             case ID_INS_SBC:       this->sbc_s(inst);           break;
             case ID_INS_SBFX:      this->sbfx_s(inst);          break;
             case ID_INS_SDIV:      this->sdiv_s(inst);          break;
+            case ID_INS_SMLABB:    this->smlabb_s(inst);        break;
+            case ID_INS_SMLABT:    this->smlabt_s(inst);        break;
+            case ID_INS_SMLATB:    this->smlatb_s(inst);        break;
+            case ID_INS_SMLATT:    this->smlatt_s(inst);        break;
             case ID_INS_SMULL:     this->smull_s(inst);         break;
             case ID_INS_STM:       this->stm_s(inst);           break;
             case ID_INS_STMIB:     this->stmib_s(inst);         break;
@@ -3588,6 +3596,174 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::smlabb_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto& src3   = inst.operands[3];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, src3);
+
+          /* Create the semantics */
+          auto smla  = this->astCtxt->bvadd(
+                            this->astCtxt->bvmul(
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(15, 0, op1)),
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(15, 0, op2))
+                            ),
+                            this->astCtxt->sx(2*bvSize, op3)
+                        );
+          auto lower = this->astCtxt->extract(bvSize-1, 0, smla);
+          auto node1 = this->buildConditionalSemantics(inst, dst, lower);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "SMLABB operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::smlabt_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto& src3   = inst.operands[3];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, src3);
+
+          /* Create the semantics */
+          auto smla  = this->astCtxt->bvadd(
+                            this->astCtxt->bvmul(
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(15, 0, op1)),
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(31, 16, op2))
+                            ),
+                            this->astCtxt->sx(2*bvSize, op3)
+                        );
+          auto lower = this->astCtxt->extract(bvSize-1, 0, smla);
+          auto node1 = this->buildConditionalSemantics(inst, dst, lower);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "SMLABT operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::smlatb_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto& src3   = inst.operands[3];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, src3);
+
+          /* Create the semantics */
+          auto smla  = this->astCtxt->bvadd(
+                            this->astCtxt->bvmul(
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(31, 16, op1)),
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(15, 0, op2))
+                            ),
+                            this->astCtxt->sx(2*bvSize, op3)
+                        );
+          auto lower = this->astCtxt->extract(bvSize-1, 0, smla);
+          auto node1 = this->buildConditionalSemantics(inst, dst, lower);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "SMLATB operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::smlatt_s(triton::arch::Instruction& inst) {
+          auto& dst    = inst.operands[0];
+          auto& src1   = inst.operands[1];
+          auto& src2   = inst.operands[2];
+          auto& src3   = inst.operands[3];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src1);
+          auto op2 = this->getArm32SourceOperandAst(inst, src2);
+          auto op3 = this->getArm32SourceOperandAst(inst, src3);
+
+          /* Create the semantics */
+          auto smla  = this->astCtxt->bvadd(
+                            this->astCtxt->bvmul(
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(31, 16, op1)),
+                                this->astCtxt->sx(2*bvSize + 16, this->astCtxt->extract(31, 16, op2))
+                            ),
+                            this->astCtxt->sx(2*bvSize, op3)
+                        );
+          auto lower = this->astCtxt->extract(bvSize-1, 0, smla);
+          auto node1 = this->buildConditionalSemantics(inst, dst, lower);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "SMLATT operation");
+
+          /* Get condition code node */
+          auto cond = node1->getChildren()[0];
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
         }
 
 
