@@ -2420,6 +2420,24 @@ CODE  = [
     (b"\x91\x43\x30\xd0", "mlasle r0, r1, r3, r4"),
     (b"\x91\x43\x30\xe0", "mlasal r0, r1, r3, r4"),
 
+    # MLS -------------------------------------------------------------------- #
+    (b"\x91\x43\x60\xe0", "mls r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x00", "mlseq r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x10", "mlsne r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x20", "mlscs r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x30", "mlscc r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x40", "mlsmi r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x50", "mlspl r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x60", "mlsvs r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x70", "mlsvc r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x80", "mlshi r0, r1, r3, r4"),
+    (b"\x91\x43\x60\x90", "mlsls r0, r1, r3, r4"),
+    (b"\x91\x43\x60\xa0", "mlsge r0, r1, r3, r4"),
+    (b"\x91\x43\x60\xb0", "mlslt r0, r1, r3, r4"),
+    (b"\x91\x43\x60\xc0", "mlsgt r0, r1, r3, r4"),
+    (b"\x91\x43\x60\xd0", "mlsle r0, r1, r3, r4"),
+    (b"\x91\x43\x60\xe0", "mlsal r0, r1, r3, r4"),
+
     # NOTE: MOV (shifted register) is a pseudo-instruction for ASR, LSL, LSR,
     # ROR, and RRX.
     # MOV -------------------------------------------------------------------- #

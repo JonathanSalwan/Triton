@@ -339,6 +339,9 @@ namespace triton {
             //! The MLA semantics.
             void mla_s(triton::arch::Instruction& inst);
 
+            //! The MLS semantics.
+            void mls_s(triton::arch::Instruction& inst);
+
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
 
