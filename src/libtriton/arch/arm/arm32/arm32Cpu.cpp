@@ -237,9 +237,14 @@ namespace triton {
 
 
         void Arm32Cpu::disassembly(triton::arch::Instruction& inst) const {
-          triton::extlibs::capstone::csh       handle;
-          triton::extlibs::capstone::cs_insn*  insn;
-          triton::usize                        count = 0;
+          static triton::uint32                 it_instrs_cnt = 0;
+          static triton::uint32                 it_instrs_cur = 0;
+          static char                           it_state_array[5];
+          static triton::arch::arm::condition_e it_cc = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          static triton::arch::arm::condition_e it_cc_inv = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          triton::extlibs::capstone::csh        handle;
+          triton::extlibs::capstone::cs_insn*   insn;
+          triton::usize                         count = 0;
 
           /* Check if the opcode and opcode' size are defined */
           if (inst.getOpcode() == nullptr || inst.getSize() == 0)
@@ -261,19 +266,6 @@ namespace triton {
           if (count > 0) {
             triton::extlibs::capstone::cs_detail* detail = insn->detail;
             for (triton::uint32 j = 0; j < 1; j++) {
-
-              /* Init the disassembly */
-              std::stringstream str;
-
-              /* Add mnemonic */
-              str << insn[j].mnemonic;
-
-              /* Add operands */
-              if (detail->arm.op_count)
-                str << " " <<  insn[j].op_str;
-
-              inst.setDisassembly(str.str());
-
               /* Refine the opcode */
               inst.setOpcode(insn[j].bytes, insn[j].size);
 
@@ -294,6 +286,42 @@ namespace triton {
 
               /* Set thumb mode */
               inst.setThumb(thumb);
+
+              /* Init the disassembly */
+              std::stringstream str;
+
+              /* Add mnemonic */
+              str << insn[j].mnemonic;
+
+              /* Add operands */
+              if (inst.getType() == ID_INS_IT || detail->arm.op_count)
+                str << " " <<  insn[j].op_str;
+
+              inst.setDisassembly(str.str());
+
+              /* Process IT instruction */
+              if (inst.getType() == ID_INS_IT) {
+                /* Copy state from the mnemonic of the instruction */
+                strncpy(it_state_array, &insn[j].mnemonic[1], 5);
+                it_state_array[4] = 0;
+
+                it_instrs_cnt = strlen(it_state_array);
+                it_instrs_cur = 0;
+
+                it_cc     = inst.getCodeCondition();
+                it_cc_inv = this->invertCodeCondition(it_cc);
+              }
+
+              /* Process instruction within an IT block */
+              if (inst.getType() != ID_INS_IT && it_instrs_cnt > 0) {
+		 /* NOTE Assuming that CS always returns the mnemonic in lower case */
+                triton::arch::arm::condition_e cc = it_state_array[it_instrs_cur] == 't' ? it_cc : it_cc_inv;
+
+                inst.setCodeCondition(cc);
+
+                it_instrs_cnt--;
+                it_instrs_cur++;
+              }
 
               /* Init operands */
               for (triton::uint32 n = 0; n < detail->arm.op_count; n++) {
@@ -760,6 +788,66 @@ namespace triton {
               this->memory.erase(baseAddr + index);
             }
           }
+        }
+
+
+        triton::arch::arm::condition_e Arm32Cpu::invertCodeCondition(triton::arch::arm::condition_e cc) const {
+          triton::arch::arm::condition_e inv = triton::arch::arm::ID_CONDITION_INVALID;
+
+          switch (cc) {
+            case triton::arch::arm::ID_CONDITION_INVALID:
+              inv = triton::arch::arm::ID_CONDITION_INVALID; break;
+
+            case triton::arch::arm::ID_CONDITION_AL:
+              inv = triton::arch::arm::ID_CONDITION_AL; break;
+
+            case triton::arch::arm::ID_CONDITION_EQ:
+              inv = triton::arch::arm::ID_CONDITION_NE; break;
+
+            case triton::arch::arm::ID_CONDITION_HS:
+              inv = triton::arch::arm::ID_CONDITION_LO; break;
+
+            case triton::arch::arm::ID_CONDITION_MI:
+              inv = triton::arch::arm::ID_CONDITION_PL; break;
+
+            case triton::arch::arm::ID_CONDITION_VS:
+              inv = triton::arch::arm::ID_CONDITION_VC; break;
+
+            case triton::arch::arm::ID_CONDITION_HI:
+              inv = triton::arch::arm::ID_CONDITION_LS; break;
+
+            case triton::arch::arm::ID_CONDITION_GE:
+              inv = triton::arch::arm::ID_CONDITION_LT; break;
+
+            case triton::arch::arm::ID_CONDITION_GT:
+              inv = triton::arch::arm::ID_CONDITION_LE; break;
+
+            case triton::arch::arm::ID_CONDITION_LE:
+              inv = triton::arch::arm::ID_CONDITION_GT; break;
+
+            case triton::arch::arm::ID_CONDITION_LT:
+              inv = triton::arch::arm::ID_CONDITION_GE; break;
+
+            case triton::arch::arm::ID_CONDITION_LS:
+              inv = triton::arch::arm::ID_CONDITION_HI; break;
+
+            case triton::arch::arm::ID_CONDITION_VC:
+              inv = triton::arch::arm::ID_CONDITION_VS; break;
+
+            case triton::arch::arm::ID_CONDITION_PL:
+              inv = triton::arch::arm::ID_CONDITION_MI; break;
+
+            case triton::arch::arm::ID_CONDITION_LO:
+              inv = triton::arch::arm::ID_CONDITION_HS; break;
+
+            case triton::arch::arm::ID_CONDITION_NE:
+              inv = triton::arch::arm::ID_CONDITION_EQ; break;
+
+            default:
+              inv = triton::arch::arm::ID_CONDITION_INVALID; break;
+          }
+
+          return inv;
         }
 
       }; /* arm32 namespace */

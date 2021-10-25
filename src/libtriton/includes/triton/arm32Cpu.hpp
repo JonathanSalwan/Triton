@@ -81,6 +81,9 @@ namespace triton {
             //! Post process instructions to provide a uniformity among ARM and Thumb modes.
             void postDisassembly(triton::arch::Instruction& inst) const;
 
+            //! Given a condition code it returns its opposite code (mainly used when processing IT instructions).
+            triton::arch::arm::condition_e invertCodeCondition(triton::arch::arm::condition_e cc) const;
+
           protected:
             /*! \brief map of address -> concrete value
              *

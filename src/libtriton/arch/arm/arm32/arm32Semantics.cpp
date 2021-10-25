@@ -41,6 +41,7 @@ CLZ                           | Count Leading Zeros
 CMN                           | Compare Negative
 CMP                           | Compare
 EOR                           | Bitwise Exclusive OR
+IT                            | If-Then
 LDM                           | Load Multiple Registers
 LDR                           | Load Register
 LDRB                          | Load Register Byte
@@ -146,6 +147,7 @@ namespace triton {
             case ID_INS_CMN:       this->cmn_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
+            case ID_INS_IT:        this->it_s(inst);            break;
             case ID_INS_LDM:       this->ldm_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
@@ -1774,6 +1776,17 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst, cond, dst);
+        }
+
+
+        void Arm32Semantics::it_s(triton::arch::Instruction& inst) {
+          /* NOTE There are no semantics to add here (beyond updating the
+           * program counter). All the processing is done in the disassembly
+           * method (Arm32Cpu::disassembly).
+           */
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
         }
 
 

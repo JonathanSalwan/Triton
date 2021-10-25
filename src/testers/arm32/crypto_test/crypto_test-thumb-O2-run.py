@@ -230,52 +230,6 @@ def emulate(ctx, pc):
             print("[-] Emulation exceeded max number of instructions!")
             break
 
-        if pc == 0x834:
-            # ITT EQ
-            print("[+] Processing ITT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2         # execute next 2 instructions
-            else:
-                pc += 2 + 2 + 2 # skip next 2 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc in [0x818, 0x844, 0x854, 0x864, 0x874, 0x884, 0x894, 0x8a4, 0x8b4,
-                  0x8c4, 0x8d4, 0x8e4, 0x8f4, 0x904, 0x916]:
-            # ITT EQ
-            print("[+] Processing ITT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2         # execute next 2 instructions
-            else:
-                pc += 2 + 4 + 2 # skip next 2 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc == 0xbb4:
-            # IT HI
-            print("[+] Processing IT instruction @ {:08x}".format(pc))
-            cf = ctx.getConcreteRegisterValue(ctx.registers.c)
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if cf == 1 and zf == 0:
-                pc += 2     # execute next instruction
-            else:
-                pc += 2 + 2 # skip next instruction
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc == 0xf80:
-            # ITTT EQ
-            print("[+] Processing ITTT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2             # execute next 3 instructions
-            else:
-                pc += 2 + 2 + 4 + 2 # skip next 3 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
         if pc == 0x838:
             r0 = ctx.getConcreteRegisterValue(ctx.registers.r0)
             debug("[+] Return value: {:#x}".format(r0))

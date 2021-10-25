@@ -309,6 +309,9 @@ namespace triton {
             //! The EOR semantics.
             void eor_s(triton::arch::Instruction& inst);
 
+            //! The IT semantics.
+            void it_s(triton::arch::Instruction& inst);
+
             //! The LDM semantics.
             void ldm_s(triton::arch::Instruction& inst);
 
