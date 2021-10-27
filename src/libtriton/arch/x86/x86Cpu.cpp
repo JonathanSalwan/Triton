@@ -355,7 +355,7 @@ namespace triton {
       }
 
 
-      void x86Cpu::disassembly(triton::arch::Instruction& inst) const {
+      void x86Cpu::disassembly(triton::arch::Instruction& inst) {
         triton::extlibs::capstone::cs_insn* insn;
         triton::usize count = 0;
 

@@ -323,7 +323,7 @@ namespace triton {
         }
 
 
-        void AArch64Cpu::disassembly(triton::arch::Instruction& inst) const {
+        void AArch64Cpu::disassembly(triton::arch::Instruction& inst) {
           triton::extlibs::capstone::cs_insn* insn;
           triton::usize count = 0;
           triton::uint32 size = 0;

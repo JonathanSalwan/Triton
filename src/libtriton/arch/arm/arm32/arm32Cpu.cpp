@@ -24,10 +24,14 @@ namespace triton {
       namespace arm32 {
 
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
-          this->callbacks    = callbacks;
-          this->handle_arm   = 0;
-          this->handle_thumb = 0;
-          this->thumb        = false;
+          this->callbacks       = callbacks;
+          this->handle_arm      = 0;
+          this->handle_thumb    = 0;
+          this->thumb           = false;
+          this->it_instrs_count = 0;
+          this->it_instr_index  = 0;
+          this->it_cc           = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->it_cc_inv       = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
 
           this->clear();
           this->disassInit();
@@ -236,15 +240,10 @@ namespace triton {
         }
 
 
-        void Arm32Cpu::disassembly(triton::arch::Instruction& inst) const {
-          static triton::uint32                 it_instrs_cnt = 0;
-          static triton::uint32                 it_instrs_cur = 0;
-          static char                           it_state_array[5];
-          static triton::arch::arm::condition_e it_cc = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          static triton::arch::arm::condition_e it_cc_inv = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          triton::extlibs::capstone::csh        handle;
-          triton::extlibs::capstone::cs_insn*   insn;
-          triton::usize                         count = 0;
+        void Arm32Cpu::disassembly(triton::arch::Instruction& inst) {
+          triton::extlibs::capstone::csh      handle;
+          triton::extlibs::capstone::cs_insn* insn;
+          triton::usize                       count = 0;
 
           /* Check if the opcode and opcode' size are defined */
           if (inst.getOpcode() == nullptr || inst.getSize() == 0)
@@ -301,26 +300,30 @@ namespace triton {
 
               /* Process IT instruction */
               if (inst.getType() == ID_INS_IT) {
+                /* Nested IT instruction, throw an exception as this is not valid ARM code */
+                if (this->it_instrs_count > 0)
+                  throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Nested IT instructions are not allowed.");
+
                 /* Copy state from the mnemonic of the instruction */
-                strncpy(it_state_array, &insn[j].mnemonic[1], 5);
-                it_state_array[4] = 0;
+                strncpy(this->it_state_array, &insn[j].mnemonic[1], 5);
+                this->it_state_array[4] = 0;
 
-                it_instrs_cnt = strlen(it_state_array);
-                it_instrs_cur = 0;
+                this->it_instrs_count = strlen(it_state_array);
+                this->it_instr_index  = 0;
 
-                it_cc     = inst.getCodeCondition();
-                it_cc_inv = this->invertCodeCondition(it_cc);
+                this->it_cc     = inst.getCodeCondition();
+                this->it_cc_inv = this->invertCodeCondition(it_cc);
               }
 
               /* Process instruction within an IT block */
-              if (inst.getType() != ID_INS_IT && it_instrs_cnt > 0) {
-		 /* NOTE Assuming that CS always returns the mnemonic in lower case */
-                triton::arch::arm::condition_e cc = it_state_array[it_instrs_cur] == 't' ? it_cc : it_cc_inv;
+              if (inst.getType() != ID_INS_IT && this->it_instrs_count > 0) {
+                /* NOTE Assuming that CS always returns mnemonics in lower case */
+                triton::arch::arm::condition_e cc = this->it_state_array[this->it_instr_index] == 't' ? this->it_cc : this->it_cc_inv;
 
                 inst.setCodeCondition(cc);
 
-                it_instrs_cnt--;
-                it_instrs_cur++;
+                this->it_instrs_count--;
+                this->it_instr_index++;
               }
 
               /* Init operands */

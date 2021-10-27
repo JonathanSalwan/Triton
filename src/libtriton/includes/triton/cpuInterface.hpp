@@ -99,7 +99,7 @@ namespace triton {
         TRITON_EXPORT virtual const triton::arch::Register& getStackPointer(void) const = 0;
 
         //! Disassembles the instruction according to the architecture.
-        TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) const = 0;
+        TRITON_EXPORT virtual void disassembly(triton::arch::Instruction& inst) = 0;
 
         //! Returns the concrete value of a memory cell.
         TRITON_EXPORT virtual triton::uint8 getConcreteMemoryValue(triton::uint64 addr,  bool execCallbacks=true) const = 0;

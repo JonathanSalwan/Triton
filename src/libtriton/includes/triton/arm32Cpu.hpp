@@ -72,6 +72,21 @@ namespace triton {
             //! Capstone context for Thumb mode.
             triton::extlibs::capstone::csh handle_thumb;
 
+            //! State of the currently processed IT block.
+            char it_state_array[5];
+
+            //! Number of instructions not yet processed in the IT block.
+            triton::uint32 it_instrs_count;
+
+            //! Index of the instruction currently processed in the IT block.
+            triton::uint32 it_instr_index;
+
+            //! Condition code of the currently processed IT block.
+            triton::arch::arm::condition_e it_cc;
+
+            //! Inverted condition code of the currently processed IT block.
+            triton::arch::arm::condition_e it_cc_inv;
+
             //! Copies a Arm32Cpu class.
             void copy(const Arm32Cpu& other);
 
@@ -170,7 +185,7 @@ namespace triton {
             TRITON_EXPORT triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
             TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
             TRITON_EXPORT void clear(void);
-            TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
+            TRITON_EXPORT void disassembly(triton::arch::Instruction& inst);
             TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
             TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
             TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
