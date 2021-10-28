@@ -308,11 +308,11 @@ namespace triton {
                 strncpy(this->it_state_array, &insn[j].mnemonic[1], 5);
                 this->it_state_array[4] = 0;
 
-                this->it_instrs_count = strlen(it_state_array);
+                this->it_instrs_count = strlen(this->it_state_array);
                 this->it_instr_index  = 0;
 
                 this->it_cc     = inst.getCodeCondition();
-                this->it_cc_inv = this->invertCodeCondition(it_cc);
+                this->it_cc_inv = this->invertCodeCondition(this->it_cc);
               }
 
               /* Process instruction within an IT block */
