@@ -24,14 +24,15 @@ namespace triton {
       namespace arm32 {
 
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
-          this->callbacks       = callbacks;
-          this->handle_arm      = 0;
-          this->handle_thumb    = 0;
-          this->thumb           = false;
-          this->it_instrs_count = 0;
-          this->it_instr_index  = 0;
-          this->it_cc           = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          this->it_cc_inv       = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->callbacks         = callbacks;
+          this->handle_arm        = 0;
+          this->handle_thumb      = 0;
+          this->thumb             = false;
+          this->it_instrs_count   = 0;
+          this->it_instr_index    = 0;
+          this->it_cc             = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->it_cc_inv         = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->exclusive_mem_acc = false;
 
           this->clear();
           this->disassInit();
@@ -763,6 +764,16 @@ namespace triton {
 
         void Arm32Cpu::setThumb(bool state) {
           this->thumb = state;
+        }
+
+
+        bool Arm32Cpu::isMemoryExclusiveAccess(void) const {
+          return this->exclusive_mem_acc;
+        }
+
+
+        void Arm32Cpu::setMemoryExclusiveAccess(bool state) {
+          this->exclusive_mem_acc = state;
         }
 
 

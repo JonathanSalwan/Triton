@@ -1108,6 +1108,17 @@ namespace triton {
         }
 
 
+        bool AArch64Cpu::isMemoryExclusiveAccess(void) const {
+          /* There is no exclusive memory access support in aarch64 */
+          return false;
+        }
+
+
+        void AArch64Cpu::setMemoryExclusiveAccess(bool state) {
+          /* There is no exclusive memory access support in aarch64 */
+        }
+
+
         bool AArch64Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
           return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
         }

@@ -65,6 +65,12 @@ namespace triton {
         //! Sets CPU state to Thumb mode.
         TRITON_EXPORT virtual void setThumb(bool state) = 0;
 
+        //! Returns true if the exclusive memory access flag is set. Only valid for Arm32.
+        TRITON_EXPORT virtual bool isMemoryExclusiveAccess(void) const = 0;
+
+        //! Sets exclusive memory access flag. Only valid for Arm32.
+        TRITON_EXPORT virtual void setMemoryExclusiveAccess(bool state) = 0;
+
         //! Returns the bit in byte of the General Purpose Registers.
         TRITON_EXPORT virtual triton::uint32 gprSize(void) const = 0;
 

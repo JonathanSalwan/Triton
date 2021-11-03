@@ -46,6 +46,7 @@ LDM                           | Load Multiple Registers
 LDR                           | Load Register
 LDRB                          | Load Register Byte
 LDRD                          | Load Register Dual
+LDREX                         | Load Register Exclusive
 LDRH                          | Load Register Halfword
 LDRSB                         | Load Register Signed Byte
 LDRSH                         | Load Register Signed Halfword
@@ -83,6 +84,7 @@ STMIB                         | Store Multiple Increment Before
 STR                           | Store Register
 STRB                          | Store Register Byte
 STRD                          | Store Register Dual
+STREX                         | Store Register Exclusive
 STRH                          | Store Register Halfword
 SUB                           | Substract
 SUBW                          | Substract
@@ -152,6 +154,7 @@ namespace triton {
             case ID_INS_LDR:       this->ldr_s(inst);           break;
             case ID_INS_LDRB:      this->ldrb_s(inst);          break;
             case ID_INS_LDRD:      this->ldrd_s(inst);          break;
+            case ID_INS_LDREX:     this->ldrex_s(inst);         break;
             case ID_INS_LDRH:      this->ldrh_s(inst);          break;
             case ID_INS_LDRSB:     this->ldrsb_s(inst);         break;
             case ID_INS_LDRSH:     this->ldrsh_s(inst);         break;
@@ -189,6 +192,7 @@ namespace triton {
             case ID_INS_STR:       this->str_s(inst);           break;
             case ID_INS_STRB:      this->strb_s(inst);          break;
             case ID_INS_STRD:      this->strd_s(inst);          break;
+            case ID_INS_STREX:     this->strex_s(inst);         break;
             case ID_INS_STRH:      this->strh_s(inst);          break;
             case ID_INS_SUB:       this->sub_s(inst);           break;
             case ID_INS_SUBW:      this->sub_s(inst);           break;
@@ -2395,6 +2399,45 @@ namespace triton {
         }
 
 
+        void Arm32Semantics::ldrex_s(triton::arch::Instruction& inst) {
+          /* NOTE This is a simplified version of the semantics of this
+           *      instruction. We only check for a global exclusive memory
+           *      access flag.
+           */
+          auto& dst = inst.operands[0];
+          auto& src = inst.operands[1];
+
+          /* Create symbolic operands */
+          auto op = this->getArm32SourceOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->buildConditionalSemantics(inst, dst, op);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "LDREX operation");
+
+          /* Get condition code node */
+          auto cond = this->getCodeConditionAst(inst);
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(true);
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+
+            /* Update execution mode accordingly. */
+            this->updateExecutionState(dst, op);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst, cond, dst);
+        }
+
+
         void Arm32Semantics::ldrsh_s(triton::arch::Instruction& inst)  {
           auto& dst = inst.operands[0];
           auto& src = inst.operands[1];
@@ -4201,6 +4244,51 @@ namespace triton {
             /* Spread taint */
             this->spreadTaint(inst, cond, expr3, base, this->taintEngine->isTainted(base));
           }
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Update the symbolic control flow */
+          this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::strex_s(triton::arch::Instruction& inst) {
+          /* NOTE This is a simplified version of the semantics of this
+           *      instruction. We only check for a global exclusive memory
+           *      access flag.
+           */
+          auto& dst1 = inst.operands[0];
+          auto& src  = inst.operands[1];
+          auto& dst2 = inst.operands[2];
+
+          /* Create symbolic operands */
+          auto op1 = this->getArm32SourceOperandAst(inst, src);
+          auto op2 = this->symbolicEngine->getOperandAst(inst, dst2);
+
+          /* Check whether there is exclusive access */
+          auto status = this->architecture->isMemoryExclusiveAccess() == true ?
+                          this->astCtxt->bv(0, dst1.getBitSize()) :     /* the operation updates memory */
+                          this->astCtxt->bv(1, dst1.getBitSize());      /* the operation fails to update memory */
+
+          /* Create the semantics */
+          auto cond  = this->getCodeConditionAst(inst);
+          auto node1 = this->astCtxt->ite(cond, status, this->symbolicEngine->getOperandAst(inst, dst1));
+          auto node2 = this->architecture->isMemoryExclusiveAccess() == true ?
+                          this->astCtxt->ite(cond, op1, op2) :
+                          this->astCtxt->ite(cond, op2, op2);
+
+          /* Create symbolic expression */
+          auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst1, "STREX operation - STATUS update");
+          auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, dst2, "STREX operation - STORE access");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr2, dst2, this->taintEngine->isTainted(src));
+
+          /* Update exclusive memory access flag */
+          this->architecture->setMemoryExclusiveAccess(false);
 
           /* Update condition flag */
           if (cond->evaluate() == true) {

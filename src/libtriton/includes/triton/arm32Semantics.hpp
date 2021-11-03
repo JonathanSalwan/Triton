@@ -321,6 +321,9 @@ namespace triton {
             //! The LDRB semantics.
             void ldrb_s(triton::arch::Instruction& inst);
 
+            //! The LDREX semantics.
+            void ldrex_s(triton::arch::Instruction& inst);
+
             //! The LDRH semantics.
             void ldrh_s(triton::arch::Instruction& inst);
 
@@ -431,6 +434,9 @@ namespace triton {
 
             //! The STRD semantics.
             void strd_s(triton::arch::Instruction& inst);
+
+            //! The STREX semantics.
+            void strex_s(triton::arch::Instruction& inst);
 
             //! The STRH semantics.
             void strh_s(triton::arch::Instruction& inst);

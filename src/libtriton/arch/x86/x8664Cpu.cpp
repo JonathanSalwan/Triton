@@ -1262,6 +1262,17 @@ namespace triton {
       }
 
 
+      bool x8664Cpu::isMemoryExclusiveAccess(void) const {
+        /* There is no exclusive memory access support in x86_64 */
+        return false;
+      }
+
+
+      void x8664Cpu::setMemoryExclusiveAccess(bool state) {
+        /* There is no exclusive memory access support in x86_64 */
+      }
+
+
       bool x8664Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
         return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
       }
