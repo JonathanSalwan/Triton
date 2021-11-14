@@ -232,14 +232,17 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(const std::string& symVarName) const {
+      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(const std::string& name) const {
         /*
-         * FIXME: When there is a ton of symvar, this loop takes a while to go through.
-         *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
+         * FIXME: 1) When there is a ton of symvar, this loop takes a while to go through.
+         *           What about adding two maps {id:symvar} and {string:symvar}? See #648.
+         *
+         *        2) If we are looking for alias, we return the first occurrence. It's not
+         *           ideal if we have multiple same aliases.
          */
         for (auto& sv: this->symbolicVariables) {
           if (auto symVar = sv.second.lock()) {
-            if (symVar->getName() == symVarName) {
+            if (symVar->getName() == name || symVar->getAlias() == name) {
               return symVar;
             }
           }
