@@ -1036,6 +1036,15 @@ namespace triton {
           //! The PMOVZXWQ semantics.
           void pmovzxwq_s(triton::arch::Instruction& inst);
 
+          //! The PMULHW semantics.
+          void pmulhw_s(triton::arch::Instruction& inst);
+
+          //! The PMULLD semantics.
+          void pmulld_s(triton::arch::Instruction& inst);
+
+          //! The PMULLW semantics.
+          void pmullw_s(triton::arch::Instruction& inst);
+
           //! The POP semantics.
           void pop_s(triton::arch::Instruction& inst);
 
