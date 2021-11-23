@@ -67,28 +67,28 @@ namespace triton {
             triton::callbacks::Callbacks* callbacks;
 
             //! Capstone context for ARM mode.
-            triton::extlibs::capstone::csh handle_arm;
+            triton::extlibs::capstone::csh handleArm;
 
             //! Capstone context for Thumb mode.
-            triton::extlibs::capstone::csh handle_thumb;
+            triton::extlibs::capstone::csh handleThumb;
 
             //! State of the currently processed IT block.
-            char it_state_array[5];
+            char itStateArray[5];
 
             //! Number of instructions not yet processed in the IT block.
-            triton::uint32 it_instrs_count;
+            triton::uint32 itInstrsCount;
 
             //! Index of the instruction currently processed in the IT block.
-            triton::uint32 it_instr_index;
+            triton::uint32 itInstrIndex;
 
             //! Condition code of the currently processed IT block.
-            triton::arch::arm::condition_e it_cc;
+            triton::arch::arm::condition_e itCC;
 
             //! Inverted condition code of the currently processed IT block.
-            triton::arch::arm::condition_e it_cc_inv;
+            triton::arch::arm::condition_e itCCInv;
 
             //! Local exclusive memory access flag.
-            bool exclusive_mem_acc;
+            bool exclusiveMemAcc;
 
             //! Copies a Arm32Cpu class.
             void copy(const Arm32Cpu& other);

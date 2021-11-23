@@ -24,15 +24,15 @@ namespace triton {
       namespace arm32 {
 
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
-          this->callbacks         = callbacks;
-          this->handle_arm        = 0;
-          this->handle_thumb      = 0;
-          this->thumb             = false;
-          this->it_instrs_count   = 0;
-          this->it_instr_index    = 0;
-          this->it_cc             = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          this->it_cc_inv         = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
-          this->exclusive_mem_acc = false;
+          this->callbacks       = callbacks;
+          this->handleArm       = 0;
+          this->handleThumb     = 0;
+          this->thumb           = false;
+          this->itInstrsCount   = 0;
+          this->itInstrIndex    = 0;
+          this->itCC            = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->itCCInv         = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->exclusiveMemAcc = false;
 
           this->clear();
           this->disassInit();
@@ -47,37 +47,37 @@ namespace triton {
         Arm32Cpu::~Arm32Cpu() {
           this->memory.clear();
 
-          if (this->handle_arm) {
-            triton::extlibs::capstone::cs_close(&this->handle_arm);
+          if (this->handleArm) {
+            triton::extlibs::capstone::cs_close(&this->handleArm);
           }
 
-          if (this->handle_thumb) {
-            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+          if (this->handleThumb) {
+            triton::extlibs::capstone::cs_close(&this->handleThumb);
           }
         }
 
 
         void Arm32Cpu::disassInit(void) {
           /* Open capstone in ARM mode. */
-          if (this->handle_arm) {
-            triton::extlibs::capstone::cs_close(&this->handle_arm);
+          if (this->handleArm) {
+            triton::extlibs::capstone::cs_close(&this->handleArm);
           }
 
           /* Open capstone in Thumb mode. */
-          if (this->handle_thumb) {
-            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+          if (this->handleThumb) {
+            triton::extlibs::capstone::cs_close(&this->handleThumb);
           }
 
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &this->handle_arm) != triton::extlibs::capstone::CS_ERR_OK) {
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &this->handleArm) != triton::extlibs::capstone::CS_ERR_OK) {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in ARM mode.");
           }
 
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_THUMB, &this->handle_thumb) != triton::extlibs::capstone::CS_ERR_OK) {
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_THUMB, &this->handleThumb) != triton::extlibs::capstone::CS_ERR_OK) {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in Thumb mode.");
           }
 
-          triton::extlibs::capstone::cs_option(this->handle_thumb, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
-          triton::extlibs::capstone::cs_option(this->handle_arm,   triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+          triton::extlibs::capstone::cs_option(this->handleThumb, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+          triton::extlibs::capstone::cs_option(this->handleArm,   triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
         }
 
 
@@ -251,7 +251,7 @@ namespace triton {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
           /* Select capstone handler (based on execution mode) */
-          handle = (this->thumb ? this->handle_thumb : this->handle_arm);
+          handle = (this->thumb ? this->handleThumb : this->handleArm);
 
           /* Clear instructicon's operands if alredy defined */
           inst.operands.clear();
@@ -302,29 +302,29 @@ namespace triton {
               /* Process IT instruction */
               if (inst.getType() == ID_INS_IT) {
                 /* Nested IT instruction, throw an exception as this is not valid ARM code */
-                if (this->it_instrs_count > 0)
+                if (this->itInstrsCount > 0)
                   throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Nested IT instructions are not allowed.");
 
                 /* Copy state from the mnemonic of the instruction */
-                strncpy(this->it_state_array, &insn[j].mnemonic[1], 5);
-                this->it_state_array[4] = 0;
+                strncpy(this->itStateArray, &insn[j].mnemonic[1], 5);
+                this->itStateArray[4] = 0;
 
-                this->it_instrs_count = strlen(this->it_state_array);
-                this->it_instr_index  = 0;
+                this->itInstrsCount = strlen(this->itStateArray);
+                this->itInstrIndex  = 0;
 
-                this->it_cc     = inst.getCodeCondition();
-                this->it_cc_inv = this->invertCodeCondition(this->it_cc);
+                this->itCC    = inst.getCodeCondition();
+                this->itCCInv = this->invertCodeCondition(this->itCC);
               }
 
               /* Process instruction within an IT block */
-              if (inst.getType() != ID_INS_IT && this->it_instrs_count > 0) {
+              if (inst.getType() != ID_INS_IT && this->itInstrsCount > 0) {
                 /* NOTE Assuming that CS always returns mnemonics in lower case */
-                triton::arch::arm::condition_e cc = this->it_state_array[this->it_instr_index] == 't' ? this->it_cc : this->it_cc_inv;
+                triton::arch::arm::condition_e cc = this->itStateArray[this->itInstrIndex] == 't' ? this->itCC : this->itCCInv;
 
                 inst.setCodeCondition(cc);
 
-                this->it_instrs_count--;
-                this->it_instr_index++;
+                this->itInstrsCount--;
+                this->itInstrIndex++;
               }
 
               /* Init operands */
@@ -768,12 +768,12 @@ namespace triton {
 
 
         bool Arm32Cpu::isMemoryExclusiveAccess(void) const {
-          return this->exclusive_mem_acc;
+          return this->exclusiveMemAcc;
         }
 
 
         void Arm32Cpu::setMemoryExclusiveAccess(bool state) {
-          this->exclusive_mem_acc = state;
+          this->exclusiveMemAcc = state;
         }
 
 
