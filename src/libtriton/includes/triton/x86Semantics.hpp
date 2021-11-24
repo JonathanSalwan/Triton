@@ -889,6 +889,9 @@ namespace triton {
           //! The PACKUSWB semantics.
           void packuswb_s(triton::arch::Instruction& inst);
 
+          //! The PACKSSWB semantics.
+          void packsswb_s(triton::arch::Instruction& inst);
+
           //! The PADDB semantics.
           void paddb_s(triton::arch::Instruction& inst);
 
