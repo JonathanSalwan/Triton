@@ -253,6 +253,7 @@ PSLLD                        | mmx/ssed2  | Shift Doubleword Left Logical
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSLLQ                        | mmx/ssed2  | Shift Quadword Left Logical
 PSLLW                        | mmx/ssed2  | Shift Word Left Logical
+PSRAW                        | mmx/ssed2  | Shift Packed Data Right Arithmetic
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PSUBB                        | mmx/sse2   | Subtract packed byte integers
 PSUBD                        | mmx/sse2   | Subtract packed doubleword integers
@@ -624,6 +625,7 @@ namespace triton {
           case ID_INS_PSLLDQ:         this->pslldq_s(inst);       break;
           case ID_INS_PSLLQ:          this->psllq_s(inst);        break;
           case ID_INS_PSLLW:          this->psllw_s(inst);        break;
+          case ID_INS_PSRAW:          this->psraw_s(inst);        break;
           case ID_INS_PSRLDQ:         this->psrldq_s(inst);       break;
           case ID_INS_PSUBB:          this->psubb_s(inst);        break;
           case ID_INS_PSUBD:          this->psubd_s(inst);        break;
@@ -10895,6 +10897,49 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::psraw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
+
+        auto shift = this->astCtxt->ite(
+          this->astCtxt->bvuge(op2, this->astCtxt->bv(triton::bitsize::word, src.getBitSize())),
+          this->astCtxt->bv(triton::bitsize::word, src.getBitSize()),
+          op2
+        );
+
+        if (shift->getBitvectorSize() < triton::bitsize::word) {
+          shift = this->astCtxt->zx(triton::bitsize::word - shift->getBitvectorSize(), shift);
+        }
+        else {
+          shift = this->astCtxt->extract(triton::bitsize::word - 1, 0, shift);
+        }
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+          pck.push_back(this->astCtxt->bvashr(this->astCtxt->extract(high, low, op1), shift));
+        }
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSRAW operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
