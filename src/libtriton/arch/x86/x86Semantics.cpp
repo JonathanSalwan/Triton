@@ -253,7 +253,8 @@ PSLLD                        | mmx/ssed2  | Shift Doubleword Left Logical
 PSLLDQ                       | sse2       | Shift Double Quadword Left Logical
 PSLLQ                        | mmx/ssed2  | Shift Quadword Left Logical
 PSLLW                        | mmx/ssed2  | Shift Word Left Logical
-PSRAW                        | mmx/ssed2  | Shift Packed Data Right Arithmetic
+PSRAD                        | mmx/ssed2  | Shift Packed Doubleword Right Arithmetic
+PSRAW                        | mmx/ssed2  | Shift Packed Word Right Arithmetic
 PSRLDQ                       | sse2       | Shift Double Quadword Right Logical
 PSUBB                        | mmx/sse2   | Subtract packed byte integers
 PSUBD                        | mmx/sse2   | Subtract packed doubleword integers
@@ -625,6 +626,7 @@ namespace triton {
           case ID_INS_PSLLDQ:         this->pslldq_s(inst);       break;
           case ID_INS_PSLLQ:          this->psllq_s(inst);        break;
           case ID_INS_PSLLW:          this->psllw_s(inst);        break;
+          case ID_INS_PSRAD:          this->psrad_s(inst);        break;
           case ID_INS_PSRAW:          this->psraw_s(inst);        break;
           case ID_INS_PSRLDQ:         this->psrldq_s(inst);       break;
           case ID_INS_PSUBB:          this->psubb_s(inst);        break;
@@ -9966,41 +9968,41 @@ namespace triton {
 
 
       void x86Semantics::pmulhw_s(triton::arch::Instruction& inst) {
-        auto& src1 = inst.operands[0];
-        auto& src2 = inst.operands[1];
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         if ((!op1->isSymbolized() && op1->evaluate() == 0) ||
             (!op2->isSymbolized() && op2->evaluate() == 0)) {
-          auto node = this->astCtxt->bv(0, src1.getBitSize());
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULHW operation");
-          this->taintEngine->setTaint(src1, false);
+          auto node = this->astCtxt->bv(0, dst.getBitSize());
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULHW operation");
+          this->taintEngine->setTaint(dst, false);
           this->controlFlow_s(inst);
           return;
         }
 
-        std::vector<triton::ast::SharedAbstractNode> temp;
-        temp.reserve(src1.getSize() / triton::size::word);
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
 
-        for (triton::uint32 i = 0; i < src1.getSize() / triton::size::word; ++i) {
-          uint32 high = (src1.getBitSize() - 1) - (i * triton::bitsize::word);
-          uint32 low = (src1.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
           auto n1 = this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1));
           auto n2 = this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2));
           auto node = this->astCtxt->extract(triton::bitsize::dword - 1, triton::bitsize::word, this->astCtxt->bvmul(n1, n2));
-          temp.push_back(node);
+          pck.push_back(node);
         }
-        auto node = this->astCtxt->concat(temp);
+        auto node = this->astCtxt->concat(pck);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULHW operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULHW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10008,41 +10010,41 @@ namespace triton {
 
 
       void x86Semantics::pmulld_s(triton::arch::Instruction& inst) {
-        auto& src1 = inst.operands[0];
-        auto& src2 = inst.operands[1];
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         if ((!op1->isSymbolized() && op1->evaluate() == 0) ||
             (!op2->isSymbolized() && op2->evaluate() == 0)) {
-          auto node = this->astCtxt->bv(0, src1.getBitSize());
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULLD operation");
-          this->taintEngine->setTaint(src1, false);
+          auto node = this->astCtxt->bv(0, dst.getBitSize());
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULLD operation");
+          this->taintEngine->setTaint(dst, false);
           this->controlFlow_s(inst);
           return;
         }
 
-        std::vector<triton::ast::SharedAbstractNode> temp;
-        temp.reserve(src1.getSize() / triton::size::dword);
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
 
-        for (triton::uint32 i = 0; i < src1.getSize() / triton::size::dword; ++i) {
-          uint32 high = (src1.getBitSize() - 1) - (i * triton::bitsize::dword);
-          uint32 low = (src1.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::dword; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
+          uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
           auto n1 = this->astCtxt->sx(triton::bitsize::dword, this->astCtxt->extract(high, low, op1));
           auto n2 = this->astCtxt->sx(triton::bitsize::dword, this->astCtxt->extract(high, low, op2));
           auto node = this->astCtxt->extract(triton::bitsize::dword - 1, 0, this->astCtxt->bvmul(n1, n2));
-          temp.push_back(node);
+          pck.push_back(node);
         }
-        auto node = this->astCtxt->concat(temp);
+        auto node = this->astCtxt->concat(pck);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULLD operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULLD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10050,41 +10052,41 @@ namespace triton {
 
 
       void x86Semantics::pmullw_s(triton::arch::Instruction& inst) {
-        auto& src1 = inst.operands[0];
-        auto& src2 = inst.operands[1];
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
 
         /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         if ((!op1->isSymbolized() && op1->evaluate() == 0) ||
             (!op2->isSymbolized() && op2->evaluate() == 0)) {
-          auto node = this->astCtxt->bv(0, src1.getBitSize());
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULLW operation");
-          this->taintEngine->setTaint(src1, false);
+          auto node = this->astCtxt->bv(0, dst.getBitSize());
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULLW operation");
+          this->taintEngine->setTaint(dst, false);
           this->controlFlow_s(inst);
           return;
         }
 
-        std::vector<triton::ast::SharedAbstractNode> temp;
-        temp.reserve(src1.getSize() / triton::size::word);
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
 
-        for (triton::uint32 i = 0; i < src1.getSize() / triton::size::word; ++i) {
-          uint32 high = (src1.getBitSize() - 1) - (i * triton::bitsize::word);
-          uint32 low = (src1.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
           auto n1 = this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1));
           auto n2 = this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2));
           auto node = this->astCtxt->extract(triton::bitsize::word - 1, 0, this->astCtxt->bvmul(n1, n2));
-          temp.push_back(node);
+          pck.push_back(node);
         }
-        auto node = this->astCtxt->concat(temp);
+        auto node = this->astCtxt->concat(pck);
 
         /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, src1, "PMULLW operation");
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMULLW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -10897,6 +10899,49 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSLLW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::psrad_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
+
+        auto shift = this->astCtxt->ite(
+          this->astCtxt->bvuge(op2, this->astCtxt->bv(triton::bitsize::dword, src.getBitSize())),
+          this->astCtxt->bv(triton::bitsize::dword, src.getBitSize()),
+          op2
+        );
+
+        if (shift->getBitvectorSize() < triton::bitsize::dword) {
+          shift = this->astCtxt->zx(triton::bitsize::dword - shift->getBitvectorSize(), shift);
+        }
+        else {
+          shift = this->astCtxt->extract(triton::bitsize::dword - 1, 0, shift);
+        }
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::dword; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
+          uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
+          pck.push_back(this->astCtxt->bvashr(this->astCtxt->extract(high, low, op1), shift));
+        }
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PSRAD operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
