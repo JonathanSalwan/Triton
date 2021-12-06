@@ -337,6 +337,9 @@ VMOVQ                        | avx        | VEX Move Quadword
 VMOVSD                       | avx        | VEX Move or Merge Scalar Double-Precision Floating-Point Value
 VMOVAPS                      | avx        | VEX Move Aligned Packed Single-Precision Floating-Point Values
 VMOVUPS                      | avx        | VEX Move Unaligned Packed Single-Precision Floating-Point Values
+VPADDB                       | avx/avx2   | VEX Add Packed Byte Integers
+VPADDD                       | avx/avx2   | VEX Add Packed Doubleword Integers
+VPADDW                       | avx/avx2   | VEX Add Packed Word Integers
 VPAND                        | avx/avx2   | VEX Logical AND
 VPANDN                       | avx/avx2   | VEX Logical AND NOT
 VPEXTRB                      | avx/avx2   | VEX Extract Byte
@@ -710,6 +713,9 @@ namespace triton {
           case ID_INS_VMOVSD:         this->vmovsd_s(inst);       break;
           case ID_INS_VMOVAPS:        this->vmovaps_s(inst);      break;
           case ID_INS_VMOVUPS:        this->vmovups_s(inst);      break;
+          case ID_INS_VPADDB:         this->vpaddb_s(inst);       break;
+          case ID_INS_VPADDD:         this->vpaddd_s(inst);       break;
+          case ID_INS_VPADDW:         this->vpaddw_s(inst);       break;
           case ID_INS_VPAND:          this->vpand_s(inst);        break;
           case ID_INS_VPANDN:         this->vpandn_s(inst);       break;
           case ID_INS_VPEXTRB:        this->vpextrb_s(inst);      break;
@@ -14329,6 +14335,99 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpaddb_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::byte);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::byte; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::byte);
+          uint32 low = (dst.getBitSize() - triton::bitsize::byte) - (i * triton::bitsize::byte);
+          pck.push_back(this->astCtxt->bvadd(this->astCtxt->extract(high, low, op1), this->astCtxt->extract(high, low, op2)));
+        }
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDB operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpaddd_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::dword; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
+          uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
+          pck.push_back(this->astCtxt->bvadd(this->astCtxt->extract(high, low, op1), this->astCtxt->extract(high, low, op2)));
+        }
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDD operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpaddw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; ++i) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+          pck.push_back(this->astCtxt->bvadd(this->astCtxt->extract(high, low, op1), this->astCtxt->extract(high, low, op2)));
+        }
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDW operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
