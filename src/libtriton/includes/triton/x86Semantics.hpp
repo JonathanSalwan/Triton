@@ -1384,6 +1384,12 @@ namespace triton {
           //! The VPMINUB semantics.
           void vpminub_s(triton::arch::Instruction& inst);
 
+          //! The VPMULHW semantics.
+          void vpmulhw_s(triton::arch::Instruction& inst);
+
+          //! The VPMULLW semantics.
+          void vpmullw_s(triton::arch::Instruction& inst);
+
           //! The VPANDN semantics.
           void vpandn_s(triton::arch::Instruction& inst);
 
