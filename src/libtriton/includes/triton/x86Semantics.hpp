@@ -1414,6 +1414,21 @@ namespace triton {
           //! The VPSLLDQ semantics.
           void vpslldq_s(triton::arch::Instruction& inst);
 
+          //! The VPSLLW semantics.
+          void vpsllw_s(triton::arch::Instruction& inst);
+
+          //! The VPSRAD semantics.
+          void vpsrad_s(triton::arch::Instruction& inst);
+
+          //! The VPSRAW semantics.
+          void vpsraw_s(triton::arch::Instruction& inst);
+
+          //! The VPSRLDQ semantics.
+          void vpsrldq_s(triton::arch::Instruction& inst);
+
+          //! The VPSRLW semantics.
+          void vpsrlw_s(triton::arch::Instruction& inst);
+
           //! The VPSUBB semantics.
           void vpsubb_s(triton::arch::Instruction& inst);
 
