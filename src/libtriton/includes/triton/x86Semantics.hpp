@@ -1342,6 +1342,12 @@ namespace triton {
           //! The VMOVUPS semantics.
           void vmovups_s(triton::arch::Instruction& inst);
 
+          //! The VPACKSSDW semantics.
+          void vpackssdw_s(triton::arch::Instruction& inst);
+
+          //! The VPACKUSWB semantics.
+          void vpackuswb_s(triton::arch::Instruction& inst);
+
           //! The VPADDB semantics.
           void vpaddb_s(triton::arch::Instruction& inst);
 
