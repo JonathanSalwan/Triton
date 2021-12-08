@@ -1456,6 +1456,30 @@ namespace triton {
           //! The VPTEST semantics.
           void vptest_s(triton::arch::Instruction& inst);
 
+          //! The VPUNPCKHBW semantics.
+          void vpunpckhbw_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKHDQ semantics.
+          void vpunpckhdq_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKHQDQ semantics.
+          void vpunpckhqdq_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKHWD semantics.
+          void vpunpckhwd_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKLBW semantics.
+          void vpunpcklbw_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKLDQ semantics.
+          void vpunpckldq_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKLQDQ semantics.
+          void vpunpcklqdq_s(triton::arch::Instruction& inst);
+
+          //! The VPUNPCKLWD semantics.
+          void vpunpcklwd_s(triton::arch::Instruction& inst);
+
           //! The VPXOR semantics.
           void vpxor_s(triton::arch::Instruction& inst);
 
