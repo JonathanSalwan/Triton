@@ -180,6 +180,7 @@ OR                           |            | Logical Inclusive OR
 ORPD                         | sse2       | Bitwise Logical OR of Double-Precision Floating-Point Values
 ORPS                         | sse1       | Bitwise Logical OR of Single-Precision Floating-Point Values
 PACKUSWB                     | mmx/sse2   | Pack with Unsigned Saturation
+PACKSSDW                     | mmx/sse2   | Pack with Signed Saturation
 PACKSSWB                     | mmx/sse2   | Pack with Signed Saturation
 PADDB                        | mmx/sse2   | Add packed byte integers
 PADDD                        | mmx/sse2   | Add packed doubleword integers
@@ -337,8 +338,9 @@ VMOVQ                        | avx        | VEX Move Quadword
 VMOVSD                       | avx        | VEX Move or Merge Scalar Double-Precision Floating-Point Value
 VMOVAPS                      | avx        | VEX Move Aligned Packed Single-Precision Floating-Point Values
 VMOVUPS                      | avx        | VEX Move Unaligned Packed Single-Precision Floating-Point Values
-VPACKSSDW                    | avx/avx2   | VEX Pack with Signed Saturation
 VPACKUSWB                    | avx/avx2   | VEX Pack with Unsigned Saturation
+VPACKSSDW                    | avx/avx2   | VEX Pack with Signed Saturation
+VPACKSSWB                    | avx/avx2   | VEX Pack with Signed Saturation
 VPADDB                       | avx/avx2   | VEX Add Packed Byte Integers
 VPADDD                       | avx/avx2   | VEX Add Packed Doubleword Integers
 VPADDW                       | avx/avx2   | VEX Add Packed Word Integers
@@ -565,6 +567,7 @@ namespace triton {
           case ID_INS_ORPD:           this->orpd_s(inst);         break;
           case ID_INS_ORPS:           this->orps_s(inst);         break;
           case ID_INS_PACKUSWB:       this->packuswb_s(inst);     break;
+          case ID_INS_PACKSSDW:       this->packssdw_s(inst);     break;
           case ID_INS_PACKSSWB:       this->packsswb_s(inst);     break;
           case ID_INS_PADDB:          this->paddb_s(inst);        break;
           case ID_INS_PADDD:          this->paddd_s(inst);        break;
@@ -722,8 +725,9 @@ namespace triton {
           case ID_INS_VMOVSD:         this->vmovsd_s(inst);       break;
           case ID_INS_VMOVAPS:        this->vmovaps_s(inst);      break;
           case ID_INS_VMOVUPS:        this->vmovups_s(inst);      break;
-          case ID_INS_VPACKSSDW:      this->vpackssdw_s(inst);    break;
           case ID_INS_VPACKUSWB:      this->vpackuswb_s(inst);    break;
+          case ID_INS_VPACKSSDW:      this->vpackssdw_s(inst);    break;
+          case ID_INS_VPACKSSWB:      this->vpacksswb_s(inst);    break;
           case ID_INS_VPADDB:         this->vpaddb_s(inst);       break;
           case ID_INS_VPADDD:         this->vpaddd_s(inst);       break;
           case ID_INS_VPADDW:         this->vpaddw_s(inst);       break;
@@ -8181,6 +8185,49 @@ namespace triton {
       }
 
 
+      void x86Semantics::packssdw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
+
+        std::vector<triton::ast::SharedAbstractNode> ops{op2, op1};
+
+          for (triton::uint32 idx = 0; idx < ops.size(); ++idx) {
+            for (triton::uint32 i = 0; i < dst.getSize() / triton::size::dword; ++i) {
+              uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
+              uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
+              auto signed_dword = this->astCtxt->extract(high, low, ops[idx]);
+              pck.push_back(this->astCtxt->ite(
+                      this->astCtxt->bvsge(signed_dword, this->astCtxt->bv(0x7fff, triton::bitsize::dword)),
+                      this->astCtxt->bv(0x7fff, triton::bitsize::word),
+                      this->astCtxt->ite(
+                              this->astCtxt->bvsle(signed_dword, this->astCtxt->bv(0xffff8000, triton::bitsize::dword)),
+                              this->astCtxt->bv(0x8000, triton::bitsize::word),
+                              this->astCtxt->extract(triton::bitsize::word - 1, 0, signed_dword)))
+              );
+            }
+          }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PACKSSDW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::packsswb_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -14359,52 +14406,6 @@ namespace triton {
       }
 
 
-      void x86Semantics::vpackssdw_s(triton::arch::Instruction& inst) {
-        auto& dst = inst.operands[0];
-        auto& src1 = inst.operands[1];
-        auto& src2 = inst.operands[2];
-
-        /* Create symbolic operands */
-        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
-        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
-
-        /* Create the semantics */
-        std::vector<triton::ast::SharedAbstractNode> pck;
-        pck.reserve(dst.getSize() / triton::size::word);
-
-        std::vector<triton::ast::SharedAbstractNode> ops{op2, op1};
-
-        for (triton::uint32 k = 0; k < dst.getSize() / triton::size::dqword; ++k) {
-          for (triton::uint32 idx = 0; idx < ops.size(); ++idx) {
-            for (triton::uint32 i = triton::size::dword * k; i < triton::size::dword * (k + 1); ++i) {
-              uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
-              uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
-              auto signed_dword = this->astCtxt->extract(high, low, ops[idx]);
-              pck.push_back(this->astCtxt->ite(
-                      this->astCtxt->bvsge(signed_dword, this->astCtxt->bv(0x7fff, triton::bitsize::dword)),
-                      this->astCtxt->bv(0x7fff, triton::bitsize::word),
-                      this->astCtxt->ite(
-                              this->astCtxt->bvsle(signed_dword, this->astCtxt->bv(0xffff8000, triton::bitsize::dword)),
-                              this->astCtxt->bv(0x8000, triton::bitsize::word),
-                              this->astCtxt->extract(triton::bitsize::word - 1, 0, signed_dword)))
-              );
-            }
-          }
-        }
-
-        auto node = this->astCtxt->concat(pck);
-
-        /* Create symbolic expression */
-        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKSSDW operation");
-
-        /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
-
-        /* Update the symbolic control flow */
-        this->controlFlow_s(inst);
-      }
-
-
       void x86Semantics::vpackuswb_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src1 = inst.operands[1];
@@ -14441,6 +14442,96 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKUSWB operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpackssdw_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::word);
+
+        std::vector<triton::ast::SharedAbstractNode> ops{op2, op1};
+        for (triton::uint32 k = 0; k < dst.getSize() / triton::size::dqword; ++k) {
+          for (triton::uint32 idx = 0; idx < ops.size(); ++idx) {
+            for (triton::uint32 i = triton::size::dword * k; i < triton::size::dword * (k + 1); ++i) {
+              uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::dword);
+              uint32 low = (dst.getBitSize() - triton::bitsize::dword) - (i * triton::bitsize::dword);
+              auto signed_dword = this->astCtxt->extract(high, low, ops[idx]);
+              pck.push_back(this->astCtxt->ite(
+                      this->astCtxt->bvsge(signed_dword, this->astCtxt->bv(0x7fff, triton::bitsize::dword)),
+                      this->astCtxt->bv(0x7fff, triton::bitsize::word),
+                      this->astCtxt->ite(
+                              this->astCtxt->bvsle(signed_dword, this->astCtxt->bv(0xffff8000, triton::bitsize::dword)),
+                              this->astCtxt->bv(0x8000, triton::bitsize::word),
+                              this->astCtxt->extract(triton::bitsize::word - 1, 0, signed_dword)))
+              );
+            }
+          }
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKSSDW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpacksswb_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize());
+
+        std::vector<triton::ast::SharedAbstractNode> ops{op2, op1};
+        for (triton::uint32 k = 0; k < dst.getSize() / triton::size::dqword; ++k) {
+          for (triton::uint32 idx = 0; idx < ops.size(); ++idx) {
+            for (triton::uint32 i = triton::size::qword * k; i < triton::size::qword * (k + 1); ++i) {
+              uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+              uint32 low = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+              auto signed_word = this->astCtxt->extract(high, low, ops[idx]);
+              pck.push_back(this->astCtxt->ite(
+                      this->astCtxt->bvsge(signed_word, this->astCtxt->bv(0x007f, triton::bitsize::word)),
+                      this->astCtxt->bv(0x7f, triton::bitsize::byte),
+                      this->astCtxt->ite(
+                              this->astCtxt->bvsle(signed_word, this->astCtxt->bv(0xff80, triton::bitsize::word)),
+                              this->astCtxt->bv(0x80, triton::bitsize::byte),
+                              this->astCtxt->extract(triton::bitsize::byte - 1, 0, signed_word)))
+              );
+            }
+          }
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKSSWB operation");
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(src1, src2);
