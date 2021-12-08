@@ -346,6 +346,7 @@ VPADDD                       | avx/avx2   | VEX Add Packed Doubleword Integers
 VPADDW                       | avx/avx2   | VEX Add Packed Word Integers
 VPAND                        | avx/avx2   | VEX Logical AND
 VPANDN                       | avx/avx2   | VEX Logical AND NOT
+VPERM2I128                   | avx2       | VEX Permute Integer Values
 VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
@@ -741,6 +742,7 @@ namespace triton {
           case ID_INS_VPADDW:         this->vpaddw_s(inst);       break;
           case ID_INS_VPAND:          this->vpand_s(inst);        break;
           case ID_INS_VPANDN:         this->vpandn_s(inst);       break;
+          case ID_INS_VPERM2I128:     this->vperm2i128_s(inst);   break;
           case ID_INS_VPEXTRB:        this->vpextrb_s(inst);      break;
           case ID_INS_VPEXTRD:        this->vpextrd_s(inst);      break;
           case ID_INS_VPEXTRQ:        this->vpextrq_s(inst);      break;
@@ -14460,7 +14462,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKUSWB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14505,7 +14507,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKSSDW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14550,7 +14552,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPACKSSWB operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14581,7 +14583,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDB operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14612,7 +14614,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDD operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14643,7 +14645,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPADDW operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -14690,6 +14692,70 @@ namespace triton {
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vperm2i128_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+        auto& src3 = inst.operands[3];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+        auto op3 = this->symbolicEngine->getOperandAst(inst, src3);
+
+        /* Create the semantics */
+        std::deque<triton::arch::OperandWrapper> taint;
+        auto permute = [&] (triton::uint8 control) {
+          switch (control) {
+            case 0:
+              taint.push_back(src1);
+              return this->astCtxt->extract(127, 0, op1);
+            case 1:
+              taint.push_back(src1);
+              return this->astCtxt->extract(255, 128, op1);
+            case 2:
+              taint.push_back(src2);
+              return this->astCtxt->extract(127, 0, op2);
+            case 3:
+            default:
+              taint.push_back(src2);
+              return this->astCtxt->extract(255, 128, op2);
+          }
+        };
+
+        auto ctrl = op3->evaluate().convert_to<triton::uint8>();
+        auto high = permute((ctrl >> 4) & 0b00000011);
+        auto low = permute(ctrl & 0b00000011);
+
+        if (ctrl & 0b00001000) {
+          low = this->astCtxt->bv(0, 128);
+          taint.pop_back();
+        }
+
+        if (ctrl & 0b10000000) {
+          high = this->astCtxt->bv(0, 128);
+          taint.pop_front();
+        }
+
+        auto node = this->astCtxt->concat(high, low);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPERM2I128 operation");
+
+        /* Spread taint */
+        if (taint.empty()) {
+          this->taintEngine->setTaint(dst, false);
+        } else if (taint.size() == 1) {
+          expr->isTainted = this->taintEngine->taintAssignment(dst, taint[0]);
+        } else {
+          expr->isTainted = this->taintEngine->taintAssignment(dst, taint[0]) | this->taintEngine->taintUnion(dst, taint[0]);
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15254,7 +15320,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPMULHW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15297,7 +15363,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPMULLW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15536,7 +15602,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPSLLW operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15580,7 +15646,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPSRAD operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15624,7 +15690,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPSRAW operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15669,7 +15735,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPSRLDQ operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15713,7 +15779,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPSRLW operation");
 
         /* Spread taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15923,7 +15989,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKHBW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15960,7 +16026,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKHDQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -15997,7 +16063,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKHQDQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -16034,7 +16100,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKHWD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -16071,7 +16137,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKLBW operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -16108,7 +16174,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKLDQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -16145,7 +16211,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKLQDQ operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -16182,7 +16248,7 @@ namespace triton {
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPUNPCKLWD operation");
 
         /* Apply the taint */
-        expr->isTainted = this->taintEngine->taintUnion(src1, src2);
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
