@@ -348,6 +348,7 @@ VPADDW                       | avx/avx2   | VEX Add Packed Word Integers
 VPAND                        | avx/avx2   | VEX Logical AND
 VPANDN                       | avx/avx2   | VEX Logical AND NOT
 VPERM2I128                   | avx2       | VEX Permute Integer Values
+VPERMQ                       | avx2       | VEX Qwords Element Permutation
 VPEXTRB                      | avx/avx2   | VEX Extract Byte
 VPEXTRD                      | avx/avx2   | VEX Extract Dword
 VPEXTRQ                      | avx/avx2   | VEX Extract Qword
@@ -746,6 +747,7 @@ namespace triton {
           case ID_INS_VPAND:          this->vpand_s(inst);        break;
           case ID_INS_VPANDN:         this->vpandn_s(inst);       break;
           case ID_INS_VPERM2I128:     this->vperm2i128_s(inst);   break;
+          case ID_INS_VPERMQ:         this->vpermq_s(inst);       break;
           case ID_INS_VPEXTRB:        this->vpextrb_s(inst);      break;
           case ID_INS_VPEXTRD:        this->vpextrd_s(inst);      break;
           case ID_INS_VPEXTRQ:        this->vpextrq_s(inst);      break;
@@ -14801,6 +14803,41 @@ namespace triton {
         } else {
           expr->isTainted = this->taintEngine->taintAssignment(dst, taint[0]) | this->taintEngine->taintUnion(dst, taint[0]);
         }
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpermq_s(triton::arch::Instruction& inst) {
+        auto& dst  = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::byte);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::qword; ++i) {
+          auto high = triton::bitsize::byte - 1 - 2 * i;
+          auto shift = this->astCtxt->bvmul(
+                         this->astCtxt->bv(triton::bitsize::qword, src1.getBitSize()),
+                         this->astCtxt->zx(src1.getBitSize() - 2,
+                           this->astCtxt->extract(high, high - 1, op2)));
+          pck.push_back(this->astCtxt->extract(triton::bitsize::qword - 1, 0, this->astCtxt->bvlshr(op1, shift)));
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPERMQ operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src1);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);

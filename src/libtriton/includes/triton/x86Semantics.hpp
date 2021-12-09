@@ -1414,6 +1414,9 @@ namespace triton {
           //! The VPERM2I128 semantics.
           void vperm2i128_s(triton::arch::Instruction& inst);
 
+          //! The VPERMQ semantics.
+          void vpermq_s(triton::arch::Instruction& inst);
+
           //! The VPEXTRB semantics.
           void vpextrb_s(triton::arch::Instruction& inst);
 
