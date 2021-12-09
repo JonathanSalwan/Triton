@@ -1327,6 +1327,9 @@ namespace triton {
           //! The UNPCKLPS semantics.
           void unpcklps_s(triton::arch::Instruction& inst);
 
+          //! The VEXTRACTI128 semantics.
+          void vextracti128_s(triton::arch::Instruction& inst);
+
           //! The VMOVD semantics.
           void vmovd_s(triton::arch::Instruction& inst);
 
