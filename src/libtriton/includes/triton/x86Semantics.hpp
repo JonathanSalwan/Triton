@@ -967,6 +967,9 @@ namespace triton {
           //! The PINSRW semantics.
           void pinsrw_s(triton::arch::Instruction& inst);
 
+          //! The PMADDWD semantics.
+          void pmaddwd_s(triton::arch::Instruction& inst);
+
           //! The PMAXSB semantics.
           void pmaxsb_s(triton::arch::Instruction& inst);
 
@@ -1389,6 +1392,9 @@ namespace triton {
 
           //! The VPCMPGTW semantics.
           void vpcmpgtw_s(triton::arch::Instruction& inst);
+
+          //! The VPMADDWD semantics.
+          void vpmaddwd_s(triton::arch::Instruction& inst);
 
           //! The VPMOVMSKB semantics.
           void vpmovmskb_s(triton::arch::Instruction& inst);

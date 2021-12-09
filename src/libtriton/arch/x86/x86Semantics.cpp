@@ -206,6 +206,7 @@ PINSRB                       | sse4.1     | Insert Byte
 PINSRD                       | sse4.1     | Insert Dword
 PINSRQ                       | sse4.1     | Insert Qword
 PINSRW                       | sse2       | Insert Word
+PMADDWD                      | mmx/sse2   | Multiply and Add Packed Integers
 PMAXSB                       | sse4.1     | Maximum of Packed Signed Byte Integers
 PMAXSD                       | sse4.1     | Maximum of Packed Signed Doubleword Integers
 PMAXSW                       | sse1       | Maximum of Packed Signed Word Integers
@@ -359,6 +360,7 @@ VPCMPEQW                     | avx/avx2   | VEX Compare packed Words for equalit
 VPCMPGTB                     | avx/avx2   | VEX Compare Packed Bytes for Greater Than
 VPCMPGTD                     | avx/avx2   | VEX Compare Packed Doublewords for Greater Than
 VPCMPGTW                     | avx/avx2   | VEX Compare Packed Words for Greater Than
+VPMADDWD                     | avx/avx    | VEX Multiply and Add Packed Integers
 VPMOVMSKB                    | avx/avx2   | VEX Move Byte Mask
 VPMINUB                      | avx/avx2   | VEX Minimum of Packed Unsigned Byte Integers
 VPMULHW                      | avx/avx2   | VEX Multiply Packed Signed Integers and Store High Result
@@ -602,6 +604,7 @@ namespace triton {
           case ID_INS_PINSRD:         this->pinsrd_s(inst);       break;
           case ID_INS_PINSRQ:         this->pinsrq_s(inst);       break;
           case ID_INS_PINSRW:         this->pinsrw_s(inst);       break;
+          case ID_INS_PMADDWD:        this->pmaddwd_s(inst);      break;
           case ID_INS_PMAXSB:         this->pmaxsb_s(inst);       break;
           case ID_INS_PMAXSD:         this->pmaxsd_s(inst);       break;
           case ID_INS_PMAXSW:         this->pmaxsw_s(inst);       break;
@@ -755,6 +758,7 @@ namespace triton {
           case ID_INS_VPCMPGTB:       this->vpcmpgtb_s(inst);     break;
           case ID_INS_VPCMPGTD:       this->vpcmpgtd_s(inst);     break;
           case ID_INS_VPCMPGTW:       this->vpcmpgtw_s(inst);     break;
+          case ID_INS_VPMADDWD:       this->vpmaddwd_s(inst);     break;
           case ID_INS_VPMOVMSKB:      this->vpmovmskb_s(inst);    break;
           case ID_INS_VPMINUB:        this->vpminub_s(inst);      break;
           case ID_INS_VPMULHW:        this->vpmulhw_s(inst);      break;
@@ -9256,6 +9260,47 @@ namespace triton {
       }
 
 
+      void x86Semantics::pmaddwd_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; i += 2) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+          auto node1 = this->astCtxt->bvmul(
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1)),
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2))
+                       );
+          high -= triton::bitsize::word;
+          low  -= triton::bitsize::word;
+          auto node2 = this->astCtxt->bvmul(
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1)),
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2))
+                       );
+          pck.push_back(this->astCtxt->bvadd(node1, node2));
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "PMADDWD operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
       void x86Semantics::pmaxsd_s(triton::arch::Instruction& inst) {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
@@ -15168,6 +15213,48 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPCMPGTW operation");
+
+        /* Apply the taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vpmaddwd_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src1 = inst.operands[1];
+        auto& src2 = inst.operands[2];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, src1);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src2);
+
+        /* Create the semantics */
+        std::vector<triton::ast::SharedAbstractNode> pck;
+        pck.reserve(dst.getSize() / triton::size::dword);
+
+        for (triton::uint32 i = 0; i < dst.getSize() / triton::size::word; i += 2) {
+          uint32 high = (dst.getBitSize() - 1) - (i * triton::bitsize::word);
+          uint32 low  = (dst.getBitSize() - triton::bitsize::word) - (i * triton::bitsize::word);
+          auto node1 = this->astCtxt->bvmul(
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1)),
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2))
+                       );
+          high -= triton::bitsize::word;
+          low  -= triton::bitsize::word;
+          auto node2 = this->astCtxt->bvmul(
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op1)),
+                         this->astCtxt->sx(triton::bitsize::word, this->astCtxt->extract(high, low, op2))
+                       );
+          pck.push_back(this->astCtxt->bvadd(node1, node2));
+        }
+
+        auto node = this->astCtxt->concat(pck);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VPMADDWD operation");
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src1) | this->taintEngine->taintUnion(dst, src2);
