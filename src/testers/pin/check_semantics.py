@@ -93,11 +93,12 @@ def cafter(instruction):
                 continue
 
             good = False
+            sym_reg = Triton.getSymbolicRegister(reg)
             bad.append({
                 'reg':    reg.getName(),
                 'svalue': svalue,
                 'cvalue': cvalue,
-                'expr':   expr
+                'expr':   sym_reg.getAst()
             })
 
     if bad:
@@ -119,6 +120,18 @@ def cafter(instruction):
                 print("     Native address   : %016x" %(nativeAddress))
                 print("     Symbolic address : %016x" %(astAddress))
 
+    # Check destination memory accesses
+    for mem, sym_mem in instruction.getStoreAccess():
+        cvalue = Pintool.getCurrentMemoryValue(mem.getAddress(), mem.getSize())
+        svalue = sym_mem.evaluate()
+        if cvalue != svalue:
+            good = False
+            print("[%sKO%s] %#x: %s (%smemory error%s)" %(RED, ENDC, instruction.getAddress(), instruction.getDisassembly(), RED, ENDC))
+            print("     Memory         : %016x" %(mem.getAddress()))
+            print("     Symbolic Value : %016x" %(svalue))
+            print("     Concrete Value : %016x" %(cvalue))
+            print("     Expression     : %s" %(sym_mem))
+
     if len(instruction.getSymbolicExpressions()) == 0:
         print("[%s??%s] %#x: %s" %(BLUE, ENDC, instruction.getAddress(), instruction.getDisassembly()))
         return
@@ -129,8 +142,6 @@ def cafter(instruction):
     else:
         #time.sleep(2)
         sys.exit(-1)
-
-    return
 
 
 if __name__ == '__main__':
