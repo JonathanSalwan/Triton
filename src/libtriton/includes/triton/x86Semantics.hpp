@@ -1441,6 +1441,9 @@ namespace triton {
           //! The VPSHUFD semantics.
           void vpshufd_s(triton::arch::Instruction& inst);
 
+          //! The VPSIGNW semantics.
+          void vpsignw_s(triton::arch::Instruction& inst);
+
           //! The VPSLLDQ semantics.
           void vpslldq_s(triton::arch::Instruction& inst);
 
