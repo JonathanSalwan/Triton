@@ -336,6 +336,7 @@ VEXTRACTI128                 | avx2       | VEX Extract Packed Integer Values
 VMOVD                        | avx        | VEX Move Doubleword
 VMOVDQA                      | avx        | VEX Move aligned packed integer values
 VMOVDQU                      | avx        | VEX Move unaligned packed integer values
+VMOVNTDQ                     | avx        | VEX Store Double Quadword Using Non-Temporal Hint
 VMOVQ                        | avx        | VEX Move Quadword
 VMOVSD                       | avx        | VEX Move or Merge Scalar Double-Precision Floating-Point Value
 VMOVAPS                      | avx        | VEX Move Aligned Packed Single-Precision Floating-Point Values
@@ -736,6 +737,7 @@ namespace triton {
           case ID_INS_VMOVD:          this->vmovd_s(inst);        break;
           case ID_INS_VMOVDQA:        this->vmovdqa_s(inst);      break;
           case ID_INS_VMOVDQU:        this->vmovdqu_s(inst);      break;
+          case ID_INS_VMOVNTDQ:       this->vmovntdq_s(inst);     break;
           case ID_INS_VMOVQ:          this->vmovq_s(inst);        break;
           case ID_INS_VMOVSD:         this->vmovsd_s(inst);       break;
           case ID_INS_VMOVAPS:        this->vmovaps_s(inst);      break;
@@ -14371,6 +14373,24 @@ namespace triton {
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VMOVDQU operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::vmovntdq_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create the semantics */
+        auto node = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "VMOVNTDQ operation");
 
         /* Spread taint */
         expr->isTainted = this->taintEngine->taintAssignment(dst, src);

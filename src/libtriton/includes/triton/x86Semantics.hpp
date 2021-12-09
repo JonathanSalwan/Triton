@@ -1339,6 +1339,9 @@ namespace triton {
           //! The VMOVDQU semantics.
           void vmovdqu_s(triton::arch::Instruction& inst);
 
+          //! The VMOVNTDQ semantics.
+          void vmovntdq_s(triton::arch::Instruction& inst);
+
           //! The VMOVQ semantics.
           void vmovq_s(triton::arch::Instruction& inst);
 
