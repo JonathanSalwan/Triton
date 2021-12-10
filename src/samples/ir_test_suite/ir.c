@@ -4385,6 +4385,40 @@ void check(void)
   asm("vpsignw xmm3, xmm1, xmm2");
   asm("vpsignw xmm3, xmm1, xmm1");
 
+  // popcnt
+  asm("mov rax, -1");
+  asm("popcnt rdx, rax");
+  asm("mov rax, 0");
+  asm("popcnt rdx, rax");
+  asm("mov rax, 1");
+  asm("popcnt rdx, rax");
+  asm("mov rax, 5");
+  asm("popcnt rdx, rax");
+  asm("mov rax, 234");
+  asm("popcnt rdx, rax");
+
+  asm("mov eax, -1");
+  asm("popcnt edx, eax");
+  asm("mov eax, 0");
+  asm("popcnt edx, eax");
+  asm("mov eax, 1");
+  asm("popcnt edx, eax");
+  asm("mov eax, 5");
+  asm("popcnt edx, eax");
+  asm("mov eax, 123456");
+  asm("popcnt edx, eax");
+
+  asm("mov ax, -1");
+  asm("popcnt dx, ax");
+  asm("mov ax, 0");
+  asm("popcnt dx, ax");
+  asm("mov ax, 1");
+  asm("popcnt dx, ax");
+  asm("mov ax, 5");
+  asm("popcnt dx, ax");
+  asm("mov ax, 12345");
+  asm("popcnt dx, ax");
+
 }
 
 int main(){

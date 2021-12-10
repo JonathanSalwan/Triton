@@ -235,6 +235,7 @@ PMOVZXWQ                     | sse4.1     | Zero Extend 2 Packed Signed 16-bit I
 PMULHW                       | sse4.1     | Multiply Packed Signed Integers and Store High Result
 PMULLD                       | sse4.1     | Multiply Packed Integers and Store Low Result
 PMULLW                       | sse4.1     | Multiply Packed Signed Integers and Store Low Result
+POPCNT                       |            | Count Number of Bits Set to 1
 POP                          |            | Pop a Value from the Stack
 POPAL/POPAD                  |            | Pop All General-Purpose Registers
 POPF                         |            | Pop Stack into lower 16-bit of EFLAGS Register
@@ -637,6 +638,7 @@ namespace triton {
           case ID_INS_PMULHW:         this->pmulhw_s(inst);       break;
           case ID_INS_PMULLD:         this->pmulld_s(inst);       break;
           case ID_INS_PMULLW:         this->pmullw_s(inst);       break;
+          case ID_INS_POPCNT:         this->popcnt_s(inst);       break;
           case ID_INS_POP:            this->pop_s(inst);          break;
           case ID_INS_POPAL:          this->popal_s(inst);        break;
           case ID_INS_POPF:           this->popf_s(inst);         break;
@@ -10229,6 +10231,34 @@ namespace triton {
 
         /* Apply the taint */
         expr->isTainted = this->taintEngine->taintUnion(dst, src);
+
+        /* Update the symbolic control flow */
+        this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::popcnt_s(triton::arch::Instruction& inst) {
+        auto& dst = inst.operands[0];
+        auto& src = inst.operands[1];
+
+        /* Create symbolic operands */
+        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
+        auto op2 = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Create the semantics */
+        auto node = this->astCtxt->bv(0, dst.getBitSize());
+        for (triton::uint32 i = 0; i < src.getBitSize(); ++i) {
+          node = this->astCtxt->bvadd(
+                   node,
+                   this->astCtxt->zx(dst.getBitSize() - 1, this->astCtxt->extract(i, i, op2))
+                 );
+        }
+
+        /* Create symbolic expression */
+        auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "POPCNT operation");
+
+        /* Spread taint */
+        expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);

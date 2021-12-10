@@ -1054,6 +1054,9 @@ namespace triton {
           //! The PMULLW semantics.
           void pmullw_s(triton::arch::Instruction& inst);
 
+          //! The POPCNT semantics.
+          void popcnt_s(triton::arch::Instruction& inst);
+
           //! The POP semantics.
           void pop_s(triton::arch::Instruction& inst);
 
