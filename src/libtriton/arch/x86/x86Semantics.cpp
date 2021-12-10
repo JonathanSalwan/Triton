@@ -16563,44 +16563,29 @@ namespace triton {
         auto& dst  = inst.operands[0];
         auto& src  = inst.operands[1];
         bool  dstT = this->taintEngine->isTainted(dst);
-        bool  srcT = this->taintEngine->isTainted(src);
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
-        auto node1 = op2;
-        auto node2 = op1;
+        auto node = this->astCtxt->bvadd(op1, op2);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "XCHG operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node2, src, "XCHG operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, op1, src, "XADD operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "XADD operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaint(dst, srcT);
-        expr2->isTainted = this->taintEngine->setTaint(src, dstT);
-
-        /* Create symbolic operands */
-        op1 = this->symbolicEngine->getOperandAst(inst, dst);
-        op2 = this->symbolicEngine->getOperandAst(inst, src);
-
-        /* Create the semantics */
-        auto node3 = this->astCtxt->bvadd(op1, op2);
-
-        /* Create symbolic expression */
-        auto expr3 = this->symbolicEngine->createSymbolicExpression(inst, node3, dst, "ADD operation");
-
-        /* Spread taint */
-        expr3->isTainted = this->taintEngine->taintUnion(dst, src);
+        expr2->isTainted = this->taintEngine->taintUnion(dst, src);
+        expr1->isTainted = this->taintEngine->setTaint(src, dstT);
 
         /* Update symbolic flags */
-        this->af_s(inst, expr3, dst, op1, op2);
-        this->cfAdd_s(inst, expr3, dst, op1, op2);
-        this->ofAdd_s(inst, expr3, dst, op1, op2);
-        this->pf_s(inst, expr3, dst);
-        this->sf_s(inst, expr3, dst);
-        this->zf_s(inst, expr3, dst);
+        this->af_s(inst, expr2, dst, op1, op2);
+        this->cfAdd_s(inst, expr2, dst, op1, op2);
+        this->ofAdd_s(inst, expr2, dst, op1, op2);
+        this->pf_s(inst, expr2, dst);
+        this->sf_s(inst, expr2, dst);
+        this->zf_s(inst, expr2, dst);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
