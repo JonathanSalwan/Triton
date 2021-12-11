@@ -24,4 +24,7 @@ RUN cd /tmp && \
 RUN cd /opt && git clone https://github.com/JonathanSalwan/Triton.git && \
     cd Triton && mkdir build && cd build && cmake .. && make install
 
+# Configure libTriton path for Python
+RUN echo export PYTHONPATH=\"/usr/lib/python\$\(python3 -c \'import sys\; print\(\".\".join\(map\(str, sys.version_info[:2]\)\)\)\'\)/site-packages:\$PYTHONPATH\" >> /etc/bash.bashrc
+
 ENTRYPOINT /bin/bash
