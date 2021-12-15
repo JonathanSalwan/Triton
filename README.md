@@ -11,43 +11,69 @@ you are able to build program analysis tools, automate reverse engineering and p
 </p>
 
 
-As **Triton** is still a young project, please, **don't blame us** if it is not yet reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
-[pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than troll =).
-
-Full documentation is available on our [doxygen page](http://triton.quarkslab.com/documentation/doxygen).</p>
+As **Triton** is a kind of a part-time project, please, **don't blame us** if it is not fully reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
+[pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than trolling =). However, you can follow the development on twitter
+[@qb_triton](https://twitter.com/qb_triton).
 
 <p>
-  <a href="https://travis-ci.org/JonathanSalwan/Triton/branches">
-    <img src="https://img.shields.io/travis/JonathanSalwan/Triton/master.svg?style=flat-square&label=unix%20build">
+  <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/">
+    <img src="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/badge.svg">
+  </a>
+  &nbsp;
+  <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/osx.yml/">
+    <img src="https://github.com/JonathanSalwan/Triton/actions/workflows/osx.yml/badge.svg">
   </a>
   &nbsp;
   <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
-    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?style=flat-square&label=windows%20build">
+    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Tests%20on%20Windows">
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
-    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/dev-v0.7/graph/badge.svg" alt="Codecov" />
+    <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/master/graph/badge.svg" alt="Codecov" />
   </a>
 </p>
 
-### Quick start
+## Quick start
 
-* [Description](http://triton.quarkslab.com/documentation/doxygen/#description_sec)
 * [Installation](http://triton.quarkslab.com/documentation/doxygen/#install_sec)
-* [Examples](https://github.com/JonathanSalwan/Triton/tree/master/src/examples)
-* [Python Bindings](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+* [Python API](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
+* [C++ API](https://triton.quarkslab.com/documentation/doxygen/annotated.html)
+* [Python Examples](https://github.com/JonathanSalwan/Triton/tree/master/src/examples/python)
 * [Presentations and Publications](http://triton.quarkslab.com/documentation/doxygen/#publications_sec)
 
-### News
+### Getting started
 
-A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us on twitter [@qb_triton](https://twitter.com/qb_triton) or via our [RSS](http://triton.quarkslab.com/rss.xml) feed.
+```python
+from triton import *
 
-### Support
+>>> # Create the Triton context with a defined architecture
+>>> ctx = TritonContext(ARCH.X86_64)
 
-* **IRC**: #qb_triton@freenode
-* **Mail**: triton at quarkslab com
+>>> # Define concrete values (optional)
+>>> ctx.setConcreteRegisterValue(ctx.registers.rip, 0x40000)
 
-### Authors
+>>> # Symbolize data (optional)
+>>> ctx.symbolizeRegister(ctx.registers.rax, 'my_rax')
+
+>>> # Execute instructions
+>>> ctx.processing(Instruction(b"\x48\x35\x34\x12\x00\x00")) # xor rax, 0x1234
+>>> ctx.processing(Instruction(b"\x48\x89\xc1")) # xor rcx, rax
+
+>>> # Get the symbolic expression
+>>> rcx_expr = ctx.getSymbolicRegister(ctx.registers.rcx)
+>>> print(rcx_expr)
+(define-fun ref!8 () (_ BitVec 64) ref!1) ; MOV operation - 0x40006: mov rcx, rax
+
+>>> # Solve constraint
+>>> ctx.getModel(rcx_expr.getAst() == 0xdead)
+{0: my_rax:64 = 0xcc99}
+
+>>> # 0xcc99 XOR 0x1234 is indeed equal to 0xdead
+>>> hex(0xcc99 ^ 0x1234)
+'0xdead'
+```
+
+## Authors
 
 * **Jonathan Salwan** - Lead dev, Quarkslab
 * **Christian Heitman** - Core dev, Quarkslab
@@ -57,14 +83,16 @@ A [blog](http://triton.quarkslab.com/blog/) is available and you can follow us o
 
 ### Cite Triton
 
-    @inproceedings{SSTIC2015-Saudel-Salwan,
-      author    = {Saudel, Florent and Salwan, Jonathan},
-      title     = {Triton: A Dynamic Symbolic Execution Framework},
-      booktitle = {Symposium sur la s{\'{e}}curit{\'{e}} des technologies de l'information
-                   et des communications},
-      series    = {SSTIC},
-      pages     = {31--54},
-      address   = {Rennes, France},
-      month     = jun,
-      year      = {2015},
-    }
+```latex
+@inproceedings{SSTIC2015-Saudel-Salwan,
+  author    = {Saudel, Florent and Salwan, Jonathan},
+  title     = {Triton: A Dynamic Symbolic Execution Framework},
+  booktitle = {Symposium sur la s{\'{e}}curit{\'{e}} des technologies de l'information
+               et des communications},
+  series    = {SSTIC},
+  pages     = {31--54},
+  address   = {Rennes, France},
+  month     = jun,
+  year      = {2015},
+}
+```
