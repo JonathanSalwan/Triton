@@ -199,35 +199,33 @@ def __strtoul():
     # Return value
     return int(nptr, base)
 
-# Simulate the printf() function                                                
-def __printf():                                                                 
+# Simulate the printf() function
+def __printf():
     debug('printf hooked')
 
     string_pos = getStringPosition(getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi)))
-                                                                                
-    # Get arguments                                                             
+
+    # Get arguments
     arg1   = getFormatString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
-    arg2   = Triton.getConcreteRegisterValue(Triton.registers.rsi)              
-    arg3   = Triton.getConcreteRegisterValue(Triton.registers.rdx)              
-    arg4   = Triton.getConcreteRegisterValue(Triton.registers.rcx)              
-    arg5   = Triton.getConcreteRegisterValue(Triton.registers.r8)               
-    arg6   = Triton.getConcreteRegisterValue(Triton.registers.r9)               
-    nbArgs = arg1.count("{")                                                    
-    args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]                            
-    rsp    = Triton.getConcreteRegisterValue(Triton.registers.rsp)              
-                                                                                
-    if nbArgs > 5:                                                              
-        for i in range(nbArgs - 5):                                             
+    arg2   = Triton.getConcreteRegisterValue(Triton.registers.rsi)
+    arg3   = Triton.getConcreteRegisterValue(Triton.registers.rdx)
+    arg4   = Triton.getConcreteRegisterValue(Triton.registers.rcx)
+    arg5   = Triton.getConcreteRegisterValue(Triton.registers.r8)
+    arg6   = Triton.getConcreteRegisterValue(Triton.registers.r9)
+    nbArgs = arg1.count("{")
+    args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
+    rsp    = Triton.getConcreteRegisterValue(Triton.registers.rsp)
+
+    if nbArgs > 5:
+        for i in range(nbArgs - 5):
             args.append(Triton.getConcreteMemoryValue(MemoryAccess(rsp + CPUSIZE.QWORD * (i + 1), CPUSIZE.QWORD)))
-                                                                                
-    for i in string_pos:                                                        
-        args[i] = getMemoryString(args[i])                                      
-                                                                                
-    s = arg1.format(*args)                                                      
-                                                                                
-    sys.stdout.write(s)                                                         
-                                                                                
-    # Return value                                                              
+
+    for i in string_pos:
+        args[i] = getMemoryString(args[i])
+    s = arg1.format(*args)
+    sys.stdout.write(s)
+
+    # Return value
     return len(s)
 
 
