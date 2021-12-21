@@ -23,6 +23,9 @@
 #ifdef TRITON_Z3_INTERFACE
   #include <triton/z3Solver.hpp>
 #endif
+#ifdef TRITON_BITWUZLA_INTERFACE
+  #include <triton/bitwuzlaSolver.hpp>
+#endif
 
 
 

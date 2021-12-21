@@ -42,6 +42,9 @@ namespace triton {
         #ifdef TRITON_Z3_INTERFACE
         SOLVER_Z3,          /*!< z3 solver. */
         #endif
+        #ifdef TRITON_BITWUZLA_INTERFACE
+        SOLVER_BITWUZLA,    /*!< bitwuzla solver. */
+        #endif
       };
 
       /*! The different kind of status */
