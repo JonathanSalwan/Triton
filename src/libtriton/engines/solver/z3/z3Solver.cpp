@@ -138,6 +138,12 @@ namespace triton {
           }
         }
         catch (const z3::exception& e) {
+          if (!strcmp(e.msg(), "max. memory exceeded")) {
+            if (status) {
+              *status = triton::engines::solver::OUTOFMEM;
+            }
+            return {};
+          }
           throw triton::exceptions::SolverEngine(std::string("Z3Solver::getModels(): ") + e.msg());
         }
 
@@ -184,6 +190,12 @@ namespace triton {
           return res == z3::sat;
         }
         catch (const z3::exception& e) {
+          if (!strcmp(e.msg(), "max. memory exceeded")) {
+            if (status) {
+              *status = triton::engines::solver::OUTOFMEM;
+            }
+            return {};
+          }
           throw triton::exceptions::SolverEngine(std::string("Z3Solver::isSat(): ") + e.msg());
         }
       }
