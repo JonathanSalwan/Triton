@@ -145,7 +145,7 @@ namespace triton {
           auto end = std::chrono::system_clock::now();
 
           if (solving_time)
-            *solving_time = (std::chrono::duration_cast<std::chrono::milliseconds>(end - start)).count();
+            *solving_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         }
         catch (const z3::exception& e) {
           throw triton::exceptions::SolverEngine(std::string("Z3Solver::getModels(): ") + e.msg());
@@ -155,7 +155,7 @@ namespace triton {
       }
 
 
-      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
+      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
         triton::ast::TritonToZ3Ast z3Ast{false};
 
         if (node == nullptr)
@@ -189,7 +189,17 @@ namespace triton {
 
           solver.set(p);
 
+          /* Get time of solving start */
+          auto start = std::chrono::system_clock::now();
+
           z3::check_result res = solver.check();
+
+          /* Get time of solving end */
+          auto end = std::chrono::system_clock::now();
+
+          if (solving_time)
+            *solving_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
           this->writeBackStatus(solver, res, status);
           return res == z3::sat;
         }

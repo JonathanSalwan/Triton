@@ -95,7 +95,7 @@ namespace triton {
           TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32 *solving_time = nullptr) const;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0) const;
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32 *solving_time = nullptr) const;
 
           //! Returns the name of the solver.
           TRITON_EXPORT std::string getName(void) const;

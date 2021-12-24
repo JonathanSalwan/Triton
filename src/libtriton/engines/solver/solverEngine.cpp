@@ -91,10 +91,10 @@ namespace triton {
       }
 
 
-      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
+      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
         if (!this->solver)
           return false;
-        return this->solver->isSat(node, status, timeout);
+        return this->solver->isSat(node, status, timeout, solving_time);
       }
 
 

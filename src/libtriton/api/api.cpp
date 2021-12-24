@@ -1101,9 +1101,9 @@ namespace triton {
   }
 
 
-  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
+  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
     this->checkSolver();
-    return this->solver->isSat(node, status, timeout);
+    return this->solver->isSat(node, status, timeout, solving_time);
   }
 
 
