@@ -77,17 +77,17 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
+      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
         if (!this->solver)
           return std::unordered_map<triton::usize, SolverModel>{};
-        return this->solver->getModel(node, status, timeout);
+        return this->solver->getModel(node, status, timeout, solving_time);
       }
 
 
-      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
         if (!this->solver)
           return std::vector<std::unordered_map<triton::usize, SolverModel>>{};
-        return this->solver->getModels(node, limit, status, timeout);
+        return this->solver->getModels(node, limit, status, timeout, solving_time);
       }
 
 
