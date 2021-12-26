@@ -15,7 +15,7 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than trolling =). However, you can follow the development on twitter
 [@qb_triton](https://twitter.com/qb_triton).
 
-<p>
+<p align="center">
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/">
     <img src="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/badge.svg">
   </a>
@@ -25,11 +25,19 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
   </a>
   &nbsp;
   <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
-    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Tests%20on%20Windows">
+    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Tests%20on%20Windows&logo=appveyor">
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
     <img src="https://codecov.io/gh/JonathanSalwan/Triton/branch/master/graph/badge.svg" alt="Codecov" />
+  </a>
+  &nbsp;
+  <a href="https://github.com/JonathanSalwan/Triton/releases">
+    <img src="https://img.shields.io/github/v/release/JonathanSalwan/Triton">
+  </a>
+  &nbsp;
+  <a href="https://twitter.com/qb_triton">
+   <img src="https://img.shields.io/twitter/follow/qb_triton?color=1da1f2&label=Follow&logo=twitter&logoColor=white&style=square">
   </a>
 </p>
 
