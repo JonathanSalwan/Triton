@@ -47,6 +47,9 @@ namespace triton {
       //! \class Z3Solver
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
+          //! Wrapper to handle variadict number of arguments or'd together.
+          static z3::expr mk_or(z3::expr_vector args);
+
         private:
           //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
           triton::uint32 timeout;
@@ -56,9 +59,6 @@ namespace triton {
 
           //! Writes back the status code of the solver into the pointer pointed by status.
           void writeBackStatus(z3::solver& solver, z3::check_result res, triton::engines::solver::status_e* status) const;
-
-          //! Wrapper to handle variadict number of arguments or'd together.
-          static z3::expr mk_or(z3::expr_vector args);
 
         public:
           //! Constructor.
