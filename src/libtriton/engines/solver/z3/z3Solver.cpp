@@ -22,8 +22,7 @@ namespace triton {
   namespace engines {
     namespace solver {
 
-      //! Wrapper to handle variadict number of arguments or'd togethers
-      z3::expr mk_or(z3::expr_vector args) {
+      z3::expr Z3Solver::mk_or(z3::expr_vector args) {
         std::vector<Z3_ast> array;
 
         for (triton::uint32 i = 0; i < args.size(); i++)
@@ -86,8 +85,7 @@ namespace triton {
           this->writeBackStatus(solver, res, status);
 
           /* Check if it is sat */
-          for (; res == z3::sat && limit >= 1; res = solver.check()) {
-
+          while (res == z3::sat && limit >= 1) {
             /* Get model */
             z3::model m = solver.get_model();
 
@@ -123,18 +121,24 @@ namespace triton {
               /* Uniq result */
               if (exp.get_sort().is_bv())
                 args.push_back(ctx.bv_const(varName.c_str(), bvSize) != ctx.bv_val(svalue.c_str(), bvSize));
-
             }
 
-            /* Escape last models */
-            solver.add(triton::engines::solver::mk_or(args));
+            /* Check that model is available */
+            if (smodel.empty())
+              break;
 
-            /* If there is model available */
-            if (smodel.size() > 0)
-              ret.push_back(smodel);
+            /* Push model */
+            ret.push_back(smodel);
 
-            /* Decrement the limit */
-            limit--;
+            if (--limit) {
+              /* Escape last models */
+              if (!args.empty()) {
+                solver.add(this->mk_or(args));
+              }
+
+              /* Get next model */
+              res = solver.check();
+            }
           }
         }
         catch (const z3::exception& e) {
