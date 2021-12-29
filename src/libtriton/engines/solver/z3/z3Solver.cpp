@@ -22,8 +22,7 @@ namespace triton {
   namespace engines {
     namespace solver {
 
-      //! Wrapper to handle variadict number of arguments or'd togethers
-      z3::expr mk_or(z3::expr_vector args) {
+      z3::expr Z3Solver::mk_or(z3::expr_vector args) {
         std::vector<Z3_ast> array;
 
         for (triton::uint32 i = 0; i < args.size(); i++)
@@ -134,7 +133,7 @@ namespace triton {
             if (--limit) {
               /* Escape last models */
               if (!args.empty()) {
-                solver.add(triton::engines::solver::mk_or(args));
+                solver.add(this->mk_or(args));
               }
 
               /* Get next model */
