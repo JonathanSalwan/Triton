@@ -133,7 +133,9 @@ namespace triton {
 
             if (--limit) {
               /* Escape last models */
-              solver.add(triton::engines::solver::mk_or(args));
+              if (!args.empty()) {
+                solver.add(triton::engines::solver::mk_or(args));
+              }
 
               /* Get next model */
               res = solver.check();
