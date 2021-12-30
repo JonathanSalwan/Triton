@@ -347,7 +347,7 @@ class TestIssue818(unittest.TestCase):
         m, status = self.ctx.getModel(ref1.getAst() == 0xdead, status=True)
         self.assertEqual(m[0].getValue(), 0xac)
         self.assertEqual(m[1].getValue(), 0xde)
-        self.assertEqual(status, SOLVER.SAT)
+        self.assertEqual(status, SOLVER_STATE.SAT)
 
 
 class TestIssue823(unittest.TestCase):
