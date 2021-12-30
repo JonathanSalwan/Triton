@@ -93,6 +93,9 @@ namespace triton {
       //! Initializes the SOLVER python namespace.
       void initSolverNamespace(PyObject* solverDict);
 
+      //! Initializes the SOLVER_STATE python namespace.
+      void initSolverStateNamespace(PyObject* solverStateDict);
+
       //! Initializes the SYMBOLIC python namespace.
       void initSymbolicNamespace(PyObject* symbolicDict);
 

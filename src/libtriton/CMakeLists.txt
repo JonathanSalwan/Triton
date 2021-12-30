@@ -195,6 +195,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initRegNamespace.cpp
         bindings/python/namespaces/initShiftsNamespace.cpp
         bindings/python/namespaces/initSolverNamespace.cpp
+        bindings/python/namespaces/initSolverStateNamespace.cpp
         bindings/python/namespaces/initSymbolicNamespace.cpp
         bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp

@@ -134,13 +134,19 @@ namespace triton {
         initShiftsNamespace(shiftsDict);
         PyObject* idShiftsClass = xPyClass_New(nullptr, shiftsDict, xPyString_FromString("SHIFT"));
 
-        /* Create the SOLVER namespace ============================================================== */
+        /* Create the SOLVER namespace =============================================================== */
 
         PyObject* solverDict = xPyDict_New();
         initSolverNamespace(solverDict);
         PyObject* idSolverClass = xPyClass_New(nullptr, solverDict, xPyString_FromString("SOLVER"));
 
-        /* Create the SYMBOLIC namespace ============================================================== */
+        /* Create the SOLVER_STATE namespace ========================================================= */
+
+        PyObject* solverStateDict = xPyDict_New();
+        initSolverStateNamespace(solverStateDict);
+        PyObject* idSolverStateClass = xPyClass_New(nullptr, solverStateDict, xPyString_FromString("SOLVER_STATE"));
+
+        /* Create the SYMBOLIC namespace ============================================================= */
 
         PyObject* symbolicDict = xPyDict_New();
         initSymbolicNamespace(symbolicDict);
@@ -183,6 +189,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "REG",                 idRegClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SHIFT",               idShiftsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER",              idSolverClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER_STATE",        idSolverStateClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
         #if defined(__unix__) || defined(__APPLE__)
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);

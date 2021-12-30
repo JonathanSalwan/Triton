@@ -151,11 +151,11 @@ Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form
 
 - <b>dict getModel(\ref py_AstNode_page node, status=False)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
-If status is True, returns a tuple of (dict, \ref py_SOLVER_page status).
+If status is True, returns a tuple of (dict, \ref py_SOLVER_STATE_page status).
 
 - <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit, status=False)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
-If status is True, returns a tuple of ([dict, ...], \ref py_SOLVER_page status).
+If status is True, returns a tuple of ([dict, ...], \ref py_SOLVER_STATE_page status).
 
 - <b>\ref py_Register_page getParentRegister(\ref py_Register_page reg)</b><br>
 Returns the parent \ref py_Register_page from a \ref py_Register_page.
@@ -338,6 +338,9 @@ Sets the concrete value of a symbolic variable.
 
 - <b>void setMode(\ref py_MODE_page mode, bool flag)</b><br>
 Enables or disables a specific mode.
+
+- <b>void setSolver(\ref py_SOLVER_page solver)</b><br>
+Defines an SMT solver
 
 - <b>void setSolverMemoryLimit(integer megabytes)</b><br>
 Defines a solver memory consumption limit (in megabytes)
@@ -2667,6 +2670,22 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_setSolver(PyObject* self, PyObject* solver) {
+        if (solver == nullptr || (!PyLong_Check(solver) && !PyInt_Check(solver)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::setSolver(): Expects a SOLVER as argument.");
+
+        try {
+          PyTritonContext_AsTritonContext(self)->setSolver(static_cast<triton::engines::solver::solver_e>(PyLong_AsUint32(solver)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_setSolverMemoryLimit(PyObject* self, PyObject* megabytes) {
         if (megabytes == nullptr || (!PyLong_Check(megabytes) && !PyInt_Check(megabytes)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::setSolverMemoryLimit(): Expects an integer as argument.");
@@ -3231,6 +3250,7 @@ namespace triton {
         {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,                  METH_VARARGS,                  ""},
         {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,                  METH_VARARGS,                  ""},
         {"setMode",                             (PyCFunction)TritonContext_setMode,                                   METH_VARARGS,                  ""},
+        {"setSolver",                           (PyCFunction)TritonContext_setSolver,                                 METH_O,                        ""},
         {"setSolverMemoryLimit",                (PyCFunction)TritonContext_setSolverMemoryLimit,                      METH_O,                        ""},
         {"setSolverTimeout",                    (PyCFunction)TritonContext_setSolverTimeout,                          METH_O,                        ""},
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                            METH_VARARGS,                  ""},
