@@ -39,7 +39,7 @@ namespace triton {
       }
 
 
-      std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
         triton::ast::TritonToZ3Ast z3Ast{false};
@@ -148,8 +148,8 @@ namespace triton {
           /* Get time of solving end */
           auto end = std::chrono::system_clock::now();
 
-          if (solving_time)
-            *solving_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+          if (solvingTime)
+            *solvingTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
         }
         catch (const z3::exception& e) {
           if (!strcmp(e.msg(), "max. memory exceeded")) {
@@ -165,7 +165,7 @@ namespace triton {
       }
 
 
-      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_time) const {
+      bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         triton::ast::TritonToZ3Ast z3Ast{false};
 
         if (node == nullptr)
@@ -207,8 +207,8 @@ namespace triton {
           /* Get time of solving end */
           auto end = std::chrono::system_clock::now();
 
-          if (solving_time)
-            *solving_time = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+          if (solvingTime)
+            *solvingTime = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
 
           this->writeBackStatus(solver, res, status);
           return res == z3::sat;
@@ -225,11 +225,11 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::usize, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solving_timeout) const {
+      std::unordered_map<triton::usize, SolverModel> Z3Solver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32 *solvingTime) const {
         std::unordered_map<triton::usize, SolverModel> ret;
         std::vector<std::unordered_map<triton::usize, SolverModel>> allModels;
 
-        allModels = this->getModels(node, 1, status, timeout, solving_timeout);
+        allModels = this->getModels(node, 1, status, timeout, solvingTime);
         if (allModels.size() > 0)
           ret = allModels.front();
 
