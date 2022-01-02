@@ -16,17 +16,19 @@ class TestSolver(unittest.TestCase):
         self.ctx = TritonContext(ARCH.X86_64)
         self.astCtxt = self.ctx.getAstContext()
 
-    def solver_a_query(self):
+    def solve_a_query(self):
         self.ctx.reset()
         self.ctx.symbolizeRegister(self.ctx.registers.rax, 'my_rax')
         self.ctx.processing(Instruction(b"\x48\x35\x34\x12\x00\x00")) # xor rax, 0x1234
         self.ctx.processing(Instruction(b"\x48\x89\xc1")) # xor rcx, rax
         rcx_expr = self.ctx.getSymbolicRegister(self.ctx.registers.rcx)
-        model = self.ctx.getModel(rcx_expr.getAst() == 0xdead)
-        self.assertEqual(model[0].getValue(), 0xcc99)
+        models, status, time = self.ctx.getModels(rcx_expr.getAst() == 0xdead, 10, status=True, timeout=5000)
+        self.assertEqual(status, SOLVER_STATE.SAT)          # must be SAT
+        self.assertEqual(len(models), 1)                    # Only one possible model
+        self.assertEqual(models[0][0].getValue(), 0xcc99)   # The correct model
         return
 
     def test_setSolver(self):
-        self.solver_a_query()
+        self.solve_a_query()
         self.ctx.setSolver(SOLVER.Z3)
-        self.solver_a_query()
+        self.solve_a_query()

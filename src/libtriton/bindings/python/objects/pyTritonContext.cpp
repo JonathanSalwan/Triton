@@ -149,13 +149,13 @@ Returns the AST corresponding to the \ref py_Immediate_page.
 - <b>\ref py_AstNode_page getMemoryAst(\ref py_MemoryAccess_page mem)</b><br>
 Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
-- <b>dict getModel(\ref py_AstNode_page node, status=False)</b><br>
+- <b>dict getModel(\ref py_AstNode_page node, status=False, timeout=0)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
-If status is True, returns a tuple of (dict, \ref py_SOLVER_STATE_page status).
+If status is True, returns a tuple of (dict model, \ref py_SOLVER_STATE_page status, integer solvingTime).
 
-- <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit, status=False)</b><br>
+- <b>[dict, ...] getModels(\ref py_AstNode_page node, integer limit, status=False, timeout=0)</b><br>
 Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
-If status is True, returns a tuple of ([dict, ...], \ref py_SOLVER_STATE_page status).
+If status is True, returns a tuple of ([dict model, ...], \ref py_SOLVER_STATE_page status, integer solvingTime).
 
 - <b>\ref py_Register_page getParentRegister(\ref py_Register_page reg)</b><br>
 Returns the parent \ref py_Register_page from a \ref py_Register_page.
@@ -1367,18 +1367,23 @@ namespace triton {
 
       static PyObject* TritonContext_getModel(PyObject* self, PyObject* args, PyObject* kwargs) {
         triton::engines::solver::status_e status;
-        PyObject* dict = nullptr;
-        PyObject* node = nullptr;
-        PyObject* wb   = nullptr;
+        triton::uint32 solvingTime = 0;
+        triton::uint32 timeout_c = 0;
+
+        PyObject* dict    = nullptr;
+        PyObject* node    = nullptr;
+        PyObject* wb      = nullptr;
+        PyObject* timeout = nullptr;
 
         static char* keywords[] = {
           (char*)"node",
           (char*)"status",
+          (char*)"timeout",
           nullptr
         };
 
         /* Extract Keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &wb) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &wb, &timeout) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
@@ -1390,9 +1395,17 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
+        if (timeout != nullptr && (!PyLong_Check(timeout) && !PyInt_Check(timeout))) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a integer as timeout keyword.");
+        }
+
+        if (timeout != nullptr) {
+          timeout_c = PyLong_AsUint32(timeout);
+        }
+
         try {
           dict = triton::bindings::python::xPyDict_New();
-          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node), &status);
+          auto model = PyTritonContext_AsTritonContext(self)->getModel(PyAstNode_AsAstNode(node), &status, timeout_c, &solvingTime);
           for (auto it = model.begin(); it != model.end(); it++) {
             xPyDict_SetItem(dict, PyLong_FromUsize(it->first), PySolverModel(it->second));
           }
@@ -1405,9 +1418,10 @@ namespace triton {
         }
 
         if (wb != nullptr && PyLong_AsBool(wb) == true) {
-          PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
+          PyObject* tuple = triton::bindings::python::xPyTuple_New(3);
           PyTuple_SetItem(tuple, 0, dict);
           PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
+          PyTuple_SetItem(tuple, 2, PyLong_FromUint32(solvingTime));
           return tuple;
         }
 
@@ -1417,20 +1431,25 @@ namespace triton {
 
       static PyObject* TritonContext_getModels(PyObject* self, PyObject* args, PyObject* kwargs) {
         triton::engines::solver::status_e status;
-        PyObject* ret   = nullptr;
-        PyObject* node  = nullptr;
-        PyObject* limit = nullptr;
-        PyObject* wb    = nullptr;
+        triton::uint32 solvingTime = 0;
+        triton::uint32 timeout_c = 0;
+
+        PyObject* ret     = nullptr;
+        PyObject* node    = nullptr;
+        PyObject* limit   = nullptr;
+        PyObject* wb      = nullptr;
+        PyObject* timeout = nullptr;
 
         static char* keywords[] = {
           (char*)"node",
           (char*)"limit",
           (char*)"status",
+          (char*)"timeout",
           nullptr
         };
 
         /* Extract Keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &limit, &wb) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOOO", keywords, &node, &limit, &wb, &timeout) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Invalid keyword argument.");
         }
 
@@ -1446,8 +1465,16 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a boolean as status keyword.");
         }
 
+        if (timeout != nullptr && (!PyLong_Check(timeout) && !PyInt_Check(timeout))) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a integer as timeout keyword.");
+        }
+
+        if (timeout != nullptr) {
+          timeout_c = PyLong_AsUint32(timeout);
+        }
+
         try {
-          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit), &status);
+          auto models = PyTritonContext_AsTritonContext(self)->getModels(PyAstNode_AsAstNode(node), PyLong_AsUint32(limit), &status, timeout_c, &solvingTime);
           triton::uint32 index = 0;
 
           ret = xPyList_New(models.size());
@@ -1470,9 +1497,10 @@ namespace triton {
         }
 
         if (wb != nullptr && PyLong_AsBool(wb) == true) {
-          PyObject* tuple = triton::bindings::python::xPyTuple_New(2);
+          PyObject* tuple = triton::bindings::python::xPyTuple_New(3);
           PyTuple_SetItem(tuple, 0, ret);
           PyTuple_SetItem(tuple, 1, PyLong_FromUint32(status));
+          PyTuple_SetItem(tuple, 2, PyLong_FromUint32(solvingTime));
           return tuple;
         }
 
