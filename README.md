@@ -17,15 +17,15 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
 
 <p align="center">
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/linux.yml/">
-    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20Linux/master?label=Linux%20CI&logo=github">
+    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20Linux/master?label=Linux&logo=github">
   </a>
   &nbsp;
   <a href="https://github.com/JonathanSalwan/Triton/actions/workflows/osx.yml/">
-    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20OSX/master?label=OSX%20CI&logo=github">
+    <img src="https://img.shields.io/github/workflow/status/JonathanSalwan/Triton/Tests%20on%20OSX/master?label=OSX&logo=github">
   </a>
   &nbsp;
   <a href="https://ci.appveyor.com/project/JonathanSalwan/triton">
-    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Windows%20CI&logo=appveyor">
+    <img src="https://img.shields.io/appveyor/ci/JonathanSalwan/triton/master.svg?label=Windows&logo=appveyor">
   </a>
   &nbsp;
   <a href="https://codecov.io/gh/JonathanSalwan/Triton">
