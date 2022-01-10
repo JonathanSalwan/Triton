@@ -33,7 +33,11 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
   </a>
   &nbsp;
   <a href="https://github.com/JonathanSalwan/Triton/releases">
-    <img src="https://img.shields.io/github/v/release/JonathanSalwan/Triton">
+    <img src="https://img.shields.io/github/v/release/JonathanSalwan/Triton?logo=github">
+  </a>
+  &nbsp;
+  <a href="https://github.com/jonathansalwan/Triton/tree/dev-v0.9">
+    <img src="https://img.shields.io/static/v1?label=dev&message=v0.9&logo=github&color=blue">
   </a>
   &nbsp;
   <a href="https://twitter.com/qb_triton">
