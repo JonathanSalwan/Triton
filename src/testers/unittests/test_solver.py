@@ -14,10 +14,10 @@ class TestSolver(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.ctx = TritonContext(ARCH.X86_64)
-        self.astCtxt = self.ctx.getAstContext()
 
-    def solve_a_query(self):
+    def solve_a_query(self, solver):
         self.ctx.reset()
+        self.ctx.setSolver(solver)
         self.ctx.symbolizeRegister(self.ctx.registers.rax, 'my_rax')
         self.ctx.processing(Instruction(b"\x48\x35\x34\x12\x00\x00")) # xor rax, 0x1234
         self.ctx.processing(Instruction(b"\x48\x89\xc1")) # xor rcx, rax
@@ -31,12 +31,8 @@ class TestSolver(unittest.TestCase):
     def test_setSolver(self):
         # Test if Z3 has been enabled
         if 'Z3' in dir(SOLVER):
-            self.solve_a_query()
-            self.ctx.setSolver(SOLVER.Z3)
-            self.solve_a_query()
+            self.solve_a_query(SOLVER.Z3)
 
         # Test if BITWUZLA has been enabled
         if 'BITWUZLA' in dir(SOLVER):
-            self.solve_a_query()
-            self.ctx.setSolver(SOLVER.BITWUZLA)
-            self.solve_a_query()
+            self.solve_a_query(SOLVER.BITWUZLA)
