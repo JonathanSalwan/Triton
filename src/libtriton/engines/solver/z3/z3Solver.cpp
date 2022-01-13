@@ -301,8 +301,7 @@ namespace triton {
               if (solver.reason_unknown() == "timeout") {
                 *status = triton::engines::solver::TIMEOUT;
               }
-              else if (solver.reason_unknown() == "max. memory exceeded")
-              {
+              else if (solver.reason_unknown() == "max. memory exceeded") {
                 *status = triton::engines::solver::OUTOFMEM;
               }
               else {
