@@ -23,10 +23,10 @@ namespace triton {
   namespace engines {
     namespace solver {
 
-      int32_t BitwuzlaSolver::terminate_fun(void* state) {
+      int32_t BitwuzlaSolver::terminateCallback(void* state) {
         auto p = reinterpret_cast<SolverParams*>(state);
 
-        // Check time only once in every 1000 calls.
+        // Execute this callback only once in every 1000 calls.
         if (++p->call_cnt < 1000) {
           return 0;
         }
@@ -37,16 +37,18 @@ namespace triton {
 
         // Check timeout expired.
         if (p->timeout && delta > p->timeout) {
-          p->code = 1;
+          p->code = triton::engines::solver::TIMEOUT;
           return 1;
         }
 
+        // Check memory limit exceeded.
 #if defined(__unix__)
-        // Check memory limit.
+        // Conver delta to seconds, check memory limit every delay seconds.
         delta /= 1000;
         if (p->memory_limit && delta > p->last_mem_check && delta % p->delay == 0) {
           p->last_mem_check = delta;
 
+          // Parse system file to get current process memory consumption (VmRSS field).
           size_t memory_usage = 0;
           std::ifstream str("/proc/self/status");
           if (str.is_open()) {
@@ -64,11 +66,15 @@ namespace triton {
             return 0;
           }
           if (memory_usage > p->memory_limit) {
-            p->code = 2;
-            return 2;
+            p->code = triton::engines::solver::OUTOFMEM;
+            return 1;
           }
-          // The more memory is available the rarely we check current
-          // memory consumption in order to save resources.
+          // Since memory checking is not a free operation, we should
+          // perform it as rarely as possible. We set delay according to
+          // the occupied memory space relatively to the limit:
+          //  - if we occupy <25% of limit check memory every 5s
+          //  - if we occupy up to 75% of limit check memory every 2s
+          //  - otherwise check memory every second
           if (memory_usage < p->memory_limit / 4) {
             p->delay = 5;
           }
@@ -84,7 +90,7 @@ namespace triton {
         return 0;
       }
 
-      void BitwuzlaSolver::abort_fun(const char* msg) {
+      void BitwuzlaSolver::abortCallback(const char* msg) {
         throw triton::exceptions::SolverEngine(msg);
       }
 
@@ -93,7 +99,7 @@ namespace triton {
         this->memoryLimit = 0;
 
         // Set bitwuzla abort function.
-        bitwuzla_set_abort_callback(this->abort_fun);
+        bitwuzla_set_abort_callback(this->abortCallback);
       }
 
       std::vector<std::unordered_map<triton::usize, SolverModel>> BitwuzlaSolver::getModels(
@@ -119,7 +125,7 @@ namespace triton {
         // Set solving params.
         SolverParams p(this->timeout, this->memoryLimit);
         if (this->timeout || this->memoryLimit) {
-          bitwuzla_set_termination_callback(bzla, this->terminate_fun, reinterpret_cast<void*>(&p));
+          bitwuzla_set_termination_callback(bzla, this->terminateCallback, reinterpret_cast<void*>(&p));
         }
 
         // Get time of solving start.
@@ -127,7 +133,21 @@ namespace triton {
 
         // Check result.
         auto res = bitwuzla_check_sat(bzla);
-        this->writeBackStatus(res, p.code, status);
+
+        // Write back status.
+        if (status) {
+          switch (res) {
+            case BITWUZLA_SAT:
+              *status = triton::engines::solver::SAT;
+              break;
+            case BITWUZLA_UNSAT:
+              *status = triton::engines::solver::UNSAT;
+              break;
+            case BITWUZLA_UNKNOWN:
+              *status = p.status;
+              break;
+          }
+        }
 
         std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         while(res == BITWUZLA_SAT && limit >= 1) {
@@ -137,11 +157,12 @@ namespace triton {
           // Parse model.
           std::unordered_map<triton::usize, SolverModel> model;
           for (const auto& it : bzlaAst.getVariables()) {
-            const char *svalue = bitwuzla_get_bv_value(bzla, it.first);
+            const char* svalue = bitwuzla_get_bv_value(bzla, it.first);
             triton::uint512 value = strtoull(svalue, 0, 2L);
             auto m = SolverModel(it.second, value);
             model[m.getId()] = m;
 
+            // Negate current model to escape duplication in the next solution.
             const auto& symvar_sort = bzlaAst.getBitvectorSorts().at(it.second->getSize());
             auto cur_val = bitwuzla_mk_bv_value(bzla, symvar_sort, svalue, BITWUZLA_BV_BASE_BIN);
             auto n = bitwuzla_mk_term2(bzla, BITWUZLA_KIND_EQUAL, it.first, cur_val);
@@ -157,7 +178,7 @@ namespace triton {
           ret.push_back(model);
 
           if (--limit) {
-            // Escapre last models.
+            // Escape last model.
             if (solution.size() > 1) {
               bitwuzla_assert(bzla, bitwuzla_mk_term(bzla, BITWUZLA_KIND_OR, solution.size(), solution.data()));
             }
@@ -197,32 +218,6 @@ namespace triton {
       std::unordered_map<triton::usize, SolverModel> BitwuzlaSolver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         auto models = this->getModels(node, 1, status, timeout, solvingTime);
         return models.empty() ? std::unordered_map<triton::usize, SolverModel>() : models.front();
-      }
-
-
-      void BitwuzlaSolver::writeBackStatus(BitwuzlaResult res, size_t code, triton::engines::solver::status_e* status) const {
-        if (status != nullptr) {
-          switch (res) {
-            case BITWUZLA_SAT:
-              *status = triton::engines::solver::SAT;
-              break;
-            case BITWUZLA_UNSAT:
-              *status = triton::engines::solver::UNSAT;
-              break;
-            case BITWUZLA_UNKNOWN:
-              switch (code) {
-                case 1:
-                  *status = triton::engines::solver::TIMEOUT;
-                  break;
-                case 2:
-                  *status = triton::engines::solver::OUTOFMEM;
-                  break;
-                default:
-                  *status = triton::engines::solver::UNKNOWN;
-              }
-              break;
-          }
-        }
       }
 
 

@@ -21,17 +21,25 @@ namespace triton {
     TritonToBitwuzlaAst::TritonToBitwuzlaAst() {}
 
     TritonToBitwuzlaAst::~TritonToBitwuzlaAst() {
-      this->translated_nodes.clear();
+      this->translatedNodes.clear();
       this->variables.clear();
       this->symbols.clear();
+    }
+
+    const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzlaAst::getVariables() const {
+      return this->variables;
+    }
+
+    const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzlaAst::getBitvectorSorts() const {
+      return this->bvSorts;
     }
 
     const BitwuzlaTerm* TritonToBitwuzlaAst::convert(const SharedAbstractNode& node, Bitwuzla* bzla) {
       auto nodes = childrenExtraction(node, true /* unroll*/, true /* revert */);
       for (auto&& n : nodes) {
-        translated_nodes[n] = translate(n, bzla);
+        translatedNodes[n] = translate(n, bzla);
       }
-      return translated_nodes.at(node);
+      return translatedNodes.at(node);
     }
 
     const BitwuzlaTerm* TritonToBitwuzlaAst::translate(const SharedAbstractNode& node, Bitwuzla* bzla) {
@@ -40,7 +48,7 @@ namespace triton {
 
       std::vector<const BitwuzlaTerm*> children;
       for (auto&& n : node->getChildren()) {
-        children.emplace_back(translated_nodes.at(n));
+        children.emplace_back(translatedNodes.at(n));
       }
 
       switch (node->getType()) {
@@ -140,9 +148,9 @@ namespace triton {
         case BV_NODE: {
           auto childNodes = node->getChildren();
           auto bv_size = reinterpret_cast<IntegerNode*>(childNodes[1].get())->getInteger().convert_to<size_t>();
-          auto sort = bv_sorts.find(bv_size);
-          if (sort == bv_sorts.end()) {
-            sort = bv_sorts.insert({bv_size, bitwuzla_mk_bv_sort(bzla, bv_size)}).first;
+          auto sort = bvSorts.find(bv_size);
+          if (sort == bvSorts.end()) {
+            sort = bvSorts.insert({bv_size, bitwuzla_mk_bv_sort(bzla, bv_size)}).first;
           }
 
           // Handle bitvector value as integer if it small enough.
@@ -202,7 +210,7 @@ namespace triton {
 
         case REFERENCE_NODE: {
           auto ref = reinterpret_cast<ReferenceNode*>(node.get())->getSymbolicExpression()->getAst();
-          return translated_nodes.at(ref);
+          return translatedNodes.at(ref);
         }
 
         case STRING_NODE: {
@@ -212,7 +220,7 @@ namespace triton {
           if (it == symbols.end())
             throw triton::exceptions::AstTranslations("TritonToBitwuzlaAst::translate(): [STRING_NODE] Symbols not found.");
 
-          return translated_nodes.at(it->second);
+          return translatedNodes.at(it->second);
         }
 
         case SX_NODE: {
@@ -224,9 +232,9 @@ namespace triton {
         case VARIABLE_NODE: {
           const auto& symVar = reinterpret_cast<VariableNode*>(node.get())->getSymbolicVariable();
           auto size = symVar->getSize();
-          auto sort = bv_sorts.find(size);
-          if (sort == bv_sorts.end()) {
-            sort = bv_sorts.insert({size, bitwuzla_mk_bv_sort(bzla, size)}).first;
+          auto sort = bvSorts.find(size);
+          if (sort == bvSorts.end()) {
+            sort = bvSorts.insert({size, bitwuzla_mk_bv_sort(bzla, size)}).first;
           }
           auto n = bitwuzla_mk_const(bzla, sort->second, symVar->getName().c_str());
           variables[n] = symVar;

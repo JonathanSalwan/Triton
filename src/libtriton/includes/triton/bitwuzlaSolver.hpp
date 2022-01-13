@@ -61,14 +61,14 @@ namespace triton {
             size_t  call_cnt = 0;        /*!< Counter for the number of termination callback calls. */
             int64_t last_mem_check = -1; /*!< Time when the last memory usage check was performed. */
             size_t  delay = 1;           /*!< Check memory limit every delay seconds. */
-            size_t  code = 0;            /*!< Reason of solving termination (1 - timeout, 2 - out_of_mem). */
+            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN /*!< Reason of solving termination. */
           };
 
         //! Callback function that implements termination of Bitwuzla solver on timeout and memory limit.
-        static int32_t terminate_fun(void* state);
+        static int32_t terminateCallback(void* state);
 
         //! Callback function that implements aborting of Bitwuzla solver with throwing exception.
-        static void abort_fun(const char* msg);
+        static void abortCallback(const char* msg);
 
         private:
           //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
@@ -76,9 +76,6 @@ namespace triton {
 
           //! The SMT solver memory limit. By default, unlimited.
           triton::uint32 memoryLimit;
-
-          //! Writes back the status code of the solver into the pointer pointed by status.
-          void writeBackStatus(BitwuzlaResult res, size_t code, triton::engines::solver::status_e* status) const;
 
         public:
           //! Constructor.
