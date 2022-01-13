@@ -46,7 +46,7 @@ namespace triton {
 
         // Check timeout expired.
         if (p->timeout && delta > p->timeout) {
-          p->code = triton::engines::solver::TIMEOUT;
+          p->status = triton::engines::solver::TIMEOUT;
           return 1;
         }
 
@@ -75,7 +75,7 @@ namespace triton {
             return 0;
           }
           if (memory_usage > p->memory_limit) {
-            p->code = triton::engines::solver::OUTOFMEM;
+            p->status = triton::engines::solver::OUTOFMEM;
             return 1;
           }
           // Since memory checking is not a free operation, we should

@@ -55,7 +55,7 @@ namespace triton {
             }
 
             std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();    /*!< Solver starting time. */
-            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN                     /*!< Reason of solving termination. */
+            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN;                    /*!< Reason of solving termination. */
             int64_t timeout;                                                                                /*!< Timeout (ms) for solver instance running. */
             size_t  memory_limit;                                                                           /*!< Memory limit for the whole symbolic process. */
             size_t  call_cnt = 0;                                                                           /*!< Counter for the number of termination callback calls. */
