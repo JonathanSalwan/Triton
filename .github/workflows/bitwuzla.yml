@@ -26,6 +26,7 @@ jobs:
           sudo apt-get install libz3-dev
           python -m pip install z3-solver
       - name: Install Bitwuzla
+        run: |
           git clone https://github.com/bitwuzla/bitwuzla
           cd bitwuzla
           ./configure.sh
