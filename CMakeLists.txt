@@ -149,6 +149,7 @@ endif()
 
 # Find Z3
 if(Z3_INTERFACE)
+    MESSAGE("-- Compiling with Z3 SMT solver")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DZ3_INTERFACE")
     if(NOT Z3_INCLUDE_DIRS)
         set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
@@ -174,6 +175,7 @@ endif()
 
 # Find bitwuzla
 if(BITWUZLA_INTERFACE)
+    MESSAGE("-- Compiling with Bitwuzla SMT solver")
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBITWUZLA_INTERFACE")
     if(NOT BITWUZLA_INCLUDE_DIRS)
         set(BITWUZLA_INCLUDE_DIRS "$ENV{BITWUZLA_INCLUDE_DIRS}")

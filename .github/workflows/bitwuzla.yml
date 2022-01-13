@@ -1,4 +1,4 @@
-name: Tests on Linux with the Bitwuzla solver
+name: Tests on Linux with Z3 + Bitwuzla
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -29,6 +29,7 @@ jobs:
         run: |
           git clone https://github.com/bitwuzla/bitwuzla
           cd bitwuzla
+          ./contrib/setup-btor2tools.sh
           ./configure.sh
           sudo make -C build install
           cd ..
