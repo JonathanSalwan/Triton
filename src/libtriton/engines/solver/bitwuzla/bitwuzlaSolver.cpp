@@ -62,7 +62,7 @@ namespace triton {
           std::ifstream str("/proc/self/status");
           if (str.is_open()) {
             std::string line;
-            std::regex vmsize("VmRSS:\\s*([0-9]+)\\s*kB");
+            static std::regex vmsize("VmRSS:\\s*([0-9]+)\\s*kB");
             while (std::getline(str, line)) {
               std::smatch match;
               if (std::regex_match(line, match, vmsize)) {
@@ -223,6 +223,49 @@ namespace triton {
       std::unordered_map<triton::usize, SolverModel> BitwuzlaSolver::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         auto models = this->getModels(node, 1, status, timeout, solvingTime);
         return models.empty() ? std::unordered_map<triton::usize, SolverModel>() : models.front();
+      }
+
+
+      triton::uint512 BitwuzlaSolver::evaluate(const triton::ast::SharedAbstractNode& node) const {
+        if (node == nullptr) {
+          throw triton::exceptions::AstTranslations("BitwuzlaSolver::evaluate(): node cannot be null.");
+        }
+
+        // Perform check-sat on empty solver to enable model generation.
+        auto bzla = bitwuzla_new();
+        bitwuzla_set_option(bzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+        if (bitwuzla_check_sat(bzla) != BITWUZLA_SAT) {
+          bitwuzla_delete(bzla);
+          return 0;
+        }
+
+        // Evaluate concrete AST in solver.
+        auto bzlaAst = triton::ast::TritonToBitwuzlaAst(true);
+        auto bv_value = bitwuzla_get_bv_value(bzla, bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla)));
+
+        // Convert short bitvector string directly.
+        triton::uint512 res;
+        auto len = strlen(bv_value);
+        if (len <= 64) {
+          res = strtoull(bv_value, 0, 2L);
+          bitwuzla_delete(bzla);
+          return res;
+        }
+
+        // Convert long bitvector string by 64-bit chunks.
+        uint pos = 0;
+        while (pos < len) {
+          auto sublen = std::min(len - pos, 64UL);
+          char substr[sublen + 1];
+          memcpy(substr, bv_value + pos, sublen);
+          substr[sublen] = '\0';
+          triton::uint512 value = strtoull(substr, 0, 2L);
+          res = (res << sublen) + value;
+          pos += sublen;
+        }
+
+        bitwuzla_delete(bzla);
+        return res;
       }
 
 

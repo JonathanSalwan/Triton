@@ -107,7 +107,7 @@ Enables or disables the symbolic execution engine.
 - <b>void enableTaintEngine(bool flag)</b><br>
 Enables or disables the taint engine.
 
-- <b>integer evaluateAstViaZ3(\ref py_AstNode_page node)</b><br>
+- <b>integer evaluateAstViaSolver(\ref py_AstNode_page node)</b><br>
 Evaluates an AST via Z3 and returns the symbolic value.
 
 - <b>[\ref py_Register_page, ...] getAllRegisters(void)</b><br>
@@ -1143,12 +1143,12 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_evaluateAstViaZ3(PyObject* self, PyObject* node) {
+      static PyObject* TritonContext_evaluateAstViaSolver(PyObject* self, PyObject* node) {
         if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::evaluateAstViaZ3(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::evaluateAstViaSolver(): Expects a AstNode as argument.");
 
         try {
-          return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->evaluateAstViaZ3(PyAstNode_AsAstNode(node)));
+          return PyLong_FromUint512(PyTritonContext_AsTritonContext(self)->evaluateAstViaSolver(PyAstNode_AsAstNode(node)));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3213,7 +3213,7 @@ namespace triton {
         {"disassembly",                         (PyCFunction)TritonContext_disassembly,                               METH_VARARGS,                  ""},
         {"enableSymbolicEngine",                (PyCFunction)TritonContext_enableSymbolicEngine,                      METH_O,                        ""},
         {"enableTaintEngine",                   (PyCFunction)TritonContext_enableTaintEngine,                         METH_O,                        ""},
-        {"evaluateAstViaZ3",                    (PyCFunction)TritonContext_evaluateAstViaZ3,                          METH_O,                        ""},
+        {"evaluateAstViaSolver",                (PyCFunction)TritonContext_evaluateAstViaSolver,                      METH_O,                        ""},
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                           METH_NOARGS,                   ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                           METH_NOARGS,                   ""},
         {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                             METH_NOARGS,                   ""},

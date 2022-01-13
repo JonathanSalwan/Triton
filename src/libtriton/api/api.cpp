@@ -1107,14 +1107,19 @@ namespace triton {
   }
 
 
-  triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
+  triton::uint512 API::evaluateAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
     #endif
-    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
+    #ifdef TRITON_BITWUZLA_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_BITWUZLA) {
+        return reinterpret_cast<const triton::engines::solver::BitwuzlaSolver*>(this->getSolverInstance())->evaluate(node);
+    }
+    #endif
+    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3 or SOLVER_BITWUZLA.");
   }
 
 

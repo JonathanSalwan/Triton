@@ -78,7 +78,7 @@ class TestAstConversion(unittest.TestCase):
                     n.evaluate(),
                     "ref = {} and triton value = {} with operator {} operands were {} and {}".format(ref, n.evaluate(), op, cv1, cv2)
                 )
-                self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
+                self.assertEqual(ref, self.Triton.evaluateAstViaSolver(n))
                 self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
 
     def test_unop(self):
@@ -105,7 +105,7 @@ class TestAstConversion(unittest.TestCase):
                                                              n.evaluate(),
                                                              op,
                                                              cv1))
-                self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
+                self.assertEqual(ref, self.Triton.evaluateAstViaSolver(n))
                 self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
 
     def test_smtbinop(self):
@@ -168,8 +168,8 @@ class TestAstConversion(unittest.TestCase):
                     n = op(self.v1, self.v2)
                 self.assertEqual(
                     n.evaluate(),
-                    self.Triton.evaluateAstViaZ3(n),
-                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.Triton.evaluateAstViaZ3(n), op, cv1, cv2)
+                    self.Triton.evaluateAstViaSolver(n),
+                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.Triton.evaluateAstViaSolver(n), op, cv1, cv2)
                 )
                 self.assertEqual(
                     n.evaluate(),
@@ -202,7 +202,7 @@ class TestAstConversion(unittest.TestCase):
                     n = op(self.v1 != 0)
                 else:
                     n = op(self.v1)
-                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
                 self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     def test_bvnode(self):
@@ -210,7 +210,7 @@ class TestAstConversion(unittest.TestCase):
         for _ in range(100):
             cv1 = random.randint(-127, 255)
             n = self.astCtxt.bv(cv1, 8)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     def test_extract(self):
@@ -226,7 +226,7 @@ class TestAstConversion(unittest.TestCase):
                                      "ref = {} and triton value = {} with operator"
                                      "'extract' operands was {} low was : {} and "
                                      "hi was : {}".format(ref, n.evaluate(), cv1, lo, hi))
-                    self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
+                    self.assertEqual(ref, self.Triton.evaluateAstViaSolver(n))
                     self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
 
     def test_ite(self):
@@ -237,7 +237,7 @@ class TestAstConversion(unittest.TestCase):
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
             self.Triton.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     @utils.xfail
@@ -245,7 +245,7 @@ class TestAstConversion(unittest.TestCase):
         # Decimal node is not exported in the python interface
         for cv1 in range(0, 256):
             n = self.astCtxt.integer(cv1)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     @utils.xfail
@@ -257,7 +257,7 @@ class TestAstConversion(unittest.TestCase):
             self.Triton.setConcreteVariableValue(self.sv1, cv1)
             self.Triton.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
 
     def test_fuzz(self):
@@ -326,7 +326,7 @@ class TestAstConversion(unittest.TestCase):
                 cv2 = random.randint(0, 255)
                 self.Triton.setConcreteVariableValue(self.sv1, cv1)
                 self.Triton.setConcreteVariableValue(self.sv2, cv2)
-                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaSolver(n))
 
     def new_node(self, depth, possible):
         """Recursive function to create a random ast."""
@@ -413,4 +413,4 @@ class TestAstTraversal(unittest.TestCase):
         ref1 = self.ast.reference(self.ctx.newSymbolicExpression(g))
         ref2 = self.ast.reference(self.ctx.newSymbolicExpression(a))
         k = ref1 + ref2
-        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaZ3(k))
+        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaSolver(k))

@@ -544,8 +544,8 @@ namespace triton {
         //! Returns true if the solver is valid.
         TRITON_EXPORT bool isSolverValid(void) const;
 
-        //! [**solver api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
-        TRITON_EXPORT triton::uint512 evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const;
+        //! [**solver api**] - Evaluates a Triton's AST via solver and returns a concrete value.
+        TRITON_EXPORT triton::uint512 evaluateAstViaSolver(const triton::ast::SharedAbstractNode& node) const;
 
         //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;

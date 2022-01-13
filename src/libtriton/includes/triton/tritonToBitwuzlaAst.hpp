@@ -39,7 +39,7 @@ namespace triton {
     class TritonToBitwuzlaAst {
       public:
         //! Constructor.
-        TRITON_EXPORT TritonToBitwuzlaAst();
+        TRITON_EXPORT TritonToBitwuzlaAst(bool eval=false);
 
         //! Destructor.
         TRITON_EXPORT ~TritonToBitwuzlaAst();
@@ -68,6 +68,9 @@ namespace triton {
 
         //! All bitvector sorts that used in the expression.
         std::map<size_t, const BitwuzlaSort*> bvSorts;
+
+        //! This flag define if the conversion is used to evaluated a node or not.
+        bool isEval;
     };
 
   /*! @} End of ast namespace */

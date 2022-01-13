@@ -18,7 +18,8 @@
 namespace triton {
   namespace ast {
 
-    TritonToBitwuzlaAst::TritonToBitwuzlaAst() {
+    TritonToBitwuzlaAst::TritonToBitwuzlaAst(bool eval)
+      : isEval(eval) {
     }
 
 
@@ -242,6 +243,16 @@ namespace triton {
           if (sort == bvSorts.end()) {
             sort = bvSorts.insert({size, bitwuzla_mk_bv_sort(bzla, size)}).first;
           }
+
+          // If the conversion is used to evaluate a node, we concretize symbolic variables.
+          if (this->isEval) {
+            triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
+            if (size <= sizeof(uint64_t) * 8) {
+              return bitwuzla_mk_bv_value_uint64(bzla, sort->second, value.convert_to<uint64_t>());
+            }
+            return bitwuzla_mk_bv_value(bzla, sort->second, value.convert_to<std::string>().c_str(), BITWUZLA_BV_BASE_DEC);
+          }
+
           auto n = bitwuzla_mk_const(bzla, sort->second, symVar->getName().c_str());
           variables[n] = symVar;
           return n;

@@ -21,8 +21,8 @@ class TestAstEval(unittest.TestCase):
         """Check our evaluation is the same as the one from Z3."""
         for test in tests:
             trv = test.evaluate()
-            z3v = self.Triton.evaluateAstViaZ3(test)
-            self.assertEqual(trv, z3v)
+            sv = self.Triton.evaluateAstViaSolver(test)
+            self.assertEqual(trv, sv)
 
     def test_sub(self):
         """Check sub operations."""
