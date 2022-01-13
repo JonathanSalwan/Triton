@@ -115,6 +115,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/astRepresentationInterface.hpp
     includes/triton/astSmtRepresentation.hpp
     includes/triton/bitsVector.hpp
+    includes/triton/bitwuzlaSolver.hpp
     includes/triton/callbacks.hpp
     includes/triton/callbacksEnums.hpp
     includes/triton/comparableFunctor.hpp
@@ -147,6 +148,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/symbolicVariable.hpp
     includes/triton/syscalls.hpp
     includes/triton/taintEngine.hpp
+    includes/triton/tritonToBitwuzlaAst.hpp
     includes/triton/tritonToZ3Ast.hpp
     includes/triton/tritonTypes.hpp
     includes/triton/unix.hpp
@@ -175,6 +177,15 @@ if(Z3_INTERFACE)
     )
 else()
     set(Z3_INTERFACE_SOURCE_FILES)
+endif()
+
+if(BITWUZLA_INTERFACE)
+    set(BITWUZLA_INTERFACE_SOURCE_FILES
+        ast/bitwuzla/tritonToBitwuzlaAst.cpp
+        engines/solver/bitwuzla/bitwuzlaSolver.cpp
+    )
+else()
+    set(BITWUZLA_INTERFACE_SOURCE_FILES)
 endif()
 
 if(PYTHON_BINDINGS)
@@ -330,7 +341,7 @@ endif()
 add_library(
     ${PROJECT_LIBTRITON} ${LIBTRITON_KIND_LINK}
     ${LIBTRITON_SOURCE_FILES} ${LIBTRITON_HEADER_FILES} ${LIBTRITON_RESOURCE_FILES}
-    ${Z3_INTERFACE_SOURCE_FILES}
+    ${Z3_INTERFACE_SOURCE_FILES} ${BITWUZLA_INTERFACE_SOURCE_FILES}
     ${LIBTRITON_PYTHON_SOURCE_FILES} ${LIBTRITON_PYTHON_HEADER_FILES}
 )
 add_library(Triton::${PROJECT_LIBTRITON} ALIAS ${PROJECT_LIBTRITON})
@@ -344,6 +355,7 @@ target_link_libraries(
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
+    ${BITWUZLA_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
     ${LIBTRITON_OTHER_LIBS}
 )

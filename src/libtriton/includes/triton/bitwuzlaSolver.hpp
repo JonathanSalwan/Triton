@@ -5,28 +5,23 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef TRITON_SOLVERENGINE_HPP
-#define TRITON_SOLVERENGINE_HPP
+#ifndef TRITON_BITWUZLASOLVER_H
+#define TRITON_BITWUZLASOLVER_H
 
-#include <iostream>
-#include <memory>
+#include <chrono>
+#include <string>
 #include <unordered_map>
 #include <vector>
 
+#include <bitwuzla/bitwuzla.h>
+
 #include <triton/ast.hpp>
-#include <triton/config.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/solverEnums.hpp>
 #include <triton/solverInterface.hpp>
 #include <triton/solverModel.hpp>
+#include <triton/symbolicExpression.hpp>
 #include <triton/tritonTypes.hpp>
-#ifdef TRITON_Z3_INTERFACE
-  #include <triton/z3Solver.hpp>
-#endif
-#ifdef TRITON_BITWUZLA_INTERFACE
-  #include <triton/bitwuzlaSolver.hpp>
-#endif
-
 
 
 //! The Triton namespace
@@ -50,36 +45,43 @@ namespace triton {
      *  @{
      */
 
-      /*! \interface SolverEngine
-          \brief This class is used to interface with solvers */
-      class SolverEngine {
-        protected:
-          //! The kind of the current solver used.
-          triton::engines::solver::solver_e kind;
+      //! \class BitwuzlaSolver
+      /*! \brief Solver engine using Bitwuzla. */
+      class BitwuzlaSolver : public SolverInterface {
+        private:
+          /*! Struct used to provide information for Bitwuzla termination callback */
+          struct SolverParams {
+            SolverParams(int64_t timeout, size_t memory_limit):
+                timeout(timeout), memory_limit(memory_limit) {}
 
-          //! Instance to the real solver class.
-          std::unique_ptr<triton::engines::solver::SolverInterface> solver;
+            std::chrono::time_point<std::chrono::system_clock>
+              start = std::chrono::system_clock::now(); /*!< Solver starting time. */
+            int64_t timeout;             /*!< Timeout (ms) for solver instance running. */
+            size_t  memory_limit;        /*!< Memory limit for the whole symbolic process. */
+            size_t  call_cnt = 0;        /*!< Counter for the number of termination callback calls. */
+            int64_t last_mem_check = -1; /*!< Time when the last memory usage check was performed. */
+            size_t  delay = 1;           /*!< Check memory limit every delay seconds. */
+            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN /*!< Reason of solving termination. */
+          };
+
+        //! Callback function that implements termination of Bitwuzla solver on timeout and memory limit.
+        static int32_t terminateCallback(void* state);
+
+        //! Callback function that implements aborting of Bitwuzla solver with throwing exception.
+        static void abortCallback(const char* msg);
+
+        private:
+          //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
+          triton::uint32 timeout;
+
+          //! The SMT solver memory limit. By default, unlimited.
+          triton::uint32 memoryLimit;
 
         public:
           //! Constructor.
-          TRITON_EXPORT SolverEngine();
+          TRITON_EXPORT BitwuzlaSolver();
 
-          //! Returns the kind of solver as triton::engines::solver::solver_e.
-          TRITON_EXPORT triton::engines::solver::solver_e getSolver(void) const;
-
-          //! Returns the instance of the initialized solver
-          TRITON_EXPORT const triton::engines::solver::SolverInterface* getSolverInstance(void) const;
-
-          //! Initializes a predefined solver.
-          TRITON_EXPORT void setSolver(triton::engines::solver::solver_e kind);
-
-          //! Initializes a custom solver.
-          TRITON_EXPORT void setCustomSolver(triton::engines::solver::SolverInterface* customSolver);
-
-          //! Returns true if the solver is valid.
-          TRITON_EXPORT bool isValid(void) const;
-
-          //! Computes and returns a model from a symbolic constraint. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
+          //! Computes and returns a model from a symbolic constraint.
           /*! \brief map of symbolic variable id -> model
            *
            * \details
@@ -88,7 +90,7 @@ namespace triton {
            */
           TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
-          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
+          //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
           /*! \brief vector of map of symbolic variable id -> model
            *
            * \details
@@ -100,7 +102,7 @@ namespace triton {
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
-          //! Returns the name of the solver.
+          //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;
 
           //! Defines a solver timeout (in milliseconds).
@@ -117,4 +119,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_SOLVERINTERFACE_HPP */
+#endif /* TRITON_BITWUZLASOLVER_H */

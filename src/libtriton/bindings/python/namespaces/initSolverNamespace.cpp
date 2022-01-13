@@ -38,7 +38,12 @@ namespace triton {
       void initSolverNamespace(PyObject* solverDict) {
         PyDict_Clear(solverDict);
 
+        #if defined(TRITON_Z3_INTERFACE)
         xPyDict_SetItemString(solverDict, "Z3", PyLong_FromUint32(triton::engines::solver::SOLVER_Z3));
+        #endif
+        #if defined(TRITON_BITWUZLA_INTERFACE)
+        xPyDict_SetItemString(solverDict, "BITWUZLA", PyLong_FromUint32(triton::engines::solver::SOLVER_BITWUZLA));
+        #endif
       }
 
     }; /* python namespace */

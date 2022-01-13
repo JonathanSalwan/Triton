@@ -18,6 +18,7 @@ option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
 option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
 option(STATICLIB "Build a static library" OFF)
 option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
+option(BITWUZLA_INTERFACE "Use Bitwuzla as SMT solver" OFF)
 
 if(STATICLIB)
     # We can't use Python bindings with a static library
@@ -169,6 +170,32 @@ if(Z3_INTERFACE)
     endif()
     include_directories(${Z3_INCLUDE_DIRS})
     set(TRITON_Z3_INTERFACE ON)
+endif()
+
+# Find bitwuzla
+if(BITWUZLA_INTERFACE)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DBITWUZLA_INTERFACE")
+    if(NOT BITWUZLA_INCLUDE_DIRS)
+        set(BITWUZLA_INCLUDE_DIRS "$ENV{BITWUZLA_INCLUDE_DIRS}")
+    endif()
+
+    if(NOT BITWUZLA_LIBRARIES)
+        set(BITWUZLA_LIBRARIES "$ENV{BITWUZLA_LIBRARIES}")
+    endif()
+
+    if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
+        if(DEFINED CMAKE_TOOLCHAIN_FILE)
+            find_package(Bitwuzla CONFIG REQUIRED)
+        else()
+            find_package(Bitwuzla REQUIRED)
+        endif()
+        if(NOT Bitwuzla_FOUND)
+            message(FATAL_ERROR "Bitwuzla not found")
+        endif()
+        set(BITWUZLA_LIBRARIES Bitwuzla::bitwuzla)
+    endif()
+    include_directories(${BITWUZLA_INCLUDE_DIRS})
+    set(TRITON_BITWUZLA_INTERFACE ON)
 endif()
 
 # Find Capstone
