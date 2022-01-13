@@ -29,6 +29,14 @@ class TestSolver(unittest.TestCase):
         return
 
     def test_setSolver(self):
-        self.solve_a_query()
-        self.ctx.setSolver(SOLVER.Z3)
-        self.solve_a_query()
+        # Test if Z3 has been enabled
+        if 'Z3' in dir(SOLVER):
+            self.solve_a_query()
+            self.ctx.setSolver(SOLVER.Z3)
+            self.solve_a_query()
+
+        # Test if BITWUZLA has been enabled
+        if 'BITWUZLA' in dir(SOLVER):
+            self.solve_a_query()
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.solve_a_query()
