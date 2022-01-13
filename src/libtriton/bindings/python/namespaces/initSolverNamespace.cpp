@@ -26,6 +26,7 @@ The SOLVER namespace contains all kinds of solver status.
 <hr>
 
 - **SOLVER.Z3**
+- **SOLVER.BITWUZLA**
 
 */
 

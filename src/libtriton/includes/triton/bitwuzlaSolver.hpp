@@ -51,26 +51,18 @@ namespace triton {
         private:
           /*! Struct used to provide information for Bitwuzla termination callback */
           struct SolverParams {
-            SolverParams(int64_t timeout, size_t memory_limit):
-                timeout(timeout), memory_limit(memory_limit) {}
+            SolverParams(int64_t timeout, size_t memory_limit): timeout(timeout), memory_limit(memory_limit) {
+            }
 
-            std::chrono::time_point<std::chrono::system_clock>
-              start = std::chrono::system_clock::now(); /*!< Solver starting time. */
-            int64_t timeout;             /*!< Timeout (ms) for solver instance running. */
-            size_t  memory_limit;        /*!< Memory limit for the whole symbolic process. */
-            size_t  call_cnt = 0;        /*!< Counter for the number of termination callback calls. */
-            int64_t last_mem_check = -1; /*!< Time when the last memory usage check was performed. */
-            size_t  delay = 1;           /*!< Check memory limit every delay seconds. */
-            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN /*!< Reason of solving termination. */
+            std::chrono::time_point<std::chrono::system_clock> start = std::chrono::system_clock::now();    /*!< Solver starting time. */
+            triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN                     /*!< Reason of solving termination. */
+            int64_t timeout;                                                                                /*!< Timeout (ms) for solver instance running. */
+            size_t  memory_limit;                                                                           /*!< Memory limit for the whole symbolic process. */
+            size_t  call_cnt = 0;                                                                           /*!< Counter for the number of termination callback calls. */
+            int64_t last_mem_check = -1;                                                                    /*!< Time when the last memory usage check was performed. */
+            size_t  delay = 1;                                                                              /*!< Check memory limit every delay seconds. */
           };
 
-        //! Callback function that implements termination of Bitwuzla solver on timeout and memory limit.
-        static int32_t terminateCallback(void* state);
-
-        //! Callback function that implements aborting of Bitwuzla solver with throwing exception.
-        static void abortCallback(const char* msg);
-
-        private:
           //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
           triton::uint32 timeout;
 
@@ -110,6 +102,12 @@ namespace triton {
 
           //! Defines a solver memory consumption limit (in megabytes).
           TRITON_EXPORT void setMemoryLimit(triton::uint32 mem);
+
+          //! Callback function that implements termination of Bitwuzla solver on timeout and memory limit.
+          static int32_t terminateCallback(void* state);
+
+          //! Callback function that implements aborting of Bitwuzla solver with throwing exception.
+          static void abortCallback(const char* msg);
       };
 
     /*! @} End of solver namespace */

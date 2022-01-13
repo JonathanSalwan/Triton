@@ -23,6 +23,15 @@ namespace triton {
   namespace engines {
     namespace solver {
 
+      BitwuzlaSolver::BitwuzlaSolver() {
+        this->timeout = 0;
+        this->memoryLimit = 0;
+
+        // Set bitwuzla abort function.
+        bitwuzla_set_abort_callback(this->abortCallback);
+      }
+
+
       int32_t BitwuzlaSolver::terminateCallback(void* state) {
         auto p = reinterpret_cast<SolverParams*>(state);
 
@@ -42,7 +51,7 @@ namespace triton {
         }
 
         // Check memory limit exceeded.
-#if defined(__unix__)
+        #if defined(__unix__)
         // Conver delta to seconds, check memory limit every delay seconds.
         delta /= 1000;
         if (p->memory_limit && delta > p->last_mem_check && delta % p->delay == 0) {
@@ -85,26 +94,22 @@ namespace triton {
             p->delay = 1;
           }
         }
-#endif
+        #endif
 
         return 0;
       }
+
 
       void BitwuzlaSolver::abortCallback(const char* msg) {
         throw triton::exceptions::SolverEngine(msg);
       }
 
-      BitwuzlaSolver::BitwuzlaSolver() {
-        this->timeout = 0;
-        this->memoryLimit = 0;
 
-        // Set bitwuzla abort function.
-        bitwuzla_set_abort_callback(this->abortCallback);
-      }
-
-      std::vector<std::unordered_map<triton::usize, SolverModel>> BitwuzlaSolver::getModels(
-          const triton::ast::SharedAbstractNode& node, triton::uint32 limit,
-          triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> BitwuzlaSolver::getModels(const triton::ast::SharedAbstractNode& node,
+                                                                                            triton::uint32 limit,
+                                                                                            triton::engines::solver::status_e* status,
+                                                                                            triton::uint32 timeout,
+                                                                                            triton::uint32* solvingTime) const {
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("BitwuzlaSolver::getModels(): Node cannot be null.");
 

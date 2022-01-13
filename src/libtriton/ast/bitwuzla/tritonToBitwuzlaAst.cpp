@@ -18,7 +18,9 @@
 namespace triton {
   namespace ast {
 
-    TritonToBitwuzlaAst::TritonToBitwuzlaAst() {}
+    TritonToBitwuzlaAst::TritonToBitwuzlaAst() {
+    }
+
 
     TritonToBitwuzlaAst::~TritonToBitwuzlaAst() {
       this->translatedNodes.clear();
@@ -26,13 +28,16 @@ namespace triton {
       this->symbols.clear();
     }
 
+
     const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzlaAst::getVariables() const {
       return this->variables;
     }
 
+
     const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzlaAst::getBitvectorSorts() const {
       return this->bvSorts;
     }
+
 
     const BitwuzlaTerm* TritonToBitwuzlaAst::convert(const SharedAbstractNode& node, Bitwuzla* bzla) {
       auto nodes = childrenExtraction(node, true /* unroll*/, true /* revert */);
@@ -41,6 +46,7 @@ namespace triton {
       }
       return translatedNodes.at(node);
     }
+
 
     const BitwuzlaTerm* TritonToBitwuzlaAst::translate(const SharedAbstractNode& node, Bitwuzla* bzla) {
       if (node == nullptr)
