@@ -31,7 +31,7 @@ jobs:
           cd bitwuzla
           ./contrib/setup-cadical.sh
           ./contrib/setup-btor2tools.sh
-          ./configure.sh
+          ./configure.sh production --only-cadical --no-symfpu --no-testing --shared
           sudo make -C build install
           cd ..
       - name: Install Capstone
