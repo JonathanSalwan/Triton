@@ -20,11 +20,20 @@ jobs:
           python -m pip install -U pip
       - name: Install dependencies
         run: |
-          sudo apt-get install python-setuptools libboost-dev lcov
+          sudo apt-get install python-setuptools libboost-dev lcov libgmp-dev
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev
           python -m pip install z3-solver
+      - name: Install Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./configure.sh production --only-cadical --no-symfpu --no-testing --shared
+          sudo make -C build install
+          cd ..
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -50,7 +59,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DGCOV=ON ..
+          cmake -DGCOV=ON -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on ..
           sudo make -j3 install
       - name: Unittests
         run: |
