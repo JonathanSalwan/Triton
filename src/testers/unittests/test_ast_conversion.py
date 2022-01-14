@@ -5,6 +5,7 @@
 import operator
 import random
 import unittest
+import utils
 
 from triton import *
 
@@ -308,6 +309,7 @@ class TestAstConversion(unittest.TestCase):
             self.ctx.setSolver(SOLVER.BITWUZLA)
             self.do_test_ite()
 
+    @utils.xfail
     def do_test_integer(self):
         # Decimal node is not exported in the python interface
         for cv1 in range(0, 256):
@@ -325,6 +327,7 @@ class TestAstConversion(unittest.TestCase):
             self.ctx.setSolver(SOLVER.BITWUZLA)
             self.do_test_integer()
 
+    @utils.xfail
     def do_test_let(self):
         # Let node didn't take the variable in its computation
         for run in range(100):
