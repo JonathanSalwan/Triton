@@ -163,7 +163,7 @@ namespace triton {
           std::unordered_map<triton::usize, SolverModel> model;
           for (const auto& it : bzlaAst.getVariables()) {
             const char* svalue = bitwuzla_get_bv_value(bzla, it.first);
-            triton::uint512 value = strtoull(svalue, 0, 2L);
+            auto value = this->fromBvalueToUint512(svalue);
             auto m = SolverModel(it.second, value);
             model[m.getId()] = m;
 
@@ -242,27 +242,7 @@ namespace triton {
         // Evaluate concrete AST in solver.
         auto bzlaAst = triton::ast::TritonToBitwuzlaAst(true);
         auto bv_value = bitwuzla_get_bv_value(bzla, bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla)));
-
-        // Convert short bitvector string directly.
-        triton::uint512 res;
-        auto len = strlen(bv_value);
-        if (len <= 64) {
-          res = strtoull(bv_value, 0, 2L);
-          bitwuzla_delete(bzla);
-          return res;
-        }
-
-        // Convert long bitvector string by 64-bit chunks.
-        uint pos = 0;
-        while (pos < len) {
-          auto sublen = std::min(len - pos, 64UL);
-          char substr[sublen + 1];
-          memcpy(substr, bv_value + pos, sublen);
-          substr[sublen] = '\0';
-          triton::uint512 value = strtoull(substr, 0, 2L);
-          res = (res << sublen) + value;
-          pos += sublen;
-        }
+        auto res = this->fromBvalueToUint512(bv_value);
 
         bitwuzla_delete(bzla);
         return res;
@@ -281,6 +261,28 @@ namespace triton {
 
       void BitwuzlaSolver::setMemoryLimit(triton::uint32 limit) {
         this->memoryLimit = limit;
+      }
+
+
+      triton::uint512 BitwuzlaSolver::fromBvalueToUint512(const char* value) const {
+        // Convert short bitvector string directly.
+        auto len = strlen(value);
+        if (len <= 64) {
+          return strtoull(value, 0, 2L);
+        }
+
+        // Convert long bitvector string by 64-bit chunks.
+        uint pos = 0;
+        triton::uint512 res;
+        while (pos < len) {
+          auto sublen = std::min(len - pos, 64UL);
+          char substr[sublen + 1];
+          memcpy(substr, value + pos, sublen);
+          substr[sublen] = '\0';
+          res = (res << sublen) + strtoull(substr, 0, 2L);
+          pos += sublen;
+        }
+        return res;
       }
 
     };

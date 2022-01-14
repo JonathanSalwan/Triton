@@ -49,6 +49,9 @@ namespace triton {
       /*! \brief Solver engine using Bitwuzla. */
       class BitwuzlaSolver : public SolverInterface {
         private:
+          //! Converts binary bitvector value from string to uint512.
+          triton::uint512 fromBvalueToUint512(const char* value) const;
+
           /*! Struct used to provide information for Bitwuzla termination callback */
           struct SolverParams {
             SolverParams(int64_t timeout, size_t memory_limit): timeout(timeout), memory_limit(memory_limit) {
