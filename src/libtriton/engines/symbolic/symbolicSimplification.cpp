@@ -20,10 +20,10 @@
 
 Triton allows you to optimize your AST (See: \ref py_AstContext_page) just before the assignment to a register, a memory
 or a volatile symbolic expression. The record of a simplification pass is really straightforward. You have to record your simplification
-callback using the triton::API::addCallback() function. Your simplification callback
-must takes as parameters a triton::API and a triton::ast::SharedAbstractNode. The callback must return a triton::ast::SharedAbstractNode.
-Then, your callback will be called before every symbolic assignment. Note that you can record several simplification callbacks or
-remove a specific callback using the triton::API::removeCallback() function.
+callback using the triton::API::addCallback() function. Your simplification callback must takes as parameters a triton::API and a
+triton::ast::SharedAbstractNode. The callback must return a triton::ast::SharedAbstractNode. Then, your callback will be called before
+every symbolic assignment. Note that you can record several simplification callbacks or remove a specific callback using the
+triton::API::removeCallback() function.
 
 \subsection SMT_simplification_triton Simplification via Triton's rules
 <hr>
@@ -172,12 +172,12 @@ namespace triton {
       }
 
 
-      triton::ast::SharedAbstractNode SymbolicSimplification::processSimplification(const triton::ast::SharedAbstractNode& node) const {
+      triton::ast::SharedAbstractNode SymbolicSimplification::simplify(const triton::ast::SharedAbstractNode& node) const {
         std::list<triton::ast::SharedAbstractNode> worklist;
         triton::ast::SharedAbstractNode snode = node;
 
         if (node == nullptr)
-          throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::processSimplification(): node cannot be null.");
+          throw triton::exceptions::SymbolicSimplification("SymbolicSimplification::simplify(): node cannot be null.");
 
         if (this->callbacks && this->callbacks->isDefined(triton::callbacks::SYMBOLIC_SIMPLIFICATION)) {
           snode = this->callbacks->processCallbacks(triton::callbacks::SYMBOLIC_SIMPLIFICATION, node);

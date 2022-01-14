@@ -860,13 +860,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::processSimplification(const triton::ast::SharedAbstractNode& node, bool z3) const {
+  triton::ast::SharedAbstractNode API::simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver) const {
     this->checkSymbolic();
-    if (z3 == true) {
-      auto snode = this->processZ3Simplification(node);
-      return this->symbolic->processSimplification(snode);
+
+    if (usingSolver) {
+      return this->simplifyAstViaSolver(node);
     }
-    return this->symbolic->processSimplification(node);
+    else {
+      return this->symbolic->simplify(node);
+    }
   }
 
 
@@ -1123,14 +1125,14 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
+  triton::ast::SharedAbstractNode API::simplifyAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }
     #endif
-    throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
+    throw triton::exceptions::API("API::simplifyAstViaSolver(): Solver instance must be a SOLVER_Z3.");
   }
 
 

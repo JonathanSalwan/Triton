@@ -360,9 +360,9 @@ Sets the targeted register as tainted or not. Returns true if the register is st
 - <b>void setThumb(bool state)</b><br>
 Sets CPU state to Thumb mode (only valid for ARM32).
 
-- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool z3=False)</b><br>
-Calls all simplification callbacks recorded and returns a new simplified node. If the `z3` flag is
-set to True, Triton will use z3 to simplify the given `node` before calling its recorded callbacks.
+- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool solver=False)</b><br>
+Calls all simplification callbacks recorded and returns a new simplified node. If the `solver` flag is
+set to True, Triton will use the current solver instance to simplify the given `node`.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
@@ -2836,26 +2836,32 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_simplify(PyObject* self, PyObject* args) {
-        PyObject* node        = nullptr;
-        PyObject* z3Flag      = nullptr;
+      static PyObject* TritonContext_simplify(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* node   = nullptr;
+        PyObject* solver = nullptr;
 
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &node, &z3Flag) == false) {
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"solver",
+          nullptr
+        };
+
+        /* Extract keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &solver) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Invalid number of arguments");
         }
 
         if (node == nullptr || !PyAstNode_Check(node))
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a AstNode as first argument.");
 
-        if (z3Flag != nullptr && !PyBool_Check(z3Flag))
+        if (solver != nullptr && !PyBool_Check(solver))
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as second argument.");
 
-        if (z3Flag == nullptr)
-          z3Flag = PyLong_FromUint32(false);
+        if (solver == nullptr)
+          solver = PyLong_FromUint32(false);
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->processSimplification(PyAstNode_AsAstNode(node), PyLong_AsBool(z3Flag)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(node), PyLong_AsBool(solver)));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3301,7 +3307,7 @@ namespace triton {
         {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                            METH_VARARGS,                  ""},
         {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                          METH_VARARGS,                  ""},
         {"setThumb",                            (PyCFunction)TritonContext_setThumb,                                  METH_O,                        ""},
-        {"simplify",                            (PyCFunction)TritonContext_simplify,                                  METH_VARARGS,                  ""},
+        {"simplify",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_simplify,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                          METH_O,                        ""},
         {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                       METH_VARARGS,                  ""},
         {"symbolizeMemory",                     (PyCFunction)TritonContext_symbolizeMemory,                           METH_VARARGS,                  ""},

@@ -55,7 +55,7 @@ namespace triton {
           TRITON_EXPORT SymbolicSimplification(const SymbolicSimplification& other);
 
           //! Processes all recorded simplifications. Returns the simplified node.
-          TRITON_EXPORT triton::ast::SharedAbstractNode processSimplification(const triton::ast::SharedAbstractNode& node) const;
+          TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
 
           //! Copies a SymbolicSimplification.
           TRITON_EXPORT SymbolicSimplification& operator=(const SymbolicSimplification& other);

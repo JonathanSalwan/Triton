@@ -78,8 +78,7 @@ class TestAstConversion(unittest.TestCase):
                     "ref = {} and triton value = {} with operator {} operands were {} and {}".format(ref, n.evaluate(), op, cv1, cv2)
                 )
                 self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
-                if self.ctx.getSolver() == SOLVER.Z3:
-                    self.assertEqual(ref, self.ctx.simplify(n, True).evaluate())
+                self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_unop(self):
         """
@@ -106,8 +105,7 @@ class TestAstConversion(unittest.TestCase):
                                                              op,
                                                              cv1))
                 self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
-                if self.ctx.getSolver() == SOLVER.Z3:
-                    self.assertEqual(ref, self.ctx.simplify(n, True).evaluate())
+                self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_smtbinop(self):
         """
@@ -172,12 +170,11 @@ class TestAstConversion(unittest.TestCase):
                     self.ctx.evaluateAstViaSolver(n),
                     "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.evaluateAstViaSolver(n), op, cv1, cv2)
                 )
-                if self.ctx.getSolver() == SOLVER.Z3:
-                    self.assertEqual(
-                        n.evaluate(),
-                        self.ctx.simplify(n, True).evaluate(),
-                        "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.simplify(n, True).evaluate(), op, cv1, cv2)
-                    )
+                self.assertEqual(
+                    n.evaluate(),
+                    self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate(),
+                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate(), op, cv1, cv2)
+                )
 
     def test_smt_unop(self):
         """
@@ -205,8 +202,7 @@ class TestAstConversion(unittest.TestCase):
                 else:
                     n = op(self.v1)
                 self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
-                if self.ctx.getSolver() == SOLVER.Z3:
-                    self.assertEqual(n.evaluate(), self.ctx.simplify(n, True).evaluate())
+                self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_bvnode(self):
         """Check python bit vector declaration."""
@@ -214,8 +210,7 @@ class TestAstConversion(unittest.TestCase):
             cv1 = random.randint(-127, 255)
             n = self.astCtxt.bv(cv1, 8)
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
-            if self.ctx.getSolver() == SOLVER.Z3:
-                self.assertEqual(n.evaluate(), self.ctx.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_extract(self):
         """Check bit extraction from bitvector."""
@@ -231,8 +226,7 @@ class TestAstConversion(unittest.TestCase):
                                      "'extract' operands was {} low was : {} and "
                                      "hi was : {}".format(ref, n.evaluate(), cv1, lo, hi))
                     self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
-                    if self.ctx.getSolver() == SOLVER.Z3:
-                        self.assertEqual(ref, self.ctx.simplify(n, True).evaluate())
+                    self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_ite(self):
         """Check ite node."""
@@ -243,8 +237,7 @@ class TestAstConversion(unittest.TestCase):
             self.ctx.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
-            if self.ctx.getSolver() == SOLVER.Z3:
-                self.assertEqual(n.evaluate(), self.ctx.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     @utils.xfail
     def test_integer(self):
@@ -252,8 +245,7 @@ class TestAstConversion(unittest.TestCase):
         for cv1 in range(0, 256):
             n = self.astCtxt.integer(cv1)
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
-            if self.ctx.getSolver() == SOLVER.Z3:
-                self.assertEqual(n.evaluate(), self.ctx.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     @utils.xfail
     def test_let(self):
@@ -265,8 +257,7 @@ class TestAstConversion(unittest.TestCase):
             self.ctx.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
-            if self.ctx.getSolver() == SOLVER.Z3:
-                self.assertEqual(n.evaluate(), self.ctx.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     def test_fuzz(self):
         """
