@@ -27,7 +27,7 @@ class TestAstConversion(unittest.TestCase):
         self.v1 = self.astCtxt.variable(self.sv1)
         self.v2 = self.astCtxt.variable(self.sv2)
 
-    def test_binop(self):
+    def do_test_binop(self):
         """
         Check python binary operation.
 
@@ -80,7 +80,17 @@ class TestAstConversion(unittest.TestCase):
                 self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
                 self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_unop(self):
+    def test_binop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_binop()
+
+    def test_binop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_binop()
+
+    def do_test_unop(self):
         """
         Check python unary operation.
 
@@ -107,7 +117,17 @@ class TestAstConversion(unittest.TestCase):
                 self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
                 self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_smtbinop(self):
+    def test_unop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_unop()
+
+    def test_unop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_unop()
+
+    def do_test_smtbinop(self):
         """
         Check smt binary operation.
 
@@ -176,7 +196,17 @@ class TestAstConversion(unittest.TestCase):
                     "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate(), op, cv1, cv2)
                 )
 
-    def test_smt_unop(self):
+    def test_smtbinop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_smtbinop()
+
+    def test_smtbinop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_smtbinop()
+
+    def do_test_smt_unop(self):
         """
         Check python unary operation.
 
@@ -204,7 +234,17 @@ class TestAstConversion(unittest.TestCase):
                 self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
                 self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_bvnode(self):
+    def test_smt_unop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_smt_unop()
+
+    def test_smt_unop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_smt_unop()
+
+    def do_test_bvnode(self):
         """Check python bit vector declaration."""
         for _ in range(100):
             cv1 = random.randint(-127, 255)
@@ -212,7 +252,17 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_extract(self):
+    def test_bvnode_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_bvnode()
+
+    def test_bvnode_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_bvnode()
+
+    def do_test_extract(self):
         """Check bit extraction from bitvector."""
         for _ in range(100):
             cv1 = random.randint(0, 255)
@@ -228,7 +278,17 @@ class TestAstConversion(unittest.TestCase):
                     self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
                     self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_ite(self):
+    def test_extract_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_extract()
+
+    def test_extract_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_extract()
+
+    def do_test_ite(self):
         """Check ite node."""
         for _ in range(100):
             cv1 = random.randint(0, 255)
@@ -239,8 +299,17 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    @utils.xfail
-    def test_integer(self):
+    def test_ite_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_ite()
+
+    def test_ite_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_ite()
+
+    def do_test_integer(self):
         # Decimal node is not exported in the python interface
         for cv1 in range(0, 256):
             n = self.astCtxt.integer(cv1)
@@ -248,7 +317,18 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
     @utils.xfail
-    def test_let(self):
+    def test_integer_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_integer()
+
+    @utils.xfail
+    def test_integer_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_integer()
+
+    def do_test_let(self):
         # Let node didn't take the variable in its computation
         for run in range(100):
             cv1 = random.randint(0, 255)
@@ -259,7 +339,19 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_fuzz(self):
+    @utils.xfail
+    def test_let_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_let()
+
+    @utils.xfail
+    def test_let_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_let()
+
+    def do_test_fuzz(self):
         """
         Fuzz test an ast evaluation.
 
@@ -327,6 +419,16 @@ class TestAstConversion(unittest.TestCase):
                 self.ctx.setConcreteVariableValue(self.sv2, cv2)
                 self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
 
+    def test_fuzz_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_fuzz()
+
+    def test_fuzz_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_fuzz()
+
     def new_node(self, depth, possible):
         """Recursive function to create a random ast."""
         if depth >= 10:
@@ -371,12 +473,14 @@ class TestUnrollAst(unittest.TestCase):
         return
 
     def test_1_z3(self):
-        self.ctx.setSolver(SOLVER.Z3)
-        self.do_test_1()
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_1()
 
     def test_1_bitwuzla(self):
-        self.ctx.setSolver(SOLVER.BITWUZLA)
-        self.do_test_1()
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_1()
 
     def do_test_2(self):
         self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
@@ -387,12 +491,14 @@ class TestUnrollAst(unittest.TestCase):
         return
 
     def test_2_z3(self):
-        self.ctx.setSolver(SOLVER.Z3)
-        self.do_test_2()
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_2()
 
     def test_2_bitwuzla(self):
-        self.ctx.setSolver(SOLVER.BITWUZLA)
-        self.do_test_2()
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_2()
 
     def do_test_3(self):
         self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
@@ -408,12 +514,14 @@ class TestUnrollAst(unittest.TestCase):
         return
 
     def test_3_z3(self):
-        self.ctx.setSolver(SOLVER.Z3)
-        self.do_test_3()
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_3()
 
     def test_3_bitwuzla(self):
-        self.ctx.setSolver(SOLVER.BITWUZLA)
-        self.do_test_3()
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_3()
 
 
 class TestAstTraversal(unittest.TestCase):
@@ -439,8 +547,9 @@ class TestAstTraversal(unittest.TestCase):
         self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaSolver(k))
 
     def test_z3(self):
-        self.ctx.setSolver(SOLVER.Z3)
-        self.do_test()
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test()
 
     def test_bitwuzla(self):
         if 'BITWUZLA' in dir(SOLVER):
