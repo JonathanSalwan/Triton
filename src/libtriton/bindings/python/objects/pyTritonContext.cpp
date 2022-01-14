@@ -149,9 +149,6 @@ Returns the AST corresponding to the \ref py_Immediate_page.
 - <b>\ref py_AstNode_page getMemoryAst(\ref py_MemoryAccess_page mem)</b><br>
 Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
-- <b>\ref py_SOLVER_page getSolver(void)</b><br>
-Returns the SMT solver engine currently used.
-
 - <b>dict getModel(\ref py_AstNode_page node, status=False, timeout=0)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 If status is True, returns a tuple of (dict model, \ref py_SOLVER_STATE_page status, integer solvingTime).
@@ -186,6 +183,9 @@ Returns the \ref py_Register_page class corresponding to a string.
 
 - <b>\ref py_AstNode_page getRegisterAst(\ref py_Register_page reg)</b><br>
 Returns the AST corresponding to the \ref py_Register_page with the SSA form.
+
+- <b>\ref py_SOLVER_page getSolver(void)</b><br>
+Returns the SMT solver engine currently used.
 
 - <b>\ref py_SymbolicExpression_page getSymbolicExpression(integer symExprId)</b><br>
 Returns the symbolic expression corresponding to an id.
@@ -1368,19 +1368,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_getSolver(PyObject* self, PyObject* noarg) {
-        try {
-          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getSolver());
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* TritonContext_getModel(PyObject* self, PyObject* args, PyObject* kwargs) {
         triton::engines::solver::status_e status;
         triton::uint32 solvingTime = 0;
@@ -1656,6 +1643,19 @@ namespace triton {
 
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getRegisterAst(*PyRegister_AsRegister(reg)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getSolver(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getSolver());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3242,7 +3242,6 @@ namespace triton {
         {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                                METH_NOARGS,                   ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                           METH_O,                        ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                              METH_O,                        ""},
-        {"getSolver",                           (PyCFunction)TritonContext_getSolver,                                 METH_NOARGS,                   ""},
         {"getModel",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModel,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"getModels",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModels, METH_VARARGS | METH_KEYWORDS,  ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                         METH_O,                        ""},
@@ -3253,6 +3252,7 @@ namespace triton {
         {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,               METH_O,                        ""},
         {"getRegister",                         (PyCFunction)TritonContext_getRegister,                               METH_O,                        ""},
         {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                            METH_O,                        ""},
+        {"getSolver",                           (PyCFunction)TritonContext_getSolver,                                 METH_NOARGS,                   ""},
         {"getSymbolicExpression",               (PyCFunction)TritonContext_getSymbolicExpression,                     METH_O,                        ""},
         {"getSymbolicExpressions",              (PyCFunction)TritonContext_getSymbolicExpressions,                    METH_NOARGS,                   ""},
         {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                         METH_VARARGS,                  ""},
