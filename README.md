@@ -69,7 +69,7 @@ from triton import *
 
 >>> # Execute instructions
 >>> ctx.processing(Instruction(b"\x48\x35\x34\x12\x00\x00")) # xor rax, 0x1234
->>> ctx.processing(Instruction(b"\x48\x89\xc1")) # xor rcx, rax
+>>> ctx.processing(Instruction(b"\x48\x89\xc1")) # mov rcx, rax
 
 >>> # Get the symbolic expression
 >>> rcx_expr = ctx.getSymbolicRegister(ctx.registers.rcx)
