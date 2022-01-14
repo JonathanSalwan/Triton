@@ -49,6 +49,9 @@ namespace triton {
       /*! \brief Solver engine using Bitwuzla. */
       class BitwuzlaSolver : public SolverInterface {
         private:
+          //! Converts binary bitvector value from string to uint512.
+          triton::uint512 fromBvalueToUint512(const char* value) const;
+
           /*! Struct used to provide information for Bitwuzla termination callback */
           struct SolverParams {
             SolverParams(int64_t timeout, size_t memory_limit): timeout(timeout), memory_limit(memory_limit) {
@@ -93,6 +96,9 @@ namespace triton {
 
           //! Returns true if an expression is satisfiable.
           TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
+
+          //! Evaluates a Triton's AST via Bitwuzla and returns a concrete value.
+          TRITON_EXPORT triton::uint512 evaluate(const triton::ast::SharedAbstractNode& node) const;
 
           //! Returns the name of this solver.
           TRITON_EXPORT std::string getName(void) const;

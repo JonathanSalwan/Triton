@@ -62,7 +62,7 @@ namespace triton {
           std::ifstream str("/proc/self/status");
           if (str.is_open()) {
             std::string line;
-            std::regex vmsize("VmRSS:\\s*([0-9]+)\\s*kB");
+            static std::regex vmsize("VmRSS:\\s*([0-9]+)\\s*kB");
             while (std::getline(str, line)) {
               std::smatch match;
               if (std::regex_match(line, match, vmsize)) {
@@ -163,7 +163,7 @@ namespace triton {
           std::unordered_map<triton::usize, SolverModel> model;
           for (const auto& it : bzlaAst.getVariables()) {
             const char* svalue = bitwuzla_get_bv_value(bzla, it.first);
-            triton::uint512 value = strtoull(svalue, 0, 2L);
+            auto value = this->fromBvalueToUint512(svalue);
             auto m = SolverModel(it.second, value);
             model[m.getId()] = m;
 
@@ -226,6 +226,29 @@ namespace triton {
       }
 
 
+      triton::uint512 BitwuzlaSolver::evaluate(const triton::ast::SharedAbstractNode& node) const {
+        if (node == nullptr) {
+          throw triton::exceptions::AstTranslations("BitwuzlaSolver::evaluate(): node cannot be null.");
+        }
+
+        // Perform check-sat on empty solver to enable model generation.
+        auto bzla = bitwuzla_new();
+        bitwuzla_set_option(bzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+        if (bitwuzla_check_sat(bzla) != BITWUZLA_SAT) {
+          bitwuzla_delete(bzla);
+          return 0;
+        }
+
+        // Evaluate concrete AST in solver.
+        auto bzlaAst = triton::ast::TritonToBitwuzlaAst(true);
+        auto bv_value = bitwuzla_get_bv_value(bzla, bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla)));
+        auto res = this->fromBvalueToUint512(bv_value);
+
+        bitwuzla_delete(bzla);
+        return res;
+      }
+
+
       std::string BitwuzlaSolver::getName(void) const {
         return "Bitwuzla";
       }
@@ -238,6 +261,28 @@ namespace triton {
 
       void BitwuzlaSolver::setMemoryLimit(triton::uint32 limit) {
         this->memoryLimit = limit;
+      }
+
+
+      triton::uint512 BitwuzlaSolver::fromBvalueToUint512(const char* value) const {
+        // Convert short bitvector string directly.
+        auto len = strlen(value);
+        if (len <= 64) {
+          return strtoull(value, 0, 2L);
+        }
+
+        // Convert long bitvector string by 64-bit chunks.
+        uint pos = 0;
+        triton::uint512 res;
+        while (pos < len) {
+          auto sublen = std::min(len - pos, 64UL);
+          char substr[sublen + 1];
+          memcpy(substr, value + pos, sublen);
+          substr[sublen] = '\0';
+          res = (res << sublen) + strtoull(substr, 0, 2L);
+          pos += sublen;
+        }
+        return res;
       }
 
     };
