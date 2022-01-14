@@ -5,7 +5,6 @@
 import operator
 import random
 import unittest
-import utils
 
 from triton import *
 
@@ -316,13 +315,11 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    @utils.xfail
     def test_integer_z3(self):
         if 'Z3' in dir(SOLVER):
             self.ctx.setSolver(SOLVER.Z3)
             self.do_test_integer()
 
-    @utils.xfail
     def test_integer_bitwuzla(self):
         if 'BITWUZLA' in dir(SOLVER):
             self.ctx.setSolver(SOLVER.BITWUZLA)
@@ -339,13 +336,11 @@ class TestAstConversion(unittest.TestCase):
             self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
             self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    @utils.xfail
     def test_let_z3(self):
         if 'Z3' in dir(SOLVER):
             self.ctx.setSolver(SOLVER.Z3)
             self.do_test_let()
 
-    @utils.xfail
     def test_let_bitwuzla(self):
         if 'BITWUZLA' in dir(SOLVER):
             self.ctx.setSolver(SOLVER.BITWUZLA)
