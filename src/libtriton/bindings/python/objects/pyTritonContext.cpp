@@ -149,6 +149,9 @@ Returns the AST corresponding to the \ref py_Immediate_page.
 - <b>\ref py_AstNode_page getMemoryAst(\ref py_MemoryAccess_page mem)</b><br>
 Returns the AST corresponding to the \ref py_MemoryAccess_page with the SSA form.
 
+- <b>\ref py_SOLVER_page getSolver(void)</b><br>
+Returns the SMT solver engine currently used.
+
 - <b>dict getModel(\ref py_AstNode_page node, status=False, timeout=0)</b><br>
 Computes and returns a model as a dictionary of {integer symVarId : \ref py_SolverModel_page model} from a symbolic constraint.
 If status is True, returns a tuple of (dict model, \ref py_SOLVER_STATE_page status, integer solvingTime).
@@ -1355,6 +1358,19 @@ namespace triton {
 
         try {
           return PyAstNode(PyTritonContext_AsTritonContext(self)->getMemoryAst(*PyMemoryAccess_AsMemoryAccess(mem)));
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* TritonContext_getSolver(PyObject* self, PyObject* noarg) {
+        try {
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->getSolver());
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3226,6 +3242,7 @@ namespace triton {
         {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                                METH_NOARGS,                   ""},
         {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                           METH_O,                        ""},
         {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                              METH_O,                        ""},
+        {"getSolver",                           (PyCFunction)TritonContext_getSolver,                                 METH_NOARGS,                   ""},
         {"getModel",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModel,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"getModels",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModels, METH_VARARGS | METH_KEYWORDS,  ""},
         {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                         METH_O,                        ""},
