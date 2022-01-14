@@ -265,23 +265,25 @@ namespace triton {
 
 
       triton::uint512 BitwuzlaSolver::fromBvalueToUint512(const char* value) const {
+        triton::usize   len = strlen(value);
+        triton::usize   pos = 0;
+        triton::uint512 res = 0;
+
         // Convert short bitvector string directly.
-        auto len = strlen(value);
         if (len <= 64) {
-          return strtoull(value, 0, 2L);
+          return std::strtoull(value, 0, 2L);
         }
 
         // Convert long bitvector string by 64-bit chunks.
-        uint pos = 0;
-        triton::uint512 res;
         while (pos < len) {
-          auto sublen = std::min(len - pos, 64UL);
+          triton::usize sublen = std::min(len - pos, 64UL);
           char substr[sublen + 1];
-          memcpy(substr, value + pos, sublen);
+          std::memcpy(substr, value + pos, sublen);
           substr[sublen] = '\0';
-          res = (res << sublen) + strtoull(substr, 0, 2L);
+          res = (res << sublen) + std::strtoull(substr, 0, 2L);
           pos += sublen;
         }
+
         return res;
       }
 

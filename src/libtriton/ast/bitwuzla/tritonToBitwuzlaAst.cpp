@@ -30,12 +30,12 @@ namespace triton {
     }
 
 
-    const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzlaAst::getVariables() const {
+    const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzlaAst::getVariables(void) const {
       return this->variables;
     }
 
 
-    const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzlaAst::getBitvectorSorts() const {
+    const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzlaAst::getBitvectorSorts(void) const {
       return this->bvSorts;
     }
 

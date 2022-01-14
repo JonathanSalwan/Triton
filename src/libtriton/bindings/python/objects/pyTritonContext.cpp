@@ -108,7 +108,7 @@ Enables or disables the symbolic execution engine.
 Enables or disables the taint engine.
 
 - <b>integer evaluateAstViaSolver(\ref py_AstNode_page node)</b><br>
-Evaluates an AST via Z3 and returns the symbolic value.
+Evaluates an AST via the solver and returns the concrete value.
 
 - <b>[\ref py_Register_page, ...] getAllRegisters(void)</b><br>
 Returns the list of all registers. Each item of this list is a \ref py_Register_page.

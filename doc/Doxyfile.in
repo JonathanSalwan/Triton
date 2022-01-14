@@ -2111,6 +2111,7 @@ INCLUDE_FILE_PATTERNS  =
 PREDEFINED             = TRITON_PYTHON_BINDINGS \
                          TRITON_PINTOOL \
                          Z3_INTERFACE \
+                         BITWUZLA_INTERFACE \
                          __x86_64__ \
                          __unix__
 

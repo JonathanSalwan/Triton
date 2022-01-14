@@ -48,15 +48,12 @@ namespace triton {
         TRITON_EXPORT const BitwuzlaTerm* convert(const SharedAbstractNode& node, Bitwuzla* bzla);
 
         //! Returns symbolic variables and its assosiated Bitwuzla terms to process the solver model.
-        TRITON_EXPORT const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& getVariables() const;
+        TRITON_EXPORT const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& getVariables(void) const;
 
         //! Returns bitvector sorts.
-        TRITON_EXPORT const std::map<size_t, const BitwuzlaSort*>& getBitvectorSorts() const;
+        TRITON_EXPORT const std::map<size_t, const BitwuzlaSort*>& getBitvectorSorts(void) const;
 
       private:
-        //! The convert internal process.
-        const BitwuzlaTerm* translate(const SharedAbstractNode& node, Bitwuzla* bzla);
-
         //! The map of Triton's AST nodes translated to the Bitwuzla terms.
         std::unordered_map<SharedAbstractNode, const BitwuzlaTerm*> translatedNodes;
 
@@ -71,6 +68,9 @@ namespace triton {
 
         //! This flag define if the conversion is used to evaluated a node or not.
         bool isEval;
+
+        //! The convert internal process.
+        const BitwuzlaTerm* translate(const SharedAbstractNode& node, Bitwuzla* bzla);
     };
 
   /*! @} End of ast namespace */
