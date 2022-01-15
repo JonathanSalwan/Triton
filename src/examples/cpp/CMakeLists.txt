@@ -1,4 +1,4 @@
-if(NOT STATICLIB)
+if(NOT BUILD_SHARED_LIBS)
     enable_testing()
 
     if(${CMAKE_CXX_COMPILER_ID} MATCHES "Clang" AND ASAN)
