@@ -308,7 +308,7 @@ target_include_directories(triton PUBLIC
 add_dependencies(triton gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies
-target_link_libraries(triton PUBLIC
+target_link_libraries(triton
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
