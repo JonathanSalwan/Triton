@@ -13,21 +13,38 @@ include(LibFindMacros)
 # Use pkg-config to get hints about paths
 # libfind_pkg_check_modules(BITWUZLA_PKGCONF bitwuzla)
 
-# Include dir
-find_path(BITWUZLA_INCLUDE_DIR
-  NAMES bitwuzla/bitwuzla.h
-  PATHS ${BITWUZLA_PKGCONF_INCLUDE_DIRS}
-)
+if(NOT BITWUZLA_INCLUDE_DIRS)
+    set(BITWUZLA_INCLUDE_DIRS "$ENV{BITWUZLA_INCLUDE_DIRS}")
+endif()
 
-# Finally the library itself
-find_library(BITWUZLA_LIBRARY
-  NAMES bitwuzla
-  PATHS ${BITWUZLA_PKGCONF_LIBRARY_DIRS}
-)
+if(NOT BITWUZLA_LIBRARIES)
+    set(BITWUZLA_LIBRARIES "$ENV{BITWUZLA_LIBRARIES}")
+endif()
 
-# Set the include dir variables and the libraries and let libfind_process do the rest.
-# NOTE: Singular variables for this library, plural for libraries this this lib depends on.
-set(BITWUZLA_PROCESS_INCLUDES BITWUZLA_INCLUDE_DIR BITWUZLA_INCLUDE_DIRS)
-set(BITWUZLA_PROCESS_LIBS BITWUZLA_LIBRARY BITWUZLA_LIBRARIES)
-libfind_process(BITWUZLA)
+if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
+    # Include dir
+    find_path(BITWUZLA_INCLUDE_DIR
+      NAMES bitwuzla/bitwuzla.h
+      PATHS ${BITWUZLA_PKGCONF_INCLUDE_DIRS}
+    )
 
+    # Finally the library itself
+    find_library(BITWUZLA_LIBRARY
+      NAMES bitwuzla
+      PATHS ${BITWUZLA_PKGCONF_LIBRARY_DIRS}
+    )
+
+    # Set the include dir variables and the libraries and let libfind_process do the rest.
+    # NOTE: Singular variables for this library, plural for libraries this this lib depends on.
+    set(BITWUZLA_PROCESS_INCLUDES BITWUZLA_INCLUDE_DIR BITWUZLA_INCLUDE_DIRS)
+    set(BITWUZLA_PROCESS_LIBS BITWUZLA_LIBRARY BITWUZLA_LIBRARIES)
+
+    libfind_process(BITWUZLA)
+
+    if(NOT BITWUZLA_FOUND)
+        message(FATAL_ERROR "Bitwuzla not found")
+    endif()
+else()
+    message("-- Bitwuzla includes directory defined: ${BITWUZLA_INCLUDE_DIRS}")
+    message("-- Bitwuzla libraries defined: ${BITWUZLA_LIBRARIES}")
+endif()
