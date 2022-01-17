@@ -53,7 +53,9 @@ if(PYTHON_BINDINGS)
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
     )
-    add_dependencies(check test-python)
+    if(NOT GCOV)
+        add_dependencies(check test-python)
+    endif()
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
