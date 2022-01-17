@@ -305,10 +305,11 @@ target_include_directories(triton PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/includes>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>"
 )
+
 add_dependencies(triton gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies
-target_link_libraries(triton
+target_link_libraries(triton PUBLIC
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
@@ -345,7 +346,6 @@ if(PYTHON_BINDINGS)
         COMMAND ${CMAKE_COMMAND} -E copy "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/${CMAKE_SHARED_MODULE_PREFIX}triton${CMAKE_SHARED_LIBRARY_SUFFIX}" "${CMAKE_CURRENT_BINARY_DIR}/${CMAKE_CFG_INTDIR}/triton${PYTHON_SUFFIX}"
         DEPENDS triton
     )
-
     execute_process (COMMAND ${PYTHON_EXECUTABLE} -c "from sysconfig import get_path; print(get_path('platlib'))" OUTPUT_VARIABLE PYTHON_SITE_PACKAGES OUTPUT_STRIP_TRAILING_WHITESPACE)
     if(${CMAKE_SYSTEM_NAME} MATCHES "Windows" AND NOT ${CMAKE_CXX_COMPILER_ID} MATCHES "GNU")
         install (FILES ${CMAKE_CURRENT_BINARY_DIR}/\${CMAKE_INSTALL_CONFIG_NAME}/triton${PYTHON_SUFFIX} DESTINATION ${PYTHON_SITE_PACKAGES})

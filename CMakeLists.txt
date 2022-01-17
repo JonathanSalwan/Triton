@@ -21,16 +21,17 @@ project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 # Define cmake options
 include(CMakeDependentOption)
 
-option(ASAN "Enable the ASAN linking" OFF)
-option(BITWUZLA_INTERFACE "Use Bitwuzla as SMT solver" OFF)
-option(BUILD_SHARED_LIBS "Build a shared library" ON)
-option(GCOV "Enable code coverage" OFF)
-option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
-option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
-option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
+option(ASAN                 "Enable the ASAN linking"                    OFF)
+option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"                 OFF)
+option(BUILD_SHARED_LIBS    "Build a shared library"                     ON)
+option(GCOV                 "Enable code coverage"                       OFF)
+option(KERNEL4              "Pin will run on a Linux's kernel v4"        ON)
+option(PINTOOL              "Build Triton with the Pin tool as tracer"   OFF)
+option(Z3_INTERFACE         "Use Z3 as SMT solver"                       ON)
 
-cmake_dependent_option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON BUILD_SHARED_LIBS OFF)
+# Define cmake dependent options
+cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete module"    OFF BUILD_SHARED_LIBS OFF)
 
 #Enable ctest
 include(CTest)
@@ -110,6 +111,7 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
 if(Z3_INTERFACE)
     MESSAGE("-- Compiling with Z3 SMT solver")
     find_package(Z3 REQUIRED)
+    include_directories(${Z3_INCLUDE_DIRS})
     set(TRITON_Z3_INTERFACE ON)
 endif()
 
@@ -117,25 +119,24 @@ endif()
 if(BITWUZLA_INTERFACE)
     MESSAGE("-- Compiling with Bitwuzla SMT solver")
     find_package(BITWUZLA REQUIRED)
+    include_directories(${BITWUZLA_INCLUDE_DIRS})
     set(TRITON_BITWUZLA_INTERFACE ON)
 endif()
 
 # Find Capstone
 MESSAGE("-- Compiling with Capstone")
 find_package(CAPSTONE REQUIRED)
+include_directories(${CAPSTONE_INCLUDE_DIRS})
 
 # Find boost
 MESSAGE("-- Compiling with Boost headers")
 find_package(Boost 1.55.0 REQUIRED)
+include_directories("${Boost_INCLUDE_DIRS}")
 
 # Use the same ABI as pin
 if(PINTOOL)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
 endif()
 
-# Add triton includes for every project
-include_directories("${TRITON_ROOT}/src/libtriton/includes")
-
-set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
 add_subdirectory(doc)
