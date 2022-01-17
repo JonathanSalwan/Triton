@@ -35,13 +35,7 @@ namespace triton {
       int32_t BitwuzlaSolver::terminateCallback(void* state) {
         auto p = reinterpret_cast<SolverParams*>(state);
 
-        // Execute this callback only once in every 1000 calls.
-        if (++p->call_cnt < 1000) {
-          return 0;
-        }
-        p->call_cnt = 0;
-
-        // Count delta.
+        // Count elapsed time.
         auto delta = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::system_clock::now() - p->start).count();
 
         // Check timeout expired.
@@ -50,12 +44,15 @@ namespace triton {
           return 1;
         }
 
-        // Check memory limit exceeded.
+        // Check memory limit.
         #if defined(__unix__)
-        // Conver delta to seconds, check memory limit every delay seconds.
-        delta /= 1000;
-        if (p->memory_limit && delta > p->last_mem_check && delta % p->delay == 0) {
-          p->last_mem_check = delta;
+
+        // Complete seconds elapsed from the start of solving.
+        auto delta_s = delta / 1000;
+
+        // Check memory limit every second. Don't perform check in first 100ms of solving.
+        if (p->memory_limit && delta > 100 && delta_s > p->last_mem_check) {
+          p->last_mem_check = delta_s;
 
           // Parse system file to get current process memory consumption (VmRSS field).
           size_t memory_usage = 0;
@@ -77,21 +74,6 @@ namespace triton {
           if (memory_usage > p->memory_limit) {
             p->status = triton::engines::solver::OUTOFMEM;
             return 1;
-          }
-          // Since memory checking is not a free operation, we should
-          // perform it as rarely as possible. We set delay according to
-          // the occupied memory space relatively to the limit:
-          //  - if we occupy <25% of limit check memory every 5s
-          //  - if we occupy up to 75% of limit check memory every 2s
-          //  - otherwise check memory every second
-          if (memory_usage < p->memory_limit / 4) {
-            p->delay = 5;
-          }
-          else if (memory_usage < 3 * p->memory_limit / 4) {
-            p->delay = 2;
-          }
-          else {
-            p->delay = 1;
           }
         }
         #endif
@@ -129,6 +111,7 @@ namespace triton {
 
         // Set solving params.
         SolverParams p(this->timeout, this->memoryLimit);
+
         if (this->timeout || this->memoryLimit) {
           bitwuzla_set_termination_callback(bzla, this->terminateCallback, reinterpret_cast<void*>(&p));
         }
