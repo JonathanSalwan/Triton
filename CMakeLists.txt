@@ -25,8 +25,6 @@ option(ASAN                 "Enable the ASAN linking"                    OFF)
 option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"                 OFF)
 option(BUILD_SHARED_LIBS    "Build a shared library"                     ON)
 option(GCOV                 "Enable code coverage"                       OFF)
-option(KERNEL4              "Pin will run on a Linux's kernel v4"        ON)
-option(PINTOOL              "Build Triton with the Pin tool as tracer"   OFF)
 option(Z3_INTERFACE         "Use Z3 as SMT solver"                       ON)
 
 # Define cmake dependent options
@@ -35,6 +33,10 @@ cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete
 
 #Enable ctest
 include(CTest)
+add_custom_target(check
+    COMMAND ctest --output-on-failure
+    DEPENDS triton
+)
 
 set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
 
@@ -51,47 +53,28 @@ if(PYTHON_BINDINGS)
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
     )
+    add_dependencies(check test-python)
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
     )
 endif()
 
-if(PINTOOL AND NOT PYTHON_BINDINGS)
-    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
-endif()
-
-if(PINTOOL AND NOT "${PYTHON_VERSION_STRING}" MATCHES "2.7")
-    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  if(GCOV)
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
     MESSAGE("-- Compiled with GCOV")
-    add_custom_target(check
+    add_custom_target(gcov-test
         COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
         COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
-        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
+        COMMAND ctest --output-on-failure
         COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
         COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
         COMMAND genhtml coverage.info -o coverage
         COMMAND ${CMAKE_COMMAND} -E echo "-- Report generated in ${CMAKE_CURRENT_BINARY_DIR}/coverage/index.html"
     )
+    add_dependencies(check gcov-test)
     add_compile_options(--coverage)
     add_link_options(--coverage)
-  else()
-    # Special handling of Linux test to check if pin can be attached on other binaries.
-    add_custom_target(check
-        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
-        DEPENDS test-python
-    )
-  endif()
-else()
-    add_custom_target(check
-        COMMAND ${PYTHONPATH_CMD} ctest --output-on-failure
-        DEPENDS test-python
-    )
 endif()
 
 # Specific OSX POLICY
@@ -132,11 +115,6 @@ include_directories(${CAPSTONE_INCLUDE_DIRS})
 MESSAGE("-- Compiling with Boost headers")
 find_package(Boost 1.55.0 REQUIRED)
 include_directories("${Boost_INCLUDE_DIRS}")
-
-# Use the same ABI as pin
-if(PINTOOL)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
-endif()
 
 add_subdirectory(src)
 add_subdirectory(doc)
