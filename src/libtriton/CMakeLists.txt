@@ -52,7 +52,6 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicVariable.cpp
     engines/taint/taintEngine.cpp
     modes/modes.cpp
-    os/unix/syscallNumberToString.cpp
     utils/coreUtils.cpp
 )
 
@@ -107,12 +106,10 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/symbolicExpression.hpp
     includes/triton/symbolicSimplification.hpp
     includes/triton/symbolicVariable.hpp
-    includes/triton/syscalls.hpp
     includes/triton/taintEngine.hpp
     includes/triton/tritonToBitwuzlaAst.hpp
     includes/triton/tritonToZ3Ast.hpp
     includes/triton/tritonTypes.hpp
-    includes/triton/unix.hpp
     includes/triton/x8664Cpu.hpp
     includes/triton/x86Cpu.hpp
     includes/triton/x86Semantics.hpp
@@ -169,7 +166,6 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initSolverNamespace.cpp
         bindings/python/namespaces/initSolverStateNamespace.cpp
         bindings/python/namespaces/initSymbolicNamespace.cpp
-        bindings/python/namespaces/initSyscallNamespace.cpp
         bindings/python/namespaces/initVersionNamespace.cpp
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
@@ -196,81 +192,6 @@ if(PYTHON_BINDINGS)
 else()
     set(LIBTRITON_PYTHON_SOURCE_FILES)
     set(LIBTRITON_PYTHON_HEADER_FILES)
-endif()
-
-# Triton have to generate a syscalls table from the kernel source
-# This following code tries to find the unistd_64.h or unistd_32.h header depending on the architecture.
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    if(EXISTS "/usr/include/*unistd_32.h")
-       FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd_32.h)
-    else()
-       FILE(GLOB_RECURSE syscalls32_table_files /usr/include/*unistd.h)
-    endif()
-
-    if(EXISTS "/usr/include/*unistd_32.h")
-        FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd_64.h)
-    else()
-       FILE(GLOB_RECURSE syscalls64_table_files /usr/include/*unistd.h)
-    endif()
-endif()
-
-macro(find_osx_syscall path)
-    if(NOT OSX_SYSCALL_H AND EXISTS ${path})
-        set(OSX_SYSCALL_H ${path})
-    endif()
-endmacro()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    find_osx_syscall("/usr/include/sys/syscall.h")
-    find_osx_syscall("/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/include/sys/syscall.h")
-    if(NOT OSX_SYSCALL_H OR NOT EXISTS ${OSX_SYSCALL_H})
-        message(FATAL_ERROR "syscall.h not found!")
-    endif()
-    FILE(GLOB_RECURSE syscalls64_table_files ${OSX_SYSCALL_H})
-endif()
-
-# Create syscall generted file directory
-file(MAKE_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/os/unix/)
-
-set(EXTRACT_SYSCALL_SCRIPT ${TRITON_ROOT}/src/scripts/extract_syscall.py)
-
-macro(gen_syscall bits)
-    # If the unistd_64.h or syscall.h is not found, we exit
-    if(NOT syscalls${bits}_table_files)
-        message(FATAL_ERROR "unistd_${bits}.h or syscall.h is missing")
-    endif()
-    LIST(GET syscalls${bits}_table_files 0 syscalls${bits}_table_file)
-
-    set(OUT_SYSCALL${bits} ${CMAKE_CURRENT_BINARY_DIR}/os/unix/syscalls${bits}.cpp)
-
-    # We generate the syscalls${bits}.cpp from the unistd_${bits}.h or syscall.h.
-    # Added python after COMMAND since to be sure that if ${TRITON_ROOT}/src/scripts/extract_syscall.py doesn't have X rights it gets executed
-    add_custom_command(
-        OUTPUT ${OUT_SYSCALL${bits}}
-        COMMAND ${PYTHON_EXECUTABLE} ${EXTRACT_SYSCALL_SCRIPT} ${syscalls${bits}_table_file} ${bits} > ${OUT_SYSCALL${bits}}
-        MAIN_DEPENDENCY ${EXTRACT_SYSCALL_SCRIPT}
-        DEPENDS ${syscalls${bits}_table_file}
-    )
-    add_custom_target(gen-syscall${bits} DEPENDS ${OUT_SYSCALL${bits}})
-    set(LIBTRITON_SOURCE_FILES ${LIBTRITON_SOURCE_FILES} ${OUT_SYSCALL${bits}})
-endmacro()
-
-# Note: Windows ?!
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-    gen_syscall(64)
-else()
-    add_custom_target(gen-syscall64
-      COMMAND echo "No syscall64 to extract on your plateform"
-    )
-endif()
-
-# Syscall 32 is only available for linux users
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    gen_syscall(32)
-else()
-    add_custom_target(gen-syscall32
-      COMMAND echo "No syscall32 to extract on your plateform"
-    )
 endif()
 
 # We generate the version numbers information
@@ -307,8 +228,6 @@ target_include_directories(triton PUBLIC
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_LIST_DIR}/includes>"
     "$<BUILD_INTERFACE:${CMAKE_CURRENT_BINARY_DIR}/includes>"
 )
-
-add_dependencies(triton gen-syscall32 gen-syscall64)
 
 # Link Triton's dependencies
 target_link_libraries(triton PUBLIC
