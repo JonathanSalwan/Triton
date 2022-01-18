@@ -57,12 +57,14 @@ set(LIBTRITON_SOURCE_FILES
 
 # Define all header files
 set(LIBTRITON_HEADER_FILES
+    includes/triton/aarch64.spec
     includes/triton/aarch64Cpu.hpp
     includes/triton/aarch64Semantics.hpp
     includes/triton/aarch64Specifications.hpp
     includes/triton/api.hpp
     includes/triton/archEnums.hpp
     includes/triton/architecture.hpp
+    includes/triton/arm32.spec
     includes/triton/arm32Cpu.hpp
     includes/triton/arm32Semantics.hpp
     includes/triton/arm32Specifications.hpp
@@ -110,6 +112,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/tritonToBitwuzlaAst.hpp
     includes/triton/tritonToZ3Ast.hpp
     includes/triton/tritonTypes.hpp
+    includes/triton/x86.spec
     includes/triton/x8664Cpu.hpp
     includes/triton/x86Cpu.hpp
     includes/triton/x86Semantics.hpp
@@ -120,9 +123,6 @@ set(LIBTRITON_HEADER_FILES
 
 # Define all resource files
 set(LIBTRITON_RESOURCE_FILES
-    includes/triton/aarch64.spec
-    includes/triton/arm32.spec
-    includes/triton/x86.spec
     includes/triton/version.hpp.in
     includes/triton/config.hpp.in
 )
