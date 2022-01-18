@@ -42,7 +42,6 @@ jobs:
           cd ./build
           cmake ..
           sudo make -j3 install
-          cat src/libtriton/os/unix/syscalls64.cpp
       - name: Unittests
         run: |
           make -C build check
