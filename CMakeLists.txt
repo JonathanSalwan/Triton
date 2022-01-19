@@ -35,8 +35,7 @@ cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete
 #Enable ctest
 include(CTest)
 add_custom_target(check
-    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton
-    COMMAND ctest --output-on-failure
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH="${CMAKE_CURRENT_BINARY_DIR}/src/libtriton" ctest --output-on-failure
     DEPENDS triton
 )
 
