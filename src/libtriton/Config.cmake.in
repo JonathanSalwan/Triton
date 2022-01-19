@@ -1,0 +1,8 @@
+@PACKAGE_INIT@
+
+include("${CMAKE_CURRENT_LIST_DIR}/tritonTargets.cmake")
+
+include(CMakeFindDependencyMacro)
+find_dependency(Z3)
+find_dependency(capstone)
+find_dependency(Boost)

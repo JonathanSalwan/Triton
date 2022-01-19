@@ -16,6 +16,7 @@ set(VERSION_MAJOR 0)
 set(VERSION_MINOR 9)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
+# Used for write_basic_package_version_file()
 project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 
 # Define cmake options

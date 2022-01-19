@@ -248,17 +248,41 @@ if(WIN32 AND BUILD_SHARED_LIBS)
     target_compile_definitions(triton PUBLIC TRITON_BUILDING_DLL)
 endif()
 
-# Installation
+# Install tritonTargets.cmake
 install(
     EXPORT tritonTargets
     DESTINATION lib/cmake/triton
     NAMESPACE triton::
 )
+
+# Install triton
 install(
     TARGETS triton
     EXPORT tritonTargets
     PUBLIC_HEADER DESTINATION include/triton
     INCLUDES DESTINATION include
+)
+
+# Configure tritonConfig.cmake and tritonConfigVersion.cmake
+include(CMakePackageConfigHelpers)
+configure_package_config_file(
+    Config.cmake.in
+    "${PROJECT_BINARY_DIR}/tritonConfig.cmake"
+    INSTALL_DESTINATION lib/cmake/triton
+    NO_SET_AND_CHECK_MACRO
+    NO_CHECK_REQUIRED_COMPONENTS_MACRO
+)
+
+write_basic_package_version_file("${PROJECT_BINARY_DIR}/tritonConfigVersion.cmake"
+    COMPATIBILITY SameMajorVersion
+)
+
+# Install tritonConfig.cmake and tritonConfigVersion.cmake
+install(
+    FILES
+        "${PROJECT_BINARY_DIR}/tritonConfig.cmake"
+        "${PROJECT_BINARY_DIR}/tritonConfigVersion.cmake"
+    DESTINATION lib/cmake/triton
 )
 
 # Install Python bindings
