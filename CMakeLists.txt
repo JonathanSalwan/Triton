@@ -35,17 +35,17 @@ cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete
 #Enable ctest
 include(CTest)
 add_custom_target(check
-    COMMAND PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton ctest --output-on-failure
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton
+    COMMAND ctest --output-on-failure
     DEPENDS triton
 )
 
-set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
-
 if(PYTHON_BINDINGS)
+    MESSAGE("-- Compiling with Python bindings")
+    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
-    MESSAGE("-- Compiling with Python bindings")
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
     find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
     include_directories(${PYTHON_INCLUDE_DIRS})
