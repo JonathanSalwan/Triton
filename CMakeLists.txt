@@ -40,7 +40,7 @@ add_custom_target(check
 )
 
 if(PYTHON_BINDINGS)
-    MESSAGE("-- Compiling with Python bindings")
+    message(STATUS "Compiling with Python bindings")
     set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
@@ -63,7 +63,7 @@ else()
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
-    MESSAGE("-- Compiled with GCOV")
+    message(STATUS "Compiled with GCOV")
     add_custom_target(gcov-test
         COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
         COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
@@ -94,7 +94,7 @@ list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
 
 # Find Z3
 if(Z3_INTERFACE)
-    MESSAGE("-- Compiling with Z3 SMT solver")
+    message(STATUS "Compiling with Z3 SMT solver")
     find_package(Z3 REQUIRED)
     include_directories(${Z3_INCLUDE_DIRS})
     set(TRITON_Z3_INTERFACE ON)
@@ -102,19 +102,19 @@ endif()
 
 # Find bitwuzla
 if(BITWUZLA_INTERFACE)
-    MESSAGE("-- Compiling with Bitwuzla SMT solver")
+    message(STATUS "Compiling with Bitwuzla SMT solver")
     find_package(BITWUZLA REQUIRED)
     include_directories(${BITWUZLA_INCLUDE_DIRS})
     set(TRITON_BITWUZLA_INTERFACE ON)
 endif()
 
 # Find Capstone
-MESSAGE("-- Compiling with Capstone")
+message(STATUS "Compiling with Capstone")
 find_package(CAPSTONE REQUIRED)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
 
 # Find boost
-MESSAGE("-- Compiling with Boost headers")
+message(STATUS "Compiling with Boost headers")
 find_package(Boost 1.55.0 REQUIRED)
 include_directories("${Boost_INCLUDE_DIRS}")
 
