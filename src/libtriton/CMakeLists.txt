@@ -244,6 +244,11 @@ if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID 
     target_compile_options(triton PRIVATE -std=c++11)
 endif()
 
+# Enable static msvc runtime.
+if(MSVC AND MSVC_STATIC)
+    target_compile_options(triton PRIVATE "$<IF:$<CONFIG:Debug>,/MTd,/MT>")
+endif()
+
 if(WIN32 AND BUILD_SHARED_LIBS)
     target_compile_definitions(triton PUBLIC TRITON_BUILDING_DLL)
 endif()
