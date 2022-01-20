@@ -111,7 +111,6 @@ namespace triton {
 
         // Set solving params.
         SolverParams p(this->timeout, this->memoryLimit);
-
         if (this->timeout || this->memoryLimit) {
           bitwuzla_set_termination_callback(bzla, this->terminateCallback, reinterpret_cast<void*>(&p));
         }
@@ -214,12 +213,13 @@ namespace triton {
           throw triton::exceptions::AstTranslations("BitwuzlaSolver::evaluate(): node cannot be null.");
         }
 
-        // Perform check-sat on empty solver to enable model generation.
         auto bzla = bitwuzla_new();
         bitwuzla_set_option(bzla, BITWUZLA_OPT_PRODUCE_MODELS, 1);
+
+        // Query check-sat on empty solver to put Bitwuzla in SAT-state. Thus, it should be able to evaluate concrete formulas.
         if (bitwuzla_check_sat(bzla) != BITWUZLA_SAT) {
           bitwuzla_delete(bzla);
-          return 0;
+          throw triton::exceptions::SolverEngine("BitwuzlaSolver::evaluate(): empty solver didn't return SAT.");
         }
 
         // Evaluate concrete AST in solver.
