@@ -22,13 +22,15 @@ if(NOT CAPSTONE_LIBRARIES)
 endif()
 
 if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
-    # Include dir
     find_path(CAPSTONE_INCLUDE_DIR
       NAMES capstone/capstone.h
       PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
     )
 
-    # Finally the library itself
+    if(NOT BUILD_SHARED_LIBS)
+        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    endif()
+
     find_library(CAPSTONE_LIBRARY
       NAMES capstone
       PATHS ${CAPSTONE_PKGCONF_LIBRARY_DIRS}

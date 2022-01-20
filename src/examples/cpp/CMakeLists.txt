@@ -1,5 +1,11 @@
 enable_testing()
 
+if (NOT BUILD_SHARED_LIBS)
+    find_package(Threads REQUIRED)
+    set(CMAKE_CXX_FLAGS -pthread)
+    set(CMAKE_EXE_LINKER_FLAGS "-static")
+endif()
+
 add_executable(taint_reg taint_reg.cpp)
 set_property(TARGET taint_reg PROPERTY CXX_STANDARD 11)
 target_link_libraries(taint_reg triton)

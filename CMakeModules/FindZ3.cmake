@@ -22,13 +22,15 @@ if(NOT Z3_LIBRARIES)
 endif()
 
 if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
-    # Include dir
     find_path(Z3_INCLUDE_DIR
       NAMES z3.h
       PATHS ${Z3_PKGCONF_INCLUDE_DIRS}
     )
 
-    # Finally the library itself
+    if(NOT BUILD_SHARED_LIBS)
+        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    endif()
+
     find_library(Z3_LIBRARY
       NAMES z3
       PATHS ${Z3_PKGCONF_LIBRARY_DIRS}

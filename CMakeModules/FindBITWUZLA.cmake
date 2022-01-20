@@ -22,13 +22,15 @@ if(NOT BITWUZLA_LIBRARIES)
 endif()
 
 if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
-    # Include dir
     find_path(BITWUZLA_INCLUDE_DIR
       NAMES bitwuzla/bitwuzla.h
       PATHS ${BITWUZLA_PKGCONF_INCLUDE_DIRS}
     )
 
-    # Finally the library itself
+    if(NOT BUILD_SHARED_LIBS)
+        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
+    endif()
+
     find_library(BITWUZLA_LIBRARY
       NAMES bitwuzla
       PATHS ${BITWUZLA_PKGCONF_LIBRARY_DIRS}
