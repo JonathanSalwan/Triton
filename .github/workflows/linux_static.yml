@@ -10,7 +10,15 @@ jobs:
         uses: actions/checkout@v2
       - name: Install dependencies
         run: |
-          sudo apt-get install python-setuptools libboost-dev libz3-dev
+          sudo apt-get install python-setuptools libboost-dev
+      - name: Install Z3
+        run: |
+          wget https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.14.tar.gz
+          tar -xf ./z3-4.8.14.tar.gz
+          cd ./z3-z3-4.8.14
+          ./configure --staticlib
+          cd build ; sudo make -j3 install
+          cd ../
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
