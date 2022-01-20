@@ -61,9 +61,7 @@ namespace triton {
             triton::engines::solver::status_e status = triton::engines::solver::UNKNOWN;                    /*!< Reason of solving termination. */
             int64_t timeout;                                                                                /*!< Timeout (ms) for solver instance running. */
             size_t  memory_limit;                                                                           /*!< Memory limit for the whole symbolic process. */
-            size_t  call_cnt = 0;                                                                           /*!< Counter for the number of termination callback calls. */
             int64_t last_mem_check = -1;                                                                    /*!< Time when the last memory usage check was performed. */
-            size_t  delay = 1;                                                                              /*!< Check memory limit every delay seconds. */
           };
 
           //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
