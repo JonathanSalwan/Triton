@@ -246,7 +246,7 @@ endif()
 
 # Enable static msvc runtime.
 if(MSVC AND MSVC_STATIC)
-    target_compile_options(triton PRIVATE "$<IF:$<CONFIG:Debug>,/MTd,/MT>")
+    set_property(TARGET triton PROPERTY MSVC_RUNTIME_LIBRARY "MultiThreaded$<$<CONFIG:Debug>:Debug>")
 endif()
 
 if(WIN32 AND BUILD_SHARED_LIBS)
