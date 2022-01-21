@@ -399,8 +399,8 @@ namespace triton {
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         TRITON_EXPORT void assignSymbolicExpressionToRegister(const triton::engines::symbolic::SharedSymbolicExpression& se, const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Processes all recorded simplifications. Returns the simplified node.
-        TRITON_EXPORT triton::ast::SharedAbstractNode processSimplification(const triton::ast::SharedAbstractNode& node, bool z3=false) const;
+        //! [**symbolic api**] - Processes all recorded AST simplifications or uses solver's simplifications if `usingSolver` is true. Returns the simplified AST.
+        TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver = false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
@@ -544,11 +544,11 @@ namespace triton {
         //! Returns true if the solver is valid.
         TRITON_EXPORT bool isSolverValid(void) const;
 
-        //! [**solver api**] - Evaluates a Triton's AST via Z3 and returns a concrete value.
-        TRITON_EXPORT triton::uint512 evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const;
+        //! [**solver api**] - Evaluates a Triton's AST via the solver and returns a concrete value.
+        TRITON_EXPORT triton::uint512 evaluateAstViaSolver(const triton::ast::SharedAbstractNode& node) const;
 
-        //! [**solver api**] - Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
-        TRITON_EXPORT triton::ast::SharedAbstractNode processZ3Simplification(const triton::ast::SharedAbstractNode& node) const;
+        //! [**solver api**] - Converts a Triton's AST to a solver's AST, perform a simplification and returns a Triton's AST.
+        TRITON_EXPORT triton::ast::SharedAbstractNode simplifyAstViaSolver(const triton::ast::SharedAbstractNode& node) const;
 
         //! [**solver api**] - Defines a solver timeout (in milliseconds).
         TRITON_EXPORT void setSolverTimeout(triton::uint32 ms);

@@ -6,87 +6,78 @@
 
 ##################################################################################### CMake libtriton
 
-cmake_minimum_required(VERSION 2.8.12)
-project(triton)
-
-# Define cmake options
-option(ASAN "Enable the ASAN linking" OFF)
-option(GCOV "Enable code coverage" OFF)
-option(KERNEL4 "Pin will run on a Linux's kernel v4" ON)
-option(PINTOOL "Build Triton with the Pin tool as tracer" OFF)
-option(PYTHON_BINDINGS "Enable Python bindings into the libtriton" ON)
-option(PYTHON_BINDINGS_AUTOCOMPLETE "Enable the generation of a triton_autocomplete module for IDE autocompletion" OFF)
-option(STATICLIB "Build a static library" OFF)
-option(Z3_INTERFACE "Use Z3 as SMT solver" ON)
-
-if(STATICLIB)
-    # We can't use Python bindings with a static library
-    set(PYTHON_BINDINGS OFF)
-endif()
+cmake_minimum_required(VERSION 3.15)
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
+# Read the build version
+file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
+set(VERSION_MAJOR 0)
+set(VERSION_MINOR 9)
+set(VERSION_BUILD ${BUILD_NUMBER})
+
+# Used for write_basic_package_version_file()
+project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
+
+# Define cmake options
+include(CMakeDependentOption)
+
+option(ASAN                 "Enable the ASAN linking"                  OFF)
+option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"               OFF)
+option(BUILD_SHARED_LIBS    "Build a shared library"                   ON)
+option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
+option(GCOV                 "Enable code coverage"                     OFF)
+option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
+
+# Define cmake dependent options
+cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete module"    OFF BUILD_SHARED_LIBS OFF)
+
 #Enable ctest
 include(CTest)
-
-set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
+add_custom_target(check
+    COMMAND ${CMAKE_COMMAND} -E env PYTHONPATH="${CMAKE_CURRENT_BINARY_DIR}/src/libtriton" ctest --output-on-failure
+    DEPENDS triton
+)
 
 if(PYTHON_BINDINGS)
+    message(STATUS "Compiling with Python bindings")
+    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
     find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
+    find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
+    include_directories(${PYTHON_INCLUDE_DIRS})
+    add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
     add_custom_target(test-python
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
     )
+    if(NOT GCOV)
+        add_dependencies(check test-python)
+    endif()
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
     )
 endif()
 
-if(PINTOOL AND NOT PYTHON_BINDINGS)
-    MESSAGE(FATAL_ERROR "You can't have pintools without python binding.")
-endif()
-
-if(PINTOOL AND NOT "${PYTHON_VERSION_STRING}" MATCHES "2.7")
-    MESSAGE(FATAL_ERROR "The Pin tracer needs Python 2.7.")
-endif()
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-  if(GCOV)
-    add_custom_target(check
+if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
+    message(STATUS "Compiled with GCOV")
+    add_custom_target(gcov-test
         COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
         COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
-        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
+        COMMAND ctest --output-on-failure
         COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
         COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
         COMMAND genhtml coverage.info -o coverage
         COMMAND ${CMAKE_COMMAND} -E echo "-- Report generated in ${CMAKE_CURRENT_BINARY_DIR}/coverage/index.html"
     )
-  else()
-    # Special handling of Linux test to check if pin can be attached on other binaries.
-    add_custom_target(check
-        COMMAND ${PYTHONPATH_CMD} ${TRITON_ROOT}/src/scripts/run_linux_test.sh
-        DEPENDS test-python
-    )
-  endif()
-else()
-    add_custom_target(check
-        COMMAND ${PYTHONPATH_CMD} ctest --output-on-failure
-        DEPENDS test-python
-    )
-endif()
-
-# Defaut build type as Release
-if(NOT CMAKE_BUILD_TYPE AND NOT CMAKE_CONFIGURATION_TYPES)
-    set(CMAKE_BUILD_TYPE Release)
-endif()
-
-if(GCOV)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -O0 --coverage")
+    add_dependencies(check gcov-test)
+    add_compile_options(--coverage)
+    add_link_options(--coverage)
 endif()
 
 # Specific OSX POLICY
@@ -99,119 +90,34 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
     endif()
 endif()
 
-# Get architecture
-if(CMAKE_SIZEOF_VOID_P EQUAL 8)
-    set(ARCHITECTURE amd64)
-else()
-    set(ARCHITECTURE i386)
-endif()
-
-if(NOT ${ARCHITECTURE} STREQUAL "i386" AND "${TARGET}" MATCHES "ia32")
-    set(ARCHITECTURE i386)
-    if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
-        # Set appropriate compile and linker flags
-        set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -m32")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -m32")
-        if(NOT STATICLIB)
-            set(CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -m32")
-        endif()
-        set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -m32")
-    endif()
-endif()
-
-# Read the build version
-file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 9)
-set(VERSION_BUILD ${BUILD_NUMBER})
-
 # Custom cmake search
 list(APPEND CMAKE_MODULE_PATH "${TRITON_ROOT}/CMakeModules/")
 
-# Find Python
-if(PYTHON_BINDINGS)
-    find_package(PythonInterp ${PYTHON_VERSION} REQUIRED)
-    if(NOT PYTHON_INCLUDE_DIRS)
-        set(PYTHON_INCLUDE_DIRS "$ENV{PYTHON_INCLUDE_DIRS}")
-    endif()
-        if(NOT PYTHON_LIBRARIES)
-            set(PYTHON_LIBRARIES "$ENV{PYTHON_LIBRARIES}")
-        endif()
-        if(NOT PYTHON_INCLUDE_DIRS AND NOT PYTHON_LIBRARIES)
-            find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
-        elseif(NOT (PYTHON_INCLUDE_DIRS AND PYTHON_LIBRARIES))
-            message(FATAL_ERROR "Inconsistent PYTHON_INCLUDE_DIRS and PYTHON_LIBRARIES")
-        endif()
-    include_directories(${PYTHON_INCLUDE_DIRS})
-    add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
-endif()
-
 # Find Z3
 if(Z3_INTERFACE)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DZ3_INTERFACE")
-    if(NOT Z3_INCLUDE_DIRS)
-        set(Z3_INCLUDE_DIRS "$ENV{Z3_INCLUDE_DIRS}")
-    endif()
-
-    if(NOT Z3_LIBRARIES)
-        set(Z3_LIBRARIES "$ENV{Z3_LIBRARIES}")
-    endif()
-
-    if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
-        if(DEFINED CMAKE_TOOLCHAIN_FILE)
-            find_package(Z3 CONFIG REQUIRED)
-        else()
-            find_package(Z3 REQUIRED)
-        endif()
-        if(NOT Z3_FOUND)
-            message(FATAL_ERROR "Z3 not found")
-        endif()
-    endif()
+    message(STATUS "Compiling with Z3 SMT solver")
+    find_package(Z3 REQUIRED)
     include_directories(${Z3_INCLUDE_DIRS})
     set(TRITON_Z3_INTERFACE ON)
 endif()
 
+# Find bitwuzla
+if(BITWUZLA_INTERFACE)
+    message(STATUS "Compiling with Bitwuzla SMT solver")
+    find_package(BITWUZLA REQUIRED)
+    include_directories(${BITWUZLA_INCLUDE_DIRS})
+    set(TRITON_BITWUZLA_INTERFACE ON)
+endif()
+
 # Find Capstone
-if(NOT CAPSTONE_INCLUDE_DIRS)
-    set(CAPSTONE_INCLUDE_DIRS "$ENV{CAPSTONE_INCLUDE_DIRS}")
-endif()
-
-if(NOT CAPSTONE_LIBRARIES)
-    set(CAPSTONE_LIBRARIES "$ENV{CAPSTONE_LIBRARIES}")
-endif()
-
-if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
-    if(DEFINED CMAKE_TOOLCHAIN_FILE)
-        find_library(CAPSTONE_LIBRARYS CAPSTONE_dll REQUIRED)
-        find_path(CAPSTONE_INCLUDE_DIR capstone.h PATH_SUFFIXES capstone)
-
-        if(CAPSTONE_INCLUDE_DIR AND CAPSTONE_LIBRARYS)
-            set(CAPSTONE_INCLUDE_DIRS ${CAPSTONE_INCLUDE_DIR})
-            set(CAPSTONE_LIBRARIES ${CAPSTONE_LIBRARYS})
-            set(CAPSTONE_FOUND TRUE)
-        endif()
-    else()
-        find_package(CAPSTONE REQUIRED)
-    endif()
-    if(NOT CAPSTONE_FOUND)
-        message(FATAL_ERROR "Capstone not found")
-    endif()
-endif()
-
+message(STATUS "Compiling with Capstone")
+find_package(CAPSTONE REQUIRED)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
 
 # Find boost
+message(STATUS "Compiling with Boost headers")
 find_package(Boost 1.55.0 REQUIRED)
 include_directories("${Boost_INCLUDE_DIRS}")
 
-# Use the same ABI as pin
-if(PINTOOL)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -D_GLIBCXX_USE_CXX11_ABI=0")
-endif()
-
-# Add triton includes for every project
-include_directories("${TRITON_ROOT}/src/libtriton/includes")
-
-set(PROJECT_LIBTRITON "triton")
 add_subdirectory(src)
 add_subdirectory(doc)

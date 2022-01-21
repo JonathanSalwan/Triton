@@ -152,19 +152,6 @@ namespace triton {
         initSymbolicNamespace(symbolicDict);
         PyObject* idSymbolicClass = xPyClass_New(nullptr, symbolicDict, xPyString_FromString("SYMBOLIC"));
 
-        /* Create the SYSCALL namespace ============================================================== */
-        #if defined(__unix__) || defined(__APPLE__)
-        PyObject* syscallsDict64 = xPyDict_New();
-        initSyscall64Namespace(syscallsDict64);
-        PyObject* idSyscallsClass64 = xPyClass_New(nullptr, syscallsDict64, xPyString_FromString("SYSCALL64"));
-        #endif
-
-        #if defined(__unix__)
-        PyObject* syscallsDict32 = xPyDict_New();
-        initSyscall32Namespace(syscallsDict32);
-        PyObject* idSyscallsClass32 = xPyClass_New(nullptr, syscallsDict32, xPyString_FromString("SYSCALL32"));
-        #endif
-
         /* Create the VERSION namespace ============================================================== */
 
         PyObject* versionDict = xPyDict_New();
@@ -191,12 +178,6 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER",              idSolverClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER_STATE",        idSolverStateClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
-        #if defined(__unix__) || defined(__APPLE__)
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL64",           idSyscallsClass64);
-        #endif
-        #if defined(__unix__)
-        PyModule_AddObject(triton::bindings::python::tritonModule, "SYSCALL32",           idSyscallsClass32);
-        #endif
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
 
         return triton::bindings::python::tritonModule;

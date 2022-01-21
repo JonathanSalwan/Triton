@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, TritonContext, MODE
+from triton import ARCH, TritonContext, MODE, SOLVER
 
 
 class TestAstEval(unittest.TestCase):
@@ -13,16 +13,26 @@ class TestAstEval(unittest.TestCase):
 
     def setUp(self):
         """Define the arch."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.astCtxt = self.Triton.getAstContext()
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.astCtxt = self.ctx.getAstContext()
 
     def check_ast(self, tests):
-        """Check our evaluation is the same as the one from Z3."""
+        """Check our evaluation is the same as the one from Z3 and Bitwuzla."""
         for test in tests:
             trv = test.evaluate()
-            z3v = self.Triton.evaluateAstViaZ3(test)
-            self.assertEqual(trv, z3v)
+
+            # Test z3 evaluation
+            if 'Z3' in dir(SOLVER):
+                self.ctx.setSolver(SOLVER.Z3)
+                sv = self.ctx.evaluateAstViaSolver(test)
+                self.assertEqual(trv, sv)
+
+            # Test bitwuzla evaluation
+            if 'BITWUZLA' in dir(SOLVER):
+                self.ctx.setSolver(SOLVER.BITWUZLA)
+                sv = self.ctx.evaluateAstViaSolver(test)
+                self.assertEqual(trv, sv)
 
     def test_sub(self):
         """Check sub operations."""
@@ -618,9 +628,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(64, 32)),
             self.astCtxt.bvrol(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
         ]
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
         self.check_ast(tests)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_ror(self):
@@ -658,9 +668,9 @@ class TestAstEval(unittest.TestCase):
             self.astCtxt.bvror(self.astCtxt.bv(0xf2345678, 32), self.astCtxt.bv(0x12345678, 32)),
             self.astCtxt.bvror(self.astCtxt.bv(11258300193617241473, 64), self.astCtxt.bv(11258300193617241473, 64))
         ]
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, False)
         self.check_ast(tests)
-        self.Triton.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
+        self.ctx.setMode(MODE.SYMBOLIZE_INDEX_ROTATION, True)
         self.check_ast(tests)
 
     def test_smod(self):
@@ -841,11 +851,11 @@ class TestAstEval(unittest.TestCase):
 
     def test_reference(self):
         """Check evaluation of reference node after variable update."""
-        self.sv1 = self.Triton.newSymbolicVariable(8)
+        self.sv1 = self.ctx.newSymbolicVariable(8)
         self.v1 = self.astCtxt.variable(self.sv1)
         subnode = self.astCtxt.bvadd(self.v1, self.v1)
-        expr = self.Triton.newSymbolicExpression(subnode)
+        expr = self.ctx.newSymbolicExpression(subnode)
         final_node = self.astCtxt.bvsub(self.astCtxt.reference(expr), self.astCtxt.bv(8, 8))
-        self.Triton.setConcreteVariableValue(self.sv1, 10)
+        self.ctx.setConcreteVariableValue(self.sv1, 10)
         trv = final_node.evaluate()
         self.assertEqual(trv, 12)

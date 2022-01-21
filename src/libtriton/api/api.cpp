@@ -137,7 +137,6 @@ To be able to compile Triton, you must install these libraries before:
  [libpython](https://www.python.org/)                                          | >= 3.6
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
  [libcapstone](http://www.capstone-engine.org/)                                | >= 4.0.x
- [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
 <hr>
 \subsection linux_install_sec Linux Installation
@@ -192,33 +191,6 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of `li
 However, if you prefer to directly download precompiled libraries, check out our [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
 Note that if you use AppVeyor's artefacts, you probably have to install the [Visual C++ Redistributable](https://www.microsoft.com/en-US/download/details.aspx?id=30679)
 packages for Visual Studio 2012.
-
-<hr>
-\subsection libpintool_install_sec Pintool for Linux users
-
-This project is also shipped with a \ref Tracer_page and may be compiled with these following commands:
-
-~~~~~~~~~~~~~{.sh}
-$ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-$ git clone https://github.com/JonathanSalwan/Triton.git
-$ cd Triton
-$ mkdir build
-$ cd build
-$ cmake -DPINTOOL=on ..
-$ make -j2
-$ cd ..
-$ ./build/triton ./src/examples/pin/ir.py /usr/bin/id
-~~~~~~~~~~~~~
-
-It's not recommended to use the pintool on a kernel `4.x`. The version `71313` of Pin doesn't support very well
-this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
-
-~~~~~~~~~~~~~{.sh}
-$ cmake -DPINTOOL=on -DKERNEL4=on ..
-$ make
-~~~~~~~~~~~~~
-
-Note that only the version `71313` of Pin is supported.
 
 */
 
@@ -860,13 +832,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::processSimplification(const triton::ast::SharedAbstractNode& node, bool z3) const {
+  triton::ast::SharedAbstractNode API::simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver) const {
     this->checkSymbolic();
-    if (z3 == true) {
-      auto snode = this->processZ3Simplification(node);
-      return this->symbolic->processSimplification(snode);
+
+    if (usingSolver) {
+      return this->simplifyAstViaSolver(node);
     }
-    return this->symbolic->processSimplification(node);
+    else {
+      return this->symbolic->simplify(node);
+    }
   }
 
 
@@ -1107,25 +1081,30 @@ namespace triton {
   }
 
 
-  triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
+  triton::uint512 API::evaluateAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
     #endif
-    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
+    #ifdef TRITON_BITWUZLA_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_BITWUZLA) {
+        return reinterpret_cast<const triton::engines::solver::BitwuzlaSolver*>(this->getSolverInstance())->evaluate(node);
+    }
+    #endif
+    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3 or SOLVER_BITWUZLA.");
   }
 
 
-  triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
+  triton::ast::SharedAbstractNode API::simplifyAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }
     #endif
-    throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
+    throw triton::exceptions::API("API::simplifyAstViaSolver(): Solver instance must be a SOLVER_Z3.");
   }
 
 

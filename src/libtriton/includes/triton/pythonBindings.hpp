@@ -99,16 +99,6 @@ namespace triton {
       //! Initializes the SYMBOLIC python namespace.
       void initSymbolicNamespace(PyObject* symbolicDict);
 
-      #if defined(__unix__) || defined(__APPLE__)
-      //! Initializes the SYSCALL32 python namespace.
-      void initSyscall64Namespace(PyObject* sys64Dict);
-
-      #if defined(__unix__)
-      //! Initializes the SYSCALL32 python namespace.
-      void initSyscall32Namespace(PyObject* sys32Dict);
-      #endif
-      #endif
-
       //! Initializes the VERSION python namespace.
       void initVersionNamespace(PyObject* versionDict);
 

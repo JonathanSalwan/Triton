@@ -384,7 +384,7 @@ namespace triton {
         triton::usize id = this->getUniqueSymExprId();
 
         /* Performes transformation if there are rules recorded */
-        const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
+        const triton::ast::SharedAbstractNode& snode = this->simplify(node);
 
         /* Allocates the new shared symbolic expression */
         SharedSymbolicExpression expr = std::make_shared<SymbolicExpression>(snode, id, type, comment);

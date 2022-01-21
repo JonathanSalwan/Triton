@@ -157,6 +157,17 @@ def x_xor_92_obfuscated(x):
 
 def main():
     ctx = TritonContext(ARCH.X86_64)
+
+    try:
+        ctx.setSolver(SOLVER.Z3)
+    except:
+        # NOTE The FORALL node is not supported currently in Bitwuzla. Remove
+        #      this check once it is supported.
+        print("This script requires Z3 as the solver engine. Compile Triton with Z3 support and re-run.")
+
+        # Return 0 so the test don't fail.
+        sys.exit(0)
+
     ast = ctx.getAstContext()
 
     ctx.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
