@@ -22,11 +22,12 @@ project(triton VERSION ${VERSION_MAJOR}.${VERSION_MINOR})
 # Define cmake options
 include(CMakeDependentOption)
 
-option(ASAN                 "Enable the ASAN linking"       OFF)
-option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"    OFF)
-option(BUILD_SHARED_LIBS    "Build a shared library"        ON)
-option(GCOV                 "Enable code coverage"          OFF)
-option(Z3_INTERFACE         "Use Z3 as SMT solver"          ON)
+option(ASAN                 "Enable the ASAN linking"                  OFF)
+option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"               OFF)
+option(BUILD_SHARED_LIBS    "Build a shared library"                   ON)
+option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
+option(GCOV                 "Enable code coverage"                     OFF)
+option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
 
 # Define cmake dependent options
 cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON BUILD_SHARED_LIBS OFF)
