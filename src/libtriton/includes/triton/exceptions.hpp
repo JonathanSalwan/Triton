@@ -156,6 +156,18 @@ namespace triton {
     };
 
 
+    /*! \class SynthesizerEngine
+     *  \brief The exception class used by the synthesizer engine. */
+    class SynthesizerEngine : public triton::exceptions::Engines {
+      public:
+        //! Constructor.
+        TRITON_EXPORT SynthesizerEngine(const char* message) : triton::exceptions::Engines(message) {};
+
+        //! Constructor.
+        TRITON_EXPORT SynthesizerEngine(const std::string& message) : triton::exceptions::Engines(message) {};
+    };
+
+
     /*! \class SolverEngine
      *  \brief The exception class used by the solver engine. */
     class SolverEngine : public triton::exceptions::Engines {

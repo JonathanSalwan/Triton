@@ -1316,4 +1316,14 @@ namespace triton {
     return this->taint->taintAssignment(regDst, regSrc);
   }
 
+
+
+  /* Synthesizer engine API ============================================================================= */
+
+  triton::engines::synthesis::SynthesisResult API::synthesize(const triton::ast::SharedAbstractNode& node, bool constant) {
+    this->checkSymbolic();
+    triton::engines::synthesis::Synthesizer synth(this->symbolic);
+    return synth.synthesize(node, constant);
+  }
+
 }; /* triton namespace */

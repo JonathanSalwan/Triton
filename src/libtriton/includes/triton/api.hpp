@@ -25,6 +25,7 @@
 #include <triton/solverEngine.hpp>
 #include <triton/solverEnums.hpp>
 #include <triton/symbolicEngine.hpp>
+#include <triton/synthesizer.hpp>
 #include <triton/taintEngine.hpp>
 #include <triton/tritonTypes.hpp>
 
@@ -655,6 +656,13 @@ namespace triton {
 
         //! [**taint api**] - Taints RegisterRegister with assignment. Returns true if the regDst is tainted.
         TRITON_EXPORT bool taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc);
+
+
+
+        /* Synthesizer engine API ============================================================================== */
+
+        //! [**synthesizer api**] - Returns the synthesized AST.
+        TRITON_EXPORT triton::engines::synthesis::SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true);
     };
 
 /*! @} End of triton namespace */

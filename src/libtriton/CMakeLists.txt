@@ -50,6 +50,9 @@ set(LIBTRITON_SOURCE_FILES
     engines/symbolic/symbolicExpression.cpp
     engines/symbolic/symbolicSimplification.cpp
     engines/symbolic/symbolicVariable.cpp
+    engines/synthesis/oracleTable.cpp
+    engines/synthesis/synthesisResult.cpp
+    engines/synthesis/synthesizer.cpp
     engines/taint/taintEngine.cpp
     modes/modes.cpp
     utils/coreUtils.cpp
@@ -94,6 +97,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/modes.hpp
     includes/triton/modesEnums.hpp
     includes/triton/operandWrapper.hpp
+    includes/triton/oracleEntry.hpp
     includes/triton/pathConstraint.hpp
     includes/triton/pathManager.hpp
     includes/triton/register.hpp
@@ -108,6 +112,8 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/symbolicExpression.hpp
     includes/triton/symbolicSimplification.hpp
     includes/triton/symbolicVariable.hpp
+    includes/triton/synthesisResult.hpp
+    includes/triton/synthesizer.hpp
     includes/triton/taintEngine.hpp
     includes/triton/tritonToBitwuzlaAst.hpp
     includes/triton/tritonToZ3Ast.hpp
