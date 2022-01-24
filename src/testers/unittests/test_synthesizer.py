@@ -21,21 +21,21 @@ class TestSynth_1(unittest.TestCase):
 
         # Some obfuscated expressions
         self.obf_exprs = [
-            ~x & 0xff,
-            -~x & 0xff,
-            (x | y) + y - (~x & y),                             # x + y             (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-            (x | y) - y + (~x & y),                             # x ^ y             (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-            (x & ~y) | (~x & y),                                # x ^ y             (from ?)
-            (x ^ y) + y - (~x & y),                             # x | y             (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-            -(x | y) + y + x,                                   # x & y             (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-            ((z << 8) >> 16) << 8,                              # z & 0xffff00      (from https://blog.regehr.org/archives/1636)
-            (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111,    # x + y             (from Ninon Eyrolle's thesis)
+            ('((0xff - x) & 0xff)',  ~x & 0xff),
+            ('((x + 0x1) & 0xff)',   -~x & 0xff),
+            ('((x + y) & 0xff)',     (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',              (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',              (x & ~y) | (~x & y)),                                # from ?
+            ('(x | y)',              (x ^ y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(y & x)',               -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(z & 0xffff00)',       ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
+            ('((x + y) & 0xff)',     (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
         ]
 
 
     def test_1(self):
-        for expr in self.obf_exprs:
-            self.assertNotEqual(self.ctx.synthesize(expr), None)
+        for org, obfu in self.obf_exprs:
+            self.assertEqual(str(self.ctx.synthesize(obfu)), org)
 
 
 class TestSynth_2(unittest.TestCase):
