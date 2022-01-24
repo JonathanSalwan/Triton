@@ -1,30 +1,43 @@
 #!/usr/bin/env python
 ## -*- coding: utf-8 -*-
 ##
-##  This program is under the terms of the BSD License.
-##  Jonathan Salwan - 2020-03-18
+## Copyright (C) - Triton
+## This program is under the terms of the Apache License 2.0.
 ##
-##  Generate the oracle table for obfuscated expressions synthesis
-##
-##  Output: src/libtriton/engines/synthesis/oracleTable.cpp
+## Generate the oracle table for obfuscated expressions synthesis
+## Output: src/libtriton/engines/synthesis/oracleTable.cpp
 ##
 
 import sys
 import operator
 
+from triton import *
 from ctypes import c_uint8, c_uint16, c_uint32, c_uint64
 from random import randrange
 
 HOW_BIG_IS_THE_TABLE = 10
 
+ctx = TritonContext(ARCH.X86_64) # does not matter of the architecture, we just need an AstContext
+ast = ctx.getAstContext()
+
 
 binary_operators = [
-    [operator.__add__, 'bvadd', 'triton::ast::BVADD_NODE'],
-    [operator.__sub__, 'bvsub', 'triton::ast::BVSUB_NODE'],
-    [operator.__xor__, 'bvxor', 'triton::ast::BVXOR_NODE'],
-    [operator.__or__,  'bvor',  'triton::ast::BVOR_NODE'],
-    [operator.__and__, 'bvand', 'triton::ast::BVAND_NODE'],
-    [operator.__mul__, 'bvmul', 'triton::ast::BVMUL_NODE'],
+    [ast.bvadd,     'bvadd',  'triton::ast::BVADD_NODE'],
+    [ast.bvand,     'bvand',  'triton::ast::BVAND_NODE'],
+    [ast.bvmul,     'bvmul',  'triton::ast::BVMUL_NODE'],
+    [ast.bvnand,    'bvnand', 'triton::ast::BVNAND_NODE'],
+    [ast.bvnor,     'bvnor',  'triton::ast::BVNOR_NODE'],
+    [ast.bvor,      'bvor',   'triton::ast::BVOR_NODE'],
+    [ast.bvrol,     'bvrol',  'triton::ast::BVROL_NODE'],
+    [ast.bvror,     'bvror',  'triton::ast::BVROR_NODE'],
+    [ast.bvsdiv,    'bvsdiv', 'triton::ast::BVSDIV_NODE'],
+    [ast.bvsmod,    'bvsmod', 'triton::ast::BVSMOD_NODE'],
+    [ast.bvsrem,    'bvsrem', 'triton::ast::BVSREM_NODE'],
+    [ast.bvsub,     'bvsub',  'triton::ast::BVSUB_NODE'],
+    [ast.bvudiv,    'bvudiv', 'triton::ast::BVUDIV_NODE'],
+    [ast.bvurem,    'bvurem', 'triton::ast::BVUREM_NODE'],
+    [ast.bvxnor,    'bvxnor', 'triton::ast::BVXNOR_NODE'],
+    [ast.bvxor,     'bvxor',  'triton::ast::BVXOR_NODE'],
 ]
 
 
@@ -34,24 +47,60 @@ def gen_binary_operator(binary_op):
     print('        {')
     print('          %s, {' %(enum))
     for i in range(HOW_BIG_IS_THE_TABLE):
-        s1 = c_uint8(randrange(1, 0x100))
-        s2 = c_uint8(randrange(1, 0x100))
-        r1 = c_uint8(op(s1.value, s2.value))
+        stop = False
+        while not stop:
+            s1 = ast.bv(randrange(1, 0x100), 8)
+            s2 = ast.bv(randrange(1, 0x100), 8)
 
-        s3 = c_uint16(randrange(0x100, 0x10000))
-        s4 = c_uint16(randrange(0x100, 0x10000))
-        r2 = c_uint16(op(s3.value, s4.value))
+            # Special case for div, we need small number
+            if name in ['bvsdiv', 'bvudiv']:
+                s2 = ast.bv(1 << i % 7, 8)
 
-        s5 = c_uint32(randrange(0x10000, 0x100000000))
-        s6 = c_uint32(randrange(0x10000, 0x100000000))
-        r3 = c_uint32(op(s5.value, s6.value))
+            r1 = op(s1, s2)
+            if r1.evaluate() != 0:
+                stop = True
 
-        s7 = c_uint64(randrange(0x100000000, 0x10000000000000000))
-        s8 = c_uint64(randrange(0x100000000, 0x10000000000000000))
-        r4 = c_uint64(op(s7.value, s8.value))
+        stop = False
+        while not stop:
+            s3 = ast.bv(randrange(0x100, 0x10000), 16)
+            s4 = ast.bv(randrange(0x100, 0x10000), 16)
+
+            # Special case for div, we need small number
+            if name in ['bvsdiv', 'bvudiv']:
+                s4 = ast.bv(1 << i, 16)
+
+            r2 = op(s3, s4)
+            if r2.evaluate() != 0:
+                stop = True
+
+        stop = False
+        while not stop:
+            s5 = ast.bv(randrange(0x10000, 0x100000000), 32)
+            s6 = ast.bv(randrange(0x10000, 0x100000000), 32)
+
+            # Special case for div, we need small number
+            if name in ['bvsdiv', 'bvudiv']:
+                s6 = ast.bv(1 << i, 32)
+
+            r3 = op(s5, s6)
+            if r3.evaluate() != 0:
+                stop = True
+
+        stop = False
+        while not stop:
+            s7 = ast.bv(randrange(0x100000000, 0x10000000000000000), 64)
+            s8 = ast.bv(randrange(0x100000000, 0x10000000000000000), 64)
+
+            # Special case for div, we need small number
+            if name in ['bvsdiv', 'bvudiv']:
+                s8 = ast.bv(1 << i, 64)
+
+            r4 = op(s7, s8)
+            if r4.evaluate() != 0:
+                stop = True
 
         print('            OracleEntry(8, 0x%02x, 0x%02x, 0x%02x), OracleEntry(16, 0x%04x, 0x%04x, 0x%04x), OracleEntry(32, 0x%08x, 0x%08x, 0x%08x), OracleEntry(64, 0x%016x, 0x%016x, 0x%016x),'
-            % (s1.value, s2.value, r1.value, s3.value, s4.value, r2.value, s5.value, s6.value, r3.value, s7.value, s8.value, r4.value)
+            % (s1.evaluate(), s2.evaluate(), r1.evaluate(), s3.evaluate(), s4.evaluate(), r2.evaluate(), s5.evaluate(), s6.evaluate(), r3.evaluate(), s7.evaluate(), s8.evaluate(), r4.evaluate())
         )
     print('          }')
     print('        },')

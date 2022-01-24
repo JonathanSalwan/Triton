@@ -147,12 +147,22 @@ namespace triton {
           // If an oracle is found, we craft a synthesized node.
           if (found) {
             switch (op) {
-              case triton::ast::BVADD_NODE: result.setOutput(actx->bvadd(actx->variable(var_x), actx->variable(var_y)));  break;
-              case triton::ast::BVAND_NODE: result.setOutput(actx->bvand(actx->variable(var_x), actx->variable(var_y)));  break;
-              case triton::ast::BVMUL_NODE: result.setOutput(actx->bvmul(actx->variable(var_x), actx->variable(var_y)));  break;
-              case triton::ast::BVOR_NODE:  result.setOutput(actx->bvor(actx->variable(var_x),  actx->variable(var_y)));  break;
-              case triton::ast::BVSUB_NODE: result.setOutput(actx->bvsub(actx->variable(var_x), actx->variable(var_y)));  break;
-              case triton::ast::BVXOR_NODE: result.setOutput(actx->bvxor(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVADD_NODE:     result.setOutput(actx->bvadd(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVAND_NODE:     result.setOutput(actx->bvand(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVMUL_NODE:     result.setOutput(actx->bvmul(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVNAND_NODE:    result.setOutput(actx->bvnand(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVNOR_NODE:     result.setOutput(actx->bvnor(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVOR_NODE:      result.setOutput(actx->bvor(actx->variable(var_x),   actx->variable(var_y)));  break;
+              case triton::ast::BVROL_NODE:     result.setOutput(actx->bvrol(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVROR_NODE:     result.setOutput(actx->bvror(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVSDIV_NODE:    result.setOutput(actx->bvsdiv(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVSMOD_NODE:    result.setOutput(actx->bvsmod(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVSREM_NODE:    result.setOutput(actx->bvsrem(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVSUB_NODE:     result.setOutput(actx->bvsub(actx->variable(var_x),  actx->variable(var_y)));  break;
+              case triton::ast::BVUDIV_NODE:    result.setOutput(actx->bvudiv(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVUREM_NODE:    result.setOutput(actx->bvurem(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVXNOR_NODE:    result.setOutput(actx->bvxnor(actx->variable(var_x), actx->variable(var_y)));  break;
+              case triton::ast::BVXOR_NODE:     result.setOutput(actx->bvxor(actx->variable(var_x),  actx->variable(var_y)));  break;
               default:
                 throw triton::exceptions::SynthesizerEngine("Synthesizer::twoVariablesSynthesis(): Invalid type of operator.");
             }
