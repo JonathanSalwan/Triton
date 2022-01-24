@@ -1,7 +1,10 @@
-//
-//  This program is under the terms of the BSD License.
-//  Jonathan Salwan - 2022-01-22
-//
+//! \file
+/*
+**  Copyright (C) - Triton
+**
+**  This program is under the terms of the Apache License 2.0.
+*/
+
 #include <array>
 #include <deque>
 #include <map>
