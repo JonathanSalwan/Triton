@@ -62,9 +62,9 @@ namespace triton {
           bool constantSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
                                  const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
-          //! Synthesize a given node that contains two variables
-          bool twoVariablesSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
-                                     const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
+          //! Synthesize a given node that contains two variables with one operator
+          bool binaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
+                                       const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
         public:
           //! Constructor.

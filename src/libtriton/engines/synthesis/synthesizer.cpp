@@ -45,7 +45,7 @@ namespace triton {
         }
 
         else if (vars.size() == 2 && input->getLevel() > 2) {
-          this->twoVariablesSynthesis(actx, vars, input, result);
+          this->binaryOperatorSynthesis(actx, vars, input, result);
         }
 
         // Stop to record the time of the synthesizing
@@ -110,8 +110,8 @@ namespace triton {
       }
 
 
-      bool Synthesizer::twoVariablesSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
-                                              const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
+      bool Synthesizer::binaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
+                                                const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
         /* We start by saving orignal value of symbolic variables */
         auto var_x = reinterpret_cast<triton::ast::VariableNode*>(vars[0].get())->getSymbolicVariable();
         auto var_y = reinterpret_cast<triton::ast::VariableNode*>(vars[1].get())->getSymbolicVariable();
@@ -124,6 +124,12 @@ namespace triton {
         if (bits != 8 && bits != 16 && bits != 32 && bits != 64)
           return false;
 
+        /*
+         * NOTE: More the oracle table will grow more it will take time to looking
+         *       for a potential synthesis. Currently, the complexity is O(n) where
+         *       n is the number of entry in the table. At some point we have to
+         *       change this.
+         */
         for (auto const& it : triton::engines::synthesis::oracleTable) {
           triton::ast::ast_e op = it.first;
           std::array<OracleEntry, 40> oracles = it.second;
@@ -164,7 +170,7 @@ namespace triton {
               case triton::ast::BVXNOR_NODE:    result.setOutput(actx->bvxnor(actx->variable(var_x), actx->variable(var_y)));  break;
               case triton::ast::BVXOR_NODE:     result.setOutput(actx->bvxor(actx->variable(var_x),  actx->variable(var_y)));  break;
               default:
-                throw triton::exceptions::SynthesizerEngine("Synthesizer::twoVariablesSynthesis(): Invalid type of operator.");
+                throw triton::exceptions::SynthesizerEngine("Synthesizer::binaryOperatorSynthesis(): Invalid type of operator.");
             }
 
             // Adjust the size of the destination
