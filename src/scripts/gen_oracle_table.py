@@ -43,9 +43,9 @@ binary_operators = [
 
 def gen_binary_operator(binary_op):
     op, name, enum = binary_op
-    print('        /* %s synthesis */' %(name))
-    print('        {')
-    print('          %s, {' %(enum))
+    print('          /* %s synthesis */' %(name))
+    print('          {')
+    print('            %s, {' %(enum))
     for i in range(HOW_BIG_IS_THE_TABLE):
         stop = False
         while not stop:
@@ -99,11 +99,11 @@ def gen_binary_operator(binary_op):
             if r4.evaluate() != 0:
                 stop = True
 
-        print('            OracleEntry(8, 0x%02x, 0x%02x, 0x%02x), OracleEntry(16, 0x%04x, 0x%04x, 0x%04x), OracleEntry(32, 0x%08x, 0x%08x, 0x%08x), OracleEntry(64, 0x%016x, 0x%016x, 0x%016x),'
+        print('              BinaryEntry(8, 0x%02x, 0x%02x, 0x%02x), BinaryEntry(16, 0x%04x, 0x%04x, 0x%04x), BinaryEntry(32, 0x%08x, 0x%08x, 0x%08x), BinaryEntry(64, 0x%016x, 0x%016x, 0x%016x),'
             % (s1.evaluate(), s2.evaluate(), r1.evaluate(), s3.evaluate(), s4.evaluate(), r2.evaluate(), s5.evaluate(), s6.evaluate(), r3.evaluate(), s7.evaluate(), s8.evaluate(), r4.evaluate())
         )
-    print('          }')
-    print('        },')
+    print('            }')
+    print('          },')
     return
 
 
@@ -127,13 +127,15 @@ def main():
     print('namespace triton {')
     print('  namespace engines {')
     print('    namespace synthesis {')
+    print('      namespace oracles {')
     print('')
-    print('      //! The oracle table. Each entry is an OracleEntry object.')
-    print('      /*! \\brief Entry: <bits> <x value> <y value> <result> <operator> */')
-    print('      std::map<triton::ast::ast_e, std::array<OracleEntry, 40>> oracleTable = {')
+    print('        //! The oracle table for binary operators. Each entry is a BinaryEntry object.')
+    print('        /*! \\brief Entry: <bits> <x value> <y value> <result> <operator> */')
+    print('        std::map<triton::ast::ast_e, std::array<BinaryEntry, 40>> binopTable = {')
     for op in binary_operators:
         gen_binary_operator(op)
-    print('      };\n')
+    print('        };\n')
+    print('      }; /* oracles namespace */')
     print('    }; /* synthesis namespace */')
     print('  }; /* engines namespace */')
     print('}; /* triton namespace */')

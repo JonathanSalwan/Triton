@@ -130,9 +130,9 @@ namespace triton {
          *       n is the number of entry in the table. At some point we have to
          *       change this.
          */
-        for (auto const& it : triton::engines::synthesis::oracleTable) {
+        for (auto const& it : triton::engines::synthesis::oracles::binopTable) {
           triton::ast::ast_e op = it.first;
-          std::array<OracleEntry, 40> oracles = it.second;
+          std::array<BinaryEntry, 40> oracles = it.second;
 
           bool found = true;
           for (auto const& oracle : oracles) {

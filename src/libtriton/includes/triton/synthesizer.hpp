@@ -45,8 +45,20 @@ namespace triton {
      *  @{
      */
 
-      //! The oracle table. Each entry is an OracleEntry object.
-      extern std::map<triton::ast::ast_e, std::array<OracleEntry, 40>> oracleTable;
+
+      //! The Synthesis namespace
+      namespace oracles {
+      /*!
+       *  \ingroup synthesis
+       *  \addtogroup oracles
+       *  @{
+       */
+
+        //! The oracle table for binary operators. Each entry is an BinaryEntry object.
+        extern std::map<triton::ast::ast_e, std::array<BinaryEntry, 40>> binopTable;
+
+      /*! @} End of oracle namespace */
+      };
 
       //! \class Synthesizer
       /*! \brief The Synthesizer engine class. */

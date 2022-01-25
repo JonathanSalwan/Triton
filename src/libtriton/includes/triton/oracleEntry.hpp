@@ -37,6 +37,8 @@ namespace triton {
      *  @{
      */
 
+      //! \class ConstantEntry
+      /*! \brief Entry of the oracle table for constant synthesis. */
       class ConstantEntry {
         public:
           //! AST operator
@@ -51,7 +53,9 @@ namespace triton {
           };
       };
 
-      class OracleEntry {
+      //! \class BinaryEntry
+      /*! \brief Entry of the oracle table for binary operators synthesis. */
+      class BinaryEntry {
         public:
           //! Size of the oracle
           triton::uint32 bits;
@@ -66,7 +70,7 @@ namespace triton {
           triton::uint64 r;
 
           //! Constructor
-          TRITON_EXPORT OracleEntry(triton::uint8 bits, triton::uint64 x, triton::uint64 y, triton::uint64 r)
+          TRITON_EXPORT BinaryEntry(triton::uint8 bits, triton::uint64 x, triton::uint64 y, triton::uint64 r)
             : bits(bits), x(x), y(y), r(r) {
           };
       };
