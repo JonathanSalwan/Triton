@@ -132,7 +132,7 @@ namespace triton {
 
 
     bool operator<(const Register& reg1, const Register& reg2) {
-        return (reg1.getId() < reg2.getId());
+      return (reg1.getId() < reg2.getId());
     }
 
   }; /* arch namespace */
