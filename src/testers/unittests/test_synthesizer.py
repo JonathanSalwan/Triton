@@ -21,7 +21,7 @@ class TestSynth_1(unittest.TestCase):
 
         # Some obfuscated expressions
         self.obf_exprs = [
-            ('((0xff - x) & 0xff)',  ~x & 0xff),
+            ('(~(x) & 0xff)',        (((0xff - x) & 0xff) + (1 * (1 - 1)))),
             ('((x + 0x1) & 0xff)',   -~x & 0xff),
             ('((x + y) & 0xff)',     (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
             ('(x ^ y)',              (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf

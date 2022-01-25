@@ -21,6 +21,12 @@ ctx = TritonContext(ARCH.X86_64) # does not matter of the architecture, we just 
 ast = ctx.getAstContext()
 
 
+unary_operators = [
+    [ast.bvneg,     'bvneg',  'triton::ast::BVNEG_NODE'],
+    [ast.bvnot,     'bvnot',  'triton::ast::BVNOT_NODE'],
+]
+
+
 binary_operators = [
     [ast.bvadd,     'bvadd',  'triton::ast::BVADD_NODE'],
     [ast.bvand,     'bvand',  'triton::ast::BVAND_NODE'],
@@ -39,6 +45,48 @@ binary_operators = [
     [ast.bvxnor,    'bvxnor', 'triton::ast::BVXNOR_NODE'],
     [ast.bvxor,     'bvxor',  'triton::ast::BVXOR_NODE'],
 ]
+
+
+def gen_unary_operator(unary_op):
+    op, name, enum = unary_op
+    print('          /* %s synthesis */' %(name))
+    print('          {')
+    print('            %s, {' %(enum))
+    for i in range(HOW_BIG_IS_THE_TABLE):
+        stop = False
+        while not stop:
+            s1 = ast.bv(randrange(1, 0x100), 8)
+            r1 = op(s1)
+            if r1.evaluate() != 0:
+                stop = True
+
+        stop = False
+        while not stop:
+            s2 = ast.bv(randrange(0x100, 0x10000), 16)
+            r2 = op(s2)
+            if r2.evaluate() != 0:
+                stop = True
+
+        stop = False
+        while not stop:
+            s3 = ast.bv(randrange(0x10000, 0x100000000), 32)
+            r3 = op(s3)
+            if r3.evaluate() != 0:
+                stop = True
+
+        stop = False
+        while not stop:
+            s4 = ast.bv(randrange(0x100000000, 0x10000000000000000), 64)
+            r4 = op(s4)
+            if r4.evaluate() != 0:
+                stop = True
+
+        print('              UnaryEntry(8, 0x%02x, 0x%02x), UnaryEntry(16, 0x%04x, 0x%04x), UnaryEntry(32, 0x%08x, 0x%08x), UnaryEntry(64, 0x%016x, 0x%016x),'
+            % (s1.evaluate(), r1.evaluate(), s2.evaluate(), r2.evaluate(), s3.evaluate(), r3.evaluate(), s4.evaluate(), r4.evaluate())
+        )
+    print('            }')
+    print('          },')
+    return
 
 
 def gen_binary_operator(binary_op):
@@ -129,12 +177,20 @@ def main():
     print('    namespace synthesis {')
     print('      namespace oracles {')
     print('')
+    print('        //! The oracle table for unary operators. Each entry is a UnaryEntry object.')
+    print('        /*! \\brief Entry: <bits> <x value> <result> <operator> */')
+    print('        std::map<triton::ast::ast_e, std::array<UnaryEntry, 40>> unopTable = {')
+    for op in unary_operators:
+        gen_unary_operator(op)
+    print('        };\n')
+    print('')
     print('        //! The oracle table for binary operators. Each entry is a BinaryEntry object.')
     print('        /*! \\brief Entry: <bits> <x value> <y value> <result> <operator> */')
     print('        std::map<triton::ast::ast_e, std::array<BinaryEntry, 40>> binopTable = {')
     for op in binary_operators:
         gen_binary_operator(op)
-    print('        };\n')
+    print('        };')
+    print('')
     print('      }; /* oracles namespace */')
     print('    }; /* synthesis namespace */')
     print('  }; /* engines namespace */')

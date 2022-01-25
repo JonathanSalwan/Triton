@@ -53,6 +53,25 @@ namespace triton {
           };
       };
 
+      //! \class UnaryEntry
+      /*! \brief Entry of the oracle table for unary operators synthesis. */
+      class UnaryEntry {
+        public:
+          //! Size of the oracle
+          triton::uint32 bits;
+
+          //! Value of x
+          triton::uint64 x;
+
+          //! Result of x <op> y
+          triton::uint64 r;
+
+          //! Constructor
+          TRITON_EXPORT UnaryEntry(triton::uint8 bits, triton::uint64 x, triton::uint64 r)
+            : bits(bits), x(x), r(r) {
+          };
+      };
+
       //! \class BinaryEntry
       /*! \brief Entry of the oracle table for binary operators synthesis. */
       class BinaryEntry {

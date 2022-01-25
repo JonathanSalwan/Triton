@@ -19,6 +19,42 @@ namespace triton {
     namespace synthesis {
       namespace oracles {
 
+        //! The oracle table for unary operators. Each entry is a UnaryEntry object.
+        /*! \brief Entry: <bits> <x value> <result> <operator> */
+        std::map<triton::ast::ast_e, std::array<UnaryEntry, 40>> unopTable = {
+          /* bvneg synthesis */
+          {
+            triton::ast::BVNEG_NODE, {
+              UnaryEntry(8, 0x84, 0x7c), UnaryEntry(16, 0xf231, 0x0dcf), UnaryEntry(32, 0xdea0368a, 0x215fc976), UnaryEntry(64, 0x5ebb7410a9076a77, 0xa1448bef56f89589),
+              UnaryEntry(8, 0xb1, 0x4f), UnaryEntry(16, 0x908a, 0x6f76), UnaryEntry(32, 0x5a3a5b2f, 0xa5c5a4d1), UnaryEntry(64, 0x16cae2f7e7d3fc97, 0xe9351d08182c0369),
+              UnaryEntry(8, 0x31, 0xcf), UnaryEntry(16, 0x7eba, 0x8146), UnaryEntry(32, 0x4450a330, 0xbbaf5cd0), UnaryEntry(64, 0x6eb5594872f62607, 0x914aa6b78d09d9f9),
+              UnaryEntry(8, 0x24, 0xdc), UnaryEntry(16, 0x0f3a, 0xf0c6), UnaryEntry(32, 0x5f849c9c, 0xa07b6364), UnaryEntry(64, 0x523c7aa7ea140cf6, 0xadc3855815ebf30a),
+              UnaryEntry(8, 0x7a, 0x86), UnaryEntry(16, 0x6f5e, 0x90a2), UnaryEntry(32, 0x3eda78a1, 0xc125875f), UnaryEntry(64, 0xe2b22250f677c90a, 0x1d4dddaf098836f6),
+              UnaryEntry(8, 0xfb, 0x05), UnaryEntry(16, 0xeaf3, 0x150d), UnaryEntry(32, 0xf606f29e, 0x09f90d62), UnaryEntry(64, 0xc25139f6c56e2b1a, 0x3daec6093a91d4e6),
+              UnaryEntry(8, 0xdf, 0x21), UnaryEntry(16, 0xf446, 0x0bba), UnaryEntry(32, 0xb3152d26, 0x4cead2da), UnaryEntry(64, 0xa6a5c5db99af6292, 0x595a3a2466509d6e),
+              UnaryEntry(8, 0x90, 0x70), UnaryEntry(16, 0xbe65, 0x419b), UnaryEntry(32, 0x6875f40f, 0x978a0bf1), UnaryEntry(64, 0xb32040a2bc375160, 0x4cdfbf5d43c8aea0),
+              UnaryEntry(8, 0xf5, 0x0b), UnaryEntry(16, 0xfc94, 0x036c), UnaryEntry(32, 0x43937e0a, 0xbc6c81f6), UnaryEntry(64, 0xf088f5479deb9f86, 0x0f770ab86214607a),
+              UnaryEntry(8, 0x82, 0x7e), UnaryEntry(16, 0xfd23, 0x02dd), UnaryEntry(32, 0xa78178e3, 0x587e871d), UnaryEntry(64, 0x9070b8c2438a7d2d, 0x6f8f473dbc7582d3),
+            }
+          },
+          /* bvnot synthesis */
+          {
+            triton::ast::BVNOT_NODE, {
+              UnaryEntry(8, 0xbf, 0x40), UnaryEntry(16, 0xa534, 0x5acb), UnaryEntry(32, 0xe615f7a1, 0x19ea085e), UnaryEntry(64, 0x7e2d19f3e35fa723, 0x81d2e60c1ca058dc),
+              UnaryEntry(8, 0x07, 0xf8), UnaryEntry(16, 0xcbfb, 0x3404), UnaryEntry(32, 0xf0033666, 0x0ffcc999), UnaryEntry(64, 0x74b2231ce11018aa, 0x8b4ddce31eefe755),
+              UnaryEntry(8, 0xad, 0x52), UnaryEntry(16, 0x952a, 0x6ad5), UnaryEntry(32, 0x4b6a154b, 0xb495eab4), UnaryEntry(64, 0x1e6a1f352e994b3d, 0xe195e0cad166b4c2),
+              UnaryEntry(8, 0x37, 0xc8), UnaryEntry(16, 0x8ae7, 0x7518), UnaryEntry(32, 0x4cda9ed4, 0xb325612b), UnaryEntry(64, 0xc8512c92c9727132, 0x37aed36d368d8ecd),
+              UnaryEntry(8, 0x86, 0x79), UnaryEntry(16, 0xbb3c, 0x44c3), UnaryEntry(32, 0x18d1e778, 0xe72e1887), UnaryEntry(64, 0xbeba68945a58db0e, 0x4145976ba5a724f1),
+              UnaryEntry(8, 0xb1, 0x4e), UnaryEntry(16, 0x872e, 0x78d1), UnaryEntry(32, 0x25718016, 0xda8e7fe9), UnaryEntry(64, 0x423a32a97ea6daf7, 0xbdc5cd5681592508),
+              UnaryEntry(8, 0x5d, 0xa2), UnaryEntry(16, 0x82fe, 0x7d01), UnaryEntry(32, 0xb9b70129, 0x4648fed6), UnaryEntry(64, 0xa349cf97698b719b, 0x5cb6306896748e64),
+              UnaryEntry(8, 0x30, 0xcf), UnaryEntry(16, 0x9694, 0x696b), UnaryEntry(32, 0x5fa761a9, 0xa0589e56), UnaryEntry(64, 0x5cddd977d5a8990e, 0xa32226882a5766f1),
+              UnaryEntry(8, 0x17, 0xe8), UnaryEntry(16, 0x3d85, 0xc27a), UnaryEntry(32, 0x7f90f323, 0x806f0cdc), UnaryEntry(64, 0xcb1e51195c5cd301, 0x34e1aee6a3a32cfe),
+              UnaryEntry(8, 0x94, 0x6b), UnaryEntry(16, 0xf83f, 0x07c0), UnaryEntry(32, 0x0edc448e, 0xf123bb71), UnaryEntry(64, 0x5e1415d881b3c360, 0xa1ebea277e4c3c9f),
+            }
+          },
+        };
+
+
         //! The oracle table for binary operators. Each entry is a BinaryEntry object.
         /*! \brief Entry: <bits> <x value> <y value> <result> <operator> */
         std::map<triton::ast::ast_e, std::array<BinaryEntry, 40>> binopTable = {

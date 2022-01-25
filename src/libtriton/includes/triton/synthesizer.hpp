@@ -45,7 +45,6 @@ namespace triton {
      *  @{
      */
 
-
       //! The Synthesis namespace
       namespace oracles {
       /*!
@@ -54,7 +53,10 @@ namespace triton {
        *  @{
        */
 
-        //! The oracle table for binary operators. Each entry is an BinaryEntry object.
+        //! The oracle table for unary operators. Each entry is a UnaryEntry object.
+        extern std::map<triton::ast::ast_e, std::array<UnaryEntry, 40>> unopTable;
+
+        //! The oracle table for binary operators. Each entry is a BinaryEntry object.
         extern std::map<triton::ast::ast_e, std::array<BinaryEntry, 40>> binopTable;
 
       /*! @} End of oracle namespace */
@@ -73,6 +75,10 @@ namespace triton {
           //! Synthesize a given node that contains one variable (constant synthesizing)
           bool constantSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
                                  const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
+
+          //! Synthesize a given node that contains one variable with one operator
+          bool unaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
+                                      const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
           //! Synthesize a given node that contains two variables with one operator
           bool binaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
