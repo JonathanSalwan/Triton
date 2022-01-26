@@ -6,6 +6,8 @@
 */
 
 #include <chrono>
+#include <stack>
+#include <unordered_set>
 #include <vector>
 
 #include <triton/ast.hpp>
@@ -28,7 +30,7 @@ namespace triton {
       }
 
 
-      SynthesisResult Synthesizer::synthesize(const triton::ast::SharedAbstractNode& input, bool constant) {
+      SynthesisResult Synthesizer::synthesize(const triton::ast::SharedAbstractNode& input, bool constant, bool subexpr) {
         SynthesisResult result;
 
         // Save the input node
@@ -37,19 +39,14 @@ namespace triton {
         // Start to record the time of the synthesizing
         auto start = std::chrono::system_clock::now();
 
-        auto actx = input->getContext();
-        auto vars = triton::ast::search(input, triton::ast::VARIABLE_NODE);
+        // Do not alter original input
+        auto node = triton::ast::newInstance(input.get(), true);
 
-        if (vars.size() == 1 && input->getLevel() > 2) {
-          bool success = this->unaryOperatorSynthesis(actx, vars, input, result);
-
-          if (success == false && constant == true) {
-            this->constantSynthesis(actx, vars, input, result);
+        // Do the synthesize and if nothing has been synthesized, try on children expression
+        if (this->do_synthesize(node, constant, result) == false) {
+          if (subexpr == true) {
+            this->childrenSynthesis(node, constant, result);
           }
-        }
-
-        else if (vars.size() == 2 && input->getLevel() > 2) {
-          this->binaryOperatorSynthesis(actx, vars, input, result);
         }
 
         // Stop to record the time of the synthesizing
@@ -62,13 +59,86 @@ namespace triton {
       }
 
 
-      bool Synthesizer::constantSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
-                                          const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
+      bool Synthesizer::do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
+        bool ret = false;
+
+        // How many variables in the expression?
+        auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
+
+        // First, find if unary operators can be synthesized
+        if (vars.size() == 1 && node->getLevel() > 2) {
+          ret = this->unaryOperatorSynthesis(vars, node, result);
+
+          // Second, find if constant can be synthesized
+          if (ret == false && constant == true) {
+            ret = this->constantSynthesis(vars, node, result);
+          }
+        }
+
+        // Third, find if binary operators can be synthesized
+        else if (vars.size() == 2 && node->getLevel() > 2) {
+          ret = this->binaryOperatorSynthesis(vars, node, result);
+        }
+
+        return ret;
+      }
+
+
+      bool Synthesizer::childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
+        std::stack<triton::ast::AbstractNode*>                worklist;
+        std::unordered_set<const triton::ast::AbstractNode*>  visited;
+
+        worklist.push(node.get());
+        while (!worklist.empty()) {
+          auto current = worklist.top();
+          worklist.pop();
+
+          // This means that node is already visited and we will not need to visited it second time
+          if (visited.find(current) != visited.end()) {
+            continue;
+          }
+          visited.insert(current);
+
+          if (current->getType() == triton::ast::REFERENCE_NODE) {
+            worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
+          }
+          else {
+            triton::usize index = 0;
+            for (const auto& child : current->getChildren()) {
+              SynthesisResult tmp;
+              if (this->do_synthesize(child, constant, tmp)) {
+                /* Replace the child node on the fly */
+                current->setChild(index++, tmp.getOutput());
+                /* Set true because we synthesized at least one child */
+                result.setSuccess(true);
+                continue;
+              }
+              worklist.push(child.get());
+              index++;
+            }
+          }
+        }
+
+        /*
+         * If we synthesized at least one child, we set the output as 'node'
+         * because it has been modified on the fly
+         */
+        if (result.successful()) {
+          result.setOutput(node);
+          return true;
+        }
+
+        return false;
+      }
+
+
+      bool Synthesizer::constantSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
         /* We need Z3 solver in order to use quantifier logic */
         #ifdef TRITON_Z3_INTERFACE
 
         /* We start by getting the symbolic variable of the expression */
         auto var_x = reinterpret_cast<triton::ast::VariableNode*>(vars[0].get())->getSymbolicVariable();
+        auto actx  = node->getContext();
 
         triton::uint32 bits    = var_x->getSize();
         triton::uint32 insize  = node->getBitvectorSize();
@@ -114,10 +184,10 @@ namespace triton {
       }
 
 
-      bool Synthesizer::unaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
-                                               const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
+      bool Synthesizer::unaryOperatorSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
         /* We start by saving orignal value of symbolic variable */
         auto var_x = reinterpret_cast<triton::ast::VariableNode*>(vars[0].get())->getSymbolicVariable();
+        auto actx  = node->getContext();
 
         triton::uint512 save_x = actx->getVariableValue(var_x->getName());
         triton::uint32  bits   = var_x->getSize();
@@ -183,11 +253,11 @@ namespace triton {
       }
 
 
-      bool Synthesizer::binaryOperatorSynthesis(const triton::ast::SharedAstContext& actx, const std::deque<triton::ast::SharedAbstractNode>& vars,
-                                                const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
+      bool Synthesizer::binaryOperatorSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
         /* We start by saving orignal value of symbolic variables */
         auto var_x = reinterpret_cast<triton::ast::VariableNode*>(vars[0].get())->getSymbolicVariable();
         auto var_y = reinterpret_cast<triton::ast::VariableNode*>(vars[1].get())->getSymbolicVariable();
+        auto actx  = node->getContext();
 
         triton::uint512 save_x = actx->getVariableValue(var_x->getName());
         triton::uint512 save_y = actx->getVariableValue(var_y->getName());

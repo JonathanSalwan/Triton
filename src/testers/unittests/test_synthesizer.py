@@ -56,16 +56,6 @@ class TestSynth_2(unittest.TestCase):
         self.CODE += b"\xC1\x8D\x14\x06\x8B\x45\xEC\x01\xD0\x83\xC0\x01\x89\x45\xFC\x8B"
         self.CODE += b"\x45\xFC\x5D\xC3"
 
-        self.ctx = TritonContext(ARCH.X86_64)
-        self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
-        self.ctx.setMode(MODE.ALIGNED_MEMORY, True)
-        self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
-        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.cb)
-
-        self.ctx.symbolizeRegister(self.ctx.registers.edi, "a")
-        self.ctx.symbolizeRegister(self.ctx.registers.esi, "b")
-        self.ctx.setConcreteMemoryAreaValue(0x1000, self.CODE)
-
     def emulate(self, ctx, pc):
         while pc:
             opcode = ctx.getConcreteMemoryAreaValue(pc, 16)
@@ -75,13 +65,36 @@ class TestSynth_2(unittest.TestCase):
         return
 
     def cb(self, ctx, node):
-        synth = ctx.synthesize(node, constant=False)
+        synth = ctx.synthesize(node, constant=False, subexpr=False)
         if synth:
             return synth
         return node
 
+    def init(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
+        self.ctx.setMode(MODE.ALIGNED_MEMORY, True)
+        self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
+
+        self.ctx.symbolizeRegister(self.ctx.registers.edi, "a")
+        self.ctx.symbolizeRegister(self.ctx.registers.esi, "b")
+        self.ctx.setConcreteMemoryAreaValue(0x1000, self.CODE)
+
     def test_2(self):
+        # First test using on the fly synthesis
+        self.init()
+        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.cb)
         self.emulate(self.ctx, 0x1000)
-        eax = self.ctx.getRegisterAst(self.ctx.registers.eax)
-        ast = self.ctx.getAstContext()
-        self.assertLessEqual(eax.getLevel(), 20)
+        eax  = self.ctx.getRegisterAst(self.ctx.registers.eax)
+        ast  = self.ctx.getAstContext()
+        res1 = str(ast.unroll(eax))
+
+        # Second test using subexpr
+        self.init()
+        self.emulate(self.ctx, 0x1000)
+        eax  = self.ctx.getRegisterAst(self.ctx.registers.eax)
+        ast  = self.ctx.getAstContext()
+        res2 = str(ast.unroll(self.ctx.synthesize(eax, constant=False, subexpr=True)))
+
+        # Both results must be equal
+        self.assertLessEqual(res1, res2)

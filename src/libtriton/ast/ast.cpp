@@ -3269,7 +3269,7 @@ namespace triton {
         auto current = worklist.top();
         worklist.pop();
 
-        // This means that node is already in work_stack and we will not need to convert it second time
+        // This means that node is already visited and we will not need to visited it second time
         if (visited.find(current) != visited.end()) {
           continue;
         }
@@ -3279,10 +3279,10 @@ namespace triton {
           result.push_front(current->shared_from_this());
 
         if (current->getType() == REFERENCE_NODE) {
-          worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
+          worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
         }
         else {
-          for (const auto &child : current->getChildren()) {
+          for (const auto& child : current->getChildren()) {
             worklist.push(child.get());
           }
         }

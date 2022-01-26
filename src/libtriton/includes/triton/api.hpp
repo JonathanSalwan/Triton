@@ -661,8 +661,8 @@ namespace triton {
 
         /* Synthesizer engine API ============================================================================== */
 
-        //! [**synthesizer api**] - Returns the synthesized AST.
-        TRITON_EXPORT triton::engines::synthesis::SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true);
+        //! [**synthesizer api**] - Synthesizes a given node. If `constant` is true, performa a constant synthesis. If `subexpr` is true, analyze children AST.
+        TRITON_EXPORT triton::engines::synthesis::SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true, bool subexpr=true);
     };
 
 /*! @} End of triton namespace */

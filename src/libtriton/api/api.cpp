@@ -1320,10 +1320,10 @@ namespace triton {
 
   /* Synthesizer engine API ============================================================================= */
 
-  triton::engines::synthesis::SynthesisResult API::synthesize(const triton::ast::SharedAbstractNode& node, bool constant) {
+  triton::engines::synthesis::SynthesisResult API::synthesize(const triton::ast::SharedAbstractNode& node, bool constant, bool subexpr) {
     this->checkSymbolic();
     triton::engines::synthesis::Synthesizer synth(this->symbolic);
-    return synth.synthesize(node, constant);
+    return synth.synthesize(node, constant, subexpr);
   }
 
 }; /* triton namespace */

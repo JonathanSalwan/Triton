@@ -376,8 +376,8 @@ Converts a symbolic memory expression to a symbolic variable. This function retu
 - <b>\ref py_SymbolicVariable_page symbolizeRegister(\ref py_Register_page reg, string symVarAlias)</b><br>
 Converts a symbolic register expression to a symbolic variable. This function returns the new symbolic variable created.
 
-- <b>\ref py_AstNode_page synthesize(\ref py_AstNode_page node, bool constant=True)</b><br>
-Synthesizes a given node. If constant is defined to True, do constant synthesizing.
+- <b>\ref py_AstNode_page synthesize(\ref py_AstNode_page node, bool constant=True, bool subexpr=True)</b><br>
+Synthesizes a given node. If `constant` is defined to True, performs a constant synthesis. If `subexpr` is defined to True, performs synthesis on sub-expressions.
 
 - <b>bool taintAssignment(\ref py_MemoryAccess_page memDst, \ref py_Immediate_page immSrc)</b><br>
 Taints `memDst` from `immSrc` with an assignment - `memDst` is untained. Returns true if the `memDst` is still tainted.
@@ -2999,15 +2999,17 @@ namespace triton {
       static PyObject* TritonContext_synthesize(PyObject* self, PyObject* args, PyObject* kwargs) {
         PyObject* node     = nullptr;
         PyObject* constant = nullptr;
+        PyObject* subexpr  = nullptr;
 
         static char* keywords[] = {
           (char*)"node",
           (char*)"constant",
+          (char*)"subexpr",
           nullptr
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &constant) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &constant, &subexpr) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Invalid number of arguments");
         }
 
@@ -3017,11 +3019,17 @@ namespace triton {
         if (constant != nullptr && !PyBool_Check(constant))
           return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as second argument.");
 
+        if (subexpr != nullptr && !PyBool_Check(subexpr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as second argument.");
+
         if (constant == nullptr)
           constant = PyLong_FromUint32(true);
 
+        if (subexpr == nullptr)
+          subexpr = PyLong_FromUint32(true);
+
         try {
-          auto result = PyTritonContext_AsTritonContext(self)->synthesize(PyAstNode_AsAstNode(node), PyLong_AsBool(constant));
+          auto result = PyTritonContext_AsTritonContext(self)->synthesize(PyAstNode_AsAstNode(node), PyLong_AsBool(constant), PyLong_AsBool(subexpr));
           if (result.successful()) {
             return PyAstNode(result.getOutput());
           }
