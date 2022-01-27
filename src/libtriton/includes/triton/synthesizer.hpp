@@ -66,6 +66,12 @@ namespace triton {
       /*! \brief The Synthesizer engine class. */
       class Synthesizer {
         private:
+          //! Map of subexpr hash to their new symbolic variable
+          std::map<triton::uint512, triton::ast::SharedAbstractNode> hash2var;
+
+          //! Map of symbolic variables to their synthesized node
+          std::map<triton::ast::SharedAbstractNode, triton::ast::SharedAbstractNode> var2expr;
+
           //! An instance of a solver engine to solver queries
           triton::engines::solver::SolverEngine solver;
 
@@ -86,6 +92,12 @@ namespace triton {
 
           //! Do the synthesis
           bool do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result);
+
+          //! Symbolize sub epxressions
+          triton::ast::SharedAbstractNode symbolizeSubExpression(const triton::ast::SharedAbstractNode& node, SynthesisResult& tmpResult);
+
+          //! Substitute all sub epxressions
+          void substituteSubExpression(const triton::ast::SharedAbstractNode& node);
 
         public:
           //! Constructor.

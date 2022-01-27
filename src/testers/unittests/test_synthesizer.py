@@ -30,8 +30,19 @@ class TestSynth_1(unittest.TestCase):
             ('(y & x)',               -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
             ('(z & 0xffff00)',       ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
             ('((x + y) & 0xff)',     (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
+            ('(x ^ 0x5c)',           self.x_xor_92_obfuscated(x)),
         ]
 
+    def x_xor_92_obfuscated(self, x):
+        a = 229 * x + 247
+        b = 237 * a + 214 + ((38 * a + 85) & 254)
+        c = (b + ((-(2 * b) + 255) & 254)) * 3 + 77
+        d = ((86 * c + 36) & 70) * 75 + 231 * c + 118
+        e = ((58 * d + 175) & 244) + 99 * d + 46
+        f = (e & 148)
+        g = (f - (e & 255) + f) * 103 + 13
+        R = (237 * (45 * g + (174 * g | 34) * 229 + 194 - 247) & 255)
+        return R
 
     def test_1(self):
         for org, obfu in self.obf_exprs:
@@ -64,12 +75,6 @@ class TestSynth_2(unittest.TestCase):
             pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
         return
 
-    def cb(self, ctx, node):
-        synth = ctx.synthesize(node, constant=False, subexpr=False)
-        if synth:
-            return synth
-        return node
-
     def init(self):
         self.ctx = TritonContext(ARCH.X86_64)
         self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
@@ -81,20 +86,9 @@ class TestSynth_2(unittest.TestCase):
         self.ctx.setConcreteMemoryAreaValue(0x1000, self.CODE)
 
     def test_2(self):
-        # First test using on the fly synthesis
-        self.init()
-        self.ctx.addCallback(CALLBACK.SYMBOLIC_SIMPLIFICATION, self.cb)
-        self.emulate(self.ctx, 0x1000)
-        eax  = self.ctx.getRegisterAst(self.ctx.registers.eax)
-        ast  = self.ctx.getAstContext()
-        res1 = str(ast.unroll(eax))
-
-        # Second test using subexpr
         self.init()
         self.emulate(self.ctx, 0x1000)
-        eax  = self.ctx.getRegisterAst(self.ctx.registers.eax)
-        ast  = self.ctx.getAstContext()
-        res2 = str(ast.unroll(self.ctx.synthesize(eax, constant=False, subexpr=True)))
-
-        # Both results must be equal
-        self.assertLessEqual(res1, res2)
+        eax = self.ctx.getRegisterAst(self.ctx.registers.eax)
+        ast = self.ctx.getAstContext()
+        res = str(ast.unroll(self.ctx.synthesize(eax, constant=False, subexpr=True)))
+        self.assertLessEqual(res, "(bvadd (bvadd a (bvmul (bvmul a b) b)) (_ bv1 32))")

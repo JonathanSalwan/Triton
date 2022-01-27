@@ -45,8 +45,13 @@ namespace triton {
         // Do the synthesize and if nothing has been synthesized, try on children expression
         if (this->do_synthesize(node, constant, result) == false) {
           if (subexpr == true) {
-            this->childrenSynthesis(node, constant, result);
+            while (this->childrenSynthesis(node, constant, result));
           }
+        }
+
+        //! Substitute all sub expressions
+        if (this->var2expr.size()) {
+          this->substituteSubExpression(result.getOutput());
         }
 
         // Stop to record the time of the synthesizing
@@ -81,54 +86,6 @@ namespace triton {
         }
 
         return ret;
-      }
-
-
-      bool Synthesizer::childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
-        std::stack<triton::ast::AbstractNode*>                worklist;
-        std::unordered_set<const triton::ast::AbstractNode*>  visited;
-
-        worklist.push(node.get());
-        while (!worklist.empty()) {
-          auto current = worklist.top();
-          worklist.pop();
-
-          // This means that node is already visited and we will not need to visited it second time
-          if (visited.find(current) != visited.end()) {
-            continue;
-          }
-          visited.insert(current);
-
-          if (current->getType() == triton::ast::REFERENCE_NODE) {
-            worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
-          }
-          else {
-            triton::usize index = 0;
-            for (const auto& child : current->getChildren()) {
-              SynthesisResult tmp;
-              if (this->do_synthesize(child, constant, tmp)) {
-                /* Replace the child node on the fly */
-                current->setChild(index++, tmp.getOutput());
-                /* Set true because we synthesized at least one child */
-                result.setSuccess(true);
-                continue;
-              }
-              worklist.push(child.get());
-              index++;
-            }
-          }
-        }
-
-        /*
-         * If we synthesized at least one child, we set the output as 'node'
-         * because it has been modified on the fly
-         */
-        if (result.successful()) {
-          result.setOutput(node);
-          return true;
-        }
-
-        return false;
       }
 
 
@@ -267,12 +224,6 @@ namespace triton {
         if (bits != 8 && bits != 16 && bits != 32 && bits != 64)
           return false;
 
-        /*
-         * NOTE: More the oracle table will grow more it will take time to looking
-         *       for a potential synthesis. Currently, the complexity is O(n) where
-         *       n is the number of entry in the table. At some point we have to
-         *       change this.
-         */
         for (auto const& it : triton::engines::synthesis::oracles::binopTable) {
           triton::ast::ast_e op = it.first;
           std::array<BinaryEntry, 40> oracles = it.second;
@@ -337,6 +288,119 @@ namespace triton {
         actx->updateVariable(var_y->getName(), save_y);
 
         return result.successful();
+      }
+
+
+      bool Synthesizer::childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
+        std::stack<triton::ast::AbstractNode*>                worklist;
+        std::unordered_set<const triton::ast::AbstractNode*>  visited;
+
+        bool ret = false;
+        worklist.push(node.get());
+        while (!worklist.empty()) {
+          auto current = worklist.top();
+          worklist.pop();
+
+          // This means that node is already visited and we will not need to visited it second time
+          if (visited.find(current) != visited.end()) {
+            continue;
+          }
+          visited.insert(current);
+
+          // Unroll reference
+          if (current->getType() == triton::ast::REFERENCE_NODE) {
+            worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
+          }
+          else {
+            triton::usize index = 0;
+            // Apply synthesis on every child
+            for (const auto& child : current->getChildren()) {
+              SynthesisResult tmp;
+              if (this->do_synthesize(child, constant, tmp)) {
+                /* Symbolize the sub expression */
+                triton::ast::SharedAbstractNode subvar = this->symbolizeSubExpression(child, tmp);
+                /* Replace the child on the fly */
+                current->setChild(index++, subvar);
+                /* Set true because we synthesized at least one child */
+                result.setSuccess(true);
+                ret = true;
+                continue;
+              }
+              worklist.push(child.get());
+              index++;
+            }
+          }
+        }
+
+        /*
+         * If we synthesized at least one child, we set the output as 'node'
+         * because it has been modified on the fly
+         */
+        if (result.successful()) {
+          result.setOutput(node);
+        }
+
+        return ret;
+      }
+
+
+      triton::ast::SharedAbstractNode Synthesizer::symbolizeSubExpression(const triton::ast::SharedAbstractNode& node, SynthesisResult& tmpResult) {
+        triton::ast::SharedAstContext actx      = node->getContext();
+        triton::ast::SharedAbstractNode subvar  = nullptr;
+
+        auto it =  this->hash2var.find(tmpResult.getOutput()->getHash());
+        if (it != this->hash2var.end()) {
+          /* If we already symbolized the node, return its symbolic variable */
+          subvar = it->second;
+        }
+        else {
+          /* Otherwise we create a new symbolic variable for this sub expression */
+          subvar = actx->variable(this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, node->getBitvectorSize()));
+          this->hash2var.insert({tmpResult.getOutput()->getHash(), subvar});
+          this->var2expr.insert({subvar, tmpResult.getOutput()});
+        }
+
+        return subvar;
+      }
+
+
+      void Synthesizer::substituteSubExpression(const triton::ast::SharedAbstractNode& node) {
+        std::stack<triton::ast::AbstractNode*>                worklist;
+        std::unordered_set<const triton::ast::AbstractNode*>  visited;
+
+        worklist.push(node.get());
+        while (!worklist.empty()) {
+          auto current = worklist.top();
+          worklist.pop();
+
+          // This means that node is already visited and we will not need to visited it second time
+          if (visited.find(current) != visited.end()) {
+            continue;
+          }
+          visited.insert(current);
+
+          // Unroll reference
+          if (current->getType() == triton::ast::REFERENCE_NODE) {
+            worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
+          }
+          else {
+            triton::usize index = 0;
+            for (const auto& child : current->getChildren()) {
+              if (child->getType() == triton::ast::VARIABLE_NODE) {
+                auto it =  this->var2expr.find(child);
+                if (it != this->var2expr.end()) {
+                  auto subexpr = this->var2expr[child];
+                  current->setChild(index, subexpr);
+                  worklist.push(subexpr.get());
+                }
+              }
+              else {
+                worklist.push(child.get());
+              }
+              index++;
+            }
+          }
+        }
       }
 
     }; /* synthesis namespace */
