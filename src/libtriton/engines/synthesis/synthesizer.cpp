@@ -30,7 +30,7 @@ namespace triton {
       }
 
 
-      SynthesisResult Synthesizer::synthesize(const triton::ast::SharedAbstractNode& input, bool constant, bool subexpr) {
+      SynthesisResult Synthesizer::synthesize(const triton::ast::SharedAbstractNode& input, bool constant, bool subexpr, bool opaque) {
         SynthesisResult result;
 
         // Save the input node
@@ -43,9 +43,9 @@ namespace triton {
         auto node = triton::ast::newInstance(input.get(), true);
 
         // Do the synthesize and if nothing has been synthesized, try on children expression
-        if (this->do_synthesize(node, constant, result) == false) {
+        if (this->do_synthesize(node, constant, opaque, result) == false) {
           if (subexpr == true) {
-            while (this->childrenSynthesis(node, constant, result));
+            while (this->childrenSynthesis(node, constant, opaque, result));
           }
         }
 
@@ -64,28 +64,57 @@ namespace triton {
       }
 
 
-      bool Synthesizer::do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
+      bool Synthesizer::do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, bool opaque, SynthesisResult& result) {
         bool ret = false;
 
         // How many variables in the expression?
         auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
 
-        // First, find if unary operators can be synthesized
+        // If there is one symbolic variable, do unary operators synthesis
         if (vars.size() == 1 && node->getLevel() > 2) {
           ret = this->unaryOperatorSynthesis(vars, node, result);
 
-          // Second, find if constant can be synthesized
+          // Do also constant synthesis
           if (ret == false && constant == true) {
             ret = this->constantSynthesis(vars, node, result);
           }
         }
 
-        // Third, find if binary operators can be synthesized
+        // If there is two symbolic variables, do binary operators synthesis
         else if (vars.size() == 2 && node->getLevel() > 2) {
           ret = this->binaryOperatorSynthesis(vars, node, result);
         }
 
+        // If nothing worked, do constant opaque synthesis
+        if (ret == false && opaque == true && node->getLevel() > 2) {
+          ret = this->opaqueConstantSynthesis(vars, node, result);
+        }
+
         return ret;
+      }
+
+
+      bool Synthesizer::opaqueConstantSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result) {
+        /* We need Z3 solver in order to use quantifier logic */
+        #ifdef TRITON_Z3_INTERFACE
+
+        auto actx  = node->getContext();
+        auto var_c = this->symbolic->newSymbolicVariable(triton::engines::symbolic::UNDEFINED_VARIABLE, 0, node->getBitvectorSize(), "");
+        auto model = this->solver.getModel(actx->forall(vars, actx->equal(node, actx->variable(var_c))));
+
+        if (model.size()) {
+          auto constant = model.at(var_c->getId()).getValue();
+          auto size     = model.at(var_c->getId()).getSize();
+
+          /* Replace the constant variable to a bitvector */
+          result.setOutput(actx->bv(constant, size));
+          result.setSuccess(true);
+          return true;
+        }
+
+        #endif
+
+        return false;
       }
 
 
@@ -295,7 +324,7 @@ namespace triton {
       }
 
 
-      bool Synthesizer::childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result) {
+      bool Synthesizer::childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, bool opaque, SynthesisResult& result) {
         std::stack<triton::ast::AbstractNode*>                worklist;
         std::unordered_set<const triton::ast::AbstractNode*>  visited;
 
@@ -320,7 +349,7 @@ namespace triton {
             // Apply synthesis on every child
             for (const auto& child : current->getChildren()) {
               SynthesisResult tmp;
-              if (this->do_synthesize(child, constant, tmp)) {
+              if (this->do_synthesize(child, constant, opaque, tmp)) {
                 /* Symbolize the sub expression */
                 triton::ast::SharedAbstractNode subvar = this->symbolizeSubExpression(child, tmp);
                 /* Replace the child on the fly */

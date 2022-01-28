@@ -15,22 +15,24 @@ class TestSynth_1(unittest.TestCase):
 
         self.ctx.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 
+        c = self.ast.variable(self.ctx.newSymbolicVariable(8, 'c'))
         x = self.ast.variable(self.ctx.newSymbolicVariable(8, 'x'))
         y = self.ast.variable(self.ctx.newSymbolicVariable(8, 'y'))
         z = self.ast.variable(self.ctx.newSymbolicVariable(32, 'z'))
 
         # Some obfuscated expressions
         self.obf_exprs = [
-            ('(~(x) & 0xff)',        (((0xff - x) & 0xff) + (1 * (1 - 1)))),
-            ('((x + 0x1) & 0xff)',   -~x & 0xff),
-            ('((x + y) & 0xff)',     (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(x ^ y)',              (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(x ^ y)',              (x & ~y) | (~x & y)),                                # from ?
-            ('(x | y)',              (x ^ y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(y & x)',               -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(z & 0xffff00)',       ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
-            ('((x + y) & 0xff)',     (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
-            ('(x ^ 0x5c)',           self.x_xor_92_obfuscated(x)),
+            ('(~(x) & 0xff)',               (((0xff - x) & 0xff) + (1 * (1 - 1)))),
+            ('((x + 0x1) & 0xff)',          -~x & 0xff),
+            ('((x + y) & 0xff)',            (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',                     (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',                     (x & ~y) | (~x & y)),                                # from ?
+            ('(x | y)',                     (x ^ y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(y & x)',                      -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(z & 0xffff00)',              ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
+            ('((x + y) & 0xff)',            (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
+            ('(x ^ 0x5c)',                  self.x_xor_92_obfuscated(x)),
+            ('((0x2 * (c ^ 0x1)) & 0xff)',  self.opaque_constant(x, y, c)),
         ]
 
     def x_xor_92_obfuscated(self, x):
@@ -44,9 +46,16 @@ class TestSynth_1(unittest.TestCase):
         R = (237 * (45 * g + (174 * g | 34) * 229 + 194 - 247) & 255)
         return R
 
+    def opaque_constant(self, a, b, c):
+        op1 = (2 * (b & ~a) + ( -1 * (~ a | b) + ( -1 * ~( a & b) + (2 * ~( a | b) + 1 * a )))) # 0 (opaque constant)
+        op2 = (a | b) - (a + b) + (a & b)                                                       # 0 (opaque constant)
+        n = op1 + (1 << op2)                                                                    # 0 + 1
+        n = (op1 + 2) * (c ^ n)                                                                 # (0 + 2) * (c ^ 1)
+        return n
+
     def test_1(self):
         for org, obfu in self.obf_exprs:
-            self.assertEqual(str(self.ctx.synthesize(obfu)), org)
+            self.assertEqual(str(self.ctx.synthesize(obfu, constant=True, subexpr=True, opaque=True)), org)
 
 
 class TestSynth_2(unittest.TestCase):

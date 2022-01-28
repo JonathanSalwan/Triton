@@ -81,6 +81,9 @@ namespace triton {
           //! Synthesize a given node that contains one variable (constant synthesizing)
           bool constantSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
+          //! Synthesize a given node that two variables (opaque constant synthesizing)
+          bool opaqueConstantSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
+
           //! Synthesize a given node that contains one variable with one operator
           bool unaryOperatorSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
@@ -88,10 +91,10 @@ namespace triton {
           bool binaryOperatorSynthesis(const std::deque<triton::ast::SharedAbstractNode>& vars, const triton::ast::SharedAbstractNode& node, SynthesisResult& result);
 
           //! Synthesize children expression
-          bool childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result);
+          bool childrenSynthesis(const triton::ast::SharedAbstractNode& node, bool constant, bool opaque, SynthesisResult& result);
 
           //! Do the synthesis
-          bool do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, SynthesisResult& result);
+          bool do_synthesize(const triton::ast::SharedAbstractNode& node, bool constant, bool opaque, SynthesisResult& result);
 
           //! Symbolize sub epxressions
           triton::ast::SharedAbstractNode symbolizeSubExpression(const triton::ast::SharedAbstractNode& node, SynthesisResult& tmpResult);
@@ -103,8 +106,8 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT Synthesizer(triton::engines::symbolic::SymbolicEngine* symbolic);
 
-          //! Synthesizes a given node. If `constant` is true, perform a constant synthesis. If `subexpr` is true, analyze children AST.
-          TRITON_EXPORT SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true, bool subexpr=true);
+          //! Synthesizes a given node. If `constant` is true, perform a constant synthesis. If `opaque` is true, perform opaque constant synthesis. If `subexpr` is true, analyze children AST.
+          TRITON_EXPORT SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true, bool subexpr=true, bool opaque=false);
       };
 
     /*! @} End of synthesis namespace */

@@ -72,9 +72,9 @@ def main():
 
     ctx.setAstRepresentationMode(AST_REPRESENTATION.PYTHON)
 
-    x = ast.variable(ctx.newSymbolicVariable(8))
-    y = ast.variable(ctx.newSymbolicVariable(8))
-    z = ast.variable(ctx.newSymbolicVariable(32))
+    x = ast.variable(ctx.newSymbolicVariable(8, 'x'))
+    y = ast.variable(ctx.newSymbolicVariable(8, 'y'))
+    z = ast.variable(ctx.newSymbolicVariable(32, 'z'))
 
     # Some obfuscated expressions
     obf_exprs = [
