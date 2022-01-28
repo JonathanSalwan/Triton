@@ -220,6 +220,10 @@ namespace triton {
         triton::uint512 save_y = actx->getVariableValue(var_y->getName());
         triton::uint32  bits   = var_x->getSize();
 
+        /* We suppose variables are on a same size */
+        if (var_x->getSize() != var_y->getSize())
+          return false;
+
         /* We suppose variables are 8, 16, 32 or 64-bit long */
         if (bits != 8 && bits != 16 && bits != 32 && bits != 64)
           return false;

@@ -77,8 +77,6 @@ class TestSynth_2(unittest.TestCase):
 
     def init(self):
         self.ctx = TritonContext(ARCH.X86_64)
-        self.ctx.setMode(MODE.CONSTANT_FOLDING, True)
-        self.ctx.setMode(MODE.ALIGNED_MEMORY, True)
         self.ctx.setMode(MODE.AST_OPTIMIZATIONS, True)
 
         self.ctx.symbolizeRegister(self.ctx.registers.edi, "a")
