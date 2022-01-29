@@ -86,7 +86,7 @@ namespace triton {
         }
 
         // If nothing worked, do constant opaque synthesis
-        if (ret == false && opaque == true && node->getLevel() > 2) {
+        if (vars.size() && ret == false && opaque == true && node->getLevel() > 2) {
           ret = this->opaqueConstantSynthesis(vars, node, result);
         }
 
