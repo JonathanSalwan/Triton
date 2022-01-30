@@ -17,6 +17,7 @@
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
 #include <triton/irBuilder.hpp>
+#include <triton/liftingEngine.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/modes.hpp>
 #include <triton/operandWrapper.hpp>
@@ -57,6 +58,9 @@ namespace triton {
         //! Raises an exception if the taint engine is not initialized.
         inline void checkTaint(void) const;
 
+        //! Raises an exception if the lifting engine is not initialized.
+        inline void checkLifting(void) const;
+
 
       protected:
         //! The Callbacks interface.
@@ -67,6 +71,9 @@ namespace triton {
 
         //! The modes.
         triton::modes::SharedModes modes;
+
+        //! The lifting engine.
+        triton::engines::lifters::LiftingEngine* lifting = nullptr;
 
         //! The taint engine.
         triton::engines::taint::TaintEngine* taint = nullptr;
@@ -273,11 +280,11 @@ namespace triton {
 
         /* AST Representation API ======================================================================== */
 
-        //! [**AST representation api**] - Returns the AST representation mode as triton::ast::representations::mode_e.
-        TRITON_EXPORT triton::uint32 getAstRepresentationMode(void) const;
+        //! [**AST representation api**] - Returns the AST representation as triton::ast::representation_e.
+        TRITON_EXPORT triton::ast::representations::mode_e getAstRepresentationMode(void) const;
 
-        //! [**AST representation api**] - Sets the AST representation mode.
-        TRITON_EXPORT void setAstRepresentationMode(triton::uint32 mode);
+        //! [**AST representation api**] - Sets the AST representation.
+        TRITON_EXPORT void setAstRepresentationMode(triton::ast::representations::mode_e mode);
 
 
 
@@ -487,9 +494,6 @@ namespace triton {
         //! [**symbolic api**] - Slices all expressions from a given one.
         TRITON_EXPORT std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> sliceExpressions(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
-        //! [**symbolic api**] - Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
-        TRITON_EXPORT std::ostream& printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_=false);
-
         //! [**symbolic api**] - Returns the list of the tainted symbolic expressions.
         TRITON_EXPORT std::vector<triton::engines::symbolic::SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;
 
@@ -663,6 +667,22 @@ namespace triton {
 
         //! [**synthesizer api**] - Synthesizes a given node. If `constant` is true, performa a constant synthesis. If `opaque` is true, perform opaque constant synthesis. If `subexpr` is true, analyze children AST.
         TRITON_EXPORT triton::engines::synthesis::SynthesisResult synthesize(const triton::ast::SharedAbstractNode& node, bool constant=true, bool subexpr=true, bool opaque=false);
+
+
+
+        /* Lifters engine API ================================================================================= */
+
+        //! [**lifting api**] - Lifts an AST and all its references to LLVM format.
+        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
+
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to LLVM format.
+        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to Python format.
+        TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
+        TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_);
     };
 
 /*! @} End of triton namespace */

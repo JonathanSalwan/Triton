@@ -239,7 +239,7 @@ namespace triton {
 
       triton::ast::SharedAbstractNode Z3Solver::simplify(const triton::ast::SharedAbstractNode& node) const {
         if (node == nullptr)
-          throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
+          throw triton::exceptions::AstLifting("Z3Solver::simplify(): node cannot be null.");
 
         try {
           triton::ast::TritonToZ3Ast z3Ast{false};
@@ -254,14 +254,14 @@ namespace triton {
           return snode;
         }
         catch (const z3::exception& e) {
-          throw triton::exceptions::AstTranslations(std::string("Z3Solver::evaluate(): ") + e.msg());
+          throw triton::exceptions::AstLifting(std::string("Z3Solver::evaluate(): ") + e.msg());
         }
       }
 
 
       triton::uint512 Z3Solver::evaluate(const triton::ast::SharedAbstractNode& node) const {
         if (node == nullptr)
-          throw triton::exceptions::AstTranslations("Z3Solver::simplify(): node cannot be null.");
+          throw triton::exceptions::AstLifting("Z3Solver::simplify(): node cannot be null.");
 
         try {
           triton::ast::TritonToZ3Ast z3ast{true};
@@ -281,7 +281,7 @@ namespace triton {
           return res;
         }
         catch (const z3::exception& e) {
-          throw triton::exceptions::AstTranslations(std::string("Z3Solver::evaluate(): ") + e.msg());
+          throw triton::exceptions::AstLifting(std::string("Z3Solver::evaluate(): ") + e.msg());
         }
       }
 

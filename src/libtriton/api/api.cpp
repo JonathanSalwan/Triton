@@ -284,6 +284,12 @@ namespace triton {
   }
 
 
+  inline void API::checkLifting(void) const {
+    if (!this->lifting)
+      throw triton::exceptions::API("API::checkLifting(): Lifting engine is undefined, you should define an architecture first.");
+  }
+
+
 
   /* Architecture API ============================================================================== */
 
@@ -555,6 +561,10 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
+    this->lifting = new(std::nothrow) triton::engines::lifters::LiftingEngine(this->astCtxt, this->symbolic);
+    if (this->lifting == nullptr)
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
+
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): Not enough memory.");
@@ -567,12 +577,14 @@ namespace triton {
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
       delete this->irBuilder;
+      delete this->lifting;
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
 
       this->astCtxt   = nullptr;
       this->irBuilder = nullptr;
+      this->lifting   = nullptr;
       this->solver    = nullptr;
       this->symbolic  = nullptr;
       this->taint     = nullptr;
@@ -621,12 +633,12 @@ namespace triton {
 
   /* AST representation API ========================================================================= */
 
-  triton::uint32 API::getAstRepresentationMode(void) const {
+  triton::ast::representations::mode_e API::getAstRepresentationMode(void) const {
     return this->astCtxt->getRepresentationMode();
   }
 
 
-  void API::setAstRepresentationMode(triton::uint32 mode) {
+  void API::setAstRepresentationMode(triton::ast::representations::mode_e mode) {
     this->astCtxt->setRepresentationMode(mode);
   }
 
@@ -1043,12 +1055,6 @@ namespace triton {
   }
 
 
-  std::ostream& API::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
-    this->checkSymbolic();
-    return this->symbolic->printSlicedExpressions(stream, expr, assert_);
-  }
-
-
   std::vector<triton::engines::symbolic::SharedSymbolicExpression> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();
@@ -1361,6 +1367,35 @@ namespace triton {
     this->checkSymbolic();
     triton::engines::synthesis::Synthesizer synth(this->symbolic);
     return synth.synthesize(node, constant, subexpr, opaque);
+  }
+
+
+
+  /* Lifters engine API ================================================================================= */
+
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node) {
+    this->checkLifting();
+    #ifdef TRITON_LLVM_INTERFACE
+    return this->lifting->liftToLLVM(stream, node);
+    #endif
+    throw triton::exceptions::API("API::liftToLLVM(): Triton not built with LLVM");
+  }
+
+
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    return this->liftToLLVM(stream, expr->getAst());
+  }
+
+
+  std::ostream& API::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    this->checkLifting();
+    return this->lifting->liftToPython(stream, expr);
+  }
+
+
+  std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+    this->checkLifting();
+    return this->lifting->liftToSMT(stream, expr, assert_);
   }
 
 }; /* triton namespace */

@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef ORACLEENTRY_HPP
-#define ORACLEENTRY_HPP
+#ifndef TRITON_ORACLEENTRY_HPP
+#define TRITON_ORACLEENTRY_HPP
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -54,7 +54,7 @@ namespace triton {
 
           //! Constructor
           TRITON_EXPORT ConstantEntry(triton::uint8 position, const triton::ast::SharedAbstractNode& op)
-            : position(position), op(op) {
+            : op(op), position(position) {
           };
       };
 
@@ -161,4 +161,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* ORACLEENTRY_HPP */
+#endif /* TRITON_ORACLEENTRY_HPP */

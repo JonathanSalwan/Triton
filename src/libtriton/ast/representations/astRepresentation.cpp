@@ -45,12 +45,12 @@ namespace triton {
       }
 
 
-      triton::uint32 AstRepresentation::getMode(void) const {
+      triton::ast::representations::mode_e AstRepresentation::getMode(void) const {
         return this->mode;
       }
 
 
-      void AstRepresentation::setMode(triton::uint32 mode) {
+      void AstRepresentation::setMode(triton::ast::representations::mode_e mode) {
         if (mode >= triton::ast::representations::LAST_REPRESENTATION)
           throw triton::exceptions::AstRepresentation("AstRepresentation::setMode(): Invalid representation mode.");
         this->mode = mode;
@@ -64,4 +64,3 @@ namespace triton {
     };
   };
 };
-

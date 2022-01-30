@@ -25,8 +25,9 @@ include(CMakeDependentOption)
 option(ASAN                 "Enable the ASAN linking"                  OFF)
 option(BITWUZLA_INTERFACE   "Use Bitwuzla as SMT solver"               OFF)
 option(BUILD_SHARED_LIBS    "Build a shared library"                   ON)
-option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
 option(GCOV                 "Enable code coverage"                     OFF)
+option(LLVM_INTERFACE       "Use LLVM for lifting"                     OFF)
+option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
 option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
 
 # Define cmake dependent options
@@ -107,6 +108,14 @@ if(BITWUZLA_INTERFACE)
     find_package(BITWUZLA REQUIRED)
     include_directories(${BITWUZLA_INCLUDE_DIRS})
     set(TRITON_BITWUZLA_INTERFACE ON)
+endif()
+
+# Find LLVM
+if(LLVM_INTERFACE)
+    message(STATUS "Compiling with LLVM")
+    find_package(LLVM REQUIRED)
+    include_directories(${LLVM_INCLUDE_DIRS})
+    set(TRITON_LLVM_INTERFACE ON)
 endif()
 
 # Find Capstone

@@ -47,7 +47,7 @@ namespace triton {
       class AstRepresentation {
         protected:
           //! The representation mode.
-          triton::uint32 mode;
+          triton::ast::representations::mode_e mode;
 
           //! AstRepresentation interface.
           std::unique_ptr<triton::ast::representations::AstRepresentationInterface> representations[triton::ast::representations::LAST_REPRESENTATION];
@@ -63,12 +63,12 @@ namespace triton {
           TRITON_EXPORT AstRepresentation& operator=(const AstRepresentation& other);
 
           //! Returns the representation mode.
-          TRITON_EXPORT triton::uint32 getMode(void) const;
+          TRITON_EXPORT triton::ast::representations::mode_e getMode(void) const;
 
           //! Sets the representation mode.
-          TRITON_EXPORT void setMode(triton::uint32 mode);
+          TRITON_EXPORT void setMode(triton::ast::representations::mode_e mode);
 
-          //! Displays the node according to the representation mode.
+          //! Prints the node according to the current representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
       };
 

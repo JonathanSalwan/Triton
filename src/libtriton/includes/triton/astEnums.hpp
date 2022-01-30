@@ -92,9 +92,9 @@ namespace triton {
 
       //! All types of representation mode.
       enum mode_e {
-        SMT_REPRESENTATION,     /*!< SMT representation */
-        PYTHON_REPRESENTATION,  /*!< Python representation */
-        LAST_REPRESENTATION     /*!< Must be the last item */
+        SMT_REPRESENTATION = 0,     /*!< SMT representation */
+        PYTHON_REPRESENTATION = 1,  /*!< Python representation */
+        LAST_REPRESENTATION = 2,    /*!< Must be the last item */
       };
 
     /*! @} End of representations namespace */
