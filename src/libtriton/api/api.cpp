@@ -1373,6 +1373,12 @@ namespace triton {
 
   /* Lifters engine API ================================================================================= */
 
+  std::ostream& API::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    this->checkLifting();
+    return this->lifting->liftToPython(stream, expr);
+  }
+
+
   std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
     this->checkLifting();
     return this->lifting->liftToSMT(stream, expr, assert_);

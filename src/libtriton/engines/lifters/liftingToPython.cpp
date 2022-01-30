@@ -10,7 +10,7 @@
 #include <vector>
 
 #include <triton/astEnums.hpp>
-#include <triton/liftingToSMT.hpp>
+#include <triton/liftingToPython.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -19,15 +19,36 @@ namespace triton {
   namespace engines {
     namespace lifters {
 
-      LiftingToSMT::LiftingToSMT(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
+      LiftingToPython::LiftingToPython(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
         : astCtxt(astCtxt), symbolic(symbolic) {
       }
 
 
-      std::ostream& LiftingToSMT::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+      void LiftingToPython::requiredFunctions(std::ostream& stream) {
+        stream << "def sx(bits, value):" << std::endl;
+        stream << "    sign_bit = 1 << (bits - 1)" << std::endl;
+        stream << "    return (value & (sign_bit - 1)) - (value & sign_bit)" << std::endl;
+
+        stream << std::endl;
+        stream << "def rol(value, rot, bits):" << std::endl;
+        stream << "    return ((value << rot) | (value >> (bits - rot))) & ((0b1 << bits) - 1)" << std::endl;
+
+        stream << std::endl;
+        stream << "def ror(value, rot, bits):" << std::endl;
+        stream << "    return ((value >> rot) | (value << (bits - rot))) & ((0b1 << bits) - 1)" << std::endl;
+
+        stream << std::endl;
+        stream << "def forall(variables, expr):" << std::endl;
+        stream << "    return True" << std::endl;
+
+        stream << std::endl;
+      }
+
+
+      std::ostream& LiftingToPython::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
         /* Save the AST representation mode */
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
-        this->astCtxt->setRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
+        this->astCtxt->setRepresentationMode(triton::ast::representations::PYTHON_REPRESENTATION);
 
         /* Collect SSA form */
         auto ssa = this->symbolic->sliceExpressions(expr);
@@ -43,6 +64,9 @@ namespace triton {
           symVars[var->getId()] = var;
         }
 
+        /* Print required functions */
+        this->requiredFunctions(stream);
+
         /* Print symbolic variables */
         for (const auto& var : symVars) {
           auto n = this->astCtxt->declare(this->astCtxt->variable(var.second));
@@ -52,42 +76,10 @@ namespace triton {
 
         /* Sort SSA */
         std::sort(symExprs.begin(), symExprs.end());
-        if (assert_) {
-          /* The last node will be handled later to separate conjuncts */
-          symExprs.pop_back();
-        }
 
         /* Print symbolic expressions */
         for (const auto& id : symExprs) {
           stream << ssa[id]->getFormattedExpression() << std::endl;
-        }
-
-        if (assert_) {
-          /* Print conjuncts in separate asserts */
-          std::vector<triton::ast::SharedAbstractNode> exprs;
-          std::vector<triton::ast::SharedAbstractNode> wl{expr->getAst()};
-
-          while (!wl.empty()) {
-            auto n = wl.back();
-            wl.pop_back();
-
-            if (n->getType() != ast::LAND_NODE) {
-              exprs.push_back(n);
-              continue;
-            }
-
-            for (const auto& child : n->getChildren()) {
-              wl.push_back(child);
-            }
-          }
-
-          for (auto it = exprs.crbegin(); it != exprs.crend(); ++it) {
-            this->astCtxt->print(stream, this->astCtxt->assert_(*it).get());
-            stream << std::endl;
-          }
-
-          stream << "(check-sat)" << std::endl;
-          stream << "(get-model)" << std::endl;
         }
 
         /* Restore the AST representation mode */

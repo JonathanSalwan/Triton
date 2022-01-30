@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef LIFTINGTOSMT_HPP
-#define LIFTINGTOSMT_HPP
+#ifndef LIFTINGTOPYTHON_HPP
+#define LIFTINGTOPYTHON_HPP
 
 #include <ostream>
 
@@ -39,9 +39,9 @@ namespace triton {
      *  @{
      */
 
-      //! \class LiftingToSMT
-      /*! \brief The lifting to SMT class. */
-      class LiftingToSMT {
+      //! \class LiftingToPython
+      /*! \brief The lifting to Python class. */
+      class LiftingToPython {
         private:
           //! Reference to the context managing ast nodes.
           triton::ast::SharedAstContext astCtxt;
@@ -49,12 +49,15 @@ namespace triton {
           //! Instance to the symbolic engine.
           triton::engines::symbolic::SymbolicEngine* symbolic;
 
+          //! Define required functions like ror, rol, sx and forall
+          void requiredFunctions(std::ostream& stream);
+
         public:
           //! Constructor.
-          TRITON_EXPORT LiftingToSMT(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);
+          TRITON_EXPORT LiftingToPython(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);
 
-          //! Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
-          TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_);
+          //! Lifts a symbolic expression and all its references to Python format.
+          TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
       };
 
     /*! @} End of lifters namespace */
@@ -64,4 +67,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* LIFTINGTOSMT_HPP */
+#endif /* LIFTINGTOPYTHON_HPP */

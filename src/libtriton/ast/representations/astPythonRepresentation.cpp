@@ -83,7 +83,7 @@ namespace triton {
 
       /* assert representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
-        stream << "assert_(" << node->getChildren()[0] << ")";
+        stream << "assert (" << node->getChildren()[0] << ")";
         return stream;
       }
 
@@ -160,14 +160,14 @@ namespace triton {
 
       /* bvrol representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
-        stream << "rol(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        stream << "rol(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
 
       /* bvror representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
-        stream << "ror(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        stream << "ror(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 

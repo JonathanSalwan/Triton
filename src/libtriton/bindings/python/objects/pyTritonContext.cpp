@@ -286,6 +286,9 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
+- <b>string liftToPython(\ref py_SymbolicExpression_page expr)</b><br>
+Lifts a symbolic expression and all its references to Python format.
+
 - <b>string liftToSMT(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
 Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
 
@@ -313,7 +316,7 @@ Resets everything.
 - <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
 Initializes an architecture. This function must be called before any call to the rest of the API.
 
-- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page repr)</b><br>
+- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)</b><br>
 Sets the AST representation.
 
 - <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
@@ -2222,6 +2225,27 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_liftToPython(PyObject* self, PyObject* expr) {
+        if (!PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Expects a SymbolicExpression as first argument.");
+
+        try {
+          std::ostringstream stream;
+          PyTritonContext_AsTritonContext(self)->liftToPython(stream, PySymbolicExpression_AsSymbolicExpression(expr));
+          return xPyString_FromString(stream.str().c_str());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_liftToSMT(PyObject* self, PyObject* args) {
         PyObject* expr        = nullptr;
         PyObject* assertFlag  = nullptr;
@@ -3349,6 +3373,7 @@ namespace triton {
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
+        {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
         {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                         METH_VARARGS,                  ""},

@@ -42,6 +42,7 @@ set(LIBTRITON_SOURCE_FILES
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp
     callbacks/callbacks.cpp
+    engines/lifters/liftingToPython.cpp
     engines/lifters/liftingToSMT.cpp
     engines/solver/solverEngine.cpp
     engines/solver/solverModel.cpp
@@ -95,6 +96,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/instruction.hpp
     includes/triton/irBuilder.hpp
     includes/triton/liftingEngine.hpp
+    includes/triton/liftingToPython.hpp
     includes/triton/liftingToSMT.hpp
     includes/triton/memoryAccess.hpp
     includes/triton/modes.hpp

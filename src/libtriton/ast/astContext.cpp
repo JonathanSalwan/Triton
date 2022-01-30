@@ -426,7 +426,7 @@ namespace triton {
        * in order to make index rotation symbolic. Note that this mode increases the
        * complexity of solving.
        *
-       * bvror(rot, expr) = ((value >> (rot % size)) | (value << (size - (rot % size))))
+       * bvror(rot, expr) = ((expr >> (rot % size)) | (expr << (size - (rot % size))))
        **/
       if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size        = expr->getBitvectorSize();
