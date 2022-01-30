@@ -1054,12 +1054,12 @@ namespace triton {
     }
 
 
-    void AstContext::setRepresentationMode(triton::uint32 mode) {
+    void AstContext::setRepresentationMode(triton::ast::representations::mode_e mode) {
       this->astRepresentation.setMode(mode);
     }
 
 
-    triton::uint32 AstContext::getRepresentationMode(void) const {
+    triton::ast::representations::mode_e AstContext::getRepresentationMode(void) const {
       return this->astRepresentation.getMode();
     }
 

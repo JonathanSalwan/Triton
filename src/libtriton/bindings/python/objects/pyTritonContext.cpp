@@ -286,6 +286,9 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
+- <b>string liftToSMT(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
+Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
+
 - <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
 
@@ -294,9 +297,6 @@ Returns a new symbolic variable.
 
 - <b>void popPathConstraint(void)</b><br>
 Pops the last constraints added to the path predicate.
-
-- <b>void printSlicedExpressions(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
-Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
 
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
@@ -313,8 +313,8 @@ Resets everything.
 - <b>void setArchitecture(\ref py_ARCH_page arch)</b><br>
 Initializes an architecture. This function must be called before any call to the rest of the API.
 
-- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)</b><br>
-Sets the AST representation mode.
+- <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page repr)</b><br>
+Sets the AST representation.
 
 - <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
 Sets the concrete value of a memory area. Note that setting a concrete value will probably imply a desynchronization with
@@ -2221,6 +2221,42 @@ namespace triton {
         }
       }
 
+
+      static PyObject* TritonContext_liftToSMT(PyObject* self, PyObject* args) {
+        PyObject* expr        = nullptr;
+        PyObject* assertFlag  = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &expr, &assertFlag) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Invalid number of arguments");
+        }
+
+        if (expr == nullptr || !PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a SymbolicExpression as first argument.");
+
+        if (assertFlag != nullptr && !PyBool_Check(assertFlag))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a boolean as second argument.");
+
+        if (assertFlag == nullptr)
+          assertFlag = PyLong_FromUint32(false);
+
+        try {
+          std::ostringstream stream;
+          PyTritonContext_AsTritonContext(self)->liftToSMT(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
+          return xPyString_FromString(stream.str().c_str());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_newSymbolicExpression(PyObject* self, PyObject* args) {
         PyObject* node          = nullptr;
         PyObject* comment       = nullptr;
@@ -2293,41 +2329,6 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
-      static PyObject* TritonContext_printSlicedExpressions(PyObject* self, PyObject* args) {
-        PyObject* expr        = nullptr;
-        PyObject* assertFlag  = nullptr;
-
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &expr, &assertFlag) == false) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Invalid number of arguments");
-        }
-
-        if (expr == nullptr || !PySymbolicExpression_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Expects a SymbolicExpression as first argument.");
-
-        if (assertFlag != nullptr && !PyBool_Check(assertFlag))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::printSlicedExpressions(): Expects a boolean as second argument.");
-
-        if (assertFlag == nullptr)
-          assertFlag = PyLong_FromUint32(false);
-
-        try {
-          std::ostringstream stream;
-          PyTritonContext_AsTritonContext(self)->printSlicedExpressions(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
-          return xPyString_FromString(stream.str().c_str());
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
         Py_INCREF(Py_None);
         return Py_None;
       }
@@ -2476,7 +2477,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::setAstRepresentationMode(): Expects an AST_REPRESENTATION as argument.");
 
         try {
-          PyTritonContext_AsTritonContext(self)->setAstRepresentationMode(PyLong_AsUint32(arg));
+          PyTritonContext_AsTritonContext(self)->setAstRepresentationMode(static_cast<triton::ast::representations::mode_e>(PyLong_AsUint32(arg)));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3348,10 +3349,10 @@ namespace triton {
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
+        {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                         METH_VARARGS,                  ""},
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                           METH_NOARGS,                   ""},
-        {"printSlicedExpressions",              (PyCFunction)TritonContext_printSlicedExpressions,                      METH_VARARGS,                  ""},
         {"processing",                          (PyCFunction)TritonContext_processing,                                  METH_O,                        ""},
         {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                          METH_O,                        ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                              METH_VARARGS,                  ""},

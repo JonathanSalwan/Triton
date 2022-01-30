@@ -66,7 +66,7 @@ class TestAstRepresentation(unittest.TestCase):
             (self.astCtxt.bvxnor(self.v1, self.v2),              "(bvxnor SymVar_0 SymVar_1)",                                   "(~(SymVar_0 ^ SymVar_1) & 0xFF)"),
             (self.astCtxt.compound([self.v1, self.v2]),          "SymVar_0\nSymVar_1",                                           "SymVar_0\nSymVar_1"),
             (self.astCtxt.concat([self.v1, self.v2]),            "(concat SymVar_0 SymVar_1)",                                   "((SymVar_0) << 8 | SymVar_1)"),
-            (self.astCtxt.declare(self.v1),                      "(declare-fun SymVar_0 () (_ BitVec 8))",                       "SymVar_0 = 0xdeadbeef"),
+            (self.astCtxt.declare(self.v1),                      "(declare-fun SymVar_0 () (_ BitVec 8))",                       "SymVar_0 = int(input())"),
             (self.astCtxt.distinct(self.v1, self.v2),            "(distinct SymVar_0 SymVar_1)",                                 "(SymVar_0 != SymVar_1)"),
             (self.astCtxt.equal(self.v1, self.v2),               "(= SymVar_0 SymVar_1)",                                        "(SymVar_0 == SymVar_1)"),
             (self.astCtxt.extract(4, 2, self.v1),                "((_ extract 4 2) SymVar_0)",                                   "((SymVar_0 >> 2) & 0x7)"),

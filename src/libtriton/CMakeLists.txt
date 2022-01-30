@@ -42,6 +42,7 @@ set(LIBTRITON_SOURCE_FILES
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp
     callbacks/callbacks.cpp
+    engines/lifters/liftingToSMT.cpp
     engines/solver/solverEngine.cpp
     engines/solver/solverModel.cpp
     engines/symbolic/pathConstraint.cpp
@@ -93,6 +94,8 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/immediate.hpp
     includes/triton/instruction.hpp
     includes/triton/irBuilder.hpp
+    includes/triton/liftingEngine.hpp
+    includes/triton/liftingToSMT.hpp
     includes/triton/memoryAccess.hpp
     includes/triton/modes.hpp
     includes/triton/modesEnums.hpp

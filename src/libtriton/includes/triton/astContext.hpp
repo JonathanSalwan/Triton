@@ -327,12 +327,12 @@ namespace triton {
         TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& name) const;
 
         //! Sets the representation mode for this astContext
-        TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);
+        TRITON_EXPORT void setRepresentationMode(triton::ast::representations::mode_e mode);
 
         //! Gets the representations mode of this astContext
-        TRITON_EXPORT triton::uint32 getRepresentationMode(void) const;
+        TRITON_EXPORT triton::ast::representations::mode_e getRepresentationMode(void) const;
 
-        //! Prints the given node with this context representation
+        //! Prints the node according to the current representation mode.
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
     };
 
