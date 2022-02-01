@@ -20,9 +20,7 @@ jobs:
           python -m pip install -U pip
       - name: Install dependencies
         run: |
-          sudo apt-get install python-setuptools libboost-dev locate
-          sudo updatedb
-          locate llvm-config
+          sudo apt-get install python-setuptools libboost-dev
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev
@@ -52,7 +50,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DLLVM_INTERFACE=ON -DLLVM_INCLUDE_DIRS=$(llvm-config --includedir) -DLLVM_LIBRARIES=$(llvm-config --libfiles) ..
+          cmake -DLLVM_INTERFACE=ON -DLLVM_INCLUDE_DIRS=$(llvm-config-12 --includedir) -DLLVM_LIBRARIES=$(llvm-config-12 --libfiles) ..
           sudo make -j3 install
       - name: Unittests
         run: |
