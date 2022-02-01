@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import TritonContext, ARCH, AST_REPRESENTATION
+from triton import TritonContext, ARCH, AST_REPRESENTATION, VERSION
 
 
 smtlifting = """(declare-fun SymVar_0 () (_ BitVec 8))
@@ -126,55 +126,56 @@ class TestAstRepresentation(unittest.TestCase):
         self.assertEqual(self.ctx.liftToSMT(self.ref), smtlifting)
         self.assertEqual(self.ctx.liftToPython(self.ref), pythonlifting)
 
-        nodes = [
-            (self.v1 & self.v2),
-            (self.v1 + self.v2),
-            (self.v1 - self.v2),
-            (self.v1 ^ self.v2),
-            (self.v1 | self.v2),
-            (self.v1 * self.v2),
-            (self.v1 / self.v2),
-            (self.v1 % self.v2),
-            (self.v1 << self.v2),
-            (self.v1 >> self.v2),
-            (~self.v1),
-            (-self.v1),
-            (self.v1 == self.v2),
-            (self.v1 != self.v2),
-            (self.v1 <= self.v2),
-            (self.v1 >= self.v2),
-            (self.v1 < self.v2),
-            (self.v1 > self.v2),
-            self.ast.bv(2, 8),
-            self.ast.bvashr(self.v1, self.v2),
-            self.ast.bvnand(self.v1, self.v2),
-            self.ast.bvnor(self.v1, self.v2),
-            self.ast.bvrol(self.v1, self.ast.bv(3, 8)),
-            self.ast.bvror(self.v2, self.ast.bv(2, 8)),
-            self.ast.bvsdiv(self.v1, self.v2),
-            self.ast.bvsge(self.v1, self.v2),
-            self.ast.bvsgt(self.v1, self.v2),
-            self.ast.bvsle(self.v1, self.v2),
-            self.ast.bvslt(self.v1, self.v2),
-            self.ast.bvsmod(self.v1, self.v2),
-            self.ast.bvsrem(self.v1, self.v2),
-            self.ast.bvurem(self.v1, self.v2),
-            self.ast.bvxnor(self.v1, self.v2),
-            self.ast.concat([self.v1, self.v2]),
-            self.ast.distinct(self.v1, self.v2),
-            self.ast.equal(self.v1, self.v2),
-            self.ast.extract(4, 2, self.v1),
-            self.ast.extract(6, 0, self.v1),
-            self.ast.extract(7, 0, self.v1),
-            self.ast.ite(self.v1 == 1, self.v1, self.v2),
-            self.ast.land([self.v1 == 1, self.v2 == 2]),
-            self.ast.lnot(self.v1 == 0),
-            self.ast.lor([self.v1 >= 0, self.v2 <= 10]),
-            self.ast.lxor([self.v1 >= 0, self.v2 <= 10]),
-            self.ast.reference(self.ref),
-            self.ast.sx(8, self.v1),
-            self.ast.zx(8, self.v1),
-        ]
+        if VERSION.LLVM_INTERFACE is True:
+            nodes = [
+                (self.v1 & self.v2),
+                (self.v1 + self.v2),
+                (self.v1 - self.v2),
+                (self.v1 ^ self.v2),
+                (self.v1 | self.v2),
+                (self.v1 * self.v2),
+                (self.v1 / self.v2),
+                (self.v1 % self.v2),
+                (self.v1 << self.v2),
+                (self.v1 >> self.v2),
+                (~self.v1),
+                (-self.v1),
+                (self.v1 == self.v2),
+                (self.v1 != self.v2),
+                (self.v1 <= self.v2),
+                (self.v1 >= self.v2),
+                (self.v1 < self.v2),
+                (self.v1 > self.v2),
+                self.ast.bv(2, 8),
+                self.ast.bvashr(self.v1, self.v2),
+                self.ast.bvnand(self.v1, self.v2),
+                self.ast.bvnor(self.v1, self.v2),
+                self.ast.bvrol(self.v1, self.ast.bv(3, 8)),
+                self.ast.bvror(self.v2, self.ast.bv(2, 8)),
+                self.ast.bvsdiv(self.v1, self.v2),
+                self.ast.bvsge(self.v1, self.v2),
+                self.ast.bvsgt(self.v1, self.v2),
+                self.ast.bvsle(self.v1, self.v2),
+                self.ast.bvslt(self.v1, self.v2),
+                self.ast.bvsmod(self.v1, self.v2),
+                self.ast.bvsrem(self.v1, self.v2),
+                self.ast.bvurem(self.v1, self.v2),
+                self.ast.bvxnor(self.v1, self.v2),
+                self.ast.concat([self.v1, self.v2]),
+                self.ast.distinct(self.v1, self.v2),
+                self.ast.equal(self.v1, self.v2),
+                self.ast.extract(4, 2, self.v1),
+                self.ast.extract(6, 0, self.v1),
+                self.ast.extract(7, 0, self.v1),
+                self.ast.ite(self.v1 == 1, self.v1, self.v2),
+                self.ast.land([self.v1 == 1, self.v2 == 2]),
+                self.ast.lnot(self.v1 == 0),
+                self.ast.lor([self.v1 >= 0, self.v2 <= 10]),
+                self.ast.lxor([self.v1 >= 0, self.v2 <= 10]),
+                self.ast.reference(self.ref),
+                self.ast.sx(8, self.v1),
+                self.ast.zx(8, self.v1),
+            ]
 
-        for n in nodes:
-            self.assertNotEqual(len(self.ctx.liftToLLVM(n)), 0)
+            for n in nodes:
+                self.assertNotEqual(len(self.ctx.liftToLLVM(n)), 0)
