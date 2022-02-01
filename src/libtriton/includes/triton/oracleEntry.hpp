@@ -54,7 +54,7 @@ namespace triton {
 
           //! Constructor
           TRITON_EXPORT ConstantEntry(triton::uint8 position, const triton::ast::SharedAbstractNode& op)
-            : position(position), op(op) {
+            : op(op), position(position) {
           };
       };
 
