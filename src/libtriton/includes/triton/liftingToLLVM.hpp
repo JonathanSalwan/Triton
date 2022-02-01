@@ -13,21 +13,12 @@
 #include <ostream>
 #include <unordered_map>
 
-#include <triton/astContext.hpp>
-#include <triton/symbolicEngine.hpp>
+#include <triton/ast.hpp>
 #include <triton/symbolicExpression.hpp>
 
 #include <llvm/IR/IRBuilder.h>
-#include <llvm/IR/InstIterator.h>
 #include <llvm/IR/LLVMContext.h>
-#include <llvm/IR/LegacyPassManager.h>
 #include <llvm/IR/Module.h>
-#include <llvm/IR/PatternMatch.h>
-#include <llvm/IR/ValueMap.h>
-#include <llvm/Linker/Linker.h>
-#include <llvm/Transforms/IPO/AlwaysInliner.h>
-#include <llvm/Transforms/IPO/PassManagerBuilder.h>
-#include <llvm/Transforms/Utils/Cloning.h>
 
 
 
@@ -58,12 +49,6 @@ namespace triton {
       /*! \brief The lifting to LLVM class. */
       class LiftingToLLVM {
         private:
-          //! Reference to the context managing ast nodes.
-          triton::ast::SharedAstContext astCtxt;
-
-          //! Instance to the symbolic engine.
-          triton::engines::symbolic::SymbolicEngine* symbolic;
-
           //! The LLVM context
           llvm::LLVMContext llvmContext;
 
@@ -84,7 +69,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT LiftingToLLVM(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);
+          TRITON_EXPORT LiftingToLLVM();
 
           //! Lifts a symbolic expression and all its references to LLVM format.
           TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);

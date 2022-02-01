@@ -11,7 +11,9 @@
 #include <vector>
 
 #include <triton/astEnums.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/liftingToLLVM.hpp>
+#include <triton/symbolicVariable.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -20,8 +22,8 @@ namespace triton {
   namespace engines {
     namespace lifters {
 
-      LiftingToLLVM::LiftingToLLVM(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
-        : astCtxt(astCtxt), symbolic(symbolic), llvmModule("tritonModule", this->llvmContext), llvmIR(this->llvmContext) {
+      LiftingToLLVM::LiftingToLLVM()
+        : llvmModule("tritonModule", this->llvmContext), llvmIR(this->llvmContext) {
       }
 
 

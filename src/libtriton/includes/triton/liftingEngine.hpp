@@ -58,7 +58,7 @@ namespace triton {
           TRITON_EXPORT LiftingEngine(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
             : LiftingToSMT(astCtxt, symbolic),
               #ifdef TRITON_LLVM_INTERFACE
-              LiftingToLLVM(astCtxt, symbolic),
+              LiftingToLLVM(),
               #endif
               LiftingToPython(astCtxt, symbolic) {
           };
