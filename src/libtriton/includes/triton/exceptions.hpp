@@ -168,6 +168,18 @@ namespace triton {
     };
 
 
+    /*! \class LiftingEngine
+     *  \brief The exception class used by the lifting engine. */
+    class LiftingEngine : public triton::exceptions::Engines {
+      public:
+        //! Constructor.
+        TRITON_EXPORT LiftingEngine(const char* message) : triton::exceptions::Engines(message) {};
+
+        //! Constructor.
+        TRITON_EXPORT LiftingEngine(const std::string& message) : triton::exceptions::Engines(message) {};
+    };
+
+
     /*! \class SolverEngine
      *  \brief The exception class used by the solver engine. */
     class SolverEngine : public triton::exceptions::Engines {

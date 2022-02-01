@@ -2225,6 +2225,27 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* expr) {
+        if (!PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression as first argument.");
+
+        try {
+          std::ostringstream stream;
+          PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PySymbolicExpression_AsSymbolicExpression(expr));
+          return xPyString_FromString(stream.str().c_str());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_liftToPython(PyObject* self, PyObject* expr) {
         if (!PySymbolicExpression_Check(expr))
           return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Expects a SymbolicExpression as first argument.");
@@ -3373,6 +3394,7 @@ namespace triton {
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
+        {"liftToLLVM",                          (PyCFunction)TritonContext_liftToLLVM,                                  METH_O,                        ""},
         {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
         {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},

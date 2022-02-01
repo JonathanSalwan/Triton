@@ -9,10 +9,15 @@
 #define LIFTINGENGINE_HPP
 
 #include <triton/astContext.hpp>
+#include <triton/config.hpp>
 #include <triton/liftingToPython.hpp>
 #include <triton/liftingToSMT.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/symbolicExpression.hpp>
+
+#ifdef TRITON_LLVM_INTERFACE
+  #include <triton/liftingToLLVM.hpp>
+#endif
 
 
 
@@ -41,11 +46,21 @@ namespace triton {
 
       //! \class LiftingEngine
       /*! \brief The lifting engine class. */
-      class LiftingEngine : public LiftingToSMT, public LiftingToPython {
+      class LiftingEngine
+        : public LiftingToSMT,
+          #ifdef TRITON_LLVM_INTERFACE
+          public LiftingToLLVM,
+          #endif
+          public LiftingToPython {
+
         public:
           //! Constructor.
           TRITON_EXPORT LiftingEngine(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
-            : LiftingToSMT(astCtxt, symbolic), LiftingToPython(astCtxt, symbolic) {
+            : LiftingToSMT(astCtxt, symbolic),
+              #ifdef TRITON_LLVM_INTERFACE
+              LiftingToLLVM(astCtxt, symbolic),
+              #endif
+              LiftingToPython(astCtxt, symbolic) {
           };
       };
 

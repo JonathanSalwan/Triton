@@ -96,6 +96,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/instruction.hpp
     includes/triton/irBuilder.hpp
     includes/triton/liftingEngine.hpp
+    includes/triton/liftingToLLVM.hpp
     includes/triton/liftingToPython.hpp
     includes/triton/liftingToSMT.hpp
     includes/triton/memoryAccess.hpp
@@ -155,6 +156,14 @@ if(BITWUZLA_INTERFACE)
     )
 else()
     set(BITWUZLA_INTERFACE_SOURCE_FILES)
+endif()
+
+if(LLVM_INTERFACE)
+    set(LLVM_INTERFACE_SOURCE_FILES
+        engines/lifters/liftingToLLVM.cpp
+    )
+else()
+    set(LLVM_INTERFACE_SOURCE_FILES)
 endif()
 
 if(PYTHON_BINDINGS)
@@ -226,6 +235,7 @@ add_library(triton
     ${LIBTRITON_RESOURCE_FILES}
     ${Z3_INTERFACE_SOURCE_FILES}
     ${BITWUZLA_INTERFACE_SOURCE_FILES}
+    ${LLVM_INTERFACE_SOURCE_FILES}
     ${LIBTRITON_PYTHON_SOURCE_FILES}
     ${LIBTRITON_PYTHON_HEADER_FILES}
 )
@@ -245,6 +255,7 @@ target_link_libraries(triton PUBLIC
     ${PYTHON_LIBRARIES}
     ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
+    ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
     ${LIBTRITON_OTHER_LIBS}
@@ -252,7 +263,7 @@ target_link_libraries(triton PUBLIC
 
 # Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
 if(NOT MSVC AND (CMAKE_CXX_COMPILER_ID MATCHES "Clang" OR CMAKE_CXX_COMPILER_ID STREQUAL "GNU"))
-    target_compile_options(triton PRIVATE -std=c++11)
+    target_compile_options(triton PRIVATE -std=c++14)
 endif()
 
 # Enable static msvc runtime.

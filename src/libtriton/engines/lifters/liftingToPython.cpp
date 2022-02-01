@@ -59,8 +59,8 @@ namespace triton {
 
         /* Collect used symbolic variables */
         std::map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> symVars;
-        for (const auto& n : ast::search(expr->getAst(), ast::VARIABLE_NODE)) {
-          auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
+        for (const auto& n : triton::ast::search(expr->getAst(), triton::ast::VARIABLE_NODE)) {
+          auto var = reinterpret_cast<triton::ast::VariableNode*>(n.get())->getSymbolicVariable();
           symVars[var->getId()] = var;
         }
 
