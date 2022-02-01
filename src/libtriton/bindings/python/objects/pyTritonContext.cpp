@@ -286,6 +286,9 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
+- <b>string liftToLLVM(\ref py_SymbolicExpression_page expr)</b><br>
+Lifts a symbolic expression and all its references to LLVM IR.
+
 - <b>string liftToPython(\ref py_SymbolicExpression_page expr)</b><br>
 Lifts a symbolic expression and all its references to Python format.
 
