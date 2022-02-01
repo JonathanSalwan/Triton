@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef LIFTINGTOPYTHON_HPP
-#define LIFTINGTOPYTHON_HPP
+#ifndef TRITON_LIFTINGTOPYTHON_HPP
+#define TRITON_LIFTINGTOPYTHON_HPP
 
 #include <ostream>
 
@@ -67,4 +67,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* LIFTINGTOPYTHON_HPP */
+#endif /* TRITON_LIFTINGTOPYTHON_HPP */

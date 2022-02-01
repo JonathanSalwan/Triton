@@ -672,6 +672,9 @@ namespace triton {
 
         /* Lifters engine API ================================================================================= */
 
+        //! [**lifting api**] - Lifts an AST and all its references to LLVM format.
+        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
+
         //! [**lifting api**] - Lifts a symbolic expression and all its references to LLVM format.
         TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
 

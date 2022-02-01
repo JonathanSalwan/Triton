@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef SYNTHESIZER_HPP
-#define SYNTHESIZER_HPP
+#ifndef TRITON_SYNTHESIZER_HPP
+#define TRITON_SYNTHESIZER_HPP
 
 #include <array>
 #include <deque>
@@ -117,4 +117,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* SYNTHESIZER_HPP */
+#endif /* TRITON_SYNTHESIZER_HPP */

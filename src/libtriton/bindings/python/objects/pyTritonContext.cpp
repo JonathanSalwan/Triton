@@ -286,6 +286,9 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
+- <b>string liftToLLVM(\ref py_AstNode_page node)</b><br>
+Lifts an AST node and all its references to LLVM IR.
+
 - <b>string liftToLLVM(\ref py_SymbolicExpression_page expr)</b><br>
 Lifts a symbolic expression and all its references to LLVM IR.
 
@@ -2228,13 +2231,18 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* expr) {
-        if (!PySymbolicExpression_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression as first argument.");
+      static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* arg) {
+        if (!PySymbolicExpression_Check(arg) && !PyAstNode_Check(arg))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression or a AstNode as first argument.");
 
         try {
           std::ostringstream stream;
-          PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PySymbolicExpression_AsSymbolicExpression(expr));
+          if (PySymbolicExpression_Check(arg)) {
+            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PySymbolicExpression_AsSymbolicExpression(arg));
+          }
+          else {
+            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PyAstNode_AsAstNode(arg));
+          }
           return xPyString_FromString(stream.str().c_str());
         }
         catch (const triton::exceptions::PyCallbacks&) {

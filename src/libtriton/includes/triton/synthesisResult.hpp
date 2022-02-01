@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef SYNTHESISRESULT_HPP
-#define SYNTHESISRESULT_HPP
+#ifndef TRITON_SYNTHESISRESULT_HPP
+#define TRITON_SYNTHESISRESULT_HPP
 
 #include <triton/ast.hpp>
 #include <triton/dllexport.hpp>
@@ -95,4 +95,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* SYNTHESISRESULT_HPP */
+#endif /* TRITON_SYNTHESISRESULT_HPP */

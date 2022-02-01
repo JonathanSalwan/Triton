@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef LIFTINGENGINE_HPP
-#define LIFTINGENGINE_HPP
+#ifndef TRITON_LIFTINGENGINE_HPP
+#define TRITON_LIFTINGENGINE_HPP
 
 #include <triton/astContext.hpp>
 #include <triton/config.hpp>
@@ -71,4 +71,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* LIFTINGENGINE_HPP */
+#endif /* TRITON_LIFTINGENGINE_HPP */

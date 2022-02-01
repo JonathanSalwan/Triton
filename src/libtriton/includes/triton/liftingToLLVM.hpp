@@ -5,13 +5,12 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef LIFTINGTOLLVM_HPP
-#define LIFTINGTOLLVM_HPP
+#ifndef TRITON_LIFTINGTOLLVM_HPP
+#define TRITON_LIFTINGTOLLVM_HPP
 
 #include <map>
 #include <memory>
 #include <ostream>
-#include <unordered_map>
 
 #include <triton/ast.hpp>
 #include <triton/symbolicExpression.hpp>
@@ -48,31 +47,15 @@ namespace triton {
       //! \class LiftingToLLVM
       /*! \brief The lifting to LLVM class. */
       class LiftingToLLVM {
-        private:
-          //! The LLVM context
-          llvm::LLVMContext llvmContext;
-
-          //! The LLVM module
-          llvm::Module llvmModule;
-
-          //! The LLVM IR builder
-          llvm::IRBuilder<> llvmIR;
-
-          //! Map Triton variables to LLVM ones
-          std::map<triton::ast::SharedAbstractNode, llvm::Value*> llvmVars;
-
-          //! Create a LLVM function
-          void createFunction(const triton::engines::symbolic::SharedSymbolicExpression& expr);
-
-          //! Converts Triton AST to LLVM IR
-          llvm::Value* do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*>* results);
-
         public:
           //! Constructor.
           TRITON_EXPORT LiftingToLLVM();
 
           //! Lifts a symbolic expression and all its references to LLVM format.
           TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+
+          //! Lifts a abstract node and all its references to LLVM format.
+          TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
       };
 
     /*! @} End of lifters namespace */
@@ -82,5 +65,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-
-#endif /* LIFTINGTOLLVM_HPP */
+#endif /* TRITON_LIFTINGTOLLVM_HPP */

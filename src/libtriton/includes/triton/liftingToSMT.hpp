@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef LIFTINGTOSMT_HPP
-#define LIFTINGTOSMT_HPP
+#ifndef TRITON_LIFTINGTOSMT_HPP
+#define TRITON_LIFTINGTOSMT_HPP
 
 #include <ostream>
 

@@ -122,6 +122,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/synthesizer.hpp
     includes/triton/taintEngine.hpp
     includes/triton/tritonToBitwuzlaAst.hpp
+    includes/triton/tritonToLLVM.hpp
     includes/triton/tritonToZ3Ast.hpp
     includes/triton/tritonTypes.hpp
     includes/triton/x86.spec
@@ -160,6 +161,7 @@ endif()
 
 if(LLVM_INTERFACE)
     set(LLVM_INTERFACE_SOURCE_FILES
+        ast/llvm/tritonToLLVM.cpp
         engines/lifters/liftingToLLVM.cpp
     )
 else()
