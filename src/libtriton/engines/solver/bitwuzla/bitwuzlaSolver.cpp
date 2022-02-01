@@ -210,7 +210,7 @@ namespace triton {
 
       triton::uint512 BitwuzlaSolver::evaluate(const triton::ast::SharedAbstractNode& node) const {
         if (node == nullptr) {
-          throw triton::exceptions::AstTranslations("BitwuzlaSolver::evaluate(): node cannot be null.");
+          throw triton::exceptions::AstLifting("BitwuzlaSolver::evaluate(): node cannot be null.");
         }
 
         auto bzla = bitwuzla_new();

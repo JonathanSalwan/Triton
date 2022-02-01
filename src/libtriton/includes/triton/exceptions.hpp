@@ -396,15 +396,15 @@ namespace triton {
     };
 
 
-    /*! \class AstTranslations
-     *  \brief The exception class used by all AST translations (`z3 <-> triton`). */
-    class AstTranslations : public triton::exceptions::Ast {
+    /*! \class AstLifting
+     *  \brief The exception class used by all AST lifting (e.g `z3 <-> triton`). */
+    class AstLifting : public triton::exceptions::Ast {
       public:
         //! Constructor.
-        TRITON_EXPORT AstTranslations(const char* message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstLifting(const char* message) : triton::exceptions::Ast(message) {};
 
         //! Constructor.
-        TRITON_EXPORT AstTranslations(const std::string& message) : triton::exceptions::Ast(message) {};
+        TRITON_EXPORT AstLifting(const std::string& message) : triton::exceptions::Ast(message) {};
     };
 
 

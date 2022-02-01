@@ -53,7 +53,7 @@ namespace triton {
             argsType[index] = llvm::Type::getInt64Ty(this->llvmContext);
             break;
           default:
-            throw triton::exceptions::LiftingEngine("TritonToLLVM::do_convert(): Symbolic variables must be aligned on 8, 16, 32 or 64 bit.");
+            throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Symbolic variables must be aligned on 8, 16, 32 or 64 bit.");
         }
       }
 
@@ -104,7 +104,7 @@ namespace triton {
 
     llvm::Value* TritonToLLVM::do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*>* results) {
       if (node == nullptr)
-        throw triton::exceptions::LiftingEngine("TritonToLLVM::do_convert(): node cannot be null.");
+        throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): node cannot be null.");
 
       /* Prepare llvm's children */
       std::vector<llvm::Value*> children;
@@ -295,7 +295,7 @@ namespace triton {
           return this->llvmIR.CreateZExt(children[1], llvm::IntegerType::get(this->llvmContext, node->getBitvectorSize()));
 
         default:
-          throw triton::exceptions::LiftingEngine("TritonToLLVM::do_convert(): Invalid kind of node.");
+          throw triton::exceptions::AstLifting("TritonToLLVM::do_convert(): Invalid kind of node.");
       }
     }
 

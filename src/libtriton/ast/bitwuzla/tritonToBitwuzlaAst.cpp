@@ -51,7 +51,7 @@ namespace triton {
 
     const BitwuzlaTerm* TritonToBitwuzlaAst::translate(const SharedAbstractNode& node, Bitwuzla* bzla) {
       if (node == nullptr)
-        throw triton::exceptions::AstTranslations("TritonToBitwuzlaAst::translate(): node cannot be null.");
+        throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): node cannot be null.");
 
       std::vector<const BitwuzlaTerm*> children;
       for (auto&& n : node->getChildren()) {
@@ -186,7 +186,7 @@ namespace triton {
         }
 
         case FORALL_NODE:
-          throw triton::exceptions::AstTranslations("TritonToBitwuzlaAst::translate(): FORALL node can't be converted due to a Bitwuzla issue (see #1062).");
+          throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): FORALL node can't be converted due to a Bitwuzla issue (see #1062).");
 
         case IFF_NODE:
           return bitwuzla_mk_term2(bzla, BITWUZLA_KIND_IFF, children[0], children[1]);
@@ -225,7 +225,7 @@ namespace triton {
 
           auto it = symbols.find(value);
           if (it == symbols.end())
-            throw triton::exceptions::AstTranslations("TritonToBitwuzlaAst::translate(): [STRING_NODE] Symbols not found.");
+            throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): [STRING_NODE] Symbols not found.");
 
           return translatedNodes.at(it->second);
         }
@@ -265,7 +265,7 @@ namespace triton {
         }
 
         default:
-          throw triton::exceptions::AstTranslations("TritonToBitwuzlaAst::translate(): Invalid kind of node.");
+          throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): Invalid kind of node.");
       }
     }
 
