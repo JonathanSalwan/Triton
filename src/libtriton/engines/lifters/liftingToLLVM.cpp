@@ -48,6 +48,8 @@ namespace triton {
             case 64:
               argsType[index] = llvm::Type::getInt64Ty(this->llvmContext);
               break;
+            default:
+              throw triton::exceptions::LiftingEngine("LiftingToLLVM::do_convert(): Symbolic variables must be aligned on 8, 16, 32 or 64 bit.");
           }
         }
 
@@ -103,7 +105,7 @@ namespace triton {
 
       llvm::Value* LiftingToLLVM::do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*>* results) {
         if (node == nullptr)
-          throw triton::exceptions::AstTranslations("LiftingToLLVM::do_convert(): node cannot be null.");
+          throw triton::exceptions::LiftingEngine("LiftingToLLVM::do_convert(): node cannot be null.");
 
         /* Prepare llvm's children */
         std::vector<llvm::Value*> children;
@@ -148,11 +150,19 @@ namespace triton {
           case triton::ast::BVOR_NODE:
             return this->llvmIR.CreateOr(children[0], children[1]);
 
-          //case triton::ast::BVROL_NODE: {
-          //}
+          // bvrol(expr, rot) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
+          case triton::ast::BVROL_NODE: {
+            auto rot  = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<uint64_t>();
+            auto size = node->getBitvectorSize();
+            return this->llvmIR.CreateOr(this->llvmIR.CreateShl(children[0], rot % size), this->llvmIR.CreateLShr(children[0], (size - (rot % size))));
+          }
 
-          //case triton::ast::BVROR_NODE: {
-          //}
+          // bvror(expr, rot) = ((expr >> (rot % size)) | (expr << (size - (rot % size))))
+          case triton::ast::BVROR_NODE: {
+            auto rot  = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<uint64_t>();
+            auto size = node->getBitvectorSize();
+            return this->llvmIR.CreateOr(this->llvmIR.CreateLShr(children[0], rot % size), this->llvmIR.CreateShl(children[0], (size - (rot % size))));
+          }
 
           case triton::ast::BVSDIV_NODE:
             return this->llvmIR.CreateSDiv(children[0], children[1]);
@@ -286,7 +296,7 @@ namespace triton {
             return this->llvmIR.CreateZExt(children[1], llvm::IntegerType::get(this->llvmContext, node->getBitvectorSize()));
 
           default:
-            throw triton::exceptions::AstTranslations("LiftingToLLVM::do_convert(): Invalid kind of node.");
+            throw triton::exceptions::LiftingEngine("LiftingToLLVM::do_convert(): Invalid kind of node.");
         }
       }
 
