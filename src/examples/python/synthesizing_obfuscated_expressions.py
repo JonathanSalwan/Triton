@@ -31,8 +31,6 @@
 ## python3 ./synthesizing_obfuscated_expressions.py  0.12s user 0.01s system 99% cpu 0.125 total
 ##
 
-from __future__ import print_function
-
 import sys
 import ctypes
 
@@ -56,17 +54,14 @@ def x_xor_92_obfuscated(x):
 
 
 def main():
-    ctx = TritonContext(ARCH.X86_64)
-
-    try:
-        ctx.setSolver(SOLVER.Z3)
-    except:
-        # NOTE The FORALL node is not supported currently in Bitwuzla. Remove
-        #      this check once it is supported.
+    if VERSION.Z3_INTERFACE is False:
+        # NOTE: The FORALL node is not supported currently in Bitwuzla.
         print("This script requires Z3 as the solver engine. Compile Triton with Z3 support and re-run.")
-
         # Return 0 so the test don't fail.
         sys.exit(0)
+
+    ctx = TritonContext(ARCH.X86_64)
+    ctx.setSolver(SOLVER.Z3)
 
     ast = ctx.getAstContext()
 
