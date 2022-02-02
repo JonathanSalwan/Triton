@@ -140,16 +140,16 @@ packages for Visual Studio 2012.
 
 Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but also by several strong contributors:
 
-* **Alberto Garcia Illera** - Cruise Automation
+* [**Alberto Garcia Illera**](https://twitter.com/algillera) - Cruise Automation
 * [**Alexey Vishnyakov**](https://vishnya.xyz/) - ISP RAS
-* **Black Binary** - n/a
-* **Christian Heitman** - Quarkslab
-* **Daniil Kuts** - ISP RAS
+* [**Black Binary**](https://github.com/black-binary) - n/a
+* [**Christian Heitman**](https://github.com/cnheitman) - Quarkslab
+* [**Daniil Kuts**](https://github.com/apach301) - ISP RAS
 * **Florent Saudel** - Bordeaux University
-* **Jessy Campos** - n/a
+* [**Jessy Campos**](https://github.com/ek0) - n/a
 * [**Jonathan Salwan**](http://shell-storm.org/) - Quarkslab
-* **Pierrick Brunet** - Quarkslab
-* **PixelRick** - n/a
+* [**Pierrick Brunet**](https://github.com/pbrunet) - Quarkslab
+* [**PixelRick**](https://github.com/PixelRick) - n/a
 * [**Romain Thomas**](https://www.romainthomas.fr/) - Quarkslab
 
 
@@ -194,7 +194,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 </li>
 <li>
 <b>Sydr: Cutting Edge Dynamic Symbolic Execution</b><br />
- <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2020. [<a href="publications/ISPRAS2020-sydr.pdf">paper</a>] [<a href="https://vishnya.xyz/vishnyakov-isprasopen2020.pdf">slide</a>] [<a href="https://www.ispras.ru/conf/2020/video/compiler-technology-11-december.mp4#t=6021">video</a>]<br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2020. [<a href="publications/ISPRAS2020-sydr.pdf">paper</a>] [<a href="publications/ISPOPEN2020-slide-sydr-vishnyakov.pdf">slide</a>] [<a href="https://www.ispras.ru/conf/2020/video/compiler-technology-11-december.mp4#t=6021">video</a>]<br />
  <b>Auhtors</b>: A.Vishnyakov, A.Fedotov, D.Kuts, A.Novikov, D.Parygina, E.Kobrin, V.Logunova, P.Belecky, S.Kurmangaleev<br />
  <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) has enormous amount of applications in computer  security (fuzzing, vulnerability discovery, reverse-engineering, etc.). We propose
  several performance and accuracy improvements for dynamic symbolic execution.  Skipping non-symbolic instructions allows to build a path predicate 1.2--3.5 times faster.
