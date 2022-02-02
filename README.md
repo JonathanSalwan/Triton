@@ -184,7 +184,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 </li>
 <li>
 <b>Symbolic Security Predicates: Hunt Program Weaknesses</b><br />
- <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2021. [<a href="publications/ISPOPEN2021-security-predicates-vishnyakov.pdf">paper</a>] [<a href="ISPOPEN2021-slide-security-predicates-vishnyakov.pdf">slide</a>]<br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2021. [<a href="publications/ISPOPEN2021-security-predicates-vishnyakov.pdf">paper</a>] [<a href="publications/ISPOPEN2021-slide-security-predicates-vishnyakov.pdf">slide</a>]<br />
  <b>Authors</b>: A.Vishnyakov, V.Logunova, E.Kobrin, D.Kuts, D.Parygina, A.Fedotov<br />
  <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) is a powerful method for
  path exploration during hybrid fuzzing and automatic bug detection. We propose
@@ -211,7 +211,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 </li>
 <li>
 <b>Towards Symbolic Pointers Reasoning in Dynamic Symbolic Execution</b><br />
- <b>Talk at</b>: Ivannikov Memorial Workshop, Nizhny Novgorod, Russia, 2021. [<a href="publications/IVMEM2021-symbolic-pointers-kuts.pdf">paper</a>] [<a href="IVMEM2021-slide-symbolic-pointers-kuts.pdf">slide</a>]<br />
+ <b>Talk at</b>: Ivannikov Memorial Workshop, Nizhny Novgorod, Russia, 2021. [<a href="publications/IVMEM2021-symbolic-pointers-kuts.pdf">paper</a>] [<a href="publications/IVMEM2021-slide-symbolic-pointers-kuts.pdf">slide</a>]<br />
  <b>Authors</b>: Daniil Kuts<br />
  <b>Abstract</b>: <em>Dynamic symbolic execution is a widely used technique for
  automated software testing, designed for execution paths exploration and
