@@ -13,6 +13,7 @@
 #include <ostream>
 
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/symbolicExpression.hpp>
 
 #include <llvm/IR/IRBuilder.h>

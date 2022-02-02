@@ -97,6 +97,7 @@ Triton relies on the following dependencies:
 * libcapstone                >= 4.0.x   https://github.com/capstone-engine/capstone
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
 * libbitwuzla   (optional)   n/a        https://github.com/bitwuzla/bitwuzla
+* llvm          (optional)   >= 12
 ```
 
 

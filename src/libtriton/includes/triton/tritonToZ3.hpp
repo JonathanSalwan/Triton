@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef TRITON_TRITONTOZ3AST_H
-#define TRITON_TRITONTOZ3AST_H
+#ifndef TRITON_TRITONTOZ3_H
+#define TRITON_TRITONTOZ3_H
 
 #include <unordered_map>
 #include <z3++.h>
@@ -32,9 +32,9 @@ namespace triton {
    *  @{
    */
 
-    //! \class TritonToZ3Ast
+    //! \class TritonToZ3
     /*! \brief Converts a Triton's AST to Z3's AST. */
-    class TritonToZ3Ast {
+    class TritonToZ3 {
       private:
         //! This flag define if the conversion is used to evaluated a node or not.
         bool isEval;
@@ -60,10 +60,10 @@ namespace triton {
         std::unordered_map<std::string, triton::engines::symbolic::SharedSymbolicVariable> variables;
 
         //! Constructor.
-        TRITON_EXPORT TritonToZ3Ast(bool eval=true);
+        TRITON_EXPORT TritonToZ3(bool eval=true);
 
         //! Destructor.
-        TRITON_EXPORT ~TritonToZ3Ast();
+        TRITON_EXPORT ~TritonToZ3();
 
         //! Converts to Z3's AST
         TRITON_EXPORT z3::expr convert(const triton::ast::SharedAbstractNode& node);
@@ -74,4 +74,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_TRITONTOZ3AST_H */
+#endif /* TRITON_TRITONTOZ3_H */

@@ -13,8 +13,8 @@
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 #ifdef TRITON_Z3_INTERFACE
-  #include <triton/tritonToZ3Ast.hpp>
-  #include <triton/z3ToTritonAst.hpp>
+  #include <triton/tritonToZ3.hpp>
+  #include <triton/z3ToTriton.hpp>
 #endif
 
 #include <cstring>
@@ -1581,7 +1581,7 @@ namespace triton {
 
       #ifdef TRITON_Z3_INTERFACE
       static PyObject* AstContext_tritonToZ3(PyObject* self, PyObject* node) {
-        triton::ast::TritonToZ3Ast tritonToZ3Ast{false};
+        triton::ast::TritonToZ3 tritonToZ3{false};
 
         if (node == nullptr || (!PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "tritonToZ3(): Expects a AstNode as argument.");
@@ -1601,7 +1601,7 @@ namespace triton {
 
         // Convert the node to a Z3++ expression and translate it into
         // python's z3 main context
-        z3::expr expr = tritonToZ3Ast.convert(PyAstNode_AsAstNode(node));
+        z3::expr expr = tritonToZ3.convert(PyAstNode_AsAstNode(node));
         Z3_ast ast    = Z3_translate(expr.ctx(), expr, z3Ctx);
 
         // Check that everything went fine
@@ -1632,8 +1632,8 @@ namespace triton {
 
 
       static PyObject* AstContext_z3ToTriton(PyObject* self, PyObject* expr) {
-        triton::ast::Z3ToTritonAst  z3ToTritonAst{PyAstContext_AsAstContext(self)};
-        z3::context                 z3Ctx;
+        triton::ast::Z3ToTriton z3ToTritonAst{PyAstContext_AsAstContext(self)};
+        z3::context z3Ctx;
 
         if (std::strcmp(Py_TYPE(expr)->tp_name, "ExprRef") && std::strcmp(Py_TYPE(expr)->tp_name, "BitVecRef"))
           return PyErr_Format(PyExc_TypeError, "z3ToTriton(): expected an ExprRef as argument");

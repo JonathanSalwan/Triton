@@ -31,16 +31,16 @@ namespace triton {
    *  @{
    */
 
-    //! \class Z3ToTritonAst
+    //! \class Z3ToTriton
     /*! \brief Converts a Z3's AST to a Triton's AST. */
-    class Z3ToTritonAst {
+    class Z3ToTriton {
       private:
         //! The Triton's AST context
         triton::ast::SharedAstContext astCtxt;
 
       public:
         //! Constructor.
-        TRITON_EXPORT Z3ToTritonAst(const triton::ast::SharedAstContext& ctxt);
+        TRITON_EXPORT Z3ToTriton(const triton::ast::SharedAstContext& ctxt);
 
         //! Converts to Triton's AST
         TRITON_EXPORT triton::ast::SharedAbstractNode convert(const z3::expr& expr);

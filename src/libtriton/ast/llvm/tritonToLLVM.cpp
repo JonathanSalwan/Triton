@@ -31,7 +31,7 @@ namespace triton {
     }
 
 
-    void TritonToLLVM::createFunction(const triton::ast::SharedAbstractNode& node) {
+    void TritonToLLVM::createFunction(const triton::ast::SharedAbstractNode& node, const std::string& fname) {
       // Collect used symbolic variables.
       auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
 
@@ -61,17 +61,14 @@ namespace triton {
       auto  retSize  = node->getBitvectorSize();
       auto* retType  = llvm::IntegerType::get(this->llvmContext, retSize);
       auto* funcType = llvm::FunctionType::get(retType, argsType, false /* isVarArg */);
-      auto* llvmFunc = llvm::Function::Create(funcType, llvm::Function::ExternalLinkage, "__triton", this->llvmModule.get());
+      auto* llvmFunc = llvm::Function::Create(funcType, llvm::Function::ExternalLinkage, fname, this->llvmModule.get());
 
       /* Rename parameters */
       llvm::Function::arg_iterator params = llvmFunc->arg_begin();
       for (const auto& node : vars) {
         auto var = reinterpret_cast<triton::ast::VariableNode*>(node.get())->getSymbolicVariable();
         auto* param = params++;
-        if (var->getAlias().empty())
-          param->setName(var->getName());
-        else
-          param->setName(var->getAlias());
+        param->setName(var->getName());
         this->llvmVars[node] = param;
       }
 
@@ -81,11 +78,11 @@ namespace triton {
     }
 
 
-    std::shared_ptr<llvm::Module> TritonToLLVM::convert(const triton::ast::SharedAbstractNode& node) {
+    std::shared_ptr<llvm::Module> TritonToLLVM::convert(const triton::ast::SharedAbstractNode& node, const std::string& fname) {
       std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*> results;
 
       /* Create the LLVM function */
-      this->createFunction(node);
+      this->createFunction(node, fname);
 
       /* Lift Triton AST to LLVM IR */
       auto nodes = triton::ast::childrenExtraction(node, true /* unroll*/, true /* revert */);

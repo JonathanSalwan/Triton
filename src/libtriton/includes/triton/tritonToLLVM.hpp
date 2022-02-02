@@ -11,9 +11,11 @@
 #include <map>
 #include <memory>
 #include <ostream>
+#include <string>
 #include <unordered_map>
 
 #include <triton/ast.hpp>
+#include <triton/dllexport.hpp>
 
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
@@ -53,7 +55,7 @@ namespace triton {
         std::map<triton::ast::SharedAbstractNode, llvm::Value*> llvmVars;
 
         //! Create a LLVM function
-        void createFunction(const triton::ast::SharedAbstractNode& node);
+        void createFunction(const triton::ast::SharedAbstractNode& node, const std::string& fname);
 
         //! Converts Triton AST to LLVM IR
         llvm::Value* do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*>* results);
@@ -63,7 +65,7 @@ namespace triton {
         TRITON_EXPORT TritonToLLVM(llvm::LLVMContext& llvmContext);
 
         //! Lifts a symbolic expression and all its references to LLVM format.
-        TRITON_EXPORT std::shared_ptr<llvm::Module> convert(const triton::ast::SharedAbstractNode& node);
+        TRITON_EXPORT std::shared_ptr<llvm::Module> convert(const triton::ast::SharedAbstractNode& node, const std::string& fname="__triton");
     };
 
   /*! @} End of ast namespace */

@@ -12,10 +12,10 @@
 #include <triton/exceptions.hpp>
 #include <triton/solverModel.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/tritonToZ3Ast.hpp>
+#include <triton/tritonToZ3.hpp>
 #include <triton/tritonTypes.hpp>
 #include <triton/z3Solver.hpp>
-#include <triton/z3ToTritonAst.hpp>
+#include <triton/z3ToTriton.hpp>
 
 
 
@@ -42,7 +42,7 @@ namespace triton {
       std::vector<std::unordered_map<triton::usize, SolverModel>> Z3Solver::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         std::vector<std::unordered_map<triton::usize, SolverModel>> ret;
         triton::ast::SharedAbstractNode onode = node;
-        triton::ast::TritonToZ3Ast z3Ast{false};
+        triton::ast::TritonToZ3 z3Ast{false};
 
         try {
           if (onode == nullptr)
@@ -166,7 +166,7 @@ namespace triton {
 
 
       bool Z3Solver::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
-        triton::ast::TritonToZ3Ast z3Ast{false};
+        triton::ast::TritonToZ3 z3Ast{false};
 
         if (node == nullptr)
           throw triton::exceptions::SolverEngine("Z3Solver::isSat(): node cannot be null.");
@@ -242,8 +242,8 @@ namespace triton {
           throw triton::exceptions::AstLifting("Z3Solver::simplify(): node cannot be null.");
 
         try {
-          triton::ast::TritonToZ3Ast z3Ast{false};
-          triton::ast::Z3ToTritonAst tritonAst{node->getContext()};
+          triton::ast::TritonToZ3 z3Ast{false};
+          triton::ast::Z3ToTriton tritonAst{node->getContext()};
 
           /* From Triton to Z3 */
           z3::expr expr = z3Ast.convert(node);
@@ -264,7 +264,7 @@ namespace triton {
           throw triton::exceptions::AstLifting("Z3Solver::simplify(): node cannot be null.");
 
         try {
-          triton::ast::TritonToZ3Ast z3ast{true};
+          triton::ast::TritonToZ3 z3ast{true};
 
           /* From Triton to Z3 */
           z3::expr expr = z3ast.convert(node);

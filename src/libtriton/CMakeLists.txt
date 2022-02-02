@@ -99,6 +99,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/liftingToLLVM.hpp
     includes/triton/liftingToPython.hpp
     includes/triton/liftingToSMT.hpp
+    includes/triton/llvmToTriton.hpp
     includes/triton/memoryAccess.hpp
     includes/triton/modes.hpp
     includes/triton/modesEnums.hpp
@@ -121,9 +122,9 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/synthesisResult.hpp
     includes/triton/synthesizer.hpp
     includes/triton/taintEngine.hpp
-    includes/triton/tritonToBitwuzlaAst.hpp
+    includes/triton/tritonToBitwuzla.hpp
     includes/triton/tritonToLLVM.hpp
-    includes/triton/tritonToZ3Ast.hpp
+    includes/triton/tritonToZ3.hpp
     includes/triton/tritonTypes.hpp
     includes/triton/x86.spec
     includes/triton/x8664Cpu.hpp
@@ -131,7 +132,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/x86Semantics.hpp
     includes/triton/x86Specifications.hpp
     includes/triton/z3Solver.hpp
-    includes/triton/z3ToTritonAst.hpp
+    includes/triton/z3ToTriton.hpp
 )
 
 # Define all resource files
@@ -142,8 +143,8 @@ set(LIBTRITON_RESOURCE_FILES
 
 if(Z3_INTERFACE)
     set(Z3_INTERFACE_SOURCE_FILES
-        ast/z3/tritonToZ3Ast.cpp
-        ast/z3/z3ToTritonAst.cpp
+        ast/z3/tritonToZ3.cpp
+        ast/z3/z3ToTriton.cpp
         engines/solver/z3/z3Solver.cpp
     )
 else()
@@ -152,7 +153,7 @@ endif()
 
 if(BITWUZLA_INTERFACE)
     set(BITWUZLA_INTERFACE_SOURCE_FILES
-        ast/bitwuzla/tritonToBitwuzlaAst.cpp
+        ast/bitwuzla/tritonToBitwuzla.cpp
         engines/solver/bitwuzla/bitwuzlaSolver.cpp
     )
 else()
@@ -161,6 +162,7 @@ endif()
 
 if(LLVM_INTERFACE)
     set(LLVM_INTERFACE_SOURCE_FILES
+        ast/llvm/llvmToTriton.cpp
         ast/llvm/tritonToLLVM.cpp
         engines/lifters/liftingToLLVM.cpp
     )

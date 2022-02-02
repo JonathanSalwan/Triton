@@ -2,9 +2,13 @@
 
 #include <iostream>
 #include <sstream>
+#include <list>
 
+#include <triton/aarch64Cpu.hpp>
+#include <triton/aarch64Specifications.hpp>
 #include <triton/api.hpp>
 #include <triton/bitsVector.hpp>
+#include <triton/config.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
@@ -14,8 +18,12 @@
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
 #include <triton/x86Specifications.hpp>
-#include <triton/aarch64Cpu.hpp>
-#include <triton/aarch64Specifications.hpp>
+
+#ifdef TRITON_LLVM_INTERFACE
+  #include <triton/tritonToLLVM.hpp>
+  #include <triton/llvmToTriton.hpp>
+#endif
+
 
 
 int test_1(void) {
@@ -469,8 +477,7 @@ int test_9(void) {
   api.setArchitecture(triton::arch::ARCH_X86_64);
 
   triton::engines::symbolic::PathConstraint pco;
-  auto node = api.getAstContext()->equal(
-      api.getAstContext()->bvtrue(), api.getAstContext()->bvtrue());
+  auto node = api.getAstContext()->equal(api.getAstContext()->bvtrue(), api.getAstContext()->bvtrue());
   pco.addBranchConstraint(false, 0x123, 0x100, node);
   pco.addBranchConstraint(true,  0x123, 0x200, node);
   pco.addBranchConstraint(false, 0x123, 0x300, node);
@@ -517,6 +524,100 @@ int test_9(void) {
 }
 
 
+#ifdef TRITON_LLVM_INTERFACE
+bool smt_proof(triton::API& ctx, const triton::ast::SharedAbstractNode& node1, const triton::ast::SharedAbstractNode& node2) {
+  auto actx = ctx.getAstContext();
+  if (ctx.isSat(actx->distinct(node1, node2)) == false)
+    return true;
+  return false;
+}
+
+
+int test_10(void) {
+  triton::API ctx(triton::arch::ARCH_X86_64);
+  auto actx = ctx.getAstContext();
+  auto varx = ctx.newSymbolicVariable(8, "x");
+
+  std::list<triton::ast::SharedAbstractNode> nodes = {
+    /* bitvector */
+    actx->bvadd(actx->bv(10, 8), actx->variable(varx)),
+    actx->bvadd(actx->variable(varx), actx->bv(11, 8)),
+    actx->bvand(actx->bv(12, 8), actx->variable(varx)),
+    actx->bvashr(actx->bv(13, 8), actx->variable(varx)),
+    actx->bvlshr(actx->bv(14, 8), actx->variable(varx)),
+    actx->bvmul(actx->bv(15, 8), actx->variable(varx)),
+    actx->bvnand(actx->bv(16, 8), actx->variable(varx)),
+    actx->bvneg(actx->bv(17, 8)),
+    actx->bvneg(actx->variable(varx)),
+    actx->bvnor(actx->bv(18, 8), actx->variable(varx)),
+    actx->bvnot(actx->bv(19, 8)),
+    actx->bvnot(actx->variable(varx)),
+    actx->bvor(actx->bv(20, 8), actx->variable(varx)),
+    actx->bvrol(actx->variable(varx), actx->bv(21, 8)),
+    actx->bvror(actx->variable(varx), actx->bv(22, 8)),
+    actx->bvsdiv(actx->variable(varx), actx->bv(23, 8)),
+    actx->bvshl(actx->variable(varx), actx->bv(24, 8)),
+    actx->bvsmod(actx->variable(varx), actx->bv(25, 8)),
+    actx->bvsrem(actx->variable(varx), actx->bv(26, 8)),
+    actx->bvsub(actx->bv(27, 8), actx->variable(varx)),
+    actx->bvudiv(actx->variable(varx), actx->bv(28, 8)),
+    actx->bvurem(actx->variable(varx), actx->bv(29, 8)),
+    actx->bvxnor(actx->bv(30, 8), actx->variable(varx)),
+    actx->bvxor(actx->bv(31, 8), actx->variable(varx)),
+    actx->sx(24, actx->variable(varx)),
+    actx->sx(8, actx->variable(varx)),
+    actx->zx(24, actx->variable(varx)),
+    actx->zx(8, actx->variable(varx)),
+
+    /* logical */
+    actx->equal(actx->bv(32, 8), actx->variable(varx)),
+    actx->distinct(actx->bv(33, 8), actx->variable(varx)),
+    actx->bvsge(actx->bv(34, 8), actx->variable(varx)),
+    actx->bvsgt(actx->bv(35, 8), actx->variable(varx)),
+    actx->bvsle(actx->bv(36, 8), actx->variable(varx)),
+    actx->bvslt(actx->bv(37, 8), actx->variable(varx)),
+    actx->bvuge(actx->bv(38, 8), actx->variable(varx)),
+    actx->bvugt(actx->bv(39, 8), actx->variable(varx)),
+    actx->bvule(actx->bv(40, 8), actx->variable(varx)),
+    actx->land(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
+    actx->lor(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
+    actx->lxor(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
+
+    /* misc */
+    actx->concat(actx->concat(actx->concat(actx->bv(50, 8), actx->variable(varx)), actx->bv(0xff, 8)), actx->variable(varx)),
+    actx->extract(11, 4, actx->concat(actx->bv(0xff, 8), actx->variable(varx))),
+    actx->ite(actx->equal(actx->bv(52, 8), actx->bv(60, 8)), actx->variable(varx), actx->bvadd(actx->variable(varx), actx->bv(1, 8))),
+    actx->ite(actx->equal(actx->bv(53, 8), actx->bv(61, 8)), actx->variable(varx), actx->bvadd(actx->variable(varx), actx->bv(2, 8))),
+    actx->ite(actx->bvsge(actx->bv(54, 8), actx->bv(62, 8)), actx->variable(varx), actx->bvadd(actx->variable(varx), actx->bv(3, 8))),
+    actx->ite(actx->bvslt(actx->bv(55, 8), actx->variable(varx)), actx->variable(varx), actx->bvadd(actx->variable(varx), actx->bv(4, 8))),
+  };
+
+  for (const auto& node : nodes) {
+    /* Triton to LLVM */
+    llvm::LLVMContext llvmContext;
+    triton::ast::TritonToLLVM ttllvm(llvmContext);
+    auto llvmModule = ttllvm.convert(node);
+    std::cerr << "IN: " << node << std::endl;
+
+    /* LLVM to Triton */
+    triton::ast::LLVMToTriton llvmtt(actx);
+    auto nout = llvmtt.convert(llvmModule.get());
+    std::cerr << "OUT: " << nout << std::endl;
+
+    if (smt_proof(ctx, node, nout) == false) {
+      std::cerr << "Node not equal" << std::endl;
+      std::cerr << "IN: " << node << std::endl;
+      std::cerr << "OUT: " << nout << std::endl;
+      return 1;
+    }
+  }
+
+  std::cout << "test_10: OK" << std::endl;
+  return 0;
+}
+#endif
+
+
 int main(int ac, const char **av) {
   if (test_1())
     return 1;
@@ -544,6 +645,11 @@ int main(int ac, const char **av) {
 
   if (test_9())
     return 1;
+
+  #ifdef TRITON_LLVM_INTERFACE
+  if (test_10())
+    return 1;
+  #endif
 
   return 0;
 }

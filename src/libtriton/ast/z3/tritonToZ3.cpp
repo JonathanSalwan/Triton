@@ -11,29 +11,29 @@
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/tritonToZ3Ast.hpp>
+#include <triton/tritonToZ3.hpp>
 
 
 
 namespace triton {
   namespace ast {
 
-    TritonToZ3Ast::TritonToZ3Ast(bool eval)
+    TritonToZ3::TritonToZ3(bool eval)
       : context() {
       this->isEval = eval;
     }
 
 
-    TritonToZ3Ast::~TritonToZ3Ast() {
+    TritonToZ3::~TritonToZ3() {
       /* See #828: Release ownership before calling container destructor */
       this->symbols.clear();
       this->variables.clear();
     }
 
 
-    triton::__uint TritonToZ3Ast::getUintValue(const z3::expr& expr) {
+    triton::__uint TritonToZ3::getUintValue(const z3::expr& expr) {
       if (!expr.is_int())
-        throw triton::exceptions::AstLifting("TritonToZ3Ast::getUintValue(): The ast is not a numerical value.");
+        throw triton::exceptions::AstLifting("TritonToZ3::getUintValue(): The ast is not a numerical value.");
 
       #if defined(__x86_64__) || defined(_M_X64) || defined(__aarch64__)
       return expr.get_numeral_uint64();
@@ -44,12 +44,12 @@ namespace triton {
     }
 
 
-    std::string TritonToZ3Ast::getStringValue(const z3::expr& expr) {
+    std::string TritonToZ3::getStringValue(const z3::expr& expr) {
       return Z3_get_numeral_string(this->context, expr);
     }
 
 
-    z3::expr TritonToZ3Ast::convert(const triton::ast::SharedAbstractNode& node) {
+    z3::expr TritonToZ3::convert(const triton::ast::SharedAbstractNode& node) {
       std::unordered_map<triton::ast::SharedAbstractNode, z3::expr> results;
 
       auto nodes = triton::ast::childrenExtraction(node, true /* unroll*/, true /* revert */);
@@ -62,9 +62,9 @@ namespace triton {
     }
 
 
-    z3::expr TritonToZ3Ast::do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, z3::expr>* results) {
+    z3::expr TritonToZ3::do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, z3::expr>* results) {
       if (node == nullptr)
-        throw triton::exceptions::AstLifting("TritonToZ3Ast::do_convert(): node cannot be null.");
+        throw triton::exceptions::AstLifting("TritonToZ3::do_convert(): node cannot be null.");
 
       /* Prepare z3's children */
       std::vector<z3::expr> children;
@@ -241,14 +241,14 @@ namespace triton {
         case LAND_NODE: {
           z3::expr currentValue = children[0];
           if (!currentValue.get_sort().is_bool()) {
-            throw triton::exceptions::AstLifting("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
+            throw triton::exceptions::AstLifting("TritonToZ3::LandNode(): Land can be apply only on bool value.");
           }
           z3::expr nextValue(this->context);
 
           for (triton::uint32 idx = 1; idx < children.size(); idx++) {
             nextValue = children[idx];
             if (!nextValue.get_sort().is_bool()) {
-              throw triton::exceptions::AstLifting("TritonToZ3Ast::LandNode(): Land can be apply only on bool value.");
+              throw triton::exceptions::AstLifting("TritonToZ3::LandNode(): Land can be apply only on bool value.");
             }
             Z3_ast ops[] = {currentValue, nextValue};
             currentValue = to_expr(this->context, Z3_mk_and(this->context, 2, ops));
@@ -267,7 +267,7 @@ namespace triton {
         case LNOT_NODE: {
           z3::expr value = children[0];
           if (!value.get_sort().is_bool()) {
-            throw triton::exceptions::AstLifting("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+            throw triton::exceptions::AstLifting("TritonToZ3::LnotNode(): Lnot can be apply only on bool value.");
           }
           return to_expr(this->context, Z3_mk_not(this->context, value));
         }
@@ -275,14 +275,14 @@ namespace triton {
         case LOR_NODE: {
           z3::expr currentValue = children[0];
           if (!currentValue.get_sort().is_bool()) {
-            throw triton::exceptions::AstLifting("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+            throw triton::exceptions::AstLifting("TritonToZ3::LnotNode(): Lnot can be apply only on bool value.");
           }
           z3::expr nextValue(this->context);
 
           for (triton::uint32 idx = 1; idx < children.size(); idx++) {
             nextValue = children[idx];
             if (!nextValue.get_sort().is_bool()) {
-              throw triton::exceptions::AstLifting("TritonToZ3Ast::LnotNode(): Lnot can be apply only on bool value.");
+              throw triton::exceptions::AstLifting("TritonToZ3::LnotNode(): Lnot can be apply only on bool value.");
             }
             Z3_ast ops[] = {currentValue, nextValue};
             currentValue = to_expr(this->context, Z3_mk_or(this->context, 2, ops));
@@ -294,14 +294,14 @@ namespace triton {
         case LXOR_NODE: {
           z3::expr currentValue = children[0];
           if (!currentValue.get_sort().is_bool()) {
-            throw triton::exceptions::AstLifting("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+            throw triton::exceptions::AstLifting("TritonToZ3::LxorNode(): Lxor can be applied only on bool value.");
           }
           z3::expr nextValue(this->context);
 
           for (triton::uint32 idx = 1; idx < children.size(); idx++) {
             nextValue = children[idx];
             if (!nextValue.get_sort().is_bool()) {
-              throw triton::exceptions::AstLifting("TritonToZ3Ast::LxorNode(): Lxor can be applied only on bool value.");
+              throw triton::exceptions::AstLifting("TritonToZ3::LxorNode(): Lxor can be applied only on bool value.");
             }
             currentValue = to_expr(this->context, Z3_mk_xor(this->context, currentValue, nextValue));
           }
@@ -316,7 +316,7 @@ namespace triton {
           std::string value = reinterpret_cast<triton::ast::StringNode*>(node.get())->getString();
 
           if (this->symbols.find(value) == this->symbols.end())
-            throw triton::exceptions::AstLifting("TritonToZ3Ast::do_convert(): [STRING_NODE] Symbols not found.");
+            throw triton::exceptions::AstLifting("TritonToZ3::do_convert(): [STRING_NODE] Symbols not found.");
 
           return results->at(this->symbols[value]);
         }
@@ -355,7 +355,7 @@ namespace triton {
         }
 
         default:
-          throw triton::exceptions::AstLifting("TritonToZ3Ast::do_convert(): Invalid kind of node.");
+          throw triton::exceptions::AstLifting("TritonToZ3::do_convert(): Invalid kind of node.");
       }
     }
 

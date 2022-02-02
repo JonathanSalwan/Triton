@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef TRITON_TRITONTOBITWUZLAAST_H
-#define TRITON_TRITONTOBITWUZLAAST_H
+#ifndef TRITON_TRITONTOBITWUZLA_H
+#define TRITON_TRITONTOBITWUZLA_H
 
 #include <map>
 #include <unordered_map>
@@ -34,15 +34,15 @@ namespace triton {
    *  @{
    */
 
-    //! \class TritonToBitwuzlaAst
+    //! \class TritonToBitwuzla
     /*! \brief Converts a Triton's AST to Bitwuzla's AST. */
-    class TritonToBitwuzlaAst {
+    class TritonToBitwuzla {
       public:
         //! Constructor.
-        TRITON_EXPORT TritonToBitwuzlaAst(bool eval=false);
+        TRITON_EXPORT TritonToBitwuzla(bool eval=false);
 
         //! Destructor.
-        TRITON_EXPORT ~TritonToBitwuzlaAst();
+        TRITON_EXPORT ~TritonToBitwuzla();
 
         //! Converts to Bitwuzla's AST
         TRITON_EXPORT const BitwuzlaTerm* convert(const SharedAbstractNode& node, Bitwuzla* bzla);
@@ -78,4 +78,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_TRITONTOBITWUZLAAST_H */
+#endif /* TRITON_TRITONTOBITWUZLA_H */

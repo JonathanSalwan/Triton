@@ -11,6 +11,7 @@
 #include <ostream>
 
 #include <triton/astContext.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/symbolicEngine.hpp>
 #include <triton/symbolicExpression.hpp>
 

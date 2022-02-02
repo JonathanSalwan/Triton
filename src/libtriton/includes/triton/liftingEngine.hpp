@@ -10,6 +10,7 @@
 
 #include <triton/astContext.hpp>
 #include <triton/config.hpp>
+#include <triton/dllexport.hpp>
 #include <triton/liftingToPython.hpp>
 #include <triton/liftingToSMT.hpp>
 #include <triton/symbolicEngine.hpp>

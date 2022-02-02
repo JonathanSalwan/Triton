@@ -15,7 +15,7 @@
 #include <triton/solverModel.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/tritonToBitwuzlaAst.hpp>
+#include <triton/tritonToBitwuzla.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -106,7 +106,7 @@ namespace triton {
         }
 
         // Convert Triton' AST to solver terms.
-        auto bzlaAst = triton::ast::TritonToBitwuzlaAst();
+        auto bzlaAst = triton::ast::TritonToBitwuzla();
         bitwuzla_assert(bzla, bzlaAst.convert(node, bzla));
 
         // Set solving params.
@@ -223,7 +223,7 @@ namespace triton {
         }
 
         // Evaluate concrete AST in solver.
-        auto bzlaAst = triton::ast::TritonToBitwuzlaAst(true);
+        auto bzlaAst = triton::ast::TritonToBitwuzla(true);
         auto bv_value = bitwuzla_get_bv_value(bzla, bitwuzla_get_value(bzla, bzlaAst.convert(node, bzla)));
         auto res = this->fromBvalueToUint512(bv_value);
 

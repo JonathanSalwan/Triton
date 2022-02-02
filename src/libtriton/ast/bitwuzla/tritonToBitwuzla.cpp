@@ -11,36 +11,36 @@
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
-#include <triton/tritonToBitwuzlaAst.hpp>
+#include <triton/tritonToBitwuzla.hpp>
 
 
 
 namespace triton {
   namespace ast {
 
-    TritonToBitwuzlaAst::TritonToBitwuzlaAst(bool eval)
+    TritonToBitwuzla::TritonToBitwuzla(bool eval)
       : isEval(eval) {
     }
 
 
-    TritonToBitwuzlaAst::~TritonToBitwuzlaAst() {
+    TritonToBitwuzla::~TritonToBitwuzla() {
       this->translatedNodes.clear();
       this->variables.clear();
       this->symbols.clear();
     }
 
 
-    const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzlaAst::getVariables(void) const {
+    const std::unordered_map<const BitwuzlaTerm*, triton::engines::symbolic::SharedSymbolicVariable>& TritonToBitwuzla::getVariables(void) const {
       return this->variables;
     }
 
 
-    const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzlaAst::getBitvectorSorts(void) const {
+    const std::map<size_t, const BitwuzlaSort*>& TritonToBitwuzla::getBitvectorSorts(void) const {
       return this->bvSorts;
     }
 
 
-    const BitwuzlaTerm* TritonToBitwuzlaAst::convert(const SharedAbstractNode& node, Bitwuzla* bzla) {
+    const BitwuzlaTerm* TritonToBitwuzla::convert(const SharedAbstractNode& node, Bitwuzla* bzla) {
       auto nodes = childrenExtraction(node, true /* unroll*/, true /* revert */);
       for (auto&& n : nodes) {
         translatedNodes[n] = translate(n, bzla);
@@ -49,9 +49,9 @@ namespace triton {
     }
 
 
-    const BitwuzlaTerm* TritonToBitwuzlaAst::translate(const SharedAbstractNode& node, Bitwuzla* bzla) {
+    const BitwuzlaTerm* TritonToBitwuzla::translate(const SharedAbstractNode& node, Bitwuzla* bzla) {
       if (node == nullptr)
-        throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): node cannot be null.");
+        throw triton::exceptions::AstLifting("TritonToBitwuzla::translate(): node cannot be null.");
 
       std::vector<const BitwuzlaTerm*> children;
       for (auto&& n : node->getChildren()) {
@@ -186,7 +186,7 @@ namespace triton {
         }
 
         case FORALL_NODE:
-          throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): FORALL node can't be converted due to a Bitwuzla issue (see #1062).");
+          throw triton::exceptions::AstLifting("TritonToBitwuzla::translate(): FORALL node can't be converted due to a Bitwuzla issue (see #1062).");
 
         case IFF_NODE:
           return bitwuzla_mk_term2(bzla, BITWUZLA_KIND_IFF, children[0], children[1]);
@@ -225,7 +225,7 @@ namespace triton {
 
           auto it = symbols.find(value);
           if (it == symbols.end())
-            throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): [STRING_NODE] Symbols not found.");
+            throw triton::exceptions::AstLifting("TritonToBitwuzla::translate(): [STRING_NODE] Symbols not found.");
 
           return translatedNodes.at(it->second);
         }
@@ -265,7 +265,7 @@ namespace triton {
         }
 
         default:
-          throw triton::exceptions::AstLifting("TritonToBitwuzlaAst::translate(): Invalid kind of node.");
+          throw triton::exceptions::AstLifting("TritonToBitwuzla::translate(): Invalid kind of node.");
       }
     }
 
