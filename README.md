@@ -184,7 +184,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 </li>
 <li>
 <b>Symbolic Security Predicates: Hunt Program Weaknesses</b><br />
- <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2021. [<a href="publications/ISPRAS2021-security-predicates-vishnyakov.pdf">paper</a>] [<a href="ISPRAS2021-slide-security-predicates-vishnyakov.pdf">slide</a>]<br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2021. [<a href="publications/ISPOPEN2021-security-predicates-vishnyakov.pdf">paper</a>] [<a href="ISPOPEN2021-slide-security-predicates-vishnyakov.pdf">slide</a>]<br />
  <b>Authors</b>: A.Vishnyakov, V.Logunova, E.Kobrin, D.Kuts, D.Parygina, A.Fedotov<br />
  <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) is a powerful method for
  path exploration during hybrid fuzzing and automatic bug detection. We propose
