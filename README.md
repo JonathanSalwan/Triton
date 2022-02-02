@@ -140,17 +140,17 @@ packages for Visual Studio 2012.
 
 Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but also by several strong contributors:
 
-* **Alberto Garcia Illera** - Salesforce
-* **Alexey Vishnyakov** - ISP RAS
-* **Black Binary** - n/a
-* **Christian Heitman** - Quarkslab
-* **Daniil Kutz** - ISP RAS
+* [**Alberto Garcia Illera**](https://twitter.com/algillera) - Cruise Automation
+* [**Alexey Vishnyakov**](https://vishnya.xyz/) - ISP RAS
+* [**Black Binary**](https://github.com/black-binary) - n/a
+* [**Christian Heitman**](https://github.com/cnheitman) - Quarkslab
+* [**Daniil Kuts**](https://github.com/apach301) - ISP RAS
 * **Florent Saudel** - Bordeaux University
-* **Jessy Campos** - n/a
-* **Jonathan Salwan** - Quarkslab
-* **Pierrick Brunet** - Quarkslab
-* **PixelRick** - n/a
-* **Romain Thomas** - Quarkslab
+* [**Jessy Campos**](https://github.com/ek0) - n/a
+* [**Jonathan Salwan**](http://shell-storm.org/) - Quarkslab
+* [**Pierrick Brunet**](https://github.com/pbrunet) - Quarkslab
+* [**PixelRick**](https://github.com/PixelRick) - n/a
+* [**Romain Thomas**](https://www.romainthomas.fr/) - Quarkslab
 
 
 ## They already used Triton
@@ -160,6 +160,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 * [Ponce](https://github.com/illera88/Ponce): IDA 2016 plugin contest winner! Symbolic Execution just one-click away!
 * [QSynthesis](https://github.com/quarkslab/qsynthesis): Greybox Synthesizer geared for deobfuscation of assembly instructions.
 * [Pimp](https://github.com/kamou/pimp): Triton based R2 plugin for concolic execution and total control.
+* [Exrop](https://github.com/d4em0n/exrop): Automatic ROPChain Generation.
 
 ### Papers and conference
 
@@ -167,7 +168,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Greybox Program Synthesis: A New Approach to Attack Dataflow Obfuscation</b><br />
  <b>Talk at</b>: Blackhat USA, Las Vegas, Nevada, 2021. [<a href="publications/BHUSA2021-David-Greybox-Program-Synthesis.pdf">slide</a>]<br />
- <b>Auhtors</b>: Robin David<br />
+ <b>Authors</b>: Robin David<br />
  <b>Abstract</b>: <em>This talk presents the latest advances in program synthesis applied for deobfuscation. It aims at demystifying this analysis technique
  by showing how it can be put into action on obfuscation. Especially the implementation Qsynthesis released for this talk shows a complete end-to-end workflow
  to deobfuscate assembly instructions back in optimized (deobfuscated) instructions reassembled back in the binary.</em>
@@ -175,16 +176,63 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>From source code to crash test-case through software testing automation</b><br />
  <b>Talk at</b>: C&ESAR, Rennes, France, 2021. [<a href="publications/CESAR2021_robin-david-paper.pdf">paper</a>] [<a href="publications/CESAR2021_robin-david-slide.pdf">slide</a>]<br />
- <b>Auhtors</b>: Robin David, Jonathan Salwan, Justin Bourroux<br />
+ <b>Authors</b>: Robin David, Jonathan Salwan, Justin Bourroux<br />
  <b>Abstract</b>: <em>This paper present an approach automating the software testing process from a source code to the dynamic testing of the compiled program.  More specifically, from a static
  analysis report indicating alerts on source lines it enables testing to cover these lines dynamically and opportunistically checking whether  whether or not they can trigger
  a crash. The result is a test corpus allowing to cover alerts and to trigger them if they happen to be true positives. This paper discuss the  methodology employed to track
  alerts down in the compiled binary, the testing engines selection process and the results obtained on a TCP/IP stack implementation for embedded  and IoT systems.</em>
 </li>
 <li>
+<b>Symbolic Security Predicates: Hunt Program Weaknesses</b><br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2021. [<a href="publications/ISPOPEN2021-security-predicates-vishnyakov.pdf">paper</a>] [<a href="publications/ISPOPEN2021-slide-security-predicates-vishnyakov.pdf">slide</a>]<br />
+ <b>Authors</b>: A.Vishnyakov, V.Logunova, E.Kobrin, D.Kuts, D.Parygina, A.Fedotov<br />
+ <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) is a powerful method for
+ path exploration during hybrid fuzzing and automatic bug detection. We propose
+ security predicates to effectively detect undefined behavior and memory access
+ violation errors. Initially, we symbolically execute program on paths that
+ don’t trigger any errors (hybrid fuzzing may explore these paths). Then we
+ construct a symbolic security predicate to verify some error condition. Thus, we
+ may change the program data flow to entail null pointer dereference, division
+ by zero, out-of-bounds access, or integer overflow weaknesses. Unlike static
+ analysis, dynamic symbolic execution does not only report errors but also
+ generates new input data to reproduce them. Furthermore, we introduce function
+ semantics modeling for common C/C++ standard library functions. We aim to model
+ the control flow inside a function with a single symbolic formula. This assists
+ bug detection, speeds up path exploration, and overcomes overconstraints in
+ path predicate. We implement the proposed techniques in our dynamic symbolic
+ execution tool Sydr. Thus, we utilize powerful methods from Sydr such as path
+ predicate slicing that eliminates irrelevant constraints. <br />
+
+ We present Juliet Dynamic to measure dynamic bug detection tools accuracy. The
+ testing system also verifies that generated inputs trigger sanitizers. We
+ evaluate Sydr accuracy for 11 CWEs from Juliet test suite. Sydr shows 95.59%
+ overall accuracy. We make Sydr evaluation artifacts publicly available to
+ facilitate results reproducibility.</em>
+</li>
+<li>
+<b>Towards Symbolic Pointers Reasoning in Dynamic Symbolic Execution</b><br />
+ <b>Talk at</b>: Ivannikov Memorial Workshop, Nizhny Novgorod, Russia, 2021. [<a href="publications/IVMEM2021-symbolic-pointers-kuts.pdf">paper</a>] [<a href="publications/IVMEM2021-slide-symbolic-pointers-kuts.pdf">slide</a>]<br />
+ <b>Authors</b>: Daniil Kuts<br />
+ <b>Abstract</b>: <em>Dynamic symbolic execution is a widely used technique for
+ automated software testing, designed for execution paths exploration and
+ program errors detection. A hybrid approach has recently become widespread,
+ when the main goal of symbolic execution is helping fuzzer increase program
+ coverage. The more branches symbolic executor can invert, the more useful it is
+ for fuzzer. A program control flow often depends on memory values, which are
+ obtained by computing address indexes from user input. However, most DSE tools
+ don't support such dependencies, so they miss some desired program branches. We
+ implement symbolic addresses reasoning on memory reads in our dynamic symbolic
+ execution tool Sydr. Possible memory access regions are determined by either
+ analyzing memory address symbolic expressions, or binary searching with
+ SMT-solver. We propose an enhanced linearization technique to model memory
+ accesses. Different memory modeling methods are compared on the set of
+ programs. Our evaluation shows that symbolic addresses handling allows to
+ discover new symbolic branches and increase the program coverage.</em>
+</li>
+<li>
 <b>QSynth: A Program Synthesis based Approach for Binary Code Deobfuscation</b><br />
  <b>Talk at</b>: BAR, San Diego, California, 2020. [<a href="publications/BAR2020-qsynth-robin-david.pdf">paper</a>]<br />
- <b>Auhtors</b>: Robin David, Luigi Coniglio, Mariano Ceccato<br />
+ <b>Authors</b>: Robin David, Luigi Coniglio, Mariano Ceccato<br />
  <b>Abstract</b>: <em>We present a generic approach leveraging both DSE and program synthesis to successfully synthesize programs  obfuscated with Mixed-Boolean-Arithmetic, Data-Encoding
  or Virtualization. The synthesis algorithm proposed is an offline enumerate synthesis primitive guided by top-down breath-first search.  We shows its effectiveness
  against a state-of-the-art obfuscator and its scalability as it supersedes other similar approaches based on synthesis. We also show its effectiveness in presence of
@@ -193,8 +241,8 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 </li>
 <li>
 <b>Sydr: Cutting Edge Dynamic Symbolic Execution</b><br />
- <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2020. [<a href="publications/ISPRAS2020-sydr.pdf">paper</a>]<br />
- <b>Auhtors</b>: A.Vishnyakov, A.Fedotov, D.Kuts, A.Novikov, D.Parygina, E.Kobrin, V.Logunova, P.Belecky, S.Kurmangaleev<br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2020. [<a href="publications/ISPRAS2020-sydr.pdf">paper</a>] [<a href="publications/ISPOPEN2020-slide-sydr-vishnyakov.pdf">slide</a>] [<a href="https://www.ispras.ru/conf/2020/video/compiler-technology-11-december.mp4#t=6021">video</a>]<br />
+ <b>Authors</b>: A.Vishnyakov, A.Fedotov, D.Kuts, A.Novikov, D.Parygina, E.Kobrin, V.Logunova, P.Belecky, S.Kurmangaleev<br />
  <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) has enormous amount of applications in computer  security (fuzzing, vulnerability discovery, reverse-engineering, etc.). We propose
  several performance and accuracy improvements for dynamic symbolic execution.  Skipping non-symbolic instructions allows to build a path predicate 1.2--3.5 times faster.
  Symbolic engine simplifies formulas during symbolic execution. Path  predicate slicing eliminates irrelevant conjuncts from solver queries. We handle each jump table
@@ -204,7 +252,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Symbolic Deobfuscation: From Virtualized Code Back to the Original</b><br />
  <b>Talk at</b>: DIMVA, Paris-Saclay, France, 2018. [<a href="publications/DIMVA2018-deobfuscation-salwan-bardin-potet.pdf">paper</a>] [<a href="publications/DIMVA2018-slide-deobfuscation-salwan-bardin-potet.pdf">slide</a>]<br />
- <b>Auhtors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
+ <b>Authors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
  <b>Abstract</b>: <em>Software protection has taken an important place during the last decade in order to protect legit software against reverse engineering or tampering.
  Virtualization is considered as one of the very best defenses against such attacks. We present a generic approach based on symbolic path exploration, taint and
  recompilation allowing to recover, from a virtualized code, a devirtualized code semantically identical to the original one and close in size. We define criteria
@@ -214,7 +262,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Deobfuscation of VM based software protection </b><br />
  <b>Talk at</b>: SSTIC, Rennes, France, 2017. [<a href="publications/SSTIC2017-French-Article-desobfuscation_binaire_reconstruction_de_fonctions_virtualisees-salwan_potet_bardin.pdf">french paper</a>] [<a href="publications/SSTIC2017_Deobfuscation_of_VM_based_software_protection.pdf">english slide</a>] [<a href="https://static.sstic.org/videos2017/SSTIC_2017-06-07_P08.mp4">french video</a>]<br />
- <b>Auhtors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
+ <b>Authors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
  <b>Abstract</b>: <em>In this presentation we describe an approach which consists to automatically analyze virtual machine based software protections and which recompiles a new
  version of the binary without such protections. This automated approach relies on a symbolic execution guide by a taint analysis and some concretization policies, then
  on a binary rewriting using LLVM transition.</em>
@@ -222,7 +270,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>How Triton can help to reverse virtual machine based software protections</b><br />
  <b>Talk at</b>: CSAW SOS, NYC, New York, 2016. [<a href="publications/CSAW2016-SOS-Virtual-Machine-Deobfuscation-RThomas_JSalwan.pdf">slide</a>]<br />
- <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Authors</b>: Jonathan Salwan, Romain Thomas<br />
  <b>Abstract</b>: <em>The first part of the talk is going to be an introduction to the Triton framework to expose its components and to explain how they work together.
  Then, the second part will include demonstrations on how it's possible to reverse virtual machine based protections using taint analysis, symbolic execution, SMT
  simplifications and LLVM-IR optimizations.</em>
@@ -230,7 +278,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Dynamic Binary Analysis and Obfuscated Codes</b><br  />
  <b>Talk at</b>: St'Hack, Bordeaux, France, 2016. [<a href="publications/StHack2016_Dynamic_Binary_Analysis_and_Obfuscated_Codes_RThomas_JSalwan.pdf">slide</a>]<br  />
- <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Authors</b>: Jonathan Salwan, Romain Thomas<br />
  <b>Abstract</b>: <em>At this presentation we will talk about how a DBA (Dynamic Binary Analysis) may help a reverse engineer to reverse obfuscated code. We will first
  introduce some basic obfuscation techniques and then expose how it's possible to break some stuffs (using our open-source DBA framework - Triton) like detect opaque
  predicates, reconstruct CFG, find the original algorithm, isolate sensible data and many more... Then, we will conclude with a demo and few words about our future work.</em>
@@ -238,7 +286,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>How Triton may help to analyse obfuscated binaries</b><br  />
  <b>Publication at</b>: MISC magazine 82, 2015. [<a href="publications/MISC-82_French_Paper_How_Triton_may_help_to_analyse_obfuscated_binaries_RThomas_JSalwan.pdf">french article</a>]<br  />
- <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Authors</b>: Jonathan Salwan, Romain Thomas<br />
  <b>Abstract</b>: <em>Binary obfuscation is used to protect software's intellectual property. There exist different kinds of obfucation but roughly, it transforms a binary
  structure into another binary structure by preserving the same semantic. The aim of obfuscation is to ensure that the original information is "drown" in useless information
  that will make reverse engineering harder. In this article we will show how we can analyse an ofbuscated program and break some obfuscations using the Triton framework.</em>
@@ -246,7 +294,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Triton: A Concolic Execution Framework</b><br  />
  <b>Talk at</b>: SSTIC, Rennes, France, 2015. [<a href="publications/SSTIC2015_French_Paper_Triton_Framework_dexecution_Concolique_FSaudel_JSalwan.pdf">french paper</a>] [<a href="publications/SSTIC2015_English_slide_detailed_version_Triton_Concolic_Execution_FrameWork_FSaudel_JSalwan.pdf">detailed english slide</a>] <br />
- <b>Auhtors</b>: Jonathan Salwan, Florent Saudel<br />
+ <b>Authors</b>: Jonathan Salwan, Florent Saudel<br />
  <b>Abstract</b>: <em>This talk is about the release of Triton, a concolic execution framework based on Pin. It provides components like a taint engine, a dynamic symbolic execution
  engine, a snapshot engine, translation of x64 instruction to SMT2, a Z3 interface to solve constraints and Python bindings. Based on these components, Triton offers the possibility
  to build tools for vulnerabilities research or reverse-engineering assistance.</em>
@@ -254,7 +302,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Dynamic Behavior Analysis Using Binary Instrumentation</b><br  />
  <b>Talk at</b>: St'Hack, Bordeaux, France, 2015. [<a href="publications/StHack2015_Dynamic_Behavior_Analysis_using_Binary_Instrumentation_Jonathan_Salwan.pdf">slide</a>]<br  />
- <b>Auhtors</b>: Jonathan Salwan<br />
+ <b>Authors</b>: Jonathan Salwan<br />
  <b>Abstract</b>: <em>This talk can be considered like the part 2 of our talk at SecurityDay. In the previous part, we talked about how it was possible to cover a targeted function
  in memory using the DSE (Dynamic Symbolic Execution) approach. Cover a function (or its states) doesn't mean find all vulnerabilities, some vulnerability doesn't crashes the program.
  That's why we must implement specific analysis to find specific bugs. These analysis are based on the binary instrumentation and the runtime behavior analysis of the program. In this
@@ -263,7 +311,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 <li>
 <b>Covering a function using a Dynamic Symbolic Execution approach</b><br  />
  <b>Talk at</b>: Security Day, Lille, France, 2015. [<a href="publications/SecurityDay2015_dynamic_symbolic_execution_Jonathan_Salwan.pdf">slide</a>]<br  />
- <b>Auhtors</b>: Jonathan Salwan<br />
+ <b>Authors</b>: Jonathan Salwan<br />
  <b>Abstract</b>: <em>This talk is about binary analysis and instrumentation. We will see how it's possible to target a specific function, snapshot the context memory/registers before the
  function, translate the instrumentation into an intermediate representation,apply a taint analysis based on this IR, build/keep formulas for a Dynamic Symbolic Execution (DSE), generate
  a concrete value to go through a specific path, restore the context memory/register and generate another concrete value to go through another path then repeat this operation until the
