@@ -579,6 +579,15 @@ int test_10(void) {
     actx->bvuge(actx->bv(38, 8), actx->variable(varx)),
     actx->bvugt(actx->bv(39, 8), actx->variable(varx)),
     actx->bvule(actx->bv(40, 8), actx->variable(varx)),
+    actx->bvult(actx->bv(41, 8), actx->variable(varx)),
+    actx->bvsge(actx->variable(varx), actx->bv(34, 8)),
+    actx->bvsgt(actx->variable(varx), actx->bv(35, 8)),
+    actx->bvsle(actx->variable(varx), actx->bv(36, 8)),
+    actx->bvslt(actx->variable(varx), actx->bv(37, 8)),
+    actx->bvuge(actx->variable(varx), actx->bv(38, 8)),
+    actx->bvugt(actx->variable(varx), actx->bv(39, 8)),
+    actx->bvule(actx->variable(varx), actx->bv(40, 8)),
+    actx->bvult(actx->variable(varx), actx->bv(41, 8)),
     actx->land(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
     actx->lor(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
     actx->lxor(actx->equal(actx->bv(10, 8), actx->variable(varx)), actx->bvsge(actx->bv(10, 8), actx->variable(varx))),
@@ -597,17 +606,17 @@ int test_10(void) {
     llvm::LLVMContext llvmContext;
     triton::ast::TritonToLLVM ttllvm(llvmContext);
     auto llvmModule = ttllvm.convert(node);
-    std::cerr << "IN: " << node << std::endl;
+    //std::cerr << "IN: " << node << std::endl;
 
     /* LLVM to Triton */
     triton::ast::LLVMToTriton llvmtt(actx);
     auto nout = llvmtt.convert(llvmModule.get());
-    std::cerr << "OUT: " << nout << std::endl;
+    //std::cerr << "OUT: " << nout << std::endl;
 
     if (smt_proof(ctx, node, nout) == false) {
-      std::cerr << "Node not equal" << std::endl;
-      std::cerr << "IN: " << node << std::endl;
-      std::cerr << "OUT: " << nout << std::endl;
+      //std::cerr << "Node not equal" << std::endl;
+      //std::cerr << "IN: " << node << std::endl;
+      //std::cerr << "OUT: " << nout << std::endl;
       return 1;
     }
   }

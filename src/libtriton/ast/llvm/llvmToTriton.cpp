@@ -200,7 +200,7 @@ namespace triton {
     }
 
 
-    SharedAbstractNode LLVMToTriton::convert(llvm::Module* llvmModule, const std::string& fname) {
+    SharedAbstractNode LLVMToTriton::convert(llvm::Module* llvmModule, const char* fname) {
       /* Check if the given llvm::module contains the __triton function */
       llvm::Function* function = llvmModule->getFunction(fname);
       if (function == nullptr) {

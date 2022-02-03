@@ -31,7 +31,7 @@ namespace triton {
     }
 
 
-    void TritonToLLVM::createFunction(const triton::ast::SharedAbstractNode& node, const std::string& fname) {
+    void TritonToLLVM::createFunction(const triton::ast::SharedAbstractNode& node, const char* fname) {
       // Collect used symbolic variables.
       auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
 
@@ -78,7 +78,7 @@ namespace triton {
     }
 
 
-    std::shared_ptr<llvm::Module> TritonToLLVM::convert(const triton::ast::SharedAbstractNode& node, const std::string& fname) {
+    std::shared_ptr<llvm::Module> TritonToLLVM::convert(const triton::ast::SharedAbstractNode& node, const char* fname) {
       std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*> results;
 
       /* Create the LLVM function */

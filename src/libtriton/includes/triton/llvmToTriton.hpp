@@ -57,7 +57,7 @@ namespace triton {
         TRITON_EXPORT LLVMToTriton(const triton::ast::SharedAstContext& ctxt);
 
         //! Converts to Triton's AST
-        TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Module* llvmModule, const std::string& fname="__triton");
+        TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Module* llvmModule, const char* fname="__triton");
     };
 
   /*! @} End of ast namespace */
