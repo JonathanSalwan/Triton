@@ -89,6 +89,9 @@ namespace triton {
         //! AST C++ API - assert node builder
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
+        //! AST C++ API - bswap node builder
+        TRITON_EXPORT SharedAbstractNode bswap(const SharedAbstractNode& expr);
+
         //! AST C++ API - bv node builder
         TRITON_EXPORT SharedAbstractNode bv(const triton::uint512& value, triton::uint32 size);
 

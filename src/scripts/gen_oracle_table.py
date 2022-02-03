@@ -23,6 +23,7 @@ ast = ctx.getAstContext()
 unary_operators = [
     [ast.bvneg,     'bvneg',  'triton::ast::BVNEG_NODE'],
     [ast.bvnot,     'bvnot',  'triton::ast::BVNOT_NODE'],
+    [ast.bswap,     'bswap',  'triton::ast::BSWAP_NODE'],
 ]
 
 

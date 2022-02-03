@@ -210,6 +210,7 @@ namespace triton {
           // If an oracle is found, we craft a synthesized node.
           if (found) {
             switch (op) {
+              case triton::ast::BSWAP_NODE: result.setOutput(actx->bswap(actx->variable(var_x))); break;
               case triton::ast::BVNEG_NODE: result.setOutput(actx->bvneg(actx->variable(var_x))); break;
               case triton::ast::BVNOT_NODE: result.setOutput(actx->bvnot(actx->variable(var_x))); break;
               default:

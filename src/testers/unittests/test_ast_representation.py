@@ -7,7 +7,89 @@ import unittest
 from triton import TritonContext, ARCH, AST_REPRESENTATION, VERSION
 
 
-smtlifting = """(declare-fun SymVar_0 () (_ BitVec 8))
+smtlifting = """(define-fun bswap8 ((value (_ BitVec 8))) (_ BitVec 8)
+    value
+)
+
+(define-fun bswap16 ((value (_ BitVec 16))) (_ BitVec 16)
+  (bvor
+    (bvshl
+      (bvand value (_ bv255 16))
+      (_ bv8 16)
+    )
+    (bvand (bvlshr value (_ bv8 16)) (_ bv255 16))
+  )
+)
+
+(define-fun bswap32 ((value (_ BitVec 32))) (_ BitVec 32)
+  (bvor
+    (bvshl
+      (bvor
+        (bvshl
+          (bvor
+            (bvshl
+              (bvand value (_ bv255 32))
+              (_ bv8 32)
+            )
+            (bvand (bvlshr value (_ bv8 32)) (_ bv255 32))
+          )
+          (_ bv8 32)
+        )
+        (bvand (bvlshr value (_ bv16 32)) (_ bv255 32))
+      )
+      (_ bv8 32)
+    )
+    (bvand (bvlshr value (_ bv24 32)) (_ bv255 32))
+  )
+)
+
+(define-fun bswap64 ((value (_ BitVec 64))) (_ BitVec 64)
+  (bvor
+    (bvshl
+      (bvor
+        (bvshl
+          (bvor
+            (bvshl
+              (bvor
+                (bvshl
+                  (bvor
+                    (bvshl
+                      (bvor
+                        (bvshl
+                          (bvor
+                            (bvshl
+                              (bvand value (_ bv255 64))
+                              (_ bv8 64)
+                            )
+                            (bvand (bvlshr value (_ bv8 64)) (_ bv255 64))
+                          )
+                          (_ bv8 64)
+                        )
+                        (bvand (bvlshr value (_ bv16 64)) (_ bv255 64))
+                      )
+                      (_ bv8 64)
+                    )
+                    (bvand (bvlshr value (_ bv24 64)) (_ bv255 64))
+                  )
+                  (_ bv8 64)
+                )
+                (bvand (bvlshr value (_ bv32 64)) (_ bv255 64))
+              )
+              (_ bv8 64)
+            )
+            (bvand (bvlshr value (_ bv40 64)) (_ bv255 64))
+          )
+          (_ bv8 64)
+        )
+        (bvand (bvlshr value (_ bv48 64)) (_ bv255 64))
+      )
+      (_ bv8 64)
+    )
+    (bvand (bvlshr value (_ bv56 64)) (_ bv255 64))
+  )
+)
+
+(declare-fun SymVar_0 () (_ BitVec 8))
 (declare-fun SymVar_1 () (_ BitVec 8))
 (define-fun ref!0 () (_ BitVec 8) (bvadd SymVar_0 SymVar_1)) ; ref test
 """
@@ -24,6 +106,13 @@ def ror(value, rot, bits):
 
 def forall(variables, expr):
     return True
+
+def bswap(value, size):
+    v = value & 0xff
+    for index in range(8, size, 8):
+        v <<= 8
+        v |= (value >> index) & 0xff
+    return v
 
 SymVar_0 = int(input())
 SymVar_1 = int(input())
@@ -68,8 +157,9 @@ class TestAstRepresentation(unittest.TestCase):
             ((self.v1 < self.v2),                            "(bvult SymVar_0 SymVar_1)",                                    "(SymVar_0 < SymVar_1)"),
             ((self.v1 > self.v2),                            "(bvugt SymVar_0 SymVar_1)",                                    "(SymVar_0 > SymVar_1)"),
 
-            # AST api                                            # SMT                                                           # Python
-            (self.ast.assert_(self.v1 == 0),                 "(assert (= SymVar_0 (_ bv0 8)))",                              "assert ((SymVar_0 == 0x0))"),
+            # AST api                                        # SMT                                                           # Python
+            (self.ast.assert_(self.v1 == 0),                 "(assert (= SymVar_0 (_ bv0 8)))",                              "assert((SymVar_0 == 0x0))"),
+            (self.ast.bswap(self.v1),                        "(bswap8 SymVar_0)",                                            "bswap(SymVar_0, 8)"),
             (self.ast.bv(2, 8),                              "(_ bv2 8)",                                                    "0x2"),
             (self.ast.bvashr(self.v1, self.v2),              "(bvashr SymVar_0 SymVar_1)",                                   "(SymVar_0 >> SymVar_1)"),
             (self.ast.bvfalse(),                             "(_ bv0 1)",                                                    "0x0"),
@@ -146,6 +236,7 @@ class TestAstRepresentation(unittest.TestCase):
                 (self.v1 >= self.v2),
                 (self.v1 < self.v2),
                 (self.v1 > self.v2),
+                self.ast.bswap(self.v1),
                 self.ast.bv(2, 8),
                 self.ast.bvashr(self.v1, self.v2),
                 self.ast.bvnand(self.v1, self.v2),

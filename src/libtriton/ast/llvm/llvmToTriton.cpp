@@ -19,12 +19,22 @@ namespace triton {
 
 
     triton::ast::SharedAbstractNode LLVMToTriton::do_convert(llvm::Value* value) {
-      llvm::Instruction* instruction = llvm::dyn_cast_or_null<llvm::Instruction>(value);
-      llvm::ConstantInt* constant    = llvm::dyn_cast_or_null<llvm::ConstantInt>(value);
       llvm::Argument* argument       = llvm::dyn_cast_or_null<llvm::Argument>(value);
+      llvm::CallInst* call           = llvm::dyn_cast_or_null<llvm::CallInst>(value);
+      llvm::ConstantInt* constant    = llvm::dyn_cast_or_null<llvm::ConstantInt>(value);
       llvm::ICmpInst* icmp           = llvm::dyn_cast_or_null<llvm::ICmpInst>(value);
+      llvm::Instruction* instruction = llvm::dyn_cast_or_null<llvm::Instruction>(value);
 
       if (instruction != nullptr) {
+
+        /* Check if the instruction is a call */
+        if (call != nullptr) {
+          if (call->getCalledFunction()->getName().find("llvm.bswap.i") != std::string::npos) {
+            return this->actx->bswap(this->do_convert(call->getOperand(0)));
+          }
+          throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM call not supported");
+        }
+
         switch (instruction->getOpcode()) {
 
           case llvm::Instruction::AShr: {
@@ -204,7 +214,7 @@ namespace triton {
       /* Check if the given llvm::module contains the __triton function */
       llvm::Function* function = llvmModule->getFunction(fname);
       if (function == nullptr) {
-        throw triton::exceptions::AstLifting("LLVMToTriton::convert(): llvm::Module doesn't contain the fiven function name");
+        throw triton::exceptions::AstLifting("LLVMToTriton::convert(): llvm::Module doesn't contain the given function name");
       }
 
       /* Get the entry block of the function */

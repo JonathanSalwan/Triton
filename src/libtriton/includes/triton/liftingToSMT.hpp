@@ -50,6 +50,9 @@ namespace triton {
           //! Instance to the symbolic engine.
           triton::engines::symbolic::SymbolicEngine* symbolic;
 
+          //! Define required functions like bswap
+          void requiredFunctions(std::ostream& stream);
+
         public:
           //! Constructor.
           TRITON_EXPORT LiftingToSMT(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);

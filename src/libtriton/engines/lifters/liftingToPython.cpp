@@ -42,6 +42,14 @@ namespace triton {
         stream << "    return True" << std::endl;
 
         stream << std::endl;
+        stream << "def bswap(value, size):" << std::endl;
+        stream << "    v = value & 0xff" << std::endl;
+        stream << "    for index in range(8, size, 8):" << std::endl;
+        stream << "        v <<= 8" << std::endl;
+        stream << "        v |= (value >> index) & 0xff" << std::endl;
+        stream << "    return v" << std::endl;
+
+        stream << std::endl;
       }
 
 

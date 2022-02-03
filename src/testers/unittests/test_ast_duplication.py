@@ -55,6 +55,7 @@ class TestAstDuplication(unittest.TestCase):
             self.astCtxt.bvsle(self.v1, self.v2),
             self.astCtxt.bvslt(self.v1, self.v2),
             self.astCtxt.bvsmod(self.v1, self.v2),
+            self.astCtxt.bswap(self.v1),
             self.astCtxt.bvtrue(),
             self.astCtxt.bvurem(self.v1, self.v2),
             self.astCtxt.bvxnor(self.v1, self.v2),

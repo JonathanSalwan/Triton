@@ -28,6 +28,9 @@
 ## In: (((0xed * ((((((((0x2d * ((((((((((((((((((0x3a * (((((((((((0x56 * ((((((((((((0xed * ((((0xe5 * Sy ...
 ## Out: (SymVar_0 ^ 0x5c)
 ##
+## In: ((((((~(((((((((((z & 0xff) << 0x8) & 0xffffffff) | ((z >> 0x8) & 0xff)) << 0x8) & 0xffffffff) | ((z ...
+## Out: (((bswap(z, 32) ^ 0x23746fbe) + 0xfffffffd) & 0xffffffff)
+##
 ## python3 ./synthesizing_obfuscated_expressions.py  0.12s user 0.01s system 99% cpu 0.125 total
 ##
 
@@ -53,6 +56,14 @@ def x_xor_92_obfuscated(x):
     return R
 
 
+# The following function returns an MBA-obfuscated expression (from UnityPlayer.dll).
+# The MBA performs the following operation: ((bswap(z, 32) ^ 0x23746fbe) + 0xfffffffd)
+def bswap32_xor_const(x):
+    a = ((~((((((x & 0xff)) << 8 | ((x >> 8) & 0xff)) << 8 | ((x >> 16) & 0xff)) << 8 | ((x >> 24) & 0xff)))) & 0xd7848ce1)
+    b = ((((((x & 0xff)) << 8 | ((x >> 8) & 0xff)) << 8 | ((x >> 16) & 0xff)) << 8 | ((x >> 24) & 0xff)) & 0x287b731e)
+    return ((( a | b ) ^ 0xf4f0e35f) + 0xfffffffd)
+
+
 def main():
     if VERSION.Z3_INTERFACE is False:
         # NOTE: The FORALL node is not supported currently in Bitwuzla.
@@ -73,19 +84,20 @@ def main():
 
     # Some obfuscated expressions
     obf_exprs = [
-        (x | y) + y - (~x & y),                             # x + y         (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-        (x | y) - y + (~x & y),                             # x ^ y         (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-        (x & ~y) | (~x & y),                                # x ^ y         (from ?)
-        (x ^ y) + y - (~x & y),                             # x | y         (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-        -(x | y) + y + x,                                   # x & y         (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
-        ((z << 8) >> 16) << 8,                              # z & 0xffff00  (from https://blog.regehr.org/archives/1636)
-        (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111,    # x + y         (from Ninon Eyrolle's thesis)
-        x_xor_92_obfuscated(x),                             # x ^ 92        (from Ninon Eyrolle's thesis)
+        (x | y) + y - (~x & y),                             # x + y                                      (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
+        (x | y) - y + (~x & y),                             # x ^ y                                      (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
+        (x & ~y) | (~x & y),                                # x ^ y                                      (from ?)
+        (x ^ y) + y - (~x & y),                             # x | y                                      (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
+        -(x | y) + y + x,                                   # x & y                                      (from http://archive.bar/pdfs/bar2020-preprint9.pdf)
+        ((z << 8) >> 16) << 8,                              # z & 0xffff00                               (from https://blog.regehr.org/archives/1636)
+        (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111,    # x + y                                      (from Ninon Eyrolle's thesis)
+        x_xor_92_obfuscated(x),                             # x ^ 92                                     (from imassage)
+        bswap32_xor_const(z),                               # ((bswap(z, 32) ^ 0x23746fbe) + 0xfffffffd) (from UnityPlayer.dll)
     ]
 
     for expr in obf_exprs:
         (print('In: %s' %(expr)) if len(str(expr)) < 100 else print('In: %s ...' %(str(expr)[0:100])))
-        expr = ctx.synthesize(expr, constant=True)
+        expr = ctx.synthesize(expr, constant=True, subexpr=True, opaque=True)
         print('Out: %s' %(expr))
         print()
 
