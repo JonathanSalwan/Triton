@@ -35,10 +35,6 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
             # FIXME: Doesn't work on Travis and Appveyor...
             return
 
-        if example_name.find('synthesizing_obfuscated_expressions') >= 0:
-            # Take too long to solve on OSX
-            return
-
         p = subprocess.Popen([sys.executable, example_name] + args, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = p.communicate()
         self.assertEqual(p.returncode, 0, "\n".join((str(out), str(err), str(p.returncode))))
