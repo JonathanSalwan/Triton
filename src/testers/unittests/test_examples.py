@@ -35,7 +35,7 @@ for i, example in enumerate(itertools.chain(glob.iglob(os.path.join(EXAMPLE_DIR,
             # FIXME: Doesn't work on Travis and Appveyor...
             return
 
-        if platform.system().lower() == 'darwin' and example_name.find('synthesizing_obfuscated_expressions') >= 0:
+        if example_name.find('synthesizing_obfuscated_expressions') >= 0:
             # Take too long to solve on OSX
             return
 
