@@ -192,6 +192,11 @@ namespace triton {
           triton::ast::ast_e op = it.first;
           std::array<UnaryEntry, 40> oracles = it.second;
 
+          // Ignore bswap oracle for 8 bit value.
+          if (bits == 8 && op == triton::ast::BSWAP_NODE) {
+            continue;
+          }
+
           bool found = true;
           for (auto const& oracle : oracles) {
             // Ignore oracle that is not on same size
