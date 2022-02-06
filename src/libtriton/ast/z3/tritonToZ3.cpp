@@ -80,10 +80,10 @@ namespace triton {
           for (triton::uint32 index = 8 ; index != bvsize ; index += triton::bitsize::byte) {
             retval = to_expr(this->context, Z3_mk_bvshl(this->context, retval, this->context.bv_val(8, bvsize)));
             retval = to_expr(this->context, Z3_mk_bvor(this->context, retval,
-                                              Z3_mk_bvand(this->context,
-                                                Z3_mk_bvlshr(this->context, children[0], this->context.bv_val(index, bvsize)),
+                       to_expr(this->context, Z3_mk_bvand(this->context,
+                         to_expr(this->context, Z3_mk_bvlshr(this->context, children[0], this->context.bv_val(index, bvsize))),
                                                 this->context.bv_val(0xff, bvsize)
-                                              )
+                                              ))
                                             ));
           }
           return to_expr(this->context, retval);
