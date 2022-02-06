@@ -292,6 +292,8 @@ install(
     EXPORT tritonTargets
     PUBLIC_HEADER DESTINATION include/triton
     INCLUDES DESTINATION include
+    ARCHIVE DESTINATION lib
+    LIBRARY DESTINATION lib
 )
 
 # Configure tritonConfig.cmake and tritonConfigVersion.cmake

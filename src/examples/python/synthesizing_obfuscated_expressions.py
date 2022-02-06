@@ -97,7 +97,7 @@ def main():
 
     for expr in obf_exprs:
         (print('In: %s' %(expr)) if len(str(expr)) < 100 else print('In: %s ...' %(str(expr)[0:100])))
-        expr = ctx.synthesize(expr, constant=True, subexpr=True, opaque=True)
+        expr = ctx.synthesize(expr, constant=True, subexpr=True, opaque=False)
         print('Out: %s' %(expr))
         print()
 
