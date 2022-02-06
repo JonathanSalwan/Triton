@@ -262,7 +262,6 @@ target_link_libraries(triton PUBLIC
     ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}
     ${CAPSTONE_LIBRARIES}
-    ${LIBTRITON_OTHER_LIBS}
 )
 
 # Workaround to allow building 'namespace linux' (defined by -std=gnu++11)
