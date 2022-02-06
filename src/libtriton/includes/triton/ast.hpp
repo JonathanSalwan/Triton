@@ -192,6 +192,17 @@ namespace triton {
     };
 
 
+    //! `(bswap <expr>)` node
+    class BswapNode : public AbstractNode {
+      private:
+        TRITON_EXPORT void initHash(void);
+
+      public:
+        TRITON_EXPORT BswapNode(const SharedAbstractNode& expr);
+        TRITON_EXPORT void init(bool withParents=false);
+    };
+
+
     //! `(bvadd <expr1> <expr2>)` node
     class BvaddNode : public AbstractNode {
       private:

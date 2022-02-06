@@ -568,6 +568,7 @@ int test_10(void) {
     actx->sx(8, actx->variable(varx)),
     actx->zx(24, actx->variable(varx)),
     actx->zx(8, actx->variable(varx)),
+    actx->bswap(actx->variable(varx)),
 
     /* logical */
     actx->equal(actx->bv(32, 8), actx->variable(varx)),

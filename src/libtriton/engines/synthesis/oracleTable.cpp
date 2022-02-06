@@ -52,6 +52,21 @@ namespace triton {
               UnaryEntry(8, 0x94, 0x6b), UnaryEntry(16, 0xf83f, 0x07c0), UnaryEntry(32, 0x0edc448e, 0xf123bb71), UnaryEntry(64, 0x5e1415d881b3c360, 0xa1ebea277e4c3c9f),
             }
           },
+          /* bswap synthesis */
+          {
+            triton::ast::BSWAP_NODE, {
+              UnaryEntry(8, 0x27, 0x27), UnaryEntry(16, 0xcb3e, 0x3ecb), UnaryEntry(32, 0xff2fd55f, 0x5fd52fff), UnaryEntry(64, 0xa88db124f3f781ac, 0xac81f7f324b18da8),
+              UnaryEntry(8, 0x51, 0x51), UnaryEntry(16, 0x5b4f, 0x4f5b), UnaryEntry(32, 0xbf2b3aa8, 0xa83a2bbf), UnaryEntry(64, 0x1e505703753e938c, 0x8c933e750357501e),
+              UnaryEntry(8, 0x9c, 0x9c), UnaryEntry(16, 0x7432, 0x3274), UnaryEntry(32, 0xa3dfc3f8, 0xf8c3dfa3), UnaryEntry(64, 0xe56f7ec839cac245, 0x45c2ca39c87e6fe5),
+              UnaryEntry(8, 0xa1, 0xa1), UnaryEntry(16, 0x9b5c, 0x5c9b), UnaryEntry(32, 0x31899f06, 0x069f8931), UnaryEntry(64, 0x1043e5a76ee28a0b, 0x0b8ae26ea7e54310),
+              UnaryEntry(8, 0xbd, 0xbd), UnaryEntry(16, 0x3752, 0x5237), UnaryEntry(32, 0x2e91aa5e, 0x5eaa912e), UnaryEntry(64, 0x18491fc165c2e982, 0x82e9c265c11f4918),
+              UnaryEntry(8, 0xb2, 0xb2), UnaryEntry(16, 0x569e, 0x9e56), UnaryEntry(32, 0x04e142dd, 0xdd42e104), UnaryEntry(64, 0xcf8d996c9e669774, 0x7497669e6c998dcf),
+              UnaryEntry(8, 0x5f, 0x5f), UnaryEntry(16, 0x6bf3, 0xf36b), UnaryEntry(32, 0x67bce895, 0x95e8bc67), UnaryEntry(64, 0xae03b5679bc74ec8, 0xc84ec79b67b503ae),
+              UnaryEntry(8, 0x5f, 0x5f), UnaryEntry(16, 0xf654, 0x54f6), UnaryEntry(32, 0xe000a10b, 0x0ba100e0), UnaryEntry(64, 0xcf6cadb6fc9ba591, 0x91a59bfcb6ad6ccf),
+              UnaryEntry(8, 0xe5, 0xe5), UnaryEntry(16, 0x0593, 0x9305), UnaryEntry(32, 0x8e67df26, 0x26df678e), UnaryEntry(64, 0xda908c7dc0afaace, 0xceaaafc07d8c90da),
+              UnaryEntry(8, 0xea, 0xea), UnaryEntry(16, 0xc035, 0x35c0), UnaryEntry(32, 0x25438920, 0x20894325), UnaryEntry(64, 0xfe8b2d171004f9e1, 0xe1f90410172d8bfe),
+            }
+          },
         };
 
 

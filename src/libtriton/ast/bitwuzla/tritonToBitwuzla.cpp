@@ -59,6 +59,23 @@ namespace triton {
       }
 
       switch (node->getType()) {
+
+        case BSWAP_NODE: {
+          auto bvsize = node->getBitvectorSize();
+          auto* bvsort = bitwuzla_mk_bv_sort(bzla, bvsize);
+          auto* retval = bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_AND, children[0], bitwuzla_mk_bv_value_uint64(bzla, bvsort, 0xff));
+          for (triton::uint32 index = 8 ; index != bvsize ; index += triton::bitsize::byte) {
+            retval = bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_SHL, retval, bitwuzla_mk_bv_value_uint64(bzla, bvsort, 8));
+            retval = bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_OR, retval,
+                      bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_AND,
+                        bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_SHR, children[0], bitwuzla_mk_bv_value_uint64(bzla, bvsort, index)),
+                        bitwuzla_mk_bv_value_uint64(bzla, bvsort, 0xff)
+                      )
+                     );
+          }
+          return retval;
+        }
+
         case BVADD_NODE:
           return bitwuzla_mk_term2(bzla, BITWUZLA_KIND_BV_ADD, children[0], children[1]);
 
@@ -155,9 +172,9 @@ namespace triton {
         case BV_NODE: {
           auto childNodes = node->getChildren();
           auto bv_size = reinterpret_cast<IntegerNode*>(childNodes[1].get())->getInteger().convert_to<size_t>();
-          auto sort = bvSorts.find(bv_size);
-          if (sort == bvSorts.end()) {
-            sort = bvSorts.insert({bv_size, bitwuzla_mk_bv_sort(bzla, bv_size)}).first;
+          auto sort = this->bvSorts.find(bv_size);
+          if (sort == this->bvSorts.end()) {
+            sort = this->bvSorts.insert({bv_size, bitwuzla_mk_bv_sort(bzla, bv_size)}).first;
           }
 
           // Handle bitvector value as integer if it small enough.
@@ -239,9 +256,9 @@ namespace triton {
         case VARIABLE_NODE: {
           const auto& symVar = reinterpret_cast<VariableNode*>(node.get())->getSymbolicVariable();
           auto size = symVar->getSize();
-          auto sort = bvSorts.find(size);
-          if (sort == bvSorts.end()) {
-            sort = bvSorts.insert({size, bitwuzla_mk_bv_sort(bzla, size)}).first;
+          auto sort = this->bvSorts.find(size);
+          if (sort == this->bvSorts.end()) {
+            sort = this->bvSorts.insert({size, bitwuzla_mk_bv_sort(bzla, size)}).first;
           }
 
           // If the conversion is used to evaluate a node, we concretize symbolic variables.

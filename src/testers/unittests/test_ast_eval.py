@@ -223,6 +223,30 @@ class TestAstEval(unittest.TestCase):
         ]
         self.check_ast(tests)
 
+    def test_bswap(self):
+        """Check bswap operations."""
+        tests = [
+            self.astCtxt.bswap(self.astCtxt.bv(0x88888888, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x12345678, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x11223344, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x98712357, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x6597236a, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0xabcdfe12, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x11, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x22233, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x345, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x412321, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x54124, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0xffff, 32)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x11, 16)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x2220, 16)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x345a, 16)),
+            self.astCtxt.bswap(self.astCtxt.bv(0xc412, 16)),
+            self.astCtxt.bswap(self.astCtxt.bv(0x5412, 16)),
+            self.astCtxt.bswap(self.astCtxt.bv(0xffff, 16)),
+        ]
+        self.check_ast(tests)
+
     def test_neg(self):
         """Check neg operations."""
         tests = [

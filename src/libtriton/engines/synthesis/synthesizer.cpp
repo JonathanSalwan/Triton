@@ -192,6 +192,11 @@ namespace triton {
           triton::ast::ast_e op = it.first;
           std::array<UnaryEntry, 40> oracles = it.second;
 
+          // Ignore bswap oracle for 8 bit value.
+          if (bits == 8 && op == triton::ast::BSWAP_NODE) {
+            continue;
+          }
+
           bool found = true;
           for (auto const& oracle : oracles) {
             // Ignore oracle that is not on same size
@@ -210,6 +215,7 @@ namespace triton {
           // If an oracle is found, we craft a synthesized node.
           if (found) {
             switch (op) {
+              case triton::ast::BSWAP_NODE: result.setOutput(actx->bswap(actx->variable(var_x))); break;
               case triton::ast::BVNEG_NODE: result.setOutput(actx->bvneg(actx->variable(var_x))); break;
               case triton::ast::BVNOT_NODE: result.setOutput(actx->bvnot(actx->variable(var_x))); break;
               default:

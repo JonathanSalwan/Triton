@@ -24,6 +24,96 @@ namespace triton {
       }
 
 
+      void LiftingToSMT::requiredFunctions(std::ostream& stream) {
+        stream << "(define-fun bswap8 ((value (_ BitVec 8))) (_ BitVec 8)" << std::endl;
+        stream << "    value" << std::endl;
+        stream << ")" << std::endl;
+
+        stream << std::endl;
+        stream << "(define-fun bswap16 ((value (_ BitVec 16))) (_ BitVec 16)" << std::endl;
+        stream << "  (bvor" << std::endl;
+        stream << "    (bvshl" << std::endl;
+        stream << "      (bvand value (_ bv255 16))" << std::endl;
+        stream << "      (_ bv8 16)" << std::endl;
+        stream << "    )" << std::endl;
+        stream << "    (bvand (bvlshr value (_ bv8 16)) (_ bv255 16))" << std::endl;
+        stream << "  )" << std::endl;
+        stream << ")" << std::endl;
+
+        stream << std::endl;
+        stream << "(define-fun bswap32 ((value (_ BitVec 32))) (_ BitVec 32)" << std::endl;
+        stream << "  (bvor" << std::endl;
+        stream << "    (bvshl" << std::endl;
+        stream << "      (bvor" << std::endl;
+        stream << "        (bvshl" << std::endl;
+        stream << "          (bvor" << std::endl;
+        stream << "            (bvshl" << std::endl;
+        stream << "              (bvand value (_ bv255 32))" << std::endl;
+        stream << "              (_ bv8 32)" << std::endl;
+        stream << "            )" << std::endl;
+        stream << "            (bvand (bvlshr value (_ bv8 32)) (_ bv255 32))" << std::endl;
+        stream << "          )" << std::endl;
+        stream << "          (_ bv8 32)" << std::endl;
+        stream << "        )" << std::endl;
+        stream << "        (bvand (bvlshr value (_ bv16 32)) (_ bv255 32))" << std::endl;
+        stream << "      )" << std::endl;
+        stream << "      (_ bv8 32)" << std::endl;
+        stream << "    )" << std::endl;
+        stream << "    (bvand (bvlshr value (_ bv24 32)) (_ bv255 32))" << std::endl;
+        stream << "  )" << std::endl;
+        stream << ")" << std::endl;
+
+        stream << std::endl;
+        stream << "(define-fun bswap64 ((value (_ BitVec 64))) (_ BitVec 64)" << std::endl;
+        stream << "  (bvor" << std::endl;
+        stream << "    (bvshl" << std::endl;
+        stream << "      (bvor" << std::endl;
+        stream << "        (bvshl" << std::endl;
+        stream << "          (bvor" << std::endl;
+        stream << "            (bvshl" << std::endl;
+        stream << "              (bvor" << std::endl;
+        stream << "                (bvshl" << std::endl;
+        stream << "                  (bvor" << std::endl;
+        stream << "                    (bvshl" << std::endl;
+        stream << "                      (bvor" << std::endl;
+        stream << "                        (bvshl" << std::endl;
+        stream << "                          (bvor" << std::endl;
+        stream << "                            (bvshl" << std::endl;
+        stream << "                              (bvand value (_ bv255 64))" << std::endl;
+        stream << "                              (_ bv8 64)" << std::endl;
+        stream << "                            )" << std::endl;
+        stream << "                            (bvand (bvlshr value (_ bv8 64)) (_ bv255 64))" << std::endl;
+        stream << "                          )" << std::endl;
+        stream << "                          (_ bv8 64)" << std::endl;
+        stream << "                        )" << std::endl;
+        stream << "                        (bvand (bvlshr value (_ bv16 64)) (_ bv255 64))" << std::endl;
+        stream << "                      )" << std::endl;
+        stream << "                      (_ bv8 64)" << std::endl;
+        stream << "                    )" << std::endl;
+        stream << "                    (bvand (bvlshr value (_ bv24 64)) (_ bv255 64))" << std::endl;
+        stream << "                  )" << std::endl;
+        stream << "                  (_ bv8 64)" << std::endl;
+        stream << "                )" << std::endl;
+        stream << "                (bvand (bvlshr value (_ bv32 64)) (_ bv255 64))" << std::endl;
+        stream << "              )" << std::endl;
+        stream << "              (_ bv8 64)" << std::endl;
+        stream << "            )" << std::endl;
+        stream << "            (bvand (bvlshr value (_ bv40 64)) (_ bv255 64))" << std::endl;
+        stream << "          )" << std::endl;
+        stream << "          (_ bv8 64)" << std::endl;
+        stream << "        )" << std::endl;
+        stream << "        (bvand (bvlshr value (_ bv48 64)) (_ bv255 64))" << std::endl;
+        stream << "      )" << std::endl;
+        stream << "      (_ bv8 64)" << std::endl;
+        stream << "    )" << std::endl;
+        stream << "    (bvand (bvlshr value (_ bv56 64)) (_ bv255 64))" << std::endl;
+        stream << "  )" << std::endl;
+        stream << ")" << std::endl;
+
+        stream << std::endl;
+      }
+
+
       std::ostream& LiftingToSMT::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
         /* Save the AST representation mode */
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
@@ -42,6 +132,9 @@ namespace triton {
           auto var = reinterpret_cast<triton::ast::VariableNode*>(n.get())->getSymbolicVariable();
           symVars[var->getId()] = var;
         }
+
+        /* Print required functions */
+        this->requiredFunctions(stream);
 
         /* Print symbolic variables */
         for (const auto& var : symVars) {

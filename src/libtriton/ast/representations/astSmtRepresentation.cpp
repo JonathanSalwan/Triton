@@ -24,6 +24,7 @@ namespace triton {
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getType()) {
           case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
+          case BSWAP_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BswapNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
           case BVAND_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvandNode*>(node)); break;
           case BVASHR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvashrNode*>(node)); break;
@@ -84,6 +85,13 @@ namespace triton {
       /* assert representation */
       std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
         stream << "(assert " << node->getChildren()[0] << ")";
+        return stream;
+      }
+
+
+      /* bswap representation */
+      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BswapNode* node) {
+        stream << "(bswap" << node->getBitvectorSize() << " " << node->getChildren()[0] << ")";
         return stream;
       }
 

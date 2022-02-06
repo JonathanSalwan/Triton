@@ -80,6 +80,15 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::bswap(const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<BswapNode>(expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::bswap(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
     SharedAbstractNode AstContext::bv(const triton::uint512& value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, this->shared_from_this());
       if (node == nullptr)

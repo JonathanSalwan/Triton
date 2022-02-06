@@ -52,6 +52,9 @@ namespace triton {
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::AssertNode* node);
 
           //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::BswapNode* node);
+
+          //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::BvNode* node);
 
           //! Displays the node according to the representation mode.

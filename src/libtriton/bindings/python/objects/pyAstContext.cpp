@@ -58,6 +58,14 @@ This class is used to build your own AST nodes.
 \section AstContext_py_api Python API - Methods of the AstContext class
 <hr>
 
+- <b>\ref py_AstNode_page assert_(\ref py_AstNode_page node)</b><br>
+Creates a `assert` node.
+e.g: `(assert node)`.
+
+- <b>\ref py_AstNode_page bswap(\ref py_AstNode_page node)</b><br>
+Creates a `bswap` node.
+e.g: `(bswap node)`.
+
 - <b>\ref py_AstNode_page bv(integer value, integer size)</b><br>
 Creates a `bv` node (bitvector). The `size` must be in bits.<br>
 e.g: `(_ bv<balue> size)`.
@@ -352,6 +360,19 @@ namespace triton {
 
         try {
           return PyAstNode(PyAstContext_AsAstContext(self)->assert_(PyAstNode_AsAstNode(op1)));
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstContext_bswap(PyObject* self, PyObject* op1) {
+        if (!PyAstNode_Check(op1))
+          return PyErr_Format(PyExc_TypeError, "bswap(): expected a AstNode as first argument");
+
+        try {
+          return PyAstNode(PyAstContext_AsAstContext(self)->bswap(PyAstNode_AsAstNode(op1)));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -1672,6 +1693,7 @@ namespace triton {
       //! AstContext methods.
       PyMethodDef AstContext_callbacks[] = {
         {"assert_",         AstContext_assert,          METH_O,           ""},
+        {"bswap",           AstContext_bswap,           METH_O,           ""},
         {"bv",              AstContext_bv,              METH_VARARGS,     ""},
         {"bvadd",           AstContext_bvadd,           METH_VARARGS,     ""},
         {"bvand",           AstContext_bvand,           METH_VARARGS,     ""},

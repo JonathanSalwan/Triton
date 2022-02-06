@@ -22,18 +22,24 @@ class TestSynth_1(unittest.TestCase):
 
         # Some obfuscated expressions
         self.obf_exprs = [
-            ('(~(x) & 0xff)',               (((0xff - x) & 0xff) + (1 * (1 - 1)))),
-            ('((x + 0x1) & 0xff)',          -~x & 0xff),
-            ('((x + y) & 0xff)',            (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(x ^ y)',                     (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(x ^ y)',                     (x & ~y) | (~x & y)),                                # from ?
-            ('(x | y)',                     (x ^ y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(y & x)',                      -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
-            ('(z & 0xffff00)',              ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
-            ('((x + y) & 0xff)',            (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
-            ('(x ^ 0x5c)',                  self.x_xor_92_obfuscated(x)),
-            ('((0x2 * (c ^ 0x1)) & 0xff)',  self.opaque_constant(x, y, c)),
+            ('(~(x) & 0xff)',                                               (((0xff - x) & 0xff) + (1 * (1 - 1)))),
+            ('((x + 0x1) & 0xff)',                                          -~x & 0xff),
+            ('((x + y) & 0xff)',                                            (x | y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',                                                     (x | y) - y + (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(x ^ y)',                                                     (x & ~y) | (~x & y)),                                # from ?
+            ('(x | y)',                                                     (x ^ y) + y - (~x & y)),                             # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(y & x)',                                                      -(x | y) + y + x),                                  # from http://archive.bar/pdfs/bar2020-preprint9.pdf
+            ('(z & 0xffff00)',                                              ((z << 8) >> 16) << 8),                              # from https://blog.regehr.org/archives/1636
+            ('((x + y) & 0xff)',                                            (((x ^ y) + 2 * (x & y)) * 39 + 23) * 151 + 111),    # from Ninon Eyrolle's thesis
+            ('(x ^ 0x5c)',                                                  self.x_xor_92_obfuscated(x)),                        # from imassage
+            ('((0x2 * (c ^ 0x1)) & 0xff)',                                  self.opaque_constant(x, y, c)),                      # from ?
+            ('(((bswap(z, 32) ^ 0x23746fbe) + 0xfffffffd) & 0xffffffff)',   self.bswap32_xor_const(z)),                          # from UnityPlayer.dll
         ]
+
+    def bswap32_xor_const(self, x):
+        a = ((~((((((x & 0xff)) << 8 | ((x >> 8) & 0xff)) << 8 | ((x >> 16) & 0xff)) << 8 | ((x >> 24) & 0xff)))) & 0xd7848ce1)
+        b = ((((((x & 0xff)) << 8 | ((x >> 8) & 0xff)) << 8 | ((x >> 16) & 0xff)) << 8 | ((x >> 24) & 0xff)) & 0x287b731e)
+        return ((( a | b ) ^ 0xf4f0e35f) + 0xfffffffd)
 
     def x_xor_92_obfuscated(self, x):
         a = 229 * x + 247
