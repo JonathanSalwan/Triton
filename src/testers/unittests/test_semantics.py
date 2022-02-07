@@ -453,3 +453,113 @@ class TestCustomIR(unittest.TestCase):
             if m.getBaseRegister().getName() == 'x1':
                 found = True
         self.assertTrue(found)
+
+    def test_fpu_x86(self):
+        ctx = TritonContext()
+        ctx.setArchitecture(ARCH.X86_64)
+        code1 = [
+            (b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "mov rax, 0x1111111111111111"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x04\x24",                           "movq mm0, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "mov rax, 0x2222222222222222"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x0C\x24",                           "movq mm1, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x33\x33\x33\x33\x33\x33\x33\x33",   "mov rax, 0x3333333333333333"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x14\x24",                           "movq mm2, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x44\x44\x44\x44\x44\x44\x44\x44",   "mov rax, 0x4444444444444444"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x1C\x24",                           "movq mm3, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x55\x55\x55\x55\x55\x55\x55\x55",   "mov rax, 0x5555555555555555"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x24\x24",                           "movq mm4, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x66\x66\x66\x66\x66\x66\x66\x66",   "mov rax, 0x6666666666666666"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x2C\x24",                           "movq mm5, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x77\x77\x77\x77\x77\x77\x77\x77",   "mov rax, 0x7777777777777777"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x34\x24",                           "movq mm6, qword ptr ss:[rsp]"),
+            (b"\x48\xB8\x88\x88\x88\x88\x88\x88\x88\x88",   "mov rax, 0x8888888888888888"),
+            (b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+            (b"\x0F\x6F\x3C\x24",                           "movq mm7, qword ptr ss:[rsp]"),
+        ]
+
+        for op, asm in code1:
+            ctx.processing(Instruction(op))
+
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm0), 0x1111111111111111)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm1), 0x2222222222222222)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm2), 0x3333333333333333)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm3), 0x4444444444444444)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm4), 0x5555555555555555)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm5), 0x6666666666666666)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm6), 0x7777777777777777)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.mm7), 0x8888888888888888)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st0), 0x1111111111111111)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st1), 0x2222222222222222)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st2), 0x3333333333333333)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st3), 0x4444444444444444)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st4), 0x5555555555555555)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st5), 0x6666666666666666)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st6), 0x7777777777777777)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st7), 0x8888888888888888)
+
+        # Save and trash registers
+        ctx.processing(Instruction(b"\x0F\xAE\x04\x24")) # fxsave ss:[rsp]
+        ctx.setConcreteRegisterValue(ctx.registers.st0, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st1, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st2, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st3, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st4, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st5, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st6, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st7, 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st0), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st1), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st2), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st3), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st4), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st5), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st6), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st7), 0)
+
+        # Restor and check registers
+        ctx.processing(Instruction(b"\x0F\xAE\x0C\x24")) # fxrstor ss:[rsp]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st0), 0x1111111111111111)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st1), 0x2222222222222222)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st2), 0x3333333333333333)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st3), 0x4444444444444444)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st4), 0x5555555555555555)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st5), 0x6666666666666666)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st6), 0x7777777777777777)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st7), 0x8888888888888888)
+
+        # Save and trash registers
+        ctx.processing(Instruction(b"\x48\x0f\xae\x04\x24")) # fxsave64 ss:[rsp]
+        ctx.setConcreteRegisterValue(ctx.registers.st0, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st1, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st2, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st3, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st4, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st5, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st6, 0)
+        ctx.setConcreteRegisterValue(ctx.registers.st7, 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st0), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st1), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st2), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st3), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st4), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st5), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st6), 0)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st7), 0)
+
+        # Restor and check registers
+        ctx.processing(Instruction(b"\x48\x0f\xae\x0c\x24")) # fxrstor64 ss:[rsp]
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st0), 0x1111111111111111)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st1), 0x2222222222222222)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st2), 0x3333333333333333)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st3), 0x4444444444444444)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st4), 0x5555555555555555)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st5), 0x6666666666666666)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st6), 0x7777777777777777)
+        self.assertEqual(ctx.getConcreteRegisterValue(ctx.registers.st7), 0x8888888888888888)

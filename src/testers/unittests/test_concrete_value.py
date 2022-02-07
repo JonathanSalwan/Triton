@@ -62,6 +62,17 @@ class TestX86ConcreteRegisterValue(unittest.TestCase):
         for r in self.ar:
             self.assertEqual(self.Triton.getConcreteRegisterValue(r), 0)
 
+    def test_fp_reg(self):
+        """Check setting concrete values"""
+        for r in self.pr:
+            if r.getBitSize() == 80:
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef0123456789dead)
+
+        """Check getting concrete values"""
+        for r in self.pr:
+            if r.getBitSize() == 80:
+                self.assertEqual(self.Triton.getConcreteRegisterValue(r), 0xabcdef0123456789dead)
+
     def test_rand_set_get_concrete_value(self):
         """Check setting concrete values"""
         for _ in range(100):
@@ -127,6 +138,17 @@ class TestX8664ConcreteRegisterValue(unittest.TestCase):
         """Check if everything is equal to zero"""
         for r in self.ar:
             self.assertEqual(self.Triton.getConcreteRegisterValue(r), 0)
+
+    def test_fp_reg(self):
+        """Check setting concrete values"""
+        for r in self.pr:
+            if r.getBitSize() == 80:
+                self.Triton.setConcreteRegisterValue(r, 0xabcdef0123456789dead)
+
+        """Check getting concrete values"""
+        for r in self.pr:
+            if r.getBitSize() == 80:
+                self.assertEqual(self.Triton.getConcreteRegisterValue(r), 0xabcdef0123456789dead)
 
 class TestX86ConcreteMemoryValue(unittest.TestCase):
 
