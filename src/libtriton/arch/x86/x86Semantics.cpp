@@ -1121,7 +1121,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st0,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_3_2 = this->astCtxt->ite(ea0_st1,
             this->astCtxt->ite(ib0_st1,
               this->astCtxt->ite(fa0_st1,
@@ -1132,7 +1133,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st1,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_5_4 = this->astCtxt->ite(ea0_st2,
             this->astCtxt->ite(ib0_st2,
               this->astCtxt->ite(fa0_st2,
@@ -1143,7 +1145,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st2,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_7_6 = this->astCtxt->ite(ea0_st3,
             this->astCtxt->ite(ib0_st3,
               this->astCtxt->ite(fa0_st3,
@@ -1154,7 +1157,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st3,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_9_8 = this->astCtxt->ite(ea0_st4,
             this->astCtxt->ite(ib0_st4,
               this->astCtxt->ite(fa0_st4,
@@ -1165,7 +1169,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st4,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_11_10 = this->astCtxt->ite(ea0_st5,
             this->astCtxt->ite(ib0_st5,
               this->astCtxt->ite(fa0_st5,
@@ -1176,7 +1181,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st5,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_13_12 = this->astCtxt->ite(ea0_st6,
             this->astCtxt->ite(ib0_st6,
               this->astCtxt->ite(fa0_st6,
@@ -1187,7 +1193,8 @@ namespace triton {
               this->astCtxt->ite(ib0_st6,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
+
         auto db_15_14 = this->astCtxt->ite(ea0_st7,
             this->astCtxt->ite(ib0_st7,
               this->astCtxt->ite(fa0_st7,
@@ -1198,7 +1205,7 @@ namespace triton {
               this->astCtxt->ite(ib0_st7,
                 this->astCtxt->bv(2, 2),    // 'Exponent Not All 0/1' + 'Integer Bit 0'
                 this->astCtxt->bv(0, 2)),   // 'Exponent Not All 0/1' + 'Integer Bit 1'
-              this->astCtxt->bv(2, 2)));   // 'Exponent All 1'
+              this->astCtxt->bv(2, 2)));    // 'Exponent All 1'
 
         /* Restore the x87 FPU Tag Word */
         auto node = this->astCtxt->concat(db_15_14,
@@ -9199,7 +9206,6 @@ namespace triton {
 
 
       void x86Semantics::movq_s(triton::arch::Instruction& inst) {
-
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
