@@ -147,11 +147,10 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 * [**Christian Heitman**](https://github.com/cnheitman) - Quarkslab
 * [**Daniil Kuts**](https://github.com/apach301) - ISP RAS
 * [**Jessy Campos**](https://github.com/ek0) - n/a
-* [**Jonathan Salwan**](http://shell-storm.org/) - Quarkslab
 * [**Matteo F.**](https://twitter.com/fvrmatteo) - n/a
 * [**Pierrick Brunet**](https://github.com/pbrunet) - Quarkslab
 * [**PixelRick**](https://github.com/PixelRick) - n/a
-* [**Romain Thomas**](https://www.romainthomas.fr/) - Quarkslab
+* [**Romain Thomas**](https://twitter.com/rh0main) - Quarkslab
 
 
 ## They already used Triton
