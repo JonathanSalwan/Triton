@@ -782,35 +782,35 @@ CODE  = [
     (None, b"\xC5\xFD\x6F\x0C\x24",                       "vmovdqa ymm1, yword ptr ss:[rsp]"),
     (None, b"\xC5\xFD\xEF\xC1",                           "vpxor ymm0, ymm0, ymm1"),
 
-    # (None, b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "mov rax,1111111111111111"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x04\x24",                           "movq mm0, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "mov rax, 2222222222222222"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x0C\x24",                           "movq mm1, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x33\x33\x33\x33\x33\x33\x33\x33",   "mov rax, 3333333333333333"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x14\x24",                           "movq mm2, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x44\x44\x44\x44\x44\x44\x44\x44",   "mov rax, 4444444444444444"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x1C\x24",                           "movq mm3, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x55\x55\x55\x55\x55\x55\x55\x55",   "mov rax, 5555555555555555"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x24\x24",                           "movq mm4, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x66\x66\x66\x66\x66\x66\x66\x66",   "mov rax, 6666666666666666"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x2C\x24",                           "movq mm5, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x77\x77\x77\x77\x77\x77\x77\x77",   "mov rax, 7777777777777777"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x34\x24",                           "movq mm6, qword ptr ss:[rsp]"),
-    # (None, b"\x48\xB8\x88\x88\x88\x88\x88\x88\x88\x88",   "mov rax, 8888888888888888"),
-    # (None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
-    # (None, b"\x0F\x6F\x3C\x24",                           "movq mm7, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x11\x11\x11\x11\x11\x11\x11\x11",   "mov rax,1111111111111111"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x04\x24",                           "movq mm0, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x22\x22\x22\x22\x22\x22\x22\x22",   "mov rax, 2222222222222222"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x0C\x24",                           "movq mm1, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x33\x33\x33\x33\x33\x33\x33\x33",   "mov rax, 3333333333333333"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x14\x24",                           "movq mm2, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x44\x44\x44\x44\x44\x44\x44\x44",   "mov rax, 4444444444444444"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x1C\x24",                           "movq mm3, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x55\x55\x55\x55\x55\x55\x55\x55",   "mov rax, 5555555555555555"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x24\x24",                           "movq mm4, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x66\x66\x66\x66\x66\x66\x66\x66",   "mov rax, 6666666666666666"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x2C\x24",                           "movq mm5, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x77\x77\x77\x77\x77\x77\x77\x77",   "mov rax, 7777777777777777"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x34\x24",                           "movq mm6, qword ptr ss:[rsp]"),
+    #(None, b"\x48\xB8\x88\x88\x88\x88\x88\x88\x88\x88",   "mov rax, 8888888888888888"),
+    #(None, b"\x48\x89\x04\x24",                           "mov qword ptr ss:[rsp], rax"),
+    #(None, b"\x0F\x6F\x3C\x24",                           "movq mm7, qword ptr ss:[rsp]"),
 
-    # (None, b"\x0F\xAE\x04\x24",                           "fxsave ss:[rsp]"),
-    # (None, b"\x0F\xAE\x0C\x24",                           "fxrstor ss:[rsp]"),
-    # (None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 ss:[rsp]"),
-    # (None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 ss:[rsp]"),
+    #(None, b"\x0F\xAE\x04\x24",                           "fxsave ss:[rsp]"),
+    #(None, b"\x0F\xAE\x0C\x24",                           "fxrstor ss:[rsp]"),
+    #(None, b"\x48\x0f\xae\x04\x24",                       "fxsave64 ss:[rsp]"),
+    #(None, b"\x48\x0f\xae\x0c\x24",                       "fxrstor64 ss:[rsp]"),
 ]
 
 
@@ -1131,7 +1131,7 @@ def dump_state(state):
 if __name__ == '__main__':
     # initial state
     state = {
-        "stack":      bytearray(b"".join([pack('B', 0) for i in range(512)])), #bytearray(b"".join([pack('B', 255 - i) for i in range(256)])),
+        "stack":      bytearray(b"".join([pack('B', 0) for i in range(512)])),
         "heap":       bytearray(b"".join([pack('B', i) for i in range(256)])),
         "eflags":     2, # bit 2 is always 1
         "rax":        0,
@@ -1186,11 +1186,11 @@ if __name__ == '__main__':
         if st is not None:
             state.update(st)
         try:
-            print("> Unicorn emulation: %s" % disassembly)
+            #print("> Unicorn emulation: %s" % disassembly)
             uc_state = emu_with_unicorn(opcode, state)
-            print("> Triton emulation: %s" % disassembly)
+            #print("> Triton emulation: %s" % disassembly)
             tt_state = emu_with_triton(opcode, state)
-            print("> Emulation done")
+            #print("> Emulation done")
         except Exception as e:
             print('[KO] %s' %(disassembly))
             print('\t%s' %(e))
