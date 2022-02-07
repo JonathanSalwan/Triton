@@ -136,8 +136,8 @@ REG_SPEC_NO_CAPSTONE(FDP, fdp, triton::bitsize::qword-1, 0, FDP, triton::bitsize
 
 /* SSE */
 
-REG_SPEC_NO_CAPSTONE(MXCSR, mxcsr, triton::bitsize::dword-1, 0, MXCSR, triton::bitsize::dword-1, 0, MXCSR, true) // mxcsr
-REG_SPEC_NO_CAPSTONE(MXCSR_MASK, mxcsr_mask, triton::bitsize::dword-1, 0, MXCSR_MASK, triton::bitsize::dword-1, 0, MXCSR_MASK, true) // mxcsr
+REG_SPEC_NO_CAPSTONE(MXCSR,      mxcsr,      triton::bitsize::dword-1, 0, MXCSR,      triton::bitsize::dword-1, 0, MXCSR,      true) // mxcsr
+REG_SPEC_NO_CAPSTONE(MXCSR_MASK, mxcsr_mask, triton::bitsize::dword-1, 0, MXCSR_MASK, triton::bitsize::dword-1, 0, MXCSR_MASK, true) // mxcsr mask
 
 REG_SPEC(XMM0,  xmm0,  triton::bitsize::dqword-1, 0, ZMM0,  triton::bitsize::dqword-1, 0, YMM0,  true)  // xmm0
 REG_SPEC(XMM1,  xmm1,  triton::bitsize::dqword-1, 0, ZMM1,  triton::bitsize::dqword-1, 0, YMM1,  true)  // xmm1
