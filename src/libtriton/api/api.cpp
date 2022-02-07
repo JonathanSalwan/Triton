@@ -23,105 +23,139 @@
 
 \section description_sec Description
 
-<b>Triton</b> is a dynamic binary analysis (DBA) framework. It provides internal components
-like a <b>Dynamic Symbolic Execution</b> (DSE) engine, a <b>Taint</b> engine, <b>AST representations</b>
-of the <b>x86</b>, <b>x86-64</b>, <b>ARM32</b> and <b>AArch64</b> instructions set architecture (ISA), <b>SMT simplification</b> passes,
-an <b>SMT solver</b> interface and, the last but not least, <b>Python bindings</b>.
+<b>Triton</b> is a dynamic binary analysis framework. It provides internal components like a
+<b>dynamic symbolic execution</b> engine, a <b>dynamic taint analysis</b> engine, <b>AST representation</b> of the
+<b>x86</b>, <b>x86-64</b>, <b>ARM32</b> and <b>AArch64</b> ISA semantic, an <b>expressions synthesis</b> engine,
+some <b>SMT simplification</b> passes, <b>SMT solver</b> interface to <b>Z3</b> and <b>Bitwuzla</b> and, the last
+but not least, <b>Python bindings</b>. Based on these components, you are able to build your program analysis tools,
+automate reverse engineering, perform software verification or just emulate code.
 
+<br>
+<center>
+  <img src="http://triton.quarkslab.com/files/triton_v09_architecture.svg" width="40%"/>
+</center>
 
 <br>
 <hr>
 \section publications_sec Presentations and Publications
 
 <ul>
-  <li><b>Symbolic Deobfuscation: From Virtualized Code Back to the Original</b><br>
-  Talk at DIMVA, Paris-Saclay, 2018.
-  [<a href="https://triton.quarkslab.com/files/DIMVA2018-deobfuscation-salwan-bardin-potet.pdf">paper</a>]
-  [<a href="https://triton.quarkslab.com/files/DIMVA2018-slide-deobfuscation-salwan-bardin-potet.pdf">slide</a>]
-  [<a href="https://triton.quarkslab.com/files/DeobfuscationDIMVA2018.txt">bibtex</a>]<br>
-  Abstract: <i>Software protection has taken an important place during the last decade in order to protect legit
-  software against reverse engineering or tampering. Virtualization is considered as one of the very best defenses
-  against such attacks. We present a generic approach based on symbolic path exploration, taint and recompilation
-  allowing to recover, from a virtualized code, a devirtualized code semantically identical to the original one
-  and close in size. We define criteria and metrics to evaluate the relevance of the deobfuscated results in terms
-  of correctness and precision. Finally we propose an open-source setup allowing to evaluate the proposed approach
-  against several forms of virtualization.
-  </i></li>
+<li>
+<b>Greybox Program Synthesis: A New Approach to Attack Dataflow Obfuscation</b><br />
+ <b>Talk at</b>: Blackhat USA, Las Vegas, Nevada, 2021. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/BHUSA2021-David-Greybox-Program-Synthesis.pdf">slide</a>]<br />
+ <b>Auhtors</b>: Robin David<br />
+ <b>Abstract</b>: <em>This talk presents the latest advances in program synthesis applied for deobfuscation. It aims at demystifying this analysis technique
+ by showing how it can be put into action on obfuscation. Especially the implementation Qsynthesis released for this talk shows a complete end-to-end workflow
+ to deobfuscate assembly instructions back in optimized (deobfuscated) instructions reassembled back in the binary.</em>
+</li>
 
-  <li><b>Deobfuscation of VM based software protection </b><br>
-  Talk at SSTIC, Rennes, 2017.
-  [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-paper.pdf">french paper</a>]
-  [<a href="https://triton.quarkslab.com/files/sstic2017-salwan-bardin-potet-slide.pdf">english slide</a>]
-  [<a href="https://static.sstic.org/videos2017/SSTIC_2017-06-07_P08.mp4">french video</a>]
-  [<a href="https://triton.quarkslab.com/files/DeobfuscationSSTIC2017.txt">bibtex</a>]<br>
-  Abstract: <i>In this presentation we describe an approach which consists to automatically analyze virtual
-  machine based software protections and which recompiles a new version of the binary without such protections. This
-  automated approach relies on a symbolic execution guide by a taint analysis and some concretization policies, then
-  on a binary rewriting using LLVM transition.
-  </i></li>
+<li>
+<b>From source code to crash test-case through software testing automation</b><br />
+ <b>Talk at</b>: C&ESAR, Rennes, France, 2021. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/CESAR2021_robin-david-paper.pdf">paper</a>] [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/CESAR2021_robin-david-slide.pdf">slide</a>]<br />
+ <b>Auhtors</b>: Robin David, Jonathan Salwan, Justin Bourroux<br />
+ <b>Abstract</b>: <em>This paper present an approach automating the software testing process from a source code to the dynamic testing of the compiled program.  More specifically, from a static
+ analysis report indicating alerts on source lines it enables testing to cover these lines dynamically and opportunistically checking whether  whether or not they can trigger
+ a crash. The result is a test corpus allowing to cover alerts and to trigger them if they happen to be true positives. This paper discuss the  methodology employed to track
+ alerts down in the compiled binary, the testing engines selection process and the results obtained on a TCP/IP stack implementation for embedded  and IoT systems.</em>
+</li>
 
-  <li><b>How Triton can help to reverse virtual machine based software protections</b><br>
-  Talk at CSAW SOS, NYC, 2016.
-  [<a href="https://triton.quarkslab.com/files/csaw2016-sos-rthomas-jsalwan.pdf">slide</a>]<br>
-  Abstract: <i>The first part of the talk is going to be an introduction to the Triton framework
-  to expose its components and to explain how they work together. Then, the second part will
-  include demonstrations on how it's possible to reverse virtual machine based protections using
-  taint analysis, symbolic execution, SMT simplifications and LLVM-IR optimizations.
-  </i></li>
+<li>
+<b>QSynth: A Program Synthesis based Approach for Binary Code Deobfuscation</b><br />
+ <b>Talk at</b>: BAR, San Diego, California, 2020. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/BAR2020-qsynth-robin-david.pdf">paper</a>]<br />
+ <b>Auhtors</b>: Robin David, Luigi Coniglio, Mariano Ceccato<br />
+ <b>Abstract</b>: <em>We present a generic approach leveraging both DSE and program synthesis to successfully synthesize programs  obfuscated with Mixed-Boolean-Arithmetic, Data-Encoding
+ or Virtualization. The synthesis algorithm proposed is an offline enumerate synthesis primitive guided by top-down breath-first search.  We shows its effectiveness
+ against a state-of-the-art obfuscator and its scalability as it supersedes other similar approaches based on synthesis. We also show its effectiveness in presence of
+ composite obfuscation (combination of various techniques). This ongoing work enlightens the effectiveness of synthesis to target certain kinds of obfuscations and
+ opens the way to more robust algorithms and simplification strategies.</em>
+</li>
 
-  <li><b>Dynamic Binary Analysis and Obfuscated Codes</b><br>
-  Talk at St'Hack, Bordeaux, 2016.
-  [<a href="https://triton.quarkslab.com/files/sthack2016-rthomas-jsalwan.pdf">slide</a>]<br>
-  Abstract: <i>At this presentation we will talk about how a DBA (Dynamic Binary Analysis) may
-  help a reverse engineer to reverse obfuscated code. We will first introduce some basic obfuscation
-  techniques and then expose how it's possible to break some stuffs (using our open-source DBA framework - Triton) like
-  detect opaque predicates, reconstruct CFG, find the original algorithm, isolate sensible
-  data and many more... Then, we will conclude with a demo and few words about our future work.
-  </i></li>
+<li>
+<b>Sydr: Cutting Edge Dynamic Symbolic Execution</b><br />
+ <b>Talk at</b>: Ivannikov ISP RAS Open Conference, Moscow, Russia, 2020. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/ISPRAS2020-sydr.pdf">paper</a>]<br />
+ <b>Auhtors</b>: A.Vishnyakov, A.Fedotov, D.Kuts, A.Novikov, D.Parygina, E.Kobrin, V.Logunova, P.Belecky, S.Kurmangaleev<br />
+ <b>Abstract</b>: <em>Dynamic symbolic execution (DSE) has enormous amount of applications in computer  security (fuzzing, vulnerability discovery, reverse-engineering, etc.). We propose
+ several performance and accuracy improvements for dynamic symbolic execution.  Skipping non-symbolic instructions allows to build a path predicate 1.2--3.5 times faster.
+ Symbolic engine simplifies formulas during symbolic execution. Path  predicate slicing eliminates irrelevant conjuncts from solver queries. We handle each jump table
+ (switch statement) as multiple branches and describe the method for symbolic execution of multi-threaded programs. The proposed solutions were implemented in Sydr tool.
+ Sydr performs inversion of branches in path predicate. Sydr combines DynamoRIO dynamic binary instrumentation tool with Triton symbolic engine.</em>
+</li>
 
-  <li><b>How Triton may help to analyse obfuscated binaries</b><br>
-  MISC magazine 82, 2015.
-  [<a href="https://triton.quarkslab.com/files/misc82-triton.pdf">french article</a>]<br>
-  Abstract: <i>Binary obfuscation is used to protect software's intellectual property.
-  There exist different kinds of obfucation but roughly, it transforms a binary structure
-  into another binary structure by preserving the same semantic. The aim of obfuscation is
-  to ensure that the original information is "drown" in useless information that will make
-  reverse engineering harder. In this article we will show how we can analyse an ofbuscated
-  program and break some obfuscations using the Triton framework.</i></li>
+<li>
+<b>Symbolic Deobfuscation: From Virtualized Code Back to the Original</b><br />
+ <b>Talk at</b>: DIMVA, Paris-Saclay, France, 2018. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/DIMVA2018-deobfuscation-salwan-bardin-potet.pdf">paper</a>] [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/DIMVA2018-slide-deobfuscation-salwan-bardin-potet.pdf">slide</a>]<br />
+ <b>Auhtors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
+ <b>Abstract</b>: <em>Software protection has taken an important place during the last decade in order to protect legit software against reverse engineering or tampering.
+ Virtualization is considered as one of the very best defenses against such attacks. We present a generic approach based on symbolic path exploration, taint and
+ recompilation allowing to recover, from a virtualized code, a devirtualized code semantically identical to the original one and close in size. We define criteria
+ and metrics to evaluate the relevance of the deobfuscated results in terms of correctness and precision. Finally we propose an open-source setup allowing to evaluate
+ the proposed approach against several forms of virtualization.</em>
+</li>
 
-  <li><b>Triton: A Concolic Execution Framework</b><br>
-  Talk at SSTIC, Rennes, 2015.
-  [<a href="https://triton.quarkslab.com/files/sstic2015_wp_fr_saudel_salwan.pdf">french paper</a>]
-  [<a href="https://triton.quarkslab.com/files/sstic2015_slide_en_saudel_salwan.pdf">detailed english slide</a>]
-  [<a href="https://triton.quarkslab.com/files/sstic2015_slide_fr_saudel_salwan.pdf">light french slide</a>]
-  [<a href="https://triton.quarkslab.com/files/TritonSSTIC2015.txt">bibtex</a>]<br>
-  Abstract: <i>This talk is about the release of Triton, a concolic execution framework based on Pin.
-  It provides components like a taint engine, a dynamic symbolic execution engine, a snapshot engine,
-  translation of x64 instruction to SMT2, a Z3 interface to solve constraints and Python bindings.
-  Based on these components, Triton offers the possibility to build tools for vulnerabilities research or
-  reverse-engineering assistance.</i></li>
+<li>
+<b>Deobfuscation of VM based software protection </b><br />
+ <b>Talk at</b>: SSTIC, Rennes, France, 2017. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/SSTIC2017-French-Article-desobfuscation_binaire_reconstruction_de_fonctions_virtualisees-salwan_potet_bardin.pdf">french paper</a>] [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/SSTIC2017_Deobfuscation_of_VM_based_software_protection.pdf">english slide</a>] [<a href="https://static.sstic.org/videos2017/SSTIC_2017-06-07_P08.mp4">french video</a>]<br />
+ <b>Auhtors</b>: Jonathan Salwan, Sébastien Bardin, Marie-Laure Potet<br />
+ <b>Abstract</b>: <em>In this presentation we describe an approach which consists to automatically analyze virtual machine based software protections and which recompiles a new
+ version of the binary without such protections. This automated approach relies on a symbolic execution guide by a taint analysis and some concretization policies, then
+ on a binary rewriting using LLVM transition.</em>
+</li>
 
-  <li><b>Dynamic Behavior Analysis Using Binary Instrumentation</b><br>
-  Talk at St'Hack, Bordeaux, 2015.
-  [<a href="https://triton.quarkslab.com/files/sthack2015_salwan.pdf">slide</a>]<br>
-  Abstract: <i>This talk can be considered like the part 2 of our talk at SecurityDay.
-  In the previous part, we talked about how it was possible to cover a targeted
-  function in memory using the DSE (Dynamic Symbolic Execution) approach. Cover
-  a function (or its states) doesn't mean find all vulnerabilities, some vulnerability
-  doesn't crashes the program. That's why we must implement specific analysis to
-  find specific bugs. These analysis are based on the binary instrumentation and
-  the runtime behavior analysis of the program. In this talk, we will see how it's
-  possible to find these following kind of bugs : off-by-one, stack / heap overflow,
-  use-after-free, format string and {write, read}-what-where.</i></li>
+<li>
+<b>How Triton can help to reverse virtual machine based software protections</b><br />
+ <b>Talk at</b>: CSAW SOS, NYC, New York, 2016. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/CSAW2016-SOS-Virtual-Machine-Deobfuscation-RThomas_JSalwan.pdf">slide</a>]<br />
+ <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Abstract</b>: <em>The first part of the talk is going to be an introduction to the Triton framework to expose its components and to explain how they work together.
+ Then, the second part will include demonstrations on how it's possible to reverse virtual machine based protections using taint analysis, symbolic execution, SMT
+ simplifications and LLVM-IR optimizations.</em>
+</li>
 
-  <li><b>Covering a function using a Dynamic Symbolic Execution approach</b><br>
-  Talk at Security Day, Lille, 2015.
-  [<a href="https://triton.quarkslab.com/files/secday2015_salwan.pdf">slide</a>]<br>
-  Abstract: <i>This talk is about binary analysis and instrumentation. We will see how it's possible to
-  target a specific function, snapshot the context memory/registers before the function, translate the instrumentation
-  into an intermediate representation,apply a taint analysis based on this IR, build/keep formulas for a Dynamic
-  Symbolic Execution (DSE), generate a concrete value to go through a specific path, restore the context memory/register and
-  generate another concrete value to go through another path then repeat this operation until the target function is covered.</i></li>
+<li>
+<b>Dynamic Binary Analysis and Obfuscated Codes</b><br  />
+ <b>Talk at</b>: St'Hack, Bordeaux, France, 2016. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/StHack2016_Dynamic_Binary_Analysis_and_Obfuscated_Codes_RThomas_JSalwan.pdf">slide</a>]<br  />
+ <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Abstract</b>: <em>At this presentation we will talk about how a DBA (Dynamic Binary Analysis) may help a reverse engineer to reverse obfuscated code. We will first
+ introduce some basic obfuscation techniques and then expose how it's possible to break some stuffs (using our open-source DBA framework - Triton) like detect opaque
+ predicates, reconstruct CFG, find the original algorithm, isolate sensible data and many more... Then, we will conclude with a demo and few words about our future work.</em>
+</li>
+
+<li>
+<b>How Triton may help to analyse obfuscated binaries</b><br  />
+ <b>Publication at</b>: MISC magazine 82, 2015. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/MISC-82_French_Paper_How_Triton_may_help_to_analyse_obfuscated_binaries_RThomas_JSalwan.pdf">french article</a>]<br  />
+ <b>Auhtors</b>: Jonathan Salwan, Romain Thomas<br />
+ <b>Abstract</b>: <em>Binary obfuscation is used to protect software's intellectual property. There exist different kinds of obfucation but roughly, it transforms a binary
+ structure into another binary structure by preserving the same semantic. The aim of obfuscation is to ensure that the original information is "drown" in useless information
+ that will make reverse engineering harder. In this article we will show how we can analyse an ofbuscated program and break some obfuscations using the Triton framework.</em>
+</li>
+
+<li>
+<b>Triton: A Concolic Execution Framework</b><br  />
+ <b>Talk at</b>: SSTIC, Rennes, France, 2015. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/SSTIC2015_French_Paper_Triton_Framework_dexecution_Concolique_FSaudel_JSalwan.pdf">french paper</a>] [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/SSTIC2015_English_slide_detailed_version_Triton_Concolic_Execution_FrameWork_FSaudel_JSalwan.pdf">detailed english slide</a>] <br />
+ <b>Auhtors</b>: Jonathan Salwan, Florent Saudel<br />
+ <b>Abstract</b>: <em>This talk is about the release of Triton, a concolic execution framework based on Pin. It provides components like a taint engine, a dynamic symbolic execution
+ engine, a snapshot engine, translation of x64 instruction to SMT2, a Z3 interface to solve constraints and Python bindings. Based on these components, Triton offers the possibility
+ to build tools for vulnerabilities research or reverse-engineering assistance.</em>
+</li>
+
+<li>
+<b>Dynamic Behavior Analysis Using Binary Instrumentation</b><br  />
+ <b>Talk at</b>: St'Hack, Bordeaux, France, 2015. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/StHack2015_Dynamic_Behavior_Analysis_using_Binary_Instrumentation_Jonathan_Salwan.pdf">slide</a>]<br  />
+ <b>Auhtors</b>: Jonathan Salwan<br />
+ <b>Abstract</b>: <em>This talk can be considered like the part 2 of our talk at SecurityDay. In the previous part, we talked about how it was possible to cover a targeted function
+ in memory using the DSE (Dynamic Symbolic Execution) approach. Cover a function (or its states) doesn't mean find all vulnerabilities, some vulnerability doesn't crashes the program.
+ That's why we must implement specific analysis to find specific bugs. These analysis are based on the binary instrumentation and the runtime behavior analysis of the program. In this
+ talk, we will see how it's possible to find these following kind of bugs : off-by-one, stack / heap overflow, use-after-free, format string and {write, read}-what-where.</em>
+</li>
+
+<li>
+<b>Covering a function using a Dynamic Symbolic Execution approach</b><br  />
+ <b>Talk at</b>: Security Day, Lille, France, 2015. [<a href="https://github.com/JonathanSalwan/Triton/tree/master/publications/SecurityDay2015_dynamic_symbolic_execution_Jonathan_Salwan.pdf">slide</a>]<br  />
+ <b>Auhtors</b>: Jonathan Salwan<br />
+ <b>Abstract</b>: <em>This talk is about binary analysis and instrumentation. We will see how it's possible to target a specific function, snapshot the context memory/registers before the
+ function, translate the instrumentation into an intermediate representation,apply a taint analysis based on this IR, build/keep formulas for a Dynamic Symbolic Execution (DSE), generate
+ a concrete value to go through a specific path, restore the context memory/register and generate another concrete value to go through another path then repeat this operation until the
+ target function is covered.</em>
+</li>
 </ul>
 
 
@@ -134,11 +168,11 @@ To be able to compile Triton, you must install these libraries before:
  lib name                                                                      | version
 -------------------------------------------------------------------------------|------------------
  [libboost](http://www.boost.org/)                                             | >= 1.68
- [libpython](https://www.python.org/)                                          | == 2.7.x or 3.6.x
+ [libpython](https://www.python.org/)                                          | >= 3.6
  [libz3](https://github.com/Z3Prover/z3)                                       | >= 4.6.0
  [libcapstone](http://www.capstone-engine.org/)                                | >= 4.0.x
- [Pin](https://software.intel.com/en-us/articles/pintool-downloads) (optional) | == 71313
 
+<br>
 <hr>
 \subsection linux_install_sec Linux Installation
 
@@ -153,6 +187,7 @@ $ cmake ..
 $ sudo make -j2 install
 ~~~~~~~~~~~~~
 
+<br>
 <hr>
 \subsection osx_install_sec OSX Installation
 
@@ -165,10 +200,11 @@ $ git clone https://github.com/JonathanSalwan/Triton.git
 $ cd Triton
 $ mkdir build
 $ cd build
-$ cmake $(echo 'from os.path import abspath, join; from distutils.sysconfig import get_python_inc, get_python_lib; print "-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_python_inc(), abspath(join(get_python_lib(), "../../libpython2.7.dylib")))' | python) ..
+$ cmake $(echo 'from os.path import abspath, join; from sysconfig import get_path; print("-DPYTHON_INCLUDE_DIR=%s -DPYTHON_LIBRARY=%s" % (get_path("include"), abspath(join(get_path("platlib"), "../../libpython3.7.dylib"))))' | python3) ..
 $ sudo make -j2 install
 ~~~~~~~~~~~~~
 
+<br>
 <hr>
 \subsection windows_install_sec Windows Installation
 
@@ -181,44 +217,17 @@ Once libraries installed, you can use `cmake` to generate the `.sln` file of `li
 > cd build
 > cmake -G "Visual Studio 14 2015 Win64" \
   -DBOOST_ROOT="C:/Users/jonathan/Works/Tools/boost_1_61_0" \
-  -DPYTHON_INCLUDE_DIRS="C:/Python27/include" \
-  -DPYTHON_LIBRARIES="C:/Python27/libs/python27.lib" \
+  -DPYTHON_INCLUDE_DIRS="C:/Python36/include" \
+  -DPYTHON_LIBRARIES="C:/Python36/libs/python36.lib" \
   -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/include" \
   -DZ3_LIBRARIES="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/bin/libz3.lib" \
-  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/include" \
-  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-3.0.5-win64/capstone.lib" ..
+  -DCAPSTONE_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/capstone-4.0.2-win64/include" \
+  -DCAPSTONE_LIBRARIES="C:/Users/jonathan/Works/Tools/capstone-4.0.2-win64/capstone.lib" ..
 ~~~~~~~~~~~~~
 
 However, if you prefer to directly download precompiled libraries, check out our [AppVeyor's artefacts](https://ci.appveyor.com/project/JonathanSalwan/triton/history).
 Note that if you use AppVeyor's artefacts, you probably have to install the [Visual C++ Redistributable](https://www.microsoft.com/en-US/download/details.aspx?id=30679)
 packages for Visual Studio 2012.
-
-<hr>
-\subsection libpintool_install_sec Pintool for Linux users
-
-This project is also shipped with a \ref Tracer_page and may be compiled with these following commands:
-
-~~~~~~~~~~~~~{.sh}
-$ cd pin-2.14-71313-gcc.4.4.7-linux/source/tools/
-$ git clone https://github.com/JonathanSalwan/Triton.git
-$ cd Triton
-$ mkdir build
-$ cd build
-$ cmake -DPINTOOL=on ..
-$ make -j2
-$ cd ..
-$ ./build/triton ./src/examples/pin/ir.py /usr/bin/id
-~~~~~~~~~~~~~
-
-It's not recommended to use the pintool on a kernel `4.x`. The version `71313` of Pin doesn't support very well
-this branch (`4.x`). Anyway, if you feel lucky, you can compile the Triton pintool with the `-DKERNEL4=on` flag.
-
-~~~~~~~~~~~~~{.sh}
-$ cmake -DPINTOOL=on -DKERNEL4=on ..
-$ make
-~~~~~~~~~~~~~
-
-Note that only the version `71313` of Pin is supported.
 
 */
 
@@ -272,6 +281,12 @@ namespace triton {
   inline void API::checkTaint(void) const {
     if (!this->taint)
       throw triton::exceptions::API("API::checkTaint(): Taint engine is undefined, you should define an architecture first.");
+  }
+
+
+  inline void API::checkLifting(void) const {
+    if (!this->lifting)
+      throw triton::exceptions::API("API::checkLifting(): Lifting engine is undefined, you should define an architecture first.");
   }
 
 
@@ -546,6 +561,10 @@ namespace triton {
     if (this->taint == nullptr)
       throw triton::exceptions::API("API::initEngines(): Not enough memory.");
 
+    this->lifting = new(std::nothrow) triton::engines::lifters::LiftingEngine(this->astCtxt, this->symbolic);
+    if (this->lifting == nullptr)
+      throw triton::exceptions::API("API::initEngines(): Not enough memory.");
+
     this->irBuilder = new(std::nothrow) triton::arch::IrBuilder(&this->arch, this->modes, this->astCtxt, this->symbolic, this->taint);
     if (this->irBuilder == nullptr)
       throw triton::exceptions::API("API::initEngines(): Not enough memory.");
@@ -558,12 +577,14 @@ namespace triton {
   void API::removeEngines(void) {
     if (this->isArchitectureValid()) {
       delete this->irBuilder;
+      delete this->lifting;
       delete this->solver;
       delete this->symbolic;
       delete this->taint;
 
       this->astCtxt   = nullptr;
       this->irBuilder = nullptr;
+      this->lifting   = nullptr;
       this->solver    = nullptr;
       this->symbolic  = nullptr;
       this->taint     = nullptr;
@@ -612,12 +633,12 @@ namespace triton {
 
   /* AST representation API ========================================================================= */
 
-  triton::uint32 API::getAstRepresentationMode(void) const {
+  triton::ast::representations::mode_e API::getAstRepresentationMode(void) const {
     return this->astCtxt->getRepresentationMode();
   }
 
 
-  void API::setAstRepresentationMode(triton::uint32 mode) {
+  void API::setAstRepresentationMode(triton::ast::representations::mode_e mode) {
     this->astCtxt->setRepresentationMode(mode);
   }
 
@@ -860,13 +881,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::processSimplification(const triton::ast::SharedAbstractNode& node, bool z3) const {
+  triton::ast::SharedAbstractNode API::simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver) const {
     this->checkSymbolic();
-    if (z3 == true) {
-      auto snode = this->processZ3Simplification(node);
-      return this->symbolic->processSimplification(snode);
+
+    if (usingSolver) {
+      return this->simplifyAstViaSolver(node);
     }
-    return this->symbolic->processSimplification(node);
+    else {
+      return this->symbolic->simplify(node);
+    }
   }
 
 
@@ -1032,12 +1055,6 @@ namespace triton {
   }
 
 
-  std::ostream& API::printSlicedExpressions(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
-    this->checkSymbolic();
-    return this->symbolic->printSlicedExpressions(stream, expr, assert_);
-  }
-
-
   std::vector<triton::engines::symbolic::SharedSymbolicExpression> API::getTaintedSymbolicExpressions(void) const {
     this->checkSymbolic();
     return this->symbolic->getTaintedSymbolicExpressions();
@@ -1089,43 +1106,48 @@ namespace triton {
   }
 
 
-  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+  std::unordered_map<triton::usize, triton::engines::solver::SolverModel> API::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
     this->checkSolver();
-    return this->solver->getModel(node, status);
+    return this->solver->getModel(node, status, timeout, solvingTime);
   }
 
 
-  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
+  std::vector<std::unordered_map<triton::usize, triton::engines::solver::SolverModel>> API::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
     this->checkSolver();
-    return this->solver->getModels(node, limit, status);
+    return this->solver->getModels(node, limit, status, timeout, solvingTime);
   }
 
 
-  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+  bool API::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
     this->checkSolver();
-    return this->solver->isSat(node, status);
+    return this->solver->isSat(node, status, timeout, solvingTime);
   }
 
 
-  triton::uint512 API::evaluateAstViaZ3(const triton::ast::SharedAbstractNode& node) const {
+  triton::uint512 API::evaluateAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->evaluate(node);
     }
     #endif
-    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3.");
+    #ifdef TRITON_BITWUZLA_INTERFACE
+    if (this->getSolver() == triton::engines::solver::SOLVER_BITWUZLA) {
+        return reinterpret_cast<const triton::engines::solver::BitwuzlaSolver*>(this->getSolverInstance())->evaluate(node);
+    }
+    #endif
+    throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3 or SOLVER_BITWUZLA.");
   }
 
 
-  triton::ast::SharedAbstractNode API::processZ3Simplification(const triton::ast::SharedAbstractNode& node) const {
+  triton::ast::SharedAbstractNode API::simplifyAstViaSolver(const triton::ast::SharedAbstractNode& node) const {
     this->checkSolver();
     #ifdef TRITON_Z3_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_Z3) {
       return reinterpret_cast<const triton::engines::solver::Z3Solver*>(this->getSolverInstance())->simplify(node);
     }
     #endif
-    throw triton::exceptions::API("API::processZ3Simplification(): Solver instance must be a SOLVER_Z3.");
+    throw triton::exceptions::API("API::simplifyAstViaSolver(): Solver instance must be a SOLVER_Z3.");
   }
 
 
@@ -1335,6 +1357,45 @@ namespace triton {
   bool API::taintAssignment(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
     this->checkTaint();
     return this->taint->taintAssignment(regDst, regSrc);
+  }
+
+
+
+  /* Synthesizer engine API ============================================================================= */
+
+  triton::engines::synthesis::SynthesisResult API::synthesize(const triton::ast::SharedAbstractNode& node, bool constant, bool subexpr, bool opaque) {
+    this->checkSymbolic();
+    triton::engines::synthesis::Synthesizer synth(this->symbolic);
+    return synth.synthesize(node, constant, subexpr, opaque);
+  }
+
+
+
+  /* Lifters engine API ================================================================================= */
+
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node) {
+    this->checkLifting();
+    #ifdef TRITON_LLVM_INTERFACE
+    return this->lifting->liftToLLVM(stream, node);
+    #endif
+    throw triton::exceptions::API("API::liftToLLVM(): Triton not built with LLVM");
+  }
+
+
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    return this->liftToLLVM(stream, expr->getAst());
+  }
+
+
+  std::ostream& API::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    this->checkLifting();
+    return this->lifting->liftToPython(stream, expr);
+  }
+
+
+  std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+    this->checkLifting();
+    return this->lifting->liftToSMT(stream, expr, assert_);
   }
 
 }; /* triton namespace */

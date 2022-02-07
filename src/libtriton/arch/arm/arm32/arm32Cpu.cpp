@@ -24,10 +24,15 @@ namespace triton {
       namespace arm32 {
 
         Arm32Cpu::Arm32Cpu(triton::callbacks::Callbacks* callbacks) : Arm32Specifications(ARCH_ARM32) {
-          this->callbacks    = callbacks;
-          this->handle_arm   = 0;
-          this->handle_thumb = 0;
-          this->thumb        = false;
+          this->callbacks       = callbacks;
+          this->handleArm       = 0;
+          this->handleThumb     = 0;
+          this->thumb           = false;
+          this->itInstrsCount   = 0;
+          this->itInstrIndex    = 0;
+          this->itCC            = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->itCCInv         = triton::arch::arm::condition_e::ID_CONDITION_INVALID;
+          this->exclusiveMemAcc = false;
 
           this->clear();
           this->disassInit();
@@ -42,37 +47,37 @@ namespace triton {
         Arm32Cpu::~Arm32Cpu() {
           this->memory.clear();
 
-          if (this->handle_arm) {
-            triton::extlibs::capstone::cs_close(&this->handle_arm);
+          if (this->handleArm) {
+            triton::extlibs::capstone::cs_close(&this->handleArm);
           }
 
-          if (this->handle_thumb) {
-            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+          if (this->handleThumb) {
+            triton::extlibs::capstone::cs_close(&this->handleThumb);
           }
         }
 
 
         void Arm32Cpu::disassInit(void) {
           /* Open capstone in ARM mode. */
-          if (this->handle_arm) {
-            triton::extlibs::capstone::cs_close(&this->handle_arm);
+          if (this->handleArm) {
+            triton::extlibs::capstone::cs_close(&this->handleArm);
           }
 
           /* Open capstone in Thumb mode. */
-          if (this->handle_thumb) {
-            triton::extlibs::capstone::cs_close(&this->handle_thumb);
+          if (this->handleThumb) {
+            triton::extlibs::capstone::cs_close(&this->handleThumb);
           }
 
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &this->handle_arm) != triton::extlibs::capstone::CS_ERR_OK) {
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_ARM, &this->handleArm) != triton::extlibs::capstone::CS_ERR_OK) {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in ARM mode.");
           }
 
-          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_THUMB, &this->handle_thumb) != triton::extlibs::capstone::CS_ERR_OK) {
+          if (triton::extlibs::capstone::cs_open(triton::extlibs::capstone::CS_ARCH_ARM, triton::extlibs::capstone::CS_MODE_THUMB, &this->handleThumb) != triton::extlibs::capstone::CS_ERR_OK) {
             throw triton::exceptions::Disassembly("Arm32Cpu::disassInit(): Cannot open capstone in Thumb mode.");
           }
 
-          triton::extlibs::capstone::cs_option(this->handle_thumb, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
-          triton::extlibs::capstone::cs_option(this->handle_arm,   triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+          triton::extlibs::capstone::cs_option(this->handleThumb, triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
+          triton::extlibs::capstone::cs_option(this->handleArm,   triton::extlibs::capstone::CS_OPT_DETAIL, triton::extlibs::capstone::CS_OPT_ON);
         }
 
 
@@ -236,17 +241,17 @@ namespace triton {
         }
 
 
-        void Arm32Cpu::disassembly(triton::arch::Instruction& inst) const {
-          triton::extlibs::capstone::csh       handle;
-          triton::extlibs::capstone::cs_insn*  insn;
-          triton::usize                        count = 0;
+        void Arm32Cpu::disassembly(triton::arch::Instruction& inst) {
+          triton::extlibs::capstone::csh      handle;
+          triton::extlibs::capstone::cs_insn* insn;
+          triton::usize                       count = 0;
 
           /* Check if the opcode and opcode' size are defined */
           if (inst.getOpcode() == nullptr || inst.getSize() == 0)
             throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Opcode and opcodeSize must be definied.");
 
           /* Select capstone handler (based on execution mode) */
-          handle = (this->thumb ? this->handle_thumb : this->handle_arm);
+          handle = (this->thumb ? this->handleThumb : this->handleArm);
 
           /* Clear instructicon's operands if alredy defined */
           inst.operands.clear();
@@ -261,19 +266,6 @@ namespace triton {
           if (count > 0) {
             triton::extlibs::capstone::cs_detail* detail = insn->detail;
             for (triton::uint32 j = 0; j < 1; j++) {
-
-              /* Init the disassembly */
-              std::stringstream str;
-
-              /* Add mnemonic */
-              str << insn[j].mnemonic;
-
-              /* Add operands */
-              if (detail->arm.op_count)
-                str << " " <<  insn[j].op_str;
-
-              inst.setDisassembly(str.str());
-
               /* Refine the opcode */
               inst.setOpcode(insn[j].bytes, insn[j].size);
 
@@ -294,6 +286,46 @@ namespace triton {
 
               /* Set thumb mode */
               inst.setThumb(thumb);
+
+              /* Init the disassembly */
+              std::stringstream str;
+
+              /* Add mnemonic */
+              str << insn[j].mnemonic;
+
+              /* Add operands */
+              if (inst.getType() == ID_INS_IT || detail->arm.op_count)
+                str << " " <<  insn[j].op_str;
+
+              inst.setDisassembly(str.str());
+
+              /* Process IT instruction */
+              if (inst.getType() == ID_INS_IT) {
+                /* Nested IT instruction, throw an exception as this is not valid ARM code */
+                if (this->itInstrsCount > 0)
+                  throw triton::exceptions::Disassembly("Arm32Cpu::disassembly(): Nested IT instructions are not allowed.");
+
+                /* Copy state from the mnemonic of the instruction */
+                strncpy(this->itStateArray, &insn[j].mnemonic[1], 5);
+                this->itStateArray[4] = 0;
+
+                this->itInstrsCount = strlen(this->itStateArray);
+                this->itInstrIndex  = 0;
+
+                this->itCC    = inst.getCodeCondition();
+                this->itCCInv = this->invertCodeCondition(this->itCC);
+              }
+
+              /* Process instruction within an IT block */
+              if (inst.getType() != ID_INS_IT && this->itInstrsCount > 0) {
+                /* NOTE Assuming that CS always returns mnemonics in lower case */
+                triton::arch::arm::condition_e cc = this->itStateArray[this->itInstrIndex] == 't' ? this->itCC : this->itCCInv;
+
+                inst.setCodeCondition(cc);
+
+                this->itInstrsCount--;
+                this->itInstrIndex++;
+              }
 
               /* Init operands */
               for (triton::uint32 n = 0; n < detail->arm.op_count; n++) {
@@ -735,6 +767,16 @@ namespace triton {
         }
 
 
+        bool Arm32Cpu::isMemoryExclusiveAccess(void) const {
+          return this->exclusiveMemAcc;
+        }
+
+
+        void Arm32Cpu::setMemoryExclusiveAccess(bool state) {
+          this->exclusiveMemAcc = state;
+        }
+
+
         bool Arm32Cpu::isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const {
           return this->isConcreteMemoryValueDefined(mem.getAddress(), mem.getSize());
         }
@@ -760,6 +802,66 @@ namespace triton {
               this->memory.erase(baseAddr + index);
             }
           }
+        }
+
+
+        triton::arch::arm::condition_e Arm32Cpu::invertCodeCondition(triton::arch::arm::condition_e cc) const {
+          triton::arch::arm::condition_e inv = triton::arch::arm::ID_CONDITION_INVALID;
+
+          switch (cc) {
+            case triton::arch::arm::ID_CONDITION_INVALID:
+              inv = triton::arch::arm::ID_CONDITION_INVALID; break;
+
+            case triton::arch::arm::ID_CONDITION_AL:
+              inv = triton::arch::arm::ID_CONDITION_AL; break;
+
+            case triton::arch::arm::ID_CONDITION_EQ:
+              inv = triton::arch::arm::ID_CONDITION_NE; break;
+
+            case triton::arch::arm::ID_CONDITION_HS:
+              inv = triton::arch::arm::ID_CONDITION_LO; break;
+
+            case triton::arch::arm::ID_CONDITION_MI:
+              inv = triton::arch::arm::ID_CONDITION_PL; break;
+
+            case triton::arch::arm::ID_CONDITION_VS:
+              inv = triton::arch::arm::ID_CONDITION_VC; break;
+
+            case triton::arch::arm::ID_CONDITION_HI:
+              inv = triton::arch::arm::ID_CONDITION_LS; break;
+
+            case triton::arch::arm::ID_CONDITION_GE:
+              inv = triton::arch::arm::ID_CONDITION_LT; break;
+
+            case triton::arch::arm::ID_CONDITION_GT:
+              inv = triton::arch::arm::ID_CONDITION_LE; break;
+
+            case triton::arch::arm::ID_CONDITION_LE:
+              inv = triton::arch::arm::ID_CONDITION_GT; break;
+
+            case triton::arch::arm::ID_CONDITION_LT:
+              inv = triton::arch::arm::ID_CONDITION_GE; break;
+
+            case triton::arch::arm::ID_CONDITION_LS:
+              inv = triton::arch::arm::ID_CONDITION_HI; break;
+
+            case triton::arch::arm::ID_CONDITION_VC:
+              inv = triton::arch::arm::ID_CONDITION_VS; break;
+
+            case triton::arch::arm::ID_CONDITION_PL:
+              inv = triton::arch::arm::ID_CONDITION_MI; break;
+
+            case triton::arch::arm::ID_CONDITION_LO:
+              inv = triton::arch::arm::ID_CONDITION_HS; break;
+
+            case triton::arch::arm::ID_CONDITION_NE:
+              inv = triton::arch::arm::ID_CONDITION_EQ; break;
+
+            default:
+              inv = triton::arch::arm::ID_CONDITION_INVALID; break;
+          }
+
+          return inv;
         }
 
       }; /* arm32 namespace */

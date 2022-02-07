@@ -24,6 +24,7 @@ namespace triton {
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getType()) {
           case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
+          case BSWAP_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BswapNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
           case BVAND_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvandNode*>(node)); break;
           case BVASHR_NODE:               return this->print(stream, reinterpret_cast<triton::ast::BvashrNode*>(node)); break;
@@ -83,7 +84,14 @@ namespace triton {
 
       /* assert representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
-        stream << "assert_(" << node->getChildren()[0] << ")";
+        stream << "assert(" << node->getChildren()[0] << ")";
+        return stream;
+      }
+
+
+      /* bswap representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BswapNode* node) {
+        stream << "bswap(" << node->getChildren()[0] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
@@ -160,14 +168,14 @@ namespace triton {
 
       /* bvrol representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
-        stream << "rol(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        stream << "rol(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
 
       /* bvror representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
-        stream << "ror(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        stream << "ror(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
@@ -330,9 +338,9 @@ namespace triton {
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
         const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
         if (var->getAlias().empty())
-          stream << var->getName() << " = " << "0xdeadbeef";
+          stream << var->getName() << " = " << "int(input())";
         else
-          stream << var->getAlias() << " = " << "0xdeadbeef";
+          stream << var->getAlias() << " = " << "int(input())";
         return stream;
       }
 

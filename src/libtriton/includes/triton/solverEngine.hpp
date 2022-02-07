@@ -23,6 +23,9 @@
 #ifdef TRITON_Z3_INTERFACE
   #include <triton/z3Solver.hpp>
 #endif
+#ifdef TRITON_BITWUZLA_INTERFACE
+  #include <triton/bitwuzlaSolver.hpp>
+#endif
 
 
 
@@ -76,26 +79,26 @@ namespace triton {
           //! Returns true if the solver is valid.
           TRITON_EXPORT bool isValid(void) const;
 
-          //! Computes and returns a model from a symbolic constraint.
+          //! Computes and returns a model from a symbolic constraint. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
-          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
+          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief vector of map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
           //! Returns the name of the solver.
           TRITON_EXPORT std::string getName(void) const;

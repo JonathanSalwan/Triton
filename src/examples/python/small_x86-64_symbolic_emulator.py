@@ -88,6 +88,20 @@ def getMemoryString(addr):
 
     return s
 
+def getStringPosition(text):
+    formatters = ['%s','%d','%#02x', '%#x', '%02x', '%x', '%*s',    \
+                  '%02X', '%lX', '%ld', '%08x', '%lu', '%u', '%c']
+
+    text = text.replace("%s", " %s ").replace("%d", " %d ").replace("%#02x", " %#02x ")   \
+           .replace("%#x", " %#x ").replace("%x", " %x ").replace("%02X", " %02X ")       \
+           .replace("%c", " %c ").replace("%02x", " %02x ").replace("%ld", " %ld ")       \
+           .replace("%*s", " %*s ").replace("%lX", " %lX").replace("%08x", " %08x ")      \
+           .replace("%u", " %u ").replace("%lu", " %lu ")                                 \
+
+
+    matches = [y for x in text.split() for y in formatters if y in x]
+    indexes = [index for index, value in enumerate(matches) if value == '%s']
+    return indexes
 
 def getFormatString(addr):
     return getMemoryString(addr)                                                    \
@@ -185,10 +199,11 @@ def __strtoul():
     # Return value
     return int(nptr, base)
 
-
 # Simulate the printf() function
 def __printf():
     debug('printf hooked')
+
+    string_pos = getStringPosition(getMemoryString(Triton.getConcreteRegisterValue(Triton.registers.rdi)))
 
     # Get arguments
     arg1   = getFormatString(Triton.getConcreteRegisterValue(Triton.registers.rdi))
@@ -199,8 +214,15 @@ def __printf():
     arg6   = Triton.getConcreteRegisterValue(Triton.registers.r9)
     nbArgs = arg1.count("{")
     args   = [arg2, arg3, arg4, arg5, arg6][:nbArgs]
-    s      = arg1.format(*args)
+    rsp    = Triton.getConcreteRegisterValue(Triton.registers.rsp)
 
+    if nbArgs > 5:
+        for i in range(nbArgs - 5):
+            args.append(Triton.getConcreteMemoryValue(MemoryAccess(rsp + CPUSIZE.QWORD * (i + 1), CPUSIZE.QWORD)))
+
+    for i in string_pos:
+        args[i] = getMemoryString(args[i])
+    s = arg1.format(*args)
     sys.stdout.write(s)
 
     # Return value
@@ -311,6 +333,35 @@ def __atoll():
     # Return value
     return int(arg1)
 
+def __memcpy():
+    debug('memcpy hooked')
+
+    #Get arguments
+    arg1 = Triton.getConcreteRegisterValue(Triton.registers.rdi)
+    arg2 = Triton.getConcreteRegisterValue(Triton.registers.rsi)
+    arg3 = Triton.getConcreteRegisterValue(Triton.registers.rdx)
+
+    for index in range(arg3):
+        value = Triton.getConcreteMemoryValue(arg2 + index)
+        Triton.setConcreteMemoryValue(arg1 + index, value)
+
+    return arg1
+
+def __strcat():
+    debug('strcat hooked')
+
+    #Get arguments
+    arg1 = Triton.getConcreteRegisterValue(Triton.registers.rdi)
+    arg2 = Triton.getConcreteRegisterValue(Triton.registers.rsi)
+
+    src_length = len(getMemoryString(arg1))
+    dest_length = len(getMemoryString(arg2))
+    for index in range(dest_length):
+        value = Triton.getConcreteMemoryValue(arg2 + index)
+        Triton.setConcreteMemoryValue(arg1 + index + src_length, value)
+
+    return arg1
+
 
 customRelocation = [
     ['__libc_start_main', __libc_start_main,    None],
@@ -318,12 +369,14 @@ customRelocation = [
     ['atol',              __atol,               None],
     ['atoll',             __atoll,              None],
     ['malloc',            __malloc,             None],
+    ['memcpy',            __memcpy,             None],
     ['printf',            __printf,             None],
     ['putchar',           __putchar,            None],
     ['puts',              __puts,               None],
     ['raise',             __raise,              None],
     ['rand',              __rand,               None],
     ['signal',            __signal,             None],
+    ['strcat',            __strcat,             None],
     ['strlen',            __strlen,             None],
     ['strtoul',           __strtoul,            None],
 ]
@@ -365,7 +418,6 @@ def emulate(pc):
         count += 1
 
         #print instruction
-
         if instruction.getType() == OPCODE.X86.HLT:
             break
 

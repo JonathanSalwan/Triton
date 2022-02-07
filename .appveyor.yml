@@ -14,20 +14,8 @@ environment:
   CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.2\include\capstone
   PLATFORM_TOOLSET: v142
   CMAKE_TEMPLATE: Visual Studio 16 2019
-  BOOST_ROOT: c:\Libraries\boost_1_71_0
 
   matrix:
-    - platform: Win32
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: C:\Python27
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\%configuration%\capstone.lib
-      LIEF_VERSION: 0.7.0
-      LIEF_ZIP: windows_x86_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x86-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.9-x86-win
-      PYTHON_VERSION: 2.7
-
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python36
@@ -49,17 +37,6 @@ environment:
       Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x86-win\bin\libz3.lib
       Z3_PKG_NAME: z3-4.8.9-x86-win
       PYTHON_VERSION: 3.7
-
-    - platform: x64
-      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
-      PYTHON: C:\Python27-x64
-      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
-      LIEF_VERSION: 0.7.0
-      LIEF_ZIP: windows_x64_lief-0.7.0_py2.7.zip
-      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
-      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
-      Z3_PKG_NAME: z3-4.8.9-x64-win
-      PYTHON_VERSION: 2.7
 
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
@@ -113,7 +90,7 @@ install:
   - cmd: python -m pip install %LIEF_ZIP%
     # Running cmake for Triton
   - cmd: echo Running cmake for Triton...
-  - cmd: cmake -DPYTHON_VERSION=%PYTHON_VERSION% .. -A %platform% -G "%CMAKE_TEMPLATE%"
+  - cmd: cmake -DBOOST_ROOT="C:/Libraries/boost_1_73_0" -DBoost_INCLUDE_DIR="C:/Libraries/boost_1_73_0" -DPYTHON_VERSION=%PYTHON_VERSION% .. -A %platform% -G "%CMAKE_TEMPLATE%"
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python

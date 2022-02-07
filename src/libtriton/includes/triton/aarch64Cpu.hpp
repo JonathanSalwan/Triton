@@ -242,6 +242,7 @@ namespace triton {
             TRITON_EXPORT bool isRegister(triton::arch::register_e regId) const;
             TRITON_EXPORT bool isRegisterValid(triton::arch::register_e regId) const;
             TRITON_EXPORT bool isThumb(void) const;
+            TRITON_EXPORT bool isMemoryExclusiveAccess(void) const;
             TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(const triton::arch::Register& reg) const;
             TRITON_EXPORT const triton::arch::Register& getParentRegister(triton::arch::register_e id) const;
@@ -259,13 +260,14 @@ namespace triton {
             TRITON_EXPORT triton::uint512 getConcreteRegisterValue(const triton::arch::Register& reg, bool execCallbacks=true) const;
             TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
             TRITON_EXPORT void clear(void);
-            TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
+            TRITON_EXPORT void disassembly(triton::arch::Instruction& inst);
             TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
             TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
             TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
             TRITON_EXPORT void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
             TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);
             TRITON_EXPORT void setThumb(bool state);
+            TRITON_EXPORT void setMemoryExclusiveAccess(bool state);
             TRITON_EXPORT bool isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const;
             TRITON_EXPORT bool isConcreteMemoryValueDefined(triton::uint64 baseAddr, triton::usize size=1) const;
             TRITON_EXPORT void clearConcreteMemoryValue(const triton::arch::MemoryAccess& mem);

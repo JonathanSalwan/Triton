@@ -19,7 +19,7 @@ SIZE  = 10 * 1024 * 1024
 TARGET = 0x200000
 
 CODE2 = [
-    (b"\x00\xbf", "nop"),           # Thumb
+    (b"\x08\xeb\x09\x07", "add r7, r8, r9"),    # Thumb
 ]
 
 CODE  = [

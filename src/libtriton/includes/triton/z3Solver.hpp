@@ -47,8 +47,11 @@ namespace triton {
       //! \class Z3Solver
       /*! \brief Solver engine using z3. */
       class Z3Solver : public SolverInterface {
+          //! Wrapper to handle variadict number of arguments or'd together.
+          static z3::expr mk_or(z3::expr_vector args);
+
         private:
-          //! The SMT solver timeout. By default, unlimited.
+          //! The SMT solver timeout. By default, unlimited. This global timeout may be changed for a specific query (isSat/getModel/getModels) via argument `timeout`.
           triton::uint32 timeout;
 
           //! The SMT solver memory limit. By default, unlimited.
@@ -61,26 +64,26 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT Z3Solver();
 
-          //! Computes and returns a model from a symbolic constraint.
+          //! Computes and returns a model from a symbolic constraint. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
-          //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned.
+          //! Computes and returns several models from a symbolic constraint. The `limit` is the number of models returned. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief vector of map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const;
+          TRITON_EXPORT bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const;
 
           //! Converts a Triton's AST to a Z3's AST, perform a Z3 simplification and returns a Triton's AST.
           TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;

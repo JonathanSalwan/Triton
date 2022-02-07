@@ -17,6 +17,7 @@
 #include <triton/architecture.hpp>
 #include <triton/armOperandProperties.hpp>
 #include <triton/ast.hpp>
+#include <triton/astContext.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/memoryAccess.hpp>
@@ -183,7 +184,7 @@ namespace triton {
           TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(triton::usize symVarId) const;
 
           //! Returns the symbolic variable corresponding to the symbolic variable name.
-          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(const std::string& symVarName) const;
+          TRITON_EXPORT SharedSymbolicVariable getSymbolicVariable(const std::string& name) const;
 
           //! Returns the symbolic expression corresponding to an id.
           TRITON_EXPORT SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
@@ -259,9 +260,6 @@ namespace triton {
 
           //! Slices all expressions from a given one.
           TRITON_EXPORT std::unordered_map<triton::usize, SharedSymbolicExpression> sliceExpressions(const SharedSymbolicExpression& expr);
-
-          //! Prints symbolic expression with used references and symbolic variables in AST representation mode. If `assert_` is true, then (assert <expr>).
-          TRITON_EXPORT std::ostream& printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_=false);
 
           //! Returns the vector of the tainted symbolic expressions.
           TRITON_EXPORT std::vector<SharedSymbolicExpression> getTaintedSymbolicExpressions(void) const;

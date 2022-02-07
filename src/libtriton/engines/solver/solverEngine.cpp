@@ -17,9 +17,11 @@ namespace triton {
 
       SolverEngine::SolverEngine() {
         this->kind = triton::engines::solver::SOLVER_INVALID;
-        #ifdef TRITON_Z3_INTERFACE
+        #if defined(TRITON_Z3_INTERFACE)
         /* By default we initialized the z3 solver */
         this->setSolver(triton::engines::solver::SOLVER_Z3);
+        #elif defined(TRITON_BITWUZLA_INTERFACE)
+        this->setSolver(triton::engines::solver::SOLVER_BITWUZLA);
         #endif
       }
 
@@ -43,6 +45,14 @@ namespace triton {
           case triton::engines::solver::SOLVER_Z3:
             /* init the new instance */
             this->solver.reset(new(std::nothrow) triton::engines::solver::Z3Solver());
+            if (this->solver == nullptr)
+              throw triton::exceptions::SolverEngine("SolverEngine::setSolver(): Not enough memory.");
+            break;
+          #endif
+          #ifdef TRITON_BITWUZLA_INTERFACE
+          case triton::engines::solver::SOLVER_BITWUZLA:
+            /* init the new instance */
+            this->solver.reset(new(std::nothrow) triton::engines::solver::BitwuzlaSolver());
             if (this->solver == nullptr)
               throw triton::exceptions::SolverEngine("SolverEngine::setSolver(): Not enough memory.");
             break;
@@ -77,24 +87,24 @@ namespace triton {
       }
 
 
-      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+      std::unordered_map<triton::usize, SolverModel> SolverEngine::getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         if (!this->solver)
           return std::unordered_map<triton::usize, SolverModel>{};
-        return this->solver->getModel(node, status);
+        return this->solver->getModel(node, status, timeout, solvingTime);
       }
 
 
-      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status) const {
+      std::vector<std::unordered_map<triton::usize, SolverModel>> SolverEngine::getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         if (!this->solver)
           return std::vector<std::unordered_map<triton::usize, SolverModel>>{};
-        return this->solver->getModels(node, limit, status);
+        return this->solver->getModels(node, limit, status, timeout, solvingTime);
       }
 
 
-      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status) const {
+      bool SolverEngine::isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status, triton::uint32 timeout, triton::uint32* solvingTime) const {
         if (!this->solver)
           return false;
-        return this->solver->isSat(node, status);
+        return this->solver->isSat(node, status, timeout, solvingTime);
       }
 
 

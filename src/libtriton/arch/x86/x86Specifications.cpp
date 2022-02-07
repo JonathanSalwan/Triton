@@ -50,7 +50,7 @@ namespace triton {
                                                       X86_LOWER,                                            \
                                                       true)                                                 \
                               );                                                                            \
-            name2id.emplace(#LOWER_NAME, ID_REG_X86_##UPPER_NAME);
+          name2id.emplace(#LOWER_NAME, ID_REG_X86_##UPPER_NAME);
           // Handle register not available in capstone as normal registers
           #define REG_SPEC_NO_CAPSTONE REG_SPEC
           #include "triton/x86.spec"

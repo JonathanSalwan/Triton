@@ -234,14 +234,17 @@ namespace triton {
 
 
       /* Returns the symbolic variable otherwise returns nullptr */
-      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(const std::string& symVarName) const {
+      SharedSymbolicVariable SymbolicEngine::getSymbolicVariable(const std::string& name) const {
         /*
-         * FIXME: When there is a ton of symvar, this loop takes a while to go through.
-         *        What about adding two maps {id:symvar} and {string:symvar}? See #648.
+         * FIXME: 1) When there is a ton of symvar, this loop takes a while to go through.
+         *           What about adding two maps {id:symvar} and {string:symvar}? See #648.
+         *
+         *        2) If we are looking for alias, we return the first occurrence. It's not
+         *           ideal if we have multiple same aliases.
          */
         for (auto& sv: this->symbolicVariables) {
           if (auto symVar = sv.second.lock()) {
-            if (symVar->getName() == symVarName) {
+            if (symVar->getName() == name || symVar->getAlias() == name) {
               return symVar;
             }
           }
@@ -383,7 +386,7 @@ namespace triton {
         triton::usize id = this->getUniqueSymExprId();
 
         /* Performes transformation if there are rules recorded */
-        const triton::ast::SharedAbstractNode& snode = this->processSimplification(node);
+        const triton::ast::SharedAbstractNode& snode = this->simplify(node);
 
         /* Allocates the new shared symbolic expression */
         SharedSymbolicExpression expr = std::make_shared<SymbolicExpression>(snode, id, type, comment);
@@ -475,74 +478,6 @@ namespace triton {
         }
 
         return exprs;
-      }
-
-
-      /* Prints symbolic expression with used references and symbolic variables */
-      std::ostream& SymbolicEngine::printSlicedExpressions(std::ostream& stream, const SharedSymbolicExpression& expr, bool assert_) {
-        /* Collect SSA form */
-        auto ssa = this->sliceExpressions(expr);
-        std::vector<triton::usize> symExprs;
-        for (const auto& se : ssa) {
-          symExprs.push_back(se.first);
-        }
-
-        /* Collect used symbolic variables */
-        std::map<triton::usize, SharedSymbolicVariable> symVars;
-        for (const auto& n : ast::search(expr->getAst(), ast::VARIABLE_NODE)) {
-          auto var = reinterpret_cast<ast::VariableNode*>(n.get())->getSymbolicVariable();
-          symVars[var->getId()] = var;
-        }
-
-        /* Print symbolic variables */
-        for (const auto& var : symVars) {
-          auto n = this->astCtxt->declare(this->astCtxt->variable(var.second));
-          this->astCtxt->print(stream, n.get());
-          stream << std::endl;
-        }
-
-        /* Sort SSA */
-        std::sort(symExprs.begin(), symExprs.end());
-        if (assert_) {
-          symExprs.pop_back();
-        }
-
-        /* Print symbolic expressions */
-        for (const auto& id : symExprs) {
-          stream << ssa[id]->getFormattedExpression() << std::endl;
-        }
-
-        if (assert_) {
-          /* Print conjuncts in separate asserts */
-          std::vector<ast::SharedAbstractNode> exprs;
-          std::vector<ast::SharedAbstractNode> wl{expr->getAst()};
-
-          while (!wl.empty()) {
-            auto n = wl.back();
-            wl.pop_back();
-
-            if (n->getType() != ast::LAND_NODE) {
-              exprs.push_back(n);
-              continue;
-            }
-
-            for (const auto& child : n->getChildren()) {
-              wl.push_back(child);
-            }
-          }
-
-          for (auto it = exprs.crbegin(); it != exprs.crend(); ++it) {
-            this->astCtxt->print(stream, this->astCtxt->assert_(*it).get());
-            stream << std::endl;
-          }
-
-          if (this->astCtxt->getRepresentationMode() == ast::representations::SMT_REPRESENTATION) {
-            stream << "(check-sat)" << std::endl;
-            stream << "(get-model)" << std::endl;
-          }
-        }
-
-        return stream;
       }
 
 

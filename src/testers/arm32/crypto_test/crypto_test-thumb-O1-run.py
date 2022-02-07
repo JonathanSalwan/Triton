@@ -230,51 +230,6 @@ def emulate(ctx, pc):
             print("[-] Emulation exceeded max number of instructions!")
             break
 
-        if pc == 0x7c0:
-            # ITT EQ
-            print("[+] Processing ITT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2         # execute next 2 instructions
-            else:
-                pc += 2 + 2 + 2 # skip next 2 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc == 0x842:
-            # ITTT EQ
-            print("[+] Processing ITTT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2             # execute next 3 instructions
-            else:
-                pc += 2 + 2 + 4 + 2 # skip next 3 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc == 0xa22:
-            # IT HI
-            print("[+] Processing IT instruction @ {:08x}".format(pc))
-            cf = ctx.getConcreteRegisterValue(ctx.registers.c)
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if cf == 1 and zf == 0:
-                pc += 2     # execute next instruction
-            else:
-                pc += 2 + 4 # skip next instruction
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
-        if pc == 0xcb6:
-            # ITTT EQ
-            print("[+] Processing ITTT instruction @ {:08x}".format(pc))
-            zf = ctx.getConcreteRegisterValue(ctx.registers.z)
-            if zf == 1:
-                pc += 2             # execute next 3 instructions
-            else:
-                pc += 2 + 2 + 4 + 2 # skip next 3 instructions
-            ctx.setConcreteRegisterValue(ctx.registers.pc, pc)
-            continue
-
         if pc == 0x84a:
             r0 = ctx.getConcreteRegisterValue(ctx.registers.r0)
             debug("[+] Return value: {:#x}".format(r0))

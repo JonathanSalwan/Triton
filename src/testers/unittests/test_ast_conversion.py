@@ -16,19 +16,18 @@ class TestAstConversion(unittest.TestCase):
     """Testing the AST conversion Triton <-> z3."""
 
     def setUp(self):
-        """Define the arch."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
+        self.ctx = TritonContext()
+        self.ctx.setArchitecture(ARCH.X86_64)
 
-        self.astCtxt = self.Triton.getAstContext()
+        self.astCtxt = self.ctx.getAstContext()
 
-        self.sv1 = self.Triton.newSymbolicVariable(8)
-        self.sv2 = self.Triton.newSymbolicVariable(8)
+        self.sv1 = self.ctx.newSymbolicVariable(8)
+        self.sv2 = self.ctx.newSymbolicVariable(8)
 
         self.v1 = self.astCtxt.variable(self.sv1)
         self.v2 = self.astCtxt.variable(self.sv2)
 
-    def test_binop(self):
+    def do_test_binop(self):
         """
         Check python binary operation.
 
@@ -63,8 +62,8 @@ class TestAstConversion(unittest.TestCase):
         for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteVariableValue(self.sv2, cv2)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv2, cv2)
             for op in binop:
                 n = op(self.v1, self.v2)
                 if op in (operator.floordiv, operator_div) and cv2 == 0:
@@ -78,10 +77,20 @@ class TestAstConversion(unittest.TestCase):
                     n.evaluate(),
                     "ref = {} and triton value = {} with operator {} operands were {} and {}".format(ref, n.evaluate(), op, cv1, cv2)
                 )
-                self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
-                self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
+                self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
+                self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_unop(self):
+    def test_binop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_binop()
+
+    def test_binop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_binop()
+
+    def do_test_unop(self):
         """
         Check python unary operation.
 
@@ -95,7 +104,7 @@ class TestAstConversion(unittest.TestCase):
         ]
 
         for cv1 in range(0, 256):
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
             for op in unop:
                 n = op(self.v1)
                 ref = op(cv1) % (2 ** 8)
@@ -105,10 +114,20 @@ class TestAstConversion(unittest.TestCase):
                                                              n.evaluate(),
                                                              op,
                                                              cv1))
-                self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
-                self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
+                self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
+                self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_smtbinop(self):
+    def test_unop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_unop()
+
+    def test_unop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_unop()
+
+    def do_test_smtbinop(self):
         """
         Check smt binary operation.
 
@@ -155,8 +174,8 @@ class TestAstConversion(unittest.TestCase):
         for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteVariableValue(self.sv2, cv2)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv2, cv2)
             for op in smtbinop:
                 if op == self.astCtxt.concat:
                     n = op([self.v1, self.v2])
@@ -168,16 +187,26 @@ class TestAstConversion(unittest.TestCase):
                     n = op(self.v1, self.v2)
                 self.assertEqual(
                     n.evaluate(),
-                    self.Triton.evaluateAstViaZ3(n),
-                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.Triton.evaluateAstViaZ3(n), op, cv1, cv2)
+                    self.ctx.evaluateAstViaSolver(n),
+                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.evaluateAstViaSolver(n), op, cv1, cv2)
                 )
                 self.assertEqual(
                     n.evaluate(),
-                    self.Triton.simplify(n, True).evaluate(),
-                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.Triton.simplify(n, True).evaluate(), op, cv1, cv2)
+                    self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate(),
+                    "triton = {} and z3 = {} with operator {} operands were {} and {}".format(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate(), op, cv1, cv2)
                 )
 
-    def test_smt_unop(self):
+    def test_smtbinop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_smtbinop()
+
+    def test_smtbinop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_smtbinop()
+
+    def do_test_smt_unop(self):
         """
         Check python unary operation.
 
@@ -196,28 +225,48 @@ class TestAstConversion(unittest.TestCase):
         ]
 
         for cv1 in range(0, 256):
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
             for op in smtunop:
                 if op == self.astCtxt.lnot:
                     n = op(self.v1 != 0)
                 else:
                     n = op(self.v1)
-                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-                self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+                self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+                self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_bvnode(self):
+    def test_smt_unop_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_smt_unop()
+
+    def test_smt_unop_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_smt_unop()
+
+    def do_test_bvnode(self):
         """Check python bit vector declaration."""
         for _ in range(100):
             cv1 = random.randint(-127, 255)
             n = self.astCtxt.bv(cv1, 8)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_extract(self):
+    def test_bvnode_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_bvnode()
+
+    def test_bvnode_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_bvnode()
+
+    def do_test_extract(self):
         """Check bit extraction from bitvector."""
         for _ in range(100):
             cv1 = random.randint(0, 255)
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
             for lo in range(0, 8):
                 for hi in range(lo, 8):
                     n = self.astCtxt.extract(hi, lo, self.v1)
@@ -226,41 +275,81 @@ class TestAstConversion(unittest.TestCase):
                                      "ref = {} and triton value = {} with operator"
                                      "'extract' operands was {} low was : {} and "
                                      "hi was : {}".format(ref, n.evaluate(), cv1, lo, hi))
-                    self.assertEqual(ref, self.Triton.evaluateAstViaZ3(n))
-                    self.assertEqual(ref, self.Triton.simplify(n, True).evaluate())
+                    self.assertEqual(ref, self.ctx.evaluateAstViaSolver(n))
+                    self.assertEqual(ref, self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_ite(self):
+    def test_extract_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_extract()
+
+    def test_extract_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_extract()
+
+    def do_test_ite(self):
         """Check ite node."""
         for _ in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteVariableValue(self.sv2, cv2)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.ite(self.v1 < self.v2, self.v1, self.v2)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
+
+    def test_ite_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_ite()
+
+    def test_ite_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_ite()
 
     @utils.xfail
-    def test_integer(self):
+    def do_test_integer(self):
         # Decimal node is not exported in the python interface
         for cv1 in range(0, 256):
             n = self.astCtxt.integer(cv1)
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
+
+    def test_integer_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_integer()
+
+    def test_integer_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_integer()
 
     @utils.xfail
-    def test_let(self):
+    def do_test_let(self):
         # Let node didn't take the variable in its computation
         for run in range(100):
             cv1 = random.randint(0, 255)
             cv2 = random.randint(0, 255)
-            self.Triton.setConcreteVariableValue(self.sv1, cv1)
-            self.Triton.setConcreteVariableValue(self.sv2, cv2)
+            self.ctx.setConcreteVariableValue(self.sv1, cv1)
+            self.ctx.setConcreteVariableValue(self.sv2, cv2)
             n = self.astCtxt.let("b", self.astCtxt.bvadd(self.v1, self.v2), self.astCtxt.bvadd(self.astCtxt.string("b"), self.v1))
-            self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
-            self.assertEqual(n.evaluate(), self.Triton.simplify(n, True).evaluate())
+            self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+            self.assertEqual(n.evaluate(), self.ctx.simplify(n, solver=True if self.ctx.getSolver() == SOLVER.Z3 else False).evaluate())
 
-    def test_fuzz(self):
+    def test_let_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_let()
+
+    def test_let_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_let()
+
+    def do_test_fuzz(self):
         """
         Fuzz test an ast evaluation.
 
@@ -324,9 +413,19 @@ class TestAstConversion(unittest.TestCase):
             for _ in range(10):
                 cv1 = random.randint(0, 255)
                 cv2 = random.randint(0, 255)
-                self.Triton.setConcreteVariableValue(self.sv1, cv1)
-                self.Triton.setConcreteVariableValue(self.sv2, cv2)
-                self.assertEqual(n.evaluate(), self.Triton.evaluateAstViaZ3(n))
+                self.ctx.setConcreteVariableValue(self.sv1, cv1)
+                self.ctx.setConcreteVariableValue(self.sv2, cv2)
+                self.assertEqual(n.evaluate(), self.ctx.evaluateAstViaSolver(n))
+
+    def test_fuzz_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_fuzz()
+
+    def test_fuzz_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_fuzz()
 
     def new_node(self, depth, possible):
         """Recursive function to create a random ast."""
@@ -361,7 +460,7 @@ class TestUnrollAst(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.X86_64)
         self.ast = self.ctx.getAstContext()
 
-    def test_1(self):
+    def do_test_1(self):
         self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
         self.ctx.processing(Instruction(b"\x48\x89\xc3")) # mov rbx, rax
         self.ctx.processing(Instruction(b"\x48\x89\xd9")) # mov rcx, rbx
@@ -371,7 +470,17 @@ class TestUnrollAst(unittest.TestCase):
         self.assertEqual(str(self.ast.unroll(rdx)), "(_ bv1 64)")
         return
 
-    def test_2(self):
+    def test_1_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_1()
+
+    def test_1_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_1()
+
+    def do_test_2(self):
         self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
         self.ctx.processing(Instruction(b"\x48\x31\xc0")) # xor rax, rax
         rax = self.ctx.getRegisterAst(self.ctx.registers.rax)
@@ -379,7 +488,17 @@ class TestUnrollAst(unittest.TestCase):
         self.assertEqual(str(self.ast.unroll(rax)), "(bvxor (_ bv1 64) (_ bv1 64))")
         return
 
-    def test_3(self):
+    def test_2_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_2()
+
+    def test_2_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_2()
+
+    def do_test_3(self):
         self.ctx.processing(Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00")) # mov rax, 1
         self.ctx.processing(Instruction(b"\x48\xc7\xc3\x02\x00\x00\x00")) # mov rbx, 2
         self.ctx.processing(Instruction(b"\x48\x31\xd8")) # xor rax, rbx
@@ -392,6 +511,16 @@ class TestUnrollAst(unittest.TestCase):
         self.assertEqual(str(ref4.getAst()), "(bvxor ref!0 ref!2)")
         return
 
+    def test_3_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test_3()
+
+    def test_3_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test_3()
+
 
 class TestAstTraversal(unittest.TestCase):
 
@@ -402,7 +531,7 @@ class TestAstTraversal(unittest.TestCase):
         self.ctx.setArchitecture(ARCH.X86_64)
         self.ast = self.ctx.getAstContext()
 
-    def test_1(self):
+    def do_test(self):
         a = self.ast.bv(1, 8)
         b = self.ast.bv(2, 8)
         c = a ^ b
@@ -413,4 +542,14 @@ class TestAstTraversal(unittest.TestCase):
         ref1 = self.ast.reference(self.ctx.newSymbolicExpression(g))
         ref2 = self.ast.reference(self.ctx.newSymbolicExpression(a))
         k = ref1 + ref2
-        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaZ3(k))
+        self.assertEqual(k.evaluate(), self.ctx.evaluateAstViaSolver(k))
+
+    def test_z3(self):
+        if 'Z3' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.Z3)
+            self.do_test()
+
+    def test_bitwuzla(self):
+        if 'BITWUZLA' in dir(SOLVER):
+            self.ctx.setSolver(SOLVER.BITWUZLA)
+            self.do_test()

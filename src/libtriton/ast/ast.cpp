@@ -310,6 +310,62 @@ namespace triton {
     }
 
 
+    /* ====== bswap */
+
+
+    BswapNode::BswapNode(const SharedAbstractNode& expr): AbstractNode(BSWAP_NODE, expr->getContext()) {
+      this->addChild(expr);
+    }
+
+
+    void BswapNode::init(bool withParents) {
+      if (this->children.size() < 1)
+        throw triton::exceptions::Ast("BswapNode::init(): Must take at least one child.");
+
+      if (this->children[0]->getBitvectorSize() % 8 != 0)
+        throw triton::exceptions::Ast("BswapNode::init(): Invalid size, must be aligned on 8-bit.");
+
+      /* Init attributes */
+      this->size       = this->children[0]->getBitvectorSize();
+      this->eval       = this->children[0]->evaluate() & 0xff;
+      this->level      = 1;
+      this->symbolized = false;
+
+      /* Init eval */
+      for (triton::uint32 index = 8 ; index != this->size ; index += triton::bitsize::byte) {
+        this->eval <<= triton::bitsize::byte;
+        this->eval |= ((this->children[0]->evaluate() >> index) & 0xff);
+      }
+
+      /* Init children and spread information */
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->children[index]->setParent(this);
+        this->symbolized |= this->children[index]->isSymbolized();
+        this->level = std::max(this->children[index]->getLevel() + 1, this->level);
+      }
+
+      /* Init parents if needed */
+      if (withParents) {
+        this->initParents();
+      }
+
+      this->initHash();
+    }
+
+
+    void BswapNode::initHash(void) {
+      triton::uint512 s = this->children.size();
+
+      this->hash = static_cast<triton::uint64>(this->type);
+      if (s) this->hash = this->hash * s;
+      for (triton::uint32 index = 0; index < this->children.size(); index++) {
+        this->hash = this->hash * this->children[index]->getHash();
+      }
+
+      this->hash = triton::ast::rotl(this->hash, this->level);
+    }
+
+
     /* ====== bvadd */
 
 
@@ -3077,6 +3133,7 @@ namespace triton {
 
       switch (node->getType()) {
         case ASSERT_NODE:               newNode = std::make_shared<AssertNode>(*reinterpret_cast<AssertNode*>(node));     break;
+        case BSWAP_NODE:                newNode = std::make_shared<BswapNode>(*reinterpret_cast<BswapNode*>(node));       break;
         case BVADD_NODE:                newNode = std::make_shared<BvaddNode>(*reinterpret_cast<BvaddNode*>(node));       break;
         case BVAND_NODE:                newNode = std::make_shared<BvandNode>(*reinterpret_cast<BvandNode*>(node));       break;
         case BVASHR_NODE:               newNode = std::make_shared<BvashrNode>(*reinterpret_cast<BvashrNode*>(node));     break;
@@ -3269,7 +3326,7 @@ namespace triton {
         auto current = worklist.top();
         worklist.pop();
 
-        // This means that node is already in work_stack and we will not need to convert it second time
+        // This means that node is already visited and we will not need to visited it second time
         if (visited.find(current) != visited.end()) {
           continue;
         }
@@ -3279,10 +3336,10 @@ namespace triton {
           result.push_front(current->shared_from_this());
 
         if (current->getType() == REFERENCE_NODE) {
-          worklist.push(reinterpret_cast<triton::ast::ReferenceNode *>(current)->getSymbolicExpression()->getAst().get());
+          worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
         }
         else {
-          for (const auto &child : current->getChildren()) {
+          for (const auto& child : current->getChildren()) {
             worklist.push(child.get());
           }
         }

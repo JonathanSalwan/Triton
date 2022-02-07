@@ -47,26 +47,26 @@ namespace triton {
           //! Destructor.
           TRITON_EXPORT virtual ~SolverInterface(){};
 
-          //! Computes and returns a model from a symbolic constraint.
+          //! Computes and returns a model from a symbolic constraint. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT virtual std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const = 0;
+          TRITON_EXPORT virtual std::unordered_map<triton::usize, SolverModel> getModel(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const = 0;
 
-          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned.
+          //! Computes and returns several models from a symbolic constraint. The `limit` is the max number of models returned. State is returned in the `status` pointer as well as the solving time. A `timeout` can also be defined.
           /*! \brief vector of map of symbolic variable id -> model
            *
            * \details
            * **item1**: symbolic variable id<br>
            * **item2**: model
            */
-          TRITON_EXPORT virtual std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr) const = 0;
+          TRITON_EXPORT virtual std::vector<std::unordered_map<triton::usize, SolverModel>> getModels(const triton::ast::SharedAbstractNode& node, triton::uint32 limit, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const = 0;
 
           //! Returns true if an expression is satisfiable.
-          TRITON_EXPORT virtual bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr) const = 0;
+          TRITON_EXPORT virtual bool isSat(const triton::ast::SharedAbstractNode& node, triton::engines::solver::status_e* status = nullptr, triton::uint32 timeout = 0, triton::uint32* solvingTime = nullptr) const = 0;
 
           //! Returns the name of the solver.
           TRITON_EXPORT virtual std::string getName(void) const = 0;

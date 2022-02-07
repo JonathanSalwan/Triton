@@ -9,5 +9,7 @@
 #define TRITON_CONFIG_HPP
 
 #cmakedefine TRITON_Z3_INTERFACE
+#cmakedefine TRITON_BITWUZLA_INTERFACE
+#cmakedefine TRITON_LLVM_INTERFACE
 
 #endif // TRITON_CONFIG_HPP

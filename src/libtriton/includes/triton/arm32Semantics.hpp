@@ -276,6 +276,9 @@ namespace triton {
             //! The B semantics.
             void b_s(triton::arch::Instruction& inst);
 
+            //! The BFC semantics.
+            void bfc_s(triton::arch::Instruction& inst);
+
             //! The BFI semantics.
             void bfi_s(triton::arch::Instruction& inst);
 
@@ -306,6 +309,9 @@ namespace triton {
             //! The EOR semantics.
             void eor_s(triton::arch::Instruction& inst);
 
+            //! The IT semantics.
+            void it_s(triton::arch::Instruction& inst);
+
             //! The LDM semantics.
             void ldm_s(triton::arch::Instruction& inst);
 
@@ -314,6 +320,9 @@ namespace triton {
 
             //! The LDRB semantics.
             void ldrb_s(triton::arch::Instruction& inst);
+
+            //! The LDREX semantics.
+            void ldrex_s(triton::arch::Instruction& inst);
 
             //! The LDRH semantics.
             void ldrh_s(triton::arch::Instruction& inst);
@@ -332,6 +341,12 @@ namespace triton {
 
             //! The LSR semantics.
             void lsr_s(triton::arch::Instruction& inst);
+
+            //! The MLA semantics.
+            void mla_s(triton::arch::Instruction& inst);
+
+            //! The MLS semantics.
+            void mls_s(triton::arch::Instruction& inst);
 
             //! The MOV semantics.
             void mov_s(triton::arch::Instruction& inst);
@@ -390,6 +405,18 @@ namespace triton {
             //! The SDIV semantics.
             void sdiv_s(triton::arch::Instruction& inst);
 
+            //! The SMLABB semantics.
+            void smlabb_s(triton::arch::Instruction& inst);
+
+            //! The SMLABT semantics.
+            void smlabt_s(triton::arch::Instruction& inst);
+
+            //! The SMLATB semantics.
+            void smlatb_s(triton::arch::Instruction& inst);
+
+            //! The SMLATT semantics.
+            void smlatt_s(triton::arch::Instruction& inst);
+
             //! The SMULL semantics.
             void smull_s(triton::arch::Instruction& inst);
 
@@ -407,6 +434,9 @@ namespace triton {
 
             //! The STRD semantics.
             void strd_s(triton::arch::Instruction& inst);
+
+            //! The STREX semantics.
+            void strex_s(triton::arch::Instruction& inst);
 
             //! The STRH semantics.
             void strh_s(triton::arch::Instruction& inst);

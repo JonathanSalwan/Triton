@@ -1,0 +1,67 @@
+name: Test the code coverage
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.6]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Upgrade pip version
+        run: |
+          python -m pip install -U pip
+      - name: Install dependencies
+        run: |
+          sudo apt-get install python-setuptools libboost-dev lcov libgmp-dev
+      - name: Install Z3
+        run: |
+          sudo apt-get install libz3-dev
+          python -m pip install z3-solver
+      - name: Install Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./configure.sh production --only-cadical --no-symfpu --no-testing --shared
+          sudo make -C build install
+          cd ..
+      - name: Install Capstone
+        run: |
+          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
+          tar -xf ./4.0.2.tar.gz
+          cd ./capstone-4.0.2
+          bash ./make.sh
+          sudo make install
+          cd ../
+      - name: Install Unicorn
+        run: |
+          git clone https://github.com/unicorn-engine/unicorn
+          cd ./unicorn
+          git checkout ec4c6365c3c91703b3725540100023f6a03db742 # 1.0.2-rc2
+          UNICORN_ARCHS="x86 arm aarch64" ./make.sh # we use unicorn to only test some semantics
+          sudo make install
+          cd bindings/python
+          python ./setup.py install --user
+          cd ../../../
+      - name: Install LIEF
+        run: |
+          python -m pip install lief
+      - name: Compile Triton
+        run: |
+          mkdir ./build
+          cd ./build
+          cmake -DGCOV=ON -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=ON -DLLVM_INCLUDE_DIRS=$(llvm-config-12 --includedir) -DLLVM_LIBRARIES=$(llvm-config-12 --libfiles) ..
+          sudo make -j3 install
+      - name: Unittests
+        run: |
+          make -C build check
+          bash <(curl -s https://codecov.io/bash) || echo "Codecov did not collect coverage reports"

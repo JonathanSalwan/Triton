@@ -98,14 +98,26 @@ namespace triton {
     }
 
 
+    template <typename T>
+    void Callbacks::removeSingleCallback(std::list<T>& container, T cb) {
+      for (auto it = container.begin(); it != container.end(); ++it) {
+        if (cb == *it) {
+          container.erase(it);
+          return;
+        }
+      }
+      throw triton::exceptions::Exception("Unable to find callback for removal");
+    }
+
+
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE:
-          this->getConcreteMemoryValueCallbacks.remove(cb);
+          this->removeSingleCallback(this->getConcreteMemoryValueCallbacks, cb);
           break;
 
         default:
-          break;
+          throw triton::exceptions::Exception("Incorrect callback kind for removal");
       }
 
       if (this->countCallbacks() == 0) {
@@ -117,11 +129,11 @@ namespace triton {
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE:
-          this->getConcreteRegisterValueCallbacks.remove(cb);
+          this->removeSingleCallback(this->getConcreteRegisterValueCallbacks, cb);
           break;
 
         default:
-          break;
+          throw triton::exceptions::Exception("Incorrect callback kind for removal");
       }
 
       if (this->countCallbacks() == 0) {
@@ -133,11 +145,11 @@ namespace triton {
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_MEMORY_VALUE:
-          this->setConcreteMemoryValueCallbacks.remove(cb);
+          this->removeSingleCallback(this->setConcreteMemoryValueCallbacks, cb);
           break;
 
         default:
-          break;
+          throw triton::exceptions::Exception("Incorrect callback kind for removal");
       }
 
       if (this->countCallbacks() == 0) {
@@ -149,11 +161,11 @@ namespace triton {
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_REGISTER_VALUE:
-          this->setConcreteRegisterValueCallbacks.remove(cb);
+          this->removeSingleCallback(this->setConcreteRegisterValueCallbacks, cb);
           break;
 
         default:
-          break;
+          throw triton::exceptions::Exception("Incorrect callback kind for removal");
       }
 
       if (this->countCallbacks() == 0) {
@@ -165,11 +177,11 @@ namespace triton {
     void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb) {
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION:
-          this->symbolicSimplificationCallbacks.remove(cb);
+          this->removeSingleCallback(this->symbolicSimplificationCallbacks, cb);
           break;
 
         default:
-          break;
+          throw triton::exceptions::Exception("Incorrect callback kind for removal");
       }
 
       if (this->countCallbacks() == 0) {

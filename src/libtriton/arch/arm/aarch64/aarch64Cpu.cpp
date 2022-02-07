@@ -323,7 +323,7 @@ namespace triton {
         }
 
 
-        void AArch64Cpu::disassembly(triton::arch::Instruction& inst) const {
+        void AArch64Cpu::disassembly(triton::arch::Instruction& inst) {
           triton::extlibs::capstone::cs_insn* insn;
           triton::usize count = 0;
           triton::uint32 size = 0;
@@ -1105,6 +1105,17 @@ namespace triton {
 
         void AArch64Cpu::setThumb(bool state) {
           /* There is no thumb mode in aarch64 */
+        }
+
+
+        bool AArch64Cpu::isMemoryExclusiveAccess(void) const {
+          /* There is no exclusive memory access support in aarch64 */
+          return false;
+        }
+
+
+        void AArch64Cpu::setMemoryExclusiveAccess(bool state) {
+          /* There is no exclusive memory access support in aarch64 */
         }
 
 

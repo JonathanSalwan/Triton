@@ -30,56 +30,57 @@ namespace triton {
       INVALID_NODE = 0,               /*!< Invalid node */
       ANY_NODE = 0,                   /*!< Any node */
       ASSERT_NODE = 3,                /*!< (assert x) */
-      BVADD_NODE = 5,                 /*!< (bvadd x y) */
-      BVAND_NODE = 7,                 /*!< (bvand x y) */
-      BVASHR_NODE = 12,               /*!< (bvashr x y) */
-      BVLSHR_NODE = 17,               /*!< (bvlshr x y) */
-      BVMUL_NODE = 19,                /*!< (bvmul x y) */
-      BVNAND_NODE = 23,               /*!< (bvnand x y) */
-      BVNEG_NODE = 29,                /*!< (bvneg x) */
-      BVNOR_NODE = 31,                /*!< (bvnor x y) */
-      BVNOT_NODE = 37,                /*!< (bvnot x) */
-      BVOR_NODE = 41,                 /*!< (bvor x y) */
-      BVROL_NODE = 43,                /*!< ((_ rotate_left x) y) */
-      BVROR_NODE = 47,                /*!< ((_ rotate_right x) y) */
-      BVSDIV_NODE = 53,               /*!< (bvsdiv x y) */
-      BVSGE_NODE = 59,                /*!< (bvsge x y) */
-      BVSGT_NODE = 61,                /*!< (bvsgt x y) */
-      BVSHL_NODE = 67,                /*!< (bvshl x y) */
-      BVSLE_NODE = 71,                /*!< (bvsle x y) */
-      BVSLT_NODE = 73,                /*!< (bvslt x y) */
-      BVSMOD_NODE = 79,               /*!< (bvsmod x y) */
-      BVSREM_NODE = 83,               /*!< (bvsrem x y) */
-      BVSUB_NODE = 89,                /*!< (bvsub x y) */
-      BVUDIV_NODE = 97,               /*!< (bvudiv x y) */
-      BVUGE_NODE = 101,               /*!< (bvuge x y) */
-      BVUGT_NODE = 103,               /*!< (bvugt x y) */
-      BVULE_NODE = 107,               /*!< (bvule x y) */
-      BVULT_NODE = 109,               /*!< (bvult x y) */
-      BVUREM_NODE = 113,              /*!< (bvurem x y) */
-      BVXNOR_NODE = 127,              /*!< (bvxnor x y) */
-      BVXOR_NODE = 131,               /*!< (bvxor x y) */
-      BV_NODE = 137,                  /*!< (_ bvx y) */
-      COMPOUND_NODE = 139,            /*!< A compound of nodes */
-      CONCAT_NODE = 149,              /*!< (concat x y z ...) */
-      DECLARE_NODE = 151,             /*!< (declare-fun <var_name> () (_ BitVec <var_size>)) */
-      DISTINCT_NODE = 157,            /*!< (distinct x y) */
-      EQUAL_NODE = 163,               /*!< (= x y) */
-      EXTRACT_NODE = 167,             /*!< ((_ extract x y) z) */
-      FORALL_NODE = 173,              /*!< (forall ((x (_ BitVec <size>)), ...) body) */
-      IFF_NODE = 179,                 /*!< (iff x y) */
-      INTEGER_NODE = 181,             /*!< Integer node */
-      ITE_NODE = 191,                 /*!< (ite x y z) */
-      LAND_NODE = 193,                /*!< (and x y) */
-      LET_NODE = 197,                 /*!< (let ((x y)) z) */
-      LNOT_NODE = 199,                /*!< (and x y) */
-      LOR_NODE = 211,                 /*!< (or x y) */
-      LXOR_NODE = 223,                /*!< (xor x y) */
-      REFERENCE_NODE = 227,           /*!< Reference node */
-      STRING_NODE = 229,              /*!< String node */
-      SX_NODE = 233,                  /*!< ((_ sign_extend x) y) */
-      VARIABLE_NODE = 239,            /*!< Variable node */
-      ZX_NODE = 241,                  /*!< ((_ zero_extend x) y) */
+      BSWAP_NODE = 5,                 /*!< (bswap x) */
+      BVADD_NODE = 7,                 /*!< (bvadd x y) */
+      BVAND_NODE = 12,                /*!< (bvand x y) */
+      BVASHR_NODE = 17,               /*!< (bvashr x y) */
+      BVLSHR_NODE = 19,               /*!< (bvlshr x y) */
+      BVMUL_NODE = 23,                /*!< (bvmul x y) */
+      BVNAND_NODE = 29,               /*!< (bvnand x y) */
+      BVNEG_NODE = 31,                /*!< (bvneg x) */
+      BVNOR_NODE = 37,                /*!< (bvnor x y) */
+      BVNOT_NODE = 41,                /*!< (bvnot x) */
+      BVOR_NODE = 43,                 /*!< (bvor x y) */
+      BVROL_NODE = 47,                /*!< ((_ rotate_left x) y) */
+      BVROR_NODE = 52,                /*!< ((_ rotate_right x) y) */
+      BVSDIV_NODE = 59,               /*!< (bvsdiv x y) */
+      BVSGE_NODE = 61,                /*!< (bvsge x y) */
+      BVSGT_NODE = 67,                /*!< (bvsgt x y) */
+      BVSHL_NODE = 71,                /*!< (bvshl x y) */
+      BVSLE_NODE = 73,                /*!< (bvsle x y) */
+      BVSLT_NODE = 79,                /*!< (bvslt x y) */
+      BVSMOD_NODE = 83,               /*!< (bvsmod x y) */
+      BVSREM_NODE = 89,               /*!< (bvsrem x y) */
+      BVSUB_NODE = 97,                /*!< (bvsub x y) */
+      BVUDIV_NODE = 101,               /*!< (bvudiv x y) */
+      BVUGE_NODE = 103,               /*!< (bvuge x y) */
+      BVUGT_NODE = 107,               /*!< (bvugt x y) */
+      BVULE_NODE = 109,               /*!< (bvule x y) */
+      BVULT_NODE = 113,               /*!< (bvult x y) */
+      BVUREM_NODE = 127,              /*!< (bvurem x y) */
+      BVXNOR_NODE = 131,              /*!< (bvxnor x y) */
+      BVXOR_NODE = 137,               /*!< (bvxor x y) */
+      BV_NODE = 139,                  /*!< (_ bvx y) */
+      COMPOUND_NODE = 149,            /*!< A compound of nodes */
+      CONCAT_NODE = 151,              /*!< (concat x y z ...) */
+      DECLARE_NODE = 157,             /*!< (declare-fun <var_name> () (_ BitVec <var_size>)) */
+      DISTINCT_NODE = 163,            /*!< (distinct x y) */
+      EQUAL_NODE = 167,               /*!< (= x y) */
+      EXTRACT_NODE = 173,             /*!< ((_ extract x y) z) */
+      FORALL_NODE = 179,              /*!< (forall ((x (_ BitVec <size>)), ...) body) */
+      IFF_NODE = 181,                 /*!< (iff x y) */
+      INTEGER_NODE = 191,             /*!< Integer node */
+      ITE_NODE = 193,                 /*!< (ite x y z) */
+      LAND_NODE = 197,                /*!< (and x y) */
+      LET_NODE = 199,                 /*!< (let ((x y)) z) */
+      LNOT_NODE = 211,                /*!< (and x y) */
+      LOR_NODE = 223,                 /*!< (or x y) */
+      LXOR_NODE = 227,                /*!< (xor x y) */
+      REFERENCE_NODE = 229,           /*!< Reference node */
+      STRING_NODE = 233,              /*!< String node */
+      SX_NODE = 239,                  /*!< ((_ sign_extend x) y) */
+      VARIABLE_NODE = 241,            /*!< Variable node */
+      ZX_NODE = 251,                  /*!< ((_ zero_extend x) y) */
     };
 
     //! The Representations namespace
@@ -92,9 +93,9 @@ namespace triton {
 
       //! All types of representation mode.
       enum mode_e {
-        SMT_REPRESENTATION,     /*!< SMT representation */
-        PYTHON_REPRESENTATION,  /*!< Python representation */
-        LAST_REPRESENTATION     /*!< Must be the last item */
+        SMT_REPRESENTATION = 0,     /*!< SMT representation */
+        PYTHON_REPRESENTATION = 1,  /*!< Python representation */
+        LAST_REPRESENTATION = 2,    /*!< Must be the last item */
       };
 
     /*! @} End of representations namespace */

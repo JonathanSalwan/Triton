@@ -404,7 +404,7 @@ namespace triton {
       }
 
 
-      void x86Cpu::disassembly(triton::arch::Instruction& inst) const {
+      void x86Cpu::disassembly(triton::arch::Instruction& inst) {
         triton::extlibs::capstone::cs_insn* insn;
         triton::usize count = 0;
 
@@ -1321,6 +1321,17 @@ namespace triton {
 
       void x86Cpu::setThumb(bool state) {
         /* There is no thumb mode in x86 */
+      }
+
+
+      bool x86Cpu::isMemoryExclusiveAccess(void) const {
+        /* There is no exclusive memory access support in x86 */
+        return false;
+      }
+
+
+      void x86Cpu::setMemoryExclusiveAccess(bool state) {
+        /* There is no exclusive memory access support in x86 */
       }
 
 

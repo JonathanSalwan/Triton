@@ -145,10 +145,10 @@ def libcMainHandler(ctx):
 
 # Functions to emulate
 customRelocation = [
-    ('printf',            printfHandler,   BASE_PLT + 0),
-    ('puts',              putsHandler,     BASE_PLT + 1),
-    ('__libc_start_main', libcMainHandler, BASE_PLT + 2),
-    ('abort',             abortHandler,    BASE_PLT + 4),
+    ('printf',            printfHandler,   BASE_PLT + 0 << 2),
+    ('puts',              putsHandler,     BASE_PLT + 1 << 2),
+    ('__libc_start_main', libcMainHandler, BASE_PLT + 2 << 2),
+    ('abort',             abortHandler,    BASE_PLT + 4 << 2),
 ]
 
 

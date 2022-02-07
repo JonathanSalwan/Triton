@@ -25,11 +25,8 @@ The SOLVER namespace contains all kinds of solver status.
 \section SOLVER_py_api Python API - Items of the SOLVER namespace
 <hr>
 
-- **SOLVER.OUTOFMEM**
-- **SOLVER.SAT**
-- **SOLVER.TIMEOUT**
-- **SOLVER.UNKNOWN**
-- **SOLVER.UNSAT**
+- **SOLVER.Z3**
+- **SOLVER.BITWUZLA**
 
 */
 
@@ -42,11 +39,12 @@ namespace triton {
       void initSolverNamespace(PyObject* solverDict) {
         PyDict_Clear(solverDict);
 
-        xPyDict_SetItemString(solverDict, "OUTOFMEM", PyLong_FromUint32(triton::engines::solver::OUTOFMEM));
-        xPyDict_SetItemString(solverDict, "SAT",      PyLong_FromUint32(triton::engines::solver::SAT));
-        xPyDict_SetItemString(solverDict, "TIMEOUT",  PyLong_FromUint32(triton::engines::solver::TIMEOUT));
-        xPyDict_SetItemString(solverDict, "UNKNOWN",  PyLong_FromUint32(triton::engines::solver::UNKNOWN));
-        xPyDict_SetItemString(solverDict, "UNSAT",    PyLong_FromUint32(triton::engines::solver::UNSAT));
+        #if defined(TRITON_Z3_INTERFACE)
+        xPyDict_SetItemString(solverDict, "Z3", PyLong_FromUint32(triton::engines::solver::SOLVER_Z3));
+        #endif
+        #if defined(TRITON_BITWUZLA_INTERFACE)
+        xPyDict_SetItemString(solverDict, "BITWUZLA", PyLong_FromUint32(triton::engines::solver::SOLVER_BITWUZLA));
+        #endif
       }
 
     }; /* python namespace */

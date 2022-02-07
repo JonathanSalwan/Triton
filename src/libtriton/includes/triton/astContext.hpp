@@ -89,6 +89,9 @@ namespace triton {
         //! AST C++ API - assert node builder
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
+        //! AST C++ API - bswap node builder
+        TRITON_EXPORT SharedAbstractNode bswap(const SharedAbstractNode& expr);
+
         //! AST C++ API - bv node builder
         TRITON_EXPORT SharedAbstractNode bv(const triton::uint512& value, triton::uint32 size);
 
@@ -327,12 +330,12 @@ namespace triton {
         TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& name) const;
 
         //! Sets the representation mode for this astContext
-        TRITON_EXPORT void setRepresentationMode(triton::uint32 mode);
+        TRITON_EXPORT void setRepresentationMode(triton::ast::representations::mode_e mode);
 
         //! Gets the representations mode of this astContext
-        TRITON_EXPORT triton::uint32 getRepresentationMode(void) const;
+        TRITON_EXPORT triton::ast::representations::mode_e getRepresentationMode(void) const;
 
-        //! Prints the given node with this context representation
+        //! Prints the node according to the current representation mode.
         TRITON_EXPORT std::ostream& print(std::ostream& stream, AbstractNode* node);
     };
 

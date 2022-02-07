@@ -80,6 +80,15 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::bswap(const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<BswapNode>(expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::bswap(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
     SharedAbstractNode AstContext::bv(const triton::uint512& value, triton::uint32 size) {
       SharedAbstractNode node = std::make_shared<BvNode>(value, size, this->shared_from_this());
       if (node == nullptr)
@@ -376,7 +385,7 @@ namespace triton {
        * in order to make index rotation symbolic. Note that this mode increases the
        * complexity of solving.
        *
-       * bvrol(rot, expr) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
+       * bvrol(expr, rot) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
        **/
       if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size        = expr->getBitvectorSize();
@@ -426,7 +435,7 @@ namespace triton {
        * in order to make index rotation symbolic. Note that this mode increases the
        * complexity of solving.
        *
-       * bvror(rot, expr) = ((value >> (rot % size)) | (value << (size - (rot % size))))
+       * bvror(expr, rot) = ((expr >> (rot % size)) | (expr << (size - (rot % size))))
        **/
       if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_INDEX_ROTATION)) {
         auto size        = expr->getBitvectorSize();
@@ -1054,12 +1063,12 @@ namespace triton {
     }
 
 
-    void AstContext::setRepresentationMode(triton::uint32 mode) {
+    void AstContext::setRepresentationMode(triton::ast::representations::mode_e mode) {
       this->astRepresentation.setMode(mode);
     }
 
 
-    triton::uint32 AstContext::getRepresentationMode(void) const {
+    triton::ast::representations::mode_e AstContext::getRepresentationMode(void) const {
       return this->astRepresentation.getMode();
     }
 

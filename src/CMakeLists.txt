@@ -1,5 +1,4 @@
 add_subdirectory(libtriton)
-add_subdirectory(tracer)
 
 if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
     # Disable exemples for windows as linkage doesn't work. Exported function should

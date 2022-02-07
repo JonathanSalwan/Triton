@@ -344,10 +344,10 @@ class TestIssue818(unittest.TestCase):
         self.ctx.processing(inst)
 
         ref1 = self.ctx.getSymbolicExpression(2) # res of 'inc rax'
-        m, status = self.ctx.getModel(ref1.getAst() == 0xdead, status=True)
+        m, status, time = self.ctx.getModel(ref1.getAst() == 0xdead, status=True)
         self.assertEqual(m[0].getValue(), 0xac)
         self.assertEqual(m[1].getValue(), 0xde)
-        self.assertEqual(status, SOLVER.SAT)
+        self.assertEqual(status, SOLVER_STATE.SAT)
 
 
 class TestIssue823(unittest.TestCase):
@@ -410,6 +410,11 @@ class TestIssue860(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext(ARCH.X86_64)
         self.ast = self.ctx.getAstContext()
+
+        # NOTE The FORALL node is not supported currently in Bitwuzla. Remove
+        #      this check once it is supported.
+        if 'BITWUZLA' in dir(SOLVER) and self.ctx.getSolver() == SOLVER.BITWUZLA:
+            self.skipTest('Skipping due to Bitwuzla issue (FORALL node not supported, see #1062)')
 
     def test_issue(self):
         x = self.ast.variable(self.ctx.newSymbolicVariable(32))

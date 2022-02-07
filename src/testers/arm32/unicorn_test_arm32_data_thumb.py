@@ -60,6 +60,17 @@ CODE  = [
     (b"\x4f\xea\xe1\x70", "asr r0, r1, #31"),
     (b"\x41\xfa\x02\xf0", "asr r0, r1, r2"),
     (b"\x41\xfa\x03\xf0", "mov r0, r1, asr r3"),
+    (b"\x01\xfb\x03\x40", "mla r0, r1, r3, r4"),
+    (b"\xad\xf2\xe4\x4d", "subw sp, sp, #0x4e4"),
+    (b"\x6f\xf3\x1f\x04", "bfc r4, #0, #32"),
+    (b"\x6f\xf3\x1e\x04", "bfc r4, #0, #31"),
+    (b"\x6f\xf3\xdf\x74", "bfc r4, #31, #1"),
+    (b"\x6f\xf3\x00\x04", "bfc r4, #0, #1"),
+    (b"\x01\xfb\x13\x40", "mls r0, r1, r3, r4"),
+    (b"\x11\xfb\x03\x40", "smlabb r0, r1, r3, r4"),
+    (b"\x11\xfb\x13\x40", "smlabt r0, r1, r3, r4"),
+    (b"\x11\xfb\x23\x40", "smlatb r0, r1, r3, r4"),
+    (b"\x11\xfb\x33\x40", "smlatt r0, r1, r3, r4"),
 
     # ADC -------------------------------------------------------------------- #
     (b"\x41\xf1\x02\x00", "adc r0, r1, #2"),

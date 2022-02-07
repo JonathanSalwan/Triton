@@ -149,6 +149,20 @@ namespace triton {
     }
 
 
+    bool Architecture::isMemoryExclusiveAccess(void) const {
+      if (!this->cpu)
+        return false;
+      return this->cpu->isMemoryExclusiveAccess();
+    }
+
+
+    void Architecture::setMemoryExclusiveAccess(bool state) {
+      if (this->cpu) {
+        this->cpu->setMemoryExclusiveAccess(state);
+      }
+    }
+
+
     triton::uint32 Architecture::numberOfRegisters(void) const {
       if (!this->cpu)
         return 0;
