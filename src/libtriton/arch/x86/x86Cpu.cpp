@@ -213,7 +213,7 @@ namespace triton {
 
 
       bool x86Cpu::isFlag(triton::arch::register_e regId) const {
-        if (regId >= triton::arch::ID_REG_X86_AC     && regId <= triton::arch::ID_REG_X86_FSW_B)  { return true; }
+        if (regId >= triton::arch::ID_REG_X86_AC     && regId <= triton::arch::ID_REG_X86_ZF)     { return true; }
         if (regId >= triton::arch::ID_REG_X86_FTW    && regId <= triton::arch::ID_REG_X86_FDP)    { return true; }
         if (regId >= triton::arch::ID_REG_X86_SSE_IE && regId <= triton::arch::ID_REG_X86_SSE_FZ) { return true; }
         if (regId >= triton::arch::ID_REG_X86_FCW_IM && regId <= triton::arch::ID_REG_X86_FCW_X)  { return true; }
@@ -269,7 +269,7 @@ namespace triton {
 
 
       bool x86Cpu::isEFER(triton::arch::register_e regId) const {
-        return ((regId >= triton::arch::ID_REG_X86_EFER && regId <= triton::arch::ID_REG_X86_EFER) ? true : false);
+        return ((regId == triton::arch::ID_REG_X86_EFER) ? true : false);
       }
 
 
