@@ -12,8 +12,8 @@ set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
 # Read the build version
 file(READ ${TRITON_ROOT}/.build_number BUILD_NUMBER)
-set(VERSION_MAJOR 0)
-set(VERSION_MINOR 9)
+set(VERSION_MAJOR 1)
+set(VERSION_MINOR 0)
 set(VERSION_BUILD ${BUILD_NUMBER})
 
 # Used for write_basic_package_version_file()
