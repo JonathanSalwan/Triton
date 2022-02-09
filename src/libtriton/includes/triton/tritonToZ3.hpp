@@ -39,9 +39,6 @@ namespace triton {
         //! This flag define if the conversion is used to evaluated a node or not.
         bool isEval;
 
-        //! Returns the integer of the z3 expression (expr must be an int).
-        triton::__uint getUintValue(const z3::expr& expr);
-
         //! Returns the integer of the z3 expression as a string.
         std::string getStringValue(const z3::expr& expr);
 
