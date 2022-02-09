@@ -42,10 +42,12 @@ namespace triton {
 
     const BitwuzlaTerm* TritonToBitwuzla::convert(const SharedAbstractNode& node, Bitwuzla* bzla) {
       auto nodes = childrenExtraction(node, true /* unroll*/, true /* revert */);
+
       for (auto&& n : nodes) {
-        translatedNodes[n] = translate(n, bzla);
+        this->translatedNodes[n] = translate(n, bzla);
       }
-      return translatedNodes.at(node);
+
+      return this->translatedNodes.at(node);
     }
 
 
@@ -55,7 +57,7 @@ namespace triton {
 
       std::vector<const BitwuzlaTerm*> children;
       for (auto&& n : node->getChildren()) {
-        children.emplace_back(translatedNodes.at(n));
+        children.emplace_back(this->translatedNodes.at(n));
       }
 
       switch (node->getType()) {
@@ -234,7 +236,7 @@ namespace triton {
 
         case REFERENCE_NODE: {
           auto ref = reinterpret_cast<ReferenceNode*>(node.get())->getSymbolicExpression()->getAst();
-          return translatedNodes.at(ref);
+          return this->translatedNodes.at(ref);
         }
 
         case STRING_NODE: {
@@ -244,7 +246,7 @@ namespace triton {
           if (it == symbols.end())
             throw triton::exceptions::AstLifting("TritonToBitwuzla::translate(): [STRING_NODE] Symbols not found.");
 
-          return translatedNodes.at(it->second);
+          return this->translatedNodes.at(it->second);
         }
 
         case SX_NODE: {
