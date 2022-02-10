@@ -93,8 +93,8 @@ Triton relies on the following dependencies:
 
 ```
 * libboost                   >= 1.68
-* libpython                  >= 3.6
 * libcapstone                >= 4.0.x   https://github.com/capstone-engine/capstone
+* libpython     (optional)   >= 3.6
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
 * libbitwuzla   (optional)   n/a        https://github.com/bitwuzla/bitwuzla
 * llvm          (optional)   >= 12
