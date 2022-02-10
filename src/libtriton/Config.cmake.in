@@ -8,6 +8,7 @@ set(TRITON_BUILD_SHARED_LIBS    @BUILD_SHARED_LIBS@)
 set(TRITON_INCLUDE_DIRS         "@CMAKE_INSTALL_PREFIX@/include")
 set(TRITON_INSTALL_PREFIX       @CMAKE_INSTALL_PREFIX@)
 set(TRITON_LIBRARY              "@CMAKE_INSTALL_PREFIX@/lib/@CMAKE_SHARED_LIBRARY_PREFIX@triton@CMAKE_SHARED_LIBRARY_SUFFIX@")
+set(TRITON_LIBRARIES            "${TRITON_LIBRARY};@Z3_LIBRARIES@;@LLVM_LIBRARIES@;@BITWUZLA_LIBRARIES@;@CAPSTONE_LIBRARIES@")
 set(TRITON_LLVM_INTERFACE       @LLVM_INTERFACE@)
 set(TRITON_MSVC_STATIC          @MSVC_STATIC@)
 set(TRITON_PYTHON_BINDINGS      @PYTHON_BINDINGS@)
@@ -18,3 +19,25 @@ message(STATUS "Found Triton: ${CMAKE_CURRENT_LIST_DIR}/tritonConfig.cmake (foun
 
 include(CMakeFindDependencyMacro)
 find_dependency(Boost)
+
+# Triton include
+include_directories("@CMAKE_INSTALL_PREFIX@/include")
+
+# Capstone include
+include_directories("@CAPSTONE_INCLUDE_DIRS@")
+
+# LLVM include and lib directories
+if (TRITON_LLVM_INTERFACE)
+    link_directories(BEFORE "@LLVM_LIBRARY_DIRS@")
+    include_directories("@LLVM_INCLUDE_DIRS@")
+endif()
+
+# Z3 include directories
+if (TRITON_Z3_INTERFACE)
+    include_directories("@Z3_INCLUDE_DIRS@")
+endif()
+
+# Bitwuzla include directories
+if (TRITON_BITWUZLA_INTERFACE)
+    include_directories("@BITWUZLA_INCLUDE_DIRS@")
+endif()
