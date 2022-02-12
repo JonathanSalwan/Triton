@@ -118,6 +118,11 @@ namespace triton {
         return stream;
       }
 
+
+      bool operator<(const SymbolicVariable& symvar1, const SymbolicVariable& symvar2) {
+        return symvar1.getId() < symvar2.getId();
+      }
+
     }; /* symbolic namespace */
   }; /* engines namespace */
 }; /*triton namespace */

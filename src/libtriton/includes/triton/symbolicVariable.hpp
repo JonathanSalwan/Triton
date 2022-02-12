@@ -126,6 +126,9 @@ namespace triton {
       //! Displays a symbolic variable.
       TRITON_EXPORT std::ostream& operator<<(std::ostream& stream, const SymbolicVariable* symVar);
 
+      //! Compares two symbolic variables.
+      TRITON_EXPORT bool operator<(const SymbolicVariable& symvar1, const SymbolicVariable& symvar2);
+
     /*! @} End of symbolic namespace */
     };
   /*! @} End of engines namespace */

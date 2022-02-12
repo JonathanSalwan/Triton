@@ -35,6 +35,9 @@ namespace triton {
       // Collect used symbolic variables.
       auto vars = triton::ast::search(node, triton::ast::VARIABLE_NODE);
 
+      //! Sort symbolic variables
+      std::sort(vars.begin(), vars.end());
+
       // Each symbolic variable is a function argument
       std::vector<llvm::Type*> argsType;
       argsType.resize(vars.size());
