@@ -673,10 +673,10 @@ namespace triton {
         /* Lifters engine API ================================================================================= */
 
         //! [**lifting api**] - Lifts an AST and all its references to LLVM format. `fname` represents the name of the LLVM function.
-        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname="__triton");
+        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname="__triton", bool optimize=false);
 
         //! [**lifting api**] - Lifts a symbolic expression and all its references to LLVM format. `fname` represents the name of the LLVM function.
-        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname="__triton");
+        TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname="__triton", bool optimize=false);
 
         //! [**lifting api**] - Lifts a symbolic expression and all its references to Python format.
         TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);

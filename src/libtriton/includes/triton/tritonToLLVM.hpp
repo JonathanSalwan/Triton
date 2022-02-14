@@ -19,7 +19,9 @@
 
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/LegacyPassManager.h>
 #include <llvm/IR/Module.h>
+#include <llvm/Transforms/IPO/PassManagerBuilder.h>
 
 
 
@@ -65,7 +67,7 @@ namespace triton {
         TRITON_EXPORT TritonToLLVM(llvm::LLVMContext& llvmContext);
 
         //! Lifts a symbolic expression and all its references to LLVM format. `fname` represents the name of the LLVM function.
-        TRITON_EXPORT std::shared_ptr<llvm::Module> convert(const triton::ast::SharedAbstractNode& node, const char* fname="__triton");
+        TRITON_EXPORT std::shared_ptr<llvm::Module> convert(const triton::ast::SharedAbstractNode& node, const char* fname="__triton", bool optimize=false);
     };
 
   /*! @} End of ast namespace */

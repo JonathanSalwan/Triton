@@ -1373,17 +1373,17 @@ namespace triton {
 
   /* Lifters engine API ================================================================================= */
 
-  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname) {
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname, bool optimize) {
     this->checkLifting();
     #ifdef TRITON_LLVM_INTERFACE
-    return this->lifting->liftToLLVM(stream, node, fname);
+    return this->lifting->liftToLLVM(stream, node, fname, optimize);
     #endif
     throw triton::exceptions::API("API::liftToLLVM(): Triton not built with LLVM");
   }
 
 
-  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname) {
-    return this->liftToLLVM(stream, expr->getAst(), fname);
+  std::ostream& API::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname, bool optimize) {
+    return this->liftToLLVM(stream, expr->getAst(), fname, optimize);
   }
 
 

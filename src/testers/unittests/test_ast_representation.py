@@ -269,4 +269,4 @@ class TestAstRepresentation(unittest.TestCase):
             ]
 
             for n in nodes:
-                self.assertNotEqual(len(self.ctx.liftToLLVM(n, fname="test")), 0)
+                self.assertNotEqual(len(self.ctx.liftToLLVM(n, fname="test", optimize=True)), 0)
