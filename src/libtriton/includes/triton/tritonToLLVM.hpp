@@ -42,29 +42,29 @@ namespace triton {
     /*! \brief Converts a Triton's AST to LVM IR. */
     class TritonToLLVM {
       private:
-        //! The LLVM context
+        //! The LLVM context.
         llvm::LLVMContext& llvmContext;
 
-        //! The LLVM module
+        //! The LLVM module.
         std::shared_ptr<llvm::Module> llvmModule;
 
-        //! The LLVM IR builder
+        //! The LLVM IR builder.
         llvm::IRBuilder<> llvmIR;
 
-        //! Map Triton variables to LLVM ones
+        //! Map Triton variables to LLVM ones.
         std::map<triton::ast::SharedAbstractNode, llvm::Value*> llvmVars;
 
-        //! Create a LLVM function
+        //! Create a LLVM function. `fname` represents the name of the LLVM function.
         void createFunction(const triton::ast::SharedAbstractNode& node, const char* fname);
 
-        //! Converts Triton AST to LLVM IR
+        //! Converts Triton AST to LLVM IR.
         llvm::Value* do_convert(const triton::ast::SharedAbstractNode& node, std::unordered_map<triton::ast::SharedAbstractNode, llvm::Value*>* results);
 
       public:
         //! Constructor.
         TRITON_EXPORT TritonToLLVM(llvm::LLVMContext& llvmContext);
 
-        //! Lifts a symbolic expression and all its references to LLVM format.
+        //! Lifts a symbolic expression and all its references to LLVM format. `fname` represents the name of the LLVM function.
         TRITON_EXPORT std::shared_ptr<llvm::Module> convert(const triton::ast::SharedAbstractNode& node, const char* fname="__triton");
     };
 

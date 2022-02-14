@@ -286,8 +286,8 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
-- <b>string liftToLLVM(\ref py_AstNode_page node)</b><br>
-Lifts an AST node and all its references to LLVM IR.
+- <b>string liftToLLVM(\ref py_AstNode_page node, string fname="__triton")</b><br>
+Lifts an AST node and all its references to LLVM IR. `fname` is the name of the LLVM function, by default it's `__triton`.
 
 - <b>string liftToLLVM(\ref py_SymbolicExpression_page expr)</b><br>
 Lifts a symbolic expression and all its references to LLVM IR.
@@ -2231,17 +2231,37 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* arg) {
-        if (!PySymbolicExpression_Check(arg) && !PyAstNode_Check(arg))
+      static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* node  = nullptr;
+        PyObject* fname = nullptr;
+
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"fname",
+          nullptr
+        };
+
+        /* Extract keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &fname) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Invalid number of arguments");
+        }
+
+        if (node == nullptr || (!PySymbolicExpression_Check(node) && !PyAstNode_Check(node)))
           return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression or a AstNode as first argument.");
+
+        if (fname != nullptr && !PyStr_Check(fname))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a string as fname parameter.");
+
+        if (fname == nullptr)
+          fname = PyStr_FromString("__triton");
 
         try {
           std::ostringstream stream;
-          if (PySymbolicExpression_Check(arg)) {
-            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PySymbolicExpression_AsSymbolicExpression(arg));
+          if (PySymbolicExpression_Check(node)) {
+            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PySymbolicExpression_AsSymbolicExpression(node), PyStr_AsString(fname));
           }
           else {
-            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PyAstNode_AsAstNode(arg));
+            PyTritonContext_AsTritonContext(self)->liftToLLVM(stream, PyAstNode_AsAstNode(node), PyStr_AsString(fname));
           }
           return xPyString_FromString(stream.str().c_str());
         }
@@ -3405,7 +3425,7 @@ namespace triton {
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
-        {"liftToLLVM",                          (PyCFunction)TritonContext_liftToLLVM,                                  METH_O,                        ""},
+        {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
         {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},

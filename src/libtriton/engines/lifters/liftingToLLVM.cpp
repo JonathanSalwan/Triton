@@ -22,13 +22,13 @@ namespace triton {
       }
 
 
-      std::ostream& LiftingToLLVM::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
-        this->liftToLLVM(stream, expr->getAst());
+      std::ostream& LiftingToLLVM::liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname) {
+        this->liftToLLVM(stream, expr->getAst(), fname);
         return stream;
       }
 
 
-      std::ostream& LiftingToLLVM::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node) {
+      std::ostream& LiftingToLLVM::liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname) {
         /* The LLVM context */
         llvm::LLVMContext context;
 
@@ -36,7 +36,7 @@ namespace triton {
         triton::ast::TritonToLLVM lifter(context);
 
         /* Lift AST to LLVM IR */
-        auto llvmModule = lifter.convert(node);
+        auto llvmModule = lifter.convert(node, fname);
 
         /* Print the LLVM module into the stream */
         std::string dump;

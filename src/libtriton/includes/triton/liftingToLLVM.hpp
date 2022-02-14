@@ -52,11 +52,11 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT LiftingToLLVM();
 
-          //! Lifts a symbolic expression and all its references to LLVM format.
-          TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+          //! Lifts a symbolic expression and all its references to LLVM format. `fname` represents the name of the LLVM function.
+          TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname="__triton");
 
-          //! Lifts a abstract node and all its references to LLVM format.
-          TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
+          //! Lifts a abstract node and all its references to LLVM format. `fname` represents the name of the LLVM function.
+          TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::ast::SharedAbstractNode& node, const char* fname="__triton");
       };
 
     /*! @} End of lifters namespace */
