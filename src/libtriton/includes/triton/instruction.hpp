@@ -260,7 +260,7 @@ namespace triton {
         TRITON_EXPORT void setThumb(bool state);
 
         //! Adds a symbolic expression
-        TRITON_EXPORT const triton::engines::symbolic::SharedSymbolicExpression& addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
+        TRITON_EXPORT void addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
         //! Returns true if this instruction is a branch
         TRITON_EXPORT bool isBranch(void) const;
