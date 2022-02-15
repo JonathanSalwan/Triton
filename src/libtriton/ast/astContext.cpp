@@ -760,7 +760,7 @@ namespace triton {
 
       if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
         /* Optimization: concatenate extractions in one if possible */
-        auto n = this->simplify_concat(std::vector<SharedAbstractNode>({expr1, expr2}));
+        SharedAbstractNode n = this->simplify_concat(std::vector<SharedAbstractNode>({expr1, expr2}));
         if (n) {
           return n;
         }
@@ -807,7 +807,7 @@ namespace triton {
         return expr;
 
       if (this->modes->isModeEnabled(triton::modes::AST_OPTIMIZATIONS)) {
-        auto n = this->simplify_extract(high, low, expr);
+        SharedAbstractNode n = this->simplify_extract(high, low, expr);
         if (n) {
           return n;
         }
@@ -1099,7 +1099,7 @@ namespace triton {
       /* Try to join all extractions into one from the right to the left */
       while (!exprs.empty()) {
         /* Get the right most node */
-        auto n = exprs.back();
+        SharedAbstractNode n = exprs.back();
         exprs.pop_back();
 
         /* Returns the first non referene node encountered */
@@ -1107,7 +1107,7 @@ namespace triton {
 
         if (n->getType() == CONCAT_NODE) {
           /* Append concatenation children to the right */
-          for (const auto& part : n->getChildren()) {
+          for (const SharedAbstractNode& part : n->getChildren()) {
             exprs.push_back(part);
           }
           continue;
@@ -1120,8 +1120,8 @@ namespace triton {
 
         /* Get extraction arguments */
         const auto& childs = n->getChildren();
-        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
-        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        triton::uint32 hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        triton::uint32 lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
         if (hi < lo) {
           return 0;
         }
@@ -1160,16 +1160,16 @@ namespace triton {
 
 
     SharedAbstractNode AstContext::simplify_extract(triton::uint32 high, triton::uint32 low, const SharedAbstractNode& expr) {
-      auto size = expr->getBitvectorSize();
+      triton::uint32 size = expr->getBitvectorSize();
 
       if (high <= low || high >= size) {
         return 0;
       }
 
-      auto node = expr;
+      SharedAbstractNode node = expr;
       while (true) {
         /* Returns the first non referene node encountered */
-        auto n = triton::ast::dereference(node);
+        SharedAbstractNode n = triton::ast::dereference(node);
 
         if (n->getType() == CONCAT_NODE) {
           /*
@@ -1181,17 +1181,17 @@ namespace triton {
            * ((_ extract 11 9) (concat (_ bv1 8) (_ bv2 8) (_ bv3 8) (_ bv4 8))) =>
            * ((_ extract 3 1) (_ bv3 8))
            */
-          auto hi = n->getBitvectorSize() - 1;
+          triton::uint32 hi = n->getBitvectorSize() - 1;
           bool found = false;
           /* Search for part of concatenation we can extract from. Iterate
            * from the left to the right. */
-          for (const auto& part : n->getChildren()) {
+          for (const SharedAbstractNode& part : n->getChildren()) {
             if (hi < high) {
               /* Did not find a part we can extract from */
               break;
             }
-            auto sz = part->getBitvectorSize();
-            auto lo = hi + 1 - sz;
+            triton::uint32 sz = part->getBitvectorSize();
+            triton::uint32 lo = hi + 1 - sz;
             if (hi == high && lo == low) {
               /* We are extracting the full part, just return it */
               return part;
@@ -1222,7 +1222,7 @@ namespace triton {
            * ((_ extract 7 0) (_ bv1 32))
            **/
           n = n->getChildren()[1];
-          auto sz = n->getBitvectorSize();
+          triton::uint32 sz = n->getBitvectorSize();
           if (low == 0 && high + 1 == sz) {
             /* Just return the node being extended */
             return n;
@@ -1237,7 +1237,7 @@ namespace triton {
       }
 
       /* Returns the first non referene node encountered */
-      auto n = triton::ast::dereference(node);
+      SharedAbstractNode n = triton::ast::dereference(node);
 
       /*
        * Optimization: extract from extract is one extract
@@ -1247,8 +1247,8 @@ namespace triton {
        **/
       if (n->getType() == EXTRACT_NODE) {
         const auto& childs = n->getChildren();
-        auto hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
-        auto lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        triton::uint32 hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
+        triton::uint32 lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
         if (lo + high <= hi) {
           node = childs[2];
           high += lo;

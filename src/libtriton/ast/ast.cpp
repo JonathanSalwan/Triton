@@ -183,13 +183,13 @@ namespace triton {
       auto it = parents.find(p);
 
       if (it == parents.end()) {
-        auto A = p->shared_from_this();
+        SharedAbstractNode A = p->shared_from_this();
         this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
       }
       else {
         if (it->second.second.expired()) {
           parents.erase(it);
-          auto A = p->shared_from_this();
+          SharedAbstractNode A = p->shared_from_this();
           this->parents.insert(std::make_pair(p, std::make_pair(1, WeakAbstractNode(A))));
         }
         // Ptr already in, add it for the counter
@@ -213,8 +213,9 @@ namespace triton {
 
 
     void AbstractNode::setParent(std::unordered_set<AbstractNode*>& p) {
-      for (auto ptr : p)
+      for (AbstractNode* ptr : p) {
         this->setParent(ptr);
+      }
     }
 
 
@@ -3290,7 +3291,7 @@ namespace triton {
 
         /* If unroll is true, we unroll all references */
         if (unroll && ast->getType() == REFERENCE_NODE) {
-          const auto& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
+          const SharedAbstractNode& ref = reinterpret_cast<ReferenceNode*>(ast.get())->getSymbolicExpression()->getAst();
           if (visited.find(ref.get()) == visited.end()) {
             worklist.push({ref, false});
           }
@@ -3323,7 +3324,7 @@ namespace triton {
 
       worklist.push(node.get());
       while (!worklist.empty()) {
-        auto current = worklist.top();
+        AbstractNode* current = worklist.top();
         worklist.pop();
 
         // This means that node is already visited and we will not need to visited it second time
@@ -3339,7 +3340,7 @@ namespace triton {
           worklist.push(reinterpret_cast<triton::ast::ReferenceNode*>(current)->getSymbolicExpression()->getAst().get());
         }
         else {
-          for (const auto& child : current->getChildren()) {
+          for (const SharedAbstractNode& child : current->getChildren()) {
             worklist.push(child.get());
           }
         }
