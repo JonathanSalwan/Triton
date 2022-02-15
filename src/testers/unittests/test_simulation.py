@@ -346,7 +346,7 @@ class Emu1(object):
         # run the code
         pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)
         while pc != 0x409A18:
-            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 20)
+            opcode = self.Triton.getConcreteMemoryAreaValue(pc, 16)
 
             instruction = Instruction()
             instruction.setOpcode(opcode)

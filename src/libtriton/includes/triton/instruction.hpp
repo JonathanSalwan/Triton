@@ -57,7 +57,7 @@ namespace triton {
         std::stringstream disassembly;
 
         //! The opcode of the instruction.
-        triton::uint8 opcode[32];
+        triton::uint8 opcode[16];
 
         //! The size of the instruction.
         triton::uint32 size;
