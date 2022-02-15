@@ -369,9 +369,10 @@ Sets the targeted register as tainted or not. Returns true if the register is st
 - <b>void setThumb(bool state)</b><br>
 Sets CPU state to Thumb mode (only valid for ARM32).
 
-- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool solver=False)</b><br>
+- <b>\ref py_AstNode_page simplify(\ref py_AstNode_page node, bool solver=False, bool llvm=False)</b><br>
 Calls all simplification callbacks recorded and returns a new simplified node. If the `solver` flag is
-set to True, Triton will use the current solver instance to simplify the given `node`.
+set to True, Triton will use the current solver instance to simplify the given `node`. If `llvm` is true,
+we use LLVM to simplify node.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
@@ -1403,7 +1404,7 @@ namespace triton {
         }
 
         if (node == nullptr || !PyAstNode_Check(node)) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModel(): Expects a AstNode as node argument.");
         }
 
         if (wb != nullptr && !PyBool_Check(wb)) {
@@ -1469,11 +1470,11 @@ namespace triton {
         }
 
         if (node == nullptr || !PyAstNode_Check(node)) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a AstNode as first argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects a AstNode as node argument.");
         }
 
         if (limit == nullptr || (!PyLong_Check(limit) && !PyInt_Check(limit))) {
-          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as second argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::getModels(): Expects an integer as limit argument.");
         }
 
         if (wb != nullptr && !PyBool_Check(wb)) {
@@ -2249,13 +2250,13 @@ namespace triton {
         }
 
         if (node == nullptr || (!PySymbolicExpression_Check(node) && !PyAstNode_Check(node)))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression or a AstNode as first argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a SymbolicExpression or a AstNode as node argument.");
 
         if (fname != nullptr && !PyStr_Check(fname))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a string as fname parameter.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a string as fname argument.");
 
         if (optimize != nullptr && !PyBool_Check(optimize))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a boolean as optimize parameter.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToLLVM(): Expects a boolean as optimize argument.");
 
         if (fname == nullptr)
           fname = PyStr_FromString("__triton");
@@ -2927,29 +2928,37 @@ namespace triton {
       static PyObject* TritonContext_simplify(PyObject* self, PyObject* args, PyObject* kwargs) {
         PyObject* node   = nullptr;
         PyObject* solver = nullptr;
+        PyObject* llvm   = nullptr;
 
         static char* keywords[] = {
           (char*)"node",
           (char*)"solver",
+          (char*)"llvm",
           nullptr
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &solver) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &solver, &llvm) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Invalid number of arguments");
         }
 
         if (node == nullptr || !PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a AstNode as first argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a AstNode as node argument.");
 
         if (solver != nullptr && !PyBool_Check(solver))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as second argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as solver argument.");
+
+        if (llvm != nullptr && !PyBool_Check(llvm))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as llvm argument.");
 
         if (solver == nullptr)
           solver = PyLong_FromUint32(false);
 
+        if (llvm == nullptr)
+          llvm = PyLong_FromUint32(false);
+
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(node), PyLong_AsBool(solver)));
+          return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(node), PyLong_AsBool(solver), PyLong_AsBool(llvm)));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3101,16 +3110,16 @@ namespace triton {
         }
 
         if (node == nullptr || !PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a AstNode as first argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a AstNode as node argument.");
 
         if (constant != nullptr && !PyBool_Check(constant))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as second argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as constant argument.");
 
         if (subexpr != nullptr && !PyBool_Check(subexpr))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as third argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as subexpr argument.");
 
         if (opaque != nullptr && !PyBool_Check(opaque))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as fourth argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::synthesize(): Expects a boolean as opaque argument.");
 
         if (constant == nullptr)
           constant = PyLong_FromUint32(true);

@@ -881,13 +881,15 @@ namespace triton {
   }
 
 
-  triton::ast::SharedAbstractNode API::simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver) const {
-    this->checkSymbolic();
-
+  triton::ast::SharedAbstractNode API::simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver, bool usingLLVM) const {
     if (usingSolver) {
       return this->simplifyAstViaSolver(node);
     }
+    else if (usingLLVM) {
+      return this->simplifyAstViaLLVM(node);
+    }
     else {
+      this->checkSymbolic();
       return this->symbolic->simplify(node);
     }
   }
@@ -1133,7 +1135,7 @@ namespace triton {
     #endif
     #ifdef TRITON_BITWUZLA_INTERFACE
     if (this->getSolver() == triton::engines::solver::SOLVER_BITWUZLA) {
-        return reinterpret_cast<const triton::engines::solver::BitwuzlaSolver*>(this->getSolverInstance())->evaluate(node);
+      return reinterpret_cast<const triton::engines::solver::BitwuzlaSolver*>(this->getSolverInstance())->evaluate(node);
     }
     #endif
     throw triton::exceptions::API("API::evaluateAstViaZ3(): Solver instance must be a SOLVER_Z3 or SOLVER_BITWUZLA.");
@@ -1396,6 +1398,15 @@ namespace triton {
   std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
     this->checkLifting();
     return this->lifting->liftToSMT(stream, expr, assert_);
+  }
+
+
+  triton::ast::SharedAbstractNode API::simplifyAstViaLLVM(const triton::ast::SharedAbstractNode& node) const {
+    this->checkLifting();
+    #ifdef TRITON_LLVM_INTERFACE
+    return this->lifting->simplifyAstViaLLVM(node);
+    #endif
+    throw triton::exceptions::API("API::simplifyAstViaLLVM(): Triton not built with LLVM");
   }
 
 }; /* triton namespace */

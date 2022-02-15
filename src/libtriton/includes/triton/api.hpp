@@ -407,8 +407,8 @@ namespace triton {
         //! [**symbolic api**] - Assigns a symbolic expression to a register.
         TRITON_EXPORT void assignSymbolicExpressionToRegister(const triton::engines::symbolic::SharedSymbolicExpression& se, const triton::arch::Register& reg);
 
-        //! [**symbolic api**] - Processes all recorded AST simplifications or uses solver's simplifications if `usingSolver` is true. Returns the simplified AST.
-        TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver = false) const;
+        //! [**symbolic api**] - Processes all recorded AST simplifications, uses solver's simplifications if `usingSolver` is true or LLVM is `usingLLVM` is true. Returns the simplified AST.
+        TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver=false, bool usingLLVM=false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
@@ -683,6 +683,9 @@ namespace triton {
 
         //! [**lifting api**] - Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
         TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_);
+
+        //! [**lifting api**] - Lifts and simplify an AST using LLVM
+        TRITON_EXPORT triton::ast::SharedAbstractNode simplifyAstViaLLVM(const triton::ast::SharedAbstractNode& node) const;
     };
 
 /*! @} End of triton namespace */

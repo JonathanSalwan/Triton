@@ -9,8 +9,13 @@
 #include <ostream>
 #include <string>
 
+#include <triton/astContext.hpp>
 #include <triton/liftingToLLVM.hpp>
+#include <triton/llvmToTriton.hpp>
 #include <triton/tritonToLLVM.hpp>
+
+#include <llvm/IR/LLVMContext.h>
+#include <llvm/IR/Module.h>
 
 
 
@@ -45,6 +50,17 @@ namespace triton {
         stream << dump;
 
         return stream;
+      }
+
+
+      triton::ast::SharedAbstractNode LiftingToLLVM::simplifyAstViaLLVM(const triton::ast::SharedAbstractNode& node) const {
+        llvm::LLVMContext context;
+
+        triton::ast::TritonToLLVM ttllvm(context);
+        triton::ast::LLVMToTriton llvmtt(node->getContext());
+
+        auto llvmModule = ttllvm.convert(node, "__tmp", true);  /* from triton to llvm */
+        return llvmtt.convert(llvmModule.get(), "__tmp");       /* from llvm to triton */
       }
 
     }; /* lifters namespace */

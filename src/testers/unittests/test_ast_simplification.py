@@ -724,3 +724,19 @@ class TestAstSimplification5(unittest.TestCase):
              "(define-fun ref!13 () (_ BitVec 1) ((_ extract 63 63) ref!8)) ; Sign flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!14 () (_ BitVec 1) (_ bv1 1)) ; Zero flag - 0x0: sub qword ptr [rdx], rcx\n"
              "(define-fun ref!15 () (_ BitVec 64) (_ bv3 64)) ; Program Counter - 0x0: sub qword ptr [rdx], rcx"))
+
+
+class TestAstSimplificationLLVM(unittest.TestCase):
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+
+    def test_1(self):
+        if VERSION.LLVM_INTERFACE is True:
+            x = self.ast.variable(self.ctx.newSymbolicVariable(8, 'x'))
+            y = self.ast.variable(self.ctx.newSymbolicVariable(8, 'y'))
+            n = (x & ~y) | (~x & y)
+            o = self.ctx.simplify(n, llvm=True)
+            r = str(o) == "(bvxor y x)" or str(o) == "(bvxor x y)"
+            self.assertTrue(r)
+        return
