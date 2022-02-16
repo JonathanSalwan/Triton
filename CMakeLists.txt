@@ -29,6 +29,8 @@ option(GCOV                 "Enable code coverage"                     OFF)
 option(LLVM_INTERFACE       "Use LLVM for lifting"                     OFF)
 option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
 option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
+option(BUILD_EXAMPLES       "Build the examples"                       ON)
+option(ENABLE_TEST          "Build test program"                       ON)
 
 # Define cmake dependent options
 cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON BUILD_SHARED_LIBS OFF)

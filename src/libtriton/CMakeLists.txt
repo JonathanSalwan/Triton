@@ -275,7 +275,7 @@ if(MSVC AND MSVC_STATIC)
 endif()
 
 if(WIN32 AND BUILD_SHARED_LIBS)
-    target_compile_definitions(triton PUBLIC TRITON_BUILDING_DLL)
+    target_compile_definitions(triton PRIVATE BUILDING_DLL)
 endif()
 
 # Install tritonTargets.cmake
@@ -291,6 +291,7 @@ install(
     EXPORT tritonTargets
     PUBLIC_HEADER DESTINATION include/triton
     INCLUDES DESTINATION include
+    RUNTIME DESTINATION bin
     ARCHIVE DESTINATION lib
     LIBRARY DESTINATION lib
 )
