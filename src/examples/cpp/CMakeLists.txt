@@ -1,6 +1,6 @@
 enable_testing()
 
-if (NOT BUILD_SHARED_LIBS)
+if(NOT BUILD_SHARED_LIBS)
     find_package(Threads REQUIRED)
     set(CMAKE_CXX_FLAGS -pthread)
     set(CMAKE_EXE_LINKER_FLAGS "-static")
