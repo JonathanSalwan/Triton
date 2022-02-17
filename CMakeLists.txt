@@ -6,7 +6,7 @@
 
 ##################################################################################### CMake libtriton
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
