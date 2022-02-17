@@ -39,13 +39,12 @@ if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
 
     libfind_process(CAPSTONE)
 
-    get_filename_component(CAPSTONE_LIB_DIR ${CAPSTONE_LIBRARY} DIRECTORY)
-    get_filename_component(CAPSTONE_LIB_NAME ${CAPSTONE_LIBRARY} NAME_WLE)
-
-    string(REGEX REPLACE "^lib" "" CAPSTONE_LIB_NAME ${CAPSTONE_LIB_NAME})
-
     if(NOT CAPSTONE_FOUND)
         message(FATAL_ERROR "Capstone not found")
+    else()
+        get_filename_component(CAPSTONE_LIB_DIR ${CAPSTONE_LIBRARY} DIRECTORY)
+        get_filename_component(CAPSTONE_LIB_NAME ${CAPSTONE_LIBRARY} NAME_WLE)
+        string(REGEX REPLACE "^lib" "" CAPSTONE_LIB_NAME ${CAPSTONE_LIB_NAME})
     endif()
 else()
     message(STATUS "Capstone includes directory defined: ${CAPSTONE_INCLUDE_DIRS}")

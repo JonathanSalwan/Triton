@@ -39,13 +39,12 @@ if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
 
     libfind_process(BITWUZLA)
 
-    get_filename_component(BITWUZLA_LIB_DIR ${BITWUZLA_LIBRARY} DIRECTORY)
-    get_filename_component(BITWUZLA_LIB_NAME ${BITWUZLA_LIBRARY} NAME_WLE)
-
-    string(REGEX REPLACE "^lib" "" BITWUZLA_LIB_NAME ${BITWUZLA_LIB_NAME})
-
     if(NOT BITWUZLA_FOUND)
         message(FATAL_ERROR "Bitwuzla not found")
+    else()
+        get_filename_component(BITWUZLA_LIB_DIR ${BITWUZLA_LIBRARY} DIRECTORY)
+        get_filename_component(BITWUZLA_LIB_NAME ${BITWUZLA_LIBRARY} NAME_WLE)
+        string(REGEX REPLACE "^lib" "" BITWUZLA_LIB_NAME ${BITWUZLA_LIB_NAME})
     endif()
 else()
     message(STATUS "Bitwuzla includes directory defined: ${BITWUZLA_INCLUDE_DIRS}")
