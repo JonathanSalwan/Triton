@@ -684,6 +684,12 @@ namespace triton {
         //! [**lifting api**] - Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
         TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_);
 
+        //! [**lifting api**] - Lifts an AST and all its references to Dot format.
+        TRITON_EXPORT std::ostream& liftToDot(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
+
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to Dot format.
+        TRITON_EXPORT std::ostream& liftToDot(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+
         //! [**lifting api**] - Lifts and simplify an AST using LLVM
         TRITON_EXPORT triton::ast::SharedAbstractNode simplifyAstViaLLVM(const triton::ast::SharedAbstractNode& node) const;
     };

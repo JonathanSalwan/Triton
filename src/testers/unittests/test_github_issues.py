@@ -41,11 +41,12 @@ class TestIssue656(unittest.TestCase):
 
     def test_issue(self):
         e = self.sym_exec_gadget((b'\x89\xd8', b'\xc2\x04\x00'))
-        self.assertEqual(str(e), '(define-fun ref!15 () (_ BitVec 64) ((_ zero_extend 32) ((_ extract 31 0) ref!1))) ; MOV operation - 0x0: mov eax, ebx')
+        self.assertEqual(str(e), '(define-fun ref!15 () (_ BitVec 64) ((_ zero_extend 32) ((_ extract 31 0) ref!1))) ; MOV operation')
         a = e.getAst()
         self.assertEqual(str(a + 1), '(bvadd ((_ zero_extend 32) ((_ extract 31 0) ref!1)) (_ bv1 64))')
         self.assertEqual(str(1 + a), '(bvadd (_ bv1 64) ((_ zero_extend 32) ((_ extract 31 0) ref!1)))')
-        self.assertEqual(str(e.getComment()), 'MOV operation - 0x0: mov eax, ebx')
+        self.assertEqual(str(e.getComment()), 'MOV operation')
+        self.assertEqual(str(e.getDisassembly()), '0x0: mov eax, ebx')
         self.assertEqual(e.getId(), 15)
         self.assertEqual(str(e.getAst()), str(e.getNewAst()))
         self.assertEqual(str(e.getOrigin()), 'rax:64 bv[63..0]')

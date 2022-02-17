@@ -37,7 +37,11 @@ class TestSymbolicExpression(unittest.TestCase):
 
     def test_getComment(self):
         """Test getComment"""
-        self.assertEqual(self.expr1.getComment(), "XOR operation - 0x0: xor rax, rbx")
+        self.assertEqual(self.expr1.getComment(), "XOR operation")
+
+    def test_getDisassembly(self):
+        """Test getComment"""
+        self.assertEqual(self.expr1.getDisassembly(), "0x0: xor rax, rbx")
 
     def test_getId(self):
         """Test getId"""

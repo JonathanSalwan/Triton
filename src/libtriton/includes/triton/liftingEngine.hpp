@@ -11,6 +11,7 @@
 #include <triton/astContext.hpp>
 #include <triton/config.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/liftingToDot.hpp>
 #include <triton/liftingToPython.hpp>
 #include <triton/liftingToSMT.hpp>
 #include <triton/symbolicEngine.hpp>
@@ -49,6 +50,7 @@ namespace triton {
       /*! \brief The lifting engine class. */
       class LiftingEngine
         : public LiftingToSMT,
+          public LiftingToDot,
           #ifdef TRITON_LLVM_INTERFACE
           public LiftingToLLVM,
           #endif
@@ -58,6 +60,7 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT LiftingEngine(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic)
             : LiftingToSMT(astCtxt, symbolic),
+              LiftingToDot(astCtxt, symbolic),
               #ifdef TRITON_LLVM_INTERFACE
               LiftingToLLVM(),
               #endif

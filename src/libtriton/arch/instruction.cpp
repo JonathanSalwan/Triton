@@ -345,6 +345,11 @@ namespace triton {
     void Instruction::addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
       if (expr == nullptr)
         throw triton::exceptions::Instruction("Instruction::addSymbolicExpression(): Cannot add a null expression.");
+
+      std::stringstream str;
+      str << *this;
+      expr->writeBackDisassembly(str.str());
+
       this->symbolicExpressions.push_back(expr);
     }
 

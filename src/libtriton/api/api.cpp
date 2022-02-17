@@ -1401,6 +1401,18 @@ namespace triton {
   }
 
 
+  std::ostream& API::liftToDot(std::ostream& stream, const triton::ast::SharedAbstractNode& node) {
+    this->checkLifting();
+    return this->lifting->liftToDot(stream, node);
+  }
+
+
+  std::ostream& API::liftToDot(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+    this->checkLifting();
+    return this->lifting->liftToDot(stream, expr);
+  }
+
+
   triton::ast::SharedAbstractNode API::simplifyAstViaLLVM(const triton::ast::SharedAbstractNode& node) const {
     this->checkLifting();
     #ifdef TRITON_LLVM_INTERFACE

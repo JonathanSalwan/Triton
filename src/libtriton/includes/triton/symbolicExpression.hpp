@@ -46,7 +46,6 @@ namespace triton {
       //! \class SymbolicExpression
       /*! \brief The symbolic expression class */
       class SymbolicExpression {
-
         protected:
           //! The type of the symbolic expression assignment.
           triton::engines::symbolic::expression_e type;
@@ -56,6 +55,9 @@ namespace triton {
 
           //! The comment of the symbolic expression.
           std::string comment;
+
+          //! The instruction disassembly where the symbolic expression comes from.
+          std::string disassembly;
 
           //! The symbolic expression id. This id is unique.
           triton::usize id;
@@ -135,6 +137,12 @@ namespace triton {
 
           //! Sets the origin register.
           TRITON_EXPORT void setOriginRegister(const triton::arch::Register& reg);
+
+          //! Writes back the instruction disassembly where the symbolic expression comes from.
+          TRITON_EXPORT void writeBackDisassembly(const std::string& disassembly);
+
+          //! Gets the instruction disassembly where the symbolic expression comes from.
+          TRITON_EXPORT const std::string& getDisassembly(void);
       };
 
       //! Shared Symbolic Expression.

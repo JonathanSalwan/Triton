@@ -286,6 +286,12 @@ Returns true if the taint engine is enabled.
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
 
+- <b>string liftToDot(\ref py_AstNode_page node)</b><br>
+Lifts an AST and all its references to Dot format.
+
+- <b>string liftToDot(\ref py_SymbolicExpression_page expr)</b><br>
+Lifts a symbolic expression and all its references to Dot format.
+
 - <b>string liftToLLVM(\ref py_AstNode_page node, string fname="__triton", bool optimize=False)</b><br>
 Lifts an AST node and all its references to LLVM IR. `fname` is the name of the LLVM function, by default it's `__triton`. If `optimize` is true, perform optimizations (-O3 -Oz).
 
@@ -2232,6 +2238,34 @@ namespace triton {
       }
 
 
+      static PyObject* TritonContext_liftToDot(PyObject* self, PyObject* node) {
+        if (!PyAstNode_Check(node) && !PySymbolicExpression_Check(node))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToDot(): Expects an AstNode or a SymbolicExpression as first argument.");
+
+        try {
+          std::ostringstream stream;
+
+          if (PyAstNode_Check(node)) {
+            PyTritonContext_AsTritonContext(self)->liftToDot(stream, PyAstNode_AsAstNode(node));
+          }
+          else {
+            PyTritonContext_AsTritonContext(self)->liftToDot(stream, PySymbolicExpression_AsSymbolicExpression(node));
+          }
+
+          return xPyString_FromString(stream.str().c_str());
+        }
+        catch (const triton::exceptions::PyCallbacks&) {
+          return nullptr;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+
+        Py_INCREF(Py_None);
+        return Py_None;
+      }
+
+
       static PyObject* TritonContext_liftToLLVM(PyObject* self, PyObject* args, PyObject* kwargs) {
         PyObject* node      = nullptr;
         PyObject* fname     = nullptr;
@@ -3442,6 +3476,7 @@ namespace triton {
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
         {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
+        {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                   METH_O,                        ""},
         {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
         {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},

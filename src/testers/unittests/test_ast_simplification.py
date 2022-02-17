@@ -693,37 +693,37 @@ class TestAstSimplification5(unittest.TestCase):
         inst = Instruction(b"\x29\xca")
         self.ctx.processing(inst)
         self.assertEqual("\n".join(str(e) for e in inst.getSymbolicExpressions()),
-            ("(define-fun ref!0 () (_ BitVec 32) (_ bv0 32)) ; Extended part - SUB operation - 0x0: sub edx, ecx\n"
-             "(define-fun ref!1 () (_ BitVec 64) ((_ zero_extend 32) ref!0)) ; SUB operation - 0x0: sub edx, ecx\n"
-             "(define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!3 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Carry flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!4 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Overflow flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!5 () (_ BitVec 1) (_ bv1 1)) ; Parity flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!6 () (_ BitVec 1) ((_ extract 31 31) ref!1)) ; Sign flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!7 () (_ BitVec 1) (_ bv1 1)) ; Zero flag - 0x0: sub edx, ecx\n"
-             "(define-fun ref!8 () (_ BitVec 64) (_ bv2 64)) ; Program Counter - 0x0: sub edx, ecx"))
+            ("(define-fun ref!0 () (_ BitVec 32) (_ bv0 32)) ; Extended part - SUB operation\n"
+             "(define-fun ref!1 () (_ BitVec 64) ((_ zero_extend 32) ref!0)) ; SUB operation\n"
+             "(define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag\n"
+             "(define-fun ref!3 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Carry flag\n"
+             "(define-fun ref!4 () (_ BitVec 1) ((_ extract 31 31) (_ bv0 32))) ; Overflow flag\n"
+             "(define-fun ref!5 () (_ BitVec 1) (_ bv1 1)) ; Parity flag\n"
+             "(define-fun ref!6 () (_ BitVec 1) ((_ extract 31 31) ref!1)) ; Sign flag\n"
+             "(define-fun ref!7 () (_ BitVec 1) (_ bv1 1)) ; Zero flag\n"
+             "(define-fun ref!8 () (_ BitVec 64) (_ bv2 64)) ; Program Counter"))
 
     def test_issue_1002_2(self):
         # See #1002
         inst = Instruction(b"\x48\x29\x0a")
         self.ctx.processing(inst)
         self.assertEqual("\n".join(str(e) for e in inst.getSymbolicExpressions()),
-            ("(define-fun ref!0 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!1 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!2 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!3 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!4 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!5 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!6 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!7 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!8 () (_ BitVec 64) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8))) ; Temporary concatenation reference - SUB operation - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!9 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!10 () (_ BitVec 1) ((_ extract 63 63) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8)))) ; Carry flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!11 () (_ BitVec 1) ((_ extract 63 63) (_ bv0 64))) ; Overflow flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!12 () (_ BitVec 1) (_ bv1 1)) ; Parity flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!13 () (_ BitVec 1) ((_ extract 63 63) ref!8)) ; Sign flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!14 () (_ BitVec 1) (_ bv1 1)) ; Zero flag - 0x0: sub qword ptr [rdx], rcx\n"
-             "(define-fun ref!15 () (_ BitVec 64) (_ bv3 64)) ; Program Counter - 0x0: sub qword ptr [rdx], rcx"))
+            ("(define-fun ref!0 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!1 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!2 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!3 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!4 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!5 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!6 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!7 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
+             "(define-fun ref!8 () (_ BitVec 64) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8))) ; Temporary concatenation reference - SUB operation\n"
+             "(define-fun ref!9 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag\n"
+             "(define-fun ref!10 () (_ BitVec 1) ((_ extract 63 63) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8)))) ; Carry flag\n"
+             "(define-fun ref!11 () (_ BitVec 1) ((_ extract 63 63) (_ bv0 64))) ; Overflow flag\n"
+             "(define-fun ref!12 () (_ BitVec 1) (_ bv1 1)) ; Parity flag\n"
+             "(define-fun ref!13 () (_ BitVec 1) ((_ extract 63 63) ref!8)) ; Sign flag\n"
+             "(define-fun ref!14 () (_ BitVec 1) (_ bv1 1)) ; Zero flag\n"
+             "(define-fun ref!15 () (_ BitVec 64) (_ bv3 64)) ; Program Counter"))
 
 
 class TestAstSimplificationLLVM(unittest.TestCase):

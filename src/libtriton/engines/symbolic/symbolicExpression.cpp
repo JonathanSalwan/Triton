@@ -215,6 +215,16 @@ namespace triton {
       }
 
 
+      void SymbolicExpression::writeBackDisassembly(const std::string& disassembly) {
+        this->disassembly = disassembly;
+      }
+
+
+      const std::string& SymbolicExpression::getDisassembly(void) {
+        return this->disassembly;
+      }
+
+
       std::ostream& operator<<(std::ostream& stream, const SymbolicExpression& symExpr) {
         stream << symExpr.getFormattedExpression();
         return stream;
