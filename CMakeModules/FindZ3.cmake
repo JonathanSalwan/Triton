@@ -27,10 +27,6 @@ if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
       PATHS ${Z3_PKGCONF_INCLUDE_DIRS}
     )
 
-    if(NOT BUILD_SHARED_LIBS)
-        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-    endif()
-
     find_library(Z3_LIBRARY
       NAMES z3
       PATHS ${Z3_PKGCONF_LIBRARY_DIRS}
@@ -42,6 +38,11 @@ if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
     set(Z3_PROCESS_LIBS Z3_LIBRARY Z3_LIBRARIES)
 
     libfind_process(Z3)
+
+    get_filename_component(Z3_LIB_DIR ${Z3_LIBRARY} DIRECTORY)
+    get_filename_component(Z3_LIB_NAME ${Z3_LIBRARY} NAME_WLE)
+
+    string(REGEX REPLACE "^lib" "" Z3_LIB_NAME ${Z3_LIB_NAME})
 
     if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
