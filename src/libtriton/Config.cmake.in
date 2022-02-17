@@ -49,5 +49,5 @@ endif()
 # Bitwuzla include directories
 if (TRITON_BITWUZLA_INTERFACE)
     include_directories("@BITWUZLA_INCLUDE_DIRS@")
-    link_directories(BEFORE "@BITWUZLA_LIBRARY_DIRS@")
+    link_directories(BEFORE "@BITWUZLA_LIB_DIR@")
 endif()

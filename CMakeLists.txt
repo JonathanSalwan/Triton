@@ -53,7 +53,7 @@ if(PYTHON_BINDINGS)
     find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
     include_directories(${PYTHON_INCLUDE_DIRS})
     add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
-    get_filename_component(PYTHON_LIB_DIR ${PYTHON_LIBRARY} DIRECTORY)
+    get_filename_component(PYTHON_LIB_DIR ${PYTHON_LIBRARY} PATH)
     get_filename_component(PYTHON_LIB_NAME ${PYTHON_LIBRARY} NAME_WLE)
     string(REGEX REPLACE "^lib" "" PYTHON_LIB_NAME ${PYTHON_LIB_NAME})
     add_custom_target(test-python
