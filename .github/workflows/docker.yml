@@ -1,17 +1,10 @@
 name: Docker Image CI
 
-on:
-  push:
-    branches: [ master, dev-v0.9 ]
-  pull_request:
-    branches: [ master, dev-v0.9 ]
+on: [push, pull_request, workflow_dispatch]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v2
     - name: Build the Docker image
