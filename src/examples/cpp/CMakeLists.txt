@@ -1,9 +1,11 @@
 enable_testing()
 
-if (NOT BUILD_SHARED_LIBS)
+if(NOT BUILD_SHARED_LIBS)
     find_package(Threads REQUIRED)
     set(CMAKE_CXX_FLAGS -pthread)
-    set(CMAKE_EXE_LINKER_FLAGS "-static")
+    if (CMAKE_CXX_COMPILER_ID STREQUAL "GNU")
+        set(CMAKE_EXE_LINKER_FLAGS "-static")
+    endif()
 endif()
 
 add_executable(taint_reg taint_reg.cpp)

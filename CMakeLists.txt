@@ -6,7 +6,7 @@
 
 ##################################################################################### CMake libtriton
 
-cmake_minimum_required(VERSION 3.15)
+cmake_minimum_required(VERSION 3.20)
 
 set(TRITON_ROOT "${CMAKE_CURRENT_LIST_DIR}")
 
@@ -29,11 +29,11 @@ option(GCOV                 "Enable code coverage"                     OFF)
 option(LLVM_INTERFACE       "Use LLVM for lifting"                     OFF)
 option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
 option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
-option(BUILD_EXAMPLES       "Build the examples"                       ON)
-option(ENABLE_TEST          "Build test program"                       ON)
 
 # Define cmake dependent options
-cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(BUILD_EXAMPLES       "Build the examples"                            ON  BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(ENABLE_TEST          "Do testing"                                    ON  BUILD_SHARED_LIBS OFF)
+cmake_dependent_option(PYTHON_BINDINGS      "Enable Python bindings"                        ON  BUILD_SHARED_LIBS OFF)
 cmake_dependent_option(PYTHON_AUTOCOMPLETE  "Generate Python triton_autocomplete module"    OFF BUILD_SHARED_LIBS OFF)
 
 #Enable ctest
@@ -53,6 +53,9 @@ if(PYTHON_BINDINGS)
     find_package(PythonLibs ${PYTHON_VERSION} REQUIRED)
     include_directories(${PYTHON_INCLUDE_DIRS})
     add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
+    cmake_path(GET PYTHON_LIBRARY PARENT_PATH PYTHON_LIB_DIR)
+    cmake_path(GET PYTHON_LIBRARY STEM LAST_ONLY PYTHON_LIB_NAME)
+    string(REGEX REPLACE "^lib" "" PYTHON_LIB_NAME ${PYTHON_LIB_NAME})
     add_custom_target(test-python
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton

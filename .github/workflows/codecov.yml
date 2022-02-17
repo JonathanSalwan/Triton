@@ -59,7 +59,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DGCOV=ON -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=ON -DLLVM_INCLUDE_DIRS=$(llvm-config-12 --includedir) -DLLVM_LIBRARIES=$(llvm-config-12 --libfiles) ..
+          cmake -DGCOV=ON -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) ..
           sudo make -j3 install
       - name: Unittests
         run: |

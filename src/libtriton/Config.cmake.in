@@ -8,7 +8,7 @@ set(TRITON_BUILD_SHARED_LIBS    @BUILD_SHARED_LIBS@)
 set(TRITON_INCLUDE_DIRS         "@CMAKE_INSTALL_PREFIX@/include")
 set(TRITON_INSTALL_PREFIX       @CMAKE_INSTALL_PREFIX@)
 set(TRITON_LIBRARY              "@CMAKE_INSTALL_PREFIX@/lib/@CMAKE_SHARED_LIBRARY_PREFIX@triton@CMAKE_SHARED_LIBRARY_SUFFIX@")
-set(TRITON_LIBRARIES            "${TRITON_LIBRARY};@PYTHON_LIBRARIES@;@Z3_LIBRARIES@;@LLVM_LIBRARIES@;@BITWUZLA_LIBRARIES@;@CAPSTONE_LIBRARIES@")
+set(TRITON_LIBRARIES            "triton;@PYTHON_LIB_NAME@;@Z3_LIB_NAME@;@LLVM_LIBRARIES@;@BITWUZLA_LIB_NAME@;@CAPSTONE_LIB_NAME@")
 set(TRITON_LLVM_INTERFACE       @LLVM_INTERFACE@)
 set(TRITON_MSVC_STATIC          @MSVC_STATIC@)
 set(TRITON_PYTHON_BINDINGS      @PYTHON_BINDINGS@)
@@ -22,27 +22,32 @@ find_dependency(Boost)
 
 # Triton include
 include_directories("@CMAKE_INSTALL_PREFIX@/include")
+link_directories(BEFORE "@CMAKE_INSTALL_PREFIX@/lib")
 
 # Capstone include
 include_directories("@CAPSTONE_INCLUDE_DIRS@")
+link_directories(BEFORE "@CAPSTONE_LIB_DIR@")
 
 # Python include directories
 if (TRITON_PYTHON_BINDINGS)
     include_directories("@PYTHON_INCLUDE_DIRS@")
+    link_directories(BEFORE "@PYTHON_LIB_DIR@")
 endif()
 
 # LLVM include and lib directories
 if (TRITON_LLVM_INTERFACE)
-    link_directories(BEFORE "@LLVM_LIBRARY_DIRS@")
     include_directories("@LLVM_INCLUDE_DIRS@")
+    link_directories(BEFORE "@LLVM_LIBRARY_DIRS@")
 endif()
 
 # Z3 include directories
 if (TRITON_Z3_INTERFACE)
     include_directories("@Z3_INCLUDE_DIRS@")
+    link_directories(BEFORE "@Z3_LIB_DIR@")
 endif()
 
 # Bitwuzla include directories
 if (TRITON_BITWUZLA_INTERFACE)
     include_directories("@BITWUZLA_INCLUDE_DIRS@")
+    link_directories(BEFORE "@BITWUZLA_LIB_DIR@")
 endif()

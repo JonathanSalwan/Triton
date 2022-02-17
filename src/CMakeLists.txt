@@ -1,6 +1,6 @@
 add_subdirectory(libtriton)
 
-if (BUILD_EXAMPLES)
+if(BUILD_EXAMPLES)
     if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
         # Disable exemples for windows as linkage doesn't work. Exported function should
         # be marked as exported on windows.
@@ -11,6 +11,6 @@ if (BUILD_EXAMPLES)
     endif()
 endif()
 
-if (ENABLE_TEST)
+if(ENABLE_TEST)
     add_subdirectory(testers)
 endif()

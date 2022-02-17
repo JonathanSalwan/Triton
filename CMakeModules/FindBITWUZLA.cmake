@@ -27,10 +27,6 @@ if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
       PATHS ${BITWUZLA_PKGCONF_INCLUDE_DIRS}
     )
 
-    if(NOT BUILD_SHARED_LIBS)
-        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-    endif()
-
     find_library(BITWUZLA_LIBRARY
       NAMES bitwuzla
       PATHS ${BITWUZLA_PKGCONF_LIBRARY_DIRS}
@@ -45,6 +41,10 @@ if(NOT BITWUZLA_INCLUDE_DIRS AND NOT BITWUZLA_LIBRARIES)
 
     if(NOT BITWUZLA_FOUND)
         message(FATAL_ERROR "Bitwuzla not found")
+    else()
+        cmake_path(GET BITWUZLA_LIBRARY PARENT_PATH BITWUZLA_LIB_DIR)
+        cmake_path(GET BITWUZLA_LIBRARY STEM LAST_ONLY BITWUZLA_LIB_NAME)
+        string(REGEX REPLACE "^lib" "" BITWUZLA_LIB_NAME ${BITWUZLA_LIB_NAME})
     endif()
 else()
     message(STATUS "Bitwuzla includes directory defined: ${BITWUZLA_INCLUDE_DIRS}")

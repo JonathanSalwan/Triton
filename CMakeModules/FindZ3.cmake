@@ -27,10 +27,6 @@ if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
       PATHS ${Z3_PKGCONF_INCLUDE_DIRS}
     )
 
-    if(NOT BUILD_SHARED_LIBS)
-        SET(CMAKE_FIND_LIBRARY_SUFFIXES ".a")
-    endif()
-
     find_library(Z3_LIBRARY
       NAMES z3
       PATHS ${Z3_PKGCONF_LIBRARY_DIRS}
@@ -45,6 +41,10 @@ if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
 
     if(NOT Z3_FOUND)
         message(FATAL_ERROR "Z3 not found")
+    else()
+        cmake_path(GET Z3_LIBRARY PARENT_PATH Z3_LIB_DIR)
+        cmake_path(GET Z3_LIBRARY STEM LAST_ONLY Z3_LIB_NAME)
+        string(REGEX REPLACE "^lib" "" Z3_LIB_NAME ${Z3_LIB_NAME})
     endif()
 else()
     message(STATUS "Z3 includes directory defined: ${Z3_INCLUDE_DIRS}")
