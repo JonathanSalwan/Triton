@@ -6,6 +6,9 @@ ARG DEBIAN_FRONTEND=noninteractive
 # llvm >= 12
 RUN apt update && apt upgrade -y && apt install -y build-essential cmake clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar && apt-get clean && pip install --upgrade pip && pip3 install Cython lief
 
+# cmake >=3.22
+RUN pip3 install cmake
+
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
     curl -o cap.tgz -L https://github.com/aquynh/capstone/archive/4.0.2.tar.gz && \
@@ -24,7 +27,7 @@ RUN cd /tmp && \
     curl -o z3.tgz -L https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.14.tar.gz && \
     tar zxf z3.tgz && cd z3-z3-4.8.14 && mkdir build && cd build && \
     CC=clang CXX=clang++ cmake -DCMAKE_BUILD_TYPE=Release .. && make -j4 && make install && \ 
-    pip3 install z3-solver && rm -rf /tmp/z3* 
+    pip3 install z3-solver && rm -rf /tmp/z3*
 
 # Triton (LLVM for lifting; z3 or bitwuzla as SMT solver)
 RUN git clone https://github.com/JonathanSalwan/Triton && cd Triton && mkdir build && cd build && cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(/usr/lib/llvm-12/bin/llvm-config --prefix) -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON .. && make -j4 && make install
