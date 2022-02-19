@@ -103,7 +103,7 @@ Triton relies on the following dependencies:
 
 ### Linux and OS X
 
-```
+```console
 $ git clone https://github.com/JonathanSalwan/Triton
 $ cd Triton
 $ mkdir build ; cd build
@@ -112,12 +112,18 @@ $ make -j3
 $ sudo make install
 ```
 
+By default, LLVM and Bitwuzla are not compiled. If you want to have the full power of Triton, the cmake compile is:
+
+```console
+$ cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) -DBITWUZLA_INTERFACE=ON ..
+```
+
 
 ### Windows
 
 You can use cmake to generate the .sln file of libTriton.
 
-```
+```console
 > git clone https://github.com/JonathanSalwan/Triton.git
 > cd Triton
 > mkdir build
