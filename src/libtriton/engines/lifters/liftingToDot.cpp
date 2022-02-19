@@ -376,23 +376,18 @@ namespace triton {
 
           /* Link the current node with its children */
           for (auto const& child : node->getChildren()) {
-            /* Custom repr for references */
+            /* Handle reference repr */
             if (child->getType() == triton::ast::REFERENCE_NODE) {
-              auto ref = reinterpret_cast<triton::ast::ReferenceNode*>(child.get())->getSymbolicExpression()->getAst();
-              stream << reinterpret_cast<size_t>(node.get()) << "->" << reinterpret_cast<size_t>(ref.get()) << ";" << std::endl;
-              continue;
+              this->handleReference(stream, node, child);
             }
-
-            /* Variables are displayed on several nodes for a better visibility */
-            if (child->getType() == triton::ast::VARIABLE_NODE) {
-              this->uniqueid++;
-              stream << this->uniqueid << " [label=\"" << child << "\" rank=max style=filled, color=black, fillcolor=lightgreen];" << std::endl;
-              stream << reinterpret_cast<size_t>(node.get()) << "->" << this->uniqueid << ";" << std::endl;
-              continue;
+            /* Handle variable repr */
+            else if (child->getType() == triton::ast::VARIABLE_NODE) {
+              this->handleVariable(stream, node, child);
             }
-
             /* Link by default */
-            stream << reinterpret_cast<size_t>(node.get()) << "->" << reinterpret_cast<size_t>(child.get()) << ";" << std::endl;
+            else {
+              stream << reinterpret_cast<size_t>(node.get()) << "->" << reinterpret_cast<size_t>(child.get()) << ";" << std::endl;
+            }
           }
         }
 
@@ -405,6 +400,27 @@ namespace triton {
         stream << "}" << std::endl;
 
         return stream;
+      }
+
+
+      void LiftingToDot::handleReference(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child) {
+        auto ref = reinterpret_cast<triton::ast::ReferenceNode*>(child.get())->getSymbolicExpression()->getAst();
+
+        if (ref->getType() == triton::ast::VARIABLE_NODE) {
+          this->handleVariable(stream, parent, ref);
+        }
+        else {
+          stream << reinterpret_cast<size_t>(parent.get()) << "->" << reinterpret_cast<size_t>(ref.get()) << ";" << std::endl;
+        }
+      }
+
+
+      void LiftingToDot::handleVariable(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child) {
+        /* Variables are displayed on several nodes for a better visibility */
+        this->uniqueid++;
+
+        stream << this->uniqueid << " [label=\"" << child << "\" rank=max style=filled, color=black, fillcolor=lightgreen];" << std::endl;
+        stream << reinterpret_cast<size_t>(parent.get()) << "->" << this->uniqueid << ";" << std::endl;
       }
 
     }; /* lifters namespace */

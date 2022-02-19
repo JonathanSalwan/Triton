@@ -67,6 +67,12 @@ namespace triton {
           //! Defines legend
           void defineLegend(std::ostream& stream);
 
+          //! Handles reference
+          void handleReference(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child);
+
+          //! Handles variable
+          void handleVariable(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& var);
+
         public:
           //! Constructor.
           TRITON_EXPORT LiftingToDot(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);
