@@ -4,10 +4,8 @@ ARG DEBIAN_FRONTEND=noninteractive
 # libboost >= 1.68
 # libpython >= 3.6
 # llvm >= 12
-RUN apt update && apt upgrade -y && apt install -y build-essential cmake clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar && apt-get clean && pip install --upgrade pip && pip3 install Cython lief
-
-# cmake >=3.22
-RUN pip3 install cmake
+# cmake >= 3.20
+RUN apt update && apt upgrade -y && apt install -y build-essential clang curl git libboost-all-dev libgmp-dev libpython3-dev libpython3-stdlib llvm-12 llvm-12-dev python3-pip tar && apt-get clean && pip install --upgrade pip && pip3 install Cython lief cmake
 
 # libcapstone >= 4.0.x
 RUN cd /tmp && \
