@@ -40,19 +40,19 @@ namespace triton {
     /*! \brief Converts a LLVM IR to a Triton AST. */
     class LLVMToTriton {
       private:
-        //! The Triton AST context
+        //! The Triton AST context.
         triton::ast::SharedAstContext actx;
 
-        //! The Triton API
-        triton::API* api = nullptr;
+        //! The Triton API.
+        triton::API* api;
 
-        //! Map of triton symbolic variables
+        //! Map of triton symbolic variables.
         std::map<std::string, SharedAbstractNode> symvars;
 
-        //! Converts nodes
+        //! Converts nodes.
         triton::ast::SharedAbstractNode do_convert(llvm::Value* llvmnode);
 
-        //! Gets or creates new symbolic variable
+        //! Gets or creates new symbolic variable.
         triton::ast::SharedAbstractNode var(const std::string& name, triton::uint32 varSize);
 
       public:
@@ -62,10 +62,10 @@ namespace triton {
         //! Constructor.
         TRITON_EXPORT LLVMToTriton(const triton::ast::SharedAstContext& ctxt);
 
-        //! Converts to Triton's AST
+        //! Converts a given function from an LLVM module to a Triton AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Module* llvmModule, const char* fname="__triton");
 
-        //! Converts to Triton's AST
+        //! Converts an LLVM instruction function to a Triton AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Value* instruction);
     };
 
