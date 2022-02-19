@@ -9,14 +9,16 @@
 #include <triton/llvmToTriton.hpp>
 
 
-
 namespace triton {
   namespace ast {
 
-    LLVMToTriton::LLVMToTriton(const SharedAstContext& actx)
-      : actx(actx) {
+    LLVMToTriton::LLVMToTriton(triton::API& api)
+      : actx(api.getAstContext()), api(&api) {
     }
 
+    LLVMToTriton::LLVMToTriton(const triton::ast::SharedAstContext& ctxt)
+        : actx(ctxt) {
+    }
 
     triton::ast::SharedAbstractNode LLVMToTriton::do_convert(llvm::Value* value) {
       llvm::Argument* argument       = llvm::dyn_cast_or_null<llvm::Argument>(value);
@@ -32,7 +34,7 @@ namespace triton {
           if (call->getCalledFunction()->getName().find("llvm.bswap.i") != std::string::npos) {
             return this->actx->bswap(this->do_convert(call->getOperand(0)));
           }
-          throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM call not supported");
+          return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
         }
 
         switch (instruction->getOpcode()) {
@@ -195,6 +197,14 @@ namespace triton {
             return this->actx->zx(size - csze, node);
           }
 
+          case llvm::Instruction::Load: {
+            return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
+          }
+
+          case llvm::Instruction::PHI: {
+            return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
+          }
+
           default:
             throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM instruction not supported");
         }
@@ -203,10 +213,23 @@ namespace triton {
         return this->actx->bv(constant->getLimitedValue(), constant->getBitWidth());
       }
       else if (argument != nullptr) {
-        return this->actx->getVariableNode(argument->getName().data());
+        return this->var(argument->getName().data(), argument->getType()->getScalarSizeInBits());
       }
 
       throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM instruction not supported");
+    }
+
+    SharedAbstractNode LLVMToTriton::var(const std::string &name, triton::uint32 varSize) {
+      auto it = this->symvars.find(name);
+      if (it != this->symvars.end())
+        return it->second;
+      SharedAbstractNode node;
+      if (this->api == nullptr)
+        node = this->actx->getVariableNode(name);
+      else
+        node = this->actx->variable(this->api->newSymbolicVariable(varSize, name));
+      symvars[name] = node;
+      return node;
     }
 
 
@@ -225,6 +248,10 @@ namespace triton {
 
       /* Let's convert everything */
       return this->do_convert(returnInstruction);
+    }
+
+    SharedAbstractNode LLVMToTriton::convert(llvm::Value* instruction) {
+      return this->do_convert(instruction);
     }
 
   }; /* ast namespace */

@@ -13,10 +13,7 @@
 #include <memory>
 #include <string>
 
-#include <triton/ast.hpp>
-#include <triton/astContext.hpp>
-#include <triton/dllexport.hpp>
-#include <triton/tritonTypes.hpp>
+#include <triton/api.hpp>
 
 #include <llvm/IR/IRBuilder.h>
 #include <llvm/IR/LLVMContext.h>
@@ -46,18 +43,30 @@ namespace triton {
         //! The Triton AST context
         triton::ast::SharedAstContext actx;
 
+        //! The Triton API
+        triton::API* api = nullptr;
+
         //! Map of triton symbolic variables
         std::map<std::string, SharedAbstractNode> symvars;
 
         //! Converts nodes
         triton::ast::SharedAbstractNode do_convert(llvm::Value* llvmnode);
 
+        //! Gets or creates new symbolic variable
+        triton::ast::SharedAbstractNode var(const std::string& name, triton::uint32 varSize);
+
       public:
+        //! Constructor.
+        TRITON_EXPORT LLVMToTriton(triton::API& api);
+
         //! Constructor.
         TRITON_EXPORT LLVMToTriton(const triton::ast::SharedAstContext& ctxt);
 
         //! Converts to Triton's AST
         TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Module* llvmModule, const char* fname="__triton");
+
+        //! Converts to Triton's AST
+        TRITON_EXPORT triton::ast::SharedAbstractNode convert(llvm::Value* instruction);
     };
 
   /*! @} End of ast namespace */
