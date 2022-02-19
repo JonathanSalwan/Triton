@@ -34,9 +34,7 @@ namespace triton {
           if (call->getCalledFunction()->getName().find("llvm.bswap.i") != std::string::npos) {
             return this->actx->bswap(this->do_convert(call->getOperand(0)));
           }
-          else if (auto* call_type = llvm::dyn_cast<llvm::IntegerType>(call->getType()))
-            return this->var(call->getName().str(), call_type->getIntegerBitWidth());
-          throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM call not supported");
+          return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
         }
 
         switch (instruction->getOpcode()) {
@@ -200,15 +198,11 @@ namespace triton {
           }
 
           case llvm::Instruction::Load: {
-            if (auto* load_type = llvm::dyn_cast<llvm::IntegerType>(instruction->getType()))
-              return this->var(instruction->getName().str(), load_type->getIntegerBitWidth());
-            throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM load not supported");
+            return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
           }
 
           case llvm::Instruction::PHI: {
-            if (auto* load_type = llvm::dyn_cast<llvm::IntegerType>(instruction->getType()))
-              return this->var(instruction->getName().str(), load_type->getIntegerBitWidth());
-            throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM phi not supported");
+            return this->var(instruction->getName().str(), instruction->getType()->getScalarSizeInBits());
           }
 
           default:
@@ -219,7 +213,7 @@ namespace triton {
         return this->actx->bv(constant->getLimitedValue(), constant->getBitWidth());
       }
       else if (argument != nullptr) {
-        return this->var(argument->getName().data(), argument->getType()->getIntegerBitWidth());
+        return this->var(argument->getName().data(), argument->getType()->getScalarSizeInBits());
       }
 
       throw triton::exceptions::AstLifting("LLVMToTriton::do_convert(): LLVM instruction not supported");
