@@ -112,7 +112,7 @@ $ make -j3
 $ sudo make install
 ```
 
-By default, LLVM and Bitwuzla are not compiled. If you want to have the full power of Triton, the cmake compile is:
+By default, LLVM and Bitwuzla are not compiled. If you want to enjoy the full power of Triton, the cmake compile is:
 
 ```console
 $ cmake -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) -DBITWUZLA_INTERFACE=ON ..
