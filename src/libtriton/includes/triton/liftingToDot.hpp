@@ -10,7 +10,9 @@
 
 #include <map>
 #include <ostream>
+#include <set>
 #include <unordered_map>
+#include <utility>
 
 #include <triton/astContext.hpp>
 #include <triton/dllexport.hpp>
@@ -61,17 +63,23 @@ namespace triton {
           //! List of symbolic expressions
           std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicExpression> expressions;
 
+          //! List of dot edges
+          std::set<std::pair<triton::usize, triton::usize>> edges;
+
+          //! List of dot nodes
+          std::set<std::pair<triton::usize, std::string>> nodes;
+
           //! Spreads information
           void spreadInformation(std::ostream& stream);
 
           //! Defines legend
           void defineLegend(std::ostream& stream);
 
-          //! Handles reference
-          void handleReference(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child);
+          //! Iterates over nodes
+          void iterateNodes(const triton::ast::SharedAbstractNode& root);
 
           //! Handles variable
-          void handleVariable(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& var);
+          void handleVariable(const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& var);
 
         public:
           //! Constructor.

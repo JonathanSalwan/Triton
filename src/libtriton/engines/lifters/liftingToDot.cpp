@@ -7,6 +7,7 @@
 
 #include <algorithm>
 #include <vector>
+#include <string>
 
 #include <triton/astEnums.hpp>
 #include <triton/liftingToDot.hpp>
@@ -76,182 +77,172 @@ namespace triton {
       }
 
 
-      std::ostream& LiftingToDot::liftToDot(std::ostream& stream, const triton::ast::SharedAbstractNode& root) {
-        auto nodes = triton::ast::childrenExtraction(root, true /* unroll*/, false /* revert */);
+      void LiftingToDot::iterateNodes(const triton::ast::SharedAbstractNode& root) {
+        auto ttnodes = triton::ast::childrenExtraction(root, true /* unroll*/, false /* revert */);
 
-        /* Prologue of Dot format */
-        stream << "digraph triton {" << std::endl;
-        stream << "ordering=\"out\";" << std::endl;
-        stream << "fontname=mono;" << std::endl;
-
-        /* Spread information */
-        this->defineLegend(stream);
-        this->spreadInformation(stream);
-
-        for (auto const& node : nodes) {
-
-          /* Print the current node on Dot format */
+        for (auto const& node : ttnodes) {
           switch (node->getType()) {
+
             case triton::ast::ASSERT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"ASSERT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"ASSERT\"];"});
               break;
             }
 
             case triton::ast::BSWAP_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BSWAP\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BSWAP\"];"});
               break;
             }
 
             case triton::ast::BVADD_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVADD\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVADD\"];"});
               break;
             }
 
             case triton::ast::BVAND_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVAND\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVAND\"];"});
               break;
             }
 
             case triton::ast::BVASHR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVASHR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVASHR\"];"});
               break;
             }
 
             case triton::ast::BVLSHR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVLSHR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVLSHR\"];"});
               break;
             }
 
             case triton::ast::BVMUL_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVMUL\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVMUL\"];"});
               break;
             }
 
             case triton::ast::BVNAND_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVNAND\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVNAND\"];"});
               break;
             }
 
             case triton::ast::BVNEG_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVNEG\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVNEG\"];"});
               break;
             }
 
             case triton::ast::BVNOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVNOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVNOR\"];"});
               break;
             }
 
             case triton::ast::BVNOT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVNOT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVNOT\"];"});
               break;
             }
 
             case triton::ast::BVOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVOR\"];"});
               break;
             }
 
             case triton::ast::BVROL_NODE: {
               auto RHS = node->getChildren()[1];
-              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger();
+              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger().convert_to<std::string>();
 
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVROL\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(RHS.get()) << " [label=\"" << rot << "-bit\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVROL\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(RHS.get()), " [label=\"" + rot + "-bit\"];"});
               break;
             }
 
             case triton::ast::BVROR_NODE: {
               auto RHS = node->getChildren()[1];
-              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger();
+              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger().convert_to<std::string>();
 
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVROR\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(RHS.get()) << " [label=\"" << rot << "-bit\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVROR\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(RHS.get()), " [label=\"" + rot + "-bit\"];"});
               break;
             }
 
             case triton::ast::BVSDIV_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSDIV\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSDIV\"];"});
               break;
             }
 
             case triton::ast::BVSGE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSGE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSGE\"];"});
               break;
             }
 
             case triton::ast::BVSGT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSGT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSGT\"];"});
               break;
             }
 
             case triton::ast::BVSHL_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSHL\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSHL\"];"});
               break;
             }
 
             case triton::ast::BVSLE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSLE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSLE\"];"});
               break;
             }
 
             case triton::ast::BVSLT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSLT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSLT\"];"});
               break;
             }
 
             case triton::ast::BVSMOD_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSMOD\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSMOD\"];"});
               break;
             }
 
             case triton::ast::BVSREM_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSREM\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSREM\"];"});
               break;
             }
 
             case triton::ast::BVSUB_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVSUB\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVSUB\"];"});
               break;
             }
 
             case triton::ast::BVUDIV_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVUDIV\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVUDIV\"];"});
               break;
             }
 
             case triton::ast::BVUGE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVUGE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVUGE\"];"});
               break;
             }
 
             case triton::ast::BVUGT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVUGT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVUGT\"];"});
               break;
             }
 
             case triton::ast::BVULE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVULE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVULE\"];"});
               break;
             }
 
             case triton::ast::BVULT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVULT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVULT\"];"});
               break;
             }
 
             case triton::ast::BVUREM_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVUREM\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVUREM\"];"});
               break;
             }
 
             case triton::ast::BVXNOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVXNOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVXNOR\"];"});
               break;
             }
 
             case triton::ast::BVXOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"BVXOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"BVXOR\"];"});
               break;
             }
 
@@ -261,107 +252,126 @@ namespace triton {
               auto value = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger();
               auto size  = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger();
 
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"0x" << std::hex << value << std::dec << " : " << size << "-bit\"];" << std::endl;
+              std::stringstream s;
+              s << " [label=\"0x" << std::hex << value << std::dec << " : " << size << "-bit\"];";
+
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), s.str()});
               break;
             }
 
             case triton::ast::COMPOUND_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"COMPOUND\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"COMPOUND\"];"});
               break;
             }
 
             case triton::ast::CONCAT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"CONCAT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"CONCAT\"];"});
               break;
             }
 
             case triton::ast::DECLARE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"DECLARE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"DECLARE\"];"});
               break;
             }
 
             case triton::ast::DISTINCT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"!=\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"!=\"];"});
               break;
             }
 
             case triton::ast::EQUAL_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"==\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"==\"];"});
               break;
             }
 
             case triton::ast::EXTRACT_NODE: {
               auto nhi = node->getChildren()[0];
               auto nlo = node->getChildren()[1];
-              auto hi  = reinterpret_cast<triton::ast::IntegerNode*>(nhi.get())->getInteger();
-              auto lo  = reinterpret_cast<triton::ast::IntegerNode*>(nlo.get())->getInteger();
+              auto hi  = reinterpret_cast<triton::ast::IntegerNode*>(nhi.get())->getInteger().convert_to<std::string>();
+              auto lo  = reinterpret_cast<triton::ast::IntegerNode*>(nlo.get())->getInteger().convert_to<std::string>();
 
-              stream << reinterpret_cast<size_t>(nhi.get()) << " [label=\"hi:" << hi << "\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(nlo.get()) << " [label=\"lo:" << lo << "\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"EXTRACT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(nhi.get()), " [label=\"hi:" + hi + "\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(nlo.get()), " [label=\"lo:" + lo + "\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"EXTRACT\"];"});
               break;
             }
 
             case triton::ast::FORALL_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"FORALL\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"FORALL\"];"});
               break;
             }
 
             case triton::ast::IFF_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"IFF\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"IFF\"];"});
               break;
             }
 
             case triton::ast::ITE_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"ITE\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"ITE\"];"});
               break;
             }
 
             case triton::ast::LAND_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"LAND\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"LAND\"];"});
               break;
             }
 
             case triton::ast::LET_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"LET\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"LET\"];"});
               break;
             }
 
             case triton::ast::LNOT_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"LNOT\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"LNOT\"];"});
               break;
             }
 
             case triton::ast::LOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"LOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"LOR\"];"});
               break;
             }
 
             case triton::ast::LXOR_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"LXOR\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"LXOR\"];"});
               break;
             }
 
             case triton::ast::STRING_NODE: {
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"" << node << "\"];" << std::endl;
+              std::stringstream s;
+              s << " [label=\"" << node << "\"];";
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), s.str()});
               break;
             }
 
             case triton::ast::SX_NODE: {
               auto LHS = node->getChildren()[0];
-              auto sx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger();
+              auto sx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger().convert_to<std::string>();
 
-              stream << reinterpret_cast<size_t>(LHS.get()) << " [label=\"" << sx << "-bit\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"SX\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(LHS.get()), " [label=\"" + sx + "-bit\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"SX\"];"});
               break;
             }
 
             case triton::ast::ZX_NODE: {
               auto LHS = node->getChildren()[0];
-              auto zx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger();
+              auto zx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger().convert_to<std::string>();
 
-              stream << reinterpret_cast<size_t>(LHS.get()) << " [label=\"" << zx << "-bit\"];" << std::endl;
-              stream << reinterpret_cast<size_t>(node.get()) << " [label=\"ZX\"];" << std::endl;
+              this->nodes.insert({reinterpret_cast<size_t>(LHS.get()), " [label=\"" + zx + "-bit\"];"});
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), " [label=\"ZX\"];"});
+              break;
+            }
+
+            case triton::ast::REFERENCE_NODE: {
+              const triton::ast::AbstractNode* ptr = node.get();
+              while (ptr->getType() == triton::ast::REFERENCE_NODE) {
+                const triton::ast::ReferenceNode* ref = reinterpret_cast<const triton::ast::ReferenceNode*>(ptr);
+                const triton::ast::AbstractNode* next = ref->getSymbolicExpression()->getAst().get();
+                triton::usize refId = ref->getSymbolicExpression()->getId();
+                this->nodes.insert({reinterpret_cast<size_t>(ref), " [label=\"Ref #" + std::to_string(refId) + "\"];"});
+                this->edges.insert({reinterpret_cast<size_t>(ptr), reinterpret_cast<size_t>(next)});
+                ptr = next;
+              }
+
               break;
             }
 
@@ -376,51 +386,63 @@ namespace triton {
 
           /* Link the current node with its children */
           for (auto const& child : node->getChildren()) {
-            /* Handle reference repr */
-            if (child->getType() == triton::ast::REFERENCE_NODE) {
-              this->handleReference(stream, node, child);
-            }
             /* Handle variable repr */
-            else if (child->getType() == triton::ast::VARIABLE_NODE) {
-              this->handleVariable(stream, node, child);
+            if (child->getType() == triton::ast::VARIABLE_NODE) {
+              this->handleVariable(node, child);
             }
             /* Link by default */
             else {
-              stream << reinterpret_cast<size_t>(node.get()) << "->" << reinterpret_cast<size_t>(child.get()) << ";" << std::endl;
+              this->edges.insert({reinterpret_cast<size_t>(node.get()), reinterpret_cast<size_t>(child.get())});
             }
           }
+        }
+      }
+
+
+      void LiftingToDot::handleVariable(const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child) {
+        /* Variables are displayed on several nodes for a better visibility */
+        this->uniqueid++;
+
+        std::stringstream s;
+        s << " [label=\"" << child << "\" rank=max style=filled, color=black, fillcolor=lightgreen];";
+
+        this->nodes.insert({this->uniqueid, s.str()});
+        this->edges.insert({reinterpret_cast<size_t>(parent.get()), this->uniqueid});
+      }
+
+
+      std::ostream& LiftingToDot::liftToDot(std::ostream& stream, const triton::ast::SharedAbstractNode& root) {
+        /* Prologue of Dot format */
+        stream << "digraph triton {" << std::endl;
+        stream << "ordering=\"out\";" << std::endl;
+        stream << "fontname=mono;" << std::endl;
+
+        /* Spread information */
+        this->defineLegend(stream);
+        this->spreadInformation(stream);
+
+        /* Iterate over nodes */
+        this->iterateNodes(root);
+
+        /* Print nodes */
+        for (const auto& node : this->nodes) {
+          stream << node.first << " " << node.second << std::endl;
+        }
+
+        /* Print edges */
+        for (const auto& edge : this->edges) {
+          stream << edge.first << " -> " << edge.second << std::endl;
         }
 
         /* Link the legend to the root node */
         if (this->expressions.empty() == false) {
-          stream << "legend->" << reinterpret_cast<size_t>(root.get()) << " [style=dotted]" << std::endl;
+          stream << "legend ->" << reinterpret_cast<size_t>(root.get()) << " [style=dotted]" << std::endl;
         }
 
         /* Epilogue of Dot format */
         stream << "}" << std::endl;
 
         return stream;
-      }
-
-
-      void LiftingToDot::handleReference(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child) {
-        auto ref = reinterpret_cast<triton::ast::ReferenceNode*>(child.get())->getSymbolicExpression()->getAst();
-
-        if (ref->getType() == triton::ast::VARIABLE_NODE) {
-          this->handleVariable(stream, parent, ref);
-        }
-        else {
-          stream << reinterpret_cast<size_t>(parent.get()) << "->" << reinterpret_cast<size_t>(ref.get()) << ";" << std::endl;
-        }
-      }
-
-
-      void LiftingToDot::handleVariable(std::ostream& stream, const triton::ast::SharedAbstractNode& parent, const triton::ast::SharedAbstractNode& child) {
-        /* Variables are displayed on several nodes for a better visibility */
-        this->uniqueid++;
-
-        stream << this->uniqueid << " [label=\"" << child << "\" rank=max style=filled, color=black, fillcolor=lightgreen];" << std::endl;
-        stream << reinterpret_cast<size_t>(parent.get()) << "->" << this->uniqueid << ";" << std::endl;
       }
 
     }; /* lifters namespace */
