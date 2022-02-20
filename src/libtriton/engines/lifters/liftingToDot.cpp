@@ -435,7 +435,7 @@ namespace triton {
 
         /* Link the legend to the root node */
         if (this->expressions.empty() == false) {
-          stream << "legend -> " << reinterpret_cast<size_t>(root.get()) << " [style=dotted]" << std::endl;
+          stream << "legend -> " << reinterpret_cast<size_t>(root.get()) << " [style=dotted];" << std::endl;
         }
 
         /* Epilogue of Dot format */

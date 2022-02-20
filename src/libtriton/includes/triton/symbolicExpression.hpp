@@ -62,10 +62,10 @@ namespace triton {
           //! The symbolic expression id. This id is unique.
           triton::usize id;
 
-          //! The origin memory address if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
+          //! The origin memory address if `type` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
           triton::arch::MemoryAccess originMemory;
 
-          //! The origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
+          //! The origin register if `type` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
           triton::arch::Register originRegister;
 
         public:
@@ -117,10 +117,10 @@ namespace triton {
           //! Returns the symbolic expression representation as string according the mode of the AST representation.
           TRITON_EXPORT std::string getFormattedExpression(void) const;
 
-          //! Returns the origin memory access if `kind` is equal to `triton::engines::symbolic::MEM`, invalid memory otherwise.
+          //! Returns the origin memory access if `kind` is equal to `triton::engines::symbolic::MEMORY_EXPRESSION`, invalid memory otherwise.
           TRITON_EXPORT const triton::arch::MemoryAccess& getOriginMemory(void) const;
 
-          //! Returns the origin register if `kind` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
+          //! Returns the origin register if `kind` is equal to `triton::engines::symbolic::REGISTER_EXPRESSION`, invalid register otherwise.
           TRITON_EXPORT const triton::arch::Register& getOriginRegister(void) const;
 
           //! Sets a root node.

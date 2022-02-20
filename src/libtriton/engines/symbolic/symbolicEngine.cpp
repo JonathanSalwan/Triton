@@ -376,6 +376,7 @@ namespace triton {
           if (node->getType() == triton::ast::ZX_NODE || node->getType() == triton::ast::SX_NODE) {
             auto n = node->getChildren()[1];
             if (n->getType() != triton::ast::REFERENCE_NODE && n->getType() != triton::ast::VARIABLE_NODE) {
+              /* FIXME: We lost the origin if we create a new symbolic expression without returning it */
               auto e = this->newSymbolicExpression(n, VOLATILE_EXPRESSION, "Extended part - " + comment);
               node->setChild(1, this->astCtxt->reference(e));
             }
