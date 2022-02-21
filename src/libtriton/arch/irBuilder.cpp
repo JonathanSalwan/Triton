@@ -122,16 +122,8 @@ namespace triton {
     void IrBuilder::postIrInit(triton::arch::Instruction& inst) {
       std::vector<triton::engines::symbolic::SharedSymbolicExpression> newVector;
 
-      auto& loadAccess        = inst.getLoadAccess();
-      auto& readRegisters     = inst.getReadRegisters();
-      auto& readImmediates    = inst.getReadImmediates();
-      auto& storeAccess       = inst.getStoreAccess();
-      auto& writtenRegisters  = inst.getWrittenRegisters();
-
       /* Set the taint */
       inst.setTaint();
-
-      // ----------------------------------------------------------------------
 
       /*
        * If the symbolic engine is defined to process symbolic
@@ -143,19 +135,19 @@ namespace triton {
         this->collectUnsymbolizedNodes(inst.operands);
 
         /* Clear implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(loadAccess);
+        this->collectUnsymbolizedNodes(inst.getLoadAccess());
 
         /* Clear implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(readRegisters);
+        this->collectUnsymbolizedNodes(inst.getReadRegisters());
 
         /* Clear implicit and explicit semantics - IMM */
-        this->collectUnsymbolizedNodes(readImmediates);
+        this->collectUnsymbolizedNodes(inst.getReadImmediates());
 
         /* Clear implicit and explicit semantics - MEM */
-        this->collectUnsymbolizedNodes(storeAccess);
+        this->collectUnsymbolizedNodes(inst.getStoreAccess());
 
         /* Clear implicit and explicit semantics - REG */
-        this->collectUnsymbolizedNodes(writtenRegisters);
+        this->collectUnsymbolizedNodes(inst.getWrittenRegisters());
 
         /* Clear symbolic expressions */
         for (const auto& se : inst.symbolicExpressions) {
@@ -168,8 +160,6 @@ namespace triton {
         inst.symbolicExpressions = newVector;
       }
 
-      // ----------------------------------------------------------------------
-
       /*
        * If the symbolic engine is defined to process symbolic
        * execution only on tainted instructions, we delete all
@@ -180,19 +170,19 @@ namespace triton {
         this->collectNodes(inst.operands);
 
         /* Implicit and explicit semantics - MEM */
-        this->collectNodes(loadAccess);
+        this->collectNodes(inst.getLoadAccess());
 
         /* Implicit and explicit semantics - REG */
-        this->collectNodes(readRegisters);
+        this->collectNodes(inst.getReadRegisters());
 
         /* Implicit and explicit semantics - IMM */
-        this->collectNodes(readImmediates);
+        this->collectNodes(inst.getReadImmediates());
 
         /* Implicit and explicit semantics - MEM */
-        this->collectNodes(storeAccess);
+        this->collectNodes(inst.getStoreAccess());
 
         /* Implicit and explicit semantics - REG */
-        this->collectNodes(writtenRegisters);
+        this->collectNodes(inst.getWrittenRegisters());
 
         /* Symbolic Expressions */
         this->removeSymbolicExpressions(inst);
