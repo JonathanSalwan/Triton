@@ -49,9 +49,6 @@ namespace triton {
         //! Symbolic engine API
         triton::engines::symbolic::SymbolicEngine* symbolicEngine;
 
-        //! Backup symbolic engine
-        triton::engines::symbolic::SymbolicEngine* backupSymbolicEngine;
-
         //! Taint engine API
         triton::engines::taint::TaintEngine* taintEngine;
 

@@ -62,9 +62,6 @@ namespace triton {
           triton::arch::CpuInterface& cpu;
 
         protected:
-          //! Defines if the taint engine is enabled or disabled.
-          bool enableFlag;
-
           //! The set of tainted addresses.
           std::unordered_set<triton::uint64> taintedMemory;
 
@@ -81,17 +78,11 @@ namespace triton {
           //! Copies a TaintEngine.
           TRITON_EXPORT TaintEngine& operator=(const TaintEngine& other);
 
-          //! Enables or disables the taint engine.
-          TRITON_EXPORT void enable(bool flag);
-
           //! Returns the tainted addresses.
           TRITON_EXPORT const std::unordered_set<triton::uint64>& getTaintedMemory(void) const;
 
           //! Returns the tainted registers.
           TRITON_EXPORT std::unordered_set<const triton::arch::Register*> getTaintedRegisters(void) const;
-
-          //! Returns true if the taint engine is enabled.
-          TRITON_EXPORT bool isEnabled(void) const;
 
           //! Returns true if the addr is tainted.
           TRITON_EXPORT bool isMemoryTainted(triton::uint64 addr, triton::uint32 size=1) const;

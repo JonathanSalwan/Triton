@@ -17,34 +17,6 @@ class TestSymbolic(unittest.TestCase):
         self.Triton.setArchitecture(ARCH.X86_64)
         self.astCtxt = self.Triton.getAstContext()
 
-    def test_backup(self):
-        """
-        Check Symbolics value are saved when engine is disable.
-
-        * Also check reseting a disable symbolic engines doesn't crash.
-        """
-        inst = Instruction()
-        # update RAX
-        inst.setOpcode(b"\x48\xFF\xC0")
-        self.Triton.processing(inst)
-
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.registers.rax), 1)
-
-        # This call triton::api.backupSymbolicEngine()
-        self.Triton.enableSymbolicEngine(False)
-
-        inst = Instruction()
-        # update RAX again
-        inst.setOpcode(b"\x48\xFF\xC0")
-        self.Triton.processing(inst)
-
-        self.assertEqual(self.Triton.getConcreteRegisterValue(self.Triton.registers.rax), 2, "concrete value is updated")
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.registers.rax), 1)
-        self.assertEqual(self.Triton.getSymbolicRegisterValue(self.Triton.registers.rax), 1, "Symbolic value is not update")
-
-        # Try to reset engine after a backup to test if the bug #385 is fixed.
-        self.Triton.reset()
-
     def test_bind_expr_to_memory(self):
         """Check symbolic expression binded to memory can be retrieve."""
         # Bind expr1 to 0x100

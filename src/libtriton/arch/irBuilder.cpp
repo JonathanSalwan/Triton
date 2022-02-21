@@ -38,21 +38,19 @@ namespace triton {
       if (taintEngine == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): The taint engines API must be defined.");
 
-      this->architecture              = architecture;
-      this->backupSymbolicEngine      = new(std::nothrow) triton::engines::symbolic::SymbolicEngine(architecture, modes, astCtxt, nullptr);
-      this->symbolicEngine            = symbolicEngine;
-      this->taintEngine               = taintEngine;
-      this->aarch64Isa                = new(std::nothrow) triton::arch::arm::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
-      this->arm32Isa                  = new(std::nothrow) triton::arch::arm::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
-      this->x86Isa                    = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
+      this->architecture         = architecture;
+      this->symbolicEngine       = symbolicEngine;
+      this->taintEngine          = taintEngine;
+      this->aarch64Isa           = new(std::nothrow) triton::arch::arm::aarch64::AArch64Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
+      this->arm32Isa             = new(std::nothrow) triton::arch::arm::arm32::Arm32Semantics(architecture, symbolicEngine, taintEngine, astCtxt);
+      this->x86Isa               = new(std::nothrow) triton::arch::x86::x86Semantics(architecture, symbolicEngine, taintEngine, modes, astCtxt);
 
-      if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->backupSymbolicEngine == nullptr)
+      if (this->x86Isa == nullptr || this->aarch64Isa == nullptr || this->arm32Isa == nullptr)
         throw triton::exceptions::IrBuilder("IrBuilder::IrBuilder(): Not enough memory.");
     }
 
 
     IrBuilder::~IrBuilder() {
-      delete this->backupSymbolicEngine;
       delete this->aarch64Isa;
       delete this->arm32Isa;
       delete this->x86Isa;
@@ -107,7 +105,7 @@ namespace triton {
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();
 
-      /* Clear implicit and explicit semantics */
+      /* Clear implicit and explicit previous semantics */
       inst.getLoadAccess().clear();
       inst.getReadRegisters().clear();
       inst.getReadImmediates().clear();
@@ -117,11 +115,6 @@ namespace triton {
       /* Update instruction address if undefined */
       if (!inst.getAddress()) {
         inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter()).convert_to<triton::uint64>());
-      }
-
-      /* Backup the symbolic engine in the case where only the taint is available. */
-      if (!this->symbolicEngine->isEnabled()) {
-        *this->backupSymbolicEngine = *this->symbolicEngine;
       }
     }
 
@@ -141,36 +134,11 @@ namespace triton {
       // ----------------------------------------------------------------------
 
       /*
-       * If the symbolic engine is disable we delete symbolic
-       * expressions and AST nodes. Note that if the taint engine
-       * is enable we must compute semanitcs to spread the taint.
-       */
-      if (!this->symbolicEngine->isEnabled()) {
-        /* Clear memory operands */
-        this->collectNodes(inst.operands);
-
-        /* Clear implicit and explicit semantics */
-        loadAccess.clear();
-        readRegisters.clear();
-        readImmediates.clear();
-        storeAccess.clear();
-        writtenRegisters.clear();
-
-        /* Symbolic Expressions */
-        this->removeSymbolicExpressions(inst);
-
-        /* Restore backup */
-        *this->symbolicEngine = *this->backupSymbolicEngine;
-      }
-
-      // ----------------------------------------------------------------------
-
-      /*
        * If the symbolic engine is defined to process symbolic
        * execution only on symbolized expressions, we delete all
        * concrete expressions and their AST nodes.
        */
-      if (this->symbolicEngine->isEnabled() && this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
+      if (this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED)) {
         /* Clear memory operands */
         this->collectUnsymbolizedNodes(inst.operands);
 

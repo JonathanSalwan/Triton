@@ -101,12 +101,6 @@ Disassembles a concrete memory area from `addr` and returns a list of at most `c
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr)</b><br>
 Disassembles a concrete memory area from `addr` to control flow instruction and returns a list of disassembled instructions.
 
-- <b>void enableSymbolicEngine(bool flag)</b><br>
-Enables or disables the symbolic execution engine.
-
-- <b>void enableTaintEngine(bool flag)</b><br>
-Enables or disables the taint engine.
-
 - <b>integer evaluateAstViaSolver(\ref py_AstNode_page node)</b><br>
 Evaluates an AST via the solver and returns the concrete value.
 
@@ -274,14 +268,8 @@ Returns true if the register is valid.
 - <b>bool isSat(\ref py_AstNode_page node)</b><br>
 Returns true if an expression is satisfiable.
 
-- <b>bool isSymbolicEngineEnabled(void)</b><br>
-Returns true if the symbolic execution engine is enabled.
-
 - <b>bool isSymbolicExpressionExists(integer symExprId)</b><br>
 Returns true if the symbolic expression id exists.
-
-- <b>bool isTaintEngineEnabled(void)</b><br>
-Returns true if the taint engine is enabled.
 
 - <b>bool isThumb(void)</b><br>
 Returns true if execution mode is Thumb (only valid for ARM32).
@@ -1124,44 +1112,6 @@ namespace triton {
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
         }
-      }
-
-
-      static PyObject* TritonContext_enableSymbolicEngine(PyObject* self, PyObject* flag) {
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::enableSymbolicEngine(): Expects an boolean as argument.");
-
-        try {
-          PyTritonContext_AsTritonContext(self)->enableSymbolicEngine(PyLong_AsBool(flag));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
-      }
-
-
-      static PyObject* TritonContext_enableTaintEngine(PyObject* self, PyObject* flag) {
-        if (!PyBool_Check(flag))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::enableTaintEngine(): Expects an boolean as argument.");
-
-        try {
-          PyTritonContext_AsTritonContext(self)->enableTaintEngine(PyLong_AsBool(flag));
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-
-        Py_INCREF(Py_None);
-        return Py_None;
       }
 
 
@@ -2158,21 +2108,6 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_isSymbolicEngineEnabled(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyTritonContext_AsTritonContext(self)->isSymbolicEngineEnabled() == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
-
-
       static PyObject* TritonContext_isSymbolicExpressionExists(PyObject* self, PyObject* symExprId) {
         if (!PyInt_Check(symExprId) && !PyLong_Check(symExprId))
           return PyErr_Format(PyExc_TypeError, "TritonContext::isSymbolicExpressionExists(): Expects an integer as argument.");
@@ -2208,20 +2143,6 @@ namespace triton {
         }
       }
 
-
-      static PyObject* TritonContext_isTaintEngineEnabled(PyObject* self, PyObject* noarg) {
-        try {
-          if (PyTritonContext_AsTritonContext(self)->isTaintEngineEnabled() == true)
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
-        }
-        catch (const triton::exceptions::PyCallbacks&) {
-          return nullptr;
-        }
-        catch (const triton::exceptions::Exception& e) {
-          return PyErr_Format(PyExc_TypeError, "%s", e.what());
-        }
-      }
 
       static PyObject* TritonContext_isThumb(PyObject* self, PyObject* noarg) {
         try {
@@ -3423,8 +3344,6 @@ namespace triton {
         {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,            METH_VARARGS,                  ""},
         {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,            METH_VARARGS,                  ""},
         {"disassembly",                         (PyCFunction)TritonContext_disassembly,                                 METH_VARARGS,                  ""},
-        {"enableSymbolicEngine",                (PyCFunction)TritonContext_enableSymbolicEngine,                        METH_O,                        ""},
-        {"enableTaintEngine",                   (PyCFunction)TritonContext_enableTaintEngine,                           METH_O,                        ""},
         {"evaluateAstViaSolver",                (PyCFunction)TritonContext_evaluateAstViaSolver,                        METH_O,                        ""},
         {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                             METH_NOARGS,                   ""},
         {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                             METH_NOARGS,                   ""},
@@ -3472,9 +3391,7 @@ namespace triton {
         {"isRegisterTainted",                   (PyCFunction)TritonContext_isRegisterTainted,                           METH_O,                        ""},
         {"isRegisterValid",                     (PyCFunction)TritonContext_isRegisterValid,                             METH_O,                        ""},
         {"isSat",                               (PyCFunction)TritonContext_isSat,                                       METH_O,                        ""},
-        {"isSymbolicEngineEnabled",             (PyCFunction)TritonContext_isSymbolicEngineEnabled,                     METH_NOARGS,                   ""},
         {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
-        {"isTaintEngineEnabled",                (PyCFunction)TritonContext_isTaintEngineEnabled,                        METH_NOARGS,                   ""},
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
         {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                   METH_O,                        ""},
         {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,  METH_VARARGS | METH_KEYWORDS,  ""},

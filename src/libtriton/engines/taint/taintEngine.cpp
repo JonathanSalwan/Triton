@@ -17,18 +17,15 @@ namespace triton {
       TaintEngine::TaintEngine(const triton::modes::SharedModes& modes, triton::engines::symbolic::SymbolicEngine* symbolicEngine, triton::arch::CpuInterface& cpu)
         : modes(modes),
           symbolicEngine(symbolicEngine),
-          cpu(cpu),
-          enableFlag(true) {
-
+          cpu(cpu) {
         if (this->symbolicEngine == nullptr)
-          throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): The symbolicEngine TaintEngine cannot be null.");
+          throw triton::exceptions::TaintEngine("TaintEngine::TaintEngine(): The symbolicEngine cannot be null.");
       }
 
 
       TaintEngine::TaintEngine(const TaintEngine& other)
         : modes(other.modes),
           cpu(other.cpu) {
-        this->enableFlag       = other.enableFlag;
         this->symbolicEngine   = other.symbolicEngine;
         this->taintedMemory    = other.taintedMemory;
         this->taintedRegisters = other.taintedRegisters;
@@ -37,22 +34,11 @@ namespace triton {
 
       TaintEngine& TaintEngine::operator=(const TaintEngine& other) {
         this->cpu              = other.cpu;
-        this->enableFlag       = other.enableFlag;
         this->modes            = other.modes;
         this->symbolicEngine   = other.symbolicEngine;
         this->taintedMemory    = other.taintedMemory;
         this->taintedRegisters = other.taintedRegisters;
         return *this;
-      }
-
-
-      bool TaintEngine::isEnabled(void) const {
-        return this->enableFlag;
-      }
-
-
-      void TaintEngine::enable(bool flag) {
-        this->enableFlag = flag;
       }
 
 
@@ -131,20 +117,14 @@ namespace triton {
 
       /* Taint the register */
       bool TaintEngine::taintRegister(const triton::arch::Register& reg) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(reg);
         this->taintedRegisters.insert(reg.getParent());
-
         return TAINTED;
       }
 
 
       /* Untaint the register */
       bool TaintEngine::untaintRegister(const triton::arch::Register& reg) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(reg);
         this->taintedRegisters.erase(reg.getParent());
-
         return !TAINTED;
       }
 
@@ -163,9 +143,6 @@ namespace triton {
 
       /* Sets the flag (taint or untaint) to a memory. */
       bool TaintEngine::setTaintMemory(const triton::arch::MemoryAccess& mem, bool flag) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(mem);
-
         if (flag == TAINTED)
           this->taintMemory(mem);
 
@@ -178,9 +155,6 @@ namespace triton {
 
       /* Sets the flag (taint or untaint) to a register. */
       bool TaintEngine::setTaintRegister(const triton::arch::Register& reg, bool flag) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(reg);
-
         if (flag == TAINTED)
           this->taintRegister(reg);
 
@@ -196,9 +170,6 @@ namespace triton {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
-        if (!this->isEnabled())
-          return this->isMemoryTainted(mem);
-
         for (triton::uint32 index = 0; index < size; index++)
           this->taintedMemory.insert(addr+index);
 
@@ -208,8 +179,6 @@ namespace triton {
 
       /* Taint the address */
       bool TaintEngine::taintMemory(triton::uint64 addr) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(addr);
         this->taintedMemory.insert(addr);
         return TAINTED;
       }
@@ -220,9 +189,6 @@ namespace triton {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
-        if (!this->isEnabled())
-          return this->isMemoryTainted(mem);
-
         for (triton::uint32 index = 0; index < size; index++)
           this->taintedMemory.erase(addr+index);
 
@@ -232,8 +198,6 @@ namespace triton {
 
       /* Untaint the address */
       bool TaintEngine::untaintMemory(triton::uint64 addr) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(addr);
         this->taintedMemory.erase(addr);
         return !TAINTED;
       }
@@ -441,9 +405,6 @@ namespace triton {
 
       /* reg <- reg  */
       bool TaintEngine::assignmentRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
-
         if (this->isRegisterTainted(regSrc)) {
           this->taintRegister(regDst);
           return TAINTED;
@@ -456,8 +417,6 @@ namespace triton {
 
       /* reg <- imm  */
       bool TaintEngine::assignmentRegisterImmediate(const triton::arch::Register& regDst) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
         this->untaintRegister(regDst);
         return !TAINTED;
       }
@@ -465,9 +424,6 @@ namespace triton {
 
       /* reg <- mem */
       bool TaintEngine::assignmentRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
-
         if (this->isMemoryTainted(memSrc)) {
           this->taintRegister(regDst);
           return TAINTED;
@@ -484,9 +440,6 @@ namespace triton {
         triton::uint32 readSize = memSrc.getSize();
         triton::uint64 addrSrc  = memSrc.getAddress();
         triton::uint64 addrDst  = memDst.getAddress();
-
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
 
         for (triton::uint32 offset = 0; offset < readSize; offset++) {
           if (this->isMemoryTainted(addrSrc+offset)) {
@@ -511,8 +464,6 @@ namespace triton {
 
       /* mem <- imm  */
       bool TaintEngine::assignmentMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
         this->untaintMemory(memDst);
         return !TAINTED;
       }
@@ -520,9 +471,6 @@ namespace triton {
 
       /* mem <- reg  */
       bool TaintEngine::assignmentMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
-
         /* Check source */
         if (this->isRegisterTainted(regSrc)) {
           this->taintMemory(memDst);
@@ -537,22 +485,16 @@ namespace triton {
 
       /* reg U imm */
       bool TaintEngine::unionRegisterImmediate(const triton::arch::Register& regDst) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
         return this->isRegisterTainted(regDst);
       }
 
 
       /* reg U reg */
       bool TaintEngine::unionRegisterRegister(const triton::arch::Register& regDst, const triton::arch::Register& regSrc) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
-
         if (this->isRegisterTainted(regSrc)) {
           this->taintRegister(regDst);
           return TAINTED;
         }
-
         return this->isRegisterTainted(regDst);
       }
 
@@ -563,9 +505,6 @@ namespace triton {
         triton::uint32 writeSize = memDst.getSize();
         triton::uint64 addrDst   = memDst.getAddress();
         triton::uint64 addrSrc   = memSrc.getAddress();
-
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
 
         /* Check source */
         for (triton::uint32 offset = 0; offset < writeSize; offset++) {
@@ -594,36 +533,25 @@ namespace triton {
 
       /* reg U mem */
       bool TaintEngine::unionRegisterMemory(const triton::arch::Register& regDst, const triton::arch::MemoryAccess& memSrc) {
-        if (!this->isEnabled())
-          return this->isRegisterTainted(regDst);
-
         if (this->isMemoryTainted(memSrc)) {
           this->taintRegister(regDst);
           return TAINTED;
         }
-
         return this->isRegisterTainted(regDst);
       }
 
 
       /* mem U imm */
       bool TaintEngine::unionMemoryImmediate(const triton::arch::MemoryAccess& memDst) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
-
         if (this->isMemoryTainted(memDst), false) {
           return TAINTED;
         }
-
         return !TAINTED;
       }
 
 
       /* mem U reg */
       bool TaintEngine::unionMemoryRegister(const triton::arch::MemoryAccess& memDst, const triton::arch::Register& regSrc) {
-        if (!this->isEnabled())
-          return this->isMemoryTainted(memDst);
-
         if (this->isRegisterTainted(regSrc)) {
           this->taintMemory(memDst);
           return TAINTED;

@@ -441,26 +441,6 @@ class TestSymbolicEngineAlignedOnlySymbolized(BaseTestSimulation, unittest.TestC
         super(TestSymbolicEngineAlignedOnlySymbolized, self).setUp()
 
 
-class TestSymbolicEngineDisable(BaseTestSimulation, unittest.TestCase):
-
-    """Testing the emulation with the symbolic engine disabled."""
-
-    def setUp(self):
-        """Define the arch and modes."""
-        self.Triton = TritonContext()
-        self.Triton.setArchitecture(ARCH.X86_64)
-        self.Triton.enableSymbolicEngine(False)
-        super(TestSymbolicEngineDisable, self).setUp()
-
-    @unittest.skip("Not possible")
-    def test_seed_coverage(self):
-        pass
-
-    @unittest.skip("Not possible")
-    def test_defcamp_2015(self):
-        pass
-
-
 class TestSymbolicEngineSymOpti(BaseTestSimulation, unittest.TestCase):
 
     """Testing the symbolic emulation engine without optimization."""

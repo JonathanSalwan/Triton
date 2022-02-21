@@ -62,9 +62,6 @@ namespace triton {
           public triton::engines::symbolic::PathManager {
 
         protected:
-          //! Defines if the engine is enable or disable.
-          bool enableFlag;
-
           //! Number of registers
           triton::uint32 numberOfRegisters;
 
@@ -293,12 +290,6 @@ namespace triton {
 
           //! Concretizes a specific symbolic register reference.
           TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
-
-          //! Enables or disables the symbolic execution engine.
-          TRITON_EXPORT void enable(bool flag);
-
-          //! Returns true if the symbolic execution engine is enabled.
-          TRITON_EXPORT bool isEnabled(void) const;
 
           //! Returns true if the symbolic expression ID exists.
           TRITON_EXPORT bool isSymbolicExpressionExists(triton::usize symExprId) const;

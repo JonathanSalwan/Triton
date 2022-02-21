@@ -914,18 +914,6 @@ namespace triton {
   }
 
 
-  void API::enableSymbolicEngine(bool flag) {
-    this->checkSymbolic();
-    this->symbolic->enable(flag);
-  }
-
-
-  bool API::isSymbolicEngineEnabled(void) const {
-    this->checkSymbolic();
-    return this->symbolic->isEnabled();
-  }
-
-
   bool API::isSymbolicExpressionExists(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->symbolic->isSymbolicExpressionExists(symExprId);
@@ -1112,18 +1100,6 @@ namespace triton {
   std::unordered_set<const triton::arch::Register*> API::getTaintedRegisters(void) const {
     this->checkTaint();
     return this->taint->getTaintedRegisters();
-  }
-
-
-  void API::enableTaintEngine(bool flag) {
-    this->checkTaint();
-    this->taint->enable(flag);
-  }
-
-
-  bool API::isTaintEngineEnabled(void) const {
-    this->checkTaint();
-    return this->taint->isEnabled();
   }
 
 

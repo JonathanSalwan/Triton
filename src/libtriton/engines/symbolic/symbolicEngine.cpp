@@ -35,7 +35,6 @@ namespace triton {
 
         this->architecture      = architecture;
         this->callbacks         = callbacks;
-        this->enableFlag        = true;
         this->numberOfRegisters = this->architecture->numberOfRegisters();
         this->uniqueSymExprId   = 0;
         this->uniqueSymVarId    = 0;
@@ -50,17 +49,16 @@ namespace triton {
           astCtxt(other.astCtxt),
           modes(other.modes) {
 
-        this->alignedMemoryReference      = other.alignedMemoryReference;
-        this->architecture                = other.architecture;
-        this->callbacks                   = other.callbacks;
-        this->enableFlag                  = other.enableFlag;
-        this->memoryReference             = other.memoryReference;
-        this->numberOfRegisters           = other.numberOfRegisters;
-        this->symbolicExpressions         = other.symbolicExpressions;
-        this->symbolicReg                 = other.symbolicReg;
-        this->symbolicVariables           = other.symbolicVariables;
-        this->uniqueSymExprId             = other.uniqueSymExprId;
-        this->uniqueSymVarId              = other.uniqueSymVarId;
+        this->alignedMemoryReference = other.alignedMemoryReference;
+        this->architecture           = other.architecture;
+        this->callbacks              = other.callbacks;
+        this->memoryReference        = other.memoryReference;
+        this->numberOfRegisters      = other.numberOfRegisters;
+        this->symbolicExpressions    = other.symbolicExpressions;
+        this->symbolicReg            = other.symbolicReg;
+        this->symbolicVariables      = other.symbolicVariables;
+        this->uniqueSymExprId        = other.uniqueSymExprId;
+        this->uniqueSymVarId         = other.uniqueSymVarId;
       }
 
 
@@ -75,19 +73,18 @@ namespace triton {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
-        this->alignedMemoryReference      = other.alignedMemoryReference;
-        this->architecture                = other.architecture;
-        this->astCtxt                     = other.astCtxt;
-        this->callbacks                   = other.callbacks;
-        this->enableFlag                  = other.enableFlag;
-        this->memoryReference             = other.memoryReference;
-        this->modes                       = other.modes;
-        this->numberOfRegisters           = other.numberOfRegisters;
-        this->symbolicExpressions         = other.symbolicExpressions;
-        this->symbolicReg                 = other.symbolicReg;
-        this->symbolicVariables           = other.symbolicVariables;
-        this->uniqueSymExprId             = other.uniqueSymExprId;
-        this->uniqueSymVarId              = other.uniqueSymVarId;
+        this->alignedMemoryReference = other.alignedMemoryReference;
+        this->architecture           = other.architecture;
+        this->astCtxt                = other.astCtxt;
+        this->callbacks              = other.callbacks;
+        this->memoryReference        = other.memoryReference;
+        this->modes                  = other.modes;
+        this->numberOfRegisters      = other.numberOfRegisters;
+        this->symbolicExpressions    = other.symbolicExpressions;
+        this->symbolicReg            = other.symbolicReg;
+        this->symbolicVariables      = other.symbolicVariables;
+        this->uniqueSymExprId        = other.uniqueSymExprId;
+        this->uniqueSymVarId         = other.uniqueSymVarId;
 
         return *this;
       }
@@ -1127,12 +1124,6 @@ namespace triton {
       }
 
 
-      /* Returns true if the symbolic engine is enable */
-      bool SymbolicEngine::isEnabled(void) const {
-        return this->enableFlag;
-      }
-
-
       /* Returns true if the symbolic expression ID exists */
       bool SymbolicEngine::isSymbolicExpressionExists(triton::usize symExprId) const {
         auto it = this->symbolicExpressions.find(symExprId);
@@ -1173,12 +1164,6 @@ namespace triton {
           return expr->isSymbolized();
         }
         return false;
-      }
-
-
-      /* Enables or disables the symbolic engine */
-      void SymbolicEngine::enable(bool flag) {
-        this->enableFlag = flag;
       }
 
 
