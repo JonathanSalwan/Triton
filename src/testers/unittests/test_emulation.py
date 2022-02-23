@@ -14,7 +14,7 @@ class TestEmulation(unittest.TestCase):
         self.ast = self.ctx.getAstContext()
 
         # Load the binary
-        binary_file = os.path.join(os.path.dirname(__file__), "misc", "md5", "md5")
+        binary_file = os.path.join(os.path.dirname(__file__), "misc", "md5", "md5-x64")
         self.binary = self.loadBinary(binary_file)
 
         # Define a fake stack
