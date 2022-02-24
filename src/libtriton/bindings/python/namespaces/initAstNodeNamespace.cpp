@@ -26,6 +26,7 @@ The AST_NODE namespace contains all kinds of nodes.
 <hr>
 
 - **AST_NODE.ANY**
+- **AST_NODE.ARRAY**
 - **AST_NODE.ASSERT**
 - **AST_NODE.BSWAP**
 - **AST_NODE.BV**
@@ -74,6 +75,8 @@ The AST_NODE namespace contains all kinds of nodes.
 - **AST_NODE.LNOT**
 - **AST_NODE.LOR**
 - **AST_NODE.REFERENCE**
+- **AST_NODE.SELECT**
+- **AST_NODE.STORE**
 - **AST_NODE.STRING**
 - **AST_NODE.SX**
 - **AST_NODE.VARIABLE**
@@ -89,6 +92,7 @@ namespace triton {
 
       void initAstNodeNamespace(PyObject* astNodeDict) {
         xPyDict_SetItemString(astNodeDict, "ANY",               PyLong_FromUint32(triton::ast::ANY_NODE));
+        xPyDict_SetItemString(astNodeDict, "ARRAY",             PyLong_FromUint32(triton::ast::ARRAY_NODE));
         xPyDict_SetItemString(astNodeDict, "ASSERT",            PyLong_FromUint32(triton::ast::ASSERT_NODE));
         xPyDict_SetItemString(astNodeDict, "BSWAP",             PyLong_FromUint32(triton::ast::BSWAP_NODE));
         xPyDict_SetItemString(astNodeDict, "BV",                PyLong_FromUint32(triton::ast::BV_NODE));
@@ -137,6 +141,8 @@ namespace triton {
         xPyDict_SetItemString(astNodeDict, "LNOT",              PyLong_FromUint32(triton::ast::LNOT_NODE));
         xPyDict_SetItemString(astNodeDict, "LOR",               PyLong_FromUint32(triton::ast::LOR_NODE));
         xPyDict_SetItemString(astNodeDict, "REFERENCE",         PyLong_FromUint32(triton::ast::REFERENCE_NODE));
+        xPyDict_SetItemString(astNodeDict, "SELECT",            PyLong_FromUint32(triton::ast::SELECT_NODE));
+        xPyDict_SetItemString(astNodeDict, "STORE",             PyLong_FromUint32(triton::ast::STORE_NODE));
         xPyDict_SetItemString(astNodeDict, "STRING",            PyLong_FromUint32(triton::ast::STRING_NODE));
         xPyDict_SetItemString(astNodeDict, "SX",                PyLong_FromUint32(triton::ast::SX_NODE));
         xPyDict_SetItemString(astNodeDict, "VARIABLE",          PyLong_FromUint32(triton::ast::VARIABLE_NODE));

@@ -22,6 +22,7 @@ namespace triton {
 
     AstContext::AstContext(const triton::modes::SharedModes& modes)
       : modes(modes) {
+      this->arraySize = 0;
     }
 
 
@@ -34,10 +35,11 @@ namespace triton {
     AstContext& AstContext::operator=(const AstContext& other) {
       std::enable_shared_from_this<AstContext>::operator=(other);
 
+      this->arraySize         = other.arraySize;
       this->astRepresentation = other.astRepresentation;
       this->modes             = other.modes;
-      this->valueMapping      = other.valueMapping;
       this->nodes             = other.nodes;
+      this->valueMapping      = other.valueMapping;
 
       return *this;
     }
@@ -68,6 +70,16 @@ namespace triton {
           return (n.use_count() == 1 ? true : false);
         }), this->nodes.end()
       );
+    }
+
+
+    SharedAbstractNode AstContext::array(triton::uint32 addrSize) {
+      this->arraySize = addrSize;
+      SharedAbstractNode node = std::make_shared<ArrayNode>(addrSize, this->shared_from_this());
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::array(): Not enough memory.");
+      node->init();
+      return this->collect(node);
     }
 
 
@@ -934,6 +946,42 @@ namespace triton {
     }
 
 
+    SharedAbstractNode AstContext::select(const SharedAbstractNode& array, triton::usize index) {
+      SharedAbstractNode node = std::make_shared<SelectNode>(array, index);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::select(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
+    SharedAbstractNode AstContext::select(const SharedAbstractNode& array, const SharedAbstractNode& index) {
+      SharedAbstractNode node = std::make_shared<SelectNode>(array, index);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::select(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
+    SharedAbstractNode AstContext::store(const SharedAbstractNode& array, triton::usize index, const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<StoreNode>(array, index, expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::store(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
+    SharedAbstractNode AstContext::store(const SharedAbstractNode& array, const SharedAbstractNode& index, const SharedAbstractNode& expr) {
+      SharedAbstractNode node = std::make_shared<StoreNode>(array, index, expr);
+      if (node == nullptr)
+        throw triton::exceptions::Ast("AstContext::store(): Not enough memory.");
+      node->init();
+      return this->collect(node);
+    }
+
+
     SharedAbstractNode AstContext::string(std::string value) {
       SharedAbstractNode node = std::make_shared<StringNode>(value, this->shared_from_this());
       if (node == nullptr)
@@ -1060,6 +1108,11 @@ namespace triton {
       }
 
       throw triton::exceptions::Ast("AstContext::updateVariable(): Variable does not exist.");
+    }
+
+
+    triton::uint16 AstContext::getArraySize(void) const {
+      return this->arraySize;
     }
 
 

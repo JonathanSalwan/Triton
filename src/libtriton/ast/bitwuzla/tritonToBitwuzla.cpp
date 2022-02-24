@@ -62,6 +62,15 @@ namespace triton {
 
       switch (node->getType()) {
 
+        case ARRAY_NODE: {
+          auto size  = reinterpret_cast<IntegerNode*>(node->getChildren()[0].get())->getInteger().convert_to<triton::uint32>();
+          auto isort = bitwuzla_mk_bv_sort(bzla, size);               // index sort
+          auto vsort = bitwuzla_mk_bv_sort(bzla, 8);                  // value sort
+          auto asort = bitwuzla_mk_array_sort(bzla, isort, vsort);    // array sort
+          auto value = bitwuzla_mk_bv_value_uint64(bzla, vsort, 0);   // const value
+          return bitwuzla_mk_const_array(bzla, asort, value);
+        }
+
         case BSWAP_NODE: {
           auto bvsize = node->getBitvectorSize();
           auto* bvsort = bitwuzla_mk_bv_sort(bzla, bvsize);
@@ -238,6 +247,12 @@ namespace triton {
           auto ref = reinterpret_cast<ReferenceNode*>(node.get())->getSymbolicExpression()->getAst();
           return this->translatedNodes.at(ref);
         }
+
+        case SELECT_NODE:
+          return bitwuzla_mk_term2(bzla, BITWUZLA_KIND_ARRAY_SELECT, children[0], children[1]);
+
+        case STORE_NODE:
+          return bitwuzla_mk_term3(bzla, BITWUZLA_KIND_ARRAY_STORE, children[0], children[1], children[2]);
 
         case STRING_NODE: {
           std::string value = reinterpret_cast<triton::ast::StringNode*>(node.get())->getString();

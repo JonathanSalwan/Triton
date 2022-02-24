@@ -61,6 +61,13 @@ namespace triton {
 
       switch (node->getType()) {
 
+        case ARRAY_NODE: {
+          auto size  = reinterpret_cast<IntegerNode*>(node->getChildren()[0].get())->getInteger().convert_to<triton::uint32>();
+          auto isort = this->context.bv_sort(size);
+          auto value = this->context.bv_val(0, 8);
+          return to_expr(this->context, Z3_mk_const_array(this->context, isort, value));
+        }
+
         case BSWAP_NODE: {
           auto bvsize = node->getBitvectorSize();
           auto retval = to_expr(this->context, Z3_mk_bvand(this->context, children[0], this->context.bv_val(0xff, bvsize)));
@@ -292,6 +299,12 @@ namespace triton {
 
           return results->at(this->symbols[value]);
         }
+
+        case SELECT_NODE:
+          return to_expr(this->context, Z3_mk_select(this->context, children[0], children[1]));
+
+        case STORE_NODE:
+          return to_expr(this->context, Z3_mk_store(this->context, children[0], children[1], children[2]));
 
         case SX_NODE:
           return to_expr(this->context, Z3_mk_sign_ext(this->context, children[0].get_numeral_uint(), children[1]));

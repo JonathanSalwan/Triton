@@ -92,6 +92,10 @@ Returns the symbolic variable of the node. Only available on `VARIABLE_NODE`, ra
 Returns the type of the node.<br>
 e.g: `AST_NODE.BVADD`
 
+- <b>bool isArray(void)</b><br>
+Returns true if it's an array node.
+e.g: `AST_NODE.ARRAY` and `AST_NODE.STORE`.
+
 - <b>bool isLogical(void)</b><br>
 Returns true if it's a logical node.
 e.g: `AST_NODE.EQUAL`, `AST_NODE.LNOT`, `AST_NODE.LAND`...
@@ -310,6 +314,18 @@ namespace triton {
       static PyObject* AstNode_getType(PyObject* self, PyObject* noarg) {
         try {
           return PyLong_FromUint32(PyAstNode_AsAstNode(self)->getType());
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* AstNode_isArray(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyAstNode_AsAstNode(self)->isArray())
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -833,6 +849,7 @@ namespace triton {
         {"getSymbolicExpression",   AstNode_getSymbolicExpression,  METH_NOARGS,     ""},
         {"getSymbolicVariable",     AstNode_getSymbolicVariable,    METH_NOARGS,     ""},
         {"getType",                 AstNode_getType,                METH_NOARGS,     ""},
+        {"isArray",                 AstNode_isArray,                METH_NOARGS,     ""},
         {"isLogical",               AstNode_isLogical,              METH_NOARGS,     ""},
         {"isSigned",                AstNode_isSigned,               METH_NOARGS,     ""},
         {"isSymbolized",            AstNode_isSymbolized,           METH_NOARGS,     ""},

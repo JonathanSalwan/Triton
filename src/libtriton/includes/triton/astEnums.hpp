@@ -52,7 +52,7 @@ namespace triton {
       BVSMOD_NODE = 83,               /*!< (bvsmod x y) */
       BVSREM_NODE = 89,               /*!< (bvsrem x y) */
       BVSUB_NODE = 97,                /*!< (bvsub x y) */
-      BVUDIV_NODE = 101,               /*!< (bvudiv x y) */
+      BVUDIV_NODE = 101,              /*!< (bvudiv x y) */
       BVUGE_NODE = 103,               /*!< (bvuge x y) */
       BVUGT_NODE = 107,               /*!< (bvugt x y) */
       BVULE_NODE = 109,               /*!< (bvule x y) */
@@ -81,6 +81,9 @@ namespace triton {
       SX_NODE = 239,                  /*!< ((_ sign_extend x) y) */
       VARIABLE_NODE = 241,            /*!< Variable node */
       ZX_NODE = 251,                  /*!< ((_ zero_extend x) y) */
+      ARRAY_NODE = 257,               /*!< (Array (_ BitVec addrSize) (_ BitVec 8)) */
+      SELECT_NODE = 263,              /*!< (select array index) */
+      STORE_NODE = 269,               /*!< (store array index expr) */
     };
 
     //! The Representations namespace

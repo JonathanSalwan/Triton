@@ -309,6 +309,16 @@ namespace triton {
         case triton::ast::REFERENCE_NODE:
           return results->at(reinterpret_cast<triton::ast::ReferenceNode*>(node.get())->getSymbolicExpression()->getAst());
 
+        case triton::ast::SELECT_NODE: {
+          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8PtrTy(this->llvmContext));
+          return this->llvmIR.CreateLoad(llvm::Type::getInt8Ty(this->llvmContext), ptr);
+        }
+
+        case triton::ast::STORE_NODE: {
+          auto* ptr = this->llvmIR.CreateIntToPtr(children[1], llvm::Type::getInt8PtrTy(this->llvmContext));
+          return this->llvmIR.CreateStore(children[2], ptr);
+        }
+
         case triton::ast::SX_NODE:
           return this->llvmIR.CreateSExt(children[1], llvm::IntegerType::get(this->llvmContext, node->getBitvectorSize()));
 

@@ -2262,27 +2262,33 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_liftToSMT(PyObject* self, PyObject* args) {
-        PyObject* expr        = nullptr;
-        PyObject* assertFlag  = nullptr;
+      static PyObject* TritonContext_liftToSMT(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* expr   = nullptr;
+        PyObject* assert = nullptr;
 
-        /* Extract arguments */
-        if (PyArg_ParseTuple(args, "|OO", &expr, &assertFlag) == false) {
+        static char* keywords[] = {
+          (char*)"expr",
+          (char*)"assert_",
+          nullptr
+        };
+
+        /* Extract keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &expr, &assert) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Invalid number of arguments");
         }
 
         if (expr == nullptr || !PySymbolicExpression_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a SymbolicExpression as first argument.");
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a SymbolicExpression as expr argument.");
 
-        if (assertFlag != nullptr && !PyBool_Check(assertFlag))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a boolean as second argument.");
+        if (assert != nullptr && !PyBool_Check(assert))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a boolean as assert_ argument.");
 
-        if (assertFlag == nullptr)
-          assertFlag = PyLong_FromUint32(false);
+        if (assert == nullptr)
+          assert = PyLong_FromUint32(false);
 
         try {
           std::ostringstream stream;
-          PyTritonContext_AsTritonContext(self)->liftToSMT(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assertFlag));
+          PyTritonContext_AsTritonContext(self)->liftToSMT(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assert));
           return xPyString_FromString(stream.str().c_str());
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -3396,7 +3402,7 @@ namespace triton {
         {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                   METH_O,                        ""},
         {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
-        {"liftToSMT",                           (PyCFunction)TritonContext_liftToSMT,                                   METH_VARARGS,                  ""},
+        {"liftToSMT",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToSMT,   METH_VARARGS | METH_KEYWORDS,  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                         METH_VARARGS,                  ""},
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                           METH_NOARGS,                   ""},

@@ -83,6 +83,11 @@ namespace triton {
         for (auto const& node : ttnodes) {
           switch (node->getType()) {
 
+            case triton::ast::ARRAY_NODE: {
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"MEMORY\"];"});
+              break;
+            }
+
             case triton::ast::ASSERT_NODE: {
               this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"ASSERT\"];"});
               break;
@@ -336,6 +341,16 @@ namespace triton {
               break;
             }
 
+            case triton::ast::SELECT_NODE: {
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"SELECT\"];"});
+              break;
+            }
+
+            case triton::ast::STORE_NODE: {
+              this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"STORE\"];"});
+              break;
+            }
+
             case triton::ast::STRING_NODE: {
               std::stringstream s;
               s << "[label=\"" << node << "\"];";
@@ -380,6 +395,11 @@ namespace triton {
 
           if (node->getType() == triton::ast::BV_NODE) {
             /* Skip bv node because we have a custom repr */
+            continue;
+          }
+
+          if (node->getType() == triton::ast::ARRAY_NODE) {
+            /* Skip array node because we have a custom repr */
             continue;
           }
 
