@@ -11,7 +11,7 @@ configuration:
 clone_folder: c:\projects\triton
 
 environment:
-  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.2\include\capstone
+  CAPSTONE_INCLUDE_DIRS: c:\projects\triton\build\capstone-4.0.2\include
   PLATFORM_TOOLSET: v142
   CMAKE_TEMPLATE: Visual Studio 16 2019
 

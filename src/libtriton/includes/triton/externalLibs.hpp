@@ -29,14 +29,10 @@ namespace triton {
      *  \addtogroup extlibs
      *  @{
      */
-      #if defined(__unix__) || defined(__APPLE__)
-        #include <capstone/arm64.h>
-        #include <capstone/arm.h>
-        #include <capstone/capstone.h>
-        #include <capstone/x86.h>
-      #elif _WIN32
-        #include <capstone.h>
-      #endif
+      #include <capstone/arm.h>
+      #include <capstone/arm64.h>
+      #include <capstone/capstone.h>
+      #include <capstone/x86.h>
     /*! @} End of capstone namespace */
     };
 
