@@ -114,7 +114,7 @@ namespace triton {
               std::string svalue = Z3_get_numeral_string(ctx, exp);
 
               /* Convert a string value to a integer value */
-              triton::uint512 value = triton::uint512(svalue);
+              triton::uint512 value = triton::uint512(svalue.c_str());
 
               /* Create a triton model */
               SolverModel trionModel = SolverModel(z3Ast.variables[varName], value);

@@ -361,7 +361,7 @@ namespace triton {
 
       /* extract representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
-        triton::uint32 low = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
+        triton::uint32 low = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
 
         if (low == 0)
           stream << "(" << node->getChildren()[2] << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";

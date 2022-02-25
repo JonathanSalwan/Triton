@@ -490,7 +490,7 @@ namespace triton {
         throw triton::exceptions::Ast("BvashrNode::init(): Must take two nodes of same size.");
 
       value = this->children[0]->evaluate();
-      shift = this->children[1]->evaluate().convert_to<triton::uint32>();
+      shift = static_cast<triton::uint32>(this->children[1]->evaluate());
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
@@ -570,7 +570,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->eval       = (this->children[0]->evaluate() >> static_cast<triton::uint32>(this->children[1]->evaluate()));
       this->level      = 1;
       this->symbolized = false;
 
@@ -719,7 +719,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->eval       = (static_cast<triton::uint512>((-(static_cast<triton::sint512>(this->children[0]->evaluate())))) & this->getBitvectorMask());
       this->level      = 1;
       this->symbolized = false;
 
@@ -924,7 +924,7 @@ namespace triton {
       if (this->children[1]->getType() != INTEGER_NODE)
         throw triton::exceptions::Ast("BvrolNode::init(): rot must be a INTEGER_NODE.");
 
-      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      rot   = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger());
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -986,7 +986,7 @@ namespace triton {
       if (this->children[1]->getType() != INTEGER_NODE)
         throw triton::exceptions::Ast("BvrorNode::init(): rot must be a INTEGER_NODE.");
 
-      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      rot   = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger());
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -1058,7 +1058,7 @@ namespace triton {
         this->eval &= this->getBitvectorMask();
       }
       else
-        this->eval = ((op1Signed / op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((op1Signed / op2Signed)) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1223,7 +1223,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->eval       = ((this->children[0]->evaluate() << static_cast<triton::uint32>(this->children[1]->evaluate())) & this->getBitvectorMask());
       this->level      = 1;
       this->symbolized = false;
 
@@ -1403,7 +1403,7 @@ namespace triton {
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
       else
-        this->eval = ((((op1Signed % op2Signed) + op2Signed) % op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((((op1Signed % op2Signed) + op2Signed) % op2Signed)) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1465,7 +1465,7 @@ namespace triton {
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
       else
-        this->eval = ((op1Signed - ((op1Signed / op2Signed) * op2Signed)).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((op1Signed - ((op1Signed / op2Signed) * op2Signed))) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1984,7 +1984,7 @@ namespace triton {
         throw triton::exceptions::Ast("BvNode::init(): Size and value must be a INTEGER_NODE.");
 
       value = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger();
-      size  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      size  = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger());
 
       if (!size)
         throw triton::exceptions::Ast("BvNode::init(): Size cannot be equal to zero.");
@@ -2298,8 +2298,8 @@ namespace triton {
       if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
         throw triton::exceptions::Ast("ExtractNode::init(): The high and low bit must both be a INTEGER_NODE.");
 
-      high = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
-      low  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      high = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger());
+      low  = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger());
 
       if (low > high)
         throw triton::exceptions::Ast("ExtractNode::init(): The high bit must be greater than the low bit.");
@@ -2898,7 +2898,7 @@ namespace triton {
       if (this->children[0]->getType() != INTEGER_NODE)
         throw triton::exceptions::Ast("SxNode::init(): The sizeExt must be a INTEGER_NODE.");
 
-      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
+      sizeExt = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger());
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
@@ -2999,7 +2999,7 @@ namespace triton {
       if (this->children[0]->getType() != INTEGER_NODE)
         throw triton::exceptions::Ast("ZxNode::init(): The sizeExt must be a INTEGER_NODE.");
 
-      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
+      sizeExt = static_cast<triton::uint32>(reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger());
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();

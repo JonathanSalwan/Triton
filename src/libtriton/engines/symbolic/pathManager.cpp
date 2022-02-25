@@ -172,7 +172,7 @@ namespace triton {
 
         /* Basic block taken */
         srcAddr = inst.getAddress();
-        dstAddr = pc->evaluate().convert_to<triton::uint64>();
+        dstAddr = static_cast<triton::uint64>(pc->evaluate());
         size    = pc->getBitvectorSize();
 
         if (size == 0)
@@ -190,11 +190,11 @@ namespace triton {
           triton::ast::SharedAbstractNode cond = pc->getChildren()[0];
 
           /* Then */
-          triton::uint64 bb1 = pc->getChildren()[1]->evaluate().convert_to<triton::uint64>();
+          triton::uint64 bb1 = static_cast<triton::uint64>(pc->getChildren()[1]->evaluate());
           triton::ast::SharedAbstractNode bb1pc = cond;
 
           /* Else */
-          triton::uint64 bb2 = pc->getChildren()[2]->evaluate().convert_to<triton::uint64>();
+          triton::uint64 bb2 = static_cast<triton::uint64>(pc->getChildren()[2]->evaluate());
           triton::ast::SharedAbstractNode bb2pc = this->astCtxt->lnot(cond);
 
           /* Branch A */

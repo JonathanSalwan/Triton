@@ -107,12 +107,12 @@ namespace triton {
           return to_expr(this->context, Z3_mk_bvor(this->context, children[0], children[1]));
 
         case BVROL_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
+          triton::uint32 rot = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
           return to_expr(this->context, Z3_mk_rotate_left(this->context, rot, children[0]));
         }
 
         case BVROR_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
+          triton::uint32 rot = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
           return to_expr(this->context, Z3_mk_rotate_right(this->context, rot, children[0]));
         }
 
@@ -219,8 +219,10 @@ namespace triton {
         }
 
         case INTEGER_NODE: {
-          std::string value(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger().convert_to<std::string>());
-          return this->context.int_val(value.c_str());
+          std::stringstream ss;
+          ss << reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger();
+
+          return this->context.int_val(ss.str().c_str());
         }
 
         case ITE_NODE: {
@@ -305,7 +307,11 @@ namespace triton {
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
-            std::string strValue(value.convert_to<std::string>());
+            
+            std::stringstream ss;
+            ss << value;
+
+            std::string strValue(ss.str());
             return this->context.bv_val(strValue.c_str(), symVar->getSize());
           }
 

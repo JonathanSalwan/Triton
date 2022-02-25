@@ -316,7 +316,7 @@ namespace triton {
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
         triton::arch::MemoryAccess mem(address, triton::size::byte);
-        return this->getSymbolicMemoryValue(mem).convert_to<triton::uint8>();
+        return static_cast<triton::uint8>(this->getSymbolicMemoryValue(mem));
       }
 
 
@@ -1212,7 +1212,7 @@ namespace triton {
 
           /* Initialize the address only if it is not already defined */
           if (!mem.getAddress() || force)
-            mem.setAddress(leaAst->evaluate().convert_to<triton::uint64>());
+            mem.setAddress(static_cast<triton::uint64>(leaAst->evaluate()));
         }
       }
 

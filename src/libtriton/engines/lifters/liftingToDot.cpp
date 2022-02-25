@@ -145,7 +145,10 @@ namespace triton {
 
             case triton::ast::BVROL_NODE: {
               auto RHS = node->getChildren()[1];
-              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger().convert_to<std::string>();
+              
+              std::stringstream ss;
+              ss << reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger();
+              auto rot = ss.str();
 
               this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"BVROL\"];"});
               this->nodes.insert({reinterpret_cast<size_t>(RHS.get()), "[label=\"" + rot + "-bit\"];"});
@@ -154,7 +157,10 @@ namespace triton {
 
             case triton::ast::BVROR_NODE: {
               auto RHS = node->getChildren()[1];
-              auto rot = reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger().convert_to<std::string>();
+
+              std::stringstream ss;
+              ss << reinterpret_cast<triton::ast::IntegerNode*>(RHS.get())->getInteger();
+              auto rot = ss.str();
 
               this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"BVROR\"];"});
               this->nodes.insert({reinterpret_cast<size_t>(RHS.get()), "[label=\"" + rot + "-bit\"];"});
@@ -287,8 +293,13 @@ namespace triton {
             case triton::ast::EXTRACT_NODE: {
               auto nhi = node->getChildren()[0];
               auto nlo = node->getChildren()[1];
-              auto hi  = reinterpret_cast<triton::ast::IntegerNode*>(nhi.get())->getInteger().convert_to<std::string>();
-              auto lo  = reinterpret_cast<triton::ast::IntegerNode*>(nlo.get())->getInteger().convert_to<std::string>();
+
+              std::stringstream ss1, ss2;
+              ss1 << reinterpret_cast<triton::ast::IntegerNode*>(nhi.get())->getInteger();
+              ss2 << reinterpret_cast<triton::ast::IntegerNode*>(nlo.get())->getInteger();
+
+              auto hi  = ss1.str();
+              auto lo  = ss2.str();
 
               this->nodes.insert({reinterpret_cast<size_t>(nhi.get()), "[label=\"hi:" + hi + "\"];"});
               this->nodes.insert({reinterpret_cast<size_t>(nlo.get()), "[label=\"lo:" + lo + "\"];"});
@@ -345,7 +356,11 @@ namespace triton {
 
             case triton::ast::SX_NODE: {
               auto LHS = node->getChildren()[0];
-              auto sx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger().convert_to<std::string>();
+
+              std::stringstream ss;
+              ss << reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger();
+
+              auto sx  = ss.str();
 
               this->nodes.insert({reinterpret_cast<size_t>(LHS.get()), "[label=\"" + sx + "-bit\"];"});
               this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"SX\"];"});
@@ -354,7 +369,10 @@ namespace triton {
 
             case triton::ast::ZX_NODE: {
               auto LHS = node->getChildren()[0];
-              auto zx  = reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger().convert_to<std::string>();
+
+              std::stringstream ss;
+              ss << reinterpret_cast<triton::ast::IntegerNode*>(LHS.get())->getInteger();
+              auto zx  = ss.str();
 
               this->nodes.insert({reinterpret_cast<size_t>(LHS.get()), "[label=\"" + zx + "-bit\"];"});
               this->nodes.insert({reinterpret_cast<size_t>(node.get()), "[label=\"ZX\"];"});

@@ -9,9 +9,8 @@
 #define TRITONTYPES_H
 
 #include <cstdint>
-#include <boost/multiprecision/cpp_int.hpp>
-#include <boost/numeric/conversion/cast.hpp>
 
+#include <triton/uintwide_t.h>
 
 
 //! The Triton namespace
@@ -34,16 +33,16 @@ namespace triton {
     typedef std::uint64_t uint64;
 
     //! unsigned 80-bits
-    typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<80, 80, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void>> uint80;
+    typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(80)), std::uint32_t> uint80;
 
     //! unsigned 128-bits
-    typedef boost::multiprecision::uint128_t uint128;
+    typedef math::wide_integer::uint128_t uint128;
 
     //! unsigned 256-bits
-    typedef boost::multiprecision::uint256_t uint256;
+    typedef math::wide_integer::uint256_t uint256;
 
     //! unsigned 512-bits
-    typedef boost::multiprecision::uint512_t uint512;
+    typedef math::wide_integer::uint512_t uint512;
 
     //! signed 8-bits
     typedef std::int8_t sint8;
@@ -58,13 +57,13 @@ namespace triton {
     typedef std::int64_t sint64;
 
     //! signed 128-bits
-    typedef boost::multiprecision::int128_t sint128;
+    typedef math::wide_integer::int128_t sint128;
 
     //! signed 256-bits
-    typedef boost::multiprecision::int256_t sint256;
+    typedef math::wide_integer::int256_t sint256;
 
     //! signed 512-bits
-    typedef boost::multiprecision::int512_t sint512;
+    typedef math::wide_integer::int512_t sint512;
 
     //! unsigned MAX_INT 32 or 64 bits according to the CPU.
     typedef std::size_t usize;

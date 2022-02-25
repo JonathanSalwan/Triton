@@ -19,7 +19,7 @@ namespace triton {
 
     void fromUintToBuffer(triton::uint80 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < triton::size::fword; i++) {
-        buffer[i] = (value & 0xff).convert_to<triton::uint8>();
+        buffer[i] = static_cast<triton::uint8>(value & 0xff);
         value >>= triton::bitsize::byte;
       }
     }
@@ -27,7 +27,7 @@ namespace triton {
 
     void fromUintToBuffer(triton::uint128 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < triton::size::dqword; i++) {
-        buffer[i] = (value & 0xff).convert_to<triton::uint8>();
+        buffer[i] = static_cast<triton::uint8>(value & 0xff);
         value >>= triton::bitsize::byte;
       }
     }
@@ -35,7 +35,7 @@ namespace triton {
 
     void fromUintToBuffer(triton::uint256 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < triton::size::qqword; i++) {
-        buffer[i] = (value & 0xff).convert_to<triton::uint8>();
+        buffer[i] = static_cast<triton::uint8>(value & 0xff);
         value >>= triton::bitsize::byte;
       }
     }
@@ -43,7 +43,7 @@ namespace triton {
 
     void fromUintToBuffer(triton::uint512 value, triton::uint8* buffer) {
       for (triton::uint32 i = 0; i < triton::size::dqqword; i++) {
-        buffer[i] = (value & 0xff).convert_to<triton::uint8>();
+        buffer[i] = static_cast<triton::uint8>(value & 0xff);
         value >>= triton::bitsize::byte;
       }
     }
