@@ -32,6 +32,7 @@ class TestSMTArray(unittest.TestCase):
         # With triton we allow the evaluation of store node
         node = self.ast.store(self.mem, 0x1000, self.ast.bv(0xde, 8))
         self.assertEqual(node.evaluate(), 0xde)
+        self.assertEqual(node.getBitvectorSize(), 0) # An array do not have a size
 
     def test_store_index_symbolic(self):
         # We store 0xCC at a symbolic address

@@ -287,15 +287,16 @@ namespace triton {
     /* ====== array */
 
 
-    ArrayNode::ArrayNode(triton::uint32 addrSize, const SharedAstContext& ctxt): AbstractNode(ARRAY_NODE, ctxt) {
-      this->addChild(this->ctxt->integer(addrSize));
+    ArrayNode::ArrayNode(triton::uint32 indexSize, const SharedAstContext& ctxt): AbstractNode(ARRAY_NODE, ctxt) {
+      this->indexSize = indexSize;
+      this->addChild(this->ctxt->integer(indexSize));
     }
 
 
     void ArrayNode::init(bool withParents) {
-      /* Init attributes */
-      this->size       = 0; // An Array does not have size.
-      this->eval       = 0; // An Array cannot be evaluated.
+      /* Init attributes. */
+      this->size       = 0; // Array do not have size.
+      this->eval       = 0; // Array cannot be evaluated.
       this->level      = 1;
       this->symbolized = false;
 
@@ -353,6 +354,11 @@ namespace triton {
 
     std::unordered_map<triton::uint64, triton::uint8>& ArrayNode::getMemory(void) {
       return this->memory;
+    }
+
+
+    triton::uint32 ArrayNode::getIndexSize(void) const {
+      return this->indexSize;
     }
 
 
@@ -1049,13 +1055,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrolNode::init(): Must take at least two children.");
 
-      if (this->children[1]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("BvrolNode::init(): rot must be a INTEGER_NODE.");
-
       if (this->children[0]->isArray())
         throw triton::exceptions::Ast("BvrolNode::init(): Cannot take an array as argument.");
 
-      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      rot   = triton::ast::getInteger<triton::uint32>(this->children[1]);
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -1114,13 +1117,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvrorNode::init(): Must take at least two children.");
 
-      if (this->children[1]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("BvrorNode::init(): rot must be a INTEGER_NODE.");
-
       if (this->children[0]->isArray())
         throw triton::exceptions::Ast("BvrorNode::init(): Cannot take an array as argument.");
 
-      rot   = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      rot   = triton::ast::getInteger<triton::uint32>(this->children[1]);
       value = this->children[0]->evaluate();
 
       /* Init attributes */
@@ -2165,11 +2165,8 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("BvNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("BvNode::init(): Size and value must be a INTEGER_NODE.");
-
-      value = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger();
-      size  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      value = triton::ast::getInteger<triton::uint512>(this->children[0]);
+      size  = triton::ast::getInteger<triton::uint32>(this->children[1]);
 
       if (!size)
         throw triton::exceptions::Ast("BvNode::init(): Size cannot be equal to zero.");
@@ -2489,14 +2486,11 @@ namespace triton {
       if (this->children.size() < 3)
         throw triton::exceptions::Ast("ExtractNode::init(): Must take at least three children.");
 
-      if (this->children[0]->getType() != INTEGER_NODE || this->children[1]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("ExtractNode::init(): The high and low bit must both be a INTEGER_NODE.");
-
       if (this->children[2]->isArray())
         throw triton::exceptions::Ast("ExtractNode::init(): Cannot take an array as argument.");
 
-      high = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
-      low  = reinterpret_cast<IntegerNode*>(this->children[1].get())->getInteger().convert_to<triton::uint32>();
+      high = triton::ast::getInteger<triton::uint32>(this->children[0]);
+      low  = triton::ast::getInteger<triton::uint32>(this->children[1]);
 
       if (low > high)
         throw triton::exceptions::Ast("ExtractNode::init(): The high bit must be greater than the low bit.");
@@ -3044,7 +3038,7 @@ namespace triton {
 
     SelectNode::SelectNode(const SharedAbstractNode& array, triton::usize index): AbstractNode(SELECT_NODE, array->getContext()) {
       this->addChild(array);
-      this->addChild(this->ctxt->bv(index, this->ctxt->getArraySize()));
+      this->addChild(this->ctxt->bv(index, triton::ast::getIndexSize(array)));
     }
 
 
@@ -3061,7 +3055,7 @@ namespace triton {
       if (this->children[0]->isArray() == false)
         throw triton::exceptions::Ast("SelectNode::init(): Must take an array as first argument.");
 
-      if (this->ctxt->getArraySize() != this->children[1]->getBitvectorSize())
+      if (triton::ast::getIndexSize(this->children[0]) != this->children[1]->getBitvectorSize())
         throw triton::exceptions::Ast("SelectNode::init(): Size of indexing must be equal.");
 
       /* Init attributes */
@@ -3114,7 +3108,7 @@ namespace triton {
 
     StoreNode::StoreNode(const SharedAbstractNode& array, triton::usize index, const SharedAbstractNode& expr): AbstractNode(STORE_NODE, array->getContext()) {
       this->addChild(array);
-      this->addChild(this->ctxt->bv(index, this->ctxt->getArraySize()));
+      this->addChild(this->ctxt->bv(index, triton::ast::getIndexSize(array)));
       this->addChild(expr);
     }
 
@@ -3133,7 +3127,7 @@ namespace triton {
       if (this->children[0]->isArray() == false)
         throw triton::exceptions::Ast("StoreNode::init(): Must take an array as first argument.");
 
-      if (this->ctxt->getArraySize() != this->children[1]->getBitvectorSize())
+      if (triton::ast::getIndexSize(this->children[0]) != this->children[1]->getBitvectorSize())
         throw triton::exceptions::Ast("StoreNode::init(): Size of indexing must be equal to the array indexing size.");
 
       if (this->children[2]->getBitvectorSize() != triton::bitsize::byte)
@@ -3141,17 +3135,19 @@ namespace triton {
 
       /* Init attributes */
       this->eval       = this->children[2]->evaluate();
-      this->size       = this->children[2]->getBitvectorSize();
+      this->size       = 0; // Array do not have size.
       this->level      = 1;
       this->symbolized = false;
 
       /* Spread the memory array from previous level */
       switch(this->children[0]->getType()) {
         case ARRAY_NODE:
-          this->memory = reinterpret_cast<ArrayNode*>(this->children[0].get())->getMemory();
+          this->indexSize = reinterpret_cast<ArrayNode*>(this->children[0].get())->getIndexSize();
+          this->memory    = reinterpret_cast<ArrayNode*>(this->children[0].get())->getMemory();
           break;
         case STORE_NODE:
-          this->memory = reinterpret_cast<StoreNode*>(this->children[0].get())->getMemory();
+          this->indexSize = reinterpret_cast<StoreNode*>(this->children[0].get())->getIndexSize();
+          this->memory    = reinterpret_cast<StoreNode*>(this->children[0].get())->getMemory();
           break;
         default:
           throw triton::exceptions::Ast("StoreNode::init(): Invalid sort");
@@ -3212,6 +3208,11 @@ namespace triton {
     }
 
 
+    triton::uint32 StoreNode::getIndexSize(void) const {
+      return this->indexSize;
+    }
+
+
     /* ====== String node */
 
 
@@ -3268,13 +3269,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("SxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("SxNode::init(): The sizeExt must be a INTEGER_NODE.");
-
       if (this->children[1]->isArray())
         throw triton::exceptions::Ast("SxNode::init(): Cannot take an array as argument.");
 
-      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
+      sizeExt = triton::ast::getInteger<triton::uint32>(this->children[0]);
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
@@ -3372,13 +3370,10 @@ namespace triton {
       if (this->children.size() < 2)
         throw triton::exceptions::Ast("ZxNode::init(): Must take at least two children.");
 
-      if (this->children[0]->getType() != INTEGER_NODE)
-        throw triton::exceptions::Ast("ZxNode::init(): The sizeExt must be a INTEGER_NODE.");
-
       if (this->children[1]->isArray())
         throw triton::exceptions::Ast("ZxNode::init(): Cannot take an array as argument.");
 
-      sizeExt = reinterpret_cast<IntegerNode*>(this->children[0].get())->getInteger().convert_to<triton::uint32>();
+      sizeExt = triton::ast::getInteger<triton::uint32>(this->children[0]);
 
       /* Init attributes */
       this->size = sizeExt + this->children[1]->getBitvectorSize();
@@ -3741,6 +3736,16 @@ namespace triton {
       }
 
       return ptr->shared_from_this();
+    }
+
+
+    triton::uint32 getIndexSize(const SharedAbstractNode& node) {
+      switch(node->getType()) {
+        case ARRAY_NODE: return reinterpret_cast<ArrayNode*>(node.get())->getIndexSize();
+        case STORE_NODE: return reinterpret_cast<StoreNode*>(node.get())->getIndexSize();
+        default:
+          throw triton::exceptions::Ast("triton::ast::getIndexSize(): The given node is not an array.");
+      }
     }
 
   }; /* ast namespace */

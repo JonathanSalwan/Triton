@@ -22,7 +22,6 @@ namespace triton {
 
     AstContext::AstContext(const triton::modes::SharedModes& modes)
       : modes(modes) {
-      this->arraySize = 0;
     }
 
 
@@ -35,7 +34,6 @@ namespace triton {
     AstContext& AstContext::operator=(const AstContext& other) {
       std::enable_shared_from_this<AstContext>::operator=(other);
 
-      this->arraySize         = other.arraySize;
       this->astRepresentation = other.astRepresentation;
       this->modes             = other.modes;
       this->nodes             = other.nodes;
@@ -73,9 +71,8 @@ namespace triton {
     }
 
 
-    SharedAbstractNode AstContext::array(triton::uint32 addrSize) {
-      this->arraySize = addrSize;
-      SharedAbstractNode node = std::make_shared<ArrayNode>(addrSize, this->shared_from_this());
+    SharedAbstractNode AstContext::array(triton::uint32 indexSize) {
+      SharedAbstractNode node = std::make_shared<ArrayNode>(indexSize, this->shared_from_this());
       if (node == nullptr)
         throw triton::exceptions::Ast("AstContext::array(): Not enough memory.");
       node->init();
@@ -1108,11 +1105,6 @@ namespace triton {
       }
 
       throw triton::exceptions::Ast("AstContext::updateVariable(): Variable does not exist.");
-    }
-
-
-    triton::uint16 AstContext::getArraySize(void) const {
-      return this->arraySize;
     }
 
 

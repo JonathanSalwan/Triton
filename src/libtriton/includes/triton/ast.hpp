@@ -20,6 +20,7 @@
 #include <triton/astEnums.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -187,7 +188,7 @@ namespace triton {
     };
 
 
-    //! `(Array (_ BitVec addrSize) (_ BitVec 8))` node
+    //! `(Array (_ BitVec indexSize) (_ BitVec 8))` node
     class ArrayNode : public AbstractNode {
       private:
         //! \brief Mapping of concrete values. It allows us to:
@@ -195,10 +196,14 @@ namespace triton {
         // (1) Synchronize the concrete and the symbolic
         // (2) Evaluate nodes
         std::unordered_map<triton::uint64, triton::uint8> memory;
+
+        //! Size of array index
+        triton::uint32 indexSize;
+
         TRITON_EXPORT void initHash(void);
 
       public:
-        TRITON_EXPORT ArrayNode(triton::uint32 addrSize, const SharedAstContext& ctxt);
+        TRITON_EXPORT ArrayNode(triton::uint32 indexSize, const SharedAstContext& ctxt);
         TRITON_EXPORT void init(bool withParents=false);
 
         //! Stores a concrete value into the memory array
@@ -215,6 +220,9 @@ namespace triton {
 
         //! Gets the concrete memory array
         TRITON_EXPORT std::unordered_map<triton::uint64, triton::uint8>& getMemory(void);
+
+        //! Gets the index size
+        TRITON_EXPORT triton::uint32 getIndexSize(void) const;
     };
 
 
@@ -811,6 +819,10 @@ namespace triton {
         // (1) Synchronize the concrete and the symbolic
         // (2) Evaluate nodes
         std::unordered_map<triton::uint64, triton::uint8> memory;
+
+        //! Size of array index
+        triton::uint32 indexSize;
+
         TRITON_EXPORT void initHash(void);
 
       public:
@@ -829,6 +841,9 @@ namespace triton {
 
         //! Gets the concrete memory array
         TRITON_EXPORT std::unordered_map<triton::uint64, triton::uint8>& getMemory(void);
+
+        //! Gets the index size
+        TRITON_EXPORT triton::uint32 getIndexSize(void) const;
     };
 
 
@@ -913,6 +928,17 @@ namespace triton {
 
     //! Returns the first non referene node encountered.
     TRITON_EXPORT SharedAbstractNode dereference(const SharedAbstractNode& node);
+
+    //! Gets the index size of an array
+    triton::uint32 getIndexSize(const SharedAbstractNode& node);
+
+    //! Gets the value of an integer node.
+    template <typename T> T inline getInteger(const SharedAbstractNode& node) {
+      if (node->getType() == INTEGER_NODE) {
+        return reinterpret_cast<IntegerNode*>(node.get())->getInteger().convert_to<T>();
+      }
+      throw triton::exceptions::Ast("triton::ast::getInteger(): You must provide an INTEGER_NODE.");
+    }
 
   /*! @} End of ast namespace */
   };

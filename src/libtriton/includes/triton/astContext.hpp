@@ -64,9 +64,6 @@ namespace triton {
         //! The list of nodes
         std::deque<SharedAbstractNode> nodes;
 
-        //! The size of the address space used for the ABV logic.
-        triton::uint16 arraySize;
-
         //! Returns simplified concatenation.
         SharedAbstractNode simplify_concat(std::vector<SharedAbstractNode> exprs);
 
