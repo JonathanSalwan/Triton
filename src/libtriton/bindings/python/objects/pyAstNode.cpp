@@ -232,7 +232,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "AstNode::getInteger(): Only available on INTEGER_NODE type.");
 
         try {
-          return PyLong_FromUint512(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger());
+          return PyLong_FromUint512(triton::ast::getInteger<triton::uint512>(node));
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

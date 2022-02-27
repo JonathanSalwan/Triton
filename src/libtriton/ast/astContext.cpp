@@ -1165,8 +1165,8 @@ namespace triton {
 
         /* Get extraction arguments */
         const auto& childs = n->getChildren();
-        triton::uint32 hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
-        triton::uint32 lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        triton::uint32 hi = triton::ast::getInteger<triton::uint32>(childs[0]);
+        triton::uint32 lo = triton::ast::getInteger<triton::uint32>(childs[1]);
         if (hi < lo) {
           return 0;
         }
@@ -1292,8 +1292,8 @@ namespace triton {
        **/
       if (n->getType() == EXTRACT_NODE) {
         const auto& childs = n->getChildren();
-        triton::uint32 hi = reinterpret_cast<IntegerNode*>(childs[0].get())->getInteger().convert_to<uint32>();
-        triton::uint32 lo = reinterpret_cast<IntegerNode*>(childs[1].get())->getInteger().convert_to<uint32>();
+        triton::uint32 hi = triton::ast::getInteger<triton::uint32>(childs[0]);
+        triton::uint32 lo = triton::ast::getInteger<triton::uint32>(childs[1]);
         if (lo + high <= hi) {
           node = childs[2];
           high += lo;

@@ -62,7 +62,7 @@ namespace triton {
       switch (node->getType()) {
 
         case ARRAY_NODE: {
-          auto size  = reinterpret_cast<IntegerNode*>(node->getChildren()[0].get())->getInteger().convert_to<triton::uint32>();
+          auto size  = triton::ast::getInteger<triton::uint32>(node->getChildren()[0]);
           auto isort = this->context.bv_sort(size);
           auto value = this->context.bv_val(0, 8);
           return to_expr(this->context, Z3_mk_const_array(this->context, isort, value));
@@ -114,12 +114,12 @@ namespace triton {
           return to_expr(this->context, Z3_mk_bvor(this->context, children[0], children[1]));
 
         case BVROL_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
+          triton::uint32 rot = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
           return to_expr(this->context, Z3_mk_rotate_left(this->context, rot, children[0]));
         }
 
         case BVROR_NODE: {
-          triton::uint32 rot = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<triton::uint32>();
+          triton::uint32 rot = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
           return to_expr(this->context, Z3_mk_rotate_right(this->context, rot, children[0]));
         }
 
@@ -226,7 +226,7 @@ namespace triton {
         }
 
         case INTEGER_NODE: {
-          std::string value(reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger().convert_to<std::string>());
+          std::string value(triton::ast::getInteger<std::string>(node));
           return this->context.int_val(value.c_str());
         }
 
