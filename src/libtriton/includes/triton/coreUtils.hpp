@@ -53,8 +53,8 @@ namespace triton {
     template <> TRITON_EXPORT triton::uint256 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint512 fromBufferToUint(const triton::uint8* buffer);
 
-    inline WIDE_INTEGER_CONSTEXPR triton::uint80 convert_to_uint80(triton::uint512 value);
-    inline WIDE_INTEGER_CONSTEXPR triton::uint512 convert_to_uint512(triton::uint80 value);
+    TRITON_EXPORT inline WIDE_INTEGER_CONSTEXPR triton::uint80 convert_to_uint80(triton::uint512 value);
+    TRITON_EXPORT inline WIDE_INTEGER_CONSTEXPR triton::uint512 convert_to_uint512(triton::uint80 value);
 
   /*! @} End of triton namespace */
   };
