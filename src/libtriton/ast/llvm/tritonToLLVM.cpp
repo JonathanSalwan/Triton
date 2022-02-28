@@ -175,14 +175,14 @@ namespace triton {
 
         // bvrol(expr, rot) = ((expr << (rot % size)) | (expr >> (size - (rot % size))))
         case triton::ast::BVROL_NODE: {
-          auto rot  = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<uint64_t>();
+          auto rot  = static_cast<uint64_t>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
           auto size = node->getBitvectorSize();
           return this->llvmIR.CreateOr(this->llvmIR.CreateShl(children[0], rot % size), this->llvmIR.CreateLShr(children[0], (size - (rot % size))));
         }
 
         // bvror(expr, rot) = ((expr >> (rot % size)) | (expr << (size - (rot % size))))
         case triton::ast::BVROR_NODE: {
-          auto rot  = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<uint64_t>();
+          auto rot  = static_cast<uint64_t>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
           auto size = node->getBitvectorSize();
           return this->llvmIR.CreateOr(this->llvmIR.CreateLShr(children[0], rot % size), this->llvmIR.CreateShl(children[0], (size - (rot % size))));
         }
@@ -242,7 +242,7 @@ namespace triton {
           return this->llvmIR.CreateXor(children[0], children[1]);
 
         case triton::ast::BV_NODE:
-          return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(node->getBitvectorSize(), node->evaluate().convert_to<uint64>(), false));
+          return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(node->getBitvectorSize(), static_cast<uint64_t>(node->evaluate()), false));
 
         case triton::ast::CONCAT_NODE: {
           auto dstSize   = node->getBitvectorSize();
@@ -264,7 +264,7 @@ namespace triton {
           return this->llvmIR.CreateICmpEQ(children[0], children[1]);
 
         case triton::ast::EXTRACT_NODE: {
-          auto  low     = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger().convert_to<uint64_t>();
+          auto  low     = static_cast<uint64_t>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
           auto  dstSize = node->getChildren()[2]->getBitvectorSize();
           auto* value   = children[2];
 
