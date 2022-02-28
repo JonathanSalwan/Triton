@@ -33,7 +33,8 @@ namespace triton {
     typedef std::uint64_t uint64;
 
     //! unsigned 80-bits
-    typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(80)), std::uint32_t> uint80;
+    //typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(96)), std::uint32_t> uint80;
+    typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(80)), std::uint16_t> uint80;
 
     //! unsigned 128-bits
     typedef math::wide_integer::uint128_t uint128;

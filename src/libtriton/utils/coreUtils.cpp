@@ -80,5 +80,57 @@ namespace triton {
       return value;
     }
 
+    inline WIDE_INTEGER_CONSTEXPR triton::uint80 convert_to_uint80(triton::uint512 value)
+    {
+#if defined(WIDE_INTEGER_NAMESPACE)
+      using WIDE_INTEGER_NAMESPACE::math::wide_integer::detail::make_lo;
+      using WIDE_INTEGER_NAMESPACE::math::wide_integer::detail::make_hi;
+#else
+      using math::wide_integer::detail::make_lo;
+      using math::wide_integer::detail::make_hi;
+#endif
+
+      static_assert(std::numeric_limits<typename triton::uint80::limb_type>::digits * 2 == std::numeric_limits<typename triton::uint512::limb_type>::digits,
+        "Error: Wrong input/output limb types for this conversion");
+
+      using local_value_type = typename triton::uint80::representation_type::value_type;
+
+      return
+        triton::uint80::from_rep
+        (
+          {
+            make_lo<local_value_type>(*(value.crepresentation().data() + 0U)),
+            make_hi<local_value_type>(*(value.crepresentation().data() + 0U)),
+            make_lo<local_value_type>(*(value.crepresentation().data() + 1U)),
+            make_hi<local_value_type>(*(value.crepresentation().data() + 1U)),
+            make_lo<local_value_type>(*(value.crepresentation().data() + 2U))
+          }
+      );
+    }
+
+    inline WIDE_INTEGER_CONSTEXPR triton::uint512 convert_to_uint512(triton::uint80 value)
+    {
+#if defined(WIDE_INTEGER_NAMESPACE)
+      using WIDE_INTEGER_NAMESPACE::math::wide_integer::detail::make_large;
+#else
+      using math::wide_integer::detail::make_large;
+#endif
+
+      static_assert(std::numeric_limits<typename triton::uint80::limb_type>::digits * 2 == std::numeric_limits<typename triton::uint512::limb_type>::digits,
+        "Error: Wrong input/output limb types for this conversion");
+
+      using local_value_type = typename triton::uint80::representation_type::value_type;
+
+      return
+        triton::uint512::from_rep
+        (
+          {
+            make_large(*(value.crepresentation().data() + 0U), *(value.crepresentation().data() + 1U)),
+            make_large(*(value.crepresentation().data() + 2U), *(value.crepresentation().data() + 3U)),
+            make_large(*(value.crepresentation().data() + 4U), static_cast<local_value_type>(0U))
+          }
+      );
+    }
+
   }; /* utils namespace */
 }; /* triton namespace */

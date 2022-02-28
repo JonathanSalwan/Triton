@@ -11,6 +11,7 @@
 #include <triton/externalLibs.hpp>
 #include <triton/x86Specifications.hpp>
 
+#include <assert.h> 
 
 
 namespace triton {
