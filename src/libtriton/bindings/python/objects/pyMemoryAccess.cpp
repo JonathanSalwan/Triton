@@ -11,7 +11,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/memoryAccess.hpp>
 
-
+#include <iostream>
 
 /* setup doctest context
 
