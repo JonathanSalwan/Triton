@@ -92,7 +92,6 @@ from triton import *
 Triton relies on the following dependencies:
 
 ```
-* libboost                   >= 1.68
 * libcapstone                >= 4.0.x   https://github.com/capstone-engine/capstone
 * libpython     (optional)   >= 3.6
 * libz3         (optional)   >= 4.6.0   https://github.com/Z3Prover/z3
@@ -129,7 +128,6 @@ You can use cmake to generate the .sln file of libTriton.
 > mkdir build
 > cd build
 > cmake -G "Visual Studio 14 2015 Win64" \
-  -DBOOST_ROOT="C:/Users/jonathan/Works/Tools/boost_1_61_0" \
   -DPYTHON_INCLUDE_DIRS="C:/Python36/include" \
   -DPYTHON_LIBRARIES="C:/Python36/libs/python36.lib" \
   -DZ3_INCLUDE_DIRS="C:/Users/jonathan/Works/Tools/z3-4.6.0-x64-win/include" \

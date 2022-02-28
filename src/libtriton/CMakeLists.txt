@@ -259,7 +259,6 @@ target_include_directories(triton PUBLIC
 # Link Triton's dependencies
 target_link_libraries(triton PUBLIC
     ${PYTHON_LIBRARIES}
-    ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}

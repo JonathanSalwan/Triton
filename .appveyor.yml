@@ -90,7 +90,7 @@ install:
   - cmd: python -m pip install %LIEF_ZIP%
     # Running cmake for Triton
   - cmd: echo Running cmake for Triton...
-  - cmd: cmake -DBOOST_ROOT="C:/Libraries/boost_1_73_0" -DBoost_INCLUDE_DIR="C:/Libraries/boost_1_73_0" -DPYTHON_VERSION=%PYTHON_VERSION% .. -A %platform% -G "%CMAKE_TEMPLATE%"
+  - cmd: cmake -DPYTHON_VERSION=%PYTHON_VERSION% .. -A %platform% -G "%CMAKE_TEMPLATE%"
 
 #build:
 # Build manually until we can build every target. For now, we can't run test-python

@@ -15,9 +15,6 @@ jobs:
         uses: actions/setup-python@v2
         with:
           python-version: ${{ matrix.python-version }}
-      - name: Install dependencies
-        run: |
-          brew install boost
       - name: Install Z3
         run: |
           brew install z3

@@ -11,7 +11,7 @@
 #include <triton/bitsVector.hpp>
 #include <triton/exceptions.hpp>
 
-
+#include <iostream>
 
 /* setup doctest context
 
