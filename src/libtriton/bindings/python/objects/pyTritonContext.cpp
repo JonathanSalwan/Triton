@@ -304,7 +304,7 @@ Pops the last constraints added to the path predicate.
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>void pushPathConstraint(\ref py_AstNode_page node)</b><br>
+- <b>void pushPathConstraint(\ref py_AstNode_page node, string comment="")</b><br>
 Pushs constraints to the current path predicate.
 
 - <b>void removeCallback(\ref py_CALLBACK_page kind, function cb)</b><br>
@@ -2398,12 +2398,33 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an AstNode as argument.");
+      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* node       = nullptr;
+        PyObject* comment    = nullptr;
+        std::string ccomment = "";
+
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"comment",
+          nullptr
+        };
+
+        /* Extract Keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Invalid keyword argument.");
+        }
+
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an AstNode as first argument.");
+
+        if (comment != nullptr && !PyStr_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects a string as second argument.");
+
+        if (comment != nullptr)
+          ccomment = PyStr_AsString(comment);
 
         try {
-          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node));
+          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node), ccomment);
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3407,7 +3428,7 @@ namespace triton {
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                         METH_VARARGS,                  ""},
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                           METH_NOARGS,                   ""},
         {"processing",                          (PyCFunction)TritonContext_processing,                                  METH_O,                        ""},
-        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                          METH_O,                        ""},
+        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                          METH_VARARGS | METH_KEYWORDS,  ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                              METH_VARARGS,                  ""},
         {"reset",                               (PyCFunction)TritonContext_reset,                                       METH_NOARGS,                   ""},
         {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                             METH_O,                        ""},
