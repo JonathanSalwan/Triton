@@ -94,7 +94,14 @@ smtlifting = """(define-fun bswap8 ((value (_ BitVec 8))) (_ BitVec 8)
 (define-fun ref!0 () (_ BitVec 8) (bvadd SymVar_0 SymVar_1)) ; ref test
 """
 
-pythonlifting = """def sx(bits, value):
+pythonlifting = """def select(mem, index):
+    return mem[index]
+
+def store(mem, index, value):
+    mem[index] = value
+    return mem
+
+def sx(bits, value):
     sign_bit = 1 << (bits - 1)
     return (value & (sign_bit - 1)) - (value & sign_bit)
 

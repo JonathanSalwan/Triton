@@ -1,6 +1,6 @@
 <p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
 
-**Triton** is a dynamic binary analysis framework. It provides internal components like a **dynamic symbolic execution** engine,
+**Triton** is a dynamic binary analysis library. It provides internal components like a **dynamic symbolic execution** engine,
 a **dynamic taint analysis** engine, **AST representation** of the **x86**, **x86-64**, **ARM32** and **AArch64** ISA semantic,
 an **expressions synthesis** engine, some **SMT simplification** passes, **SMT solver** interface to **Z3** and **Bitwuzla**
 and, the last but not least, **Python bindings**. Based on these components, you are able to build your program analysis tools,

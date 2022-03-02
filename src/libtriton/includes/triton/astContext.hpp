@@ -86,6 +86,9 @@ namespace triton {
         //! Garbage unused nodes.
         TRITON_EXPORT void garbage(void);
 
+        //! AST C++ API - array node builder
+        TRITON_EXPORT SharedAbstractNode array(triton::uint32 addrSize);
+
         //! AST C++ API - assert node builder
         TRITON_EXPORT SharedAbstractNode assert_(const SharedAbstractNode& expr);
 
@@ -305,6 +308,18 @@ namespace triton {
         //! AST C++ API - reference node builder
         TRITON_EXPORT SharedAbstractNode reference(const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
+        //! AST C++ API - select node builder
+        TRITON_EXPORT SharedAbstractNode select(const SharedAbstractNode& array, triton::usize index);
+
+        //! AST C++ API - select node builder
+        TRITON_EXPORT SharedAbstractNode select(const SharedAbstractNode& array, const SharedAbstractNode& index);
+
+        //! AST C++ API - store node builder
+        TRITON_EXPORT SharedAbstractNode store(const SharedAbstractNode& array, triton::usize index, const SharedAbstractNode& expr);
+
+        //! AST C++ API - store node builder
+        TRITON_EXPORT SharedAbstractNode store(const SharedAbstractNode& array, const SharedAbstractNode& index, const SharedAbstractNode& expr);
+
         //! AST C++ API - string node builder
         TRITON_EXPORT SharedAbstractNode string(std::string value);
 
@@ -325,6 +340,9 @@ namespace triton {
 
         //! Gets a variable node from its name.
         SharedAbstractNode getVariableNode(const std::string& name);
+
+        //! Returns the address space used for the ABV logic.
+        TRITON_EXPORT triton::uint16 getArraySize(void) const;
 
         //! Gets a variable value from its name.
         TRITON_EXPORT const triton::uint512& getVariableValue(const std::string& name) const;

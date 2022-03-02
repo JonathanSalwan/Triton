@@ -61,6 +61,13 @@ namespace triton {
 
       switch (node->getType()) {
 
+        case ARRAY_NODE: {
+          auto size  = triton::ast::getInteger<triton::uint32>(node->getChildren()[0]);
+          auto isort = this->context.bv_sort(size);
+          auto value = this->context.bv_val(0, 8);
+          return to_expr(this->context, Z3_mk_const_array(this->context, isort, value));
+        }
+
         case BSWAP_NODE: {
           auto bvsize = node->getBitvectorSize();
           auto retval = to_expr(this->context, Z3_mk_bvand(this->context, children[0], this->context.bv_val(0xff, bvsize)));
@@ -107,12 +114,12 @@ namespace triton {
           return to_expr(this->context, Z3_mk_bvor(this->context, children[0], children[1]));
 
         case BVROL_NODE: {
-          triton::uint32 rot = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
+          triton::uint32 rot = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
           return to_expr(this->context, Z3_mk_rotate_left(this->context, rot, children[0]));
         }
 
         case BVROR_NODE: {
-          triton::uint32 rot = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
+          triton::uint32 rot = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
           return to_expr(this->context, Z3_mk_rotate_right(this->context, rot, children[0]));
         }
 
@@ -219,10 +226,8 @@ namespace triton {
         }
 
         case INTEGER_NODE: {
-          std::stringstream ss;
-          ss << reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger();
-
-          return this->context.int_val(ss.str().c_str());
+          std::string value(triton::ast::getInteger<std::string>(node));
+          return this->context.int_val(value.c_str());
         }
 
         case ITE_NODE: {
@@ -294,6 +299,12 @@ namespace triton {
 
           return results->at(this->symbols[value]);
         }
+
+        case SELECT_NODE:
+          return to_expr(this->context, Z3_mk_select(this->context, children[0], children[1]));
+
+        case STORE_NODE:
+          return to_expr(this->context, Z3_mk_store(this->context, children[0], children[1], children[2]));
 
         case SX_NODE:
           return to_expr(this->context, Z3_mk_sign_ext(this->context, children[0].get_numeral_uint(), children[1]));

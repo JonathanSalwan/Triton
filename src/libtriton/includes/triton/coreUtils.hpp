@@ -48,7 +48,7 @@ namespace triton {
       return {};
     }
 
-    template <> TRITON_EXPORT triton::uint80 fromBufferToUint(const triton::uint8* buffer);
+    template <> TRITON_EXPORT triton::uint80  fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint128 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint256 fromBufferToUint(const triton::uint8* buffer);
     template <> TRITON_EXPORT triton::uint512 fromBufferToUint(const triton::uint8* buffer);

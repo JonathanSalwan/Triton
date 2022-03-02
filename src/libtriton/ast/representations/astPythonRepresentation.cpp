@@ -23,6 +23,7 @@ namespace triton {
       /* Representation dispatcher from an abstract node */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getType()) {
+          case ARRAY_NODE:                return this->print(stream, reinterpret_cast<triton::ast::ArrayNode*>(node)); break;
           case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
           case BSWAP_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BswapNode*>(node)); break;
           case BVADD_NODE:                return this->print(stream, reinterpret_cast<triton::ast::BvaddNode*>(node)); break;
@@ -71,6 +72,8 @@ namespace triton {
           case LOR_NODE:                  return this->print(stream, reinterpret_cast<triton::ast::LorNode*>(node)); break;
           case LXOR_NODE:                 return this->print(stream, reinterpret_cast<triton::ast::LxorNode*>(node)); break;
           case REFERENCE_NODE:            return this->print(stream, reinterpret_cast<triton::ast::ReferenceNode*>(node)); break;
+          case SELECT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::SelectNode*>(node)); break;
+          case STORE_NODE:                return this->print(stream, reinterpret_cast<triton::ast::StoreNode*>(node)); break;
           case STRING_NODE:               return this->print(stream, reinterpret_cast<triton::ast::StringNode*>(node)); break;
           case SX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::SxNode*>(node)); break;
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
@@ -78,6 +81,13 @@ namespace triton {
           default:
             throw triton::exceptions::AstRepresentation("AstPythonRepresentation::print(AbstractNode): Invalid kind node.");
         }
+        return stream;
+      }
+
+
+      /* array representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ArrayNode* node) {
+        stream << "Memory";
         return stream;
       }
 
@@ -336,11 +346,22 @@ namespace triton {
 
       /* declare representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
-        const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
-        if (var->getAlias().empty())
-          stream << var->getName() << " = " << "int(input())";
-        else
-          stream << var->getAlias() << " = " << "int(input())";
+        if (node->getChildren()[0]->getType() == VARIABLE_NODE) {
+          const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
+          if (var->getAlias().empty())
+            stream << var->getName() << " = " << "int(input())";
+          else
+            stream << var->getAlias() << " = " << "int(input())";
+        }
+
+        else if (node->getChildren()[0]->getType() == ARRAY_NODE) {
+          stream << node->getChildren()[0] << " = bytearray()";
+        }
+
+        else {
+          throw triton::exceptions::AstRepresentation("AstSmtRepresentation::print(DeclareNode): Invalid sort.");
+        }
+
         return stream;
       }
 
@@ -361,7 +382,7 @@ namespace triton {
 
       /* extract representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
-        triton::uint32 low = static_cast<triton::uint32>(reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[1].get())->getInteger());
+        triton::uint32 low = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
 
         if (low == 0)
           stream << "(" << node->getChildren()[2] << " & " << std::hex << "0x" << node->getBitvectorMask() << std::dec << ")";
@@ -468,6 +489,20 @@ namespace triton {
       }
 
 
+      /* select representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::SelectNode* node) {
+        stream << "select(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        return stream;
+      }
+
+
+      /* store representation */
+      std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::StoreNode* node) {
+        stream << "store(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getChildren()[2] << ")";
+        return stream;
+      }
+
+
       /* string representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::StringNode* node) {
         stream << node->getString();
@@ -477,7 +512,7 @@ namespace triton {
 
       /* sx representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::SxNode* node) {
-        triton::uint512 extend = reinterpret_cast<triton::ast::IntegerNode*>(node->getChildren()[0].get())->getInteger();
+        triton::uint32 extend = triton::ast::getInteger<triton::uint32>(node->getChildren()[0]);
 
         if (extend)
           stream << "sx(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";

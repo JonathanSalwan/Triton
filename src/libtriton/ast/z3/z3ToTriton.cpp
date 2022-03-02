@@ -37,6 +37,12 @@ namespace triton {
       /* All z3's AST nodes supported */
       switch (function.decl_kind()) {
 
+        /* Const array */
+        case  Z3_OP_CONST_ARRAY: {
+          node = this->astCtxt->array(function.range().array_domain().bv_size());
+          break;
+        }
+
         case Z3_OP_EQ: {
           if (expr.num_args() != 2)
             throw triton::exceptions::AstLifting("Z3ToTriton::visit(): Z3_OP_EQ must contain two arguments.");
@@ -406,6 +412,20 @@ namespace triton {
           break;
         }
 
+        case Z3_OP_SELECT: {
+          if (expr.num_args() != 2)
+            throw triton::exceptions::AstLifting("Z3ToTritonAst::visit(): Z3_OP_SELECT must contain two argument.");
+          node = this->astCtxt->select(this->convert(expr.arg(0)), this->convert(expr.arg(1)));
+          break;
+        }
+
+        case Z3_OP_STORE: {
+          if (expr.num_args() != 3)
+            throw triton::exceptions::AstLifting("Z3ToTritonAst::visit(): Z3_OP_STORE must contain three argument.");
+          node = this->astCtxt->store(this->convert(expr.arg(0)), this->convert(expr.arg(1)), this->convert(expr.arg(2)));
+          break;
+        }
+
         /* Always TRUE */
         case Z3_OP_TRUE: {
           node = this->astCtxt->equal(this->astCtxt->bvtrue(), this->astCtxt->bvtrue());
@@ -423,8 +443,9 @@ namespace triton {
           std::string name = function.name().str();
 
           node = this->astCtxt->getVariableNode(name);
-          if (node == nullptr)
+          if (node == nullptr) {
             node = this->astCtxt->string(name);
+          }
 
           break;
         }

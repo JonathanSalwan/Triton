@@ -20,6 +20,7 @@
 #include <triton/astEnums.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/dllexport.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/tritonTypes.hpp>
 
 
@@ -97,6 +98,9 @@ namespace triton {
         //! True if it's a logical node.
         bool logical;
 
+        //! True if it's an array node.
+        bool array;
+
         //! Contect use to create this node
         SharedAstContext ctxt;
 
@@ -118,6 +122,9 @@ namespace triton {
 
         //! Returns the vector mask according the size of the node.
         TRITON_EXPORT triton::uint512 getBitvectorMask(void) const;
+
+        //! Returns true if it's an array node.
+        TRITON_EXPORT bool isArray(void) const;
 
         //! According to the size of the expression, returns true if the MSB is 1.
         TRITON_EXPORT bool isSigned(void) const;
@@ -178,6 +185,44 @@ namespace triton {
 
         //! Init properties of the node. If withParents is true, init also properties of parents
         TRITON_EXPORT virtual void init(bool withParents=false) = 0;
+    };
+
+
+    //! `(Array (_ BitVec indexSize) (_ BitVec 8))` node
+    class ArrayNode : public AbstractNode {
+      private:
+        //! \brief Mapping of concrete values. It allows us to:
+        //
+        // (1) Synchronize the concrete and the symbolic
+        // (2) Evaluate nodes
+        std::unordered_map<triton::uint64, triton::uint8> memory;
+
+        //! Size of array index
+        triton::uint32 indexSize;
+
+        TRITON_EXPORT void initHash(void);
+
+      public:
+        TRITON_EXPORT ArrayNode(triton::uint32 indexSize, const SharedAstContext& ctxt);
+        TRITON_EXPORT void init(bool withParents=false);
+
+        //! Stores a concrete value into the memory array
+        TRITON_EXPORT void store(triton::uint64 addr, triton::uint8 value);
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(triton::uint64 addr) const;
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(const triton::uint512& addr) const;
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(const SharedAbstractNode& node) const;
+
+        //! Gets the concrete memory array
+        TRITON_EXPORT std::unordered_map<triton::uint64, triton::uint8>& getMemory(void);
+
+        //! Gets the index size
+        TRITON_EXPORT triton::uint32 getIndexSize(void) const;
     };
 
 
@@ -754,6 +799,54 @@ namespace triton {
     };
 
 
+    //! `(select array index)`
+    class SelectNode : public AbstractNode {
+      private:
+        TRITON_EXPORT void initHash(void);
+
+      public:
+        TRITON_EXPORT SelectNode(const SharedAbstractNode& array, triton::usize index);
+        TRITON_EXPORT SelectNode(const SharedAbstractNode& array, const SharedAbstractNode& index);
+        TRITON_EXPORT void init(bool withParents=false);
+    };
+
+
+    //! `(store array index expr)`
+    class StoreNode : public AbstractNode {
+      private:
+        //! \brief Mapping of concrete values. It allows us to:
+        //
+        // (1) Synchronize the concrete and the symbolic
+        // (2) Evaluate nodes
+        std::unordered_map<triton::uint64, triton::uint8> memory;
+
+        //! Size of array index
+        triton::uint32 indexSize;
+
+        TRITON_EXPORT void initHash(void);
+
+      public:
+        TRITON_EXPORT StoreNode(const SharedAbstractNode& array, triton::usize index, const SharedAbstractNode& expr);
+        TRITON_EXPORT StoreNode(const SharedAbstractNode& array, const SharedAbstractNode& index, const SharedAbstractNode& expr);
+        TRITON_EXPORT void init(bool withParents=false);
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(triton::uint64 addr) const;
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(const triton::uint512& addr) const;
+
+        //! Select a concrete value into the memory array
+        TRITON_EXPORT triton::uint8 select(const SharedAbstractNode& node) const;
+
+        //! Gets the concrete memory array
+        TRITON_EXPORT std::unordered_map<triton::uint64, triton::uint8>& getMemory(void);
+
+        //! Gets the index size
+        TRITON_EXPORT triton::uint32 getIndexSize(void) const;
+    };
+
+
     //! String node
     class StringNode : public AbstractNode {
       private:
@@ -835,6 +928,17 @@ namespace triton {
 
     //! Returns the first non referene node encountered.
     TRITON_EXPORT SharedAbstractNode dereference(const SharedAbstractNode& node);
+
+    //! Gets the index size of an array
+    triton::uint32 getIndexSize(const SharedAbstractNode& node);
+
+    //! Gets the value of an integer node.
+    template <typename T> T inline getInteger(const SharedAbstractNode& node) {
+      if (node->getType() == INTEGER_NODE) {
+        return reinterpret_cast<IntegerNode*>(node.get())->getInteger().convert_to<T>();
+      }
+      throw triton::exceptions::Ast("triton::ast::getInteger(): You must provide an INTEGER_NODE.");
+    }
 
   /*! @} End of ast namespace */
   };

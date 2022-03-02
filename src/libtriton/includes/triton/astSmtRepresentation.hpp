@@ -49,6 +49,9 @@ namespace triton {
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::AbstractNode* node);
 
           //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ArrayNode* node);
+
+          //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::AssertNode* node);
 
           //! Displays the node according to the representation mode.
@@ -191,6 +194,12 @@ namespace triton {
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::ReferenceNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::SelectNode* node);
+
+          //! Displays the node according to the representation mode.
+          TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::StoreNode* node);
 
           //! Displays the node according to the representation mode.
           TRITON_EXPORT std::ostream& print(std::ostream& stream, triton::ast::StringNode* node);

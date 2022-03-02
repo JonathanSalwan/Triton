@@ -23,7 +23,7 @@
 
 \section description_sec Description
 
-<b>Triton</b> is a dynamic binary analysis framework. It provides internal components like a
+<b>Triton</b> is a dynamic binary analysis library. It provides internal components like a
 <b>dynamic symbolic execution</b> engine, a <b>dynamic taint analysis</b> engine, <b>AST representation</b> of the
 <b>x86</b>, <b>x86-64</b>, <b>ARM32</b> and <b>AArch64</b> ISA semantic, an <b>expressions synthesis</b> engine,
 some <b>SMT simplification</b> passes, <b>SMT solver</b> interface to <b>Z3</b> and <b>Bitwuzla</b> and, the last

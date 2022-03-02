@@ -25,6 +25,15 @@ namespace triton {
 
 
       void LiftingToPython::requiredFunctions(std::ostream& stream) {
+        stream << "def select(mem, index):" << std::endl;
+        stream << "    return mem[index]" << std::endl;
+
+        stream << std::endl;
+        stream << "def store(mem, index, value):" << std::endl;
+        stream << "    mem[index] = value" << std::endl;
+        stream << "    return mem" << std::endl;
+
+        stream << std::endl;
         stream << "def sx(bits, value):" << std::endl;
         stream << "    sign_bit = 1 << (bits - 1)" << std::endl;
         stream << "    return (value & (sign_bit - 1)) - (value & sign_bit)" << std::endl;
@@ -75,11 +84,16 @@ namespace triton {
         /* Print required functions */
         this->requiredFunctions(stream);
 
+        /* Declare arrays if exist */
+        for (const auto& array : triton::ast::search(expr->getAst(), triton::ast::ARRAY_NODE)) {
+          auto n = this->astCtxt->declare(array);
+          stream << n << std::endl;
+        }
+
         /* Print symbolic variables */
         for (const auto& var : symVars) {
           auto n = this->astCtxt->declare(this->astCtxt->variable(var.second));
-          this->astCtxt->print(stream, n.get());
-          stream << std::endl;
+          stream << n << std::endl;
         }
 
         /* Sort SSA */
