@@ -80,7 +80,7 @@ namespace triton {
       return value;
     }
 
-    inline WIDE_INTEGER_CONSTEXPR triton::uint80 convert_to_uint80(triton::uint512 value)
+    WIDE_INTEGER_CONSTEXPR triton::uint80 convert_to_uint80(triton::uint512 value)
     {
 #if defined(WIDE_INTEGER_NAMESPACE)
       using WIDE_INTEGER_NAMESPACE::math::wide_integer::detail::make_lo;
@@ -108,7 +108,7 @@ namespace triton {
       );
     }
 
-    inline WIDE_INTEGER_CONSTEXPR triton::uint512 convert_to_uint512(triton::uint80 value)
+    WIDE_INTEGER_CONSTEXPR triton::uint512 convert_to_uint512(triton::uint80 value)
     {
 #if defined(WIDE_INTEGER_NAMESPACE)
       using WIDE_INTEGER_NAMESPACE::math::wide_integer::detail::make_large;
