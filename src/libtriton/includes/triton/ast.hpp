@@ -935,7 +935,17 @@ namespace triton {
     //! Gets the value of an integer node.
     template <typename T> T inline getInteger(const SharedAbstractNode& node) {
       if (node->getType() == INTEGER_NODE) {
-        return reinterpret_cast<IntegerNode*>(node.get())->getInteger().convert_to<T>();
+        return static_cast<T>(reinterpret_cast<IntegerNode*>(node.get())->getInteger());
+      }
+      throw triton::exceptions::Ast("triton::ast::getInteger(): You must provide an INTEGER_NODE.");
+    }
+
+    //! std::string specialization
+    template <> std::string inline getInteger(const SharedAbstractNode& node) {
+      if (node->getType() == INTEGER_NODE) {
+        std::stringstream ss;
+        ss << reinterpret_cast<triton::ast::IntegerNode*>(node.get())->getInteger();
+        return ss.str();
       }
       throw triton::exceptions::Ast("triton::ast::getInteger(): You must provide an INTEGER_NODE.");
     }

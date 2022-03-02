@@ -343,12 +343,12 @@ namespace triton {
 
 
     triton::uint8 ArrayNode::select(const triton::uint512& addr) const {
-      return this->select(addr.convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(addr));
     }
 
 
     triton::uint8 ArrayNode::select(const SharedAbstractNode& node) const {
-      return this->select(node->evaluate().convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(node->evaluate()));
     }
 
 
@@ -3154,7 +3154,7 @@ namespace triton {
       }
 
       /* Store the value to the memory array */
-      this->memory[this->children[1]->evaluate().convert_to<triton::uint64>()] = this->eval.convert_to<triton::uint8>();
+      this->memory[static_cast<triton::uint64>(this->children[1]->evaluate())] = static_cast<triton::uint8>(this->eval);
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -3194,12 +3194,12 @@ namespace triton {
 
 
     triton::uint8 StoreNode::select(const triton::uint512& addr) const {
-      return this->select(addr.convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(addr));
     }
 
 
     triton::uint8 StoreNode::select(const SharedAbstractNode& node) const {
-      return this->select(node->evaluate().convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(node->evaluate()));
     }
 
 

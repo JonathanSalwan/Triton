@@ -195,10 +195,7 @@ namespace triton {
           }
 
           auto bv_value = triton::ast::getInteger<std::string>(childNodes[0]);
-          std::stringstream ss;
-          ss << bv_value;
-          std::string bv_value_str(ss.str());
-          return bitwuzla_mk_bv_value(bzla, sort->second, bv_value_str.c_str(), BITWUZLA_BV_BASE_DEC);
+          return bitwuzla_mk_bv_value(bzla, sort->second, bv_value.c_str(), BITWUZLA_BV_BASE_DEC);
         }
 
         case CONCAT_NODE:
