@@ -231,7 +231,7 @@ namespace triton {
 
 
       /* Pushes constraint created from node to the current path predicate. */
-      void PathManager::pushPathConstraint(const triton::ast::SharedAbstractNode& node, const std::string& comment="") {
+      void PathManager::pushPathConstraint(const triton::ast::SharedAbstractNode& node, const std::string& comment) {
         triton::engines::symbolic::PathConstraint pco;
 
         if (node->isLogical() == false)
