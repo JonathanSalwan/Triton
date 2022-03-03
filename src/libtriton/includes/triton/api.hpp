@@ -438,7 +438,7 @@ namespace triton {
         TRITON_EXPORT triton::usize getSizeOfPathConstraints(void) const;
 
         //! [**symbolic api**] - Pushes constraint created from node to the current path predicate.
-        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
+        TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
         //! [**symbolic api**] - Pushes constraint to the current path predicate.
         TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco);

@@ -304,7 +304,7 @@ Pops the last constraints added to the path predicate.
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>void pushPathConstraint(\ref py_AstNode_page node)</b><br>
+- <b>void pushPathConstraint(\ref py_AstNode_page node, string comment="")</b><br>
 Pushs constraints to the current path predicate.
 
 - <b>void removeCallback(\ref py_CALLBACK_page kind, function cb)</b><br>
@@ -2398,12 +2398,33 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* node) {
-        if (!PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an AstNode as argument.");
+      static PyObject* TritonContext_pushPathConstraint(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* node       = nullptr;
+        PyObject* comment    = nullptr;
+        std::string ccomment = "";
+
+        static char* keywords[] = {
+          (char*)"node",
+          (char*)"comment",
+          nullptr
+        };
+
+        /* Extract Keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &node, &comment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Invalid keyword argument.");
+        }
+
+        if (node == nullptr || (!PyAstNode_Check(node)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects an AstNode as first argument.");
+
+        if (comment != nullptr && !PyStr_Check(comment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::pushPathConstraint(): Expects a string as second argument.");
+
+        if (comment != nullptr)
+          ccomment = PyStr_AsString(comment);
 
         try {
-          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node));
+          PyTritonContext_AsTritonContext(self)->pushPathConstraint(PyAstNode_AsAstNode(node), ccomment);
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -3334,108 +3355,108 @@ namespace triton {
 
       //! TritonContext methods.
       PyMethodDef TritonContext_callbacks[] = {
-        {"addCallback",                         (PyCFunction)TritonContext_addCallback,                                 METH_VARARGS,                  ""},
-        {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,            METH_VARARGS,                  ""},
-        {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,          METH_VARARGS,                  ""},
-        {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                              METH_O,                        ""},
-        {"clearCallbacks",                      (PyCFunction)TritonContext_clearCallbacks,                              METH_NOARGS,                   ""},
-        {"clearModes",                          (PyCFunction)TritonContext_clearModes,                                  METH_NOARGS,                   ""},
-        {"clearConcreteMemoryValue",            (PyCFunction)TritonContext_clearConcreteMemoryValue,                    METH_VARARGS,                  ""},
-        {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                        METH_NOARGS,                   ""},
-        {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                         METH_NOARGS,                   ""},
-        {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                       METH_NOARGS,                   ""},
-        {"concretizeMemory",                    (PyCFunction)TritonContext_concretizeMemory,                            METH_O,                        ""},
-        {"concretizeRegister",                  (PyCFunction)TritonContext_concretizeRegister,                          METH_O,                        ""},
-        {"createSymbolicMemoryExpression",      (PyCFunction)TritonContext_createSymbolicMemoryExpression,              METH_VARARGS,                  ""},
-        {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,            METH_VARARGS,                  ""},
-        {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,            METH_VARARGS,                  ""},
-        {"disassembly",                         (PyCFunction)TritonContext_disassembly,                                 METH_VARARGS,                  ""},
-        {"evaluateAstViaSolver",                (PyCFunction)TritonContext_evaluateAstViaSolver,                        METH_O,                        ""},
-        {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                             METH_NOARGS,                   ""},
-        {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                             METH_NOARGS,                   ""},
-        {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                               METH_NOARGS,                   ""},
-        {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,                    METH_NOARGS,                   ""},
-        {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,                  METH_VARARGS,                  ""},
-        {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                      METH_O,                        ""},
-        {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,                    METH_O,                        ""},
-        {"getConcreteVariableValue",            (PyCFunction)TritonContext_getConcreteVariableValue,                    METH_O,                        ""},
-        {"getGprBitSize",                       (PyCFunction)TritonContext_getGprBitSize,                               METH_NOARGS,                   ""},
-        {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                                  METH_NOARGS,                   ""},
-        {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                             METH_O,                        ""},
-        {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                                METH_O,                        ""},
-        {"getModel",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModel,    METH_VARARGS | METH_KEYWORDS,  ""},
-        {"getModels",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModels,   METH_VARARGS | METH_KEYWORDS,  ""},
-        {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                           METH_O,                        ""},
-        {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                          METH_NOARGS,                   ""},
-        {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                          METH_NOARGS,                   ""},
-        {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                            METH_NOARGS,                   ""},
-        {"getPathPredicateSize",                (PyCFunction)TritonContext_getPathPredicateSize,                        METH_NOARGS,                   ""},
-        {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,                 METH_O,                        ""},
-        {"getRegister",                         (PyCFunction)TritonContext_getRegister,                                 METH_O,                        ""},
-        {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                              METH_O,                        ""},
-        {"getSolver",                           (PyCFunction)TritonContext_getSolver,                                   METH_NOARGS,                   ""},
-        {"getSymbolicExpression",               (PyCFunction)TritonContext_getSymbolicExpression,                       METH_O,                        ""},
-        {"getSymbolicExpressions",              (PyCFunction)TritonContext_getSymbolicExpressions,                      METH_NOARGS,                   ""},
-        {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                           METH_VARARGS,                  ""},
-        {"getSymbolicMemoryValue",              (PyCFunction)TritonContext_getSymbolicMemoryValue,                      METH_O,                        ""},
-        {"getSymbolicRegister",                 (PyCFunction)TritonContext_getSymbolicRegister,                         METH_O,                        ""},
-        {"getSymbolicRegisterValue",            (PyCFunction)TritonContext_getSymbolicRegisterValue,                    METH_O,                        ""},
-        {"getSymbolicRegisters",                (PyCFunction)TritonContext_getSymbolicRegisters,                        METH_NOARGS,                   ""},
-        {"getSymbolicVariable",                 (PyCFunction)TritonContext_getSymbolicVariable,                         METH_O,                        ""},
-        {"getSymbolicVariables",                (PyCFunction)TritonContext_getSymbolicVariables,                        METH_NOARGS,                   ""},
-        {"getTaintedMemory",                    (PyCFunction)TritonContext_getTaintedMemory,                            METH_NOARGS,                   ""},
-        {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                         METH_NOARGS,                   ""},
-        {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,               METH_NOARGS,                   ""},
-        {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                         METH_NOARGS,                   ""},
-        {"isConcreteMemoryValueDefined",        (PyCFunction)TritonContext_isConcreteMemoryValueDefined,                METH_VARARGS,                  ""},
-        {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                      METH_O,                        ""},
-        {"isMemorySymbolized",                  (PyCFunction)TritonContext_isMemorySymbolized,                          METH_O,                        ""},
-        {"isMemoryTainted",                     (PyCFunction)TritonContext_isMemoryTainted,                             METH_O,                        ""},
-        {"isModeEnabled",                       (PyCFunction)TritonContext_isModeEnabled,                               METH_O,                        ""},
-        {"isRegister",                          (PyCFunction)TritonContext_isRegister,                                  METH_O,                        ""},
-        {"isRegisterSymbolized",                (PyCFunction)TritonContext_isRegisterSymbolized,                        METH_O,                        ""},
-        {"isRegisterTainted",                   (PyCFunction)TritonContext_isRegisterTainted,                           METH_O,                        ""},
-        {"isRegisterValid",                     (PyCFunction)TritonContext_isRegisterValid,                             METH_O,                        ""},
-        {"isSat",                               (PyCFunction)TritonContext_isSat,                                       METH_O,                        ""},
-        {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                  METH_O,                        ""},
-        {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                     METH_NOARGS,                   ""},
-        {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                   METH_O,                        ""},
-        {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,  METH_VARARGS | METH_KEYWORDS,  ""},
-        {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                METH_O,                        ""},
-        {"liftToSMT",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToSMT,   METH_VARARGS | METH_KEYWORDS,  ""},
-        {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                       METH_VARARGS,                  ""},
-        {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                         METH_VARARGS,                  ""},
-        {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                           METH_NOARGS,                   ""},
-        {"processing",                          (PyCFunction)TritonContext_processing,                                  METH_O,                        ""},
-        {"pushPathConstraint",                  (PyCFunction)TritonContext_pushPathConstraint,                          METH_O,                        ""},
-        {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                              METH_VARARGS,                  ""},
-        {"reset",                               (PyCFunction)TritonContext_reset,                                       METH_NOARGS,                   ""},
-        {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                             METH_O,                        ""},
-        {"setAstRepresentationMode",            (PyCFunction)TritonContext_setAstRepresentationMode,                    METH_O,                        ""},
-        {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,                  METH_VARARGS,                  ""},
-        {"setConcreteMemoryValue",              (PyCFunction)TritonContext_setConcreteMemoryValue,                      METH_VARARGS,                  ""},
-        {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,                    METH_VARARGS,                  ""},
-        {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,                    METH_VARARGS,                  ""},
-        {"setMode",                             (PyCFunction)TritonContext_setMode,                                     METH_VARARGS,                  ""},
-        {"setSolver",                           (PyCFunction)TritonContext_setSolver,                                   METH_O,                        ""},
-        {"setSolverMemoryLimit",                (PyCFunction)TritonContext_setSolverMemoryLimit,                        METH_O,                        ""},
-        {"setSolverTimeout",                    (PyCFunction)TritonContext_setSolverTimeout,                            METH_O,                        ""},
-        {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                              METH_VARARGS,                  ""},
-        {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                            METH_VARARGS,                  ""},
-        {"setThumb",                            (PyCFunction)TritonContext_setThumb,                                    METH_O,                        ""},
-        {"simplify",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_simplify,    METH_VARARGS | METH_KEYWORDS,  ""},
-        {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                            METH_O,                        ""},
-        {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                         METH_VARARGS,                  ""},
-        {"symbolizeMemory",                     (PyCFunction)TritonContext_symbolizeMemory,                             METH_VARARGS,                  ""},
-        {"symbolizeRegister",                   (PyCFunction)TritonContext_symbolizeRegister,                           METH_VARARGS,                  ""},
-        {"synthesize",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_synthesize,  METH_VARARGS | METH_KEYWORDS,  ""},
-        {"taintAssignment",                     (PyCFunction)TritonContext_taintAssignment,                             METH_VARARGS,                  ""},
-        {"taintMemory",                         (PyCFunction)TritonContext_taintMemory,                                 METH_O,                        ""},
-        {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                               METH_O,                        ""},
-        {"taintUnion",                          (PyCFunction)TritonContext_taintUnion,                                  METH_VARARGS,                  ""},
-        {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                               METH_O,                        ""},
-        {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                             METH_O,                        ""},
-        {nullptr,                               nullptr,                                                                0,                             nullptr}
+        {"addCallback",                         (PyCFunction)TritonContext_addCallback,                                         METH_VARARGS,                  ""},
+        {"assignSymbolicExpressionToMemory",    (PyCFunction)TritonContext_assignSymbolicExpressionToMemory,                    METH_VARARGS,                  ""},
+        {"assignSymbolicExpressionToRegister",  (PyCFunction)TritonContext_assignSymbolicExpressionToRegister,                  METH_VARARGS,                  ""},
+        {"buildSemantics",                      (PyCFunction)TritonContext_buildSemantics,                                      METH_O,                        ""},
+        {"clearCallbacks",                      (PyCFunction)TritonContext_clearCallbacks,                                      METH_NOARGS,                   ""},
+        {"clearModes",                          (PyCFunction)TritonContext_clearModes,                                          METH_NOARGS,                   ""},
+        {"clearConcreteMemoryValue",            (PyCFunction)TritonContext_clearConcreteMemoryValue,                            METH_VARARGS,                  ""},
+        {"clearPathConstraints",                (PyCFunction)TritonContext_clearPathConstraints,                                METH_NOARGS,                   ""},
+        {"concretizeAllMemory",                 (PyCFunction)TritonContext_concretizeAllMemory,                                 METH_NOARGS,                   ""},
+        {"concretizeAllRegister",               (PyCFunction)TritonContext_concretizeAllRegister,                               METH_NOARGS,                   ""},
+        {"concretizeMemory",                    (PyCFunction)TritonContext_concretizeMemory,                                    METH_O,                        ""},
+        {"concretizeRegister",                  (PyCFunction)TritonContext_concretizeRegister,                                  METH_O,                        ""},
+        {"createSymbolicMemoryExpression",      (PyCFunction)TritonContext_createSymbolicMemoryExpression,                      METH_VARARGS,                  ""},
+        {"createSymbolicRegisterExpression",    (PyCFunction)TritonContext_createSymbolicRegisterExpression,                    METH_VARARGS,                  ""},
+        {"createSymbolicVolatileExpression",    (PyCFunction)TritonContext_createSymbolicVolatileExpression,                    METH_VARARGS,                  ""},
+        {"disassembly",                         (PyCFunction)TritonContext_disassembly,                                         METH_VARARGS,                  ""},
+        {"evaluateAstViaSolver",                (PyCFunction)TritonContext_evaluateAstViaSolver,                                METH_O,                        ""},
+        {"getAllRegisters",                     (PyCFunction)TritonContext_getAllRegisters,                                     METH_NOARGS,                   ""},
+        {"getArchitecture",                     (PyCFunction)TritonContext_getArchitecture,                                     METH_NOARGS,                   ""},
+        {"getAstContext",                       (PyCFunction)TritonContext_getAstContext,                                       METH_NOARGS,                   ""},
+        {"getAstRepresentationMode",            (PyCFunction)TritonContext_getAstRepresentationMode,                            METH_NOARGS,                   ""},
+        {"getConcreteMemoryAreaValue",          (PyCFunction)TritonContext_getConcreteMemoryAreaValue,                          METH_VARARGS,                  ""},
+        {"getConcreteMemoryValue",              (PyCFunction)TritonContext_getConcreteMemoryValue,                              METH_O,                        ""},
+        {"getConcreteRegisterValue",            (PyCFunction)TritonContext_getConcreteRegisterValue,                            METH_O,                        ""},
+        {"getConcreteVariableValue",            (PyCFunction)TritonContext_getConcreteVariableValue,                            METH_O,                        ""},
+        {"getGprBitSize",                       (PyCFunction)TritonContext_getGprBitSize,                                       METH_NOARGS,                   ""},
+        {"getGprSize",                          (PyCFunction)TritonContext_getGprSize,                                          METH_NOARGS,                   ""},
+        {"getImmediateAst",                     (PyCFunction)TritonContext_getImmediateAst,                                     METH_O,                        ""},
+        {"getMemoryAst",                        (PyCFunction)TritonContext_getMemoryAst,                                        METH_O,                        ""},
+        {"getModel",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModel,            METH_VARARGS | METH_KEYWORDS,  ""},
+        {"getModels",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_getModels,           METH_VARARGS | METH_KEYWORDS,  ""},
+        {"getParentRegister",                   (PyCFunction)TritonContext_getParentRegister,                                   METH_O,                        ""},
+        {"getParentRegisters",                  (PyCFunction)TritonContext_getParentRegisters,                                  METH_NOARGS,                   ""},
+        {"getPathConstraints",                  (PyCFunction)TritonContext_getPathConstraints,                                  METH_NOARGS,                   ""},
+        {"getPathPredicate",                    (PyCFunction)TritonContext_getPathPredicate,                                    METH_NOARGS,                   ""},
+        {"getPathPredicateSize",                (PyCFunction)TritonContext_getPathPredicateSize,                                METH_NOARGS,                   ""},
+        {"getPredicatesToReachAddress",         (PyCFunction)TritonContext_getPredicatesToReachAddress,                         METH_O,                        ""},
+        {"getRegister",                         (PyCFunction)TritonContext_getRegister,                                         METH_O,                        ""},
+        {"getRegisterAst",                      (PyCFunction)TritonContext_getRegisterAst,                                      METH_O,                        ""},
+        {"getSolver",                           (PyCFunction)TritonContext_getSolver,                                           METH_NOARGS,                   ""},
+        {"getSymbolicExpression",               (PyCFunction)TritonContext_getSymbolicExpression,                               METH_O,                        ""},
+        {"getSymbolicExpressions",              (PyCFunction)TritonContext_getSymbolicExpressions,                              METH_NOARGS,                   ""},
+        {"getSymbolicMemory",                   (PyCFunction)TritonContext_getSymbolicMemory,                                   METH_VARARGS,                  ""},
+        {"getSymbolicMemoryValue",              (PyCFunction)TritonContext_getSymbolicMemoryValue,                              METH_O,                        ""},
+        {"getSymbolicRegister",                 (PyCFunction)TritonContext_getSymbolicRegister,                                 METH_O,                        ""},
+        {"getSymbolicRegisterValue",            (PyCFunction)TritonContext_getSymbolicRegisterValue,                            METH_O,                        ""},
+        {"getSymbolicRegisters",                (PyCFunction)TritonContext_getSymbolicRegisters,                                METH_NOARGS,                   ""},
+        {"getSymbolicVariable",                 (PyCFunction)TritonContext_getSymbolicVariable,                                 METH_O,                        ""},
+        {"getSymbolicVariables",                (PyCFunction)TritonContext_getSymbolicVariables,                                METH_NOARGS,                   ""},
+        {"getTaintedMemory",                    (PyCFunction)TritonContext_getTaintedMemory,                                    METH_NOARGS,                   ""},
+        {"getTaintedRegisters",                 (PyCFunction)TritonContext_getTaintedRegisters,                                 METH_NOARGS,                   ""},
+        {"getTaintedSymbolicExpressions",       (PyCFunction)TritonContext_getTaintedSymbolicExpressions,                       METH_NOARGS,                   ""},
+        {"isArchitectureValid",                 (PyCFunction)TritonContext_isArchitectureValid,                                 METH_NOARGS,                   ""},
+        {"isConcreteMemoryValueDefined",        (PyCFunction)TritonContext_isConcreteMemoryValueDefined,                        METH_VARARGS,                  ""},
+        {"isFlag",                              (PyCFunction)TritonContext_isFlag,                                              METH_O,                        ""},
+        {"isMemorySymbolized",                  (PyCFunction)TritonContext_isMemorySymbolized,                                  METH_O,                        ""},
+        {"isMemoryTainted",                     (PyCFunction)TritonContext_isMemoryTainted,                                     METH_O,                        ""},
+        {"isModeEnabled",                       (PyCFunction)TritonContext_isModeEnabled,                                       METH_O,                        ""},
+        {"isRegister",                          (PyCFunction)TritonContext_isRegister,                                          METH_O,                        ""},
+        {"isRegisterSymbolized",                (PyCFunction)TritonContext_isRegisterSymbolized,                                METH_O,                        ""},
+        {"isRegisterTainted",                   (PyCFunction)TritonContext_isRegisterTainted,                                   METH_O,                        ""},
+        {"isRegisterValid",                     (PyCFunction)TritonContext_isRegisterValid,                                     METH_O,                        ""},
+        {"isSat",                               (PyCFunction)TritonContext_isSat,                                               METH_O,                        ""},
+        {"isSymbolicExpressionExists",          (PyCFunction)TritonContext_isSymbolicExpressionExists,                          METH_O,                        ""},
+        {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                             METH_NOARGS,                   ""},
+        {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                           METH_O,                        ""},
+        {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,          METH_VARARGS | METH_KEYWORDS,  ""},
+        {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                        METH_O,                        ""},
+        {"liftToSMT",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToSMT,           METH_VARARGS | METH_KEYWORDS,  ""},
+        {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                               METH_VARARGS,                  ""},
+        {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                                 METH_VARARGS,                  ""},
+        {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                                   METH_NOARGS,                   ""},
+        {"processing",                          (PyCFunction)TritonContext_processing,                                          METH_O,                        ""},
+        {"pushPathConstraint",                  (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_pushPathConstraint,  METH_VARARGS | METH_KEYWORDS,  ""},
+        {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                                      METH_VARARGS,                  ""},
+        {"reset",                               (PyCFunction)TritonContext_reset,                                               METH_NOARGS,                   ""},
+        {"setArchitecture",                     (PyCFunction)TritonContext_setArchitecture,                                     METH_O,                        ""},
+        {"setAstRepresentationMode",            (PyCFunction)TritonContext_setAstRepresentationMode,                            METH_O,                        ""},
+        {"setConcreteMemoryAreaValue",          (PyCFunction)TritonContext_setConcreteMemoryAreaValue,                          METH_VARARGS,                  ""},
+        {"setConcreteMemoryValue",              (PyCFunction)TritonContext_setConcreteMemoryValue,                              METH_VARARGS,                  ""},
+        {"setConcreteRegisterValue",            (PyCFunction)TritonContext_setConcreteRegisterValue,                            METH_VARARGS,                  ""},
+        {"setConcreteVariableValue",            (PyCFunction)TritonContext_setConcreteVariableValue,                            METH_VARARGS,                  ""},
+        {"setMode",                             (PyCFunction)TritonContext_setMode,                                             METH_VARARGS,                  ""},
+        {"setSolver",                           (PyCFunction)TritonContext_setSolver,                                           METH_O,                        ""},
+        {"setSolverMemoryLimit",                (PyCFunction)TritonContext_setSolverMemoryLimit,                                METH_O,                        ""},
+        {"setSolverTimeout",                    (PyCFunction)TritonContext_setSolverTimeout,                                    METH_O,                        ""},
+        {"setTaintMemory",                      (PyCFunction)TritonContext_setTaintMemory,                                      METH_VARARGS,                  ""},
+        {"setTaintRegister",                    (PyCFunction)TritonContext_setTaintRegister,                                    METH_VARARGS,                  ""},
+        {"setThumb",                            (PyCFunction)TritonContext_setThumb,                                            METH_O,                        ""},
+        {"simplify",                            (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_simplify,            METH_VARARGS | METH_KEYWORDS,  ""},
+        {"sliceExpressions",                    (PyCFunction)TritonContext_sliceExpressions,                                    METH_O,                        ""},
+        {"symbolizeExpression",                 (PyCFunction)TritonContext_symbolizeExpression,                                 METH_VARARGS,                  ""},
+        {"symbolizeMemory",                     (PyCFunction)TritonContext_symbolizeMemory,                                     METH_VARARGS,                  ""},
+        {"symbolizeRegister",                   (PyCFunction)TritonContext_symbolizeRegister,                                   METH_VARARGS,                  ""},
+        {"synthesize",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_synthesize,          METH_VARARGS | METH_KEYWORDS,  ""},
+        {"taintAssignment",                     (PyCFunction)TritonContext_taintAssignment,                                     METH_VARARGS,                  ""},
+        {"taintMemory",                         (PyCFunction)TritonContext_taintMemory,                                         METH_O,                        ""},
+        {"taintRegister",                       (PyCFunction)TritonContext_taintRegister,                                       METH_O,                        ""},
+        {"taintUnion",                          (PyCFunction)TritonContext_taintUnion,                                          METH_VARARGS,                  ""},
+        {"untaintMemory",                       (PyCFunction)TritonContext_untaintMemory,                                       METH_O,                        ""},
+        {"untaintRegister",                     (PyCFunction)TritonContext_untaintRegister,                                     METH_O,                        ""},
+        {nullptr,                               nullptr,                                                                        0,                             nullptr}
       };
 
 

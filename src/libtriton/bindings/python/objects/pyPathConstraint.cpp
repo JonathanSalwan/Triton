@@ -78,6 +78,9 @@ of the branch instruction and the destination address is the destination of the 
 is the source address and 0x55667788 is the destination if and only if the branch is taken, otherwise the destination is the next
 instruction address.
 
+- <b>string getComment(void)</b><br>
+Returns the comment (if exists) of the path constraint.
+
 - <b>integer getTakenAddress(void)</b><br>
 Returns the address of the taken branch.
 
@@ -89,6 +92,9 @@ Returns the thread id of the constraint. Returns -1 if thread id is undefined.
 
 - <b>bool isMultipleBranches(void)</b><br>
 Returns true if it is not a direct jump.
+
+- <b>void setComment(string comment)</b><br>
+Sets comment of the path constraint.
 
 */
 
@@ -122,6 +128,16 @@ namespace triton {
           }
 
           return ret;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
+      static PyObject* PathConstraint_getComment(PyObject* self, PyObject* noarg) {
+        try {
+          return Py_BuildValue("s", PyPathConstraint_AsPathConstraint(self)->getComment().c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());
@@ -171,13 +187,29 @@ namespace triton {
       }
 
 
+      static PyObject* PathConstraint_setComment(PyObject* self, PyObject* comment) {
+        try {
+          if (!PyStr_Check(comment))
+            return PyErr_Format(PyExc_TypeError, "PathConstraint::setComment(): Expected a string as argument.");
+          PyPathConstraint_AsPathConstraint(self)->setComment(PyStr_AsString(comment));
+          Py_INCREF(Py_None);
+          return Py_None;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       //! PathConstraint methods.
       PyMethodDef PathConstraint_callbacks[] = {
         {"getBranchConstraints",        PathConstraint_getBranchConstraints,      METH_NOARGS,    ""},
+        {"getComment",                  PathConstraint_getComment,                METH_NOARGS,    ""},
         {"getTakenAddress",             PathConstraint_getTakenAddress,           METH_NOARGS,    ""},
         {"getTakenPredicate",           PathConstraint_getTakenPredicate,         METH_NOARGS,    ""},
         {"getThreadId",                 PathConstraint_getThreadId,               METH_NOARGS,    ""},
         {"isMultipleBranches",          PathConstraint_isMultipleBranches,        METH_NOARGS,    ""},
+        {"setComment",                  PathConstraint_setComment,                METH_O,         ""},
         {nullptr,                       nullptr,                                  0,              nullptr}
       };
 

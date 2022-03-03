@@ -890,9 +890,9 @@ namespace triton {
   }
 
 
-  void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node) {
+  void API::pushPathConstraint(const triton::ast::SharedAbstractNode& node, const std::string& comment) {
     this->checkSymbolic();
-    this->symbolic->pushPathConstraint(node);
+    this->symbolic->pushPathConstraint(node, comment);
   }
 
 

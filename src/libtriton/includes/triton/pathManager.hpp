@@ -88,7 +88,7 @@ namespace triton {
           TRITON_EXPORT void pushPathConstraint(const triton::arch::Instruction& inst, const triton::engines::symbolic::SharedSymbolicExpression& expr);
 
           //! Pushes constraint created from node to the current path predicate.
-          TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node);
+          TRITON_EXPORT void pushPathConstraint(const triton::ast::SharedAbstractNode& node, const std::string& comment="");
 
           //! Pushes constraint to the current path predicate.
           TRITON_EXPORT void pushPathConstraint(const triton::engines::symbolic::PathConstraint& pco);

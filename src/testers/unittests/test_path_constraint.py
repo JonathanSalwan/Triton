@@ -103,3 +103,14 @@ class TestPathConstraint(unittest.TestCase):
             ctx.processing(Instruction(opcodes))
 
         self.assertEqual(ctx.getModel(ctx.getPredicatesToReachAddress(0x1337)[0])[0].getValue(), 0x1336)
+
+    def test_pushPathConstraintComment(self):
+        ast = self.ctx.getAstContext()
+
+        self.ctx.setMode(MODE.PC_TRACKING_SYMBOLIC, False)
+
+        self.ctx.pushPathConstraint(ast.equal(ast.bvtrue(), ast.bvtrue()), "Some comment")
+
+        pc = self.ctx.getPathConstraints()[-1]
+
+        self.assertEqual(pc.getComment(), "Some comment")
