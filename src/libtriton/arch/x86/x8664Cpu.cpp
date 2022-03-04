@@ -12,6 +12,7 @@
 #include <triton/coreUtils.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/externalLibs.hpp>
 #include <triton/immediate.hpp>
 #include <triton/x8664Cpu.hpp>
 

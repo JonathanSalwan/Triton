@@ -14,15 +14,14 @@
 #include <vector>
 
 #include <triton/archEnums.hpp>
+#include <triton/arm32Specifications.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
-#include <triton/externalLibs.hpp>
 #include <triton/instruction.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
 #include <triton/tritonTypes.hpp>
-#include <triton/arm32Specifications.hpp>
 
 
 
@@ -69,10 +68,10 @@ namespace triton {
             triton::callbacks::Callbacks* callbacks;
 
             //! Capstone context for ARM mode.
-            triton::extlibs::capstone::csh handleArm;
+            std::size_t handleArm;
 
             //! Capstone context for Thumb mode.
-            triton::extlibs::capstone::csh handleThumb;
+            std::size_t handleThumb;
 
             //! State of the currently processed IT block.
             char itStateArray[5];

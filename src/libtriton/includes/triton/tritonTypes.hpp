@@ -8,6 +8,7 @@
 #ifndef TRITONTYPES_H
 #define TRITONTYPES_H
 
+#include <cstddef>
 #include <cstdint>
 #include <boost/multiprecision/cpp_int.hpp>
 #include <boost/numeric/conversion/cast.hpp>
