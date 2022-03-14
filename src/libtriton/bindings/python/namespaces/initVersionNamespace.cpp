@@ -47,20 +47,26 @@ namespace triton {
         xPyDict_SetItemString(versionDict, "BUILD", PyLong_FromUint32(triton::BUILD));
 
         #ifdef TRITON_Z3_INTERFACE
+          Py_INCREF(Py_True);
           xPyDict_SetItemString(versionDict, "Z3_INTERFACE", Py_True);
         #else
+          Py_INCREF(Py_False);
           xPyDict_SetItemString(versionDict, "Z3_INTERFACE", Py_False);
         #endif
 
         #ifdef TRITON_BITWUZLA_INTERFACE
+          Py_INCREF(Py_True);
           xPyDict_SetItemString(versionDict, "BITWUZLA_INTERFACE", Py_True);
         #else
+          Py_INCREF(Py_False);
           xPyDict_SetItemString(versionDict, "BITWUZLA_INTERFACE", Py_False);
         #endif
 
         #ifdef TRITON_LLVM_INTERFACE
+          Py_INCREF(Py_True);
           xPyDict_SetItemString(versionDict, "LLVM_INTERFACE", Py_True);
         #else
+          Py_INCREF(Py_False);
           xPyDict_SetItemString(versionDict, "LLVM_INTERFACE", Py_False);
         #endif
       }
