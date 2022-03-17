@@ -5,6 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <iostream>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>

@@ -114,7 +114,7 @@ namespace triton {
 
       /* Update instruction address if undefined */
       if (!inst.getAddress()) {
-        inst.setAddress(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter()).convert_to<triton::uint64>());
+        inst.setAddress(static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(this->architecture->getProgramCounter())));
       }
     }
 

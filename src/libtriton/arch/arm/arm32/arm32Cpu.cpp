@@ -258,7 +258,7 @@ namespace triton {
 
           /* Update instruction address if undefined */
           if (!inst.getAddress()) {
-            inst.setAddress(this->getConcreteRegisterValue(this->getProgramCounter()).convert_to<triton::uint64>());
+            inst.setAddress(static_cast<triton::uint64>(this->getConcreteRegisterValue(this->getProgramCounter())));
           }
 
           /* Let's disass and build our operands */
@@ -670,7 +670,7 @@ namespace triton {
             this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, mem, value);
 
           for (triton::uint32 i = 0; i < size; i++) {
-            this->memory[addr+i] = (cv & 0xff).convert_to<triton::uint8>();
+            this->memory[addr+i] = static_cast<triton::uint8>((cv & 0xff));
             cv >>= 8;
           }
         }
@@ -700,21 +700,21 @@ namespace triton {
             this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);
 
           switch (reg.getId()) {
-            case triton::arch::ID_REG_ARM32_R0:   (*((triton::uint32*)(this->r0)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R1:   (*((triton::uint32*)(this->r1)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R2:   (*((triton::uint32*)(this->r2)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R3:   (*((triton::uint32*)(this->r3)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R4:   (*((triton::uint32*)(this->r4)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R5:   (*((triton::uint32*)(this->r5)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R6:   (*((triton::uint32*)(this->r6)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R7:   (*((triton::uint32*)(this->r7)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R8:   (*((triton::uint32*)(this->r8)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R9:   (*((triton::uint32*)(this->r9)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R10:  (*((triton::uint32*)(this->r10)))  = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R11:  (*((triton::uint32*)(this->r11)))  = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R12:  (*((triton::uint32*)(this->r12)))  = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_SP:   (*((triton::uint32*)(this->sp)))   = value.convert_to<triton::uint32>(); break;
-            case triton::arch::ID_REG_ARM32_R14:  (*((triton::uint32*)(this->r14)))  = value.convert_to<triton::uint32>(); break;
+            case triton::arch::ID_REG_ARM32_R0:   (*((triton::uint32*)(this->r0)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R1:   (*((triton::uint32*)(this->r1)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R2:   (*((triton::uint32*)(this->r2)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R3:   (*((triton::uint32*)(this->r3)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R4:   (*((triton::uint32*)(this->r4)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R5:   (*((triton::uint32*)(this->r5)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R6:   (*((triton::uint32*)(this->r6)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R7:   (*((triton::uint32*)(this->r7)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R8:   (*((triton::uint32*)(this->r8)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R9:   (*((triton::uint32*)(this->r9)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R10:  (*((triton::uint32*)(this->r10)))  = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R11:  (*((triton::uint32*)(this->r11)))  = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R12:  (*((triton::uint32*)(this->r12)))  = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_SP:   (*((triton::uint32*)(this->sp)))   = static_cast<triton::uint32>(value); break;
+            case triton::arch::ID_REG_ARM32_R14:  (*((triton::uint32*)(this->r14)))  = static_cast<triton::uint32>(value); break;
             case triton::arch::ID_REG_ARM32_PC: {
               /* NOTE: Once in Thumb mode only switch to ARM through a Branch
                * and Exchange instruction. The reason for this is that after
@@ -723,14 +723,14 @@ namespace triton {
                * these mechanism we would have a problem processing Thumb
                * instructions.
                */
-              auto pc = value.convert_to<triton::uint32>();
+              auto pc = static_cast<triton::uint32>(value);
               if (this->isThumb() == false && (pc & 0x1) == 0x1) {
                 this->setThumb(true);
               }
               (*((triton::uint32*)(this->pc))) = pc & ~0x1;
               break;
             }
-            case triton::arch::ID_REG_ARM32_APSR: (*((triton::uint32*)(this->apsr))) = value.convert_to<triton::uint32>(); break;
+            case triton::arch::ID_REG_ARM32_APSR: (*((triton::uint32*)(this->apsr))) = static_cast<triton::uint32>(value); break;
             case triton::arch::ID_REG_ARM32_N: {
               triton::uint32 b = (*((triton::uint32*)(this->apsr)));
               (*((triton::uint32*)(this->apsr))) = !value.is_zero() ? b | (1 << 31) : b & ~(1 << 31);

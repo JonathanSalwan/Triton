@@ -115,7 +115,7 @@ namespace triton {
 
         case Z3_OP_BNUM: {
           std::string stringValue = Z3_get_numeral_string(expr.ctx(), expr);
-          triton::uint512 intValue{stringValue};
+          triton::uint512 intValue{stringValue.c_str()};
           node = this->astCtxt->bv(intValue, expr.get_sort().bv_size());
           break;
         }

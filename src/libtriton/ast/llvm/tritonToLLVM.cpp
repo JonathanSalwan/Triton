@@ -242,7 +242,7 @@ namespace triton {
           return this->llvmIR.CreateXor(children[0], children[1]);
 
         case triton::ast::BV_NODE:
-          return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(node->getBitvectorSize(), node->evaluate().convert_to<uint64>(), false));
+          return llvm::ConstantInt::get(this->llvmContext, llvm::APInt(node->getBitvectorSize(), static_cast<uint64_t>(node->evaluate()), false));
 
         case triton::ast::CONCAT_NODE: {
           auto dstSize   = node->getBitvectorSize();

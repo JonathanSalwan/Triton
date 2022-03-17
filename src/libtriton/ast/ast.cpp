@@ -343,12 +343,12 @@ namespace triton {
 
 
     triton::uint8 ArrayNode::select(const triton::uint512& addr) const {
-      return this->select(addr.convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(addr));
     }
 
 
     triton::uint8 ArrayNode::select(const SharedAbstractNode& node) const {
-      return this->select(node->evaluate().convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(node->evaluate()));
     }
 
 
@@ -603,7 +603,7 @@ namespace triton {
         throw triton::exceptions::Ast("BvashrNode::init(): Cannot take an array as argument.");
 
       value = this->children[0]->evaluate();
-      shift = this->children[1]->evaluate().convert_to<triton::uint32>();
+      shift = static_cast<triton::uint32>(this->children[1]->evaluate());
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
@@ -686,7 +686,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = (this->children[0]->evaluate() >> this->children[1]->evaluate().convert_to<triton::uint32>());
+      this->eval       = (this->children[0]->evaluate() >> static_cast<triton::uint32>(this->children[1]->evaluate()));
       this->level      = 1;
       this->symbolized = false;
 
@@ -844,7 +844,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = ((-(this->children[0]->evaluate().convert_to<triton::sint512>())).convert_to<triton::uint512>() & this->getBitvectorMask());
+      this->eval       = (static_cast<triton::uint512>((-(static_cast<triton::sint512>(this->children[0]->evaluate())))) & this->getBitvectorMask());
       this->level      = 1;
       this->symbolized = false;
 
@@ -1195,7 +1195,7 @@ namespace triton {
         this->eval &= this->getBitvectorMask();
       }
       else
-        this->eval = ((op1Signed / op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((op1Signed / op2Signed)) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1369,7 +1369,7 @@ namespace triton {
 
       /* Init attributes */
       this->size       = this->children[0]->getBitvectorSize();
-      this->eval       = ((this->children[0]->evaluate() << this->children[1]->evaluate().convert_to<triton::uint32>()) & this->getBitvectorMask());
+      this->eval       = ((this->children[0]->evaluate() << static_cast<triton::uint32>(this->children[1]->evaluate())) & this->getBitvectorMask());
       this->level      = 1;
       this->symbolized = false;
 
@@ -1558,7 +1558,7 @@ namespace triton {
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
       else
-        this->eval = ((((op1Signed % op2Signed) + op2Signed) % op2Signed).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((((op1Signed % op2Signed) + op2Signed) % op2Signed)) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -1623,7 +1623,7 @@ namespace triton {
       if (this->children[1]->evaluate() == 0)
         this->eval = this->children[0]->evaluate();
       else
-        this->eval = ((op1Signed - ((op1Signed / op2Signed) * op2Signed)).convert_to<triton::uint512>() & this->getBitvectorMask());
+        this->eval = (static_cast<triton::uint512>((op1Signed - ((op1Signed / op2Signed) * op2Signed))) & this->getBitvectorMask());
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -3154,7 +3154,7 @@ namespace triton {
       }
 
       /* Store the value to the memory array */
-      this->memory[this->children[1]->evaluate().convert_to<triton::uint64>()] = this->eval.convert_to<triton::uint8>();
+      this->memory[static_cast<triton::uint64>(this->children[1]->evaluate())] = static_cast<triton::uint8>(this->eval);
 
       /* Init children and spread information */
       for (triton::uint32 index = 0; index < this->children.size(); index++) {
@@ -3194,12 +3194,12 @@ namespace triton {
 
 
     triton::uint8 StoreNode::select(const triton::uint512& addr) const {
-      return this->select(addr.convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(addr));
     }
 
 
     triton::uint8 StoreNode::select(const SharedAbstractNode& node) const {
-      return this->select(node->evaluate().convert_to<triton::uint64>());
+      return this->select(static_cast<triton::uint64>(node->evaluate()));
     }
 
 
@@ -3480,7 +3480,7 @@ namespace triton {
 
       if ((node->evaluate() >> (node->getBitvectorSize()-1)) & 1) {
         value = -1;
-        value = ((value << node->getBitvectorSize()) | node->evaluate());
+        value = ((value << node->getBitvectorSize()) | static_cast<math::wide_integer::int512_t>(node->evaluate()));
       }
       else {
         value = node->evaluate();

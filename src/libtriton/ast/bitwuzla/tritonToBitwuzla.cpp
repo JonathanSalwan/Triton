@@ -193,6 +193,7 @@ namespace triton {
             auto bv_value = triton::ast::getInteger<triton::uint64>(childNodes[0]);
             return bitwuzla_mk_bv_value_uint64(bzla, sort->second, bv_value);
           }
+
           auto bv_value = triton::ast::getInteger<std::string>(childNodes[0]);
           return bitwuzla_mk_bv_value(bzla, sort->second, bv_value.c_str(), BITWUZLA_BV_BASE_DEC);
         }
@@ -282,9 +283,12 @@ namespace triton {
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
             if (size <= sizeof(uint64_t) * 8) {
-              return bitwuzla_mk_bv_value_uint64(bzla, sort->second, value.convert_to<uint64_t>());
+              return bitwuzla_mk_bv_value_uint64(bzla, sort->second, static_cast<uint64_t>(value));
             }
-            return bitwuzla_mk_bv_value(bzla, sort->second, value.convert_to<std::string>().c_str(), BITWUZLA_BV_BASE_DEC);
+            std::stringstream ss;
+            ss << value;
+            std::string value_str(ss.str());
+            return bitwuzla_mk_bv_value(bzla, sort->second, value_str.c_str(), BITWUZLA_BV_BASE_DEC);
           }
 
           auto n = bitwuzla_mk_const(bzla, sort->second, symVar->getName().c_str());

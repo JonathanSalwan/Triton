@@ -363,7 +363,7 @@ namespace triton {
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->taintUnion(dst, dst));
 
           /* Return the new stack value */
-          return node->evaluate().convert_to<triton::uint64>();
+          return static_cast<triton::uint64>(node->evaluate());
         }
 
 
@@ -388,7 +388,7 @@ namespace triton {
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->taintUnion(dst, dst));
 
           /* Return the new stack value */
-          return node->evaluate().convert_to<triton::uint64>();
+          return static_cast<triton::uint64>(node->evaluate());
         }
 
 
@@ -1810,7 +1810,7 @@ namespace triton {
             auto& dst = inst.operands[i];
 
             /* Compute memory address */
-            auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
+            auto addr = static_cast<triton::uint64>(baseNode->evaluate()) + size * (i - 1);
             auto src  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
             /* Create symbolic operands */
@@ -3067,7 +3067,7 @@ namespace triton {
           for (uint8_t i = 0; i < inst.operands.size(); i++) {
             auto& dst        = inst.operands[i];
             auto  stack      = this->architecture->getStackPointer();
-            auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+            auto  stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
             auto  src        = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, size));
 
             /* Create symbolic operands */
@@ -3892,7 +3892,7 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * (i-1);
+            auto addr = static_cast<triton::uint64>(baseNode->evaluate()) + size * (i-1);
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
             /* Create symbolic operands */
@@ -3951,7 +3951,7 @@ namespace triton {
             auto& src = inst.operands[i];
 
             /* Compute memory address */
-            auto addr = baseNode->evaluate().convert_to<triton::uint64>() + size * i;
+            auto addr = static_cast<triton::uint64>(baseNode->evaluate()) + size * i;
             auto dst  = triton::arch::OperandWrapper(triton::arch::MemoryAccess(addr, size));
 
             /* Create symbolic operands */

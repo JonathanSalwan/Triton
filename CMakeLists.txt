@@ -135,10 +135,5 @@ message(STATUS "Compiling with Capstone")
 find_package(CAPSTONE REQUIRED)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
 
-# Find boost
-message(STATUS "Compiling with Boost headers")
-find_package(Boost 1.55.0 REQUIRED)
-include_directories("${Boost_INCLUDE_DIRS}")
-
 add_subdirectory(src)
 add_subdirectory(doc)

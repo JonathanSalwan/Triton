@@ -318,7 +318,11 @@ namespace triton {
           /* If the conversion is used to evaluate a node, we concretize symbolic variables */
           if (this->isEval) {
             triton::uint512 value = reinterpret_cast<triton::ast::VariableNode*>(node.get())->evaluate();
-            std::string strValue(value.convert_to<std::string>());
+            
+            std::stringstream ss;
+            ss << value;
+
+            std::string strValue(ss.str());
             return this->context.bv_val(strValue.c_str(), symVar->getSize());
           }
 

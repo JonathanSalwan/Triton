@@ -9,6 +9,7 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
+    add_definitions(/MP)
     set(PYTHON_SUFFIX .pyd)
 else()
     set(PYTHON_SUFFIX .so)
@@ -128,6 +129,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/tritonToLLVM.hpp
     includes/triton/tritonToZ3.hpp
     includes/triton/tritonTypes.hpp
+    includes/triton/uintwide_t.h
     includes/triton/x86.spec
     includes/triton/x8664Cpu.hpp
     includes/triton/x86Cpu.hpp
@@ -259,7 +261,6 @@ target_include_directories(triton PUBLIC
 # Link Triton's dependencies
 target_link_libraries(triton PUBLIC
     ${PYTHON_LIBRARIES}
-    ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}

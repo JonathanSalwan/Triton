@@ -835,7 +835,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Return the new stack value */
-        return node->evaluate().convert_to<triton::uint64>();
+        return static_cast<triton::uint64>(node->evaluate());
       }
 
 
@@ -856,7 +856,7 @@ namespace triton {
         expr->isTainted = this->taintEngine->taintUnion(dst, dst);
 
         /* Return the new stack value */
-        return node->evaluate().convert_to<triton::uint64>();
+        return static_cast<triton::uint64>(node->evaluate());
       }
 
 
@@ -5200,7 +5200,7 @@ namespace triton {
         triton::ast::SharedAbstractNode node4 = nullptr;
 
         /* In this case, we concretize the AX option */
-        switch (op1->evaluate().convert_to<triton::uint32>()) {
+        switch (static_cast<triton::uint32>(op1->evaluate())) {
           case 0:
             node1 = this->astCtxt->bv(0x0000000d, dst1.getBitSize());
             node2 = this->astCtxt->bv(0x756e6547, dst2.getBitSize());
@@ -8125,7 +8125,7 @@ namespace triton {
       void x86Semantics::leave_s(triton::arch::Instruction& inst) {
         auto stack     = this->architecture->getStackPointer();
         auto base      = this->architecture->getParentRegister(ID_REG_X86_BP);
-        auto baseValue = this->architecture->getConcreteRegisterValue(base).convert_to<triton::uint64>();
+        auto baseValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(base));
         auto bp1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(baseValue, base.getSize()));
         auto bp2       = triton::arch::OperandWrapper(this->architecture->getParentRegister(ID_REG_X86_BP));
         auto sp        = triton::arch::OperandWrapper(stack);
@@ -10853,7 +10853,7 @@ namespace triton {
 
         // SEL  = COUNT[3:0];
         // MASK = (0FFH << (SEL * 8));
-        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x0f;
+        triton::uint64 sel   = static_cast<triton::uint64>(op3->evaluate()) & 0x0f;
         triton::uint128 mask = 0xff;
         mask = mask << (sel * 8);
 
@@ -10898,7 +10898,7 @@ namespace triton {
 
         // SEL  = COUNT[1:0];
         // MASK = (0FFFFFFFFH << (SEL * 32));
-        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x03;
+        triton::uint64 sel   = static_cast<triton::uint64>(op3->evaluate()) & 0x03;
         triton::uint128 mask = 0xffffffff;
         mask = mask << (sel * 32);
 
@@ -10943,7 +10943,7 @@ namespace triton {
 
         // SEL  = COUNT[0:0];
         // MASK = (0FFFFFFFFFFFFFFFFH << (SEL * 64));
-        triton::uint64 sel   = op3->evaluate().convert_to<triton::uint64>() & 0x1;
+        triton::uint64 sel   = static_cast<triton::uint64>(op3->evaluate()) & 0x1;
         triton::uint128 mask = 0xffffffffffffffff;
         mask = mask << (sel * 64);
 
@@ -11000,7 +11000,7 @@ namespace triton {
          * }
          */
         if (dst.getBitSize() == triton::bitsize::qword) {
-          sel = op3->evaluate().convert_to<triton::uint64>() & 0x3;
+          sel = static_cast<triton::uint64>(op3->evaluate()) & 0x3;
           switch (sel) {
             case 1: mask = mask << 16; break;
             case 2: mask = mask << 32; break;
@@ -11024,7 +11024,7 @@ namespace triton {
          * }
          */
         else {
-          sel = op3->evaluate().convert_to<triton::uint64>() & 0x7;
+          sel = static_cast<triton::uint64>(op3->evaluate()) & 0x7;
           switch (sel) {
             case 1: mask = mask << 16;  break;
             case 2: mask = mask << 32;  break;
@@ -12063,7 +12063,7 @@ namespace triton {
       void x86Semantics::pop_s(triton::arch::Instruction& inst) {
         bool  stackRelative = false;
         auto  stack         = this->architecture->getStackPointer();
-        auto  stackValue    = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  stackValue    = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto& dst           = inst.operands[0];
         auto  src           = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, dst.getSize()));
 
@@ -12120,7 +12120,7 @@ namespace triton {
 
       void x86Semantics::popal_s(triton::arch::Instruction& inst) {
         auto stack      = this->architecture->getStackPointer();
-        auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDI));
         auto dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_ESI));
         auto dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EBP));
@@ -12174,7 +12174,7 @@ namespace triton {
 
       void x86Semantics::popf_s(triton::arch::Instruction& inst) {
         auto  stack      = this->architecture->getStackPointer();
-        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
         auto  dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AF));
@@ -12237,7 +12237,7 @@ namespace triton {
 
       void x86Semantics::popfd_s(triton::arch::Instruction& inst) {
         auto  stack      = this->architecture->getStackPointer();
-        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
         auto  dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AF));
@@ -12315,7 +12315,7 @@ namespace triton {
 
       void x86Semantics::popfq_s(triton::arch::Instruction& inst) {
         auto  stack      = this->architecture->getStackPointer();
-        auto  stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto  stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto  dst1       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_CF));
         auto  dst2       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_PF));
         auto  dst3       = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AF));
@@ -13704,7 +13704,7 @@ namespace triton {
 
       void x86Semantics::pushal_s(triton::arch::Instruction& inst) {
         auto stack      = this->architecture->getStackPointer();
-        auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto dst1       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 1), stack.getSize()));
         auto dst2       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 2), stack.getSize()));
         auto dst3       = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue-(stack.getSize() * 3), stack.getSize()));
@@ -14162,7 +14162,7 @@ namespace triton {
 
       void x86Semantics::ret_s(triton::arch::Instruction& inst) {
         auto stack      = this->architecture->getStackPointer();
-        auto stackValue = this->architecture->getConcreteRegisterValue(stack).convert_to<triton::uint64>();
+        auto stackValue = static_cast<triton::uint64>(this->architecture->getConcreteRegisterValue(stack));
         auto pc         = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
         auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
 
@@ -16724,7 +16724,7 @@ namespace triton {
           }
         };
 
-        auto ctrl = op3->evaluate().convert_to<triton::uint8>();
+        auto ctrl = static_cast<triton::uint8>(op3->evaluate());
         auto high = permute((ctrl >> 4) & 0b00000011);
         auto low = permute(ctrl & 0b00000011);
 

@@ -11,7 +11,7 @@
 #include <triton/exceptions.hpp>
 #include <triton/instruction.hpp>
 
-
+#include <iostream>
 
 /*! \page py_Instruction_page Instruction
     \brief [**python api**] All information about the Instruction Python object.
