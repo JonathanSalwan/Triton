@@ -3480,7 +3480,7 @@ namespace triton {
 
       if ((node->evaluate() >> (node->getBitvectorSize()-1)) & 1) {
         value = -1;
-        value = ((value << node->getBitvectorSize()) | static_cast<math::wide_integer::int512_t>(node->evaluate()));
+        value = ((value << node->getBitvectorSize()) | static_cast<triton::sint512>(node->evaluate()));
       }
       else {
         value = node->evaluate();

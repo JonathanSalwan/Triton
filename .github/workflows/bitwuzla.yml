@@ -20,7 +20,7 @@ jobs:
           python -m pip install -U pip
       - name: Install dependencies
         run: |
-          sudo apt-get install python-setuptools libgmp-dev
+          sudo apt-get install python-setuptools libboost-dev libgmp-dev
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev

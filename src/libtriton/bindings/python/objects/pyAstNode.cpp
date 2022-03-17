@@ -5,13 +5,15 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <iostream>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
+
+#include <iostream>
 
 
 
@@ -432,9 +434,7 @@ namespace triton {
 
       static PyObject* AstNode_str(PyObject* self) {
         try {
-          std::stringstream str;
-          str << PyAstNode_AsAstNode(self);
-          return PyStr_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", triton::utils::toString(PyAstNode_AsAstNode(self)).c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

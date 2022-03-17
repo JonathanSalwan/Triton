@@ -29,6 +29,7 @@ option(GCOV                 "Enable code coverage"                     OFF)
 option(LLVM_INTERFACE       "Use LLVM for lifting"                     OFF)
 option(MSVC_STATIC          "Use statically-linked runtime library"    OFF)
 option(Z3_INTERFACE         "Use Z3 as SMT solver"                     ON)
+option(BOOST_INTERFACE      "Use Boost as multiprecision library"      ON)
 
 # Define cmake dependent options
 cmake_dependent_option(BUILD_EXAMPLES       "Build the examples"                            ON  BUILD_SHARED_LIBS OFF)
@@ -134,6 +135,17 @@ endif()
 message(STATUS "Compiling with Capstone")
 find_package(CAPSTONE REQUIRED)
 include_directories(${CAPSTONE_INCLUDE_DIRS})
+
+# Find boost
+if(BOOST_INTERFACE)
+  message(STATUS "Compiling with Boost headers")
+  find_package(Boost 1.55.0 REQUIRED)
+  include_directories("${Boost_INCLUDE_DIRS}")
+  set(TRITON_BOOST_INTERFACE ON)
+else()
+  message(STATUS "Compiling with wide-integer headers")
+  set(TRITON_BOOST_INTERFACE OFF)
+endif()
 
 add_subdirectory(src)
 add_subdirectory(doc)

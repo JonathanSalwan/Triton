@@ -8,10 +8,13 @@
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/instruction.hpp>
 
 #include <iostream>
+
+
 
 /*! \page py_Instruction_page Instruction
     \brief [**python api**] All information about the Instruction Python object.
@@ -708,9 +711,7 @@ namespace triton {
 
       static PyObject* Instruction_str(PyObject* self) {
         try {
-          std::stringstream str;
-          str << PyInstruction_AsInstruction(self);
-          return PyStr_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", triton::utils::toString(PyInstruction_AsInstruction(self)).c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

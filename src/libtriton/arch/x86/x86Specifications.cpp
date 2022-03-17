@@ -5,13 +5,14 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <cassert>
+
 #include <triton/architecture.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/externalLibs.hpp>
 #include <triton/x86Specifications.hpp>
 
-#include <assert.h> 
 
 
 namespace triton {

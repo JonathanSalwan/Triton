@@ -5,12 +5,14 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <iostream>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
+
+#include <iostream>
 
 
 
@@ -239,9 +241,7 @@ namespace triton {
 
       static PyObject* Immediate_str(PyObject* self) {
         try {
-          std::stringstream str;
-          str << PyImmediate_AsImmediate(self);
-          return PyStr_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", triton::utils::toString(PyImmediate_AsImmediate(self)).c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

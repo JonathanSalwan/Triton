@@ -5,12 +5,14 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <iostream>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/memoryAccess.hpp>
+
+#include <iostream>
 
 
 
@@ -397,9 +399,7 @@ namespace triton {
 
       static PyObject* MemoryAccess_str(PyObject* self) {
         try {
-          std::stringstream str;
-          str << PyMemoryAccess_AsMemoryAccess(self);
-          return PyStr_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", triton::utils::toString(PyMemoryAccess_AsMemoryAccess(self)).c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

@@ -7,6 +7,7 @@
 
 #include <cstring>
 
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
@@ -345,11 +346,7 @@ namespace triton {
     void Instruction::addSymbolicExpression(const triton::engines::symbolic::SharedSymbolicExpression& expr) {
       if (expr == nullptr)
         throw triton::exceptions::Instruction("Instruction::addSymbolicExpression(): Cannot add a null expression.");
-
-      std::stringstream str;
-      str << *this;
-      expr->writeBackDisassembly(str.str());
-
+      expr->writeBackDisassembly(triton::utils::toString(*this));
       this->symbolicExpressions.push_back(expr);
     }
 

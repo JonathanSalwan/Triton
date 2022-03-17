@@ -9,7 +9,6 @@ if(NOT ${CMAKE_SYSTEM_NAME} MATCHES "Windows")
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    add_definitions(/MP)
     set(PYTHON_SUFFIX .pyd)
 else()
     set(PYTHON_SUFFIX .so)
@@ -261,6 +260,7 @@ target_include_directories(triton PUBLIC
 # Link Triton's dependencies
 target_link_libraries(triton PUBLIC
     ${PYTHON_LIBRARIES}
+    ${Boost_LIBRARIES}
     ${Z3_LIBRARIES}
     ${LLVM_LIBRARIES}
     ${BITWUZLA_LIBRARIES}

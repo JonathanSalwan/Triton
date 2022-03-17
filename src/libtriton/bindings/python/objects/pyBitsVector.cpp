@@ -5,12 +5,14 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <iostream>
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
 #include <triton/bitsVector.hpp>
+#include <triton/coreUtils.hpp>
 #include <triton/exceptions.hpp>
+
+#include <iostream>
 
 
 
@@ -127,9 +129,7 @@ namespace triton {
 
       static PyObject* BitsVector_str(PyObject* self) {
         try {
-          std::stringstream str;
-          str << PyBitsVector_AsBitsVector(self);
-          return PyStr_FromFormat("%s", str.str().c_str());
+          return PyStr_FromFormat("%s", triton::utils::toString(PyBitsVector_AsBitsVector(self)).c_str());
         }
         catch (const triton::exceptions::Exception& e) {
           return PyErr_Format(PyExc_TypeError, "%s", e.what());

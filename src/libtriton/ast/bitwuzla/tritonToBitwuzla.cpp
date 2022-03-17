@@ -7,6 +7,7 @@
 
 #include <vector>
 
+#include <triton/coreUtils.hpp>
 #include <triton/cpuSize.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
@@ -285,10 +286,7 @@ namespace triton {
             if (size <= sizeof(uint64_t) * 8) {
               return bitwuzla_mk_bv_value_uint64(bzla, sort->second, static_cast<uint64_t>(value));
             }
-            std::stringstream ss;
-            ss << value;
-            std::string value_str(ss.str());
-            return bitwuzla_mk_bv_value(bzla, sort->second, value_str.c_str(), BITWUZLA_BV_BASE_DEC);
+            return bitwuzla_mk_bv_value(bzla, sort->second, triton::utils::toString(value).c_str(), BITWUZLA_BV_BASE_DEC);
           }
 
           auto n = bitwuzla_mk_const(bzla, sort->second, symVar->getName().c_str());

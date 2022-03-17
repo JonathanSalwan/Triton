@@ -10,8 +10,18 @@
 
 #include <cstddef>
 #include <cstdint>
+#include <sstream>
+#include <string>
 
-#include <triton/uintwide_t.h>
+#include <triton/config.hpp>
+
+#ifdef TRITON_BOOST_INTERFACE
+  #include <boost/multiprecision/cpp_int.hpp>
+  #include <boost/numeric/conversion/cast.hpp>
+#else
+  #include <triton/uintwide_t.h>
+#endif
+
 
 
 //! The Triton namespace
@@ -34,17 +44,32 @@ namespace triton {
     typedef std::uint64_t uint64;
 
     //! unsigned 80-bits
-    //typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(96)), std::uint32_t> uint80;
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::number<boost::multiprecision::cpp_int_backend<80, 80, boost::multiprecision::unsigned_magnitude, boost::multiprecision::unchecked, void>> uint80;
+    #else
     typedef math::wide_integer::uintwide_t<static_cast<size_t>(UINT32_C(80)), std::uint16_t> uint80;
+    #endif
 
     //! unsigned 128-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::uint128_t uint128;
+    #else
     typedef math::wide_integer::uint128_t uint128;
+    #endif
 
     //! unsigned 256-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::uint256_t uint256;
+    #else
     typedef math::wide_integer::uint256_t uint256;
+    #endif
 
     //! unsigned 512-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::uint512_t uint512;
+    #else
     typedef math::wide_integer::uint512_t uint512;
+    #endif
 
     //! signed 8-bits
     typedef std::int8_t sint8;
@@ -59,13 +84,25 @@ namespace triton {
     typedef std::int64_t sint64;
 
     //! signed 128-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::int128_t sint128;
+    #else
     typedef math::wide_integer::int128_t sint128;
+    #endif
 
     //! signed 256-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::int256_t sint256;
+    #else
     typedef math::wide_integer::int256_t sint256;
+    #endif
 
     //! signed 512-bits
+    #ifdef TRITON_BOOST_INTERFACE
+    typedef boost::multiprecision::int512_t sint512;
+    #else
     typedef math::wide_integer::int512_t sint512;
+    #endif
 
     //! unsigned MAX_INT 32 or 64 bits according to the CPU.
     typedef std::size_t usize;
@@ -90,11 +127,12 @@ namespace triton {
     *   \brief Used as a hash function in hash tables containers (std::unordered_map, robin_map).
     */
     template<typename T>
-    class IdentityHash
-    {
-    public:
-      //! Returns the key as is.
-      T operator()(const T& key) const { return key; }
+    class IdentityHash {
+      public:
+        //! Returns the key as is.
+        T operator()(const T& key) const {
+          return key;
+        }
     };
 
 /*! @} End of triton namespace */
