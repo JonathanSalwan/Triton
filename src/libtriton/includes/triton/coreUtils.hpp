@@ -8,6 +8,8 @@
 #ifndef TRITON_CORE_UTIL_H
 #define TRITON_CORE_UTIL_H
 
+#include <sstream>
+#include <string>
 #include <type_traits>
 
 #include <triton/config.hpp>
