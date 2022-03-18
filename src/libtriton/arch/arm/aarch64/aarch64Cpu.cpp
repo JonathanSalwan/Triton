@@ -6,6 +6,7 @@
 */
 
 #include <algorithm>
+#include <cctype>
 #include <cstring>
 
 #include <triton/aarch64Cpu.hpp>
