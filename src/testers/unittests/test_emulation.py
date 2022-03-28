@@ -51,7 +51,7 @@ class TestEmulationX64(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
         return binary
 
     def start(self):
@@ -191,7 +191,7 @@ class TestEmulationX86(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
         return binary
 
     def start(self):
@@ -330,7 +330,7 @@ class TestEmulationAArch64(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
         return binary
 
     def start(self):
@@ -469,7 +469,7 @@ class TestEmulationARM32(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
         return binary
 
     def start(self):

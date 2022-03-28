@@ -75,7 +75,7 @@ class TestIR(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
 
     def test_ir(self):
         """Load binary, setup environment and emulate the ir test suite."""
@@ -252,7 +252,7 @@ class TestIRQemu(unittest.TestCase):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
         return binary
 
     def make_relocation(self, binary):

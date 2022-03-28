@@ -100,7 +100,7 @@ def loadBinary(path):
         size   = phdr.physical_size
         vaddr  = phdr.virtual_address
         print('[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
-        ctx.setConcreteMemoryAreaValue(vaddr, phdr.content)
+        ctx.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
     return
 
 

@@ -277,7 +277,7 @@ def loadBinary(filename):
         size   = phdr.physical_size
         vaddr  = phdr.virtual_address
         debug('Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
-        Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+        Triton.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
     return binary
 
 

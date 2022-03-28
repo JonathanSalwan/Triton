@@ -115,7 +115,7 @@ def loadBinary(ctx, binary):
         size   = sec.virtual_size
         vaddr  = sec.virtual_address + 0x10000000
         debug('[+] Loading 0x%06x - 0x%06x' %(vaddr, vaddr+size))
-        ctx.setConcreteMemoryAreaValue(vaddr, sec.content)
+        ctx.setConcreteMemoryAreaValue(vaddr, list(sec.content))
     return
 
 

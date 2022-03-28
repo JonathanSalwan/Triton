@@ -94,7 +94,7 @@ class DefCamp2015(object):
         for phdr in phdrs:
             size   = phdr.physical_size
             vaddr  = phdr.virtual_address
-            self.Triton.setConcreteMemoryAreaValue(vaddr, phdr.content)
+            self.Triton.setConcreteMemoryAreaValue(vaddr, list(phdr.content))
 
     def test_defcamp_2015(self):
         """Load binary, self.Triton.setup environment and solve challenge with sym eval."""
