@@ -134,7 +134,14 @@ endif()
 # Find Capstone
 message(STATUS "Compiling with Capstone")
 find_package(CAPSTONE REQUIRED)
-include_directories(${CAPSTONE_INCLUDE_DIRS})
+message(STATUS "CAPSTONE version: ${CAPSTONE_VERSION}")
+if(TARGET capstone::capstone)
+    link_libraries(capstone::capstone)
+elseif(DEFINED CAPSTONE_INCLUDE_DIRS)
+    include_directories(${CAPSTONE_INCLUDE_DIRS})
+else()
+    message(FATAL_ERROR "Unexpected capstone package search outcome: neither target capstone::capstone not variable CAPSTONE_INCLUDE_DIRS exists.")
+endif()
 
 # Find boost
 if(BOOST_INTERFACE)
