@@ -58,7 +58,7 @@ find_file(CAPSTONE_VERSION_HEADER
   NAMES
     capstone.h
     capstone/capstone.h
-  PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
+  PATHS ${CAPSTONE_INCLUDE_DIRS}
   REQUIRED
 )
 
