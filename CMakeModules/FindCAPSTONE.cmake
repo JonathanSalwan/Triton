@@ -24,7 +24,9 @@ endif()
 
 if(NOT CAPSTONE_INCLUDE_DIRS AND NOT CAPSTONE_LIBRARIES)
     find_path(CAPSTONE_INCLUDE_DIR
-      NAMES capstone/capstone.h
+      NAMES
+        capstone.h
+        capstone/capstone.h
       PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
     )
 
@@ -53,7 +55,9 @@ else()
 endif()
 
 find_file(CAPSTONE_VERSION_HEADER
-  capstone/capstone.h
+  NAMES
+    capstone.h
+    capstone/capstone.h
   PATHS ${CAPSTONE_PKGCONF_INCLUDE_DIRS}
   REQUIRED
 )
