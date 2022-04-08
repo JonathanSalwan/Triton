@@ -54,7 +54,7 @@ endif()
 
 find_file(Z3_VERSION_HEADER
   z3_version.h
-  PATHS ${Z3_PKGCONF_INCLUDE_DIRS}
+  PATHS ${Z3_INCLUDE_DIRS}
   REQUIRED
 )
 
