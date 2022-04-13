@@ -2,6 +2,7 @@
 # Once done, this will define
 #
 #  Z3_FOUND - system has Z3
+#  Z3_VERSION - the Z3 version
 #  Z3_INCLUDE_DIRS - the Z3 include directories
 #  Z3_LIBRARIES - link these to use Z3
 
@@ -28,7 +29,7 @@ if(NOT Z3_INCLUDE_DIRS AND NOT Z3_LIBRARIES)
     )
 
     find_library(Z3_LIBRARY
-      NAMES z3
+      NAMES z3 libz3 
       PATHS ${Z3_PKGCONF_LIBRARY_DIRS}
     )
 
@@ -50,3 +51,20 @@ else()
     message(STATUS "Z3 includes directory defined: ${Z3_INCLUDE_DIRS}")
     message(STATUS "Z3 libraries defined: ${Z3_LIBRARIES}")
 endif()
+
+find_file(Z3_VERSION_HEADER
+  z3_version.h
+  PATHS ${Z3_INCLUDE_DIRS}
+  REQUIRED
+)
+
+file(READ "${Z3_VERSION_HEADER}" Z3_VERSION_HEADER_CONTENT)
+string(REGEX MATCH "Z3_MAJOR_VERSION +([0-9]+)" _ ${Z3_VERSION_HEADER_CONTENT})
+set(Z3_MAJOR_VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "Z3_MINOR_VERSION +([0-9]+)" _ ${Z3_VERSION_HEADER_CONTENT})
+set(Z3_MINOR_VERSION ${CMAKE_MATCH_1})
+string(REGEX MATCH "Z3_BUILD_NUMBER +([0-9]+)" _ ${Z3_VERSION_HEADER_CONTENT})
+set(Z3_BUILD_NUMBER ${CMAKE_MATCH_1})
+string(REGEX MATCH "Z3_REVISION_NUMBER +([0-9]+)" _ ${Z3_VERSION_HEADER_CONTENT})
+set(Z3_REVISION_NUMBER ${CMAKE_MATCH_1})
+set(Z3_VERSION "${Z3_MAJOR_VERSION}.${Z3_MINOR_VERSION}.${Z3_BUILD_NUMBER}.${Z3_REVISION_NUMBER}")
