@@ -247,6 +247,18 @@ namespace triton {
     }
 
 
+    void Architecture::disassembly(triton::arch::BasicBlock& block, triton::uint64 addr) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::disassembly(): You must define an architecture.");
+
+      for (auto& inst : block.getInstructions()) {
+        inst.setAddress(addr);
+        this->cpu->disassembly(inst);
+        addr += inst.getSize();
+      }
+    }
+
+
     std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr, triton::usize count) const {
       std::vector<triton::arch::Instruction> ret;
       ret.reserve(count);

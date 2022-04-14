@@ -14,6 +14,7 @@
 #include <vector>
 
 #include <triton/archEnums.hpp>
+#include <triton/basicBlock.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/cpuInterface.hpp>
 #include <triton/dllexport.hpp>
@@ -140,6 +141,9 @@ namespace triton {
 
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
+
+        //! Disassembles a block of instructions according to the architecture.
+        TRITON_EXPORT void disassembly(triton::arch::BasicBlock& block, triton::uint64 addr=0) const;
 
         //! Disassembles a concrete memory area and returns a list of at most `count` disassembled instructions.
         TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;

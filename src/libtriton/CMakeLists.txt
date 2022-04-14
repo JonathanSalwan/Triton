@@ -25,6 +25,7 @@ set(LIBTRITON_SOURCE_FILES
     arch/arm/arm32/arm32Semantics.cpp
     arch/arm/arm32/arm32Specifications.cpp
     arch/arm/armOperandProperties.cpp
+    arch/basicBlock.cpp
     arch/bitsVector.cpp
     arch/immediate.cpp
     arch/instruction.cpp
@@ -82,6 +83,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/astRepresentation.hpp
     includes/triton/astRepresentationInterface.hpp
     includes/triton/astSmtRepresentation.hpp
+    includes/triton/basicBlock.hpp
     includes/triton/bitsVector.hpp
     includes/triton/bitwuzlaSolver.hpp
     includes/triton/callbacks.hpp

@@ -300,6 +300,18 @@ namespace triton {
     };
 
 
+    /*! \class BasicBlock
+     *  \brief The exception class used by a basic block. */
+    class BasicBlock : public triton::exceptions::Architecture {
+      public:
+        //! Constructor.
+        TRITON_EXPORT BasicBlock(const char* message) : triton::exceptions::Architecture(message) {};
+
+        //! Constructor.
+        TRITON_EXPORT BasicBlock(const std::string& message) : triton::exceptions::Architecture(message) {};
+    };
+
+
     /*! \class Cpu
      *  \brief The exception class used by all CPUs. */
     class Cpu : public triton::exceptions::Architecture {

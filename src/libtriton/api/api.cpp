@@ -460,6 +460,12 @@ namespace triton {
   }
 
 
+  void API::disassembly(triton::arch::BasicBlock& block, triton::uint64 addr) const {
+    this->checkArchitecture();
+    this->arch.disassembly(block, addr);
+  }
+
+
   std::vector<triton::arch::Instruction> API::disassembly(triton::uint64 addr, triton::usize count) const {
     this->checkArchitecture();
     return this->arch.disassembly(addr, count);
@@ -545,12 +551,25 @@ namespace triton {
   }
 
 
+  bool API::processing(triton::arch::BasicBlock& block) {
+    this->checkArchitecture();
+    this->arch.disassembly(block);
+    return this->irBuilder->buildSemantics(block);
+  }
+
+
 
   /* IR builder API ================================================================================= */
 
   bool API::buildSemantics(triton::arch::Instruction& inst) {
     this->checkIrBuilder();
     return this->irBuilder->buildSemantics(inst);
+  }
+
+
+  bool API::buildSemantics(triton::arch::BasicBlock& block) {
+    this->checkIrBuilder();
+    return this->irBuilder->buildSemantics(block);
   }
 
 
