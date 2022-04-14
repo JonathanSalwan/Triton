@@ -43,7 +43,7 @@ namespace triton {
    */
 
     /*! \class Instruction
-     *  \brief This class is used when to represent an instruction
+     *  \brief This class is used to represent an instruction
      */
     class Instruction {
       protected:

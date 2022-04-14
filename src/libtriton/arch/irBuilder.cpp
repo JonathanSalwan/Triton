@@ -101,6 +101,22 @@ namespace triton {
     }
 
 
+    bool IrBuilder::buildSemantics(triton::arch::BasicBlock& block) {
+      triton::usize count = block.size();
+
+      for (auto& inst : block.getInstructions()) {
+        if (this->buildSemantics(inst) == false) {
+          return false;
+        }
+        if (inst.isControlFlow() && --count) {
+          throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): Do not add instructions in a block after a branch instruction.");
+        }
+      }
+
+      return true;
+    }
+
+
     void IrBuilder::preIrInit(triton::arch::Instruction& inst) {
       /* Clear previous expressions if exist */
       inst.symbolicExpressions.clear();

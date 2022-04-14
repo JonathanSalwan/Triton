@@ -12,6 +12,7 @@
 #include <triton/ast.hpp>
 #include <triton/astContext.hpp>
 #include <triton/astRepresentation.hpp>
+#include <triton/basicBlock.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/immediate.hpp>
@@ -244,6 +245,9 @@ namespace triton {
         //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
+        //! [**architecture api**] - Disassembles a block of instructions. You must define an architecture before.
+        TRITON_EXPORT void disassembly(triton::arch::BasicBlock& block, triton::uint64 addr=0) const;
+
         //! [**architecture api**] - Disassembles a concrete memory area and returns a list of at most `count` disassembled instructions.
         TRITON_EXPORT std::vector<triton::arch::Instruction> disassembly(triton::uint64 addr, triton::usize count) const;
 
@@ -256,6 +260,9 @@ namespace triton {
 
         //! [**proccesing api**] - Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported.
         TRITON_EXPORT bool processing(triton::arch::Instruction& inst);
+
+        //! [**proccesing api**] - Processes a block of instructions and updates engines according to instructions semantics. Returns false if an instruction is not supported.
+        TRITON_EXPORT bool processing(triton::arch::BasicBlock& block);
 
         //! [**proccesing api**] - Initializes everything.
         TRITON_EXPORT void initEngines(void);
@@ -272,6 +279,9 @@ namespace triton {
 
         //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
         TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
+
+        //! [**IR builder api**] - Builds the instructions semantics of a block. Returns false if an instruction is not supported. You must define an architecture before.
+        TRITON_EXPORT bool buildSemantics(triton::arch::BasicBlock& block);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
         TRITON_EXPORT triton::ast::SharedAstContext getAstContext(void);
