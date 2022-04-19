@@ -108,7 +108,8 @@ namespace triton {
         if (this->buildSemantics(inst) == false) {
           return false;
         }
-        if (inst.isControlFlow() && --count) {
+        count--;
+        if (inst.isControlFlow() && count) {
           throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): Do not add instructions in a block after a branch instruction.");
         }
       }
