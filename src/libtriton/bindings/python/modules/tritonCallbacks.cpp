@@ -9,8 +9,9 @@
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
-#include <triton/exceptions.hpp>
+#include <triton/basicBlock.hpp>
 #include <triton/bitsVector.hpp>
+#include <triton/exceptions.hpp>
 #include <triton/immediate.hpp>
 #include <triton/memoryAccess.hpp>
 #include <triton/register.hpp>
@@ -32,6 +33,7 @@ to wrap more generic concepts.
 
 - \ref py_AstContext_page
 - \ref py_AstNode_page
+- \ref py_BasicBlock_page
 - \ref py_BitsVector_page
 - \ref py_Immediate_page
 - \ref py_Instruction_page
@@ -71,6 +73,45 @@ to wrap more generic concepts.
 namespace triton {
   namespace bindings {
     namespace python {
+
+      static PyObject* triton_BasicBlock(PyObject* self, PyObject* args) {
+        PyObject* obj = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|O", &obj) == false) {
+          return PyErr_Format(PyExc_TypeError, "BasicBlock(): Invalid constructor.");
+        }
+
+        try {
+          /* Check if it's a default constructor */
+          if (obj == nullptr)
+            return PyBasicBlock();
+
+          /* Check if argument is a list of instruction */
+          else if (obj != nullptr && PyList_Check(obj)) {
+            triton::arch::BasicBlock block;
+
+            for (Py_ssize_t i = 0; i < PyList_Size(obj); i++) {
+              PyObject* item = PyList_GetItem(obj, i);
+
+              if (PyInstruction_Check(item) == false)
+                return PyErr_Format(PyExc_TypeError, "BasicBlock(): All items must be an Instruction objet.");
+
+              block.add(*PyInstruction_AsInstruction(item));
+            }
+
+            return PyBasicBlock(block);
+          }
+
+          /* Otherwise, invalid constructor */
+          else {
+            return PyErr_Format(PyExc_TypeError, "BasicBlock(): Invalid constructor.");
+          }
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
 
       static PyObject* triton_Immediate(PyObject* self, PyObject* args) {
         PyObject* value = nullptr;
@@ -189,6 +230,7 @@ namespace triton {
 
 
       PyMethodDef tritonCallbacks[] = {
+        {"BasicBlock",      (PyCFunction)triton_BasicBlock,       METH_VARARGS,   ""},
         {"Immediate",       (PyCFunction)triton_Immediate,        METH_VARARGS,   ""},
         {"Instruction",     (PyCFunction)triton_Instruction,      METH_VARARGS,   ""},
         {"MemoryAccess",    (PyCFunction)triton_MemoryAccess,     METH_VARARGS,   ""},

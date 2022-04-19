@@ -278,7 +278,7 @@ namespace triton {
     }
 
 
-    std::vector<triton::arch::Instruction> Architecture::disassembly(triton::uint64 addr) const {
+    triton::arch::BasicBlock Architecture::disassembly(triton::uint64 addr) const {
       std::vector<triton::arch::Instruction> ret;
 
       do {
@@ -292,7 +292,7 @@ namespace triton {
         addr += inst.getSize();
       } while (!ret.back().isControlFlow());
 
-      return ret;
+      return triton::arch::BasicBlock(ret);
     }
 
 

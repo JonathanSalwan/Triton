@@ -199,6 +199,7 @@ if(PYTHON_BINDINGS)
         bindings/python/objects/pyAstContext.cpp
         bindings/python/objects/pyAstNode.cpp
         bindings/python/objects/pyBitsVector.cpp
+        bindings/python/objects/pyBasicBlock.cpp
         bindings/python/objects/pyImmediate.cpp
         bindings/python/objects/pyInstruction.cpp
         bindings/python/objects/pyMemoryAccess.cpp

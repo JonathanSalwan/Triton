@@ -13,6 +13,7 @@
 
 #include <triton/archEnums.hpp>
 #include <triton/ast.hpp>
+#include <triton/basicBlock.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/immediate.hpp>
 #include <triton/instruction.hpp>
@@ -58,6 +59,15 @@ namespace triton {
 
       //! Creates the Immediate python class.
       PyObject* PyImmediate(const triton::arch::Immediate& imm);
+
+      //! Creates the BasicBlock python class.
+      PyObject* PyBasicBlock(void);
+
+      //! Creates the BasicBlock python class.
+      PyObject* PyBasicBlock(const triton::arch::BasicBlock& block);
+
+      //! Creates the BasicBlock python class.
+      PyObject* PyBasicBlock(std::vector<triton::arch::Instruction>& insts);
 
       //! Creates the Instruction python class.
       PyObject* PyInstruction(void);
@@ -122,6 +132,17 @@ namespace triton {
 
       //! pyBitsVector type.
       extern PyTypeObject BitsVector_Type;
+
+      /* Basic Block ===================================================== */
+
+      //! pyBasicBlock object.
+      typedef struct {
+        PyObject_HEAD
+        triton::arch::BasicBlock* block;
+      } BasicBlock_Object;
+
+      //! pyBasicBlock type.
+      extern PyTypeObject BasicBlock_Type;
 
       /* Immediate ====================================================== */
 
@@ -251,6 +272,12 @@ namespace triton {
 
 /*! Returns the triton::arch::BitsVector. */
 #define PyBitsVector_AsBitsVector(v) (((triton::bindings::python::BitsVector_Object*)(v))->bv)
+
+/*! Checks if the pyObject is a triton::arch::BasicBlock. */
+#define PyBasicBlock_Check(v) ((v)->ob_type == &triton::bindings::python::BasicBlock_Type)
+
+/*! Returns the triton::arch::BasicBlock. */
+#define PyBasicBlock_AsBasicBlock(v) (((triton::bindings::python::BasicBlock_Object*)(v))->block)
 
 /*! Checks if the pyObject is a triton::arch::Immediate. */
 #define PyImmediate_Check(v) ((v)->ob_type == &triton::bindings::python::Immediate_Type)

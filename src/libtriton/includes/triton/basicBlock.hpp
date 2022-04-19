@@ -65,7 +65,7 @@ namespace triton {
         TRITON_EXPORT std::vector<triton::arch::Instruction>& getInstructions(void);
 
         //! Returns the number of instructions in the block
-        TRITON_EXPORT triton::usize size(void) const;
+        TRITON_EXPORT triton::usize getSize(void) const;
 
         //! Returns the first instruction's address
         TRITON_EXPORT triton::uint64 getFirstAddress(void) const;

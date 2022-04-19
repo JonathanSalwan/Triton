@@ -95,11 +95,14 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
+- <b>void disassembly(\ref py_BasicBlock_page block)</b><br>
+Disassembles a basic block. You must define an architecture before.
+
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
 Disassembles a concrete memory area from `addr` and returns a list of at most `count` disassembled instructions.
 
-- <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr)</b><br>
-Disassembles a concrete memory area from `addr` to control flow instruction and returns a list of disassembled instructions.
+- <b>\ref py_BasicBlock_page disassembly(integer addr)</b><br>
+Disassembles a concrete memory area from `addr` to control flow instruction and returns a \ref py_BasicBlock_page.
 
 - <b>integer evaluateAstViaSolver(\ref py_AstNode_page node)</b><br>
 Evaluates an AST via the solver and returns the concrete value.
@@ -303,6 +306,9 @@ Pops the last constraints added to the path predicate.
 
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+
+- <b>bool processing(\ref py_BasicBlock_page block)</b><br>
+Processes a basic block and updates engines according to the instructions semantics.
 
 - <b>void pushPathConstraint(\ref py_AstNode_page node, string comment="")</b><br>
 Pushs constraints to the current path predicate.
@@ -1086,20 +1092,28 @@ namespace triton {
             Py_INCREF(Py_None);
             return Py_None;
           }
+          if (arg0 != nullptr && PyBasicBlock_Check(arg0)) {
+            triton::uint64 base = 0;
+            if (arg1 != nullptr && (PyLong_Check(arg1) || PyInt_Check(arg1))) {
+              base = PyLong_AsUint64(arg1);
+            }
+            PyTritonContext_AsTritonContext(self)->disassembly(*PyBasicBlock_AsBasicBlock(arg0), base);
+            Py_INCREF(Py_None);
+            return Py_None;
+          }
           if ((arg0 != nullptr && (PyLong_Check(arg0) || PyInt_Check(arg0))) &&
               (arg1 == nullptr || PyLong_Check(arg1) || PyInt_Check(arg1))) {
 
             std::vector<triton::arch::Instruction> insts;
             if (arg1) {
               insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0), PyLong_AsUsize(arg1));
+              ret = xPyList_New(insts.size());
+              for (auto& inst : insts)
+                PyList_SetItem(ret, index++, PyInstruction(inst));
             }
             else {
-              insts = PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0));
+              ret = PyBasicBlock(PyTritonContext_AsTritonContext(self)->disassembly(PyLong_AsUint64(arg0)));
             }
-            ret = xPyList_New(insts.size());
-            for (auto& inst : insts)
-              PyList_SetItem(ret, index++, PyInstruction(inst));
-
             return ret;
           }
           else {
@@ -2380,14 +2394,19 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_processing(PyObject* self, PyObject* inst) {
-        if (!PyInstruction_Check(inst))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::processing(): Expects an Instruction as argument.");
-
+      static PyObject* TritonContext_processing(PyObject* self, PyObject* obj) {
         try {
-          if (PyTritonContext_AsTritonContext(self)->processing(*PyInstruction_AsInstruction(inst)))
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          if (PyInstruction_Check(obj)) {
+            if (PyTritonContext_AsTritonContext(self)->processing(*PyInstruction_AsInstruction(obj)))
+              Py_RETURN_TRUE;
+            Py_RETURN_FALSE;
+          }
+          else if (PyBasicBlock_Check(obj)) {
+            if (PyTritonContext_AsTritonContext(self)->processing(*PyBasicBlock_AsBasicBlock(obj)))
+              Py_RETURN_TRUE;
+            Py_RETURN_FALSE;
+          }
+          return PyErr_Format(PyExc_TypeError, "TritonContext::processing(): Expects an Instruction or a BasicBlock as argument.");
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
