@@ -297,12 +297,12 @@ class TestX64Disass(unittest.TestCase):
         ]
         raw = b"".join(code)
         self.ctx.setConcreteMemoryAreaValue(0x1000, raw)
-        insts = self.ctx.disassembly(0x1000)
-        self.assertEqual(str(insts), '[0x1000: movabs rcx, 0x1122334455667788, '
-                                      '0x100a: inc rcx, '
-                                      '0x100d: mov rax, rcx, '
-                                      '0x1010: leave, '
-                                      '0x1011: ret]')
+        block = self.ctx.disassembly(0x1000)
+        self.assertEqual(str(block.getInstructions()), '[0x1000: movabs rcx, 0x1122334455667788, '
+                                                       '0x100a: inc rcx, '
+                                                       '0x100d: mov rax, rcx, '
+                                                       '0x1010: leave, '
+                                                       '0x1011: ret]')
 
     def test_inst4(self):
         code = [
@@ -315,12 +315,12 @@ class TestX64Disass(unittest.TestCase):
         ]
         raw = b"".join(code)
         self.ctx.setConcreteMemoryAreaValue(0x1000, raw)
-        insts = self.ctx.disassembly(0x1000)
-        self.assertEqual(str(insts), '[0x1000: movabs rcx, 0x1122334455667788, '
-                                      '0x100a: inc rcx, '
-                                      '0x100d: mov rax, rcx, '
-                                      '0x1010: leave, '
-                                      '0x1011: jmp rax]')
+        block = self.ctx.disassembly(0x1000)
+        self.assertEqual(str(block.getInstructions()), '[0x1000: movabs rcx, 0x1122334455667788, '
+                                                       '0x100a: inc rcx, '
+                                                       '0x100d: mov rax, rcx, '
+                                                       '0x1010: leave, '
+                                                       '0x1011: jmp rax]')
 
     def test_inst5(self):
         code = [

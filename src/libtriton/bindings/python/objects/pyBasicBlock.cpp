@@ -15,6 +15,13 @@
 #include <iostream>
 
 
+/* setup doctest context
+
+>>> from __future__ import print_function
+>>> from triton import *
+>>> ctx = TritonContext(ARCH.X86_64)
+
+*/
 
 /*! \page py_BasicBlock_page BasicBlock
     \brief [**python api**] All information about the BasicBlock Python object.
