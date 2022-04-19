@@ -59,7 +59,7 @@ namespace triton {
     }
 
 
-    triton::usize BasicBlock::size(void) const {
+    triton::usize BasicBlock::getSize(void) const {
       return this->instructions.size();
     }
 
@@ -79,7 +79,7 @@ namespace triton {
 
 
     std::ostream& operator<<(std::ostream& stream, BasicBlock& block) {
-      triton::usize size = block.size();
+      triton::usize size = block.getSize();
       for (const auto& inst : block.getInstructions()) {
         stream << inst;
         if (--size) {

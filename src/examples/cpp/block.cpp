@@ -47,7 +47,7 @@ int main(int ac, const char **av) {
 
   std::cout << "First addr: 0x" << std::hex << block.getFirstAddress() << std::endl;
   std::cout << "Last addr: " << std::hex << block.getLastAddress() << std::endl;
-  std::cout << "Number of instructions: " << std::hex << block.size() << std::endl;
+  std::cout << "Number of instructions: " << std::hex << block.getSize() << std::endl;
 
   std::cout << "----------" << std::endl;
 

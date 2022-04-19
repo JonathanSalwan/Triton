@@ -102,7 +102,7 @@ namespace triton {
 
 
     bool IrBuilder::buildSemantics(triton::arch::BasicBlock& block) {
-      triton::usize count = block.size();
+      triton::usize count = block.getSize();
 
       for (auto& inst : block.getInstructions()) {
         if (this->buildSemantics(inst) == false) {

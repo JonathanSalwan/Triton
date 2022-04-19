@@ -472,7 +472,7 @@ namespace triton {
   }
 
 
-  std::vector<triton::arch::Instruction> API::disassembly(triton::uint64 addr) const {
+  triton::arch::BasicBlock API::disassembly(triton::uint64 addr) const {
     this->checkArchitecture();
     return this->arch.disassembly(addr);
   }
