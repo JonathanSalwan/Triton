@@ -896,6 +896,31 @@ CODE  = [
     (None, [],              b"\xf7\xd3",                      "not ebx"),
     (None, [],              b"\xbb\x00\x00\x00\x00",          "mov ebx, 0x00000000"),
     (None, [],              b"\xf7\xd3",                      "not ebx"),
+
+    (None, [],              b"\xf9",                          "stc"),
+    (None, [],              b"\xbb\xfe\xff\xff\xff",          "mov ebx, 0xfffffffe"),
+    (None, [],              b"\xb8\x01\x00\x00\x00",          "mov eax, 0x00000001"),
+    (None, [],              b"\x11\xd8",                      "adc eax, ebx"),
+
+    (None, [],              b"\xf9",                          "stc"),
+    (None, [],              b"\xbb\xfe\xff\xff\xff",          "mov ebx, 0xfffffffe"),
+    (None, [],              b"\xb8\x02\x00\x00\x00",          "mov eax, 0x00000002"),
+    (None, [],              b"\x11\xd8",                      "adc eax, ebx"),
+
+    (None, [],              b"\xf9",                          "stc"),
+    (None, [],              b"\x48\xc7\xc3\xff\xff\xff\xff",  "mov rbx, -1"),
+    (None, [],              b"\x48\xc7\xc0\x01\x00\x00\x00",  "mov rax, 1"),
+    (None, [],              b"\x48\x11\xc3",                  "adc rax, rbx"),
+
+    (None, [],              b"\xf9",                          "stc"),
+    (None, [],              b"\x48\xc7\xc3\xff\xff\xff\xff",  "mov rbx, -1"),
+    (None, [],              b"\x48\xc7\xc0\x02\x00\x00\x00",  "mov rax, 2"),
+    (None, [],              b"\x48\x11\xc3",                  "adc rax, rbx"),
+
+    (None, [],              b"\xf8",                          "clc"),
+    (None, [],              b"\x48\xc7\xc3\xff\xff\xff\xff",  "mov rbx, -1"),
+    (None, [],              b"\x48\xc7\xc0\x02\x00\x00\x00",  "mov rax, 2"),
+    (None, [],              b"\x48\x11\xc3",                  "adc rax, rbx"),
 ]
 
 
