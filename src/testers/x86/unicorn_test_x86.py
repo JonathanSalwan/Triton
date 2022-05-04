@@ -921,6 +921,36 @@ CODE  = [
     (None, [],              b"\x48\xc7\xc3\xff\xff\xff\xff",  "mov rbx, -1"),
     (None, [],              b"\x48\xc7\xc0\x02\x00\x00\x00",  "mov rax, 2"),
     (None, [],              b"\x48\x11\xc3",                  "adc rax, rbx"),
+
+    (None, [],              b"\xf9",                                      "stc"),
+    (None, [],              b"\x48\xbb\xff\xff\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7fffffffffffffff"),
+    (None, [],              b"\x48\xc7\xc0\x01\x00\x00\x00",              "mov rax, 1"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
+
+    (None, [],              b"\xf9",                                      "stc"),
+    (None, [],              b"\x48\xbb\xff\xff\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7fffffffffffffff"),
+    (None, [],              b"\x48\xc7\xc0\x00\x00\x00\x00",              "mov rax, 0"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
+
+    (None, [],              b"\xf8",                                      "clc"),
+    (None, [],              b"\x48\xbb\xff\xff\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7fffffffffffffff"),
+    (None, [],              b"\x48\xc7\xc0\x01\x00\x00\x00",              "mov rax, 1"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
+
+    (None, [],              b"\xf8",                                      "clc"),
+    (None, [],              b"\x48\xbb\xff\xff\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7fffffffffffffff"),
+    (None, [],              b"\x48\xc7\xc0\x02\x00\x00\x00",              "mov rax, 2"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
+
+    (None, [],              b"\xf9",                                      "stc"),
+    (None, [],              b"\x48\xbb\xff\xff\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7fffffffffffffff"),
+    (None, [],              b"\x48\xc7\xc0\x02\x00\x00\x00",              "mov rax, 2"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
+
+    (None, [],              b"\xf9",                                      "stc"),
+    (None, [],              b"\x48\xbb\xff\xfe\xff\xff\xff\xff\xff\x7f",  "mov rbx, 0x7ffffffffffffffe"),
+    (None, [],              b"\x48\xc7\xc0\x01\x00\x00\x00",              "mov rax, 1"),
+    (None, [],              b"\x48\x11\xc3",                              "adc rax, rbx"),
 ]
 
 
