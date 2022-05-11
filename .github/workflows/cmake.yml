@@ -1,0 +1,92 @@
+name: CMake
+
+on: push
+
+jobs:
+  build-install:
+
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os:
+          - macOS-latest
+          - ubuntu-20.04
+          - windows-2022
+        include:
+          - os: windows-2022
+            platform: windows
+            vcpkg-triplet: x64-windows-static-release-md
+            cmake-preset: windows-x64
+            capstone-library: capstone.lib
+            python-executable: python
+          - os: ubuntu-20.04
+            platform: linux
+            vcpkg-triplet: x64-linux-release
+            cmake-preset: linux-x64
+            capstone-library: libcapstone.a
+            python-executable: python3
+          - os: macOS-latest
+            platform: macos
+            vcpkg-triplet: x64-osx-release
+            cmake-preset: macos-x64
+            capstone-library: libcapstone.a
+            python-executable: python3
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - uses: actions/checkout@v3
+      name: Get vcpkg
+      with:
+        repository: 'microsoft/vcpkg'
+        ref: '2022.04.12'
+        path: '${{ github.workspace }}/_vcpkg'
+        fetch-depth: 0
+
+    - uses: lukka/get-cmake@latest
+      name: Get CMake
+
+    - uses: ilammy/msvc-dev-cmd@v1  
+      name: Setup Windows dev environment
+      with:
+        arch: 'x64'
+      if: ${{ matrix.platform == 'windows' }}
+
+    - name: Configure (Windows)
+      if: ${{ matrix.platform == 'windows' }}
+      run: |
+        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}\vcpkg\triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
+      env:
+        # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
+        CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
+        CAPSTONE_LIBRARIES: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/lib/${{ matrix.capstone-library }}
+        VCPKG_ROOT: ${{ github.workspace }}/_vcpkg
+        VCPKG_FEATURE_FLAGS: manifests,versions,binarycaching,registries
+
+    - name: Configure (UNIX)
+      if: ${{ matrix.platform != 'windows' }}
+      run: |
+        cmake --preset=${{ matrix.cmake-preset }} -DBUILD_SHARED_LIBS:BOOL=ON -DVCPKG_OVERLAY_TRIPLETS:PATH=${{ github.workspace }}/vcpkg/triplets -DVCPKG_TARGET_TRIPLET:STRING=${{ matrix.vcpkg-triplet }}
+      env:
+        # capstone 4.0.2 does not produce a CMake Config, hence the need to point directly to include directories and libraries
+        CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/include
+        CAPSTONE_LIBRARIES: ${{ github.workspace }}/build/${{ matrix.cmake-preset }}/vcpkg_installed/${{ matrix.vcpkg-triplet }}/lib/${{ matrix.capstone-library }}
+        VCPKG_ROOT: ${{ github.workspace }}/_vcpkg
+        VCPKG_FEATURE_FLAGS: manifests,versions,binarycaching,registries
+
+    - name: Build
+      run: |
+        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release
+
+    - name: Install
+      run: |
+        cmake --build --preset build-${{ matrix.cmake-preset }} --config Release --target install
+
+    - name: Upload
+      uses: actions/upload-artifact@v3
+      with:
+        name: triton-x64-${{ matrix.platform }}
+        path: ${{ github.workspace }}/out/install/${{ matrix.cmake-preset }}
+        if-no-files-found: warn
