@@ -46,7 +46,7 @@ add_custom_target(check
 
 if(PYTHON_BINDINGS)
     message(STATUS "Compiling with Python bindings")
-    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
+    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:triton>/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
@@ -64,6 +64,12 @@ if(PYTHON_BINDINGS)
     if(NOT GCOV)
         add_dependencies(check test-python)
     endif()
+
+    add_test(NAME test-python
+        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests)
+    set_property(TEST test-python
+        PROPERTY ENVIRONMENT
+            "PYTHONPATH=$<TARGET_FILE_DIR:triton>/")
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
