@@ -128,7 +128,7 @@ build_script:
     #  - cmd: cmake --build . --config release
 
 test_script:
-  - cmd: cmake --build . --config Release --target check
+  - cmd: ctest --test-dir . -C Release --output-on-failure
 
 after_test:
   # Check installation

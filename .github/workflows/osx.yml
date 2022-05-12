@@ -44,4 +44,4 @@ jobs:
           sudo make -j3 install
       - name: Unittests
         run: |
-          make -C build check
+          ctest --test-dir build --output-on-failure
