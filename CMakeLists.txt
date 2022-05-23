@@ -46,7 +46,7 @@ add_custom_target(check
 
 if(PYTHON_BINDINGS)
     message(STATUS "Compiling with Python bindings")
-    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=${CMAKE_CURRENT_BINARY_DIR}/src/libtriton/${CMAKE_CFG_INTDIR}/)
+    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:triton>/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
@@ -64,6 +64,12 @@ if(PYTHON_BINDINGS)
     if(NOT GCOV)
         add_dependencies(check test-python)
     endif()
+
+    add_test(NAME test-python
+        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests)
+    set_property(TEST test-python
+        PROPERTY ENVIRONMENT
+            "PYTHONPATH=$<TARGET_FILE_DIR:triton>/")
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"
@@ -73,15 +79,16 @@ endif()
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
     message(STATUS "Compiled with GCOV")
     add_custom_target(gcov-test
-        COMMAND lcov --zerocounters --directory ${CMAKE_BINARY_DIR}/src/libtriton
-        COMMAND lcov --capture --initial --directory ${CMAKE_BINARY_DIR}/src/libtriton --output-file app
+        COMMAND lcov --zerocounters --directory $<TARGET_FILE_DIR:triton>
+        COMMAND lcov --capture --initial --directory $<TARGET_FILE_DIR:triton> --output-file app
         COMMAND ${CMAKE_COMMAND} --build ${CMAKE_BINARY_DIR} --target test-python
         COMMAND ctest --output-on-failure
-        COMMAND lcov --no-checksum --directory ${CMAKE_BINARY_DIR}/src/libtriton --capture --output-file coverage.info
+        COMMAND lcov --no-checksum --directory $<TARGET_FILE_DIR:triton> --capture --output-file coverage.info
         COMMAND lcov --remove coverage.info '/usr*' --remove coverage.info 'pintools*' --remove coverage.info 'examples*' -o coverage.info
         COMMAND genhtml coverage.info -o coverage
         COMMAND ${CMAKE_COMMAND} -E echo "-- Report generated in ${CMAKE_CURRENT_BINARY_DIR}/coverage/index.html"
     )
+    add_dependencies(gcov-test triton)
     add_dependencies(check gcov-test)
     add_compile_options(--coverage)
     add_link_options(--coverage)
