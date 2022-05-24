@@ -66,10 +66,11 @@ if(PYTHON_BINDINGS)
     endif()
 
     add_test(NAME test-python
-        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests)
+        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests
+    )
     set_property(TEST test-python
-        PROPERTY ENVIRONMENT
-            "PYTHONPATH=$<TARGET_FILE_DIR:triton>/")
+        PROPERTY ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:triton>/"
+    )
 else()
     add_custom_target(test-python
         COMMAND echo "No python test as python support is disabled"

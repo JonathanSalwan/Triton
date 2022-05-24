@@ -2,7 +2,7 @@
     "$schema": "https://raw.githubusercontent.com/microsoft/vcpkg/master/scripts/vcpkg.schema.json",
     "name": "triton",
     "version": "1.0",
-    "description": "Triton is a Dynamic Binary Analysis (DBA) framework. It provides internal components like a Dynamic Symbolic Execution (DSE) engine, a dynamic taint engine, AST representations of the x86, x86-64, ARM32 and AArch64 Instructions Set Architecture (ISA), SMT simplification passes, an SMT solver interface and, the last but not least, Python bindings.",
+    "description": "Triton is a dynamic binary analysis library. It provides internal components like a dynamic symbolic execution engine, a dynamic taint analysis engine, AST representation of the x86, x86-64, ARM32 and AArch64 ISA semantic, an expressions synthesis engine, some SMT simplification passes, SMT solver interface to Z3 and Bitwuzla and, the last but not least, Python bindings. Based on these components, you are able to build your program analysis tools, automate reverse engineering, perform software verification or just emulate code.",
     "homepage": "https://github.com/JonathanSalwan/Triton",
     "license": "Apache-2.0",
     "supports": "!arm",
