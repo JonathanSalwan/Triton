@@ -262,7 +262,7 @@ namespace triton {
         TRITON_EXPORT bool processing(triton::arch::Instruction& inst);
 
         //! [**proccesing api**] - Processes a block of instructions and updates engines according to instructions semantics. Returns false if an instruction is not supported.
-        TRITON_EXPORT bool processing(triton::arch::BasicBlock& block);
+        TRITON_EXPORT bool processing(triton::arch::BasicBlock& block, triton::uint64 addr=0);
 
         //! [**proccesing api**] - Initializes everything.
         TRITON_EXPORT void initEngines(void);

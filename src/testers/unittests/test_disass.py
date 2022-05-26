@@ -345,3 +345,26 @@ class TestX64Disass(unittest.TestCase):
         raw = b"".join(code)
         self.ctx.setConcreteMemoryAreaValue(0x1000, raw)
         self.assertRaises(Exception, self.ctx.disassembly, 0x1000)
+
+    def test_inst7(self):
+        block = BasicBlock([
+            Instruction(b"\x48\xb9\x88\x77\x66\x55\x44\x33\x22\x11"), # mov rcx, 0x1122334455667788
+            Instruction(b"\x48\xff\xc1"),                             # inc rcx
+            Instruction(b"\x48\x89\xc8"),                             # mov rax, rcx
+            Instruction(b"\xc9"),                                     # leave
+            Instruction(b"\xc3"),                                     # ret
+        ])
+        self.ctx.disassembly(block)
+        self.assertEqual(block.getInstructions()[0].getAddress(), 0x0)
+
+        self.ctx.disassembly(block, 0x1000)
+        self.assertEqual(block.getInstructions()[0].getAddress(), 0x1000)
+
+        self.ctx.disassembly(block)
+        self.assertEqual(block.getInstructions()[0].getAddress(), 0x0)
+
+        self.ctx.processing(block)
+        self.assertEqual(block.getInstructions()[0].getAddress(), 0x0)
+
+        self.ctx.processing(block, 0x112233)
+        self.assertEqual(block.getInstructions()[0].getAddress(), 0x112233)

@@ -551,9 +551,9 @@ namespace triton {
   }
 
 
-  bool API::processing(triton::arch::BasicBlock& block) {
+  bool API::processing(triton::arch::BasicBlock& block, triton::uint64 addr) {
     this->checkArchitecture();
-    this->arch.disassembly(block);
+    this->arch.disassembly(block, addr);
     return this->irBuilder->buildSemantics(block);
   }
 

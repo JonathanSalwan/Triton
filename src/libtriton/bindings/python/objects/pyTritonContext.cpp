@@ -95,8 +95,8 @@ Returns the new symbolic volatile expression and links this expression to the in
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
 Disassembles the instruction and sets up operands. You must define an architecture before.
 
-- <b>void disassembly(\ref py_BasicBlock_page block)</b><br>
-Disassembles a basic block. You must define an architecture before.
+- <b>void disassembly(\ref py_BasicBlock_page block, integer addr=0)</b><br>
+Disassembles a basic block with a potential given base address. You must define an architecture before.
 
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
 Disassembles a concrete memory area from `addr` and returns a list of at most `count` disassembled instructions.
@@ -307,8 +307,8 @@ Pops the last constraints added to the path predicate.
 - <b>bool processing(\ref py_Instruction_page inst)</b><br>
 Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
 
-- <b>bool processing(\ref py_BasicBlock_page block)</b><br>
-Processes a basic block and updates engines according to the instructions semantics.
+- <b>bool processing(\ref py_BasicBlock_page block, integer addr=0)</b><br>
+Processes a basic block with a potential given base address and updates engines according to the instructions semantics.
 
 - <b>void pushPathConstraint(\ref py_AstNode_page node, string comment="")</b><br>
 Pushs constraints to the current path predicate.
@@ -2394,7 +2394,15 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_processing(PyObject* self, PyObject* obj) {
+      static PyObject* TritonContext_processing(PyObject* self, PyObject* args) {
+        PyObject* obj  = nullptr;
+        PyObject* addr = nullptr;
+
+        /* Extract arguments */
+        if (PyArg_ParseTuple(args, "|OO", &obj, &addr) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::processing(): Invalid number of arguments");
+        }
+
         try {
           if (PyInstruction_Check(obj)) {
             if (PyTritonContext_AsTritonContext(self)->processing(*PyInstruction_AsInstruction(obj)))
@@ -2402,7 +2410,11 @@ namespace triton {
             Py_RETURN_FALSE;
           }
           else if (PyBasicBlock_Check(obj)) {
-            if (PyTritonContext_AsTritonContext(self)->processing(*PyBasicBlock_AsBasicBlock(obj)))
+            triton::uint64 base = 0;
+            if (addr != nullptr && (PyLong_Check(addr) || PyInt_Check(addr))) {
+              base = PyLong_AsUint64(addr);
+            }
+            if (PyTritonContext_AsTritonContext(self)->processing(*PyBasicBlock_AsBasicBlock(obj), base))
               Py_RETURN_TRUE;
             Py_RETURN_FALSE;
           }
@@ -3446,7 +3458,7 @@ namespace triton {
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                               METH_VARARGS,                  ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                                 METH_VARARGS,                  ""},
         {"popPathConstraint",                   (PyCFunction)TritonContext_popPathConstraint,                                   METH_NOARGS,                   ""},
-        {"processing",                          (PyCFunction)TritonContext_processing,                                          METH_O,                        ""},
+        {"processing",                          (PyCFunction)TritonContext_processing,                                          METH_VARARGS,                  ""},
         {"pushPathConstraint",                  (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_pushPathConstraint,  METH_VARARGS | METH_KEYWORDS,  ""},
         {"removeCallback",                      (PyCFunction)TritonContext_removeCallback,                                      METH_VARARGS,                  ""},
         {"reset",                               (PyCFunction)TritonContext_reset,                                               METH_NOARGS,                   ""},
