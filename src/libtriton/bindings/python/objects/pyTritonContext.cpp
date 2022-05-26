@@ -374,6 +374,9 @@ Calls all simplification callbacks recorded and returns a new simplified node. I
 set to True, Triton will use the current solver instance to simplify the given `node`. If `llvm` is true,
 we use LLVM to simplify node.
 
+- <b>\ref py_BasicBlock_page simplify(\ref py_BasicBlock_page block)</b><br>
+Performs a dead store elimination simplification on a given block.
+
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
 
@@ -2939,24 +2942,24 @@ namespace triton {
 
 
       static PyObject* TritonContext_simplify(PyObject* self, PyObject* args, PyObject* kwargs) {
-        PyObject* node   = nullptr;
+        PyObject* obj    = nullptr;
         PyObject* solver = nullptr;
         PyObject* llvm   = nullptr;
 
         static char* keywords[] = {
-          (char*)"node",
+          (char*)"obj",
           (char*)"solver",
           (char*)"llvm",
           nullptr
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &node, &solver, &llvm) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOO", keywords, &obj, &solver, &llvm) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Invalid number of arguments");
         }
 
-        if (node == nullptr || !PyAstNode_Check(node))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a AstNode as node argument.");
+        if (obj == nullptr || (!PyAstNode_Check(obj) && !PyBasicBlock_Check(obj)))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a AstNode or a BasicBlock as obj argument.");
 
         if (solver != nullptr && !PyBool_Check(solver))
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as solver argument.");
@@ -2971,7 +2974,14 @@ namespace triton {
           llvm = PyLong_FromUint32(false);
 
         try {
-          return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(node), PyLong_AsBool(solver), PyLong_AsBool(llvm)));
+          if (PyAstNode_Check(obj))
+            return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(obj), PyLong_AsBool(solver), PyLong_AsBool(llvm)));
+
+          else if (PyBasicBlock_Check(obj))
+            return PyBasicBlock(PyTritonContext_AsTritonContext(self)->simplify(*PyBasicBlock_AsBasicBlock(obj)));
+
+          else
+            return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Something wrong.");
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;

@@ -6,7 +6,11 @@
 */
 
 #include <list>
+#include <map>
+
+#include <triton/api.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/symbolicExpression.hpp>
 #include <triton/symbolicSimplification.hpp>
 
 
@@ -207,6 +211,63 @@ namespace triton {
         }
 
         return snode;
+      }
+
+
+      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block) const {
+        return this->deadStoreElimination(block);
+      }
+
+
+      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block) const {
+        std::unordered_map<triton::usize, SharedSymbolicExpression> lifetime;
+        std::map<triton::uint64, triton::arch::Instruction> instructions;
+        triton::arch::BasicBlock out;
+        triton::arch::BasicBlock in = block;
+
+        if (block.getSize() == 0)
+          return {};
+
+        /* Define a temporary API */
+        triton::API tmpapi(in.getInstructions()[0].getArchitecture());
+
+        /* Execute the block */
+        tmpapi.processing(in);
+
+        /* Get all symbolic registers that were written */
+        for (auto& reg : tmpapi.getSymbolicRegisters()) {
+          for (auto& item : tmpapi.sliceExpressions(reg.second)) {
+            lifetime[item.first] = item.second;
+          }
+        }
+
+        /* Get all symbolic memory cells that were written */
+        for (auto& mem : tmpapi.getSymbolicMemory()) {
+          for (auto& item : tmpapi.sliceExpressions(mem.second)) {
+            lifetime[item.first] = item.second;
+          }
+        }
+
+        /* Get back the origin assembly of expressions that still alive */
+        for (auto& se : lifetime) {
+          auto assembly = se.second->getDisassembly();
+          if (assembly.empty())
+            continue;
+          triton::uint64 addr = std::stoi(assembly, nullptr, 16);
+          for (auto& inst : in.getInstructions()) {
+            if (inst.getAddress() == addr) {
+              instructions[addr] = inst;
+              break;
+            }
+          }
+        }
+
+        /* Create a new block with sorted instructions */
+        for (auto& item : instructions) {
+          out.add(item.second);
+        }
+
+        return out;
       }
 
 

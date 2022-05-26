@@ -47,6 +47,9 @@ namespace triton {
      */
     class Instruction {
       protected:
+        //! The instruction's architecture.
+        triton::arch::architecture_e arch;
+
         //! The thread id of the instruction.
         triton::uint32 tid;
 
@@ -138,6 +141,9 @@ namespace triton {
 
         //! Destructor.
         TRITON_EXPORT ~Instruction();
+
+        //! Returns the instruction's architecture.
+        TRITON_EXPORT triton::arch::architecture_e getArchitecture(void) const;
 
         //! Returns the thread id of the instruction.
         TRITON_EXPORT triton::uint32 getThreadId(void) const;
@@ -231,6 +237,9 @@ namespace triton {
 
         //! Sets the size of the instruction.
         TRITON_EXPORT void setSize(triton::uint32 size);
+
+        //! Sets the instruction's architecture.
+        TRITON_EXPORT void setArchitecture(triton::arch::architecture_e arch);
 
         //! Sets the type of the instruction.
         TRITON_EXPORT void setType(triton::uint32 type);

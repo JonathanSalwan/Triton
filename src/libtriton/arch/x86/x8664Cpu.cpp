@@ -523,6 +523,9 @@ namespace triton {
           /* Init the instruction's prefix */
           inst.setPrefix(this->capstonePrefixToTritonPrefix(detail->x86.prefix[0]));
 
+          /* Set architecture */
+          inst.setArchitecture(triton::arch::ARCH_X86_64);
+
           /* Init operands */
           for (triton::uint32 n = 0; n < detail->x86.op_count; n++) {
             triton::extlibs::capstone::cs_x86_op* op = &(detail->x86.operands[n]);

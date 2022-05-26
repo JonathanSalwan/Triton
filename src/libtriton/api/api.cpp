@@ -843,6 +843,12 @@ namespace triton {
   }
 
 
+  triton::arch::BasicBlock API::simplify(const triton::arch::BasicBlock& block) const {
+    this->checkSymbolic();
+    return this->symbolic->simplify(block);
+  }
+
+
   triton::engines::symbolic::SharedSymbolicExpression API::getSymbolicExpression(triton::usize symExprId) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicExpression(symExprId);

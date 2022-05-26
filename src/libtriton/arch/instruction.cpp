@@ -19,6 +19,7 @@ namespace triton {
 
     Instruction::Instruction() {
       this->address         = 0;
+      this->arch            = triton::arch::ARCH_INVALID;
       this->branch          = false;
       this->codeCondition   = triton::arch::arm::ID_CONDITION_INVALID;
       this->conditionTaken  = 0;
@@ -72,6 +73,7 @@ namespace triton {
 
     void Instruction::copy(const Instruction& other) {
       this->address             = other.address;
+      this->arch                = other.arch;
       this->branch              = other.branch;
       this->codeCondition       = other.codeCondition;
       this->conditionTaken      = other.conditionTaken;
@@ -149,6 +151,11 @@ namespace triton {
 
     triton::uint32 Instruction::getType(void) const {
       return this->type;
+    }
+
+
+    triton::arch::architecture_e Instruction::getArchitecture(void) const {
+      return this->arch;
     }
 
 
@@ -284,6 +291,11 @@ namespace triton {
 
     void Instruction::removeUndefinedRegister(const triton::arch::Register& reg) {
       this->undefinedRegisters.erase(reg);
+    }
+
+
+    void Instruction::setArchitecture(triton::arch::architecture_e arch) {
+      this->arch = arch;
     }
 
 

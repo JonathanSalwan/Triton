@@ -9,6 +9,7 @@
 #define TRITON_SYMBOLICSIMPLIFICATION_H
 
 #include <triton/ast.hpp>
+#include <triton/basicBlock.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/dllexport.hpp>
 
@@ -47,6 +48,9 @@ namespace triton {
           //! Copies a SymbolicSimplification.
           void copy(const SymbolicSimplification& other);
 
+          //! Performs a dead store elimination analysis
+          triton::arch::BasicBlock deadStoreElimination(const triton::arch::BasicBlock& block) const;
+
         public:
           //! Constructor.
           TRITON_EXPORT SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
@@ -56,6 +60,9 @@ namespace triton {
 
           //! Processes all recorded simplifications. Returns the simplified node.
           TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
+
+          //! Performs a dead store elimination simplification
+          TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block) const;
 
           //! Copies a SymbolicSimplification.
           TRITON_EXPORT SymbolicSimplification& operator=(const SymbolicSimplification& other);
