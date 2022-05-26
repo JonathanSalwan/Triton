@@ -13,7 +13,9 @@ class TestDeadStoreElimination(unittest.TestCase):
         """Define the arch."""
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.X86_64)
-        self.block = BasicBlock([
+
+    def test_inst1(self):
+        block = BasicBlock([
             Instruction(b"\x66\xd3\xd7"),                    # rcl     di, cl
             Instruction(b"\x58"),                            # pop     rax
             Instruction(b"\x66\x41\x0f\xa4\xdb\x01"),        # shld    r11w, bx, 1
@@ -67,10 +69,8 @@ class TestDeadStoreElimination(unittest.TestCase):
             Instruction(b"\x41\x5d"),                        # pop     r13
             Instruction(b"\xc3"),                            # ret
         ])
-
-    def test_inst1(self):
-        self.ctx.disassembly(self.block, 0x140004149)
-        sblock = self.ctx.simplify(self.block)
+        self.ctx.disassembly(block, 0x140004149)
+        sblock = self.ctx.simplify(block)
         self.ctx.disassembly(sblock, 0x140004149)
         self.assertEqual(str(sblock), '0x140004149: pop rax\n'
                                       '0x14000414a: pop r11\n'
@@ -88,3 +88,36 @@ class TestDeadStoreElimination(unittest.TestCase):
                                       '0x14000415c: pop rsi\n'
                                       '0x14000415d: pop r13\n'
                                       '0x14000415f: ret')
+
+    def test_inst2(self):
+        block = BasicBlock([
+            Instruction(b"\x90"), # nop
+            Instruction(b"\x90"), # nop
+            Instruction(b"\x90"), # nop
+            Instruction(b"\xc9"), # leave
+            Instruction(b"\xc3")  # ret
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: leave\n'
+                                      '0x1: ret')
+
+
+    def test_inst3(self):
+        block = BasicBlock([
+            Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00"),   # mov rax, 1
+            Instruction(b"\x48\x31\xdb"),                   # xor rbx, rbx
+            Instruction(b"\x48\xff\xc3"),                   # inc rbx
+            Instruction(b"\x48\x0f\xaf\xd8"),               # imul rbx, rax
+            Instruction(b"\x9d"),                           # popfq
+            Instruction(b"\x48\x89\xc3"),                   # mov rbx, rax
+            Instruction(b"\xeb\x62"),                       # jmp 0x64
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: mov rax, 1\n'
+                                      '0x7: popfq\n'
+                                      '0x8: mov rbx, rax\n'
+                                      '0xb: jmp 0x6f')
