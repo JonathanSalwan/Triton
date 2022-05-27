@@ -12,9 +12,9 @@ class TestDeadStoreElimination(unittest.TestCase):
     def setUp(self):
         """Define the arch."""
         self.ctx = TritonContext()
-        self.ctx.setArchitecture(ARCH.X86_64)
 
     def test_inst1(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
         block = BasicBlock([
             Instruction(b"\x66\xd3\xd7"),                    # rcl     di, cl
             Instruction(b"\x58"),                            # pop     rax
@@ -90,6 +90,7 @@ class TestDeadStoreElimination(unittest.TestCase):
                                       '0x14000415f: ret')
 
     def test_inst2(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
         block = BasicBlock([
             Instruction(b"\x90"), # nop
             Instruction(b"\x90"), # nop
@@ -105,6 +106,7 @@ class TestDeadStoreElimination(unittest.TestCase):
 
 
     def test_inst3(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
         block = BasicBlock([
             Instruction(b"\x48\xc7\xc0\x01\x00\x00\x00"),   # mov rax, 1
             Instruction(b"\x48\x31\xdb"),                   # xor rbx, rbx
@@ -121,3 +123,29 @@ class TestDeadStoreElimination(unittest.TestCase):
                                       '0x7: popfq\n'
                                       '0x8: mov rbx, rax\n'
                                       '0xb: jmp 0x6f')
+
+    def test_inst4(self):
+        self.ctx.setArchitecture(ARCH.X86)
+        block = BasicBlock([
+            Instruction(b"\x50"),             # push eax
+            Instruction(b"\x9c"),             # pushfd
+            Instruction(b"\x31\xc0"),         # xor eax, eax
+            Instruction(b"\x0f\x9b\xc0"),     # setpo al
+            Instruction(b"\x52"),             # push edx
+            Instruction(b"\x31\xc2"),         # xor edx, eax
+            Instruction(b"\xc1\xe2\x02"),     # shl edx, 2
+            Instruction(b"\x92"),             # xchg eax, edx
+            Instruction(b"\x5a"),             # pop edx
+            Instruction(b"\x09\xc8"),         # or eax, ecx
+            Instruction(b"\x9d"),             # popfd
+            Instruction(b"\x58"),             # pop eax
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: push eax\n'
+                                      '0x1: pushfd\n'
+                                      '0x2: push edx\n'
+                                      '0x3: pop edx\n'
+                                      '0x4: popfd\n'
+                                      '0x5: pop eax')
