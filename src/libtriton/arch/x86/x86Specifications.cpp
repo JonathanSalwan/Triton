@@ -155,9 +155,11 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_FIADD;
             break;
 
+#if CS_API_MAJOR < 5
           case triton::extlibs::capstone::X86_INS_FADDP:
             tritonId = triton::arch::x86::ID_INS_FADDP;
             break;
+#endif
 
           case triton::extlibs::capstone::X86_INS_ADOX:
             tritonId = triton::arch::x86::ID_INS_ADOX;
@@ -2879,9 +2881,11 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_FUCOM;
             break;
 
+#if CS_API_MAJOR < 5
           case triton::extlibs::capstone::X86_INS_UD2B:
             tritonId = triton::arch::x86::ID_INS_UD2B;
             break;
+#endif
 
           case triton::extlibs::capstone::X86_INS_UNPCKHPD:
             tritonId = triton::arch::x86::ID_INS_UNPCKHPD;
@@ -3039,17 +3043,21 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_VCVTDQ2PS;
             break;
 
+#if CS_API_MAJOR < 5
           case triton::extlibs::capstone::X86_INS_VCVTPD2DQX:
             tritonId = triton::arch::x86::ID_INS_VCVTPD2DQX;
             break;
+#endif
 
           case triton::extlibs::capstone::X86_INS_VCVTPD2DQ:
             tritonId = triton::arch::x86::ID_INS_VCVTPD2DQ;
             break;
 
+#if CS_API_MAJOR < 5
           case triton::extlibs::capstone::X86_INS_VCVTPD2PSX:
             tritonId = triton::arch::x86::ID_INS_VCVTPD2PSX;
             break;
+#endif
 
           case triton::extlibs::capstone::X86_INS_VCVTPD2PS:
             tritonId = triton::arch::x86::ID_INS_VCVTPD2PS;
@@ -3095,9 +3103,11 @@ namespace triton {
             tritonId = triton::arch::x86::ID_INS_VCVTSS2USI;
             break;
 
+#if CS_API_MAJOR < 5
           case triton::extlibs::capstone::X86_INS_VCVTTPD2DQX:
             tritonId = triton::arch::x86::ID_INS_VCVTTPD2DQX;
             break;
+#endif
 
           case triton::extlibs::capstone::X86_INS_VCVTTPD2DQ:
             tritonId = triton::arch::x86::ID_INS_VCVTTPD2DQ;
