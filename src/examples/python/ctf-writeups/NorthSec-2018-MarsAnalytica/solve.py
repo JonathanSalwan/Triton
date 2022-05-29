@@ -570,7 +570,8 @@ def main():
 
     # Going further than just solving the challenge
     # Lifting the path predicate to LLVM
-    lifting2llvm(ctx)
+    if if VERSION.LLVM_INTERFACE is True:
+        lifting2llvm(ctx)
 
     # Used as unittest
     return not serial == b'q4Eo-eyMq-1dd0-leKx'
