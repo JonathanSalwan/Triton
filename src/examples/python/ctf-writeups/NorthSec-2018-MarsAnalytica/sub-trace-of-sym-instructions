@@ -1,0 +1,1726 @@
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x4030a9: mov esi, eax
+0x40319f: mov edx, esi
+0x400d64: mov dword ptr [rbp - 0x20], edx
+0x400da0: mov edx, dword ptr [rbp - 0x20]
+0x400da3: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb51e3e: mov ebx, eax
+0xb51e4f: cmp ebx, eax
+0xb51e51: jle 0xb522da
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb53418: cmp ebx, eax
+0xb5341a: jle 0xb53d16
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb55377: mov ebx, eax
+0xb55388: cmp ebx, eax
+0xb5538a: jle 0xb5593f
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb57669: cmp ebx, eax
+0xb5766b: jle 0xb5793c
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb58e0b: mov ebx, eax
+0xb58e1c: cmp ebx, eax
+0xb58e1e: jle 0xb599bd
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb5b060: cmp ebx, eax
+0xb5b062: jle 0xb5b527
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb5cf43: mov ebx, eax
+0xb5cf54: cmp ebx, eax
+0xb5cf56: jle 0xb5d1fc
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb5e1e2: cmp ebx, eax
+0xb5e1e4: jle 0xb5e623
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb5f65b: mov ebx, eax
+0xb5f66c: cmp ebx, eax
+0xb5f66e: jle 0xb5ffbd
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb61091: cmp ebx, eax
+0xb61093: jle 0xb6162f
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb62b32: mov ebx, eax
+0xb62b43: cmp ebx, eax
+0xb62b45: jle 0xb62f2e
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb642ca: cmp ebx, eax
+0xb642cc: jle 0xb644f0
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb65a7b: mov ebx, eax
+0xb65a8c: cmp ebx, eax
+0xb65a8e: jle 0xb661cf
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb6728b: cmp ebx, eax
+0xb6728d: jle 0xb679c0
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb685c1: mov ebx, eax
+0xb685d2: cmp ebx, eax
+0xb685d4: jle 0xb68988
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb6a0ae: cmp ebx, eax
+0xb6a0b0: jle 0xb6a8bd
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb6c5d6: mov ebx, eax
+0xb6c5e7: cmp ebx, eax
+0xb6c5e9: jle 0xb6c975
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb6ddf7: cmp ebx, eax
+0xb6ddf9: jle 0xb6e00c
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb6f3e9: mov ebx, eax
+0xb6f3fa: cmp ebx, eax
+0xb6f3fc: jle 0xb6f8de
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb70e6e: cmp ebx, eax
+0xb70e70: jle 0xb71877
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb72c4b: mov ebx, eax
+0xb72c5c: cmp ebx, eax
+0xb72c5e: jle 0xb73392
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb751a4: cmp ebx, eax
+0xb751a6: jle 0xb75375
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb76bde: mov ebx, eax
+0xb76bef: cmp ebx, eax
+0xb76bf1: jle 0xb774a0
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb7887e: cmp ebx, eax
+0xb78880: jle 0xb7908b
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb7a57d: mov ebx, eax
+0xb7a58e: cmp ebx, eax
+0xb7a590: jle 0xb7a87f
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb7c2af: cmp ebx, eax
+0xb7c2b1: jle 0xb7c85d
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb7e02e: mov ebx, eax
+0xb7e03f: cmp ebx, eax
+0xb7e041: jle 0xb7e6b8
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb806d1: cmp ebx, eax
+0xb806d3: jle 0xb810d3
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb82fa4: mov ebx, eax
+0xb82fb5: cmp ebx, eax
+0xb82fb7: jle 0xb839af
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb84c19: cmp ebx, eax
+0xb84c1b: jle 0xb851ee
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb8662e: mov ebx, eax
+0xb8663f: cmp ebx, eax
+0xb86641: jle 0xb86900
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb87f56: cmp ebx, eax
+0xb87f58: jle 0xb885b6
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb89acc: mov ebx, eax
+0xb89add: cmp ebx, eax
+0xb89adf: jle 0xb89f98
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb8b325: cmp ebx, eax
+0xb8b327: jle 0xb8bc7a
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb8ce2d: mov ebx, eax
+0xb8ce3e: cmp ebx, eax
+0xb8ce40: jle 0xb8d459
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb8ec82: cmp ebx, eax
+0xb8ec84: jle 0xb8f4ae
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb90b0d: mov ebx, eax
+0xb90b1e: cmp ebx, eax
+0xb90b20: jle 0xb910a0
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xb92a80: cmp ebx, eax
+0xb92a82: jle 0xb93018
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbde916: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbde927: imul ebx, eax
+0xbde92a: mov edx, ebx
+0xbde933: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbdfc20: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbdfc31: sub ebx, eax
+0xbdfc33: mov edx, ebx
+0xbdfc3c: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe1084: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe1095: xor ebx, eax
+0xbe1097: mov edx, ebx
+0xbe10a0: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe2398: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe23a9: imul ebx, eax
+0xbe23ac: mov edx, ebx
+0xbe23b5: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe3b7b: cmp ebx, eax
+0xbe3b7d: jne 0xbe4e43
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe77b7: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe77c8: xor ebx, eax
+0xbe77ca: mov edx, ebx
+0xbe77d3: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe8712: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe8723: sub ebx, eax
+0xbe8725: mov edx, ebx
+0xbe872e: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe9a82: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbe9a93: xor ebx, eax
+0xbe9a95: mov edx, ebx
+0xbe9a9e: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbeaff3: cmp ebx, eax
+0xbeaff5: jne 0xbec7f9
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbef108: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbef119: sub ebx, eax
+0xbef11b: mov edx, ebx
+0xbef124: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf03c4: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf03d5: lea edx, [rbx + rax]
+0xbf03df: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf198f: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf19a0: xor ebx, eax
+0xbf19a2: mov edx, ebx
+0xbf19ab: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf2c1e: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf2c2f: imul ebx, eax
+0xbf2c32: mov edx, ebx
+0xbf2c3b: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf40f2: cmp ebx, eax
+0xbf40f4: jne 0xbf50c4
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf78ab: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf78bc: sub ebx, eax
+0xbf78be: mov edx, ebx
+0xbf78c7: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbf992c: cmp ebx, eax
+0xbf992e: jne 0xbfa931
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbfce65: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbfce76: lea edx, [rbx + rax]
+0xbfce80: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbfe4d7: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbfe4e8: xor ebx, eax
+0xbfe4ea: mov edx, ebx
+0xbfe4f3: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xbffb50: cmp ebx, eax
+0xbffb52: jne 0xc00bbc
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc02ba6: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc02bb7: sub ebx, eax
+0xc02bb9: mov edx, ebx
+0xc02bc2: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc03725: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc03736: lea edx, [rbx + rax]
+0xc03740: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc05330: cmp ebx, eax
+0xc05332: jne 0xc0642a
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc09535: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc09546: xor ebx, eax
+0xc09548: mov edx, ebx
+0xc09551: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0a4a8: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0a4b9: lea edx, [rbx + rax]
+0xc0a4c3: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0b189: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0b19a: sub ebx, eax
+0xc0b19c: mov edx, ebx
+0xc0b1a5: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0c505: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0c516: xor ebx, eax
+0xc0c518: mov edx, ebx
+0xc0c521: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc0d7ae: cmp ebx, eax
+0xc0d7b0: jne 0xc0ef4a
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc10b63: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc10b74: imul ebx, eax
+0xc10b77: mov edx, ebx
+0xc10b80: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc12339: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1234a: xor ebx, eax
+0xc1234c: mov edx, ebx
+0xc12355: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1318e: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1319f: imul ebx, eax
+0xc131a2: mov edx, ebx
+0xc131ab: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc14127: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc14138: lea edx, [rbx + rax]
+0xc14142: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc153ba: cmp ebx, eax
+0xc153bc: jne 0xc16a1f
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc189fc: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc18a0d: imul ebx, eax
+0xc18a10: mov edx, ebx
+0xc18a19: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc19cd6: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc19ce7: sub ebx, eax
+0xc19ce9: mov edx, ebx
+0xc19cf2: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1b4c0: cmp ebx, eax
+0xc1b4c2: jne 0xc1cda8
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1f1c3: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1f1d4: lea edx, [rbx + rax]
+0xc1f1de: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1fa2e: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc1fa3f: sub ebx, eax
+0xc1fa41: mov edx, ebx
+0xc1fa4a: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2110a: cmp ebx, eax
+0xc2110c: jne 0xc225a8
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc24dda: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc24deb: lea edx, [rbx + rax]
+0xc24df5: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc258d9: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc258ea: imul ebx, eax
+0xc258ed: mov edx, ebx
+0xc258f6: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc26a7b: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc26a8c: lea edx, [rbx + rax]
+0xc26a96: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc27a41: cmp ebx, eax
+0xc27a43: jne 0xc28c5c
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2a4b4: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2a4c5: sub ebx, eax
+0xc2a4c7: mov edx, ebx
+0xc2a4d0: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2af77: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2af88: lea edx, [rbx + rax]
+0xc2af92: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2c12f: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2c140: sub ebx, eax
+0xc2c142: mov edx, ebx
+0xc2c14b: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc2d155: cmp ebx, eax
+0xc2d157: jne 0xc2e938
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc30fea: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc30ffb: xor ebx, eax
+0xc30ffd: mov edx, ebx
+0xc31006: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc31da4: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc31db5: imul ebx, eax
+0xc31db8: mov edx, ebx
+0xc31dc1: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc32aad: cmp ebx, eax
+0xc32aaf: jne 0xc33596
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3562f: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc35640: imul ebx, eax
+0xc35643: mov edx, ebx
+0xc3564c: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc36a93: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc36aa4: imul ebx, eax
+0xc36aa7: mov edx, ebx
+0xc36ab0: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc37a49: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc37a5a: lea edx, [rbx + rax]
+0xc37a64: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc38c3c: cmp ebx, eax
+0xc38c3e: jne 0xc3a1a8
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3c02d: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3c03e: sub ebx, eax
+0xc3c040: mov edx, ebx
+0xc3c049: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3d0b3: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3d0c4: imul ebx, eax
+0xc3d0c7: mov edx, ebx
+0xc3d0d0: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x402ad7: mov eax, dword ptr [rax + 8]
+0x402ada: mov dword ptr [rbp - 0x94a34], eax
+0x402af1: mov edx, dword ptr [rdx + 8]
+0x402af4: mov dword ptr [rax + 8], edx
+0x402afe: mov edx, dword ptr [rbp - 0x94a34]
+0x402b04: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3dcfb: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3dd0c: sub ebx, eax
+0xc3dd0e: mov edx, ebx
+0xc3dd17: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc3f57c: cmp ebx, eax
+0xc3f57e: jne 0xc40cf7
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc433c0: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc433d1: imul ebx, eax
+0xc433d4: mov edx, ebx
+0xc433dd: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc44210: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc44221: imul ebx, eax
+0xc44224: mov edx, ebx
+0xc4422d: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc455d9: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc455ea: lea edx, [rbx + rax]
+0xc455f4: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4739a: cmp ebx, eax
+0xc4739c: jne 0xc48135
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4a320: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4a331: lea edx, [rbx + rax]
+0xc4a33b: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400d50: mov eax, dword ptr [rax + 8]
+0x402060: mov edx, eax
+0x402069: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4b1c4: mov ebx, eax
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4b1d5: imul ebx, eax
+0xc4b1d8: mov edx, ebx
+0xc4b1e1: mov esi, edx
+0x400aba: mov dword ptr [rbp - 0x1c], esi
+0x400aee: mov edx, dword ptr [rbp - 0x1c]
+0x400af1: mov dword ptr [rax + 8], edx
+0x400a1d: mov eax, dword ptr [rax + 8]
+0x400a20: mov dword ptr [rbp - 0xc], eax
+0x400a4d: mov eax, dword ptr [rbp - 0xc]
+0xc4c300: cmp ebx, eax
+0xc4c302: jne 0xc4d9c7
