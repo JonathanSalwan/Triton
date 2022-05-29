@@ -570,7 +570,7 @@ def main():
 
     # Going further than just solving the challenge
     # Lifting the path predicate to LLVM
-    if if VERSION.LLVM_INTERFACE is True:
+    if VERSION.LLVM_INTERFACE is True:
         lifting2llvm(ctx)
 
     # Used as unittest
