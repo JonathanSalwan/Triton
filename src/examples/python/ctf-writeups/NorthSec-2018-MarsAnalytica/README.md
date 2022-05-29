@@ -21,8 +21,8 @@ the challenge :).
 This write-up have several objectifs:
 
 * Pleasing Toshi (even if it's 4 years later :D)
-* Give another Virtual Machine to Triton (see [Tigress](https://github.com/JonathanSalwan/Tigress_protection) and [VMProtect](https://github.com/JonathanSalwan/VMProtect-devirtualization))
-* Provide a methodology example when analyzing a big binary with Triton
+* Giving another Virtual Machine to Triton (see [Tigress](https://github.com/JonathanSalwan/Tigress_protection) and [VMProtect](https://github.com/JonathanSalwan/VMProtect-devirtualization))
+* Providing a methodology example when analyzing a big binary with Triton
 * Last but not least, having fun :)
 
 # The challenge
@@ -55,7 +55,7 @@ of all, we will unpack it.
 
 The easy and lazy way to do this is to use GDB when the binary is waiting for
 an input on stdin. So, we run the binary in gdb, when the binary is waiting for
-an input, we press <ctrl-c> in order to go back on GDB's prompt and then we dump
+an input, we press *ctrl-c* in order to go back on GDB's prompt and then we dump
 the process memory.
 
 ```
@@ -170,15 +170,15 @@ the script that emulates the code, I used to print all instructions in a file an
 analyzing the trace but in this case the file is about 717M and contains 21,578,841
 instructions. Another bad point is that it takes about 1 hour to generate the trace with Triton,
 which is not doable because we will not wait 1h for every test we do. So we have
-to find a solution to speed up the execution. 2 possible solutions 1) improve Triton
+to find a solution to speed up the execution. Two possible solutions 1) improve Triton
 2) do not emulate the binary from the entry point. Well, the second point looks good to
 me :).
 
 What we know? We know nothing about the code but we know that it waits for an user
 input. So the idea is to put a *watchpoint* on the PLT of the `getchar` function. It
-will give us information about when interesting parts of the code start. Via a static
+will give us information about where interesting parts of the code start. Via a static
 analysis with IDA and some watchpoints on GDB, I found that the first `getchar`
-is called at `0x4030A9`. So let's put a breakpoint on it and then doing a [fulldump](https://github.com/JonathanSalwan/Triton/blob/316696e09fc38d4d25e6e81e39942302e8dfe932/src/examples/python/ctf-writeups/defcon-2016-baby-re/gdb-peda-fulldump.patch)
+is called at `0x4030A9`. So let's put a breakpoint on it and then do a [fulldump](https://github.com/JonathanSalwan/Triton/blob/316696e09fc38d4d25e6e81e39942302e8dfe932/src/examples/python/ctf-writeups/defcon-2016-baby-re/gdb-peda-fulldump.patch)
 of registers and memory segments.
 
 ```
@@ -240,7 +240,7 @@ Full dump saved into fulldump.dump
 The dump is about 55M. The dump contains all memory segments and registers state when the breakpoint
 has been reached. So now, we just have to initialize Triton with this concrete state and start the
 emulation from the dump. It definitely increases the speed of the execution and now we are able to
-emulate the code ~2 minutes.
+emulate the code in ~2 minutes.
 
 ## Symbolize the user input and solve constraints
 
