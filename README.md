@@ -1,4 +1,4 @@
-<p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
+<p align="center"><img width="50%" src="https://triton-library.github.io/files/triton2.png"/></p>
 
 **Triton** is a dynamic binary analysis library. It provides internal components that allow you to build your program analysis tools,
 automate reverse engineering, perform software verification or just emulate code.
@@ -13,8 +13,8 @@ automate reverse engineering, perform software verification or just emulate code
 * **C++** and **Python** API
 
 <p align="center">
-    <img src="http://triton.quarkslab.com/files/triton_v09_architecture.svg" width="80%"/></br>
-    <img src="http://triton.quarkslab.com/files/triton_multi_os.png"/>
+    <img src="https://triton-library.github.io/files/triton_v09_architecture.svg" width="80%"/></br>
+    <img src="https://triton-library.github.io/files/triton_multi_os.png"/>
 </p>
 
 As **Triton** is a kind of a part-time project, please, **don't blame us** if it is not fully reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
@@ -54,8 +54,8 @@ As **Triton** is a kind of a part-time project, please, **don't blame us** if it
 # Quick start
 
 * [Installation](#install)
-* [Python API](http://triton.quarkslab.com/documentation/doxygen/py_triton_page.html)
-* [C++ API](https://triton.quarkslab.com/documentation/doxygen/annotated.html)
+* [Python API](https://triton-library.github.io/documentation/doxygen/py_triton_page.html)
+* [C++ API](https://triton-library.github.io/documentation/doxygen/annotated.html)
 * [Python Examples](https://github.com/JonathanSalwan/Triton/tree/master/src/examples/python)
 * [They already used Triton](#they-already-used-triton)
 
@@ -150,7 +150,7 @@ packages for Visual Studio 2012.
 
 # Contributors
 
-Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but also by several strong contributors:
+Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but also by several contributors:
 
 * [**Alberto Garcia Illera**](https://twitter.com/algillera) - Cruise Automation
 * [**Alexey Vishnyakov**](https://vishnya.xyz/) - ISP RAS
@@ -162,6 +162,7 @@ Triton is strongly powered by [Quarkslab](https://quarkslab.com) for years but a
 * [**Pierrick Brunet**](https://github.com/pbrunet) - Quarkslab
 * [**PixelRick**](https://github.com/PixelRick) - n/a
 * [**Romain Thomas**](https://twitter.com/rh0main) - Quarkslab
+* [**And many more**](https://github.com/JonathanSalwan/Triton/graphs/contributors)
 
 
 ## They already used Triton
