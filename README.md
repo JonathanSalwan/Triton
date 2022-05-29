@@ -1,16 +1,21 @@
 <p align="center"><img width="50%" src="http://triton.quarkslab.com/files/triton2.png"/></p>
 
-**Triton** is a dynamic binary analysis library. It provides internal components like a **dynamic symbolic execution** engine,
-a **dynamic taint analysis** engine, **AST representation** of the **x86**, **x86-64**, **ARM32** and **AArch64** ISA semantic,
-an **expressions synthesis** engine, some **SMT simplification** passes, **SMT solver** interface to **Z3** and **Bitwuzla**
-and, the last but not least, **Python bindings**. Based on these components, you are able to build your program analysis tools,
+**Triton** is a dynamic binary analysis library. It provides internal components that allow you to build your program analysis tools,
 automate reverse engineering, perform software verification or just emulate code.
+
+* Dynamic **symbolic** execution
+* Dynamic **taint** analysis
+* AST representation of the **x86**, **x86-64**, **ARM32** and **AArch64** ISA semantic
+* Expressions **synthesis**
+* SMT **simplification** passes
+* **Lifting** to **LLVM** as well as **Z3** and back
+* **SMT solver** interface to **Z3** and **Bitwuzla**
+* **C++** and **Python** API
 
 <p align="center">
     <img src="http://triton.quarkslab.com/files/triton_v09_architecture.svg" width="80%"/></br>
     <img src="http://triton.quarkslab.com/files/triton_multi_os.png"/>
 </p>
-
 
 As **Triton** is a kind of a part-time project, please, **don't blame us** if it is not fully reliable. [Open issues](https://github.com/JonathanSalwan/Triton/issues) or
 [pull requests](https://github.com/JonathanSalwan/Triton/pulls) are always better than trolling =). However, you can follow the development on twitter
