@@ -1,6 +1,6 @@
 # NorthSec 2018 MarsAnalytica (Virtual Machine) challenge
 
-I did not participate to the challenge in 2018 but few days ago (in 2022) I saw
+I did not participate to the challenge in 2018 but yesterday (in 2022) I saw
 the [Toshi's](https://twitter.com/piazzt) write-up on the RPISEC's
 [blog](https://rpis.ec/blog/northsec-2018-marsanalytica/). At the end of the
 blog post Toshi said:
@@ -18,7 +18,7 @@ blog post Toshi said:
 Well, with a comment like this I can't resist the temptation to take a look at
 the challenge :).
 
-This write-up have several objectifs:
+This write-up have several objective:
 
 * Pleasing Toshi (even if it's 4 years later :D)
 * Giving another Virtual Machine to Triton (see [Tigress](https://github.com/JonathanSalwan/Tigress_protection) and [VMProtect](https://github.com/JonathanSalwan/VMProtect-devirtualization))
@@ -577,4 +577,4 @@ It was easy because it looks like the virtual code contains only one basic block
 
 Even if the challenge is 4 years old, I thought it would be interesting to talk
 about a potential methodology when analyzing a big binary with Triton. Hope you
-enjoyed it and that you are no longer afraid about using Triton ! :)
+are no longer afraid about using Triton ! :)
