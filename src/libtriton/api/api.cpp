@@ -32,7 +32,7 @@ automate reverse engineering, perform software verification or just emulate code
 
 <br>
 <center>
-  <img src="http://triton.quarkslab.com/files/triton_v09_architecture.svg" width="40%"/>
+  <img src="https://triton-library.github.io/files/triton_v09_architecture.svg" width="40%"/>
 </center>
 
 <br>
