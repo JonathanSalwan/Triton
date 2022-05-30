@@ -3767,8 +3767,9 @@ namespace triton {
             bytes.push_front(this->astCtxt->extract(31, 24, op1));
             bytes.push_front(this->astCtxt->extract(23, 16, op1));
           case triton::size::word:
-            bytes.push_front(this->astCtxt->extract(15, 8, op1));
-            bytes.push_front(this->astCtxt->extract(7,  0, op1));
+            // See #1131
+            bytes.push_front(this->astCtxt->bv(0, 8));
+            bytes.push_front(this->astCtxt->bv(0, 8));
             break;
           default:
             throw triton::exceptions::Semantics("x86Semantics::bswap_s(): Invalid operand size.");

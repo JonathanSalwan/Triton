@@ -508,3 +508,15 @@ class TestIssue1029(unittest.TestCase):
 
     def test_issue(self):
         self.ctx.processing(Instruction(b"\x00#")) # movs r3, #0
+
+
+class TestIssue1131(unittest.TestCase):
+    """Testing #1131."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0xdeadbeefcafebabe)
+
+    def test_issue(self):
+        self.ctx.processing(Instruction(b"\x66\x0f\xcf")) # bswap di
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rdi), 0xdeadbeefcafe0000)
