@@ -57,8 +57,8 @@ namespace triton {
           //! Constructor.
           TRITON_EXPORT LiftingToPython(const triton::ast::SharedAstContext& astCtxt, triton::engines::symbolic::SymbolicEngine* symbolic);
 
-          //! Lifts a symbolic expression and all its references to Python format.
-          TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+          //! Lifts a symbolic expression and all its references to Python format. If `icomment` is true, then print instructions assembly in expression comments.
+          TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool icomment=false);
       };
 
     /*! @} End of lifters namespace */

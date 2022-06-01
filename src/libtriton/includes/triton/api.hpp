@@ -679,11 +679,11 @@ namespace triton {
         //! [**lifting api**] - Lifts a symbolic expression and all its references to LLVM format. `fname` represents the name of the LLVM function.
         TRITON_EXPORT std::ostream& liftToLLVM(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, const char* fname="__triton", bool optimize=false);
 
-        //! [**lifting api**] - Lifts a symbolic expression and all its references to Python format.
-        TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr);
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to Python format. If `icomment` is true, then print instructions assembly in expression comments.
+        TRITON_EXPORT std::ostream& liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool icomment=false);
 
-        //! [**lifting api**] - Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
-        TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_);
+        //! [**lifting api**] - Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>). If `icomment` is true, then print instructions assembly in expression comments.
+        TRITON_EXPORT std::ostream& liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_=false, bool icomment=false);
 
         //! [**lifting api**] - Lifts an AST and all its references to Dot format.
         TRITON_EXPORT std::ostream& liftToDot(std::ostream& stream, const triton::ast::SharedAbstractNode& node);
