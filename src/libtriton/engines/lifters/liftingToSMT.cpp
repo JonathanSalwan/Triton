@@ -160,8 +160,10 @@ namespace triton {
           auto& e = ssa[id];
           stream << e->getFormattedExpression();
           if (icomment && !e->getDisassembly().empty()) {
-            if (!e->getComment().empty())
-            {
+            if (e->getComment().empty()) {
+              stream << " ; ";
+            }
+            else {
               stream << " - ";
             }
             stream << e->getDisassembly();
