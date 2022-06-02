@@ -289,11 +289,11 @@ Lifts an AST node and all its references to LLVM IR. `fname` is the name of the 
 - <b>string liftToLLVM(\ref py_SymbolicExpression_page expr, string fname="__triton", bool optimize=False)</b><br>
 Lifts a symbolic expression and all its references to LLVM IR. `fname` is the name of the LLVM function, by default it's `__triton`. If `optimize` is true, perform optimizations (-O3 -Oz).
 
-- <b>string liftToPython(\ref py_SymbolicExpression_page expr)</b><br>
-Lifts a symbolic expression and all its references to Python format.
+- <b>string liftToPython(\ref py_SymbolicExpression_page expr, bool icomment=False)</b><br>
+Lifts a symbolic expression and all its references to Python format. If `icomment` is true, then print instructions assembly in expression comments.
 
-- <b>string liftToSMT(\ref py_SymbolicExpression_page expr, bool assert_=False)</b><br>
-Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>).
+- <b>string liftToSMT(\ref py_SymbolicExpression_page expr, bool assert_=False, bool icomment=False)</b><br>
+Lifts a symbolic expression and all its references to SMT format. If `assert_` is true, then (assert <expr>). If `icomment` is true, then print instructions assembly in expression comments.
 
 - <b>\ref py_SymbolicExpression_page newSymbolicExpression(\ref py_AstNode_page node, string comment)</b><br>
 Returns a new symbolic expression. Note that if there are simplification passes recorded, simplifications will be applied.
@@ -2258,13 +2258,33 @@ namespace triton {
       }
 
 
-      static PyObject* TritonContext_liftToPython(PyObject* self, PyObject* expr) {
-        if (!PySymbolicExpression_Check(expr))
-          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Expects a SymbolicExpression as first argument.");
+      static PyObject* TritonContext_liftToPython(PyObject* self, PyObject* args, PyObject* kwargs) {
+        PyObject* expr     = nullptr;
+        PyObject* icomment = nullptr;
+
+        static char* keywords[] = {
+          (char*)"expr",
+          (char*)"icomment",
+          nullptr
+        };
+
+        /* Extract keywords */
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &expr, &icomment) == false) {
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Invalid number of arguments");
+        }
+
+        if (expr == nullptr || !PySymbolicExpression_Check(expr))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Expects a SymbolicExpression as expr argument.");
+
+        if (icomment != nullptr && !PyBool_Check(icomment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToPython(): Expects a boolean as icomment argument.");
+
+        if (icomment == nullptr)
+          icomment = PyLong_FromUint32(false);
 
         try {
           std::ostringstream stream;
-          PyTritonContext_AsTritonContext(self)->liftToPython(stream, PySymbolicExpression_AsSymbolicExpression(expr));
+          PyTritonContext_AsTritonContext(self)->liftToPython(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(icomment));
           return xPyString_FromString(stream.str().c_str());
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -2280,17 +2300,19 @@ namespace triton {
 
 
       static PyObject* TritonContext_liftToSMT(PyObject* self, PyObject* args, PyObject* kwargs) {
-        PyObject* expr   = nullptr;
-        PyObject* assert = nullptr;
+        PyObject* expr     = nullptr;
+        PyObject* assert   = nullptr;
+        PyObject* icomment = nullptr;
 
         static char* keywords[] = {
           (char*)"expr",
           (char*)"assert_",
+          (char*)"icomment",
           nullptr
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &expr, &assert) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OO", keywords, &expr, &assert, &icomment) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Invalid number of arguments");
         }
 
@@ -2303,9 +2325,15 @@ namespace triton {
         if (assert == nullptr)
           assert = PyLong_FromUint32(false);
 
+        if (icomment != nullptr && !PyBool_Check(icomment))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::liftToSMT(): Expects a boolean as icomment argument.");
+
+        if (icomment == nullptr)
+          icomment = PyLong_FromUint32(false);
+
         try {
           std::ostringstream stream;
-          PyTritonContext_AsTritonContext(self)->liftToSMT(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assert));
+          PyTritonContext_AsTritonContext(self)->liftToSMT(stream, PySymbolicExpression_AsSymbolicExpression(expr), PyLong_AsBool(assert), PyLong_AsBool(icomment));
           return xPyString_FromString(stream.str().c_str());
         }
         catch (const triton::exceptions::PyCallbacks&) {
@@ -3463,7 +3491,7 @@ namespace triton {
         {"isThumb",                             (PyCFunction)TritonContext_isThumb,                                             METH_NOARGS,                   ""},
         {"liftToDot",                           (PyCFunction)TritonContext_liftToDot,                                           METH_O,                        ""},
         {"liftToLLVM",                          (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToLLVM,          METH_VARARGS | METH_KEYWORDS,  ""},
-        {"liftToPython",                        (PyCFunction)TritonContext_liftToPython,                                        METH_O,                        ""},
+        {"liftToPython",                        (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToPython,        METH_VARARGS | METH_KEYWORDS,  ""},
         {"liftToSMT",                           (PyCFunction)(void*)(PyCFunctionWithKeywords)TritonContext_liftToSMT,           METH_VARARGS | METH_KEYWORDS,  ""},
         {"newSymbolicExpression",               (PyCFunction)TritonContext_newSymbolicExpression,                               METH_VARARGS,                  ""},
         {"newSymbolicVariable",                 (PyCFunction)TritonContext_newSymbolicVariable,                                 METH_VARARGS,                  ""},

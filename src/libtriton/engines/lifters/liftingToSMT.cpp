@@ -114,7 +114,7 @@ namespace triton {
       }
 
 
-      std::ostream& LiftingToSMT::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+      std::ostream& LiftingToSMT::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_, bool icomment) {
         /* Save the AST representation mode */
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
         this->astCtxt->setRepresentationMode(triton::ast::representations::SMT_REPRESENTATION);
@@ -157,7 +157,18 @@ namespace triton {
 
         /* Print symbolic expressions */
         for (const auto& id : symExprs) {
-          stream << ssa[id]->getFormattedExpression() << std::endl;
+          auto& e = ssa[id];
+          stream << e->getFormattedExpression();
+          if (icomment && !e->getDisassembly().empty()) {
+            if (e->getComment().empty()) {
+              stream << " ; ";
+            }
+            else {
+              stream << " - ";
+            }
+            stream << e->getDisassembly();
+          }
+          stream << std::endl;
         }
 
         if (assert_) {
