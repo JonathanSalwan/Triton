@@ -544,14 +544,14 @@ namespace triton {
   }
 
 
-  bool API::processing(triton::arch::Instruction& inst) {
+  triton::arch::exception_e API::processing(triton::arch::Instruction& inst) {
     this->checkArchitecture();
     this->arch.disassembly(inst);
     return this->irBuilder->buildSemantics(inst);
   }
 
 
-  bool API::processing(triton::arch::BasicBlock& block, triton::uint64 addr) {
+  triton::arch::exception_e API::processing(triton::arch::BasicBlock& block, triton::uint64 addr) {
     this->checkArchitecture();
     this->arch.disassembly(block, addr);
     return this->irBuilder->buildSemantics(block);
@@ -561,13 +561,13 @@ namespace triton {
 
   /* IR builder API ================================================================================= */
 
-  bool API::buildSemantics(triton::arch::Instruction& inst) {
+  triton::arch::exception_e API::buildSemantics(triton::arch::Instruction& inst) {
     this->checkIrBuilder();
     return this->irBuilder->buildSemantics(inst);
   }
 
 
-  bool API::buildSemantics(triton::arch::BasicBlock& block) {
+  triton::arch::exception_e API::buildSemantics(triton::arch::BasicBlock& block) {
     this->checkIrBuilder();
     return this->irBuilder->buildSemantics(block);
   }

@@ -50,8 +50,8 @@ The symbolic expression (`symExpr`) must be aligned to the memory access.
 Assigns a \ref py_SymbolicExpression_page to a \ref py_Register_page. **Be careful**, use this function only if you know what you are doing.
 The symbolic expression (`symExpr`) must be aligned to the targeted size register. The register must be a parent register.
 
-- <b>bool buildSemantics(\ref py_Instruction_page inst)</b><br>
-Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+- <b>\ref py_EXCEPTION_page buildSemantics(\ref py_Instruction_page inst)</b><br>
+Builds the instruction semantics. Returns `EXCEPTION.NO_FAULT` if the instruction is supported.
 
 - <b>void clearCallbacks(void)</b><br>
 Clears recorded callbacks.
@@ -93,10 +93,10 @@ Returns the new symbolic register expression and links this expression to the in
 Returns the new symbolic volatile expression and links this expression to the instruction.
 
 - <b>void disassembly(\ref py_Instruction_page inst)</b><br>
-Disassembles the instruction and sets up operands. You must define an architecture before.
+Disassembles the instruction and sets up operands.
 
 - <b>void disassembly(\ref py_BasicBlock_page block, integer addr=0)</b><br>
-Disassembles a basic block with a potential given base address. You must define an architecture before.
+Disassembles a basic block with a potential given base address.
 
 - <b>[\ref py_Instruction_page inst, ...] disassembly(integer addr, integer count)</b><br>
 Disassembles a concrete memory area from `addr` and returns a list of at most `count` disassembled instructions.
@@ -304,10 +304,10 @@ Returns a new symbolic variable.
 - <b>void popPathConstraint(void)</b><br>
 Pops the last constraints added to the path predicate.
 
-- <b>bool processing(\ref py_Instruction_page inst)</b><br>
-Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported. You must define an architecture before.
+- <b>\ref py_EXCEPTION_page processing(\ref py_Instruction_page inst)</b><br>
+Processes an instruction and updates engines according to the instruction semantics. Returns `EXCEPTION.NO_FAULT` if the instruction is supported.
 
-- <b>bool processing(\ref py_BasicBlock_page block, integer addr=0)</b><br>
+- <b>\ref py_EXCEPTION_page processing(\ref py_BasicBlock_page block, integer addr=0)</b><br>
 Processes a basic block with a potential given base address and updates engines according to the instructions semantics.
 
 - <b>void pushPathConstraint(\ref py_AstNode_page node, string comment="")</b><br>
@@ -772,9 +772,7 @@ namespace triton {
           return PyErr_Format(PyExc_TypeError, "TritonContext::buildSemantics(): Expects an Instruction as argument.");
 
         try {
-          if (PyTritonContext_AsTritonContext(self)->buildSemantics(*PyInstruction_AsInstruction(inst)))
-            Py_RETURN_TRUE;
-          Py_RETURN_FALSE;
+          return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->buildSemantics(*PyInstruction_AsInstruction(inst)));
         }
         catch (const triton::exceptions::PyCallbacks&) {
           return nullptr;
@@ -2408,18 +2406,14 @@ namespace triton {
 
         try {
           if (PyInstruction_Check(obj)) {
-            if (PyTritonContext_AsTritonContext(self)->processing(*PyInstruction_AsInstruction(obj)))
-              Py_RETURN_TRUE;
-            Py_RETURN_FALSE;
+            return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->processing(*PyInstruction_AsInstruction(obj)));
           }
           else if (PyBasicBlock_Check(obj)) {
             triton::uint64 base = 0;
             if (addr != nullptr && (PyLong_Check(addr) || PyInt_Check(addr))) {
               base = PyLong_AsUint64(addr);
             }
-            if (PyTritonContext_AsTritonContext(self)->processing(*PyBasicBlock_AsBasicBlock(obj), base))
-              Py_RETURN_TRUE;
-            Py_RETURN_FALSE;
+            return PyLong_FromUint32(PyTritonContext_AsTritonContext(self)->processing(*PyBasicBlock_AsBasicBlock(obj), base));
           }
           return PyErr_Format(PyExc_TypeError, "TritonContext::processing(): Expects an Instruction or a BasicBlock as argument.");
         }

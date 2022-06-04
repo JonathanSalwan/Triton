@@ -28,7 +28,7 @@ This object is used to represent an Instruction.
 
 ~~~~~~~~~~~~~{.py}
 >>> from __future__ import print_function
->>> from triton import TritonContext, ARCH, Instruction, OPERAND
+>>> from triton import TritonContext, ARCH, Instruction, OPERAND, EXCEPTION
 
 >>> trace = [
 ...     (0x400000, b"\x48\x8b\x05\xb8\x13\x00\x00"), # mov        rax, QWORD PTR [rip+0x13b8]
@@ -56,7 +56,7 @@ This object is used to represent an Instruction.
 ...     inst.setAddress(addr)
 ...
 ...     # Process everything
-...     if not ctxt.processing(inst):
+...     if ctxt.processing(inst) == EXCEPTION.FAULT_UD:
 ...         print("Fail an instruction")
 ...
 ...     print(inst)
@@ -114,7 +114,7 @@ This object is used to represent an Instruction.
 >>> inst.setAddress(0x40000)
 >>> inst.setOpcode(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x40000: mov rax, 1
 
@@ -124,7 +124,7 @@ True
 >>> inst = Instruction(b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> inst.setAddress(0x40000)
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x40000: mov rax, 1
 
@@ -133,7 +133,7 @@ True
 ~~~~~~~~~~~~~{.py}
 >>> inst = Instruction(0x40000, b"\x48\xC7\xC0\x01\x00\x00\x00")
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x40000: mov rax, 1
 

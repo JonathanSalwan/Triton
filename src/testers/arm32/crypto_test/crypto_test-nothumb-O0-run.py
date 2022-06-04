@@ -299,7 +299,7 @@ def emulate(ctx, pc):
         instruction.setAddress(pc)
 
         # Process
-        if ctx.processing(instruction) == False:
+        if ctx.processing(instruction):
             opcodes_str = " ".join(["{:02x}".format(b) for b in bytearray(instruction.getOpcode())])
             debug('[-] Instruction not supported: %s\t%s' %(opcodes_str, str(instruction)))
             break

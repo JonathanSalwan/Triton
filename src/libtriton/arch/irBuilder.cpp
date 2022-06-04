@@ -57,9 +57,9 @@ namespace triton {
     }
 
 
-    bool IrBuilder::buildSemantics(triton::arch::Instruction& inst) {
+    triton::arch::exception_e IrBuilder::buildSemantics(triton::arch::Instruction& inst) {
       triton::arch::architecture_e arch = this->architecture->getArchitecture();
-      bool ret = false;
+      triton::arch::exception_e ret = triton::arch::NO_FAULT;
 
       if (arch == triton::arch::ARCH_INVALID)
         throw triton::exceptions::IrBuilder("IrBuilder::buildSemantics(): You must define an architecture.");
@@ -101,12 +101,14 @@ namespace triton {
     }
 
 
-    bool IrBuilder::buildSemantics(triton::arch::BasicBlock& block) {
+    triton::arch::exception_e IrBuilder::buildSemantics(triton::arch::BasicBlock& block) {
+      triton::arch::exception_e ret = triton::arch::NO_FAULT;
       triton::usize count = block.getSize();
 
       for (auto& inst : block.getInstructions()) {
-        if (this->buildSemantics(inst) == false) {
-          return false;
+        ret = this->buildSemantics(inst);
+        if (ret != triton::arch::NO_FAULT) {
+          return ret;
         }
         count--;
         if (inst.isControlFlow() && count) {
@@ -114,7 +116,7 @@ namespace triton {
         }
       }
 
-      return true;
+      return ret;
     }
 
 

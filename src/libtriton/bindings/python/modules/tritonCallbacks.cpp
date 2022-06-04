@@ -54,6 +54,7 @@ to wrap more generic concepts.
 - \ref py_CALLBACK_page
 - \ref py_CONDITION_page
 - \ref py_CPUSIZE_page
+- \ref py_EXCEPTION_page
 - \ref py_EXTEND_page
 - \ref py_MODE_page
 - \ref py_OPCODE_page

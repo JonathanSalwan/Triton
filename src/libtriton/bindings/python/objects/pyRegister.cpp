@@ -43,7 +43,7 @@ This object is used to represent a register operand according to the CPU archite
 
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x40000: mov ah, byte ptr [rdx + rcx*2 + 0x100]
 

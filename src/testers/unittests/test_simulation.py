@@ -5,8 +5,7 @@
 import unittest
 import os
 
-from triton import (Instruction, ARCH, CPUSIZE, MemoryAccess, MODE,
-                    TritonContext, REG)
+from triton import *
 
 
 def checkAstIntegrity(instruction):
@@ -353,7 +352,7 @@ class Emu1(object):
             instruction.setAddress(pc)
 
             # Check if triton doesn't supports this instruction
-            self.assertTrue(self.Triton.processing(instruction))
+            self.assertTrue(self.Triton.processing(instruction) == EXCEPTION.NO_FAULT)
             self.assertTrue(checkAstIntegrity(instruction))
 
             pc = self.Triton.getConcreteRegisterValue(self.Triton.registers.rip)

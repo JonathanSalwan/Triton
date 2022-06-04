@@ -92,7 +92,13 @@ namespace triton {
         initCpuSizeNamespace(cpuSizeDict);
         PyObject* idCpuSizeClass = xPyClass_New(nullptr, cpuSizeDict, xPyString_FromString("CPUSIZE"));
 
-        /* Create the EXTEND namespace ================================================================ */
+        /* Create the EXCEPTION namespace ============================================================ */
+
+        PyObject* exceptionDict = xPyDict_New();
+        initExceptionNamespace(exceptionDict);
+        PyObject* idExceptionClass = xPyClass_New(nullptr, exceptionDict, xPyString_FromString("EXCEPTION"));
+
+        /* Create the EXTEND namespace =============================================================== */
 
         PyObject* extendDict = xPyDict_New();
         initExtendNamespace(extendDict);
@@ -168,6 +174,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "CALLBACK",            idCallbackClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CONDITION",           idConditionsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "CPUSIZE",             idCpuSizeClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "EXCEPTION",           idExceptionClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "EXTEND",              idExtendClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "MODE",                idModeClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "OPCODE",              idOpcodesClass);

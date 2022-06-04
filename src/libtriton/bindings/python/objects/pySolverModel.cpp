@@ -40,7 +40,7 @@ This object is used to represent a model for an SMT solver.
 SymVar_0:64
 
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x0: xor rax, 0x11223344
 

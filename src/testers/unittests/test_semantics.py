@@ -59,7 +59,7 @@ class TestIR(unittest.TestCase):
             instruction.setAddress(pc)
 
             # Process
-            self.assertTrue(self.ctx.processing(instruction))
+            self.assertTrue(self.ctx.processing(instruction) == EXCEPTION.NO_FAULT)
 
             # Next
             pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.rip)
@@ -211,7 +211,7 @@ class TestIRQemu(unittest.TestCase):
             if instruction.getType() == OPCODE.X86.HLT:
                 break
 
-            self.assertTrue(ret)
+            self.assertTrue(ret == EXCEPTION.NO_FAULT)
             self.assertTrue(checkAstIntegrity(instruction))
 
             # Simulate routines

@@ -97,7 +97,7 @@ def emulate(ctx, pc):
         instruction.setAddress(pc)
 
         # Process
-        if ctx.processing(instruction) == False:
+        if ctx.processing(instruction) == EXCEPTION.FAULT_UD:
             debug('[-] Instruction not supported: %s' %(str(instruction)))
             break
 

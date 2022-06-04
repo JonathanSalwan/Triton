@@ -174,10 +174,10 @@ namespace triton {
         AArch64Semantics::AArch64Semantics(triton::arch::Architecture* architecture,
                                            triton::engines::symbolic::SymbolicEngine* symbolicEngine,
                                            triton::engines::taint::TaintEngine* taintEngine,
-                                           const triton::ast::SharedAstContext& astCtxt) {
+                                           const triton::ast::SharedAstContext& astCtxt) : astCtxt(astCtxt) {
 
           this->architecture    = architecture;
-          this->astCtxt         = astCtxt;
+          this->exception       = triton::arch::NO_FAULT;
           this->symbolicEngine  = symbolicEngine;
           this->taintEngine     = taintEngine;
 
@@ -192,7 +192,7 @@ namespace triton {
         }
 
 
-        bool AArch64Semantics::buildSemantics(triton::arch::Instruction& inst) {
+        triton::arch::exception_e AArch64Semantics::buildSemantics(triton::arch::Instruction& inst) {
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
@@ -300,9 +300,9 @@ namespace triton {
             case ID_INS_UXTB:      this->uxtb_s(inst);          break;
             case ID_INS_UXTH:      this->uxth_s(inst);          break;
             default:
-              return false;
+              return triton::arch::FAULT_UD;
           }
-          return true;
+          return this->exception;
         }
 
 

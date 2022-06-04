@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MODE, CPUSIZE, TritonContext, Instruction, MemoryAccess
+from triton import *
 
 
 def checkAstIntegrity(instruction):
@@ -48,7 +48,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), False)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -57,7 +57,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         ctx.setMode(MODE.ONLY_ON_TAINTED, True)
         self.assertEqual(ctx.isModeEnabled(MODE.ONLY_ON_TAINTED), True)
 
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getSymbolicExpressions()), 0)
@@ -78,7 +78,7 @@ class TestOnlyTaintedMode(unittest.TestCase):
         ctx.taintRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)

@@ -4,7 +4,7 @@
 
 import unittest
 
-from triton import ARCH, MODE, CPUSIZE, TritonContext, Instruction, MemoryAccess
+from triton import *
 
 
 def checkAstIntegrity(instruction):
@@ -47,7 +47,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, False)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -55,7 +55,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
 
         ctx.setMode(MODE.ONLY_ON_SYMBOLIZED, True)
 
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 0)
@@ -70,7 +70,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x89\xc3") # mov rbx, rax
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -83,7 +83,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.setArchitecture(ARCH.X86_64)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -98,7 +98,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.symbolizeRegister(ctx.registers.rax)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -113,7 +113,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 0)
@@ -129,7 +129,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(len(inst.getReadRegisters()), 1)
@@ -144,7 +144,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.setConcreteRegisterValue(ctx.registers.rax, 0x1337)
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)
@@ -159,7 +159,7 @@ class TestOnlySymbolizedMode(unittest.TestCase):
         ctx.symbolizeMemory(MemoryAccess(0, CPUSIZE.QWORD))
 
         inst = Instruction(b"\x48\x8b\x18") # mov rbx, qword ptr [rax]
-        self.assertTrue(ctx.processing(inst))
+        self.assertTrue(ctx.processing(inst) == EXCEPTION.NO_FAULT)
         self.assertTrue(checkAstIntegrity(inst))
 
         self.assertEqual(inst.getOperands()[1].getAddress(), 0x1337)

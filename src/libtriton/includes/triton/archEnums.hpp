@@ -39,16 +39,25 @@ namespace triton {
 
     /*! Types of endianness */
     enum endianness_e {
-      LE_ENDIANNESS, /*!< Little endian.     */
-      BE_ENDIANNESS, /*!< Big endian.        */
+      LE_ENDIANNESS,    /*!< Little endian.     */
+      BE_ENDIANNESS,    /*!< Big endian.        */
     };
 
     /*! Types of operand */
     enum operand_e {
-      OP_INVALID = 0, //!< invalid operand
-      OP_IMM,         //!< immediate operand
-      OP_MEM,         //!< memory operand
-      OP_REG          //!< register operand
+      OP_INVALID = 0,   /*!< Invalid operand    */
+      OP_IMM,           /*!< Immediate operand  */
+      OP_MEM,           /*!< Memory operand     */
+      OP_REG            /*!< Register operand   */
+    };
+
+    /*! Types of exceptions */
+    enum exception_e {
+      NO_FAULT = 0,     /*!< Succeed, no fault.                       */
+      FAULT_DE,         /*!< Fault raised: Divide-by-zero.            */
+      FAULT_BP,         /*!< Fault raised: Breakpoint.                */
+      FAULT_UD,         /*!< Fault raised: Instruction not supported. */
+      FAULT_GP,         /*!< Fault raised: General Protection Fault.  */
     };
 
     //! Types of register.

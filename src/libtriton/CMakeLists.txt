@@ -185,6 +185,7 @@ if(PYTHON_BINDINGS)
         bindings/python/namespaces/initCallbackNamespace.cpp
         bindings/python/namespaces/initConditionsNamespace.cpp
         bindings/python/namespaces/initCpuSizeNamespace.cpp
+        bindings/python/namespaces/initExceptionNamespace.cpp
         bindings/python/namespaces/initExtendNamespace.cpp
         bindings/python/namespaces/initModeNamespace.cpp
         bindings/python/namespaces/initOpcodesNamespace.cpp

@@ -137,6 +137,7 @@ FXRSTOR                      | sse1       | Restore the x87 FPU, MMX, XMM, and M
 FXRSTOR64                    | sse1       | Restore the x87 FPU, MMX, XMM, and MXCSR register state from m512byte (REX.W = 1)
 FXSAVE                       | sse1       | Save the x87 FPU, MMX, XMM, and MXCSR register state to m512byte
 FXSAVE64                     | sse1       | Save the x87 FPU, MMX, XMM, and MXCSR register state to m512byte (REX.W = 1)
+INT3                         |            | Generate breakpoint trap.
 MFENCE                       | sse2       | Memory Fence
 MOV                          |            | Move
 MOVABS                       |            | Move
@@ -420,6 +421,7 @@ namespace triton {
                                  const triton::ast::SharedAstContext& astCtxt) : modes(modes), astCtxt(astCtxt) {
 
         this->architecture    = architecture;
+        this->exception       = triton::arch::NO_FAULT;
         this->symbolicEngine  = symbolicEngine;
         this->taintEngine     = taintEngine;
 
@@ -434,7 +436,7 @@ namespace triton {
       }
 
 
-      bool x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
+      triton::arch::exception_e x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
         switch (inst.getType()) {
           case ID_INS_AAA:            this->aaa_s(inst);          break;
           case ID_INS_AAD:            this->aad_s(inst);          break;
@@ -544,6 +546,7 @@ namespace triton {
           case ID_INS_LODSW:          this->lodsw_s(inst);        break;
           case ID_INS_LOOP:           this->loop_s(inst);         break;
           case ID_INS_LZCNT:          this->lzcnt_s(inst);        break;
+          case ID_INS_INT3:           this->int3_s(inst);         break;
           case ID_INS_MFENCE:         this->mfence_s(inst);       break;
           case ID_INS_MOV:            this->mov_s(inst);          break;
           case ID_INS_MOVABS:         this->movabs_s(inst);       break;
@@ -812,9 +815,9 @@ namespace triton {
           case ID_INS_XORPD:          this->xorpd_s(inst);        break;
           case ID_INS_XORPS:          this->xorps_s(inst);        break;
           default:
-            return false;
+            return triton::arch::FAULT_UD;
         }
-        return true;
+        return this->exception;
       }
 
 
@@ -5431,6 +5434,12 @@ namespace triton {
         /* Create symbolic operands */
         auto divisor = this->symbolicEngine->getOperandAst(inst, src);
 
+        /* Return an exception if the divisor is zero */
+        if (divisor->evaluate() == 0) {
+          this->exception = triton::arch::FAULT_DE;
+          return;
+        }
+
         /* Create symbolic expression */
         switch (src.getSize()) {
 
@@ -5597,7 +5606,8 @@ namespace triton {
 
         /* Check if the address is on a 16-byte boundary */
         if (m512byte & 0xF) {
-          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+          this->exception = triton::arch::FAULT_GP;
+          return;
         }
 
         /* Fetch the FPU, STX, SSE, EFER and CS implicit operands */
@@ -6063,7 +6073,8 @@ namespace triton {
 
         /* Check if the address is on a 16-byte boundary */
         if (m512byte & 0xF) {
-          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+          this->exception = triton::arch::FAULT_GP;
+          return;
         }
 
         /* Fetch the FPU, STX, SSE, EFER and CS implicit operands */
@@ -6522,7 +6533,8 @@ namespace triton {
 
         /* Check if the address is on a 16-byte boundary */
         if (m512byte & 0xF) {
-          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+          this->exception = triton::arch::FAULT_GP;
+          return;
         }
 
         /* Fetch the FPU, STX, SSE, EFER and CS implicit operands */
@@ -6826,7 +6838,8 @@ namespace triton {
 
         /* Check if the address is on a 16-byte boundary */
         if (m512byte & 0xF) {
-          // TODO @fvrmatteo: trigger an exception (https://github.com/JonathanSalwan/Triton/issues/872)
+          this->exception = triton::arch::FAULT_GP;
+          return;
         }
 
         /* Fetch the FPU, STX, SSE, EFER and CS implicit operands */
@@ -7109,6 +7122,12 @@ namespace triton {
 
         /* Create symbolic operands */
         auto divisor = this->symbolicEngine->getOperandAst(inst, src);
+
+        /* Return an exception if the divisor is zero */
+        if (divisor->evaluate() == 0) {
+          this->exception = triton::arch::FAULT_DE;
+          return;
+        }
 
         /* Create symbolic expression */
         switch (src.getSize()) {
@@ -8543,6 +8562,12 @@ namespace triton {
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
+      }
+
+
+      void x86Semantics::int3_s(triton::arch::Instruction& inst) {
+        /* Return a breakpoint fault */
+        this->exception = triton::arch::FAULT_BP;
       }
 
 

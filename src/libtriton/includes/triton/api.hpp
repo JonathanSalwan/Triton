@@ -242,7 +242,7 @@ namespace triton {
         //! Clears concrete values assigned to the memory cells
         TRITON_EXPORT void clearConcreteMemoryValue(triton::uint64 baseAddr, triton::usize size=1);
 
-        //! [**architecture api**] - Disassembles the instruction and setup operands. You must define an architecture before. \sa processing().
+        //! [**architecture api**] - Disassembles the instruction and setup operands.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 
         //! [**architecture api**] - Disassembles a block of instructions. You must define an architecture before.
@@ -258,11 +258,11 @@ namespace triton {
 
         /* Processing API ================================================================================ */
 
-        //! [**proccesing api**] - Processes an instruction and updates engines according to the instruction semantics. Returns true if the instruction is supported.
-        TRITON_EXPORT bool processing(triton::arch::Instruction& inst);
+        //! [**proccesing api**] - Processes an instruction and updates engines according to the instruction semantics. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e processing(triton::arch::Instruction& inst);
 
-        //! [**proccesing api**] - Processes a block of instructions and updates engines according to instructions semantics. Returns false if an instruction is not supported.
-        TRITON_EXPORT bool processing(triton::arch::BasicBlock& block, triton::uint64 addr=0);
+        //! [**proccesing api**] - Processes a block of instructions and updates engines according to instructions semantics. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e processing(triton::arch::BasicBlock& block, triton::uint64 addr=0);
 
         //! [**proccesing api**] - Initializes everything.
         TRITON_EXPORT void initEngines(void);
@@ -277,11 +277,11 @@ namespace triton {
 
         /* IR API ======================================================================================== */
 
-        //! [**IR builder api**] - Builds the instruction semantics. Returns true if the instruction is supported. You must define an architecture before. \sa processing().
-        TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
+        //! [**IR builder api**] - Builds the instruction semantics. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e buildSemantics(triton::arch::Instruction& inst);
 
-        //! [**IR builder api**] - Builds the instructions semantics of a block. Returns false if an instruction is not supported. You must define an architecture before.
-        TRITON_EXPORT bool buildSemantics(triton::arch::BasicBlock& block);
+        //! [**IR builder api**] - Builds the instructions semantics of a block. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e buildSemantics(triton::arch::BasicBlock& block);
 
         //! [**IR builder api**] - Returns the AST context. Used as AST builder.
         TRITON_EXPORT triton::ast::SharedAstContext getAstContext(void);

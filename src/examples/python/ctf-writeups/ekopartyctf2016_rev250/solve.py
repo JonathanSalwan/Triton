@@ -178,7 +178,7 @@ def emulate(ctx, pc):
             pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
             continue
 
-        if ctx.processing(instruction) == False:
+        if ctx.processing(instruction) == EXCEPTION.FAULT_UD:
             break
 
         #if instruction.isSymbolized():

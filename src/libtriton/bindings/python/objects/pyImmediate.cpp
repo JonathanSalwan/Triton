@@ -43,7 +43,7 @@ This object is used to represent an immediate.
 
 ~~~~~~~~~~~~~{.py}
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x0: mov eax, 0x14
 

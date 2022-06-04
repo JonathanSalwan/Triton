@@ -81,6 +81,9 @@ namespace triton {
       //! Initializes the SHIFT python namespace.
       void initShiftsNamespace(PyObject* shiftDict);
 
+      //! Initializes the EXCEPTION python namespace.
+      void initExceptionNamespace(PyObject* exceptionDict);
+
       //! Initializes the EXTEND python namespace.
       void initExtendNamespace(PyObject* extendDict);
 

@@ -8,6 +8,7 @@
 #ifndef TRITON_ARM32SEMANTICS_H
 #define TRITON_ARM32SEMANTICS_H
 
+#include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
 #include <triton/dllexport.hpp>
 #include <triton/instruction.hpp>
@@ -64,6 +65,9 @@ namespace triton {
             //! The AST Context API
             triton::ast::SharedAstContext astCtxt;
 
+            //! Exception status
+            triton::arch::exception_e exception;
+
           public:
             //! Constructor.
             TRITON_EXPORT Arm32Semantics(triton::arch::Architecture* architecture,
@@ -71,8 +75,8 @@ namespace triton {
                                          triton::engines::taint::TaintEngine* taintEngine,
                                          const triton::ast::SharedAstContext& astCtxt);
 
-            //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-            TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
+            //! Builds the semantics of the instruction. Returns `triton::arch::NO_FAULT` if succeed.
+            TRITON_EXPORT triton::arch::exception_e buildSemantics(triton::arch::Instruction& inst);
 
           private:
             //! Rotates right.

@@ -8,6 +8,7 @@
 #ifndef TRITON_IRBUILDER_H
 #define TRITON_IRBUILDER_H
 
+#include <triton/archEnums.hpp>
 #include <triton/architecture.hpp>
 #include <triton/basicBlock.hpp>
 #include <triton/dllexport.hpp>
@@ -89,11 +90,11 @@ namespace triton {
         //! Destructor.
         TRITON_EXPORT virtual ~IrBuilder();
 
-        //! Builds the semantics of the instruction. Returns true if the instruction is supported.
-        TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
+        //! Builds the semantics of the instruction. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e buildSemantics(triton::arch::Instruction& inst);
 
-        //! Builds the semantics of instructions in a block. Returns false if an instruction is not supported.
-        TRITON_EXPORT bool buildSemantics(triton::arch::BasicBlock& block);
+        //! Builds the semantics of instructions in a block. Returns `triton::arch::NO_FAULT` if succeed.
+        TRITON_EXPORT triton::arch::exception_e buildSemantics(triton::arch::BasicBlock& block);
 
         //! Everything which must be done before buiding the semantics
         TRITON_EXPORT void preIrInit(triton::arch::Instruction& inst);

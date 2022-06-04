@@ -42,7 +42,7 @@ This object is used to represent a symbolic expression.
 >>> ctxt.setConcreteRegisterValue(ctxt.registers.rdx, 67890)
 
 >>> ctxt.processing(inst)
-True
+0
 >>> print(inst)
 0x400000: xor rax, rdx
 

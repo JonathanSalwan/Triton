@@ -520,3 +520,24 @@ class TestIssue1131(unittest.TestCase):
     def test_issue(self):
         self.ctx.processing(Instruction(b"\x66\x0f\xcf")) # bswap di
         self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rdi), 0xdeadbeefcafe0000)
+
+
+class TestIssue872(unittest.TestCase):
+    """Testing #872."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.code = [
+          (b"\xB8\x05\x00\x00\x00", EXCEPTION.NO_FAULT),  # mov eax, 5
+          (b"\xBA\x00\x00\x00\x00", EXCEPTION.NO_FAULT),  # mov edx, 0
+          (b"\xF7\xF2",             EXCEPTION.FAULT_DE)   # div edx
+        ]
+
+    def test_1(self):
+        for op in self.code:
+            ret = self.ctx.processing(Instruction(op[0]))
+            self.assertEqual(ret, op[1])
+
+    def test_2(self):
+        ret = self.ctx.processing(Instruction(b"\xCC")) # int3
+        self.assertEqual(ret, EXCEPTION.FAULT_BP)

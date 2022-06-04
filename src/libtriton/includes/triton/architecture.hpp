@@ -151,9 +151,6 @@ namespace triton {
         //! Disassembles a concrete memory area from `addr` to control flow instruction and returns a `BasicBlock`.
         TRITON_EXPORT triton::arch::BasicBlock disassembly(triton::uint64 addr) const;
 
-        //! Builds the instruction semantics according to the architecture. Returns true if the instruction is supported.
-        TRITON_EXPORT bool buildSemantics(triton::arch::Instruction& inst);
-
         //! Returns the concrete value of a memory cell.
         TRITON_EXPORT triton::uint8 getConcreteMemoryValue(triton::uint64 addr, bool execCallbacks=true) const;
 

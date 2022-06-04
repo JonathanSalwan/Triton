@@ -264,7 +264,7 @@ def emulate(ctx, pc):
         #
         # Luckily, these instructions do not infer in constraints to solve the
         # challenge. So, in this case we just skip them :).
-        if ctx.processing(instruction) == False:
+        if ctx.processing(instruction) == EXCEPTION.FAULT_UD:
             pc = instruction.getNextAddress()
             continue
 

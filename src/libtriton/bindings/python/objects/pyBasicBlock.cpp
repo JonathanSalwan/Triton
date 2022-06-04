@@ -80,7 +80,7 @@ True
 
 # Process a block
 >>> ctx.processing(block)
-True
+0
 
 ~~~~~~~~~~~~~
 
