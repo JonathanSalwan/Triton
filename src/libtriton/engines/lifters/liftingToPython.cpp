@@ -62,7 +62,7 @@ namespace triton {
       }
 
 
-      std::ostream& LiftingToPython::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+      std::ostream& LiftingToPython::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool icomment) {
         /* Save the AST representation mode */
         triton::ast::representations::mode_e mode = this->astCtxt->getRepresentationMode();
         this->astCtxt->setRepresentationMode(triton::ast::representations::PYTHON_REPRESENTATION);
@@ -101,7 +101,18 @@ namespace triton {
 
         /* Print symbolic expressions */
         for (const auto& id : symExprs) {
-          stream << ssa[id]->getFormattedExpression() << std::endl;
+          auto& e = ssa[id];
+          stream << e->getFormattedExpression();
+          if (icomment && !e->getDisassembly().empty()) {
+            if (e->getComment().empty()) {
+              stream << " # ";
+            }
+            else {
+              stream << " - ";
+            }
+            stream << e->getDisassembly();
+          }
+          stream << std::endl;
         }
 
         /* Restore the AST representation mode */

@@ -1319,15 +1319,15 @@ namespace triton {
   }
 
 
-  std::ostream& API::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr) {
+  std::ostream& API::liftToPython(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool icomment) {
     this->checkLifting();
-    return this->lifting->liftToPython(stream, expr);
+    return this->lifting->liftToPython(stream, expr, icomment);
   }
 
 
-  std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_) {
+  std::ostream& API::liftToSMT(std::ostream& stream, const triton::engines::symbolic::SharedSymbolicExpression& expr, bool assert_, bool icomment) {
     this->checkLifting();
-    return this->lifting->liftToSMT(stream, expr, assert_);
+    return this->lifting->liftToSMT(stream, expr, assert_, icomment);
   }
 
 
