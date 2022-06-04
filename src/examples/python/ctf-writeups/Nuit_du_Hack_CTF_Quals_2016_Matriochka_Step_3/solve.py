@@ -66,7 +66,8 @@ def emulate(ctx, handler):
         instruction = Instruction(pc, opcode)
 
         # Process
-        ctx.processing(instruction)
+        if ctx.processing(instruction) != EXCEPTION.NO_FAULT:
+            return
 
         # Next
         pc = ctx.getConcreteRegisterValue(ctx.registers.rip)
