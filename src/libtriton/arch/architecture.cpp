@@ -47,37 +47,16 @@ namespace triton {
     void Architecture::setArchitecture(triton::arch::architecture_e arch) {
       /* Allocate and init the good arch */
       switch (arch) {
-        case triton::arch::ARCH_X86_64:
-          /* init the new instance */
-          this->cpu.reset(new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks));
-          if (this->cpu == nullptr)
-            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
-          break;
-
-        case triton::arch::ARCH_X86:
-          /* init the new instance */
-          this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));
-          if (this->cpu == nullptr)
-            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
-          break;
-
-        case triton::arch::ARCH_AARCH64:
-          /* init the new instance */
-          this->cpu.reset(new(std::nothrow) triton::arch::arm::aarch64::AArch64Cpu(this->callbacks));
-          if (this->cpu == nullptr)
-            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
-          break;
-
-        case triton::arch::ARCH_ARM32:
-          /* init the new instance */
-          this->cpu.reset(new(std::nothrow) triton::arch::arm::arm32::Arm32Cpu(this->callbacks));
-          if (this->cpu == nullptr)
-            throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
-          break;
-
+        case triton::arch::ARCH_X86_64:  this->cpu.reset(new(std::nothrow) triton::arch::x86::x8664Cpu(this->callbacks));            break;
+        case triton::arch::ARCH_X86:     this->cpu.reset(new(std::nothrow) triton::arch::x86::x86Cpu(this->callbacks));              break;
+        case triton::arch::ARCH_AARCH64: this->cpu.reset(new(std::nothrow) triton::arch::arm::aarch64::AArch64Cpu(this->callbacks)); break;
+        case triton::arch::ARCH_ARM32:   this->cpu.reset(new(std::nothrow) triton::arch::arm::arm32::Arm32Cpu(this->callbacks));     break;
         default:
           throw triton::exceptions::Architecture("Architecture::setArchitecture(): Architecture not supported.");
-          break;
+      }
+
+      if (this->cpu == nullptr) {
+        throw triton::exceptions::Architecture("Architecture::setArchitecture(): Not enough memory.");
       }
 
       /* Setup global variables */
