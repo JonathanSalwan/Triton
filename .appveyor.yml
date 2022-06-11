@@ -16,6 +16,7 @@ environment:
   CMAKE_TEMPLATE: Visual Studio 16 2019
 
   matrix:
+    # 32-bit, python3.6, boost on
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python36
@@ -30,6 +31,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
 
+    # 32-bit, python3.7, boost on
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python37
@@ -44,6 +46,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
 
+    # 32-bit, python3.7, boost off
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python37
@@ -56,6 +59,7 @@ environment:
       PYTHON_VERSION: 3.7
       BOOST_INTERFACE: off
 
+    # 64-bit, python3.6, boost on
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python36-x64
@@ -70,6 +74,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
 
+    # 64-bit, python3.7, boost on
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python37-x64
@@ -84,6 +89,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
 
+    # 64-bit, python3.7, boost off
     - platform: x64
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python37-x64
@@ -96,6 +102,89 @@ environment:
       PYTHON_VERSION: 3.7
       BOOST_INTERFACE: off
 
+    # 64-bit, python3.8, boost on
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python38-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.8
+      BOOST_INTERFACE: on
+      BOOST_ROOT: C:\Libraries\boost_1_73_0
+      Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
+
+    # 64-bit, python3.8, boost off
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python38-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.8
+      BOOST_INTERFACE: off
+
+    # 64-bit, python3.9, boost on
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python39-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.9
+      BOOST_INTERFACE: on
+      BOOST_ROOT: C:\Libraries\boost_1_73_0
+      Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
+
+    # 64-bit, python3.9, boost off
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python39-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.9
+      BOOST_INTERFACE: off
+
+    # 64-bit, python3.10, boost on
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python10-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.10
+      BOOST_INTERFACE: on
+      BOOST_ROOT: C:\Libraries\boost_1_73_0
+      Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
+
+    # 64-bit, python3.10, boost off
+    - platform: x64
+      APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
+      PYTHON: C:\Python10-x64
+      CAPSTONE_LIBRARIES: c:\projects\triton\build\capstone-4.0.2\msvc\x64\%configuration%\capstone.lib
+      LIEF_VERSION: 0.10.1
+      LIEF_ZIP: lief-0.10.1-cp37-cp37m-win_amd64.whl
+      Z3_INCLUDE_DIRS: c:\projects\triton\build\z3-4.8.9-x64-win\include
+      Z3_LIBRARIES: c:\projects\triton\build\z3-4.8.9-x64-win\bin\libz3.lib
+      Z3_PKG_NAME: z3-4.8.9-x64-win
+      PYTHON_VERSION: 3.10
+      BOOST_INTERFACE: off
 
 install:
   - set PATH=%PYTHON%;%PATH%
