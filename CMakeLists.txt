@@ -46,7 +46,6 @@ add_custom_target(check
 
 if(PYTHON_BINDINGS)
     message(STATUS "Compiling with Python bindings")
-    set(PYTHONPATH_CMD ${CMAKE_COMMAND} -E env PYTHONPATH=$<TARGET_FILE_DIR:triton>/)
     if(NOT PYTHON_VERSION)
         set(PYTHON_VERSION 3.6)
     endif()
@@ -57,24 +56,14 @@ if(PYTHON_BINDINGS)
     cmake_path(GET PYTHON_LIBRARY PARENT_PATH PYTHON_LIB_DIR)
     cmake_path(GET PYTHON_LIBRARY STEM LAST_ONLY PYTHON_LIB_NAME)
     string(REGEX REPLACE "^lib" "" PYTHON_LIB_NAME ${PYTHON_LIB_NAME})
-    add_custom_target(test-python
-        COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
-        DEPENDS python-triton
-    )
     if(NOT GCOV)
-        add_dependencies(check test-python)
+        add_test(NAME test-python
+            COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests
+        )
+        set_property(TEST test-python
+            PROPERTY ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:triton>/"
+        )
     endif()
-
-    add_test(NAME test-python
-        COMMAND ${PYTHON_EXECUTABLE} -m unittest discover ${triton_SOURCE_DIR}/src/testers/unittests
-    )
-    set_property(TEST test-python
-        PROPERTY ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:triton>/"
-    )
-else()
-    add_custom_target(test-python
-        COMMAND echo "No python test as python support is disabled"
-    )
 endif()
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND GCOV)
