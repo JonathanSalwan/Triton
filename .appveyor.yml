@@ -46,7 +46,7 @@ environment:
       BOOST_ROOT: C:\Libraries\boost_1_73_0
       Boost_INCLUDE_DIR: C:\Libraries\boost_1_73_0
 
-    # 32-bit, python3.7, boost on
+    # 32-bit, python3.7, boost off
     - platform: Win32
       APPVEYOR_BUILD_WORKER_IMAGE: Visual Studio 2019
       PYTHON: C:\Python37
