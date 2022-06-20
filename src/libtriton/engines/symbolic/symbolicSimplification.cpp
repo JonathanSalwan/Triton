@@ -9,6 +9,7 @@
 #include <map>
 
 #include <triton/api.hpp>
+#include <triton/archEnums.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicSimplification.hpp>
@@ -214,12 +215,12 @@ namespace triton {
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block) const {
-        return this->deadStoreElimination(block);
+      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block, bool padding) const {
+        return this->deadStoreElimination(block, padding);
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block) const {
+      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block, bool padding) const {
         std::unordered_map<triton::usize, SharedSymbolicExpression> lifetime;
         std::map<triton::uint64, triton::arch::Instruction> instructions;
         triton::arch::BasicBlock out;
@@ -263,8 +264,17 @@ namespace triton {
         }
 
         /* Create a new block with sorted instructions */
+        auto lastaddr = in.getFirstAddress();
+        auto nop = tmpapi.getNopInstruction();
         for (auto& item : instructions) {
+          if (padding) {
+            while (item.second.getAddress() > lastaddr) {
+              out.add(nop);
+              lastaddr += nop.getSize();
+            }
+          }
           out.add(item.second);
+          lastaddr = item.second.getNextAddress();
         }
 
         return out;

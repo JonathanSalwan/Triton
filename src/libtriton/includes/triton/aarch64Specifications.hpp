@@ -77,6 +77,9 @@ namespace triton {
             TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
         };
 
+        //! AArch64 NOP instruction
+        const triton::arch::Instruction nop = triton::arch::Instruction(reinterpret_cast<const triton::uint8*>("\x1f\x20\x03\xd5"), 4);
+
         //! The list of opcodes.
         enum instruction_e {
           ID_INS_INVALID = 0, //!< invalid

@@ -279,3 +279,162 @@ class TestDeadStoreElimination(unittest.TestCase):
                                       '0x10019: popfq\n'
                                       '0x1001a: pop rsi\n'
                                       '0x1001b: ret')
+
+
+    def test_inst7(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        # Code from VMProtect
+        block = BasicBlock([
+            Instruction(b"\x48\x89\xec"),                   # 0x10000: mov rsp, rbp
+            Instruction(b"\x41\x59"),                       # 0x10003: pop r9
+            Instruction(b"\x41\x5d"),                       # 0x10005: pop r13
+            Instruction(b"\x41\x5e"),                       # 0x10007: pop r14
+            Instruction(b"\x66\x45\x85\xe8"),               # 0x10009: test r8w, r13w
+            Instruction(b"\x41\x0f\xa3\xe2"),               # 0x1000d: bt r10d, esp
+            Instruction(b"\x5b"),                           # 0x10011: pop rbx
+            Instruction(b"\x66\x98"),                       # 0x10012: cbw
+            Instruction(b"\x41\xd2\xe3"),                   # 0x10014: shl r11b, cl
+            Instruction(b"\x41\x5c"),                       # 0x10017: pop r12
+            Instruction(b"\x41\x5a"),                       # 0x10019: pop r10
+            Instruction(b"\x66\x41\x81\xf0\x51\xbe"),       # 0x1001b: xor r8w, 0xbe51
+            Instruction(b"\xf9"),                           # 0x10021: stc
+            Instruction(b"\x58"),                           # 0x10022: pop rax
+            Instruction(b"\x66\x41\x0f\xab\xf3"),           # 0x10023: bts r11w, si
+            Instruction(b"\x5f"),                           # 0x10028: pop rdi
+            Instruction(b"\x41\xf6\xdf"),                   # 0x10029: neg r15b
+            Instruction(b"\x66\x45\x0f\xbc\xc4"),           # 0x1002c: bsf r8w, r12w
+            Instruction(b"\x5a"),                           # 0x10031: pop rdx
+            Instruction(b"\x66\x0f\xba\xfd\x0c"),           # 0x10032: btc bp, 0xc
+            Instruction(b"\x45\x09\xd3"),                   # 0x10037: or r11d, r10d
+            Instruction(b"\x41\x5b"),                       # 0x1003a: pop r11
+            Instruction(b"\x81\xc6\x83\x0f\x7f\xff"),       # 0x1003c: add esi, 0xff7f0f83
+            Instruction(b"\x48\x81\xdd\x6d\x28\xe7\x7d"),   # 0x10042: sbb rbp, 0x7de7286d
+            Instruction(b"\x59"),                           # 0x10049: pop rcx
+            Instruction(b"\x5d"),                           # 0x1004a: pop rbp
+            Instruction(b"\x66\x45\x0f\x46\xc5"),           # 0x1004b: cmovbe r8w, r13w
+            Instruction(b"\x66\x41\xff\xc8"),               # 0x10050: dec r8w
+            Instruction(b"\x66\x45\x0f\xbe\xfd"),           # 0x10054: movsx r15w, r13b
+            Instruction(b"\x41\x58"),                       # 0x10059: pop r8
+            Instruction(b"\x40\xd2\xee"),                   # 0x1005b: shr sil, cl
+            Instruction(b"\x40\x0f\x9b\xc6"),               # 0x1005e: setnp sil
+            Instruction(b"\x41\x5f"),                       # 0x10062: pop r15
+            Instruction(b"\x49\x0f\xbf\xf6"),               # 0x10064: movsx rsi, r14w
+            Instruction(b"\xf8"),                           # 0x10068: clc
+            Instruction(b"\x9d"),                           # 0x10069: popfq
+            Instruction(b"\x40\x0f\x90\xc6"),               # 0x1006a: seto sil
+            Instruction(b"\x49\x0f\xb7\xf1"),               # 0x1006e: movzx rsi, r9w
+            Instruction(b"\x5e"),                           # 0x10072: pop rsi
+            Instruction(b"\xc3"),                           # 0x10073: ret
+        ])
+
+        self.ctx.disassembly(block, 0x10000)
+        sblock = self.ctx.simplify(block, padding=True)
+        self.ctx.disassembly(sblock, 0x10000)
+        self.assertEqual(block.getFirstAddress(), sblock.getFirstAddress())
+        self.assertEqual(block.getLastAddress(), sblock.getLastAddress())
+        self.assertEqual(str(sblock), '0x10000: mov rsp, rbp\n'
+                                      '0x10003: pop r9\n'
+                                      '0x10005: pop r13\n'
+                                      '0x10007: pop r14\n'
+                                      '0x10009: nop\n'
+                                      '0x1000a: nop\n'
+                                      '0x1000b: nop\n'
+                                      '0x1000c: nop\n'
+                                      '0x1000d: nop\n'
+                                      '0x1000e: nop\n'
+                                      '0x1000f: nop\n'
+                                      '0x10010: nop\n'
+                                      '0x10011: pop rbx\n'
+                                      '0x10012: nop\n'
+                                      '0x10013: nop\n'
+                                      '0x10014: nop\n'
+                                      '0x10015: nop\n'
+                                      '0x10016: nop\n'
+                                      '0x10017: pop r12\n'
+                                      '0x10019: pop r10\n'
+                                      '0x1001b: nop\n'
+                                      '0x1001c: nop\n'
+                                      '0x1001d: nop\n'
+                                      '0x1001e: nop\n'
+                                      '0x1001f: nop\n'
+                                      '0x10020: nop\n'
+                                      '0x10021: nop\n'
+                                      '0x10022: pop rax\n'
+                                      '0x10023: nop\n'
+                                      '0x10024: nop\n'
+                                      '0x10025: nop\n'
+                                      '0x10026: nop\n'
+                                      '0x10027: nop\n'
+                                      '0x10028: pop rdi\n'
+                                      '0x10029: nop\n'
+                                      '0x1002a: nop\n'
+                                      '0x1002b: nop\n'
+                                      '0x1002c: nop\n'
+                                      '0x1002d: nop\n'
+                                      '0x1002e: nop\n'
+                                      '0x1002f: nop\n'
+                                      '0x10030: nop\n'
+                                      '0x10031: pop rdx\n'
+                                      '0x10032: nop\n'
+                                      '0x10033: nop\n'
+                                      '0x10034: nop\n'
+                                      '0x10035: nop\n'
+                                      '0x10036: nop\n'
+                                      '0x10037: nop\n'
+                                      '0x10038: nop\n'
+                                      '0x10039: nop\n'
+                                      '0x1003a: pop r11\n'
+                                      '0x1003c: nop\n'
+                                      '0x1003d: nop\n'
+                                      '0x1003e: nop\n'
+                                      '0x1003f: nop\n'
+                                      '0x10040: nop\n'
+                                      '0x10041: nop\n'
+                                      '0x10042: nop\n'
+                                      '0x10043: nop\n'
+                                      '0x10044: nop\n'
+                                      '0x10045: nop\n'
+                                      '0x10046: nop\n'
+                                      '0x10047: nop\n'
+                                      '0x10048: nop\n'
+                                      '0x10049: pop rcx\n'
+                                      '0x1004a: pop rbp\n'
+                                      '0x1004b: nop\n'
+                                      '0x1004c: nop\n'
+                                      '0x1004d: nop\n'
+                                      '0x1004e: nop\n'
+                                      '0x1004f: nop\n'
+                                      '0x10050: nop\n'
+                                      '0x10051: nop\n'
+                                      '0x10052: nop\n'
+                                      '0x10053: nop\n'
+                                      '0x10054: nop\n'
+                                      '0x10055: nop\n'
+                                      '0x10056: nop\n'
+                                      '0x10057: nop\n'
+                                      '0x10058: nop\n'
+                                      '0x10059: pop r8\n'
+                                      '0x1005b: nop\n'
+                                      '0x1005c: nop\n'
+                                      '0x1005d: nop\n'
+                                      '0x1005e: nop\n'
+                                      '0x1005f: nop\n'
+                                      '0x10060: nop\n'
+                                      '0x10061: nop\n'
+                                      '0x10062: pop r15\n'
+                                      '0x10064: nop\n'
+                                      '0x10065: nop\n'
+                                      '0x10066: nop\n'
+                                      '0x10067: nop\n'
+                                      '0x10068: nop\n'
+                                      '0x10069: popfq\n'
+                                      '0x1006a: nop\n'
+                                      '0x1006b: nop\n'
+                                      '0x1006c: nop\n'
+                                      '0x1006d: nop\n'
+                                      '0x1006e: nop\n'
+                                      '0x1006f: nop\n'
+                                      '0x10070: nop\n'
+                                      '0x10071: nop\n'
+                                      '0x10072: pop rsi\n'
+                                      '0x10073: ret')

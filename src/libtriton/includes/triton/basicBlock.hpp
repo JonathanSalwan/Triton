@@ -56,7 +56,7 @@ namespace triton {
         TRITON_EXPORT ~BasicBlock();
 
         //! Add an instruction to the block
-        TRITON_EXPORT void add(Instruction& instruction);
+        TRITON_EXPORT void add(const Instruction& instruction);
 
         //! Remove an instruction from the block at the given position. Returns true if success.
         TRITON_EXPORT bool remove(triton::uint32 position);

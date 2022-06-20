@@ -335,6 +335,11 @@ namespace triton {
   }
 
 
+  const triton::arch::Instruction API::getNopInstruction(void) const {
+    return this->arch.getNopInstruction();
+  }
+
+
   const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& API::getAllRegisters(void) const {
     this->checkArchitecture();
     return this->arch.getAllRegisters();
@@ -843,9 +848,9 @@ namespace triton {
   }
 
 
-  triton::arch::BasicBlock API::simplify(const triton::arch::BasicBlock& block) const {
+  triton::arch::BasicBlock API::simplify(const triton::arch::BasicBlock& block, bool padding) const {
     this->checkSymbolic();
-    return this->symbolic->simplify(block);
+    return this->symbolic->simplify(block, padding);
   }
 
 

@@ -139,6 +139,9 @@ namespace triton {
         //! Returns the stack pointer register
         TRITON_EXPORT const triton::arch::Register& getStackPointer(void) const;
 
+        //! Returns a NOP instruction according to the architecture.
+        TRITON_EXPORT const triton::arch::Instruction getNopInstruction(void) const;
+
         //! Disassembles the instruction according to the architecture.
         TRITON_EXPORT void disassembly(triton::arch::Instruction& inst) const;
 

@@ -8,11 +8,14 @@
 #include <new>
 
 #include <triton/aarch64Cpu.hpp>
+#include <triton/aarch64Specifications.hpp>
 #include <triton/architecture.hpp>
 #include <triton/arm32Cpu.hpp>
+#include <triton/arm32Specifications.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/x8664Cpu.hpp>
 #include <triton/x86Cpu.hpp>
+#include <triton/x86Specifications.hpp>
 
 
 
@@ -363,6 +366,31 @@ namespace triton {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::clearConcreteMemoryValue(): You must define an architecture.");
       this->cpu->clearConcreteMemoryValue(baseAddr, size);
+    }
+
+
+    const triton::arch::Instruction Architecture::getNopInstruction(void) const {
+      if (!this->cpu)
+        throw triton::exceptions::Architecture("Architecture::getNopInstruction(): You must define an architecture.");
+
+      switch (this->getArchitecture()) {
+        case triton::arch::ARCH_AARCH64:
+          return triton::arch::arm::aarch64::nop;
+
+        case triton::arch::ARCH_ARM32: {
+          if (this->isThumb())
+            return triton::arch::arm::arm32::thumbnop;
+          else
+            return triton::arch::arm::arm32::nop;
+        }
+
+        case triton::arch::ARCH_X86:
+        case triton::arch::ARCH_X86_64:
+          return triton::arch::x86::nop;
+
+        default:
+          throw triton::exceptions::Architecture("Architecture::getNopInstruction(): Invalid architecture.");
+      }
     }
 
   }; /* arch namespace */

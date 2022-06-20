@@ -38,11 +38,12 @@ namespace triton {
     }
 
 
-    void BasicBlock::add(Instruction& instruction) {
+    void BasicBlock::add(const Instruction& instruction) {
+      Instruction copy = instruction;
       if (this->instructions.size()) {
-        instruction.setAddress(this->instructions.back().getNextAddress());
+        copy.setAddress(this->instructions.back().getNextAddress());
       }
-      this->instructions.push_back(instruction);
+      this->instructions.push_back(copy);
     }
 
 

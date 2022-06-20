@@ -172,6 +172,9 @@ namespace triton {
         //! [**architecture api**] - Returns the number of registers according to the CPU architecture.
         TRITON_EXPORT triton::uint32 getNumberOfRegisters(void) const;
 
+        //! Returns a NOP instruction according to the architecture.
+        TRITON_EXPORT const triton::arch::Instruction getNopInstruction(void) const;
+
         //! [**architecture api**] - Returns all registers. \sa triton::arch::x86::register_e.
         TRITON_EXPORT const std::unordered_map<triton::arch::register_e, const triton::arch::Register>& getAllRegisters(void) const;
 
@@ -420,8 +423,8 @@ namespace triton {
         //! [**symbolic api**] - Processes all recorded AST simplifications, uses solver's simplifications if `usingSolver` is true or LLVM is `usingLLVM` is true. Returns the simplified AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver=false, bool usingLLVM=false) const;
 
-        //! [**symbolic api**] - Processes a dead store elimination simplification on a given basic block.
-        TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block) const;
+        //! [**symbolic api**] - Processes a dead store elimination simplification on a given basic block. If `padding` is true, keep the same block size and padds with NOP instructions.
+        TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block, bool padding=false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicExpression getSymbolicExpression(triton::usize symExprId) const;
