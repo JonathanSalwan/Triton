@@ -61,7 +61,7 @@ namespace triton {
           //! Processes all recorded simplifications. Returns the simplified node.
           TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
 
-          //! Performs a dead store elimination simplification. If `padding` is true, keep the same block size and padds with NOP instructions.
+          //! Performs a dead store elimination simplification. If `padding` is true, keep addresses aligned and padds with NOP instructions.
           TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block, bool padding=false) const;
 
           //! Copies a SymbolicSimplification.

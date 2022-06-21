@@ -375,7 +375,7 @@ set to True, Triton will use the current solver instance to simplify the given `
 we use LLVM to simplify node.
 
 - <b>\ref py_BasicBlock_page simplify(\ref py_BasicBlock_page block, bool padding=False)</b><br>
-Performs a dead store elimination simplification on a given block. If `padding` is true, keep the same block size and padds with NOP instructions.
+Performs a dead store elimination simplification on a given block. If `padding` is true, keep addresses aligned and padds with NOP instructions.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.

@@ -423,7 +423,7 @@ namespace triton {
         //! [**symbolic api**] - Processes all recorded AST simplifications, uses solver's simplifications if `usingSolver` is true or LLVM is `usingLLVM` is true. Returns the simplified AST.
         TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node, bool usingSolver=false, bool usingLLVM=false) const;
 
-        //! [**symbolic api**] - Processes a dead store elimination simplification on a given basic block. If `padding` is true, keep the same block size and padds with NOP instructions.
+        //! [**symbolic api**] - Processes a dead store elimination simplification on a given basic block. If `padding` is true, keep addresses aligned and padds with NOP instructions.
         TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block, bool padding=false) const;
 
         //! [**symbolic api**] - Returns the shared symbolic expression corresponding to an id.
