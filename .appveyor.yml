@@ -118,6 +118,7 @@ install:
   - cmd: echo Downloading z3...
   - cmd: appveyor DownloadFile https://github.com/Z3Prover/z3/releases/download/z3-4.8.9/%Z3_PKG_NAME%.zip
   - cmd: 7z x %Z3_PKG_NAME%.zip
+  - cmd: copy %Z3_PKG_NAME%\bin\libz3.dll C:\Windows\System32
   - set PATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin;%PATH%
   - set PYTHONPATH=C:\projects\triton\build\%Z3_PKG_NAME%\bin\python;%PYTHONPATH%
     # Install capstone
