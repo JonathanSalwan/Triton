@@ -9,8 +9,13 @@
 #define TRITONPYTHONBINDINGS_H
 
 #include <Python.h>
+#if __has_include(<cpython/longintrepr.h>)
+#include <cpython/longintrepr.h>
+#else
 #include <longintrepr.h>
-#if _WIN32
+#endif
+
+#if defined(_WIN32) && !defined(__WINE__)
   #include <cmath>
   #define _hypot hypot
 #endif
