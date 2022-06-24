@@ -10,9 +10,9 @@
 
 #include <Python.h>
 #if __has_include(<cpython/longintrepr.h>)
-#include <cpython/longintrepr.h>
+  #include <cpython/longintrepr.h>
 #else
-#include <longintrepr.h>
+  #include <longintrepr.h>
 #endif
 
 #if defined(_WIN32) && !defined(__WINE__)
