@@ -249,7 +249,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
@@ -282,7 +286,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
@@ -318,7 +326,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
@@ -347,7 +359,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
@@ -376,7 +392,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
@@ -405,7 +425,11 @@ namespace triton {
 
         v = _PyLong_New(ndigits);
         digit* p = v->ob_digit;
+#if PY_VERSION_HEX >= 0x030a00f0 
+        Py_SET_SIZE(v, ndigits);
+#else
         Py_SIZE(v) = ndigits;
+#endif
         while (value) {
           *p++ = static_cast<digit>(value & PyLong_MASK);
           value >>= PyLong_SHIFT;
