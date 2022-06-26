@@ -37,9 +37,10 @@ index 31eae61..40b6f2c 100644
 +        cnt = (8 if bits == 32 else 16)
 +        for i in range(cnt):
 +            xmm = peda.execute_redirect("info registers xmm%d" % (i))
-+            xmm = xmm.splitlines()
-+            xmm = int(xmm[7].split()[2], 16)
-+            regs.update({"xmm%d" % (i): xmm})
++            offset = xmm.find('uint128')
++            if offset > 0:
++                uint128 = xmm[offset:].replace('\n', '').replace('}', '').split('=')[1]
++                regs.update({"xmm%d" % (i): int(uint128, 16)})
 +
 +        dump = (regs, memory)
 +
