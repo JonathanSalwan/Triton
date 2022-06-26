@@ -21,14 +21,14 @@ using namespace triton::arch;
 
 
 struct op {
-  unsigned int    addr;
-  unsigned char*  inst;
-  unsigned int    size;
+  unsigned int addr;
+  const void*  inst;
+  unsigned int size;
 };
 
 struct op trace[] = {
-  {0x400017, (unsigned char *)"\x48\x35\x44\x33\x22\x11", 6}, /* xor rax, 0x11223344 */
-  {0x0,      nullptr,                                     0}
+  {0x400017, "\x48\x35\x44\x33\x22\x11", 6}, /* xor rax, 0x11223344 */
+  {0x0,      nullptr,                    0}
 };
 
 

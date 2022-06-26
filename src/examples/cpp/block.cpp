@@ -15,10 +15,10 @@ int main(int ac, const char **av) {
   api.setArchitecture(ARCH_X86_64);
 
   BasicBlock block = BasicBlock({
-    Instruction((unsigned char *)"\x89\xd0", 2),      /* mov   eax, edx  */
-    Instruction((unsigned char *)"\x80\xf4\x99", 3),  /* xor   ah, 0x99  */
-    Instruction((unsigned char *)"\x85\xc0", 2),      /* test  eax, eax  */
-    Instruction((unsigned char *)"\x74\x08", 2),      /* jz    10        */
+    Instruction("\x89\xd0", 2),      /* mov   eax, edx  */
+    Instruction("\x80\xf4\x99", 3),  /* xor   ah, 0x99  */
+    Instruction("\x85\xc0", 2),      /* test  eax, eax  */
+    Instruction("\x74\x08", 2),      /* jz    10        */
   });
 
   api.disassembly(block);
@@ -26,7 +26,7 @@ int main(int ac, const char **av) {
   std::cout << block << std::endl;
   std::cout << "----------" << std::endl;
 
-  auto i = Instruction((unsigned char *)"\x90", 1); /* nop */
+  auto i = Instruction("\x90", 1); /* nop */
   api.disassembly(i);
 
   block.add(i);
