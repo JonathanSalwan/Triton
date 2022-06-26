@@ -178,7 +178,7 @@ What we know? We know nothing about the code but we know that it waits for an us
 input. So the idea is to put a *watchpoint* on the PLT of the `getchar` function. It
 will give us information about where interesting parts of the code start. Via a static
 analysis with IDA and some watchpoints on GDB, I found that the first `getchar`
-is called at `0x4030A9`. So let's put a breakpoint on it and then do a [fulldump](https://github.com/JonathanSalwan/Triton/blob/316696e09fc38d4d25e6e81e39942302e8dfe932/src/examples/python/ctf-writeups/defcon-2016-baby-re/gdb-peda-fulldump.patch)
+is called at `0x4030A9`. So let's put a breakpoint on it and then do a [fulldump](https://github.com/JonathanSalwan/Triton/blob/109f39fcb37738c4ab26de0a976e8c4f733a728b/src/examples/python/ctf-writeups/defcon-2016-baby-re/gdb-peda-fulldump.patch)
 of registers and memory segments.
 
 ```
