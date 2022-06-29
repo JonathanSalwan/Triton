@@ -35,7 +35,7 @@ class CMakeBuild(build_ext):
         # Set platform-agnostric arguments.
         cmake_args = [
             # General arguments.
-            '-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + ext_dir,
+            #'-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + ext_dir,
             '-DPYTHON_EXECUTABLE=' + sys.executable,
             '-DCMAKE_BUILD_TYPE=Release',
             # Common arguments.
