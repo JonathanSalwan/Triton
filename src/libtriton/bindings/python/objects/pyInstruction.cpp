@@ -220,6 +220,9 @@ Returns true if at least one of its \ref py_SymbolicExpression_page is tainted.
 - <b>bool isWriteBack(void)</b><br>
 Returns true if the instruction performs a write back. Mainly used for AArch64 instructions like LDR.
 
+- <b>bool isUpdateFlag(void)</b><br>
+Returns true if the instruction updates flags. Mainly used for AArch64 instructions like ADDS.
+
 - <b>bool isThumb(void)</b><br>
 Returns true if the instruction is a Thumb instruction.
 
@@ -642,6 +645,18 @@ namespace triton {
       }
 
 
+      static PyObject* Instruction_isUpdateFlag(PyObject* self, PyObject* noarg) {
+        try {
+          if (PyInstruction_AsInstruction(self)->isUpdateFlag() == true)
+            Py_RETURN_TRUE;
+          Py_RETURN_FALSE;
+        }
+        catch (const triton::exceptions::Exception& e) {
+          return PyErr_Format(PyExc_TypeError, "%s", e.what());
+        }
+      }
+
+
       static PyObject* Instruction_isThumb(PyObject* self, PyObject* noarg) {
         try {
           if (PyInstruction_AsInstruction(self)->isThumb() == true)
@@ -747,6 +762,7 @@ namespace triton {
         {"isSymbolized",              Instruction_isSymbolized,             METH_NOARGS,     ""},
         {"isTainted",                 Instruction_isTainted,                METH_NOARGS,     ""},
         {"isWriteBack",               Instruction_isWriteBack,              METH_NOARGS,     ""},
+        {"isUpdateFlag",              Instruction_isUpdateFlag,             METH_NOARGS,     ""},
         {"isThumb",                   Instruction_isThumb,                  METH_NOARGS,     ""},
         {"setAddress",                Instruction_setAddress,               METH_O,          ""},
         {"setOpcode",                 Instruction_setOpcode,                METH_O,          ""},
