@@ -51,7 +51,7 @@ class CMakeBuild(build_ext):
 
         # Set platform-specific arguments.
         if platform.system() == "Linux":
-            cmake_args = [
+            cmake_args += [
                 '-DBITWUZLA_INTERFACE=Off',
             ]
             build_args += ['--', '-j4']
