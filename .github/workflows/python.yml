@@ -3,7 +3,7 @@ name: Build Python Package
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build-linux:
+  build-linux-z3:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -51,14 +51,74 @@ jobs:
           PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
-          CAPSTONE_INCLUDE_DIRS: /usr/include
-          CAPSTONE_LIBRARIES: /usr/lib/libcapstone.a
 
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-python-${{ matrix.python-version }}-linux_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp*-cp*-linux_x86_64.whl
+          name: triton_library-1.0.0-python-${{ matrix.python-version }}-z3-linux_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp*-cp*-z3-linux_x86_64.whl
+          if-no-files-found: warn
+
+  build-linux-z3-bitwuzla:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip version
+        run: |
+          python${{ matrix.python-version }} -m pip install -U pip
+      - name: Install build package
+        run: |
+          python${{ matrix.python-version }} -m pip install build
+      - name: Install dependencies
+        run: |
+          sudo apt-get install python-setuptools libgmp-dev
+      - name: Download Z3
+        run: |
+          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
+          unzip z3-4.8.17-x64-glibc-2.31.zip
+      - name: Install Capstone
+        run: |
+          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
+          tar -xf ./4.0.2.tar.gz
+          cd ./capstone-4.0.2
+          bash ./make.sh
+          sudo make install
+          cd ../
+      - name: Install Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./configure.sh production --only-cadical --no-symfpu --no-testing
+          sudo make -C build install
+          cd ..
+      - name: Build Triton Python package
+        run: python${{ matrix.python-version }} -m build --wheel
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          PYTHON_LIBRARIES: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
+          PYTHON_LIBRARY: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
+          PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
+          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+          BITWUZLA_INTERFACE: On
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-python-${{ matrix.python-version }}-z3-bitwuzla-linux_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp*-cp*-z3-bitwuzla-linux_x86_64.whl
           if-no-files-found: warn
 
   build-windows:
