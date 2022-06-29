@@ -1,0 +1,121 @@
+name: Build Python Package
+
+on: [push, pull_request, workflow_dispatch]
+
+jobs:
+  build-nix:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip version
+        run: |
+          python -m pip install -U pip
+
+      - name: Install build package
+        run: |
+          python -m pip install build
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get install python-setuptools
+
+      - name: Download Z3
+        run: |
+          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
+          unzip z3-4.8.17-x64-glibc-2.31.zip
+
+      - name: Install Capstone
+        run: |
+          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
+          tar -xf ./4.0.2.tar.gz
+          cd ./capstone-4.0.2
+          bash ./make.sh
+          sudo make install
+          cd ../
+
+      - name: Build Triton Python package
+        run: python -m build --wheel
+        env:
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
+          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+          CAPSTONE_INCLUDE_DIRS: /usr/include
+          CAPSTONE_LIBRARIES: /usr/lib/libcapstone.a
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-cp38-cp38-linux_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp38-cp38-linux_x86_64.whl
+          if-no-files-found: warn
+
+  build-win:
+    runs-on: windows-latest
+    strategy:
+      matrix:
+        python-version: [3.8]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Get CMake
+        uses: lukka/get-cmake@latest
+
+      - name: Setup Windows dev environment
+        uses: ilammy/msvc-dev-cmd@v1
+        with:
+          arch: 'x64'
+
+      - name: Upgrade pip version
+        run: |
+          python -m pip install -U pip
+
+      - name: Install build package
+        run: |
+          python -m pip install build
+
+      - name: Download and build Z3
+        run: |
+          wget -UseBasicParsing https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-win.zip -O z3-4.8.17-x64-win.zip
+          tar -xf z3-4.8.17-x64-win.zip
+          wget -UseBasicParsing https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.17.zip -O z3-4.8.17.zip
+          tar -xf z3-4.8.17.zip
+          cd z3-z3-4.8.17
+          python scripts\mk_make.py --x64 --staticlib
+          cd build
+          nmake
+        shell: powershell
+
+      - name: Download Capstone
+        run: |
+          wget -UseBasicParsing https://github.com/capstone-engine/capstone/releases/download/4.0.2/capstone-4.0.2-win64.zip -O capstone-4.0.2-win64.zip
+          tar -xf capstone-4.0.2-win64.zip
+        shell: powershell
+
+      - name: Build Triton Python package
+        run: |
+          python -c "import os; import sys; print(os.path.dirname(sys.executable))" >> $PYTHON_DIR
+          echo "$PYTHON_DIR\include" >> $PYTHON_INCLUDE_DIRS
+          echo "$PYTHON_DIR\libs\python38.lib" >> $PYTHON_LIBRARIES
+          python -m build --wheel
+        env:
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.8.17-x64-win\include
+          Z3_LIBRARIES: ${{ github.workspace }}\z3-z3-4.8.17\build\libz3-static.lib
+          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-4.0.2-win64\include
+          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-4.0.2-win64\capstone.lib
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-cp39-cp39-win_amd64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp39-cp39-win_amd64.whl
+          if-no-files-found: warn
