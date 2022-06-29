@@ -83,6 +83,12 @@ class CMakeBuild(build_ext):
         if os.getenv('PYTHON_INCLUDE_DIRS'):
             cmake_args += ['-DPYTHON_INCLUDE_DIRS=' + os.getenv('PYTHON_INCLUDE_DIRS')]
 
+        if os.getenv('PYTHON_LIBRARY'):
+            cmake_args += ['-DPYTHON_LIBRARY=' + os.getenv('PYTHON_LIBRARY')]
+
+        if os.getenv('PYTHON_VERSION'):
+            cmake_args += ['-DPYTHON_VERSION=' + os.getenv('PYTHON_VERSION')]
+
         # Custom Z3 paths.
         if os.getenv('Z3_LIBRARIES'):
             cmake_args += ['-DZ3_LIBRARIES=' + os.getenv('Z3_LIBRARIES')]

@@ -3,11 +3,11 @@ name: Build Python Package
 on: [push, pull_request, workflow_dispatch]
 
 jobs:
-  build-nix:
+  build-linux:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.8]
+        python-version: ['3.8', '3.9', '3.10']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -19,21 +19,17 @@ jobs:
 
       - name: Upgrade pip version
         run: |
-          python -m pip install -U pip
-
+          python${{ matrix.python-version }} -m pip install -U pip
       - name: Install build package
         run: |
-          python -m pip install build
-
+          python${{ matrix.python-version }} -m pip install build
       - name: Install dependencies
         run: |
           sudo apt-get install python-setuptools
-
       - name: Download Z3
         run: |
           wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
           unzip z3-4.8.17-x64-glibc-2.31.zip
-
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -42,10 +38,17 @@ jobs:
           bash ./make.sh
           sudo make install
           cd ../
-
+      - name: Listing Python
+        run: |
+          echo ls -l /opt/hostedtoolcache/Python/${{ matrix.python-version }}.*/x64/lib
+          ls -l /opt/hostedtoolcache/Python/${{ matrix.python-version }}.*/x64/include
       - name: Build Triton Python package
-        run: python -m build --wheel
+        run: python${{ matrix.python-version }} -m build --wheel
         env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          PYTHON_LIBRARIES: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
+          PYTHON_LIBRARY: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
+          PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
           CAPSTONE_INCLUDE_DIRS: /usr/include
@@ -54,11 +57,11 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-cp38-cp38-linux_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp38-cp38-linux_x86_64.whl
+          name: triton_library-1.0.0-python-${{ matrix.python-version }}-linux_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-cp*-cp*-linux_x86_64.whl
           if-no-files-found: warn
 
-  build-win:
+  build-windows:
     runs-on: windows-latest
     strategy:
       matrix:
