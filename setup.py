@@ -24,10 +24,12 @@ class CMakeExtension(Extension):
 
 
 class CMakeBuild(build_ext):
+
     def run(self):
         ext = self.extensions[0]
         self.build_extension(ext)
         self.copy_extension_to_source(ext)
+
 
     def build_extension(self, ext):
         ext_dir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
@@ -38,11 +40,21 @@ class CMakeBuild(build_ext):
             #'-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + ext_dir,
             '-DPYTHON_EXECUTABLE=' + sys.executable,
             '-DCMAKE_BUILD_TYPE=Release',
-            # Common arguments.
-            '-DZ3_INTERFACE=On',
-            '-DBOOST_INTERFACE=Off',
-            '-DLLVM_INTERFACE=Off',
         ]
+
+        # Interfaces can be defined using environment variables.
+        # Interfaces by default:
+        #
+        #   - Z3_INTERFACE=On
+        #   - LLVM_INTERFACE=Off
+        #   - BITWUZLA_INTERFACE=Off
+        #   - BOOST_INTERFACE=Off
+        #
+        for arg, value in [('Z3_INTERFACE', 'On'), ('LLVM_INTERFACE', 'Off'), ('BITWUZLA_INTERFACE', 'Off'), ('BOOST_INTERFACE', 'Off')]:
+            if os.getenv(arg):
+                cmake_args += [f'-D{arg}=' + os.getenv(arg)]
+            else:
+                cmake_args += [f'-D{arg}={value}']
 
         build_args = []
 
