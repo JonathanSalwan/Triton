@@ -1,3 +1,9 @@
+##
+##  Copyright (C) - Triton
+##
+##  This program is under the terms of the Apache License 2.0.
+##
+
 import os
 import platform
 import re
@@ -119,16 +125,18 @@ with open("README.md", "r") as f:
 setup(
     name="triton-library",
     version="1.0.0",
-    author="Jonathan Salwan",
-    author_email="jonathan.salwan@gmail.com",
+    author="The Triton's community",
+    author_email="tritonlibrary@gmail.com",
     description="Triton is a dynamic binary analysis library",
     long_description=long_description,
     long_description_content_type="text/markdown",
     license = "Apache License Version 2.0",
     license_files = ('LICENSE.txt',),
     classifiers=[
+        "Programming Language :: C++",
         "Programming Language :: Python :: 3",
-        "Operating System :: POSIX :: Linux"
+        "Topic :: Security",
+        "Topic :: Software Development :: Libraries",
     ],
     python_requires='>=3.6',
     project_urls={
