@@ -63,7 +63,10 @@ class CMakeBuild(build_ext):
 
         # Set platform-specific arguments.
         if platform.system() == "Linux":
-            build_args += ['--', '-j4', '-fPIC']
+            cmake_args += [
+                '-DCMAKE_POSITION_INDEPENDENT_CODE=On',
+            ]
+            build_args += ['--', '-j4']
         elif platform.system() == "Windows":
             cmake_args += [
                 '-G Visual Studio 17 2022',
