@@ -36,6 +36,31 @@ jobs:
         run: |
           sudo apt-get install python-setuptools
 
+      - name: Download and build GMP
+        run: |
+          wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+          tar xvf gmp-6.2.1.tar.xz
+          cd gmp-6.2.1/
+          ./configure --with-pic
+          make
+          make check
+
+      - name: Download and build Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla.git
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./contrib/setup-symfpu.sh
+          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+          cd build
+          make
+          cd lib
+          ar cqT libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a && echo -e 'create libbitwuzlam.a\naddlib libbitwuzlam.a\nsave\nend' | ar -M
+          mv libbitwuzlam.a libbitwuzla.a
+          cd ..
+          make install
+
       - name: Download Z3
         run: |
           wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
@@ -59,6 +84,9 @@ jobs:
           PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+          BITWUZLA_INTERFACE: On
+          BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
+          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
 
       - name: Upload
         uses: actions/upload-artifact@v3
