@@ -32,12 +32,9 @@ class CMakeBuild(build_ext):
 
 
     def build_extension(self, ext):
-        ext_dir = os.path.abspath(os.path.dirname(self.get_ext_fullpath(ext.name)))
-
         # Set platform-agnostric arguments.
         cmake_args = [
             # General arguments.
-            #'-DCMAKE_LIBRARY_OUTPUT_DIRECTORY=' + ext_dir,
             '-DPYTHON_EXECUTABLE=' + sys.executable,
             '-DCMAKE_BUILD_TYPE=Release',
         ]
@@ -45,10 +42,10 @@ class CMakeBuild(build_ext):
         # Interfaces can be defined using environment variables.
         # Interfaces by default:
         #
-        #   - Z3_INTERFACE=On
-        #   - LLVM_INTERFACE=Off
-        #   - BITWUZLA_INTERFACE=Off
-        #   - BOOST_INTERFACE=Off
+        #   Z3_INTERFACE=On
+        #   LLVM_INTERFACE=Off
+        #   BITWUZLA_INTERFACE=Off
+        #   BOOST_INTERFACE=Off
         #
         for arg, value in [('Z3_INTERFACE', 'On'), ('LLVM_INTERFACE', 'Off'), ('BITWUZLA_INTERFACE', 'Off'), ('BOOST_INTERFACE', 'Off')]:
             if os.getenv(arg):
@@ -63,15 +60,14 @@ class CMakeBuild(build_ext):
 
         # Set platform-specific arguments.
         if platform.system() == "Linux":
-            cmake_args += [
-                '-DCMAKE_POSITION_INDEPENDENT_CODE=On',
-            ]
             build_args += ['--', '-j4']
+
         elif platform.system() == "Windows":
             cmake_args += [
                 '-G Visual Studio 17 2022',
             ]
             build_args += ['--', '/m:4']
+
         else:
             raise Exception(f'Platform not supported: {platform.system()}')
 
