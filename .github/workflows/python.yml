@@ -71,12 +71,15 @@ jobs:
           - python-version: 3.8
             pycp: cp38-cp38
             pylib: python38.lib
+            pypath: C:/hostedtoolcache/windows/Python/3.8/x64/
           - python-version: 3.9
             pycp: cp39-cp39
             pylib: python39.lib
+            pypath: C:/hostedtoolcache/windows/Python/3.9/x64/
           - python-version: 3.10
             pycp: cp310-cp310
             pylib: python310.lib
+            pypath: C:/hostedtoolcache/windows/Python/3.10/x64/
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -116,12 +119,12 @@ jobs:
         shell: powershell
 
       - name: Build Triton Python package
-        run: |
-          python -c "import os; import sys; print(os.path.dirname(sys.executable))" >> $PYTHON_DIR
-          echo "$PYTHON_DIR\include" >> $PYTHON_INCLUDE_DIRS
-          echo "$PYTHON_DIR\libs\${{ matrix.pylib }}" >> $PYTHON_LIBRARIES
-          python -m build --wheel
+        run: python -m build --wheel
         env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          PYTHON_INCLUDE_DIRS: ${{ matrix.pypath }}\include
+          PYTHON_LIBRARIES: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
+          PYTHON_LIBRARY: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.8.17-x64-win\include
           Z3_LIBRARIES: ${{ github.workspace }}\z3-z3-4.8.17\build\libz3-static.lib
           CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-4.0.2-win64\include
