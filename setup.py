@@ -126,7 +126,7 @@ class CMakeBuild(build_ext):
             src_filename = os.path.join(self.build_temp + '/src/libtriton', 'triton.so')
             dst_filename = os.path.join(self.build_lib, os.path.basename(filename))
         elif platform.system() == "Darwin":
-            src_filename = os.path.join(self.build_temp + '/src/libtriton', 'triton.dylib')
+            src_filename = os.path.join(self.build_temp + '/src/libtriton', 'libtriton.dylib')
             dst_filename = os.path.join(self.build_lib, os.path.basename(filename))
         elif platform.system() == "Windows":
             src_filename = os.path.join(self.build_temp + '\\src\\libtriton\\Release', 'triton.pyd')
