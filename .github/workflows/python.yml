@@ -151,11 +151,11 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
         include:
           - python-version: 3.8
-            pycp: cp38-cp38
+            pywhl: triton_library-1.0.0-cp38-cp38-macosx_11_0_x86_64.whl
           - python-version: 3.9
-            pycp: cp39-cp39
+            pywhl: triton_library-1.0.0-cp39-cp39-macosx_11_0_x86_64.whl
           - python-version: 3.10
-            pycp: cp310-cp310
+            pywhl: triton_library-1.0.0-cp310-cp310-macosx_11_0_universal2.whl
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -200,6 +200,6 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-${{ matrix.pycp }}-macosx_11_0_universal2.whl
-          path: ${{ github.workspace }}/dist/triton_library-1.0.0-${{ matrix.pycp }}-macosx_11_0_universal2.whl
+          name: ${{ matrix.pywhl }}
+          path: ${{ github.workspace }}/dist/${{ matrix.pywhl }}
           if-no-files-found: warn
