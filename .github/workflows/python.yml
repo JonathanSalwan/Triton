@@ -12,7 +12,7 @@ jobs:
           - python-version: 3.8
             pycp: cp38-cp38
           - python-version: 3.9
-            pycp: cp38-cp38
+            pycp: cp39-cp39
           - python-version: 3.10
             pycp: cp310-cp310
     steps:
@@ -66,14 +66,17 @@ jobs:
     runs-on: windows-latest
     strategy:
       matrix:
-        python-version: [3.8, 3.9]
+        python-version: ['3.8', '3.9', '3.10']
         include:
           - python-version: 3.8
             pycp: cp38-cp38
             pylib: python38.lib
           - python-version: 3.9
-            pycp: cp38-cp38
+            pycp: cp39-cp39
             pylib: python39.lib
+          - python-version: 3.10
+            pycp: cp310-cp310
+            pylib: python310.lib
     steps:
       - name: Checkout
         uses: actions/checkout@v3
