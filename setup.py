@@ -62,6 +62,9 @@ class CMakeBuild(build_ext):
         if platform.system() == "Linux":
             build_args += ['--', '-j4']
 
+        elif platform.system() == "Darwin":
+            build_args += ['--', '-j4']
+
         elif platform.system() == "Windows":
             cmake_args += [
                 '-G Visual Studio 17 2022',

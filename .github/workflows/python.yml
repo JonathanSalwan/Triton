@@ -181,11 +181,6 @@ jobs:
           wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-osx-10.16.zip
           unzip z3-4.8.17-x64-osx-10.16.zip
 
-      - name: Install Z3
-        run: |
-          brew install z3
-          sudo python -m pip install z3-solver
-
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
