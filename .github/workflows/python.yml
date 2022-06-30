@@ -71,15 +71,15 @@ jobs:
           - python-version: 3.8
             pycp: cp38-cp38
             pylib: python38.lib
-            pypath: C:/hostedtoolcache/windows/Python/3.8/x64/
+            pypath: C:/hostedtoolcache/windows/Python/3.8.10/x64/
           - python-version: 3.9
             pycp: cp39-cp39
             pylib: python39.lib
-            pypath: C:/hostedtoolcache/windows/Python/3.9/x64/
+            pypath: C:/hostedtoolcache/windows/Python/3.9.13/x64/
           - python-version: 3.10
             pycp: cp310-cp310
             pylib: python310.lib
-            pypath: C:/hostedtoolcache/windows/Python/3.10/x64/
+            pypath: C:/hostedtoolcache/windows/Python/3.10.5/x64/
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -121,7 +121,7 @@ jobs:
       - name: Build Triton Python package
         run: python -m build --wheel
         env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
+          #PYTHON_VERSION: ${{ matrix.python-version }}
           PYTHON_INCLUDE_DIRS: ${{ matrix.pypath }}\include
           PYTHON_LIBRARIES: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
           PYTHON_LIBRARY: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
