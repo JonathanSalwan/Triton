@@ -121,7 +121,7 @@ jobs:
       - name: Build Triton Python package
         run: python -m build --wheel
         env:
-          #PYTHON_VERSION: ${{ matrix.python-version }}
+          PYTHON_VERSION: ${{ matrix.python-version }}
           PYTHON_INCLUDE_DIRS: ${{ matrix.pypath }}\include
           PYTHON_LIBRARIES: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
           PYTHON_LIBRARY: ${{ matrix.pypath }}\libs\${{ matrix.pylib }}
