@@ -27,16 +27,20 @@ jobs:
       - name: Upgrade pip version
         run: |
           python${{ matrix.python-version }} -m pip install -U pip
+
       - name: Install build package
         run: |
           python${{ matrix.python-version }} -m pip install build
+
       - name: Install dependencies
         run: |
           sudo apt-get install python-setuptools
+
       - name: Download Z3
         run: |
           wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
           unzip z3-4.8.17-x64-glibc-2.31.zip
+
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -45,6 +49,7 @@ jobs:
           bash ./make.sh
           sudo make install
           cd ../
+
       - name: Build Triton Python package
         run: python${{ matrix.python-version }} -m build --wheel
         env:
@@ -140,4 +145,66 @@ jobs:
         with:
           name: triton_library-1.0.0-${{ matrix.pycp }}-win_amd64.whl
           path: ${{ github.workspace }}/dist/triton_library-1.0.0-${{ matrix.pycp }}-win_amd64.whl
+          if-no-files-found: warn
+
+  build-macos:
+    runs-on: macos-latest
+    strategy:
+      matrix:
+        python-version: ['3.8', '3.9', '3.10']
+        include:
+          - python-version: 3.8
+            pycp: cp38-cp38
+          - python-version: 3.9
+            pycp: cp39-cp39
+          - python-version: 3.10
+            pycp: cp310-cp310
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Upgrade pip version
+        run: |
+          sudo python -m pip install -U pip
+
+      - name: Install build package
+        run: |
+          sudo python -m pip install build
+
+      - name: Download Z3
+        run: |
+          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-osx-10.16.zip
+          unzip z3-4.8.17-x64-osx-10.16.zip
+
+      - name: Install Z3
+        run: |
+          brew install z3
+          sudo python -m pip install z3-solver
+
+      - name: Install Capstone
+        run: |
+          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
+          tar -xf ./4.0.2.tar.gz
+          cd ./capstone-4.0.2
+          bash ./make.sh
+          sudo make install
+          cd ../
+
+      - name: Build Triton Python package
+        run: python -m build --wheel
+        env:
+          PYTHON_VERSION: ${{ matrix.python-version }}
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include
+          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a
+
+      - name: Upload
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-${{ matrix.pycp }}-macos_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-1.0.0-${{ matrix.pycp }}-macos_x86_64.whl
           if-no-files-found: warn
