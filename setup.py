@@ -108,6 +108,13 @@ class CMakeBuild(build_ext):
         if os.getenv('CAPSTONE_INCLUDE_DIRS'):
             cmake_args += ['-DCAPSTONE_INCLUDE_DIRS=' + os.getenv('CAPSTONE_INCLUDE_DIRS')]
 
+        # Custom LLVM paths.
+        if os.getenv('LLVM_LIBRARIES'):
+            cmake_args += ['-DLLVM_LIBRARIES=' + os.getenv('LLVM_LIBRARIES')]
+
+        if os.getenv('LLVM_INCLUDE_DIRS'):
+            cmake_args += ['-DLLVM_INCLUDE_DIRS=' + os.getenv('LLVM_INCLUDE_DIRS')]
+
         # Create temp and lib folders.
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
