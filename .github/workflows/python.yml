@@ -90,6 +90,8 @@ jobs:
           PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
+          CAPSTONE_INCLUDE_DIRS: /usr/include
+          CAPSTONE_LIBRARIES: /usr/lib/libcapstone.a
           BITWUZLA_INTERFACE: On
           BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
           BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
@@ -247,6 +249,8 @@ jobs:
           PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a
+          CAPSTONE_INCLUDE_DIRS: /usr/local/include
+          CAPSTONE_LIBRARIES: /usr/local/lib/libcapstone.a
           LLVM_INTERFACE: On
           CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
 
