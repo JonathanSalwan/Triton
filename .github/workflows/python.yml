@@ -24,6 +24,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
+          directory: ${{ runner.temp }}/llvm
+
       - name: Upgrade pip version
         run: |
           python${{ matrix.python-version }} -m pip install -U pip
@@ -87,6 +93,8 @@ jobs:
           BITWUZLA_INTERFACE: On
           BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
           BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
+          LLVM_INTERFACE: On
+          CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
 
       - name: Upload
         uses: actions/upload-artifact@v3
@@ -193,6 +201,12 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
 
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
+          directory: ${{ runner.temp }}/llvm
+
       - name: Upgrade pip version
         run: |
           sudo python -m pip install -U pip
@@ -224,6 +238,8 @@ jobs:
           PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
           Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include
           Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a
+          LLVM_INTERFACE: On
+          CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
 
       - name: Upload
         uses: actions/upload-artifact@v3
