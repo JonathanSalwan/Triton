@@ -5,8 +5,8 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#ifndef TRITON_API_H
-#define TRITON_API_H
+#ifndef TRITON_CONTEXT_H
+#define TRITON_CONTEXT_H
 
 #include <triton/architecture.hpp>
 #include <triton/ast.hpp>
@@ -40,9 +40,9 @@ namespace triton {
  *  @{
  */
 
-    /*! \class API
-     *  \brief This is used as C++ API. */
-    class API {
+    /*! \class Context
+     *  \brief This is the main Triton Context class. */
+    class Context {
       private:
         //! Raises an exception if the architecture is not initialized.
         inline void checkArchitecture(void) const;
@@ -96,14 +96,14 @@ namespace triton {
         //! A shortcut to access to a Register class from a register name.
         triton::arch::ShortcutRegister registers;
 
-        //! Constructor of the API.
-        TRITON_EXPORT API();
+        //! Constructor of the Context.
+        TRITON_EXPORT Context();
 
-        //! Constructor of the API.
-        TRITON_EXPORT API(triton::arch::architecture_e arch);
+        //! Constructor of the Context.
+        TRITON_EXPORT Context(triton::arch::architecture_e arch);
 
-        //! Destructor of the API.
-        TRITON_EXPORT ~API();
+        //! Destructor of the Context.
+        TRITON_EXPORT ~Context();
 
 
 
@@ -701,4 +701,4 @@ namespace triton {
 /*! @} End of triton namespace */
 };
 
-#endif /* TRITON_API_H */
+#endif /* TRITON_CONTEXT_H */

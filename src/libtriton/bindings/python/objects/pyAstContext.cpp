@@ -1906,8 +1906,8 @@ namespace triton {
       };
 
 
-      PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt) {
-        if (ctxt == nullptr) {
+      PyObject* PyAstContext(const triton::ast::SharedAstContext& actx) {
+        if (actx == nullptr) {
           Py_INCREF(Py_None);
           return Py_None;
         }
@@ -1915,7 +1915,7 @@ namespace triton {
         PyType_Ready(&AstContext_Type);
         auto* object = (triton::bindings::python::AstContext_Object*)PyObject_CallObject((PyObject*)&AstContext_Type, nullptr);
         if (object != NULL) {
-          object->ctxt = ctxt;
+          object->actx = actx;
         }
 
         return (PyObject*)object;

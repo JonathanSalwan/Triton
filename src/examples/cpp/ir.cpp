@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/x86Specifications.hpp>
 
 using namespace triton;
@@ -34,10 +34,10 @@ struct op trace[] = {
 
 int main(int ac, const char **av) {
   /* Init the triton context */
-  triton::API api;
+  triton::Context ctx;
 
   /* Set the arch */
-  api.setArchitecture(ARCH_X86_64);
+  ctx.setArchitecture(ARCH_X86_64);
 
   for (unsigned int i = 0; trace[i].inst; i++) {
     /* Build an instruction */
@@ -50,7 +50,7 @@ int main(int ac, const char **av) {
     inst.setAddress(trace[i].addr);
 
     /* Process everything */
-    api.processing(inst);
+    ctx.processing(inst);
 
     std::cout << inst << std::endl;
     for (unsigned int op_index = 0; op_index != inst.operands.size(); op_index++) {

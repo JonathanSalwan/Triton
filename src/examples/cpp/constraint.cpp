@@ -12,7 +12,7 @@
 
 
 #include <iostream>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/ast.hpp>
 #include <triton/x86Specifications.hpp>
 
@@ -34,10 +34,10 @@ struct op trace[] = {
 
 
 int main(int ac, const char **av) {
+  triton::Context ctx;
 
-  triton::API api;
   /* Set the arch */
-  api.setArchitecture(ARCH_X86_64);
+  ctx.setArchitecture(ARCH_X86_64);
 
   /* Build an instruction */
   Instruction inst;
@@ -46,13 +46,13 @@ int main(int ac, const char **av) {
   inst.setOpcode(trace[0].inst, trace[0].size);
 
   /* Define RAX as symbolic variable */
-  api.symbolizeRegister(api.registers.x86_rax);
+  ctx.symbolizeRegister(ctx.registers.x86_rax);
 
   /* Process everything */
-  api.processing(inst);
+  ctx.processing(inst);
 
   /* Get the RAX symbolic ID */
-  auto raxSym = api.getSymbolicRegister(api.registers.x86_rax);
+  auto raxSym = ctx.getSymbolicRegister(ctx.registers.x86_rax);
 
   /* Get the RAX full AST */
   auto raxFullAst = triton::ast::unroll(raxSym->getAst());
@@ -61,7 +61,7 @@ int main(int ac, const char **av) {
   std::cout << "RAX expr: " << raxFullAst << std::endl;
 
   /* Get the context to create and ast constraint*/
-  auto ast = api.getAstContext();
+  auto ast = ctx.getAstContext();
 
   /* Modify RAX's AST to build the constraint */
   auto constraint = ast->equal(raxFullAst, ast->bv(0, raxFullAst->getBitvectorSize()));
@@ -70,7 +70,7 @@ int main(int ac, const char **av) {
   std::cout << "constraint: " << constraint << std::endl;
 
   /* Ask a model */
-  auto model = api.getModel(constraint);
+  auto model = ctx.getModel(constraint);
 
   /* Display all symbolic variable value contained in the model */
   std::cout << "Model:" << std::endl;

@@ -15,7 +15,7 @@
 
 #include <iostream>
 #include <triton/x86Specifications.hpp>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 
 using namespace triton;
 using namespace triton::arch;
@@ -23,24 +23,24 @@ using namespace triton::arch::x86;
 
 
 int main(int ac, const char **av) {
-  triton::API api;
+  triton::Context ctx;
 
   /* Set the arch */
-  api.setArchitecture(ARCH_X86_64);
+  ctx.setArchitecture(ARCH_X86_64);
 
-  std::cout << "Name        : " << api.registers.x86_ah.getName() << std::endl;
-  std::cout << "Size byte   : " << api.registers.x86_ah.getSize() << std::endl;
-  std::cout << "Size bit    : " << api.registers.x86_ah.getBitSize() << std::endl;
-  std::cout << "Higher bit  : " << api.registers.x86_ah.getHigh() << std::endl;
-  std::cout << "Lower  bit  : " << api.registers.x86_ah.getLow() << std::endl;
-  std::cout << "Parent      : " << api.getParentRegister(ID_REG_X86_AH).getName() << std::endl;
-  std::cout << "operator<<  : " << api.getRegister(ID_REG_X86_AH) << std::endl;
-  std::cout << "Object      : " << api.getRegister("ah") << std::endl;
-  std::cout << "Object      : " << api.getRegister("AH") << std::endl;
+  std::cout << "Name        : " << ctx.registers.x86_ah.getName() << std::endl;
+  std::cout << "Size byte   : " << ctx.registers.x86_ah.getSize() << std::endl;
+  std::cout << "Size bit    : " << ctx.registers.x86_ah.getBitSize() << std::endl;
+  std::cout << "Higher bit  : " << ctx.registers.x86_ah.getHigh() << std::endl;
+  std::cout << "Lower  bit  : " << ctx.registers.x86_ah.getLow() << std::endl;
+  std::cout << "Parent      : " << ctx.getParentRegister(ID_REG_X86_AH).getName() << std::endl;
+  std::cout << "operator<<  : " << ctx.getRegister(ID_REG_X86_AH) << std::endl;
+  std::cout << "Object      : " << ctx.getRegister("ah") << std::endl;
+  std::cout << "Object      : " << ctx.getRegister("AH") << std::endl;
 
   std::cout << "----------------------------" << std::endl;
 
-  for(const auto& kv: api.getAllRegisters())
+  for(const auto& kv: ctx.getAllRegisters())
     std::cout << kv.second << std::endl;
 
   return 0;

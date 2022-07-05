@@ -6,7 +6,7 @@
 
 #include <triton/aarch64Cpu.hpp>
 #include <triton/aarch64Specifications.hpp>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/bitsVector.hpp>
 #include <triton/config.hpp>
 #include <triton/exceptions.hpp>
@@ -31,30 +31,30 @@ int test_1(void) {
   triton::arch::x86::x8664Cpu*  cpy2;
   triton::arch::x86::x8664Cpu*  cpy3;
   triton::arch::x86::x8664Cpu   cpu;
-  triton::API                   api;
+  triton::Context               ctx;
 
-  api.setArchitecture(triton::arch::ARCH_X86_64);
-  api.setConcreteRegisterValue(api.registers.x86_rax, 12345);
+  ctx.setArchitecture(triton::arch::ARCH_X86_64);
+  ctx.setConcreteRegisterValue(ctx.registers.x86_rax, 12345);
 
-  if (api.getConcreteRegisterValue(api.registers.x86_rax) != 12345)
+  if (ctx.getConcreteRegisterValue(ctx.registers.x86_rax) != 12345)
     return 1;
 
-  cpy1 = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance());
-  if (cpy1.getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
-    std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+  cpy1 = *reinterpret_cast<triton::arch::x86::x8664Cpu*>(ctx.getCpuInstance());
+  if (cpy1.getConcreteRegisterValue(ctx.registers.x86_rax) != 12345) {
+    std::cerr << "test_1: KO (cpy context != ctx context)" << std::endl;
     return 1;
   }
 
-  cpy2 = new triton::arch::x86::x8664Cpu(*reinterpret_cast<triton::arch::x86::x8664Cpu*>(api.getCpuInstance()));
-  if (cpy2->getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
-    std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+  cpy2 = new triton::arch::x86::x8664Cpu(*reinterpret_cast<triton::arch::x86::x8664Cpu*>(ctx.getCpuInstance()));
+  if (cpy2->getConcreteRegisterValue(ctx.registers.x86_rax) != 12345) {
+    std::cerr << "test_1: KO (cpy context != ctx context)" << std::endl;
     return 1;
   }
 
   cpy3 = new triton::arch::x86::x8664Cpu();
   *cpy3 = *cpy2;
-  if (cpy3->getConcreteRegisterValue(api.registers.x86_rax) != 12345) {
-    std::cerr << "test_1: KO (cpy context != api context)" << std::endl;
+  if (cpy3->getConcreteRegisterValue(ctx.registers.x86_rax) != 12345) {
+    std::cerr << "test_1: KO (cpy context != ctx context)" << std::endl;
     return 1;
   }
 
@@ -72,17 +72,17 @@ int test_1(void) {
 
 int test_2(void) {
   triton::arch::x86::x86Cpu   cpy;
-  triton::API                 api;
+  triton::Context             ctx;
 
-  api.setArchitecture(triton::arch::ARCH_X86);
-  api.setConcreteRegisterValue(api.registers.x86_eax, 12345);
+  ctx.setArchitecture(triton::arch::ARCH_X86);
+  ctx.setConcreteRegisterValue(ctx.registers.x86_eax, 12345);
 
-  if (api.getConcreteRegisterValue(api.registers.x86_eax) != 12345)
+  if (ctx.getConcreteRegisterValue(ctx.registers.x86_eax) != 12345)
     return 1;
 
-  cpy = *reinterpret_cast<triton::arch::x86::x86Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.registers.x86_eax) != 12345) {
-    std::cerr << "test_2: KO (cpy context != api context)" << std::endl;
+  cpy = *reinterpret_cast<triton::arch::x86::x86Cpu*>(ctx.getCpuInstance());
+  if (cpy.getConcreteRegisterValue(ctx.registers.x86_eax) != 12345) {
+    std::cerr << "test_2: KO (cpy context != ctx context)" << std::endl;
     return 1;
   }
 
@@ -240,7 +240,7 @@ int test_5(void) {
 
 
 int test_6(void) {
-  triton::API ctx;
+  triton::Context ctx;
 
   ctx.setArchitecture(triton::arch::ARCH_X86_64);
   triton::arch::Instruction inst1((const unsigned char*)"\x48\x89\xd8", 3); // mov rax, rbx
@@ -343,7 +343,7 @@ int test_6(void) {
 
 
 int test_7(void) {
-  triton::API ctx;
+  triton::Context ctx;
 
   ctx.setArchitecture(triton::arch::ARCH_X86);
 
@@ -452,17 +452,17 @@ int test_7(void) {
 
 int test_8(void) {
   triton::arch::arm::aarch64::AArch64Cpu cpy;
-  triton::API api;
+  triton::Context ctx;
 
-  api.setArchitecture(triton::arch::ARCH_AARCH64);
-  api.setConcreteRegisterValue(api.registers.aarch64_x0, 12345);
+  ctx.setArchitecture(triton::arch::ARCH_AARCH64);
+  ctx.setConcreteRegisterValue(ctx.registers.aarch64_x0, 12345);
 
-  if (api.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345)
+  if (ctx.getConcreteRegisterValue(ctx.registers.aarch64_x0) != 12345)
     return 1;
 
-  cpy = *reinterpret_cast<triton::arch::arm::aarch64::AArch64Cpu*>(api.getCpuInstance());
-  if (cpy.getConcreteRegisterValue(api.registers.aarch64_x0) != 12345) {
-    std::cerr << "test_8: KO (cpy context != api context)" << std::endl;
+  cpy = *reinterpret_cast<triton::arch::arm::aarch64::AArch64Cpu*>(ctx.getCpuInstance());
+  if (cpy.getConcreteRegisterValue(ctx.registers.aarch64_x0) != 12345) {
+    std::cerr << "test_8: KO (cpy context != ctx context)" << std::endl;
     return 1;
   }
 
@@ -472,23 +472,23 @@ int test_8(void) {
 
 
 int test_9(void) {
-  triton::API api;
+  triton::Context ctx;
 
-  api.setArchitecture(triton::arch::ARCH_X86_64);
+  ctx.setArchitecture(triton::arch::ARCH_X86_64);
 
   triton::engines::symbolic::PathConstraint pco;
-  auto node = api.getAstContext()->equal(api.getAstContext()->bvtrue(), api.getAstContext()->bvtrue());
+  auto node = ctx.getAstContext()->equal(ctx.getAstContext()->bvtrue(), ctx.getAstContext()->bvtrue());
   pco.addBranchConstraint(false, 0x123, 0x100, node);
   pco.addBranchConstraint(true,  0x123, 0x200, node);
   pco.addBranchConstraint(false, 0x123, 0x300, node);
-  api.pushPathConstraint(pco);
+  ctx.pushPathConstraint(pco);
 
-  if (api.getPathConstraints().size() != 1) {
+  if (ctx.getPathConstraints().size() != 1) {
     std::cerr << "test_9: KO (pathConstraints size != 1)" << std::endl;
     return 1;
   }
 
-  auto branches = api.getPathConstraints().at(0).getBranchConstraints();
+  auto branches = ctx.getPathConstraints().at(0).getBranchConstraints();
   if (branches.size() != 3) {
     std::cerr << "test_9: KO (branches size != 3)" << std::endl;
     return 1;
@@ -525,7 +525,7 @@ int test_9(void) {
 
 
 #ifdef TRITON_LLVM_INTERFACE
-bool smt_proof(triton::API& ctx, const triton::ast::SharedAbstractNode& node1, const triton::ast::SharedAbstractNode& node2) {
+bool smt_proof(triton::Context& ctx, const triton::ast::SharedAbstractNode& node1, const triton::ast::SharedAbstractNode& node2) {
   auto actx = ctx.getAstContext();
   if (ctx.isSat(actx->distinct(node1, node2)) == false)
     return true;
@@ -534,7 +534,7 @@ bool smt_proof(triton::API& ctx, const triton::ast::SharedAbstractNode& node1, c
 
 
 int test_10(void) {
-  triton::API ctx(triton::arch::ARCH_X86_64);
+  triton::Context ctx(triton::arch::ARCH_X86_64);
   auto actx = ctx.getAstContext();
   auto varx = ctx.newSymbolicVariable(8, "x");
 

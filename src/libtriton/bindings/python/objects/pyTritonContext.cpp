@@ -8,8 +8,8 @@
 #include <triton/pythonObjects.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
-#include <triton/api.hpp>
 #include <triton/arm32Cpu.hpp>
+#include <triton/context.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/register.hpp>
 
@@ -515,7 +515,7 @@ namespace triton {
           switch (static_cast<triton::callbacks::callback_e>(PyLong_AsUint32(mode))) {
 
             case callbacks::GET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cb_self, cb](triton::API& api, const triton::arch::MemoryAccess& mem) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_MEMORY_VALUE, callbacks::getConcreteMemoryValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::MemoryAccess& mem) {
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -523,13 +523,13 @@ namespace triton {
                 if (cb_self) {
                   args = triton::bindings::python::xPyTuple_New(3);
                   PyTuple_SetItem(args, 0, cb_self);
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
                   Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyMemoryAccess(mem));
                 }
 
@@ -547,7 +547,7 @@ namespace triton {
               break;
 
             case callbacks::GET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_REGISTER_VALUE, callbacks::getConcreteRegisterValueCallback([cb_self, cb](triton::API& api, const triton::arch::Register& reg){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::GET_CONCRETE_REGISTER_VALUE, callbacks::getConcreteRegisterValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::Register& reg){
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -555,13 +555,13 @@ namespace triton {
                 if (cb_self) {
                   args = triton::bindings::python::xPyTuple_New(3);
                   PyTuple_SetItem(args, 0, cb_self);
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
                   Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(reg));
                 }
 
@@ -579,7 +579,7 @@ namespace triton {
               break;
 
             case callbacks::SET_CONCRETE_MEMORY_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_MEMORY_VALUE, callbacks::setConcreteMemoryValueCallback([cb_self, cb](triton::API& api, const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_MEMORY_VALUE, callbacks::setConcreteMemoryValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -587,14 +587,14 @@ namespace triton {
                 if (cb_self) {
                   args = triton::bindings::python::xPyTuple_New(4);
                   PyTuple_SetItem(args, 0, cb_self);
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyMemoryAccess(mem));
                   PyTuple_SetItem(args, 3, triton::bindings::python::PyLong_FromUint512(value));
                   Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(3);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyMemoryAccess(mem));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyLong_FromUint512(value));
                 }
@@ -613,7 +613,7 @@ namespace triton {
               break;
 
             case callbacks::SET_CONCRETE_REGISTER_VALUE:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_REGISTER_VALUE, callbacks::setConcreteRegisterValueCallback([cb_self, cb](triton::API& api, const triton::arch::Register& reg, const triton::uint512& value){
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SET_CONCRETE_REGISTER_VALUE, callbacks::setConcreteRegisterValueCallback([cb_self, cb](triton::Context& ctx, const triton::arch::Register& reg, const triton::uint512& value){
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -621,14 +621,14 @@ namespace triton {
                 if (cb_self) {
                   args = triton::bindings::python::xPyTuple_New(4);
                   PyTuple_SetItem(args, 0, cb_self);
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyRegister(reg));
                   PyTuple_SetItem(args, 3, triton::bindings::python::PyLong_FromUint512(value));
                   Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(3);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyRegister(reg));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyLong_FromUint512(value));
                 }
@@ -647,7 +647,7 @@ namespace triton {
               break;
 
             case callbacks::SYMBOLIC_SIMPLIFICATION:
-              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SYMBOLIC_SIMPLIFICATION, callbacks::symbolicSimplificationCallback([cb_self, cb](triton::API& api, triton::ast::SharedAbstractNode node) {
+              PyTritonContext_AsTritonContext(self)->addCallback(callbacks::SYMBOLIC_SIMPLIFICATION, callbacks::symbolicSimplificationCallback([cb_self, cb](triton::Context& ctx, triton::ast::SharedAbstractNode node) {
                 /********* Lambda *********/
                 PyObject* args = nullptr;
 
@@ -655,13 +655,13 @@ namespace triton {
                 if (cb_self) {
                   args = triton::bindings::python::xPyTuple_New(3);
                   PyTuple_SetItem(args, 0, cb_self);
-                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 1, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 2, triton::bindings::python::PyAstNode(node));
                   Py_INCREF(cb_self);
                 }
                 else {
                   args = triton::bindings::python::xPyTuple_New(2);
-                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(api));
+                  PyTuple_SetItem(args, 0, triton::bindings::python::PyTritonContextRef(ctx));
                   PyTuple_SetItem(args, 1, triton::bindings::python::PyAstNode(node));
                 }
 
@@ -3599,7 +3599,7 @@ namespace triton {
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
         if (object != nullptr) {
-          object->api = new triton::API();
+          object->ctx = new triton::Context();
           object->ref = false;
           object->regAttr = nullptr;
         }
@@ -3613,7 +3613,7 @@ namespace triton {
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
         if (object != nullptr) {
-          object->api = new triton::API(arch);
+          object->ctx = new triton::Context(arch);
           object->ref = false;
           object->regAttr = nullptr;
         }
@@ -3622,12 +3622,12 @@ namespace triton {
       }
 
 
-      PyObject* PyTritonContextRef(triton::API& api) {
+      PyObject* PyTritonContextRef(triton::Context& ctx) {
         PyType_Ready(&TritonContext_Type);
         TritonContext_Object* object = PyObject_NEW(TritonContext_Object, &TritonContext_Type);
 
         if (object != nullptr) {
-          object->api = &api;
+          object->ctx = &ctx;
           object->ref = true;
           object->regAttr = nullptr;
         }

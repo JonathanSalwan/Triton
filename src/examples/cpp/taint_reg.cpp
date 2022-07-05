@@ -8,7 +8,7 @@
 */
 
 #include <iostream>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/x86Specifications.hpp>
 
 using namespace triton;
@@ -17,28 +17,28 @@ using namespace triton::arch::x86;
 
 
 int main(int ac, const char **av) {
+  triton::Context ctx;
 
-  triton::API api;
   /* Set the arch */
-  api.setArchitecture(ARCH_X86_64);
+  ctx.setArchitecture(ARCH_X86_64);
 
   /* Taint the RAX */
-  api.taintRegister(api.registers.x86_ah);
+  ctx.taintRegister(ctx.registers.x86_ah);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
+  std::cout << ctx.isRegisterTainted(ctx.registers.x86_rdx) << std::endl;
 
   /* Spread RAX into RDX */
-  api.taintAssignment(api.registers.x86_rdx, api.registers.x86_rax);
+  ctx.taintAssignment(ctx.registers.x86_rdx, ctx.registers.x86_rax);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
+  std::cout << ctx.isRegisterTainted(ctx.registers.x86_rdx) << std::endl;
 
   /* Untaint RDX */
-  api.untaintRegister(api.registers.x86_rdx);
+  ctx.untaintRegister(ctx.registers.x86_rdx);
 
   /* Is RDX tainted ? */
-  std::cout << api.isRegisterTainted(api.registers.x86_rdx) << std::endl;
+  std::cout << ctx.isRegisterTainted(ctx.registers.x86_rdx) << std::endl;
 
   return 0;
 }

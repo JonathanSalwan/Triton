@@ -53,16 +53,16 @@ class TestAstSimplification1(unittest.TestCase):
 
     # a ^ a -> a = 0
     @staticmethod
-    def xor_1(api, node):
+    def xor_1(ctx, node):
         if node.getType() == AST_NODE.BVXOR:
             if node.getChildren()[0].equalTo(node.getChildren()[1]):
-                return api.getAstContext().bv(0, node.getBitvectorSize())
+                return ctx.getAstContext().bv(0, node.getBitvectorSize())
         return node
 
 
     # ((a & ~b) | (~a & b)) -> (a ^ b)
     @staticmethod
-    def xor_2(api, node):
+    def xor_2(ctx, node):
 
         def getNot(node):
             a = node.getChildren()[0]

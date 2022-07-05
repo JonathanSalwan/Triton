@@ -204,15 +204,15 @@ namespace triton {
     };
 
 
-    /*! \class API
-     *  \brief The exception class used by the Triton's API. */
-    class API : public triton::exceptions::Exception {
+    /*! \class Context
+     *  \brief The exception class used by the Triton's Context. */
+    class Context : public triton::exceptions::Exception {
       public:
         //! Constructor.
-        TRITON_EXPORT API(const char* message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Context(const char* message) : triton::exceptions::Exception(message) {};
 
         //! Constructor.
-        TRITON_EXPORT API(const std::string& message) : triton::exceptions::Exception(message) {};
+        TRITON_EXPORT Context(const std::string& message) : triton::exceptions::Exception(message) {};
     };
 
 

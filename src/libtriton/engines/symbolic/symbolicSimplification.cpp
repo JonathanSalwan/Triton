@@ -8,8 +8,8 @@
 #include <list>
 #include <map>
 
-#include <triton/api.hpp>
 #include <triton/archEnums.hpp>
+#include <triton/context.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicSimplification.hpp>
@@ -25,10 +25,10 @@
 
 Triton allows you to optimize your AST (See: \ref py_AstContext_page) just before the assignment to a register, a memory
 or a volatile symbolic expression. The record of a simplification pass is really straightforward. You have to record your simplification
-callback using the triton::API::addCallback() function. Your simplification callback must takes as parameters a triton::API and a
+callback using the triton::Context::addCallback() function. Your simplification callback must takes as parameters a triton::Context and a
 triton::ast::SharedAbstractNode. The callback must return a triton::ast::SharedAbstractNode. Then, your callback will be called before
 every symbolic assignment. Note that you can record several simplification callbacks or remove a specific callback using the
-triton::API::removeCallback() function.
+triton::Context::removeCallback() function.
 
 \subsection SMT_simplification_triton Simplification via Triton's rules
 <hr>
@@ -37,7 +37,7 @@ Below, a little example which replaces all \f$ A \oplus A \rightarrow A = 0\f$.
 
 ~~~~~~~~~~~~~{.cpp}
 // Rule: if (bvxor x x) -> (_ bv0 x_size)
-triton::ast::SharedAbstractNode xor_simplification(triton::API& ctx, const triton::ast::SharedAbstractNode& node) {
+triton::ast::SharedAbstractNode xor_simplification(triton::Context& ctx, const triton::ast::SharedAbstractNode& node) {
 
   if (node->getType() == triton::ast::BVXOR_NODE) {
     if (node->getChildren()[0]->equalTo(node->getChildren()[1]))
@@ -50,7 +50,7 @@ triton::ast::SharedAbstractNode xor_simplification(triton::API& ctx, const trito
 int main(int ac, const char *av[]) {
   ...
   // Record a simplification callback
-  api.addCallback(xor_simplification);
+  ctx.addCallback(xor_simplification);
   ...
 }
 ~~~~~~~~~~~~~
@@ -229,22 +229,22 @@ namespace triton {
         if (block.getSize() == 0)
           return {};
 
-        /* Define a temporary API */
-        triton::API tmpapi(in.getInstructions()[0].getArchitecture());
+        /* Define a temporary Context */
+        triton::Context tmpctx(in.getInstructions()[0].getArchitecture());
 
         /* Execute the block */
-        tmpapi.processing(in);
+        tmpctx.processing(in);
 
         /* Get all symbolic registers that were written */
-        for (auto& reg : tmpapi.getSymbolicRegisters()) {
-          for (auto& item : tmpapi.sliceExpressions(reg.second)) {
+        for (auto& reg : tmpctx.getSymbolicRegisters()) {
+          for (auto& item : tmpctx.sliceExpressions(reg.second)) {
             lifetime[item.first] = item.second;
           }
         }
 
         /* Get all symbolic memory cells that were written */
-        for (auto& mem : tmpapi.getSymbolicMemory()) {
-          for (auto& item : tmpapi.sliceExpressions(mem.second)) {
+        for (auto& mem : tmpctx.getSymbolicMemory()) {
+          for (auto& item : tmpctx.sliceExpressions(mem.second)) {
             lifetime[item.first] = item.second;
           }
         }
@@ -265,7 +265,7 @@ namespace triton {
 
         /* Create a new block with sorted instructions */
         auto lastaddr = in.getFirstAddress();
-        auto nop = tmpapi.getNopInstruction();
+        auto nop = tmpctx.getNopInstruction();
         for (auto& item : instructions) {
           if (padding) {
             while (item.second.getAddress() > lastaddr) {

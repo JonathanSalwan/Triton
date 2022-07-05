@@ -16,7 +16,6 @@ endif()
 
 # Define all source files
 set(LIBTRITON_SOURCE_FILES
-    api/api.cpp
     arch/architecture.cpp
     arch/arm/aarch64/aarch64Cpu.cpp
     arch/arm/aarch64/aarch64Semantics.cpp
@@ -43,6 +42,7 @@ set(LIBTRITON_SOURCE_FILES
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp
     callbacks/callbacks.cpp
+    context/context.cpp
     engines/lifters/liftingToDot.cpp
     engines/lifters/liftingToPython.cpp
     engines/lifters/liftingToSMT.cpp
@@ -68,7 +68,6 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/aarch64Cpu.hpp
     includes/triton/aarch64Semantics.hpp
     includes/triton/aarch64Specifications.hpp
-    includes/triton/api.hpp
     includes/triton/archEnums.hpp
     includes/triton/architecture.hpp
     includes/triton/arm32.spec
@@ -89,6 +88,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/callbacks.hpp
     includes/triton/callbacksEnums.hpp
     includes/triton/comparableFunctor.hpp
+    includes/triton/context.hpp
     includes/triton/coreUtils.hpp
     includes/triton/cpuInterface.hpp
     includes/triton/cpuSize.hpp

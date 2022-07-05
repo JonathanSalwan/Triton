@@ -33,7 +33,7 @@ namespace triton {
  *  @{
  */
 
-  class API;
+  class Context;
 
   //! The Bindings namespace
   namespace bindings {
@@ -94,10 +94,10 @@ namespace triton {
       PyObject* PyTritonContext(triton::arch::architecture_e arch);
 
       //! Creates a TritonContext python class which is a reference to another Context.
-      PyObject* PyTritonContextRef(triton::API& api);
+      PyObject* PyTritonContextRef(triton::Context& ctx);
 
       //! Creates an AstContext python class.
-      PyObject* PyAstContext(const triton::ast::SharedAstContext& ctxt);
+      PyObject* PyAstContext(const triton::ast::SharedAstContext& actx);
 
       //! Creates the Register python class.
       PyObject* PyRegister(const triton::arch::Register& reg);
@@ -204,9 +204,9 @@ namespace triton {
       //! pyTritonContext object.
       typedef struct {
         PyObject_HEAD
-        triton::API* api;   //! Pointer to the cpp triton context
-        bool ref;           //! Determine if this instance is a reference or not.
-        PyObject* regAttr;  //! Pointer to the registers attribute
+        triton::Context* ctx; //! Pointer to the cpp triton context
+        bool ref;             //! Determine if this instance is a reference or not.
+        PyObject* regAttr;    //! Pointer to the registers attribute
       } TritonContext_Object;
 
       //! pyRegister type.
@@ -217,7 +217,7 @@ namespace triton {
       //! pyAstContext object.
       typedef struct {
         PyObject_HEAD
-        triton::ast::SharedAstContext ctxt;
+        triton::ast::SharedAstContext actx;
       } AstContext_Object;
 
       //! pyRegister type.
@@ -307,13 +307,13 @@ namespace triton {
 #define PyTritonContext_Check(v) ((v)->ob_type == &triton::bindings::python::TritonContext_Type)
 
 /*! Returns the triton::arch::TritonContext. */
-#define PyTritonContext_AsTritonContext(v) (((triton::bindings::python::TritonContext_Object*)(v))->api)
+#define PyTritonContext_AsTritonContext(v) (((triton::bindings::python::TritonContext_Object*)(v))->ctx)
 
 /*! Checks if the pyObject is a triton::arch::AstContext. */
 #define PyAstContext_Check(v) ((v)->ob_type == &triton::bindings::python::AstContext_Type)
 
 /*! Returns the triton::arch::AstContext. */
-#define PyAstContext_AsAstContext(v) (((triton::bindings::python::AstContext_Object*)(v))->ctxt)
+#define PyAstContext_AsAstContext(v) (((triton::bindings::python::AstContext_Object*)(v))->actx)
 
 /*! Checks if the pyObject is a triton::arch::Register. */
 #define PyRegister_Check(v) ((v)->ob_type == &triton::bindings::python::Register_Type)

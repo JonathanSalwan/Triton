@@ -1,6 +1,6 @@
 
 #include <iostream>
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/basicBlock.hpp>
 
 using namespace triton;
@@ -9,10 +9,10 @@ using namespace triton::arch;
 
 int main(int ac, const char **av) {
   /* Init the triton context */
-  triton::API api;
+  triton::Context ctx;
 
   /* Set the arch */
-  api.setArchitecture(ARCH_X86_64);
+  ctx.setArchitecture(ARCH_X86_64);
 
   BasicBlock block = BasicBlock({
     Instruction("\x89\xd0", 2),      /* mov   eax, edx  */
@@ -21,13 +21,13 @@ int main(int ac, const char **av) {
     Instruction("\x74\x08", 2),      /* jz    10        */
   });
 
-  api.disassembly(block);
+  ctx.disassembly(block);
 
   std::cout << block << std::endl;
   std::cout << "----------" << std::endl;
 
   auto i = Instruction("\x90", 1); /* nop */
-  api.disassembly(i);
+  ctx.disassembly(i);
 
   block.add(i);
   block.add(i);
@@ -41,7 +41,7 @@ int main(int ac, const char **av) {
   std::cout << block << std::endl;
   std::cout << "----------" << std::endl;
 
-  api.disassembly(block, 0x1000);
+  ctx.disassembly(block, 0x1000);
 
   std::cout << block << std::endl;
 
@@ -52,7 +52,7 @@ int main(int ac, const char **av) {
   std::cout << "----------" << std::endl;
 
   block.remove(2); /* remove the jz */
-  api.processing(block);
+  ctx.processing(block);
 
   std::cout << block << std::endl;
 

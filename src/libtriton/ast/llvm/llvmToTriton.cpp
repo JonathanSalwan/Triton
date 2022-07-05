@@ -12,13 +12,13 @@
 namespace triton {
   namespace ast {
 
-    LLVMToTriton::LLVMToTriton(triton::API& api)
-      : actx(api.getAstContext()), api(&api) {
+    LLVMToTriton::LLVMToTriton(triton::Context& ctx)
+      : actx(ctx.getAstContext()), ctx(&ctx) {
     }
 
 
-    LLVMToTriton::LLVMToTriton(const triton::ast::SharedAstContext& ctxt)
-      : actx(ctxt), api(nullptr) {
+    LLVMToTriton::LLVMToTriton(const triton::ast::SharedAstContext& actx)
+      : actx(actx), ctx(nullptr) {
     }
 
 
@@ -233,10 +233,10 @@ namespace triton {
 
       /* Otherwise, create a new one */
       SharedAbstractNode node;
-      if (this->api == nullptr)
+      if (this->ctx == nullptr)
         node = this->actx->getVariableNode(name);
       else
-        node = this->actx->variable(this->api->newSymbolicVariable(varSize, name));
+        node = this->actx->variable(this->ctx->newSymbolicVariable(varSize, name));
 
       symvars[name] = node;
       return node;

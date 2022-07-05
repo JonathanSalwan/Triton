@@ -5,7 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <triton/api.hpp>
+#include <triton/context.hpp>
 #include <triton/callbacks.hpp>
 #include <triton/exceptions.hpp>
 
@@ -14,7 +14,7 @@
 namespace triton {
   namespace callbacks {
 
-    Callbacks::Callbacks(triton::API& api) : api(api) {
+    Callbacks::Callbacks(triton::Context& ctx) : ctx(ctx) {
       this->defined   = false;
       this->mget      = false;
       this->mload     = false;
@@ -23,7 +23,7 @@ namespace triton {
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb) {
+    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::MemoryAccess&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE:
           this->getConcreteMemoryValueCallbacks.push_back(cb);
@@ -36,7 +36,7 @@ namespace triton {
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb) {
+    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::Register&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE:
           this->getConcreteRegisterValueCallbacks.push_back(cb);
@@ -49,7 +49,7 @@ namespace triton {
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb) {
+    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_MEMORY_VALUE:
           this->setConcreteMemoryValueCallbacks.push_back(cb);
@@ -62,7 +62,7 @@ namespace triton {
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb) {
+    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::Register&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_REGISTER_VALUE:
           this->setConcreteRegisterValueCallbacks.push_back(cb);
@@ -75,7 +75,7 @@ namespace triton {
     }
 
 
-    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb) {
+    void Callbacks::addCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::Context&, const triton::ast::SharedAbstractNode&)> cb) {
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION:
           this->symbolicSimplificationCallbacks.push_back(cb);
@@ -110,7 +110,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&)> cb) {
+    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::MemoryAccess&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_MEMORY_VALUE:
           this->removeSingleCallback(this->getConcreteMemoryValueCallbacks, cb);
@@ -126,7 +126,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&)> cb) {
+    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::Register&)> cb) {
       switch (kind) {
         case triton::callbacks::GET_CONCRETE_REGISTER_VALUE:
           this->removeSingleCallback(this->getConcreteRegisterValueCallbacks, cb);
@@ -142,7 +142,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb) {
+    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::MemoryAccess&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_MEMORY_VALUE:
           this->removeSingleCallback(this->setConcreteMemoryValueCallbacks, cb);
@@ -158,7 +158,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::API&, const triton::arch::Register&, const triton::uint512& value)> cb) {
+    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<void(triton::Context&, const triton::arch::Register&, const triton::uint512& value)> cb) {
       switch (kind) {
         case triton::callbacks::SET_CONCRETE_REGISTER_VALUE:
           this->removeSingleCallback(this->setConcreteRegisterValueCallbacks, cb);
@@ -174,7 +174,7 @@ namespace triton {
     }
 
 
-    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::API&, const triton::ast::SharedAbstractNode&)> cb) {
+    void Callbacks::removeCallback(triton::callbacks::callback_e kind, ComparableFunctor<triton::ast::SharedAbstractNode(triton::Context&, const triton::ast::SharedAbstractNode&)> cb) {
       switch (kind) {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION:
           this->removeSingleCallback(this->symbolicSimplificationCallbacks, cb);
@@ -195,7 +195,7 @@ namespace triton {
         case triton::callbacks::SYMBOLIC_SIMPLIFICATION: {
           for (auto& function: this->symbolicSimplificationCallbacks) {
             // Reinject node in next callback
-            node = function(this->api, node);
+            node = function(this->ctx, node);
             if (node == nullptr)
               throw triton::exceptions::Callbacks("Callbacks::processCallbacks(SYMBOLIC_SIMPLIFICATION): You cannot return a nullptr node.");
           }
@@ -218,9 +218,9 @@ namespace triton {
 
           for (auto& function: this->getConcreteMemoryValueCallbacks) {
             this->mload = true;
-            function(this->api, mem);
+            function(this->ctx, mem);
             if (mem.getLeaAst() != nullptr) {
-              this->api.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem));
+              this->ctx.getSymbolicEngine()->initLeaAst(const_cast<triton::arch::MemoryAccess&>(mem));
             }
             this->mload = false;
           }
@@ -244,7 +244,7 @@ namespace triton {
 
           for (auto& function: this->getConcreteRegisterValueCallbacks) {
             this->mget = true;
-            function(this->api, reg);
+            function(this->ctx, reg);
             this->mget = false;
           }
 
@@ -267,7 +267,7 @@ namespace triton {
 
           for (auto& function: this->setConcreteMemoryValueCallbacks) {
             this->mstore = true;
-            function(this->api, mem, value);
+            function(this->ctx, mem, value);
             this->mstore = false;
           }
 
@@ -290,7 +290,7 @@ namespace triton {
 
           for (auto& function: this->setConcreteRegisterValueCallbacks) {
             this->mput = true;
-            function(this->api, reg, value);
+            function(this->ctx, reg, value);
             this->mput = false;
           }
 
