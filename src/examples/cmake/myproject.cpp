@@ -1,4 +1,4 @@
-// This is an example about how to compile Triton using it's config file.
+// This is an example about how to compile Triton using its config file.
 // See the CMakeLists.txt from this directory.
 
 #include <iostream>

@@ -1,4 +1,4 @@
-# This is an example about how to compile Triton using it's config file.
+# This is an example about how to compile Triton using its config file.
 cmake_minimum_required(VERSION 3.20)
 project(myproject)
 
