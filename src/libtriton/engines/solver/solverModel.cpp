@@ -64,6 +64,11 @@ namespace triton {
       }
 
 
+      bool SolverModel::operator==(const SolverModel& other) const {
+        return (this->value == other.value && this->variable->getId() == other.variable->getId());
+      }
+
+
       std::ostream& operator<<(std::ostream& stream, const SolverModel& model) {
         stream << model.getVariable() << " = 0x" << std::hex << model.getValue() << std::dec;
         return stream;

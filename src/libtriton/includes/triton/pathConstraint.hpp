@@ -83,6 +83,9 @@ namespace triton {
           //! Returns the address of the taken branch.
           TRITON_EXPORT triton::uint64 getTakenAddress(void) const;
 
+          //! Returns the address of the jump instruction (eg.: "A: jz B", returns A).
+          TRITON_EXPORT triton::uint64 getSourceAddress(void) const;
+
           //! Returns the predicate of the taken branch.
           TRITON_EXPORT triton::ast::SharedAbstractNode getTakenPredicate(void) const;
 

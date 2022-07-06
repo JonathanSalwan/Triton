@@ -64,6 +64,9 @@ namespace triton {
           //! Copies a SolverModel
           TRITON_EXPORT SolverModel& operator=(const SolverModel& other);
 
+          //! Operator ==
+          TRITON_EXPORT bool operator==(const SolverModel& other) const;
+
           //! Returns the id of the variable.
           TRITON_EXPORT triton::usize getId(void) const;
 

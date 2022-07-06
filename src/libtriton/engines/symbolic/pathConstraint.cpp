@@ -52,6 +52,15 @@ namespace triton {
       }
 
 
+      triton::uint64 PathConstraint::getSourceAddress(void) const {
+        for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
+          if (std::get<0>(*it) == true)
+            return std::get<1>(*it);
+        }
+        throw triton::exceptions::PathConstraint("PathConstraint::getSourceAddress(): Something wrong, no branch.");
+      }
+
+
       triton::uint64 PathConstraint::getTakenAddress(void) const {
         for (auto it = this->branches.begin(); it != this->branches.end(); it++) {
           if (std::get<0>(*it) == true)
