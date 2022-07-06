@@ -678,6 +678,12 @@ namespace triton {
   }
 
 
+  void Context::symbolizeMemory(triton::uint64 addr, triton::usize size) {
+    this->checkSymbolic();
+    this->symbolic->symbolizeMemory(addr, size);
+  }
+
+
   triton::engines::symbolic::SharedSymbolicVariable Context::symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias) {
     this->checkSymbolic();
     return this->symbolic->symbolizeRegister(reg, symVarAlias);

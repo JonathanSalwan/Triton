@@ -544,6 +544,14 @@ namespace triton {
       }
 
 
+      /* Symbolize a memory area to a 8-bits symbolic variables */
+      void SymbolicEngine::symbolizeMemory(triton::uint64 addr, triton::usize size) {
+        for (triton::usize i = 0; i != size; i++) {
+          this->symbolizeMemory(triton::arch::MemoryAccess(addr + i, triton::size::byte));
+        }
+      }
+
+
       /* The memory size is used to define the symbolic variable's size. */
       SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias) {
         triton::uint64 memAddr    = mem.getAddress();
