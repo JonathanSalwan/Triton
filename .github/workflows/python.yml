@@ -5,104 +5,46 @@ on: [push, pull_request, workflow_dispatch]
 jobs:
   build-linux:
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
-        include:
-          - python-version: 3.8
-            pycp: cp38-cp38
-          - python-version: 3.9
-            pycp: cp39-cp39
-          - python-version: 3.10
-            pycp: cp310-cp310
     steps:
       - name: Checkout
         uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+      - name: Create Docker image
+        run: bash ./src/scripts/docker/build-docker-image.sh
 
-      - name: Install LLVM and Clang
-        uses: KyleMayes/install-llvm-action@v1
-        with:
-          version: "14.0"
-          directory: ${{ runner.temp }}/llvm
-
-      - name: Upgrade pip version
+      - name: Build Wheel packages
         run: |
-          python${{ matrix.python-version }} -m pip install -U pip
+          docker run \
+                 --rm \
+                 -v $GITHUB_WORKSPACE:/src \
+                 build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
-      - name: Install build package
-        run: |
-          python${{ matrix.python-version }} -m pip install build
-
-      - name: Install dependencies
-        run: |
-          sudo apt-get install python-setuptools
-
-      - name: Download and build GMP
-        run: |
-          wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
-          tar xvf gmp-6.2.1.tar.xz
-          cd gmp-6.2.1/
-          ./configure --with-pic
-          make
-          make check
-
-      - name: Download and build Bitwuzla
-        run: |
-          git clone https://github.com/bitwuzla/bitwuzla.git
-          cd bitwuzla
-          ./contrib/setup-cadical.sh
-          ./contrib/setup-btor2tools.sh
-          ./contrib/setup-symfpu.sh
-          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
-          cd build
-          make
-          cd lib
-          ar cqT libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a && echo -e 'create libbitwuzlam.a\naddlib libbitwuzlam.a\nsave\nend' | ar -M
-          mv libbitwuzlam.a libbitwuzla.a
-          cd ..
-          make install
-
-      - name: Download Z3
-        run: |
-          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-glibc-2.31.zip
-          unzip z3-4.8.17-x64-glibc-2.31.zip
-
-      - name: Install Capstone
-        run: |
-          wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
-          tar -xf ./4.0.2.tar.gz
-          cd ./capstone-4.0.2
-          bash ./make.sh
-          sudo make install
-          cd ../
-
-      - name: Build Triton Python package
-        run: python${{ matrix.python-version }} -m build --wheel
-        env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
-          PYTHON_LIBRARIES: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
-          PYTHON_LIBRARY: ${{ env.pythonLocation }}/lib/libpython${{ matrix.python-version }}.so
-          PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}/include/python${{ matrix.python-version }}
-          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/include
-          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
-          CAPSTONE_INCLUDE_DIRS: /usr/include
-          CAPSTONE_LIBRARIES: /usr/lib/libcapstone.a
-          BITWUZLA_INTERFACE: On
-          BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
-          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
-          LLVM_INTERFACE: On
-          CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
-
-      - name: Upload
+      - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-${{ matrix.pycp }}-linux_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-1.0.0-${{ matrix.pycp }}-linux_x86_64.whl
+          name: triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.9)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-cp39-cp39-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-1.0.0-cp39-cp39-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.10)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-cp310-cp310-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-1.0.0-cp310-cp310-manylinux_2_24_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.11)
+        uses: actions/upload-artifact@v3
+        with:
+          name: triton_library-1.0.0-cp311-cp311-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-1.0.0-cp311-cp311-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
   build-windows:
