@@ -3769,6 +3769,9 @@ namespace triton {
           case triton::size::dword:
             bytes.push_front(this->astCtxt->extract(31, 24, op1));
             bytes.push_front(this->astCtxt->extract(23, 16, op1));
+            bytes.push_front(this->astCtxt->extract(15, 8, op1));
+            bytes.push_front(this->astCtxt->extract(7,  0, op1));
+            break;
           case triton::size::word:
             // See #1131
             bytes.push_front(this->astCtxt->bv(0, 8));

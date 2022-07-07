@@ -522,6 +522,18 @@ class TestIssue1131(unittest.TestCase):
         self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rdi), 0xdeadbeefcafe0000)
 
 
+class TestIssue1131Regression(unittest.TestCase):
+    """Testing #1131 regression."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.r8d, 0xcafebabe)
+
+    def test_issue(self):
+        self.ctx.processing(Instruction(b"\x41\x0f\xc8")) # bswap r8d
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.r8d), 0xbebafeca)
+
+
 class TestIssue872(unittest.TestCase):
     """Testing #872."""
 
