@@ -10,14 +10,14 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Create Docker image
-        run: bash ./scripts/docker/build-docker-image.sh
+        run: bash ./src/scripts/docker/build-docker-image.sh
 
       - name: Build Wheel packages
         run: |
           docker run \
                  --rm \
                  -v $GITHUB_WORKSPACE:/src \
-                 build-triton-linux-x86_64 bash /src/scripts/docker/build-wheel-linux.sh
+                 build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
 
       - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
