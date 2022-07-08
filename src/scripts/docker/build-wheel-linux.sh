@@ -77,13 +77,6 @@ export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; prin
 
 $PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
 
-# Build Triton Python wheel package for Python 3.11.
-export PYTHON_BINARY=/opt/python/cp311-cp311/bin/python
-export PYTHON_INCLUDE_DIRS=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-export PYTHON_LIBRARY=$($PYTHON_BINARY -c "from sysconfig import get_paths; print(get_paths()['include'])")
-
-$PYTHON_BINARY setup.py bdist_wheel --dist-dir wheel-temp
-
 # Repair wheels.
 for whl in wheel-temp/*.whl; do
     auditwheel repair "$whl" -w wheel-final

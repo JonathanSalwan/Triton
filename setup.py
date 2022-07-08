@@ -17,6 +17,16 @@ from setuptools import setup
 from setuptools.command.build_ext import build_ext
 
 
+VERSION_MAJOR = 1
+VERSION_MINOR = 0
+VERSION_PATCH = 0
+
+RELEASE_CANDIDATE = 1
+
+VERSION = f'{VERSION_MAJOR}.{VERSION_MINOR}.{VERSION_PATCH}' + \
+            f'rc{RELEASE_CANDIDATE}' if RELEASE_CANDIDATE else ''
+
+
 class CMakeExtension(Extension):
     def __init__(self, name, sourcedir=''):
         Extension.__init__(self, name, sources=[])
@@ -150,7 +160,7 @@ with open("README.md", "r") as f:
 
 setup(
     name="triton-library",
-    version="1.0.0",
+    version=VERSION,
     author="The Triton's community",
     author_email="tritonlibrary@gmail.com",
     description="Triton is a dynamic binary analysis library",

@@ -2,6 +2,9 @@ name: Build Python Package
 
 on: [push, pull_request, workflow_dispatch]
 
+env:
+  package-version: '1.0.0rc1'
+
 jobs:
   build-linux:
     runs-on: ubuntu-latest
@@ -23,28 +26,21 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
-          path: wheel-final/triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.9)
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-cp39-cp39-manylinux_2_24_x86_64.whl
-          path: wheel-final/triton_library-1.0.0-cp39-cp39-manylinux_2_24_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp39-cp39-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
       - name: Upload Wheel packages (Python 3.10)
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-cp310-cp310-manylinux_2_24_x86_64.whl
-          path: wheel-final/triton_library-1.0.0-cp310-cp310-manylinux_2_24_x86_64.whl
-          if-no-files-found: warn
-
-      - name: Upload Wheel packages (Python 3.11)
-        uses: actions/upload-artifact@v3
-        with:
-          name: triton_library-1.0.0-cp311-cp311-manylinux_2_24_x86_64.whl
-          path: wheel-final/triton_library-1.0.0-cp311-cp311-manylinux_2_24_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
+          path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
   build-windows:
@@ -120,8 +116,8 @@ jobs:
       - name: Upload
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-${{ matrix.pycp }}-win_amd64.whl
-          path: ${{ github.workspace }}/dist/triton_library-1.0.0-${{ matrix.pycp }}-win_amd64.whl
+          name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
+          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
           if-no-files-found: warn
 
   build-macos:
@@ -131,11 +127,8 @@ jobs:
         python-version: ['3.8', '3.9', '3.10']
         include:
           - python-version: 3.8
-            pywhl: triton_library-1.0.0-cp38-cp38-macosx_11_0_x86_64.whl
           - python-version: 3.9
-            pywhl: triton_library-1.0.0-cp39-cp39-macosx_11_0_x86_64.whl
           - python-version: 3.10
-            pywhl: triton_library-1.0.0-cp310-cp310-macosx_11_0_universal2.whl
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -215,9 +208,26 @@ jobs:
           LLVM_INTERFACE: On
           CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
 
-      - name: Upload
+      - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
+        if: ${{ matrix.python-version == '3.8' }}
         with:
-          name: ${{ matrix.pywhl }}
-          path: ${{ github.workspace }}/dist/${{ matrix.pywhl }}
+          name: triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.9)
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.python-version == '3.9' }}
+        with:
+          name: triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
+          if-no-files-found: warn
+
+      - name: Upload Wheel packages (Python 3.10)
+        uses: actions/upload-artifact@v3
+        if: ${{ matrix.python-version == '3.10' }}
+        with:
+          name: triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
+          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
           if-no-files-found: warn
