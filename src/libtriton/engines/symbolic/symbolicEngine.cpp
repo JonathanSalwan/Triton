@@ -251,9 +251,9 @@ namespace triton {
 
 
       /* Returns all symbolic variables */
-      std::unordered_map<triton::usize, SharedSymbolicVariable> SymbolicEngine::getSymbolicVariables(void) const {
+      std::map<triton::usize, SharedSymbolicVariable> SymbolicEngine::getSymbolicVariables(void) const {
         // Copy and clean up dead weak ref
-        std::unordered_map<triton::usize, SharedSymbolicVariable> ret;
+        std::map<triton::usize, SharedSymbolicVariable> ret;
         std::vector<triton::usize> toRemove;
 
         for (auto& kv : this->symbolicVariables) {

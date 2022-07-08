@@ -1022,7 +1022,7 @@ namespace triton {
   }
 
 
-  std::unordered_map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> Context::getSymbolicVariables(void) const {
+  std::map<triton::usize, triton::engines::symbolic::SharedSymbolicVariable> Context::getSymbolicVariables(void) const {
     this->checkSymbolic();
     return this->symbolic->getSymbolicVariables();
   }
