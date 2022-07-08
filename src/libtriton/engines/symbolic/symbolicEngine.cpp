@@ -544,7 +544,7 @@ namespace triton {
       }
 
 
-      /* Symbolize a memory area to a 8-bits symbolic variables */
+      /* Symbolize a memory area to 8-bits symbolic variables */
       void SymbolicEngine::symbolizeMemory(triton::uint64 addr, triton::usize size) {
         for (triton::usize i = 0; i != size; i++) {
           this->symbolizeMemory(triton::arch::MemoryAccess(addr + i, triton::size::byte));

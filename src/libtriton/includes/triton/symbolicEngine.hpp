@@ -273,7 +273,7 @@ namespace triton {
           //! Converts a symbolic memory expression to a symbolic variable.
           TRITON_EXPORT SharedSymbolicVariable symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias="");
 
-          //! Converts a symbolic memory area to a 8-bits symbolic variables.
+          //! Converts a symbolic memory area to 8-bits symbolic variables.
           TRITON_EXPORT void symbolizeMemory(triton::uint64 addr, triton::usize size);
 
           //! Converts a symbolic register expression to a symbolic variable.
