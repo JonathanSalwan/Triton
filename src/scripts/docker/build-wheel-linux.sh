@@ -1,5 +1,16 @@
 #! /usr/bin/env bash
 
+# This file is meant to be used inside the docker image build by the
+# `build-docker-image.sh` script. This file build triton-library for Python 3.8,
+# 3.9 and 3.10. It is used by the Build Python Package Github workflow but can
+# also be used locally by running:
+#
+# $ docker pull quay.io/pypa/manylinux_2_24_x86_64
+# $ ./build-docker-image.sh
+# $ docker run --rm -v $(pwd):/src build-triton-linux-x86_64 bash /src/src/scripts/docker/build-wheel-linux.sh
+#
+# You'll find the .whl packages in the wheel-final folder.
+
 set -ex
 
 # Create deps folder.
