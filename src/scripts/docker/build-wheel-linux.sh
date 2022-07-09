@@ -45,6 +45,10 @@ bash ./make.sh
 sudo make install
 cd ..
 
+# Download LLVM.
+wget https://github.com/llvm/llvm-project/releases/download/llvmorg-12.0.1/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+tar -xf clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-16.04.tar.xz
+
 # Set environment variables for building Triton.
 export Z3_INCLUDE_DIRS=$(pwd)/z3-4.8.17-x64-glibc-2.31/include
 export Z3_LIBRARIES=$(pwd)/z3-4.8.17-x64-glibc-2.31/bin/libz3.a
@@ -53,6 +57,8 @@ export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.a
 export BITWUZLA_INTERFACE=On
 export BITWUZLA_INCLUDE_DIRS=$(pwd)/bitwuzla/install/include
 export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib/libbitwuzla.a
+export LLVM_INTERFACE=ON
+export CMAKE_PREFIX_PATH=$($(pwd)/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
 
 cd ..
 

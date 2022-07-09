@@ -125,6 +125,10 @@ class CMakeBuild(build_ext):
         if os.getenv('LLVM_INCLUDE_DIRS'):
             cmake_args += ['-DLLVM_INCLUDE_DIRS=' + os.getenv('LLVM_INCLUDE_DIRS')]
 
+        # Custom CMake prefix path.
+        if os.getenv('CMAKE_PREFIX_PATH'):
+            cmake_args += ['-DCMAKE_PREFIX_PATH=' + os.getenv('CMAKE_PREFIX_PATH')]
+
         # Create temp and lib folders.
         if not os.path.exists(self.build_temp):
             os.makedirs(self.build_temp)
