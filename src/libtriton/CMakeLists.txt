@@ -59,6 +59,7 @@ set(LIBTRITON_SOURCE_FILES
     engines/synthesis/synthesizer.cpp
     engines/taint/taintEngine.cpp
     modes/modes.cpp
+    stubs/libc.cpp
     utils/coreUtils.cpp
 )
 
@@ -118,6 +119,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/solverEnums.hpp
     includes/triton/solverInterface.hpp
     includes/triton/solverModel.hpp
+    includes/triton/stubs.hpp
     includes/triton/symbolicEngine.hpp
     includes/triton/symbolicEnums.hpp
     includes/triton/symbolicExpression.hpp
