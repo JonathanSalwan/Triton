@@ -5,6 +5,8 @@
  * emulation with Triton.
  *
  * $ gcc -shared -fPIC -o triton-stubs.so triton-stubs.c
+ $ or
+ * $ gcc triton-stubs.c -larchive -o triton-stubs.a -c -fno-stack-protector
  *
  */
 
