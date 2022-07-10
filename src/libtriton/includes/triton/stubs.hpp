@@ -30,31 +30,41 @@ namespace triton {
    *  @{
    */
 
-    //! The systemv namespace
-    namespace systemv {
+    //! The x8664 namespace
+    namespace x8664 {
     /*!
      *  \ingroup stubs
-     *  \addtogroup systemv
+     *  \addtogroup x8664
      *  @{
      */
 
-      //! The linux namespace
-      namespace libc {
+      //! The systemv namespace
+      namespace systemv {
       /*!
-       *  \ingroup systemv
-       *  \addtogroup libc
+       *  \ingroup x8664
+       *  \addtogroup systemv
        *  @{
        */
 
-        /*! Symbols mapping. Each entry points on its position in `systemv::libc::code`. Example: strcmp -> 0x601. */
-        extern std::map<std::string, triton::uint64> symbols;
+        //! The linux namespace
+        namespace libc {
+        /*!
+         *  \ingroup systemv
+         *  \addtogroup libc
+         *  @{
+         */
 
-        /*! Position independent code of some libc functions */
-        extern std::vector<triton::uint8> code;
+          /*! Symbols mapping. Each entry points on its position in `systemv::libc::code`. Example: strcmp -> 0x601. */
+          extern std::map<std::string, triton::uint64> symbols;
 
-      /*! @} End of libc namespace */
+          /*! Position independent code of some libc functions */
+          extern std::vector<triton::uint8> code;
+
+        /*! @} End of libc namespace */
+        };
+      /*! @} End of systemv namespace */
       };
-    /*! @} End of systemv namespace */
+    /*! @} End of x8664 namespace */
     };
   /*! @} End of stubs namespace */
   };
