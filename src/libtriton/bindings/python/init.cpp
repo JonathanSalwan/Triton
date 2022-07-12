@@ -152,6 +152,12 @@ namespace triton {
         initSolverStateNamespace(solverStateDict);
         PyObject* idSolverStateClass = xPyClass_New(nullptr, solverStateDict, xPyString_FromString("SOLVER_STATE"));
 
+        /* Create the STUBS namespace ============================================================= */
+
+        PyObject* stubsDict = xPyDict_New();
+        initStubsNamespace(stubsDict);
+        PyObject* idStubsClass = xPyClass_New(nullptr, stubsDict, xPyString_FromString("STUBS"));
+
         /* Create the SYMBOLIC namespace ============================================================= */
 
         PyObject* symbolicDict = xPyDict_New();
@@ -184,6 +190,7 @@ namespace triton {
         PyModule_AddObject(triton::bindings::python::tritonModule, "SHIFT",               idShiftsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER",              idSolverClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SOLVER_STATE",        idSolverStateClass);
+        PyModule_AddObject(triton::bindings::python::tritonModule, "STUBS",               idStubsClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "SYMBOLIC",            idSymbolicClass);
         PyModule_AddObject(triton::bindings::python::tritonModule, "VERSION",             idVersionClass);
 
