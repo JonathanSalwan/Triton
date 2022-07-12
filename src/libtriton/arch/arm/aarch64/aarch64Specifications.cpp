@@ -252,6 +252,12 @@ namespace triton {
               tritonId = triton::arch::arm::aarch64::ID_INS_ADD;
               break;
 
+            #if CS_API_MAJOR >= 5
+            case triton::extlibs::capstone::ARM64_INS_ADDS:
+              tritonId = triton::arch::arm::aarch64::ID_INS_ADD;
+              break;
+            #endif
+
             case triton::extlibs::capstone::ARM64_INS_ADDV:
               tritonId = triton::arch::arm::aarch64::ID_INS_ADDV;
               break;
@@ -1584,9 +1590,11 @@ namespace triton {
               tritonId = triton::arch::arm::aarch64::ID_INS_SUBHN2;
               break;
 
+            #if CS_API_MAJOR >= 5
             case triton::extlibs::capstone::ARM64_INS_SUBS:
               tritonId = triton::arch::arm::aarch64::ID_INS_SUB;
               break;
+            #endif
 
             case triton::extlibs::capstone::ARM64_INS_SUB:
               tritonId = triton::arch::arm::aarch64::ID_INS_SUB;
