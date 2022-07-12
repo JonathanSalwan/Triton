@@ -1,5 +1,9 @@
 #! /usr/bin/env bash
 
+# This file is used for building the docker image necessary to build
+# triton-library with the manylinux tag. It is used by the Build Python
+# Package Github workflow but can also be used locally.
+
 set -ex
 
 SCRIPT_DIR=$( cd -- "$( dirname -- "${BASH_SOURCE[0]}" )" &> /dev/null && pwd )
