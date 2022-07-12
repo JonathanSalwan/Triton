@@ -1584,6 +1584,10 @@ namespace triton {
               tritonId = triton::arch::arm::aarch64::ID_INS_SUBHN2;
               break;
 
+            case triton::extlibs::capstone::ARM64_INS_SUBS:
+              tritonId = triton::arch::arm::aarch64::ID_INS_SUB;
+              break;
+
             case triton::extlibs::capstone::ARM64_INS_SUB:
               tritonId = triton::arch::arm::aarch64::ID_INS_SUB;
               break;
