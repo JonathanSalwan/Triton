@@ -1,4 +1,4 @@
-name: CMake
+name: Test the VCPKG install
 
 on: [push, pull_request, workflow_dispatch]
 
@@ -48,7 +48,7 @@ jobs:
     - uses: lukka/get-cmake@latest
       name: Get CMake
 
-    - uses: ilammy/msvc-dev-cmd@v1  
+    - uses: ilammy/msvc-dev-cmd@v1
       name: Setup Windows dev environment
       with:
         arch: 'x64'

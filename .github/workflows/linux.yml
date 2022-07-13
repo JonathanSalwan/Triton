@@ -7,12 +7,13 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        boost-interface: ['ON', 'OFF']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
       - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
       - name: Upgrade pip version
@@ -20,11 +21,20 @@ jobs:
           python -m pip install -U pip
       - name: Install dependencies
         run: |
-          sudo apt-get install python-setuptools libboost-dev
+          sudo apt-get install python-setuptools libboost-dev libgmp-dev
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev
           python -m pip install z3-solver
+      - name: Install Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./configure.sh production --only-cadical --no-symfpu --no-testing --shared
+          sudo make -C build install
+          cd ..
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -50,7 +60,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake ..
+          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) -DBOOST_INTERFACE=${{ matrix.boost-interface }} ..
           sudo make -j3 install
       - name: Unittests
         run: |
