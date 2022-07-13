@@ -197,8 +197,7 @@ def emulate(ctx, pc):
 
         # Process
         if ctx.processing(instruction) == EXCEPTION.FAULT_UD:
-            opcodes_str = " ".join(["{:02x}".format(ord(b)) for b in instruction.getOpcode()])
-            debug('[-] Instruction not supported: %s\t%s' %(opcodes_str, str(instruction)))
+            debug('[-] Instruction not supported: %s' %(str(instruction)))
             break
 
         # debug(instruction)

@@ -149,6 +149,7 @@ namespace triton {
             case ID_INS_CMN:       this->cmn_s(inst);           break;
             case ID_INS_CMP:       this->cmp_s(inst);           break;
             case ID_INS_EOR:       this->eor_s(inst);           break;
+            case ID_INS_HINT:      this->nop_s(inst);           break;
             case ID_INS_IT:        this->it_s(inst);            break;
             case ID_INS_LDM:       this->ldm_s(inst);           break;
             case ID_INS_LDR:       this->ldr_s(inst);           break;

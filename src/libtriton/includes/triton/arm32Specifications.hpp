@@ -508,8 +508,6 @@ namespace triton {
           ID_INS_CBZ, //!< cbz
           ID_INS_POP, //!< pop
           ID_INS_PUSH, //!< push
-
-          // special instructions
           ID_INS_NOP, //!< nop
           ID_INS_YIELD, //!< yield
           ID_INS_WFE, //!< wfe
