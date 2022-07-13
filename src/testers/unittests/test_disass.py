@@ -14,20 +14,6 @@ class TestAArch64Disass(unittest.TestCase):
         self.ctx = TritonContext()
         self.ctx.setArchitecture(ARCH.AARCH64)
 
-    def test_inst1(self):
-        inst = Instruction(b"\x80\x46\x82\xd2") # mov x0, #0x1234
-
-        self.ctx.disassembly(inst)
-        self.assertEqual(inst.getDisassembly(), "mov x0, #0x1234")
-
-        self.assertEqual(len(inst.getOperands()), 2)
-
-        op0 = inst.getOperands()[0]
-        op1 = inst.getOperands()[1]
-
-        self.assertEqual(op0.getName(), "x0")
-        self.assertEqual(op1.getValue(), 0x1234)
-
     def test_inst2(self):
         inst = Instruction(b"\xe1\x0b\x40\xb9") # ldr w1, [sp, #8]
 
