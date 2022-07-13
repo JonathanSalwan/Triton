@@ -5437,12 +5437,6 @@ namespace triton {
         /* Create symbolic operands */
         auto divisor = this->symbolicEngine->getOperandAst(inst, src);
 
-        /* Return an exception if the divisor is zero */
-        if (divisor->evaluate() == 0) {
-          this->exception = triton::arch::FAULT_DE;
-          return;
-        }
-
         /* Create symbolic expression */
         switch (src.getSize()) {
 
@@ -5464,6 +5458,11 @@ namespace triton {
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "DIV operation");
             /* Apply the taint */
             expr->isTainted = this->taintEngine->taintUnion(ax, src);
+            /* Divide error */
+            if (result->evaluate() > 0xff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -5473,7 +5472,8 @@ namespace triton {
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, dx), this->symbolicEngine->getOperandAst(inst, ax));
             /* res = DX:AX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::word, divisor)));
+            auto temp = this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::word, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, temp);
             /* mod = DX:AX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::word, divisor)));
             /* Create the symbolic expression for AX */
@@ -5484,6 +5484,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, dx, "DIV operation");
             /* Apply the taint for DX */
             expr2->isTainted = this->taintEngine->taintUnion(dx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -5493,7 +5498,8 @@ namespace triton {
             auto eax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, edx), this->symbolicEngine->getOperandAst(inst, eax));
             /* res = EDX:EAX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::dword, divisor)));
+            auto temp = this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::dword, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, temp);
             /* mod = EDX:EAX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::dword, divisor)));
             /* Create the symbolic expression for EAX */
@@ -5504,6 +5510,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, edx, "DIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(edx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffffffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -5513,7 +5524,8 @@ namespace triton {
             auto rax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, rdx), this->symbolicEngine->getOperandAst(inst, rax));
             /* res = RDX:RAX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::qword, divisor)));
+            auto temp = this->astCtxt->bvudiv(dividend, this->astCtxt->zx(triton::bitsize::qword, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, temp);
             /* mod = RDX:RAX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvurem(dividend, this->astCtxt->zx(triton::bitsize::qword, divisor)));
             /* Create the symbolic expression for RAX */
@@ -5524,6 +5536,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, rdx, "DIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(rdx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffffffffffffffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -5536,6 +5553,12 @@ namespace triton {
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
+
+        /* Return an exception if the divisor is zero */
+        if (divisor->evaluate() == 0) {
+          this->exception = triton::arch::FAULT_DE;
+          return;
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
@@ -7126,12 +7149,6 @@ namespace triton {
         /* Create symbolic operands */
         auto divisor = this->symbolicEngine->getOperandAst(inst, src);
 
-        /* Return an exception if the divisor is zero */
-        if (divisor->evaluate() == 0) {
-          this->exception = triton::arch::FAULT_DE;
-          return;
-        }
-
         /* Create symbolic expression */
         switch (src.getSize()) {
 
@@ -7153,6 +7170,11 @@ namespace triton {
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "IDIV operation");
             /* Apply the taint */
             expr->isTainted = this->taintEngine->taintUnion(ax, src);
+            /* Divide error */
+            if (result->evaluate() > 0xff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -7162,7 +7184,8 @@ namespace triton {
             auto ax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_AX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, dx), this->symbolicEngine->getOperandAst(inst, ax));
             /* res = DX:AX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
+            auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::word, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::word - 1), 0, temp);
             /* mod = DX:AX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::word - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::word, divisor)));
             /* Create the symbolic expression for AX */
@@ -7173,6 +7196,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, dx, "IDIV operation");
             /* Apply the taint for DX */
             expr2->isTainted = this->taintEngine->taintUnion(dx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -7182,7 +7210,8 @@ namespace triton {
             auto eax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, edx), this->symbolicEngine->getOperandAst(inst, eax));
             /* res = EDX:EAX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
+            auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::dword - 1), 0, temp);
             /* mod = EDX:EAX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::dword, divisor)));
             /* Create the symbolic expression for EAX */
@@ -7193,6 +7222,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, edx, "IDIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(edx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffffffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -7202,7 +7236,8 @@ namespace triton {
             auto rax = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_RAX));
             auto dividend = this->astCtxt->concat(this->symbolicEngine->getOperandAst(inst, rdx), this->symbolicEngine->getOperandAst(inst, rax));
             /* res = RDX:RAX / Source */
-            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
+            auto temp = this->astCtxt->bvsdiv(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor));
+            auto result = this->astCtxt->extract((triton::bitsize::qword - 1), 0, temp);
             /* mod = RDX:RAX % Source */
             auto mod = this->astCtxt->extract((triton::bitsize::qword - 1), 0, this->astCtxt->bvsmod(dividend, this->astCtxt->sx(triton::bitsize::qword, divisor)));
             /* Create the symbolic expression for RAX */
@@ -7213,6 +7248,11 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, rdx, "IDIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(rdx, src);
+            /* Divide error */
+            if (temp->evaluate() > 0xffffffffffffffff) {
+              this->exception = triton::arch::FAULT_DE;
+              return;
+            }
             break;
           }
 
@@ -7225,6 +7265,12 @@ namespace triton {
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_PF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_SF));
         this->undefined_s(inst, this->architecture->getRegister(ID_REG_X86_ZF));
+
+        /* Return an exception if the divisor is zero */
+        if (divisor->evaluate() == 0) {
+          this->exception = triton::arch::FAULT_DE;
+          return;
+        }
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
