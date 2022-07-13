@@ -861,7 +861,7 @@ namespace triton {
       }
 
 
-      PyObject* PyInstruction(const triton::uint8* opcode, triton::uint32 opSize) {
+      PyObject* PyInstruction(const void* opcode, triton::uint32 opSize) {
         Instruction_Object* object;
 
         PyType_Ready(&Instruction_Type);
@@ -873,7 +873,7 @@ namespace triton {
       }
 
 
-      PyObject* PyInstruction(triton::uint64 addr, const triton::uint8* opcode, triton::uint32 opSize) {
+      PyObject* PyInstruction(triton::uint64 addr, const void* opcode, triton::uint32 opSize) {
         Instruction_Object* object;
 
         PyType_Ready(&Instruction_Type);

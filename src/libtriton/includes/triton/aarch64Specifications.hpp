@@ -78,7 +78,7 @@ namespace triton {
         };
 
         //! AArch64 NOP instruction
-        const triton::arch::Instruction nop = triton::arch::Instruction(reinterpret_cast<const triton::uint8*>("\x1f\x20\x03\xd5"), 4);
+        const triton::arch::Instruction nop = triton::arch::Instruction("\x1f\x20\x03\xd5", 4);
 
         //! The list of opcodes.
         enum instruction_e {

@@ -277,7 +277,7 @@ namespace triton {
           TRITON_EXPORT void clear(void);
           TRITON_EXPORT void disassembly(triton::arch::Instruction& inst);
           TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values);
-          TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
+          TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size);
           TRITON_EXPORT void setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value);
           TRITON_EXPORT void setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value);
           TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value);

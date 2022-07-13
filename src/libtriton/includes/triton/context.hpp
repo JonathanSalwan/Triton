@@ -223,7 +223,7 @@ namespace triton {
          * \details Note that by setting a concrete value will probably imply a desynchronization
          * with the symbolic state (if it exists). You should probably use the concretize functions after this.
          */
-        TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size);
+        TRITON_EXPORT void setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size);
 
         /*!
          * \brief [**architecture api**] - Sets the concrete value of a register.

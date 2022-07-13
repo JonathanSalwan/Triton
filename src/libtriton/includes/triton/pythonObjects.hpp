@@ -76,10 +76,10 @@ namespace triton {
       PyObject* PyInstruction(const triton::arch::Instruction& inst);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(const triton::uint8* opcodes, triton::uint32 opSize);
+      PyObject* PyInstruction(const void* opcodes, triton::uint32 opSize);
 
       //! Creates the Instruction python class.
-      PyObject* PyInstruction(triton::uint64 addr, const triton::uint8* opcodes, triton::uint32 opSize);
+      PyObject* PyInstruction(triton::uint64 addr, const void* opcodes, triton::uint32 opSize);
 
       //! Creates the Memory python class.
       PyObject* PyMemoryAccess(const triton::arch::MemoryAccess& mem);

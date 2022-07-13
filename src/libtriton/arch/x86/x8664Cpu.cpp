@@ -969,11 +969,11 @@ namespace triton {
       }
 
 
-      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size) {
         // Pre-reserving the memory. We modified the original robin_map to not force rehash on every reserve if not needed.
         this->memory.reserve(size + this->memory.size());
         for (triton::usize index = 0; index < size; index++) {
-          this->setConcreteMemoryValue(baseAddr+index, area[index]);
+          this->setConcreteMemoryValue(baseAddr+index, reinterpret_cast<const triton::uint8*>(area)[index]);
         }
       }
 

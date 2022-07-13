@@ -411,7 +411,7 @@ namespace triton {
   }
 
 
-  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size) {
     this->checkArchitecture();
     this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
     /*

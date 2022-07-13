@@ -327,7 +327,7 @@ namespace triton {
     }
 
 
-    void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const triton::uint8* area, triton::usize size) {
+    void Architecture::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size) {
       if (!this->cpu)
         throw triton::exceptions::Architecture("Architecture::setConcreteMemoryAreaValue(): You must define an architecture.");
       this->cpu->setConcreteMemoryAreaValue(baseAddr, area, size);

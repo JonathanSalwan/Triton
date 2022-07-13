@@ -75,10 +75,10 @@ namespace triton {
         };
 
         //! ARM32 NOP instruction
-        const triton::arch::Instruction nop = triton::arch::Instruction(reinterpret_cast<const triton::uint8*>("\x00\xf0\x20\xe3"), 4);
+        const triton::arch::Instruction nop = triton::arch::Instruction("\x00\xf0\x20\xe3", 4);
 
         //! ARM32 Thumb NOP instruction
-        const triton::arch::Instruction thumbnop = triton::arch::Instruction(reinterpret_cast<const triton::uint8*>("\x00\xbf"), 2);
+        const triton::arch::Instruction thumbnop = triton::arch::Instruction("\x00\xbf", 2);
 
         //! The list of opcodes.
         enum instruction_e {
