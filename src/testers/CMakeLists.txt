@@ -1,6 +1,6 @@
 # These following tests are used to test our semantics. It relies on Unicorn emulator.
-# We test our semantics on Linux only because the setup is easier.
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
+# We test our semantics on Linux and OSX only because the setup is easier.
+if((${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin") AND PYTHON_BINDINGS)
     enable_testing()
 
     add_test(NAME UnicornAArch64Semantics   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/aarch64/unicorn_test_aarch64.py)
@@ -38,7 +38,43 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux" AND PYTHON_BINDINGS)
     add_test(NAME UnicornARM32Semantics31   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-O3-run.py)
     add_test(NAME UnicornARM32Semantics32   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-Os-run.py)
     add_test(NAME UnicornARM32Semantics33   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-Oz-run.py)
-    set_property(TEST UnicornAArch64Semantics UnicornX86Semantics UnicornARM32Semantics1 UnicornARM32Semantics2 UnicornARM32Semantics3 UnicornARM32Semantics4 UnicornARM32Semantics5 UnicornARM32Semantics6 UnicornARM32Semantics7 UnicornARM32Semantics8 UnicornARM32Semantics9 UnicornARM32Semantics10 UnicornARM32Semantics11 UnicornARM32Semantics12 UnicornARM32Semantics13 UnicornARM32Semantics14 UnicornARM32Semantics15 UnicornARM32Semantics16 UnicornARM32Semantics17 UnicornARM32Semantics18 UnicornARM32Semantics19 UnicornARM32Semantics20 UnicornARM32Semantics21 UnicornARM32Semantics22 UnicornARM32Semantics23 UnicornARM32Semantics24 UnicornARM32Semantics25 UnicornARM32Semantics26 UnicornARM32Semantics27 UnicornARM32Semantics28 UnicornARM32Semantics29 UnicornARM32Semantics30 UnicornARM32Semantics31 UnicornARM32Semantics32 UnicornARM32Semantics33
-        PROPERTY ENVIRONMENT
-            "PYTHONPATH=$<TARGET_FILE_DIR:triton>")
+
+    set_property(TEST
+        UnicornAArch64Semantics
+        UnicornX86Semantics
+        UnicornARM32Semantics1
+        UnicornARM32Semantics2
+        UnicornARM32Semantics3
+        UnicornARM32Semantics4
+        UnicornARM32Semantics5
+        UnicornARM32Semantics6
+        UnicornARM32Semantics7
+        UnicornARM32Semantics8
+        UnicornARM32Semantics9
+        UnicornARM32Semantics10
+        UnicornARM32Semantics11
+        UnicornARM32Semantics12
+        UnicornARM32Semantics13
+        UnicornARM32Semantics14
+        UnicornARM32Semantics15
+        UnicornARM32Semantics16
+        UnicornARM32Semantics17
+        UnicornARM32Semantics18
+        UnicornARM32Semantics19
+        UnicornARM32Semantics20
+        UnicornARM32Semantics21
+        UnicornARM32Semantics22
+        UnicornARM32Semantics23
+        UnicornARM32Semantics24
+        UnicornARM32Semantics25
+        UnicornARM32Semantics26
+        UnicornARM32Semantics27
+        UnicornARM32Semantics28
+        UnicornARM32Semantics29
+        UnicornARM32Semantics30
+        UnicornARM32Semantics31
+        UnicornARM32Semantics32
+        UnicornARM32Semantics33
+        PROPERTY ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:triton>"
+    )
 endif()
