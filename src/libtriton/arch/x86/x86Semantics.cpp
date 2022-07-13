@@ -7170,11 +7170,6 @@ namespace triton {
             auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, ax, "IDIV operation");
             /* Apply the taint */
             expr->isTainted = this->taintEngine->taintUnion(ax, src);
-            /* Divide error */
-            if (result->evaluate() > 0xff) {
-              this->exception = triton::arch::FAULT_DE;
-              return;
-            }
             break;
           }
 
@@ -7196,11 +7191,6 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, dx, "IDIV operation");
             /* Apply the taint for DX */
             expr2->isTainted = this->taintEngine->taintUnion(dx, src);
-            /* Divide error */
-            if (temp->evaluate() > 0xffff) {
-              this->exception = triton::arch::FAULT_DE;
-              return;
-            }
             break;
           }
 
@@ -7222,11 +7212,6 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, edx, "IDIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(edx, src);
-            /* Divide error */
-            if (temp->evaluate() > 0xffffffff) {
-              this->exception = triton::arch::FAULT_DE;
-              return;
-            }
             break;
           }
 
@@ -7248,11 +7233,6 @@ namespace triton {
             auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, mod, rdx, "IDIV operation");
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(rdx, src);
-            /* Divide error */
-            if (temp->evaluate() > 0xffffffffffffffff) {
-              this->exception = triton::arch::FAULT_DE;
-              return;
-            }
             break;
           }
 
