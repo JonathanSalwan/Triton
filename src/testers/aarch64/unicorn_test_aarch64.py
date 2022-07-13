@@ -1749,10 +1749,9 @@ CODE  = [
     (b"\x02\x02\x80\xd2", "movz x2, #16"),
     (b"\x25\xfc\x5f\xc8", "ldaxr x5, [x1]"),
     (b"\x01\x06\xa0\xd2", "movz x1, #0x30, lsl #16"), # HEAP address
-    (b"\x21\xc8\x00\x91", "add x1, x1, #50"), # HEAP+50 address
     (b"\x29\xfc\x5f\xc8", "ldaxr x9, [x1]"),
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
-    (b"\x3f\x10\x00\x91", "add sp, x1, #4"),
+    (b"\x3f\x20\x00\x91", "add sp, x1, #8"),
     (b"\xeb\xff\x5f\xc8", "ldaxr x11, [sp]"),
     (b"\xff\xff\x5f\xc8", "ldaxr xzr, [sp]"),
     (b"\xe7\xff\x5f\x88", "ldaxr w7, [sp]"),
@@ -1804,7 +1803,7 @@ CODE  = [
     (b"\x2b\xfc\x9f\x48", "stlrh w11, [x1]"),
 
     (b"\x01\x04\xa0\xd2", "movz x1, #0x20, lsl #16"), # STACK address
-    (b"\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+12
+    (b"\x21\x20\x00\x91", "add x1, x1, #8"), # STACK+8
     (b"\x20\x7c\x5f\xc8", "ldxr x0, [x1]"),
     (b"\x21\x30\x00\x91", "add x1, x1, #12"), # STACK+24
     (b"\x20\x7c\x5f\x08", "ldxrb w0, [x1]"),

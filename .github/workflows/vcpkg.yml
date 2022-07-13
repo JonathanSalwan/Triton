@@ -85,7 +85,7 @@ jobs:
       # Test disabled on macOS `pip install lief` fails as there is no ready to use .whl and compilation fails 
       if: ${{ (matrix.platform != 'windows') && (matrix.platform != 'macos') }}
       run: |
-        ${{ matrix.python-executable }} -m pip install lief==0.10.1 unicorn==1.0.2rc2 z3-solver
+        ${{ matrix.python-executable }} -m pip install lief==0.10.1 unicorn z3-solver
         ctest --preset test-${{ matrix.cmake-preset }} -C Release --output-on-failure
 
     - name: Install

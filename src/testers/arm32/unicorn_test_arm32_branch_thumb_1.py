@@ -61,7 +61,6 @@ CODE  = [
     (b"\x56\xf8\x04\xff", "ldr pc, [r6, #0x4]!"),
     (b"\x57\xf8\x04\xfd", "ldr pc, [r7, #-0x4]!"),
 
-    (b"\x95\xe8\x00\x80", "ldm r5, {pc}"),
     (b"\x55\xf8\x04\xfb", "ldm r5!, {pc}"),
 ]
 

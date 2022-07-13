@@ -69,7 +69,7 @@ jobs:
 
       - name: Install Unicorn
         run: |
-          sudo python -m pip install unicorn==1.0.2rc2
+          sudo python -m pip install unicorn
 
       - name: Install LIEF
         run: |
