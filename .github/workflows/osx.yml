@@ -7,21 +7,57 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        python-version: [3.6, 3.7, 3.8, 3.9]
+        python-version: ['3.6', '3.7', '3.8', '3.9', '3.10']
+        boost-interface: ['ON', 'OFF']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v4
         with:
           python-version: ${{ matrix.python-version }}
+
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
+          directory: ${{ runner.temp }}/llvm
+
       - name: Install dependencies
         run: |
           brew install boost
+
       - name: Install Z3
         run: |
           brew install z3
           sudo python -m pip install z3-solver
+
+      - name: Download and build GMP
+        run: |
+          wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
+          tar xvf gmp-6.2.1.tar.xz
+          cd gmp-6.2.1/
+          ./configure --with-pic
+          make
+          make check
+
+      - name: Download and build Bitwuzla
+        run: |
+          git clone https://github.com/bitwuzla/bitwuzla.git
+          cd bitwuzla
+          ./contrib/setup-cadical.sh
+          ./contrib/setup-btor2tools.sh
+          ./contrib/setup-symfpu.sh
+          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+          cd build
+          make
+          cd lib
+          libtool -static -o libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a
+          mv libbitwuzlam.a libbitwuzla.a
+          cd ..
+          make install
+
       - name: Install Capstone
         run: |
           wget https://github.com/aquynh/capstone/archive/4.0.2.tar.gz
@@ -30,18 +66,23 @@ jobs:
           bash ./make.sh
           sudo make install
           cd ../
+
       - name: Install Unicorn
         run: |
           sudo python -m pip install unicorn==1.0.2rc2
+
       - name: Install LIEF
         run: |
           sudo python -m pip install lief
+
       - name: Compile Triton
         run: |
           mkdir ./build
           cd ./build
           cmake ..
+          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} -DBOOST_INTERFACE=${{ matrix.boost-interface }} ..
           sudo make -j3 install
+
       - name: Unittests
         run: |
           ctest --test-dir build --output-on-failure
