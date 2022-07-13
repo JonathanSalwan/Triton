@@ -553,3 +553,45 @@ class TestIssue872(unittest.TestCase):
     def test_2(self):
         ret = self.ctx.processing(Instruction(b"\xCC")) # int3
         self.assertEqual(ret, EXCEPTION.FAULT_BP)
+
+
+class TestIssue1159(unittest.TestCase):
+    """Testing #1159."""
+
+    def setUp(self):
+        self.ctx = TritonContext(ARCH.X86_64)
+        self.ast = self.ctx.getAstContext()
+        self.ctx.symbolizeRegister(self.ctx.registers.rax, "rax")
+        self.ctx.symbolizeRegister(self.ctx.registers.rdx, "rdx")
+        self.ctx.symbolizeRegister(self.ctx.registers.r12, "r12")
+        self.code = [
+          (b"\x48\xC7\xC0\xFF\xFF\xFF\xFF", EXCEPTION.NO_FAULT),  # mov rax, 0xffffffffffffffff
+          (b"\x48\xC7\xC2\xFF\xFF\xFF\xFF", EXCEPTION.NO_FAULT),  # mov rdx, 0xffffffffffffffff
+          (b"\x49\xC7\xC4\xFF\xFF\xFF\xFF", EXCEPTION.NO_FAULT),  # mov r12, 0xffffffffffffffff
+          (b"\x49\xF7\xF4",                 EXCEPTION.FAULT_DE),  # div r12
+          (b"\x48\xFF\xCA",                 EXCEPTION.NO_FAULT),  # dec rdx
+        ]
+
+    def test_1(self):
+        # 0xffffffffffffffffffffffffffffffff / 0xffffffffffffffff = 0x10000000000000001 + 0 remainder
+        for op in self.code[0:4]:
+            ret = self.ctx.processing(Instruction(op[0]))
+            self.assertEqual(ret, op[1])
+
+    def test_2(self):
+        # 0xfffffffffffffffeffffffffffffffff / 0xffffffffffffffff = 0xffffffffffffffff + 0xfffffffffffffffe remainder
+        self.code.append(self.code.pop(3))  # move the division to the end
+        for op in self.code[0:5]:  # initialize with -1 and decrement rdx
+            ret = self.ctx.processing(Instruction(op[0]))
+            self.assertEqual(ret, EXCEPTION.NO_FAULT)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rax), 0xffffffffffffffff)
+        self.assertEqual(self.ctx.getConcreteRegisterValue(self.ctx.registers.rdx), 0xfffffffffffffffe)
+
+    def test_3(self):  # pure symbolic rdx:rax / r12
+        for op in self.code[3:4]:
+            ret = self.ctx.processing(Instruction(op[0]))
+            self.assertEqual(ret, EXCEPTION.NO_FAULT)
+        raxast = self.ast.unroll(self.ctx.getSymbolicRegister(self.ctx.registers.rax).getAst())
+        self.assertEqual(str(raxast), "((_ extract 63 0) (bvudiv (concat rdx rax) ((_ zero_extend 64) r12)))")
+        rdxast = self.ast.unroll(self.ctx.getSymbolicRegister(self.ctx.registers.rdx).getAst())
+        self.assertEqual(str(rdxast), "((_ extract 63 0) (bvurem (concat rdx rax) ((_ zero_extend 64) r12)))")
