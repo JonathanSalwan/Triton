@@ -437,6 +437,7 @@ namespace triton {
 
 
       triton::arch::exception_e x86Semantics::buildSemantics(triton::arch::Instruction& inst) {
+        this->exception = triton::arch::NO_FAULT;
         switch (inst.getType()) {
           case ID_INS_AAA:            this->aaa_s(inst);          break;
           case ID_INS_AAD:            this->aad_s(inst);          break;
@@ -815,7 +816,8 @@ namespace triton {
           case ID_INS_XORPD:          this->xorpd_s(inst);        break;
           case ID_INS_XORPS:          this->xorps_s(inst);        break;
           default:
-            return triton::arch::FAULT_UD;
+            this->exception = triton::arch::FAULT_UD;
+            break;
         }
         return this->exception;
       }

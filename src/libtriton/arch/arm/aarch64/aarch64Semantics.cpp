@@ -193,6 +193,7 @@ namespace triton {
 
 
         triton::arch::exception_e AArch64Semantics::buildSemantics(triton::arch::Instruction& inst) {
+          this->exception = triton::arch::NO_FAULT;
           switch (inst.getType()) {
             case ID_INS_ADC:       this->adc_s(inst);           break;
             case ID_INS_ADD:       this->add_s(inst);           break;
@@ -300,7 +301,8 @@ namespace triton {
             case ID_INS_UXTB:      this->uxtb_s(inst);          break;
             case ID_INS_UXTH:      this->uxth_s(inst);          break;
             default:
-              return triton::arch::FAULT_UD;
+              this->exception = triton::arch::FAULT_UD;
+              break;
           }
           return this->exception;
         }
