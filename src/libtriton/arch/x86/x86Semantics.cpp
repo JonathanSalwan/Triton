@@ -7171,7 +7171,7 @@ namespace triton {
             /* Apply the taint */
             expr->isTainted = this->taintEngine->taintUnion(ax, src);
             /* Divide error */
-            if (!result->isSymbolized() && result->evaluate() > 0xff) {
+            if (!result->isSymbolized() && ((result->evaluate() > 0x7f) || (result->evaluate() < 0x80))) {
               this->exception = triton::arch::FAULT_DE;
               return;
             }
@@ -7197,7 +7197,7 @@ namespace triton {
             /* Apply the taint for DX */
             expr2->isTainted = this->taintEngine->taintUnion(dx, src);
             /* Divide error */
-            if (!temp->isSymbolized() && temp->evaluate() > 0xffff) {
+            if (!temp->isSymbolized() && ((temp->evaluate() > 0x7fff) || (temp->evaluate() < 0x8000))) {
               this->exception = triton::arch::FAULT_DE;
               return;
             }
@@ -7223,7 +7223,7 @@ namespace triton {
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(edx, src);
             /* Divide error */
-            if (!temp->isSymbolized() && temp->evaluate() > 0xffffffff) {
+            if (!temp->isSymbolized() && ((temp->evaluate() > 0x7fffffff) || (temp->evaluate() < 0x80000000))) {
               this->exception = triton::arch::FAULT_DE;
               return;
             }
@@ -7249,7 +7249,7 @@ namespace triton {
             /* Apply the taint for EDX */
             expr2->isTainted = this->taintEngine->taintUnion(rdx, src);
             /* Divide error */
-            if (!temp->isSymbolized() && temp->evaluate() > 0xffffffffffffffff) {
+            if (!temp->isSymbolized() && ((temp->evaluate() > 0x7fffffffffffffff) || (temp->evaluate() < 0x8000000000000000))) {
               this->exception = triton::arch::FAULT_DE;
               return;
             }
