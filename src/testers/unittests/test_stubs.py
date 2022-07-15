@@ -39,3 +39,24 @@ class TestStubs(unittest.TestCase):
         self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strcmp"])
         rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
         self.assertEqual(rax, 0)
+
+    def test_strncasecmp(self):
+        # Equal
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"trIton StuBS")
+        self.ctx.setConcreteMemoryAreaValue(0x2000, b"TritOn stUbS")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0x2000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdx, 12)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strncasecmp"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 0)
+
+        # Not equal
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"trIton St..S")
+        self.ctx.setConcreteMemoryAreaValue(0x2000, b"TritOn stUbS")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0x2000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdx, 12)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strncasecmp"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertNotEqual(rax, 0)
