@@ -66,6 +66,43 @@ namespace triton {
       };
     /*! @} End of x8664 namespace */
     };
+
+    //! The i386 namespace
+    namespace i386 {
+    /*!
+     *  \ingroup stubs
+     *  \addtogroup i386
+     *  @{
+     */
+
+      //! The systemv namespace
+      namespace systemv {
+      /*!
+       *  \ingroup i386
+       *  \addtogroup systemv
+       *  @{
+       */
+
+        //! The linux namespace
+        namespace libc {
+        /*!
+         *  \ingroup systemv
+         *  \addtogroup libc
+         *  @{
+         */
+
+          /*! Symbols mapping. Each entry points on its position in `systemv::libc::code`. Example: strcmp -> 0x601. */
+          extern std::map<std::string, triton::uint64> symbols;
+
+          /*! Position independent code of some libc functions */
+          extern std::vector<triton::uint8> code;
+
+        /*! @} End of libc namespace */
+        };
+      /*! @} End of systemv namespace */
+      };
+    /*! @} End of i386 namespace */
+    };
   /*! @} End of stubs namespace */
   };
 /*! @} End of triton namespace */

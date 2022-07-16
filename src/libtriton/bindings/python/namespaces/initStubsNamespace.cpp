@@ -5,6 +5,9 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
+#include <map>
+#include <vector>
+
 #include <triton/pythonBindings.hpp>
 #include <triton/pythonUtils.hpp>
 #include <triton/pythonXFunctions.hpp>
@@ -39,52 +42,60 @@ namespace triton {
   namespace bindings {
     namespace python {
 
-      static PyObject* initCode(void) {
-        auto vv = triton::stubs::x8664::systemv::libc::code;
-        auto* area = new triton::uint8[vv.size()];
+      static PyObject* initCode(const std::vector<triton::uint8>& code) {
+        auto* area = new triton::uint8[code.size()];
 
-        for (triton::usize index = 0; index < vv.size(); index++)
-          area[index] = vv[index];
+        for (triton::usize index = 0; index < code.size(); index++)
+          area[index] = code[index];
 
-        auto* code = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(area), vv.size());
+        auto* ret = PyBytes_FromStringAndSize(reinterpret_cast<const char*>(area), code.size());
         delete[] area;
 
-        return code;
+        return ret;
       }
 
-      static PyObject* initSymbols(void) {
+      static PyObject* initSymbols(const std::map<std::string, triton::uint64>& symbols) {
         PyObject* symbolsDict = xPyDict_New();
-        for (const auto& it : triton::stubs::x8664::systemv::libc::symbols) {
+        for (const auto& it : symbols) {
           xPyDict_SetItem(symbolsDict, xPyString_FromString(it.first.c_str()), PyLong_FromUsize(it.second));
         }
         return symbolsDict;
       }
 
-      static PyObject* initLibc(void) {
+      static PyObject* initLibc(const std::vector<triton::uint8>& code, const std::map<std::string, triton::uint64>& symbols) {
         PyObject* libcDict = xPyDict_New();
-        xPyDict_SetItemString(libcDict, "code", initCode());
-        xPyDict_SetItemString(libcDict, "symbols", initSymbols());
+        xPyDict_SetItemString(libcDict, "code", initCode(code));
+        xPyDict_SetItemString(libcDict, "symbols", initSymbols(symbols));
         PyObject* libcDictClass = xPyClass_New(nullptr, libcDict, xPyString_FromString("LIBC"));
 
         return libcDictClass;
       }
 
-      static PyObject* initSystemV(void) {
+      static PyObject* initSystemV(const std::vector<triton::uint8>& code, const std::map<std::string, triton::uint64>& symbols) {
         PyObject* systemvDict = xPyDict_New();
-        xPyDict_SetItemString(systemvDict, "LIBC", initLibc());
+        xPyDict_SetItemString(systemvDict, "LIBC", initLibc(code, symbols));
         PyObject* systemvDictClass = xPyClass_New(nullptr, systemvDict, xPyString_FromString("SYSTEMV"));
         return systemvDictClass;
       }
 
       static PyObject* initx8664(void) {
-        PyObject* x8664Dict = xPyDict_New();
-        xPyDict_SetItemString(x8664Dict, "SYSTEMV", initSystemV());
-        PyObject* x8664DictClass = xPyClass_New(nullptr, x8664Dict, xPyString_FromString("X8664"));
-        return x8664DictClass;
+        PyObject* dict = xPyDict_New();
+        xPyDict_SetItemString(dict, "SYSTEMV", initSystemV(triton::stubs::x8664::systemv::libc::code, triton::stubs::x8664::systemv::libc::symbols));
+        PyObject* dictClass = xPyClass_New(nullptr, dict, xPyString_FromString("X8664"));
+        return dictClass;
+      }
+
+
+      static PyObject* initi386(void) {
+        PyObject* dict = xPyDict_New();
+        xPyDict_SetItemString(dict, "SYSTEMV", initSystemV(triton::stubs::i386::systemv::libc::code, triton::stubs::i386::systemv::libc::symbols));
+        PyObject* dictClass = xPyClass_New(nullptr, dict, xPyString_FromString("I386"));
+        return dictClass;
       }
 
       void initStubsNamespace(PyObject* stubsDict) {
         xPyDict_SetItemString(stubsDict, "X8664", initx8664());
+        xPyDict_SetItemString(stubsDict, "I386", initi386());
       }
 
     }; /* python namespace */
