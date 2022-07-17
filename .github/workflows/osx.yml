@@ -8,8 +8,6 @@ jobs:
     strategy:
       matrix:
         python-version: ['3.7', '3.8', '3.9', '3.10']
-        boost-interface: ['ON', 'OFF']
-        capstone-version: ['4.0.2', '5.0-rc2']
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -61,9 +59,9 @@ jobs:
 
       - name: Install Capstone
         run: |
-          wget https://github.com/aquynh/capstone/archive/${{ matrix.capstone-version }}.tar.gz
-          tar -xf ./${{ matrix.capstone-version }}.tar.gz
-          cd ./capstone-${{ matrix.capstone-version }}
+          wget https://github.com/aquynh/capstone/archive/5.0-rc2.tar.gz
+          tar -xf ./5.0-rc2.tar.gz
+          cd ./capstone-5.0-rc2
           bash ./make.sh
           sudo make install
           cd ../
@@ -81,7 +79,7 @@ jobs:
           mkdir ./build
           cd ./build
           cmake ..
-          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} -DBOOST_INTERFACE=${{ matrix.boost-interface }} ..
+          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} -DBOOST_INTERFACE=OFF ..
           sudo make -j3 install
 
       - name: Unittests
