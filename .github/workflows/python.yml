@@ -25,7 +25,7 @@ jobs:
       - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
           path: wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
