@@ -2109,9 +2109,9 @@ INCLUDE_FILE_PATTERNS  =
 # This tag requires that the tag ENABLE_PREPROCESSING is set to YES.
 
 PREDEFINED             = TRITON_PYTHON_BINDINGS \
-                         Z3_INTERFACE \
-                         BITWUZLA_INTERFACE \
-                         LLVM_INTERFACE \
+                         TRITON_Z3_INTERFACE \
+                         TRITON_BITWUZLA_INTERFACE \
+                         TRITON_LLVM_INTERFACE \
                          __x86_64__ \
                          __unix__
 
