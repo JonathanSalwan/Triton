@@ -29,8 +29,9 @@ jobs:
 
       - name: Install Z3
         run: |
-          brew install z3
-          sudo python -m pip install z3-solver
+          wget https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-osx-10.16.zip
+          unzip z3-4.8.17-x64-osx-10.16.zip
+          sudo python -m pip install z3-solver==4.8.17.0
 
       - name: Download and build GMP
         run: |
@@ -79,7 +80,15 @@ jobs:
           mkdir ./build
           cd ./build
           cmake ..
-          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} -DBOOST_INTERFACE=OFF ..
+          cmake -DZ3_INTERFACE=ON \
+                -DZ3_INCLUDE_DIRS=${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include \
+                -DZ3_LIBRARIES=${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a \
+                -DBITWUZLA_INTERFACE=ON \
+                -DBITWUZLA_INCLUDE_DIRS=${{ github.workspace }}/bitwuzla/install/include \
+                -DBITWUZLA_LIBRARIES=${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a \
+                -DLLVM_INTERFACE=ON \
+                -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} \
+                -DBOOST_INTERFACE=OFF ..
           sudo make -j3 install
 
       - name: Unittests
