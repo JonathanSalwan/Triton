@@ -90,6 +90,9 @@ jobs:
                 -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} \
                 -DBOOST_INTERFACE=OFF ..
           sudo make -j3 install
+        env:
+          Z3_INCLUDE_DIRS: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/include
+          Z3_LIBRARIES: ${{ github.workspace }}/z3-4.8.17-x64-osx-10.16/bin/libz3.a
 
       - name: Unittests
         run: |
