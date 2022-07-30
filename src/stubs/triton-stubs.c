@@ -5,11 +5,11 @@
  * emulation with Triton.
  *
  * System V ABI
- * $ gcc triton-stubs.c -larchive -o triton-stubs.a -c -fno-stack-protector -fno-builtin
+ * $ gcc triton-stubs.c -o triton-x8664-systemv-stubs.o -c -fno-stack-protector -fno-builtin -fPIC
  * With: __attribute__((sysv_abi))
  *
  * MS ABI
- * $ gcc triton-stubs.c -larchive -o triton-stubs.a -c -fno-stack-protector -fno-builtin
+ * $ gcc triton-stubs.c -o triton-x8664-ms-stubs.o -c -fno-stack-protector -fno-builtin -fPIC
  * With: __attribute__((ms_abi))
  *
  */
@@ -582,4 +582,10 @@ __attribute__((ABI))
 char* strtok(char* s1, const char* s2) {
   static char* next_start = NULL; /* Initialized to 0 since in bss. */
   return strtok_r(s1, s2, &next_start);
+}
+
+
+__attribute__((ABI))
+void none(void) {
+  return;
 }
