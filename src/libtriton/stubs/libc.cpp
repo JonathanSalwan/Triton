@@ -55,6 +55,7 @@ namespace triton {
             {"strstr",      0xa72},
             {"strtok_r",    0xad0},
             {"strtok",      0xb53},
+            {"none",        0xb7e},
           };
 
           /*
@@ -411,6 +412,7 @@ namespace triton {
             {"strtok_r",               0x9EC},
             {"strtok",                 0xA51},
             {"__x86_get_pc_thunk_ax",  0xA7C},
+            {"none",                   0xFBF},
           };
 
           /*
