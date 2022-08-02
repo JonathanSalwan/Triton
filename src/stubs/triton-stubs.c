@@ -4,23 +4,13 @@
  * routines helping the dynamic symbolic exploration when doing a pure
  * emulation with Triton.
  *
- * System V ABI
- * $ gcc triton-stubs.c -o triton-x8664-systemv-stubs.o -c -fno-stack-protector -fno-builtin -fPIC
- * With: __attribute__((sysv_abi))
- *
- * MS ABI
- * $ gcc triton-stubs.c -o triton-x8664-ms-stubs.o -c -fno-stack-protector -fno-builtin -fPIC
- * With: __attribute__((ms_abi))
- *
  */
 
 #include <stddef.h>
 #include <stdlib.h>
 
-#define ABI sysv_abi
 
-
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memccpy(void* s1, const void* s2, int c, size_t n) {
   register char *r1 = s1;
   register const char *r2 = s2;
@@ -31,7 +21,7 @@ void* memccpy(void* s1, const void* s2, int c, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memchr(const void* s, int c, size_t n) {
   const unsigned char* r = (const unsigned char*)s;
 
@@ -47,7 +37,7 @@ void* memchr(const void* s, int c, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int memcmp(const void* s1, const void* s2, size_t n) {
   register const unsigned char* r1 = (const unsigned char*)s1;
   register const unsigned char* r2 = (const unsigned char*)s2;
@@ -59,7 +49,7 @@ int memcmp(const void* s1, const void* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memcpy(void* s1, const void* s2, size_t n) {
   register unsigned char* r1 = s1;
   register const unsigned char* r2 = s2;
@@ -73,7 +63,7 @@ void* memcpy(void* s1, const void* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memmem(const void* haystack, size_t haystacklen, const void* needle, size_t needlelen) {
   register const char* ph;
   register const char* pn;
@@ -103,7 +93,7 @@ void* memmem(const void* haystack, size_t haystacklen, const void* needle, size_
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memmove(void* s1, const void* s2, size_t n) {
   register char* s = (char*)s1;
   register const char* p = (const char*)s2;
@@ -124,7 +114,7 @@ void* memmove(void* s1, const void* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* mempcpy(void* s1, const void* s2, size_t n) {
   register char* r1 = s1;
   register const char* r2 = s2;
@@ -138,7 +128,7 @@ void* mempcpy(void* s1, const void* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memrchr(const void* s, int c, size_t n) {
   register const unsigned char* r;
 
@@ -155,7 +145,7 @@ void* memrchr(const void* s, int c, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* memset(void* s, int c, size_t n) {
   register unsigned char* p = (unsigned char*)s;
 
@@ -168,19 +158,19 @@ void* memset(void* s, int c, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void bcopy(const void* s2, void* s1, size_t n) {
   memmove(s1, s2, n);
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void bzero(void* s, size_t n) {
   (void)memset(s, 0, n);
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void* rawmemchr(const void* s, int c) {
   register const unsigned char* r = s;
   while (*r != ((unsigned char)c)) ++r;
@@ -188,14 +178,14 @@ void* rawmemchr(const void* s, int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* stpcpy(register char* s1, const char* s2) {
   while ((*s1++ = *s2++) != 0);
   return s1 - 1;
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* stpncpy(register char* s1, register const char* s2, size_t n) {
   char* s = s1;
   const char* p = s2;
@@ -210,7 +200,7 @@ char* stpncpy(register char* s1, register const char* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int tolower(int c) {
   int ch = c;
   if ((unsigned int)(ch - 'A') < 26u)
@@ -219,7 +209,7 @@ int tolower(int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int toupper(int c) {
   int ch = c;
   if ((unsigned int)(ch - 'a') < 26u)
@@ -228,7 +218,7 @@ int toupper(int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int strcasecmp(register const char* s1, register const char* s2) {
   while ((*s1 == *s2) || (tolower(*s1) == tolower(*s2))) {
     if (!*s1++) {
@@ -240,7 +230,7 @@ int strcasecmp(register const char* s1, register const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strcasestr(const char* s1, const char* s2) {
   register const char* s = s1;
   register const char* p = s2;
@@ -263,7 +253,7 @@ char* strcasestr(const char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strcat(char* s1, register const char* s2)
 {
   register char* s = s1;
@@ -276,7 +266,7 @@ char* strcat(char* s1, register const char* s2)
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strchr(register const char* s, int c) {
   do {
     if (*s == ((char)c)) {
@@ -288,7 +278,7 @@ char* strchr(register const char* s, int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strchrnul(register const char* s, int c) {
   --s;
   while (*++s && (*s != ((char)c)));
@@ -296,7 +286,7 @@ char* strchrnul(register const char* s, int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int strcmp(register const char* s1, register const char* s2) {
   int r;
   while (((r = ((int)(*((unsigned char*)s1))) - *((unsigned char*)s2++)) == 0) && *s1++);
@@ -304,7 +294,7 @@ int strcmp(register const char* s1, register const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strcpy(char* s1, const char* s2) {
   register char* s = s1;
   while ((*s++ = *s2++) != 0);
@@ -312,7 +302,7 @@ char* strcpy(char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strcspn(const char* s1, const char* s2) {
   register const char* s;
   register const char* p;
@@ -328,7 +318,7 @@ size_t strcspn(const char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strlen(const char* s) {
   register const char* p;
   for (p=s ; *p ; p++);
@@ -348,7 +338,7 @@ size_t strlen(const char* s) {
 //}
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strlcat(register char* dst, register const char* src, size_t n) {
   size_t len;
   char dummy[1];
@@ -378,7 +368,7 @@ size_t strlcat(register char* dst, register const char* src, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strlcpy(register char* dst, register const char* src, size_t n) {
   const char* src0 = src;
   char dummy[1];
@@ -401,7 +391,7 @@ size_t strlcpy(register char* dst, register const char* src, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int strncasecmp(register const char* s1, register const char* s2, size_t n) {
   int r = 0;
   while (n && ((s1 == s2) || !(r = ((int)(tolower(*((unsigned char*)s1)))) - tolower(*((unsigned char*)s2)))) && (--n, ++s2, *s1++));
@@ -409,7 +399,7 @@ int strncasecmp(register const char* s1, register const char* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strncat(char* s1, register const char* s2, size_t n) {
   register char *s = s1;
 
@@ -425,7 +415,7 @@ char* strncat(char* s1, register const char* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 int strncmp(register const char* s1, register const char* s2, size_t n) {
   int r = 0;
   while (n-- && ((r = ((int)(*((unsigned char *)s1))) - *((unsigned char *)s2++)) == 0) && *s1++);
@@ -433,7 +423,7 @@ int strncmp(register const char* s1, register const char* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strncpy(char* s1, register const char* s2, size_t n) {
   register char* s = s1;
 
@@ -447,7 +437,7 @@ char* strncpy(char* s1, register const char* s2, size_t n) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strnlen(const char* s, size_t max) {
   register const char* p = s;
 
@@ -474,7 +464,7 @@ size_t strnlen(const char* s, size_t max) {
 //}
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strpbrk(const char* s1, const char* s2) {
   register const char* s;
   register const char* p;
@@ -490,7 +480,7 @@ char* strpbrk(const char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strrchr(register const  char* s, int c) {
   register const char* p;
 
@@ -505,7 +495,7 @@ char* strrchr(register const  char* s, int c) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strsep(char** s1, const char* s2) {
   register char* s = *s1;
   register char* p;
@@ -520,7 +510,7 @@ char* strsep(char** s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 size_t strspn(const char* s1, const char* s2) {
   register const char* s = s1;
   register const char* p = s2;
@@ -536,7 +526,7 @@ size_t strspn(const char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strstr(const char* s1, const char* s2) {
   register const char* s = s1;
   register const char* p = s2;
@@ -559,7 +549,7 @@ char* strstr(const char* s1, const char* s2) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strtok_r(char* s1, const char* s2, char** next_start) {
   register char* s;
   register char* p;
@@ -578,14 +568,64 @@ char* strtok_r(char* s1, const char* s2, char** next_start) {
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 char* strtok(char* s1, const char* s2) {
   static char* next_start = NULL; /* Initialized to 0 since in bss. */
   return strtok_r(s1, s2, &next_start);
 }
 
 
-__attribute__((ABI))
+__attribute__((STUB_ABI))
 void none(void) {
   return;
+}
+
+
+__attribute__((STUB_ABI))
+char* basename(const char* path) {
+  const char* s;
+  const char* p;
+
+  p = s = path;
+
+  while (*s) {
+    if (*s++ == '/') {
+      p = s;
+    }
+  }
+  return (char *)p;
+}
+
+
+__attribute__((STUB_ABI))
+char* dirname(char* path) {
+  static const char null_or_empty_or_noslash[] = ".";
+  char* s;
+  char* last;
+  char* first;
+
+  last = s = path;
+
+  if (s != NULL) {
+  LOOP:
+    while (*s && (*s != '/')) ++s;
+    first = s;
+    while (*s == '/') ++s;
+    if (*s) {
+      last = first;
+      goto LOOP;
+    }
+    if (last == path) {
+      if (*last != '/') {
+        goto DOT;
+      }
+      if ((*++last == '/') && (last[1] == 0)) {
+        ++last;
+      }
+    }
+    *last = 0;
+    return path;
+  }
+  DOT:
+    return (char *)null_or_empty_or_noslash;
 }
