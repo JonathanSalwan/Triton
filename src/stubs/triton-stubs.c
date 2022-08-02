@@ -326,18 +326,6 @@ size_t strlen(const char* s) {
 }
 
 
-//char* strdup(register const char* s1) {
-//  register char* s;
-//  register size_t l = (strlen(s1) + 1) * sizeof(char);
-//
-//  if ((s = malloc(l)) != NULL) {
-//    memcpy(s, s1, l);
-//  }
-//
-//  return s;
-//}
-
-
 __attribute__((STUB_ABI))
 size_t strlcat(register char* dst, register const char* src, size_t n) {
   size_t len;
@@ -448,20 +436,6 @@ size_t strnlen(const char* s, size_t max) {
 
   return p - s;
 }
-
-
-//char* strndup(register const char* s1, size_t n) {
-//  register char* s;
-//
-//  n = strnlen(s1,n); /* Avoid problems if s1 not nul-terminated. */
-//
-//  if ((s = malloc(n + 1)) != NULL) {
-//    memcpy(s, s1, n);
-//    s[n] = 0;
-//  }
-//
-//  return s;
-//}
 
 
 __attribute__((STUB_ABI))
@@ -978,7 +952,25 @@ unsigned long long strtoull(const char* nptr, char** endptr, register int base) 
 
 
 __attribute__((STUB_ABI))
-int ffs (register int valu) {
+int atoi(const char* nptr) {
+  return (int)strtol(nptr, (char**)NULL, 10);
+}
+
+
+__attribute__((STUB_ABI))
+long atol(const char* nptr) {
+  return strtol(nptr, (char**)NULL, 10);
+}
+
+
+__attribute__((STUB_ABI))
+long long atoll(const char* nptr) {
+  return strtoll(nptr, (char**)NULL, 10);
+}
+
+
+__attribute__((STUB_ABI))
+int ffs(register int valu) {
   register int bit;
 
   if (valu == 0)
@@ -989,3 +981,103 @@ int ffs (register int valu) {
 
   return bit;
 }
+
+
+__attribute__((STUB_ABI))
+int abs(int i) {
+  return i < 0 ? -i : i;
+}
+
+
+__attribute__((STUB_ABI))
+long int labs (long int i) {
+  return i < 0 ? -i : i;
+}
+
+
+__attribute__((STUB_ABI))
+long long int llabs (long long int i) {
+  return i < 0 ? -i : i;
+}
+
+
+/* Conversion table.  */
+static const char conv_table[64] = {
+  '.', '/', '0', '1', '2', '3', '4', '5',
+  '6', '7', '8', '9', 'A', 'B', 'C', 'D',
+  'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L',
+  'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
+  'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b',
+  'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j',
+  'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r',
+  's', 't', 'u', 'v', 'w', 'x', 'y', 'z'
+};
+
+
+__attribute__((STUB_ABI))
+char* l64a(long int n) {
+  unsigned long int m = (unsigned long int) n;
+  static char result[7];
+  int cnt;
+
+  /* The standard says that only 32 bits are used.  */
+  m &= 0xffffffff;
+
+  if (m == 0ul)
+    /* The value for N == 0 is defined to be the empty string. */
+    return (char *) "";
+
+  for (cnt = 0; m > 0ul; ++cnt) {
+    result[cnt] = conv_table[m & 0x3f];
+    m >>= 6;
+  }
+  result[cnt] = '\0';
+
+  return result;
+}
+
+
+#define TABLE_BASE 0x2e
+#define TABLE_SIZE 0x4d
+
+#define XX ((char)0x40)
+
+static const char a64l_table[TABLE_SIZE] = {
+  /* 0x2e */                                                           0,  1,
+  /* 0x30 */   2,  3,  4,  5,  6,  7,  8,  9, 10, 11, XX, XX, XX, XX, XX, XX,
+  /* 0x40 */  XX, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26,
+  /* 0x50 */  27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, XX, XX, XX, XX, XX,
+  /* 0x60 */  XX, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52,
+  /* 0x70 */  53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63
+};
+
+
+__attribute__((STUB_ABI))
+long int a64l(const char* string) {
+  const char* ptr = string;
+  unsigned long int result = 0ul;
+  const char* end = ptr + 6;
+  int shift = 0;
+
+  do {
+    unsigned index;
+    unsigned value;
+
+    index = *ptr - TABLE_BASE;
+    if ((unsigned int) index >= TABLE_SIZE)
+      break;
+    value = (int) a64l_table[index];
+    if (value == (int) XX)
+      break;
+    ++ptr;
+    result |= value << shift;
+    shift += 6;
+  }
+  while (ptr != end);
+
+  return (long int) result;
+}
+
+#undef TABLE_BASE
+#undef TABLE_SIZE
+#undef XX

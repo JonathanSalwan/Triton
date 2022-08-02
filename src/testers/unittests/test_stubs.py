@@ -40,7 +40,7 @@ class TestStubsx8664(unittest.TestCase):
         rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
         self.assertEqual(rax, 0)
 
-    def test_strtoul(self):
+    def test_strtoul1(self):
         self.ctx.setConcreteMemoryAreaValue(0x1000, b"123456")
         self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
         self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0)
@@ -49,7 +49,7 @@ class TestStubsx8664(unittest.TestCase):
         rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
         self.assertEqual(rax, 123456)
 
-    def test_strtoul(self):
+    def test_strtoul2(self):
         self.ctx.setConcreteMemoryAreaValue(0x1000, b"0xdeadbeef")
         self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
         self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0)
@@ -57,6 +57,34 @@ class TestStubsx8664(unittest.TestCase):
         self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strtoul"])
         rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
         self.assertEqual(rax, 0xdeadbeef)
+
+    def test_atoi1(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"12345")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["atoi"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 12345)
+
+    def test_atoi2(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"-1")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["atoi"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 0xffffffffffffffff)
+
+    def test_a64l1(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"zz1")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["a64l"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 0x3fff)
+
+    def test_a64l2(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"FT")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["a64l"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 2001)
 
     def test_strncasecmp(self):
         # Equal
