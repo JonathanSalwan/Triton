@@ -40,6 +40,24 @@ class TestStubsx8664(unittest.TestCase):
         rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
         self.assertEqual(rax, 0)
 
+    def test_strtoul(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"123456")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdx, 10)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strtoul"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 123456)
+
+    def test_strtoul(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"0xdeadbeef")
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdi, 0x1000)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rdx, 16)
+        self.emulate(0x66600000 + STUBS.X8664.SYSTEMV.LIBC.symbols["strtoul"])
+        rax = self.ctx.getConcreteRegisterValue(self.ctx.registers.rax)
+        self.assertEqual(rax, 0xdeadbeef)
+
     def test_strncasecmp(self):
         # Equal
         self.ctx.setConcreteMemoryAreaValue(0x1000, b"trIton StuBS")
