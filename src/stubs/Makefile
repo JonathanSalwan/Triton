@@ -1,5 +1,5 @@
 SRC  	= triton-stubs.c
-CFLAGS 	= -c -fno-stack-protector -fno-builtin -fPIC
+CFLAGS 	= -c -fno-stack-protector -fno-builtin -fPIC -fno-asynchronous-unwind-tables
 CC 	= gcc
 
 all: 64b 32b
