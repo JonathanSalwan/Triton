@@ -56,9 +56,6 @@ if(PYTHON_BINDINGS)
     endif()
     include_directories(${PYTHON_INCLUDE_DIRS})
     add_definitions("-DPYTHON_LIBRARIES=\"${PYTHON_LIBRARIES}\"")
-    cmake_path(GET PYTHON_LIBRARY PARENT_PATH PYTHON_LIB_DIR)
-    cmake_path(GET PYTHON_LIBRARY STEM LAST_ONLY PYTHON_LIB_NAME)
-    string(REGEX REPLACE "^lib" "" PYTHON_LIB_NAME ${PYTHON_LIB_NAME})
     add_custom_target(test-python
         COMMAND ${PYTHONPATH_CMD} ${PYTHON_EXECUTABLE} -m unittest discover ${TRITON_ROOT}/src/testers/unittests
         DEPENDS python-triton
