@@ -157,9 +157,10 @@ jobs:
           wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
           tar xvf gmp-6.2.1.tar.xz
           cd gmp-6.2.1/
-          ./configure --with-pic
+          ./configure --enable-cxx
           make
           make check
+          make install
 
       - name: Download and build Bitwuzla
         run: |
@@ -168,13 +169,9 @@ jobs:
           ./contrib/setup-cadical.sh
           ./contrib/setup-btor2tools.sh
           ./contrib/setup-symfpu.sh
-          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+          ./configure.sh --shared --prefix $(pwd)/install
           cd build
           make
-          cd lib
-          libtool -static -o libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a
-          mv libbitwuzlam.a libbitwuzla.a
-          cd ..
           make install
 
       - name: Download Z3
@@ -204,30 +201,48 @@ jobs:
           CAPSTONE_LIBRARIES: /usr/local/lib/libcapstone.a
           BITWUZLA_INTERFACE: On
           BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
-          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
+          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib
           LLVM_INTERFACE: On
           CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
+
+      - name: Repair wheel package (Python 3.8)
+        if: ${{ matrix.python-version == '3.8' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.8' }}
         with:
           name: triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
           if-no-files-found: warn
+
+      - name: Repair wheel package (Python 3.9)
+        if: ${{ matrix.python-version == '3.9' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.9)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.9' }}
         with:
           name: triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
           if-no-files-found: warn
+
+      - name: Repair wheel package (Python 3.10)
+        if: ${{ matrix.python-version == '3.10' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.10)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.10' }}
         with:
-          name: triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
+          name: triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
           if-no-files-found: warn
