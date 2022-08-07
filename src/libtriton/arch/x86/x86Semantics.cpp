@@ -14202,8 +14202,9 @@ namespace triton {
         auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
 
         /* Create symbolic operands */
-        auto op1 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, this->symbolicEngine->getOperandAst(inst, src));
-        auto op2 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, this->symbolicEngine->getOperandAst(inst, src));
+        auto ast = this->symbolicEngine->getOperandAst(inst, src);
+        auto op1 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, ast);
+        auto op2 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, ast);
 
         /* Create symbolic expression */
         auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, op1, dst1.getRegister(), "RDTSC EDX operation");
