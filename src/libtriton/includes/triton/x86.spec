@@ -325,6 +325,10 @@ REG_SPEC(FS, fs, triton::bitsize::qword-1, 0, FS, triton::bitsize::dword-1, 0, F
 REG_SPEC(GS, gs, triton::bitsize::qword-1, 0, GS, triton::bitsize::dword-1, 0, GS, true) // GS Segment
 REG_SPEC(SS, ss, triton::bitsize::qword-1, 0, SS, triton::bitsize::dword-1, 0, SS, true) // Stack Segment
 
+/* Model-Specific Registers (MSR) */
+
+REG_SPEC_NO_CAPSTONE(TSC, tsc, triton::bitsize::qword-1, 0, TSC, triton::bitsize::qword-1, 0, TSC, true) // Time-Stamp Counter
+
 #undef REG_SPEC
 #undef REG_SPEC_NO_CAPSTONE
 
