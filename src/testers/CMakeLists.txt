@@ -38,7 +38,6 @@ if((${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin
     add_test(NAME UnicornARM32Semantics31   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-O3-run.py)
     add_test(NAME UnicornARM32Semantics32   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-Os-run.py)
     add_test(NAME UnicornARM32Semantics33   COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/arm32/crypto_test/crypto_test-thumb-Oz-run.py)
-    add_test(NAME ExecCallbacksX86          COMMAND ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_LIST_DIR}/x86/exec_callback_test.py)
 
     set_property(TEST
         UnicornAArch64Semantics
@@ -76,7 +75,6 @@ if((${CMAKE_SYSTEM_NAME} MATCHES "Linux" OR ${CMAKE_SYSTEM_NAME} MATCHES "Darwin
         UnicornARM32Semantics31
         UnicornARM32Semantics32
         UnicornARM32Semantics33
-        ExecCallbacksX86
         PROPERTY ENVIRONMENT "PYTHONPATH=$<TARGET_FILE_DIR:triton>"
     )
 endif()
