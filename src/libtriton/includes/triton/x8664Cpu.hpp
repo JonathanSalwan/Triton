@@ -272,6 +272,8 @@ namespace triton {
           triton::uint8 mxcsr[triton::size::dword];
           //! Concrete value of the SSE Register State Mask
           triton::uint8 mxcsr_mask[triton::size::dword];
+          //! Concrete value of the TSC MSR Register
+          triton::uint8 tsc[triton::size::qword];
 
         public:
           //! Constructor.
@@ -303,6 +305,9 @@ namespace triton {
 
           //! Returns true if regId is an EFER register
           TRITON_EXPORT bool isEFER(triton::arch::register_e regId) const;
+
+          //! Returns true if regId is an TSC register
+          TRITON_EXPORT bool isTSC(triton::arch::register_e regId) const;
 
           //! Returns true if regId is a AVX-256 (YMM) register.
           TRITON_EXPORT bool isAVX256(triton::arch::register_e regId) const;

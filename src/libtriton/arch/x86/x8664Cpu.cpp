@@ -159,6 +159,7 @@ namespace triton {
         std::memcpy(this->fdp,        other.fdp,        sizeof(this->fdp));
         std::memcpy(this->fds,        other.fds,        sizeof(this->fds));
         std::memcpy(this->efer,       other.efer,       sizeof(this->efer));
+        std::memcpy(this->tsc,        other.tsc,        sizeof(this->tsc));
       }
 
 
@@ -264,6 +265,7 @@ namespace triton {
         std::memset(this->fdp,        0x00, sizeof(this->fdp));
         std::memset(this->fds,        0x00, sizeof(this->fds));
         std::memset(this->efer,       0x00, sizeof(this->efer));
+        std::memset(this->tsc,        0x00, sizeof(this->tsc));
       }
 
 
@@ -298,6 +300,7 @@ namespace triton {
           this->isSSE(regId)      ||
           this->isFPU(regId)      ||
           this->isEFER(regId)     ||
+          this->isTSC(regId)      ||
           this->isAVX256(regId)   ||
           this->isAVX512(regId)   ||
           this->isControl(regId)  ||
@@ -339,6 +342,11 @@ namespace triton {
 
       bool x8664Cpu::isEFER(triton::arch::register_e regId) const {
         return ((regId == triton::arch::ID_REG_X86_EFER) ? true : false);
+      }
+
+
+      bool x8664Cpu::isTSC(triton::arch::register_e regId) const {
+        return ((regId == triton::arch::ID_REG_X86_TSC) ? true : false);
       }
 
 
@@ -416,6 +424,10 @@ namespace triton {
 
           /* Add EFER */
           else if (this->isEFER(regId))
+            ret.insert(&reg);
+
+          /* Add TSC */
+          else if (this->isTSC(regId))
             ret.insert(&reg);
 
           /* Add AVX-256 */
@@ -923,6 +935,8 @@ namespace triton {
           case triton::arch::ID_REG_X86_EFER_FFXSR: { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 14) & 1); }
           case triton::arch::ID_REG_X86_EFER_TCE:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 15) & 1); }
           case triton::arch::ID_REG_X86_EFER:       { triton::uint64 val = 0;  std::memcpy(&val,  (triton::uint64*)this->efer, sizeof(triton::uint64)); return val; }
+
+          case triton::arch::ID_REG_X86_TSC:    { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->tsc, sizeof(triton::uint64)); return val; }
 
           default:
             throw triton::exceptions::Cpu("x8664Cpu::getConcreteRegisterValue(): Invalid register.");
@@ -1753,6 +1767,8 @@ namespace triton {
           case triton::arch::ID_REG_X86_FS: { triton::uint64 val = static_cast<triton::uint64>(value); std::memcpy((triton::uint64*)this->fs, &val, triton::size::qword); break; }
           case triton::arch::ID_REG_X86_GS: { triton::uint64 val = static_cast<triton::uint64>(value); std::memcpy((triton::uint64*)this->gs, &val, triton::size::qword); break; }
           case triton::arch::ID_REG_X86_SS: { triton::uint64 val = static_cast<triton::uint64>(value); std::memcpy((triton::uint64*)this->ss, &val, triton::size::qword); break; }
+
+          case triton::arch::ID_REG_X86_TSC: { triton::uint64 val = static_cast<triton::uint64>(value); std::memcpy((triton::uint64*)this->tsc, &val, triton::size::qword); break; }
 
           default:
             throw triton::exceptions::Cpu("x8664Cpu:setConcreteRegisterValue(): Invalid register.");
