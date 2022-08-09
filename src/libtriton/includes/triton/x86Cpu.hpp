@@ -208,7 +208,7 @@ namespace triton {
           triton::uint8 mxcsr[triton::size::dword];
           //! Concrete value of the SSE Register State Mask
           triton::uint8 mxcsr_mask[triton::size::dword];
-          //! Concrete value of the TSC MSR Register
+          //! Concrete value of the TSC Register
           triton::uint8 tsc[triton::size::qword];
 
         public:

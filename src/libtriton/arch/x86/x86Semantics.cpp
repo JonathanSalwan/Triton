@@ -14197,18 +14197,18 @@ namespace triton {
 
 
       void x86Semantics::rdtsc_s(triton::arch::Instruction& inst) {
-        auto src = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_TSC));
+        auto src  = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_TSC));
         auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
         auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
 
         /* Create symbolic operands */
-        auto ast = this->symbolicEngine->getOperandAst(inst, src);
-        auto op1 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, ast);
-        auto op2 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, ast);
+        auto op   = this->symbolicEngine->getOperandAst(inst, src);
+        auto high = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, op);
+        auto low  = this->astCtxt->extract((triton::bitsize::dword - 1), 0, op);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, op1, dst1.getRegister(), "RDTSC EDX operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, op2, dst2.getRegister(), "RDTSC EAX operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, high, dst1, "RDTSC EDX operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, low, dst2, "RDTSC EAX operation");
 
         /* Spread taint */
         expr1->isTainted = this->taintEngine->taintUnion(dst1, src);

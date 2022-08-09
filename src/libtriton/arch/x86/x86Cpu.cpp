@@ -662,6 +662,8 @@ namespace triton {
           case triton::arch::ID_REG_X86_YMM6: { return triton::utils::cast<triton::uint256>(this->ymm6); }
           case triton::arch::ID_REG_X86_YMM7: { return triton::utils::cast<triton::uint256>(this->ymm7); }
 
+
+          case triton::arch::ID_REG_X86_TSC:        { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->tsc,        sizeof(triton::uint64)); return val; }
           case triton::arch::ID_REG_X86_MXCSR:      { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->mxcsr,      sizeof(triton::uint32)); return val; }
           case triton::arch::ID_REG_X86_MXCSR_MASK: { triton::uint32 val = 0; std::memcpy(&val, (triton::uint32*)this->mxcsr_mask, sizeof(triton::uint32)); return val; }
 
@@ -773,8 +775,6 @@ namespace triton {
           case triton::arch::ID_REG_X86_EFER_FFXSR: { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 14) & 1); }
           case triton::arch::ID_REG_X86_EFER_TCE:   { triton::uint64 flag = 0; std::memcpy(&flag, (triton::uint64*)this->efer, sizeof(triton::uint64)); return ((flag >> 15) & 1); }
           case triton::arch::ID_REG_X86_EFER:       { triton::uint64 val = 0;  std::memcpy(&val,  (triton::uint64*)this->efer, sizeof(triton::uint64)); return val; }
-
-          case triton::arch::ID_REG_X86_TSC:    { triton::uint64 val = 0; std::memcpy(&val, (triton::uint64*)this->tsc, sizeof(triton::uint64)); return val; }
 
           default:
             throw triton::exceptions::Cpu("x86Cpu::getConcreteRegisterValue(): Invalid register.");
