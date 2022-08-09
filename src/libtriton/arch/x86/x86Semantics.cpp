@@ -14197,20 +14197,22 @@ namespace triton {
 
 
       void x86Semantics::rdtsc_s(triton::arch::Instruction& inst) {
+        auto src = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_TSC));
         auto dst1 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EDX));
         auto dst2 = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_X86_EAX));
 
         /* Create symbolic operands */
-        auto op1 = this->astCtxt->bv(0, dst1.getBitSize());
-        auto op2 = this->astCtxt->bv(this->symbolicEngine->getSymbolicExpressions().size(), dst2.getBitSize());
+        auto ast = this->symbolicEngine->getOperandAst(inst, src);
+        auto op1 = this->astCtxt->extract((triton::bitsize::qword - 1), triton::bitsize::dword, ast);
+        auto op2 = this->astCtxt->extract((triton::bitsize::dword - 1), 0, ast);
 
         /* Create symbolic expression */
-        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, op1, dst1, "RDTSC EDX operation");
-        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, op2, dst2, "RDTSC EAX operation");
+        auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, op1, dst1.getRegister(), "RDTSC EDX operation");
+        auto expr2 = this->symbolicEngine->createSymbolicExpression(inst, op2, dst2.getRegister(), "RDTSC EAX operation");
 
         /* Spread taint */
-        expr1->isTainted = this->taintEngine->setTaint(dst1, triton::engines::taint::UNTAINTED);
-        expr2->isTainted = this->taintEngine->setTaint(dst2, triton::engines::taint::UNTAINTED);
+        expr1->isTainted = this->taintEngine->taintUnion(dst1, src);
+        expr2->isTainted = this->taintEngine->taintUnion(dst2, src);
 
         /* Update the symbolic control flow */
         this->controlFlow_s(inst);
