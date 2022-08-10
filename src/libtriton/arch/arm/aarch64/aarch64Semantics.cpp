@@ -1749,9 +1749,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -1769,9 +1766,6 @@ namespace triton {
         void AArch64Semantics::ldarh_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1809,9 +1803,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -1829,9 +1820,6 @@ namespace triton {
         void AArch64Semantics::ldaxrh_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
 
           /* Create the semantics of the LOAD */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
@@ -1965,9 +1953,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create the semantics of the LOAD */
           auto node1 = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2020,9 +2005,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
-
           /* Create the semantics of the LOAD */
           auto node1 = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2074,9 +2056,6 @@ namespace triton {
         void AArch64Semantics::ldrsb_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2133,9 +2112,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
-
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2190,9 +2166,6 @@ namespace triton {
         void AArch64Semantics::ldrsw_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 32 bits */
-          src.getMemory().setBits(31, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2267,9 +2240,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2290,9 +2260,6 @@ namespace triton {
         void AArch64Semantics::ldurh_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2315,9 +2282,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2339,9 +2303,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
-
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2362,9 +2323,6 @@ namespace triton {
         void AArch64Semantics::ldursw_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 32 bits */
-          src.getMemory().setBits(31, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -2405,9 +2363,6 @@ namespace triton {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          src.getMemory().setBits(7, 0);
-
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
 
@@ -2428,9 +2383,6 @@ namespace triton {
         void AArch64Semantics::ldxrh_s(triton::arch::Instruction& inst) {
           triton::arch::OperandWrapper& dst = inst.operands[0];
           triton::arch::OperandWrapper& src = inst.operands[1];
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          src.getMemory().setBits(15, 0);
 
           /* Create symbolic operands */
           auto op = this->symbolicEngine->getOperandAst(inst, src);
@@ -3192,9 +3144,6 @@ namespace triton {
           /* Create the semantics of the STORE */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setBits(7, 0);
-
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRB operation - STORE access");
 
@@ -3212,9 +3161,6 @@ namespace triton {
 
           /* Create the semantics of the STORE */
           auto node = this->symbolicEngine->getOperandAst(inst, src);
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setBits(15, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRH operation - STORE access");
@@ -3349,9 +3295,6 @@ namespace triton {
           /* Create the semantics */
           auto node1 = this->astCtxt->extract(7, 0, op);
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setBits(7, 0);
-
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRB operation - STORE access");
 
@@ -3406,9 +3349,6 @@ namespace triton {
 
           /* Create the semantics */
           auto node1 = this->astCtxt->extract(15, 0, op);
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setBits(15, 0);
 
           /* Create symbolic expression */
           auto expr1 = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "STRH operation - STORE access");
@@ -3483,9 +3423,6 @@ namespace triton {
           /* Create the semantics */
           auto node = this->astCtxt->extract(7, 0, op);
 
-          /* Special behavior: Define that the size of the memory access is 8 bits */
-          dst.getMemory().setBits(7, 0);
-
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURB operation");
 
@@ -3506,9 +3443,6 @@ namespace triton {
 
           /* Create the semantics */
           auto node = this->astCtxt->extract(15, 0, op);
-
-          /* Special behavior: Define that the size of the memory access is 16 bits */
-          dst.getMemory().setBits(15, 0);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STURH operation");

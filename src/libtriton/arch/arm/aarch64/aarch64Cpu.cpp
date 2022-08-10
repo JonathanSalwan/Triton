@@ -463,6 +463,7 @@ namespace triton {
                   }
 
                   /* Define a base address for next operand */
+                  size = this->getMemoryOperandSpecialSize(inst.getType());
                   if (!size) {
                     size = reg.getSize();
                   }
