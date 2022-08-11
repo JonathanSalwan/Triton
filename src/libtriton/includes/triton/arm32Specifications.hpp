@@ -72,6 +72,9 @@ namespace triton {
 
             //! Converts a capstone's instruction id to a triton's instruction id.
             TRITON_EXPORT triton::uint32 capstoneInstructionToTritonInstruction(triton::uint32 id) const;
+
+            //! Returns memory access size if it is specified by instruction.
+            TRITON_EXPORT triton::uint32 getMemoryOperandSpecialSize(triton::uint32 id) const;
         };
 
         //! ARM32 NOP instruction
