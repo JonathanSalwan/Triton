@@ -1946,6 +1946,22 @@ namespace triton {
           return tritonId;
         }
 
+
+        triton::uint32 Arm32Specifications::getMemoryOperandSpecialSize(triton::uint32 id) const {
+          switch (id) {
+            case ID_INS_LDRB:
+            case ID_INS_LDRSB:
+            case ID_INS_STRB:
+              return 1;
+            case ID_INS_LDRH:
+            case ID_INS_LDRSH:
+            case ID_INS_STRH:
+              return 2;
+            default:
+              return 0;
+          }
+        }
+
       }; /* arm32 namespace */
     }; /* arm namespace */
   }; /* arch namespace */
