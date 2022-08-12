@@ -259,12 +259,13 @@ namespace triton {
 
         // Convert long bitvector string by 64-bit chunks.
         while (pos < len) {
-          triton::usize sublen = std::min(len - pos, 64UL);
-          char substr[sublen + 1];
+          triton::usize sublen = std::min(len - pos, (triton::usize) 64UL);
+          char* substr = new char[sublen + 1];
           std::memcpy(substr, value + pos, sublen);
           substr[sublen] = '\0';
           res = (res << sublen) + std::strtoull(substr, 0, 2L);
           pos += sublen;
+          delete[] substr;
         }
 
         return res;

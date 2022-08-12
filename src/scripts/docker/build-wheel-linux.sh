@@ -22,10 +22,10 @@ cd deps
 wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
 tar xvf gmp-6.2.1.tar.xz
 cd gmp-6.2.1/
-./configure --with-pic --enable-cxx
+./configure --enable-cxx
 make
 make check
-sudo make install
+make install
 cd ..
 
 # Download and build Bitwuzla.
@@ -34,13 +34,9 @@ cd bitwuzla
 ./contrib/setup-cadical.sh
 ./contrib/setup-btor2tools.sh
 ./contrib/setup-symfpu.sh
-CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+./configure.sh --shared --prefix $(pwd)/install
 cd build
 make
-cd lib
-ar cqT libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a && echo -e "create libbitwuzlam.a\naddlib libbitwuzlam.a\nsave\nend" | ar -M
-mv libbitwuzlam.a libbitwuzla.a
-cd ..
 make install
 cd ../..
 
@@ -67,7 +63,7 @@ export CAPSTONE_INCLUDE_DIRS=/usr/include
 export CAPSTONE_LIBRARIES=/usr/lib/libcapstone.a
 export BITWUZLA_INTERFACE=On
 export BITWUZLA_INCLUDE_DIRS=$(pwd)/bitwuzla/install/include
-export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib/libbitwuzla.a
+export BITWUZLA_LIBRARIES=$(pwd)/bitwuzla/install/lib/libbitwuzla.so
 export LLVM_INTERFACE=ON
 export CMAKE_PREFIX_PATH=$($(pwd)/clang+llvm-12.0.1-x86_64-linux-gnu-ubuntu-/bin/llvm-config --prefix)
 
@@ -99,4 +95,8 @@ for whl in wheel-temp/*.whl; do
     auditwheel repair "$whl" -w wheel-final
 done
 
+chown -R 1000:1000 build
+chown -R 1000:1000 deps
+chown -R 1000:1000 triton_library.egg-info
 chown -R 1000:1000 wheel-final
+chown -R 1000:1000 wheel-temp

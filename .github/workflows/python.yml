@@ -25,7 +25,7 @@ jobs:
       - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
         with:
-          name: triton_library-1.0.0-cp38-cp38-manylinux_2_24_x86_64.whl
+          name: triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
           path: wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
@@ -43,82 +43,82 @@ jobs:
           path: wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-manylinux_2_24_x86_64.whl
           if-no-files-found: warn
 
-  build-windows:
-    runs-on: windows-latest
-    strategy:
-      matrix:
-        python-version: ['3.8', '3.9', '3.10']
-        include:
-          - python-version: 3.8
-            pycp: cp38-cp38
-            pylib: python38.lib
-          - python-version: 3.9
-            pycp: cp39-cp39
-            pylib: python39.lib
-          - python-version: 3.10
-            pycp: cp310-cp310
-            pylib: python310.lib
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+  # build-windows:
+  #   runs-on: windows-latest
+  #   strategy:
+  #     matrix:
+  #       python-version: ['3.8', '3.9', '3.10']
+  #       include:
+  #         - python-version: 3.8
+  #           pycp: cp38-cp38
+  #           pylib: python38.lib
+  #         - python-version: 3.9
+  #           pycp: cp39-cp39
+  #           pylib: python39.lib
+  #         - python-version: 3.10
+  #           pycp: cp310-cp310
+  #           pylib: python310.lib
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v3
 
-      - name: Set up Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v4
-        with:
-          python-version: ${{ matrix.python-version }}
+  #     - name: Set up Python ${{ matrix.python-version }}
+  #       uses: actions/setup-python@v4
+  #       with:
+  #         python-version: ${{ matrix.python-version }}
 
-      - name: Get CMake
-        uses: lukka/get-cmake@latest
+  #     - name: Get CMake
+  #       uses: lukka/get-cmake@latest
 
-      - name: Setup Windows dev environment
-        uses: ilammy/msvc-dev-cmd@v1
-        with:
-          arch: 'x64'
+  #     - name: Setup Windows dev environment
+  #       uses: ilammy/msvc-dev-cmd@v1
+  #       with:
+  #         arch: 'x64'
 
-      - name: Upgrade pip version
-        run: |
-          python -m pip install -U pip
+  #     - name: Upgrade pip version
+  #       run: |
+  #         python -m pip install -U pip
 
-      - name: Install build package
-        run: |
-          python -m pip install build
+  #     - name: Install build package
+  #       run: |
+  #         python -m pip install build
 
-      - name: Download and build Z3
-        run: |
-          wget -UseBasicParsing https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-win.zip -O z3-4.8.17-x64-win.zip
-          tar -xf z3-4.8.17-x64-win.zip
-          wget -UseBasicParsing https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.17.zip -O z3-4.8.17.zip
-          tar -xf z3-4.8.17.zip
-          cd z3-z3-4.8.17
-          python scripts\mk_make.py --x64 --staticlib
-          cd build
-          nmake
-        shell: powershell
+  #     - name: Download and build Z3
+  #       run: |
+  #         wget -UseBasicParsing https://github.com/Z3Prover/z3/releases/download/z3-4.8.17/z3-4.8.17-x64-win.zip -O z3-4.8.17-x64-win.zip
+  #         tar -xf z3-4.8.17-x64-win.zip
+  #         wget -UseBasicParsing https://github.com/Z3Prover/z3/archive/refs/tags/z3-4.8.17.zip -O z3-4.8.17.zip
+  #         tar -xf z3-4.8.17.zip
+  #         cd z3-z3-4.8.17
+  #         python scripts\mk_make.py --x64 --staticlib
+  #         cd build
+  #         nmake
+  #       shell: powershell
 
-      - name: Download Capstone
-        run: |
-          wget -UseBasicParsing https://github.com/capstone-engine/capstone/releases/download/4.0.2/capstone-4.0.2-win64.zip -O capstone-4.0.2-win64.zip
-          tar -xf capstone-4.0.2-win64.zip
-        shell: powershell
+  #     - name: Download Capstone
+  #       run: |
+  #         wget -UseBasicParsing https://github.com/capstone-engine/capstone/releases/download/4.0.2/capstone-4.0.2-win64.zip -O capstone-4.0.2-win64.zip
+  #         tar -xf capstone-4.0.2-win64.zip
+  #       shell: powershell
 
-      - name: Build Triton Python package
-        run: python -m build --wheel
-        env:
-          PYTHON_VERSION: ${{ matrix.python-version }}
-          PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}\include
-          PYTHON_LIBRARIES: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
-          PYTHON_LIBRARY: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
-          Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.8.17-x64-win\include
-          Z3_LIBRARIES: ${{ github.workspace }}\z3-z3-4.8.17\build\libz3-static.lib
-          CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-4.0.2-win64\include
-          CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-4.0.2-win64\capstone.lib
+  #     - name: Build Triton Python package
+  #       run: python -m build --wheel
+  #       env:
+  #         PYTHON_VERSION: ${{ matrix.python-version }}
+  #         PYTHON_INCLUDE_DIRS: ${{ env.pythonLocation }}\include
+  #         PYTHON_LIBRARIES: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
+  #         PYTHON_LIBRARY: ${{ env.pythonLocation }}\libs\${{ matrix.pylib }}
+  #         Z3_INCLUDE_DIRS: ${{ github.workspace }}\z3-4.8.17-x64-win\include
+  #         Z3_LIBRARIES: ${{ github.workspace }}\z3-z3-4.8.17\build\libz3-static.lib
+  #         CAPSTONE_INCLUDE_DIRS: ${{ github.workspace }}\capstone-4.0.2-win64\include
+  #         CAPSTONE_LIBRARIES: ${{ github.workspace }}\capstone-4.0.2-win64\capstone.lib
 
-      - name: Upload
-        uses: actions/upload-artifact@v3
-        with:
-          name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
-          if-no-files-found: warn
+  #     - name: Upload
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
+  #         path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-${{ matrix.pycp }}-win_amd64.whl
+  #         if-no-files-found: warn
 
   build-macos:
     runs-on: macos-latest
@@ -157,9 +157,10 @@ jobs:
           wget https://gmplib.org/download/gmp/gmp-6.2.1.tar.xz
           tar xvf gmp-6.2.1.tar.xz
           cd gmp-6.2.1/
-          ./configure --with-pic
+          ./configure --enable-cxx
           make
           make check
+          make install
 
       - name: Download and build Bitwuzla
         run: |
@@ -168,13 +169,9 @@ jobs:
           ./contrib/setup-cadical.sh
           ./contrib/setup-btor2tools.sh
           ./contrib/setup-symfpu.sh
-          CMAKE_OPTS="-DCMAKE_POSITION_INDEPENDENT_CODE=ON" ./configure.sh --prefix $(pwd)/install
+          ./configure.sh --shared --prefix $(pwd)/install
           cd build
           make
-          cd lib
-          libtool -static -o libbitwuzlam.a libbitwuzla.a ../../deps/install/lib/libbtor2parser.a ../../deps/cadical/build/libcadical.a ../../../gmp-6.2.1/.libs/libgmp.a
-          mv libbitwuzlam.a libbitwuzla.a
-          cd ..
           make install
 
       - name: Download Z3
@@ -204,30 +201,48 @@ jobs:
           CAPSTONE_LIBRARIES: /usr/local/lib/libcapstone.a
           BITWUZLA_INTERFACE: On
           BITWUZLA_INCLUDE_DIRS: ${{ github.workspace }}/bitwuzla/install/include
-          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.a
+          BITWUZLA_LIBRARIES: ${{ github.workspace }}/bitwuzla/install/lib/libbitwuzla.dylib
           LLVM_INTERFACE: On
           CMAKE_PREFIX_PATH: ${{env.LLVM_PATH}}
+
+      - name: Repair wheel package (Python 3.8)
+        if: ${{ matrix.python-version == '3.8' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.8)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.8' }}
         with:
           name: triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp38-cp38-macosx_11_0_x86_64.whl
           if-no-files-found: warn
+
+      - name: Repair wheel package (Python 3.9)
+        if: ${{ matrix.python-version == '3.9' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.9)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.9' }}
         with:
           name: triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp39-cp39-macosx_11_0_x86_64.whl
           if-no-files-found: warn
+
+      - name: Repair wheel package (Python 3.10)
+        if: ${{ matrix.python-version == '3.10' }}
+        run: |
+          pip install delocate
+          delocate-wheel -w wheel-final -v ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
 
       - name: Upload Wheel packages (Python 3.10)
         uses: actions/upload-artifact@v3
         if: ${{ matrix.python-version == '3.10' }}
         with:
-          name: triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
-          path: ${{ github.workspace }}/dist/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_universal2.whl
+          name: triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
+          path: ${{ github.workspace }}/wheel-final/triton_library-${{ env.package-version }}-cp310-cp310-macosx_11_0_x86_64.whl
           if-no-files-found: warn
