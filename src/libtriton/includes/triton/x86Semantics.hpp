@@ -1076,6 +1076,9 @@ namespace triton {
           //! The PMULLW semantics.
           void pmullw_s(triton::arch::Instruction& inst);
 
+          //! The PMULUDQ semantics.
+          void pmuludq_s(triton::arch::Instruction& inst);
+
           //! The POPCNT semantics.
           void popcnt_s(triton::arch::Instruction& inst);
 
@@ -1099,6 +1102,9 @@ namespace triton {
 
           //! The PREFETCHx semantics.
           void prefetchx_s(triton::arch::Instruction& inst);
+
+          //! The PSHUFB semantics.
+          void pshufb_s(triton::arch::Instruction& inst);
 
           //! The PSHUFD semantics.
           void pshufd_s(triton::arch::Instruction& inst);
