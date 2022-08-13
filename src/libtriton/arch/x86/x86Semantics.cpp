@@ -9270,34 +9270,38 @@ namespace triton {
         auto& dst = inst.operands[0];
         auto& src = inst.operands[1];
 
-        auto op1 = this->symbolicEngine->getOperandAst(inst, dst);
         auto op2 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics */
         triton::ast::SharedAbstractNode node = nullptr;
 
         /* when operating on MMX technology registers and memory locations */
-        if (dst.getBitSize() == triton::bitsize::qword && src.getBitSize() == triton::bitsize::qword)
+        if (dst.getBitSize() == triton::bitsize::qword && src.getBitSize() == triton::bitsize::qword) {
           node = op2;
+        }
 
         /* when source and destination operands are XMM registers */
-        else if (dst.getBitSize() == triton::bitsize::dqword && src.getBitSize() == triton::bitsize::dqword)
+        else if (dst.getBitSize() == triton::bitsize::dqword && src.getBitSize() == triton::bitsize::dqword) {
           node = this->astCtxt->concat(
-                  this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, op1),
+                  this->astCtxt->extract(triton::bitsize::dqword-1, triton::bitsize::qword, this->symbolicEngine->getOperandAst(inst, dst)),
                   this->astCtxt->extract(triton::bitsize::qword-1, 0, op2)
                  );
+        }
 
         /* when source operand is XMM register and destination operand is memory location */
-        else if (dst.getBitSize() < src.getBitSize())
+        else if (dst.getBitSize() < src.getBitSize()) {
           node = this->astCtxt->extract(triton::bitsize::qword-1, 0, op2);
+        }
 
         /* when source operand is memory location and destination operand is XMM register */
-        else if (dst.getBitSize() > src.getBitSize())
+        else if (dst.getBitSize() > src.getBitSize()) {
           node = this->astCtxt->zx(triton::bitsize::qword, op2);
+        }
 
         /* Invalid operation */
-        else
+        else {
           throw triton::exceptions::Semantics("x86Semantics::movq_s(): Invalid operation.");
+        }
 
         /* Create symbolic expression */
         auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "MOVQ operation");
