@@ -119,16 +119,16 @@ Returns the AST context to create and modify nodes.
 - <b>\ref py_AST_REPRESENTATION_page getAstRepresentationMode(void)</b><br>
 Returns the current AST representation mode.
 
-- <b>bytes getConcreteMemoryAreaValue(integer baseAddr, integer size)</b><br>
+- <b>bytes getConcreteMemoryAreaValue(integer addr, integer size, bool callbacks=True)</b><br>
 Returns the concrete value of a memory area.
 
-- <b>integer getConcreteMemoryValue(integer addr)</b><br>
+- <b>integer getConcreteMemoryValue(integer addr, bool callbacks=True)</b><br>
 Returns the concrete value of a memory cell.
 
-- <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem)</b><br>
+- <b>integer getConcreteMemoryValue(\ref py_MemoryAccess_page mem, bool callbacks=True)</b><br>
 Returns the concrete value of memory cells.
 
-- <b>integer getConcreteRegisterValue(\ref py_Register_page reg)</b><br>
+- <b>integer getConcreteRegisterValue(\ref py_Register_page reg, bool callbacks=True)</b><br>
 Returns the concrete value of a register.
 
 - <b>integer getConcreteVariableValue(\ref py_SymbolicVariable_page symVar)</b><br>
@@ -325,23 +325,23 @@ Initializes an architecture. This function must be called before any call to the
 - <b>void setAstRepresentationMode(\ref py_AST_REPRESENTATION_page mode)</b><br>
 Sets the AST representation.
 
-- <b>void setConcreteMemoryAreaValue(integer baseAddr, [integer,])</b><br>
+- <b>void setConcreteMemoryAreaValue(integer addr, [integer,], bool callbacks=True)</b><br>
 Sets the concrete value of a memory area. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteMemoryAreaValue(integer baseAddr, bytes opcodes)</b><br>
+- <b>void setConcreteMemoryAreaValue(integer addr, bytes opcodes, bool callbacks=True)</b><br>
 Sets the concrete value of a memory area. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteMemoryValue(integer addr, integer value)</b><br>
+- <b>void setConcreteMemoryValue(integer addr, integer value, bool callbacks=True)</b><br>
 Sets the concrete value of a memory cell. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem, integer value)</b><br>
+- <b>void setConcreteMemoryValue(\ref py_MemoryAccess_page mem, integer value, bool callbacks=True)</b><br>
 Sets the concrete value of memory cells. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
-- <b>void setConcreteRegisterValue(\ref py_Register_page reg, integer value)</b><br>
+- <b>void setConcreteRegisterValue(\ref py_Register_page reg, integer value, bool callbacks=True)</b><br>
 Sets the concrete value of a register. Note that setting a concrete value will probably imply a desynchronization with
 the symbolic state (if it exists). You should probably use the concretize functions after this.
 
@@ -1220,7 +1220,7 @@ namespace triton {
         static char* keywords[] = {
           (char*)"addr",
           (char*)"size",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 
@@ -1274,7 +1274,7 @@ namespace triton {
 
         static char* keywords[] = {
           (char*)"mem",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 
@@ -1318,7 +1318,7 @@ namespace triton {
 
         static char* keywords[] = {
           (char*)"reg",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 
@@ -2694,9 +2694,9 @@ namespace triton {
         PyObject* execCallbacks = nullptr;
 
         static char* keywords[] = {
-          (char*)"baseAddr",
+          (char*)"addr",
           (char*)"values",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 
@@ -2792,7 +2792,7 @@ namespace triton {
         static char* keywords[] = {
           (char*)"mem",
           (char*)"value",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 
@@ -2868,7 +2868,7 @@ namespace triton {
         static char* keywords[] = {
           (char*)"reg",
           (char*)"value",
-          (char*)"execCallbacks",
+          (char*)"callbacks",
           nullptr
         };
 

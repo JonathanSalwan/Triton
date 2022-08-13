@@ -93,7 +93,7 @@ class TestExecCallbacks(unittest.TestCase):
             print('(\'MEM\', \'R\', MemoryAccess({}, {}), {}),'.format(
                 hex(mem.getAddress()),
                 mem.getSize(),
-                hex(ctx.getConcreteMemoryValue(mem, execCallbacks=False)),
+                hex(ctx.getConcreteMemoryValue(mem, callbacks=False)),
             ))
             return
         event = next(self.trace, None)
@@ -104,9 +104,9 @@ class TestExecCallbacks(unittest.TestCase):
         self.assertEqual(eTarget.getSize(), mem.getSize())
         self.assertEqual(eTarget.getAddress(), mem.getAddress())
         if ctx.isConcreteMemoryValueDefined(mem):
-            self.assertEqual(eValue, ctx.getConcreteMemoryValue(mem, execCallbacks=False))
+            self.assertEqual(eValue, ctx.getConcreteMemoryValue(mem, callbacks=False))
         else:
-            ctx.setConcreteMemoryValue(mem, eValue, execCallbacks=False)
+            ctx.setConcreteMemoryValue(mem, eValue, callbacks=False)
         self.actual.append(event)
 
     def mem_write_cb(self, ctx, mem, value):
@@ -131,7 +131,7 @@ class TestExecCallbacks(unittest.TestCase):
         if self.log_trace:
             print('(\'REG\', \'R\', \'{}\', {}),'.format(
                 reg.getName(),
-                hex(ctx.getConcreteRegisterValue(reg, execCallbacks=False)),
+                hex(ctx.getConcreteRegisterValue(reg, callbacks=False)),
             ))
             return
         event = next(self.trace, None)
@@ -140,10 +140,10 @@ class TestExecCallbacks(unittest.TestCase):
         self.assertEqual(eType, 'REG')
         self.assertEqual(eAction, 'R')
         self.assertEqual(eTarget, reg.getName())
-        tValue = ctx.getConcreteRegisterValue(reg, execCallbacks=False)
+        tValue = ctx.getConcreteRegisterValue(reg, callbacks=False)
         if tValue != eValue:
             self.assertEqual(tValue, 0)
-            ctx.setConcreteRegisterValue(reg, eValue, execCallbacks=False)
+            ctx.setConcreteRegisterValue(reg, eValue, callbacks=False)
         self.actual.append(event)
 
     def reg_write_cb(self, ctx, reg, value):
@@ -167,5 +167,5 @@ class TestExecCallbacks(unittest.TestCase):
         while pc in self.function:
             inst = Instruction(pc, self.function[pc])
             self.ctx.processing(inst)
-            pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.eip, execCallbacks=False)
+            pc = self.ctx.getConcreteRegisterValue(self.ctx.registers.eip, callbacks=False)
         self.assertEqual(self.expect, self.actual)
