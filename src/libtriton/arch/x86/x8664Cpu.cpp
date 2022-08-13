@@ -648,7 +648,7 @@ namespace triton {
         std::vector<triton::uint8> area;
 
         for (triton::usize index = 0; index < size; index++)
-          area.push_back(this->getConcreteMemoryValue(baseAddr+index));
+          area.push_back(this->getConcreteMemoryValue(baseAddr+index, execCallbacks));
 
         return area;
       }
@@ -946,14 +946,14 @@ namespace triton {
       }
 
 
-      void x8664Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
-        if (this->callbacks)
+      void x8664Cpu::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value, bool execCallbacks) {
+        if (execCallbacks && this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, MemoryAccess(addr, triton::size::byte), value);
         this->memory[addr] = value;
       }
 
 
-      void x8664Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
+      void x8664Cpu::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value, bool execCallbacks) {
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
         triton::uint512 cv  = value;
@@ -964,7 +964,7 @@ namespace triton {
         if (size == 0 || size > triton::size::dqqword)
           throw triton::exceptions::Cpu("x8664Cpu::setConcreteMemoryValue(): Invalid size memory.");
 
-        if (this->callbacks)
+        if (execCallbacks && this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_MEMORY_VALUE, mem, value);
 
         for (triton::uint32 i = 0; i < size; i++) {
@@ -974,29 +974,29 @@ namespace triton {
       }
 
 
-      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values, bool execCallbacks) {
         // Pre-reserving the memory. We modified the original robin_map to not force rehash on reserve.
         this->memory.reserve(values.size() + this->memory.size());
         for (triton::usize index = 0; index < values.size(); index++) {
-          this->setConcreteMemoryValue(baseAddr+index, values[index]);
+          this->setConcreteMemoryValue(baseAddr+index, values[index], execCallbacks);
         }
       }
 
 
-      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size) {
+      void x8664Cpu::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size, bool execCallbacks) {
         // Pre-reserving the memory. We modified the original robin_map to not force rehash on every reserve if not needed.
         this->memory.reserve(size + this->memory.size());
         for (triton::usize index = 0; index < size; index++) {
-          this->setConcreteMemoryValue(baseAddr+index, reinterpret_cast<const triton::uint8*>(area)[index]);
+          this->setConcreteMemoryValue(baseAddr+index, reinterpret_cast<const triton::uint8*>(area)[index], execCallbacks);
         }
       }
 
 
-      void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
+      void x8664Cpu::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value, bool execCallbacks) {
         if (value > reg.getMaxValue())
           throw triton::exceptions::Register("x8664Cpu::setConcreteRegisterValue(): You cannot set this concrete value (too big) to this register.");
 
-        if (this->callbacks)
+        if (execCallbacks && this->callbacks)
           this->callbacks->processCallbacks(triton::callbacks::SET_CONCRETE_REGISTER_VALUE, reg, value);
 
         switch (reg.getId()) {

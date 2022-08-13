@@ -376,9 +376,9 @@ namespace triton {
   }
 
 
-  void Context::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value) {
+  void Context::setConcreteMemoryValue(triton::uint64 addr, triton::uint8 value, bool execCallbacks) {
     this->checkArchitecture();
-    this->arch.setConcreteMemoryValue(addr, value);
+    this->arch.setConcreteMemoryValue(addr, value, execCallbacks);
     /*
      * In order to synchronize the concrete state with the symbolic
      * one, the symbolic expression is concretized.
@@ -387,9 +387,9 @@ namespace triton {
   }
 
 
-  void Context::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value) {
+  void Context::setConcreteMemoryValue(const triton::arch::MemoryAccess& mem, const triton::uint512& value, bool execCallbacks) {
     this->checkArchitecture();
-    this->arch.setConcreteMemoryValue(mem, value);
+    this->arch.setConcreteMemoryValue(mem, value, execCallbacks);
     /*
      * In order to synchronize the concrete state with the symbolic
      * one, the symbolic expression is concretized.
@@ -398,9 +398,9 @@ namespace triton {
   }
 
 
-  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values) {
+  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const std::vector<triton::uint8>& values, bool execCallbacks) {
     this->checkArchitecture();
-    this->arch.setConcreteMemoryAreaValue(baseAddr, values);
+    this->arch.setConcreteMemoryAreaValue(baseAddr, values, execCallbacks);
     /*
      * In order to synchronize the concrete state with the symbolic
      * one, the symbolic expression is concretized.
@@ -411,9 +411,9 @@ namespace triton {
   }
 
 
-  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size) {
+  void Context::setConcreteMemoryAreaValue(triton::uint64 baseAddr, const void* area, triton::usize size, bool execCallbacks) {
     this->checkArchitecture();
-    this->arch.setConcreteMemoryAreaValue(baseAddr, area, size);
+    this->arch.setConcreteMemoryAreaValue(baseAddr, area, size, execCallbacks);
     /*
      * In order to synchronize the concrete state with the symbolic
      * one, the symbolic expression is concretized.
@@ -424,9 +424,9 @@ namespace triton {
   }
 
 
-  void Context::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value) {
+  void Context::setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value, bool execCallbacks) {
     this->checkArchitecture();
-    this->arch.setConcreteRegisterValue(reg, value);
+    this->arch.setConcreteRegisterValue(reg, value, execCallbacks);
     /*
      * In order to synchronize the concrete state with the symbolic
      * one, the symbolic expression is concretized.
