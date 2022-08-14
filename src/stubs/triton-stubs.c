@@ -8,6 +8,7 @@
 
 #include <stddef.h>
 #include <limits.h>
+#include <stdbool.h>
 
 
 __attribute__((STUB_ABI))
@@ -1081,3 +1082,77 @@ long int a64l(const char* string) {
 #undef TABLE_BASE
 #undef TABLE_SIZE
 #undef XX
+
+/* A very basic malloc and free implementation */
+
+#define ALLOC_SIZE 0x10000
+#define USED 1
+#define FREE !USED
+
+struct s_alloc_header
+{
+  bool flag;      /* used=1 or free=0 */
+  unsigned size;  /* alloc size */
+};
+
+/* yeah, it will be in .rodata but it's simpler when dumping the stub with IDA */
+const char alloc_area[ALLOC_SIZE] = {0x00};
+
+__attribute__((STUB_ABI))
+void* malloc(size_t size) {
+  void* ptr = 0;
+  struct s_alloc_header* header = (struct s_alloc_header*)alloc_area;
+
+  while (true) {
+    /* Check if we are out of alloc area */
+    if ((void*)header - (void*)alloc_area >= ALLOC_SIZE) {
+      break;
+    }
+
+    /* If a chunk is used, continue to find a free one */
+    if (header->flag == USED) {
+      header += header->size;
+      continue;
+    }
+
+    if (header->flag == FREE) {
+      /* If a chunk is free and the size fits, return this chunk */
+      if (header->size && size <= header->size) {
+        header->flag = USED;
+        ptr = (void*)header + sizeof(struct s_alloc_header);
+        break;
+      }
+      /* If the chunk is free but the size does not fits, continue to find a new one */
+      else if (header->size && size > header->size) {
+        header += header->size;
+        continue;
+      }
+      /* If the chunk is free and never initialized, used this chunk and define a size */
+      else if (header->size == 0) {
+        ptr = (void*)header + sizeof(struct s_alloc_header);
+        if ((ptr - (void*)alloc_area) + size >= ALLOC_SIZE) {
+          /* No enough memory */
+          return 0;
+        }
+        header->flag = USED;
+        header->size = size;
+        break;
+      }
+      else {
+        /* something wrong */
+        return 0;
+      }
+    }
+  }
+  return ptr;
+}
+
+__attribute__((STUB_ABI))
+void free(void* ptr) {
+  struct s_alloc_header* header = ptr - sizeof(struct s_alloc_header);
+  header->flag = FREE;
+}
+
+#undef ALLOC_SIZE
+#undef FREE
+#undef USED
