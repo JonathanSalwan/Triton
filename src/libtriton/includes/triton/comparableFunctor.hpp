@@ -46,6 +46,12 @@ namespace triton {
       }
 
       //! Forward call to real functor
+      template <class apiType>
+      auto operator()(apiType& api) const -> decltype(F_(api)) {
+        return F_(api);
+      }
+
+      //! Forward call to real functor
       template <class apiType, class paramType>
       auto operator()(apiType& api, paramType& param) const -> decltype(F_(api, param)) {
         return F_(api, param);
