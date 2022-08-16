@@ -27,6 +27,12 @@ jobs:
         run: |
           sudo apt-get install python-setuptools libboost-dev libgmp-dev
 
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
+          directory: ${{ runner.temp }}/llvm
+
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev
@@ -63,7 +69,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) -DBOOST_INTERFACE=${{ matrix.boost-interface }} ..
+          cmake -DZ3_INTERFACE=ON -DBITWUZLA_INTERFACE=ON -DLLVM_INTERFACE=ON -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} -DBOOST_INTERFACE=${{ matrix.boost-interface }} ..
           sudo make -j3 install
 
       - name: Unittests

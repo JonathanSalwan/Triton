@@ -25,6 +25,12 @@ jobs:
         run: |
           sudo apt-get install python-setuptools lcov libboost-dev libgmp-dev
 
+      - name: Install LLVM and Clang
+        uses: KyleMayes/install-llvm-action@v1
+        with:
+          version: "14.0"
+          directory: ${{ runner.temp }}/llvm
+
       - name: Install Z3
         run: |
           sudo apt-get install libz3-dev
@@ -61,7 +67,7 @@ jobs:
         run: |
           mkdir ./build
           cd ./build
-          cmake -DGCOV=on -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=on -DCMAKE_PREFIX_PATH=$(llvm-config --prefix) ..
+          cmake -DGCOV=on -DZ3_INTERFACE=on -DBITWUZLA_INTERFACE=on -DLLVM_INTERFACE=on -DCMAKE_PREFIX_PATH=${{env.LLVM_PATH}} ..
           sudo make -j3 install
 
       - name: Unittests
