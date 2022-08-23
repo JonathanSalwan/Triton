@@ -12,9 +12,9 @@ jobs:
         os:
           - macOS-latest
           - ubuntu-20.04
-          - windows-2022
-        include:
           # FIXME
+          #- windows-2022
+        include:
           #- os: windows-2022
           #  platform: windows
           #  vcpkg-triplet: x64-windows-static-release-md
