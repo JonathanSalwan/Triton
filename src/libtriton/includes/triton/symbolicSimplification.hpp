@@ -49,7 +49,7 @@ namespace triton {
           void copy(const SymbolicSimplification& other);
 
           //! Performs a dead store elimination analysis.
-          triton::arch::BasicBlock deadStoreElimination(const triton::arch::BasicBlock& block, bool padding=false) const;
+          triton::arch::BasicBlock deadStoreElimination(const triton::arch::BasicBlock& block, bool padding=false, bool keepmem=true) const;
 
         public:
           //! Constructor.
@@ -61,8 +61,8 @@ namespace triton {
           //! Processes all recorded simplifications. Returns the simplified node.
           TRITON_EXPORT triton::ast::SharedAbstractNode simplify(const triton::ast::SharedAbstractNode& node) const;
 
-          //! Performs a dead store elimination simplification. If `padding` is true, keep addresses aligned and padds with NOP instructions.
-          TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block, bool padding=false) const;
+          //! Performs a dead store elimination simplification. If `padding` is true, keep addresses aligned and padds with NOP instructions. If `keepmem` is true, do not simplify store accesses.
+          TRITON_EXPORT triton::arch::BasicBlock simplify(const triton::arch::BasicBlock& block, bool padding=false, bool keepmem=true) const;
 
           //! Copies a SymbolicSimplification.
           TRITON_EXPORT SymbolicSimplification& operator=(const SymbolicSimplification& other);

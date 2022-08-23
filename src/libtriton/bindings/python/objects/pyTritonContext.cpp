@@ -374,8 +374,8 @@ Calls all simplification callbacks recorded and returns a new simplified node. I
 set to True, Triton will use the current solver instance to simplify the given `node`. If `llvm` is true,
 we use LLVM to simplify node.
 
-- <b>\ref py_BasicBlock_page simplify(\ref py_BasicBlock_page block, bool padding=False)</b><br>
-Performs a dead store elimination simplification on a given block. If `padding` is true, keep addresses aligned and padds with NOP instructions.
+- <b>\ref py_BasicBlock_page simplify(\ref py_BasicBlock_page block, bool padding=False, bool keepmem=True)</b><br>
+Performs a dead store elimination simplification on a given block. If `padding` is true, keep addresses aligned and padds with NOP instructions. If `keepmem` is true, do not simplify store accesses.
 
 - <b>dict sliceExpressions(\ref py_SymbolicExpression_page expr)</b><br>
 Slices expressions from a given one (backward slicing) and returns all symbolic expressions as a dictionary of {integer SymExprId : \ref py_SymbolicExpression_page expr}.
@@ -3096,17 +3096,19 @@ namespace triton {
         PyObject* solver  = nullptr;
         PyObject* llvm    = nullptr;
         PyObject* padding = nullptr;
+        PyObject* keepmem = nullptr;
 
         static char* keywords[] = {
           (char*)"obj",
           (char*)"solver",
           (char*)"llvm",
           (char*)"padding",
+          (char*)"keepmem",
           nullptr
         };
 
         /* Extract keywords */
-        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOOO", keywords, &obj, &solver, &llvm, &padding) == false) {
+        if (PyArg_ParseTupleAndKeywords(args, kwargs, "|OOOOO", keywords, &obj, &solver, &llvm, &padding, &keepmem) == false) {
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Invalid number of arguments");
         }
 
@@ -3122,6 +3124,9 @@ namespace triton {
         if (padding != nullptr && !PyBool_Check(padding))
           return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as padding argument.");
 
+        if (keepmem != nullptr && !PyBool_Check(keepmem))
+          return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Expects a boolean as keepmem argument.");
+
         if (solver == nullptr)
           solver = PyLong_FromUint32(false);
 
@@ -3131,12 +3136,15 @@ namespace triton {
         if (padding == nullptr)
           padding = PyLong_FromUint32(false);
 
+        if (keepmem == nullptr)
+          keepmem = PyLong_FromUint32(true);
+
         try {
           if (PyAstNode_Check(obj))
             return PyAstNode(PyTritonContext_AsTritonContext(self)->simplify(PyAstNode_AsAstNode(obj), PyLong_AsBool(solver), PyLong_AsBool(llvm)));
 
           else if (PyBasicBlock_Check(obj))
-            return PyBasicBlock(PyTritonContext_AsTritonContext(self)->simplify(*PyBasicBlock_AsBasicBlock(obj), PyLong_AsBool(padding)));
+            return PyBasicBlock(PyTritonContext_AsTritonContext(self)->simplify(*PyBasicBlock_AsBasicBlock(obj), PyLong_AsBool(padding), PyLong_AsBool(keepmem)));
 
           else
             return PyErr_Format(PyExc_TypeError, "TritonContext::simplify(): Something wrong.");

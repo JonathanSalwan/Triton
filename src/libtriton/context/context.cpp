@@ -854,9 +854,9 @@ namespace triton {
   }
 
 
-  triton::arch::BasicBlock Context::simplify(const triton::arch::BasicBlock& block, bool padding) const {
+  triton::arch::BasicBlock Context::simplify(const triton::arch::BasicBlock& block, bool padding, bool keepmem) const {
     this->checkSymbolic();
-    return this->symbolic->simplify(block, padding);
+    return this->symbolic->simplify(block, padding, keepmem);
   }
 
 

@@ -215,12 +215,12 @@ namespace triton {
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block, bool padding) const {
-        return this->deadStoreElimination(block, padding);
+      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block, bool padding, bool keepmem) const {
+        return this->deadStoreElimination(block, padding, keepmem);
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block, bool padding) const {
+      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block, bool padding, bool keepmem) const {
         std::unordered_map<triton::usize, SharedSymbolicExpression> lifetime;
         std::map<triton::uint64, triton::arch::Instruction> instructions;
         triton::arch::BasicBlock out;
@@ -243,9 +243,20 @@ namespace triton {
         }
 
         /* Get all symbolic memory cells that were written */
-        for (auto& mem : tmpctx.getSymbolicMemory()) {
-          for (auto& item : tmpctx.sliceExpressions(mem.second)) {
-            lifetime[item.first] = item.second;
+        if (keepmem == true) {
+          for (auto& i : in.getInstructions()) {
+            for (auto& se : i.symbolicExpressions) {
+              if (se->isMemory()) {
+                lifetime[se->getId()] = se;
+              }
+            }
+          }
+        }
+        else {
+          for (auto& mem : tmpctx.getSymbolicMemory()) {
+            for (auto& item : tmpctx.sliceExpressions(mem.second)) {
+              lifetime[item.first] = item.second;
+            }
           }
         }
 
