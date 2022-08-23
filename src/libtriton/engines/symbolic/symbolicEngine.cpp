@@ -24,7 +24,7 @@ namespace triton {
                                      const triton::modes::SharedModes& modes,
                                      const triton::ast::SharedAstContext& astCtxt,
                                      triton::callbacks::Callbacks* callbacks)
-        : triton::engines::symbolic::SymbolicSimplification(callbacks),
+        : triton::engines::symbolic::SymbolicSimplification(architecture, callbacks),
           triton::engines::symbolic::PathManager(modes, astCtxt),
           astCtxt(astCtxt),
           modes(modes) {

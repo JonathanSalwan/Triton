@@ -438,3 +438,52 @@ class TestDeadStoreElimination(unittest.TestCase):
                                       '0x10071: nop\n'
                                       '0x10072: pop rsi\n'
                                       '0x10073: ret')
+
+
+    def test_inst8(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0x1234)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x1234)
+        block = BasicBlock([
+	        Instruction(b"\x48\x8B\x14\x2C"),             #  mov rdx, qword ptr [rsp + rbp]
+	        Instruction(b"\x48\x81\xEE\x08\x00\x00\x00"), #  sub rsi, 8
+	        Instruction(b"\x48\x89\x16"),                 #  mov qword ptr [rsi], rdx
+	        Instruction(b"\x41\x51"),                     #  push r9
+	        Instruction(b"\x8b\x03"),                     #  mov eax, dword ptr [rbx]
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block, keepmem=False)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: mov rdx, qword ptr [rsp + rbp]\n'
+                                      '0x4: sub rsi, 8\n'
+                                      '0xb: push r9\n'
+                                      '0xd: mov eax, dword ptr [rbx]')
+
+        sblock = self.ctx.simplify(block, keepmem=True)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: mov rdx, qword ptr [rsp + rbp]\n'
+                                      '0x4: sub rsi, 8\n'
+                                      '0xb: mov qword ptr [rsi], rdx\n'
+                                      '0xe: push r9\n'
+                                      '0x10: mov eax, dword ptr [rbx]')
+
+
+    def test_inst9(self):
+        self.ctx.setArchitecture(ARCH.X86_64)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0x1234)
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsp, 0x9876)
+        block = BasicBlock([
+	        Instruction(b"\x48\x8B\x14\x2C"),             #  mov rdx, qword ptr [rsp + rbp]
+	        Instruction(b"\x48\x81\xEE\x08\x00\x00\x00"), #  sub rsi, 8
+	        Instruction(b"\x48\x89\x16"),                 #  mov qword ptr [rsi], rdx
+	        Instruction(b"\x41\x51"),                     #  push r9
+	        Instruction(b"\x8b\x03"),                     #  mov eax, dword ptr [rbx]
+        ])
+        self.ctx.disassembly(block)
+        sblock = self.ctx.simplify(block, keepmem=False)
+        self.ctx.disassembly(sblock)
+        self.assertEqual(str(sblock), '0x0: mov rdx, qword ptr [rsp + rbp]\n'
+                                      '0x4: sub rsi, 8\n'
+                                      '0xb: mov qword ptr [rsi], rdx\n'
+                                      '0xe: push r9\n'
+                                      '0x10: mov eax, dword ptr [rbx]')

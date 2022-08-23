@@ -5,9 +5,13 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <triton/context.hpp>
+#include <triton/aarch64Cpu.hpp>
+#include <triton/arm32Cpu.hpp>
 #include <triton/config.hpp>
+#include <triton/context.hpp>
 #include <triton/exceptions.hpp>
+#include <triton/x8664Cpu.hpp>
+#include <triton/x86Cpu.hpp>
 
 #include <list>
 #include <map>
@@ -432,6 +436,33 @@ namespace triton {
      * one, the symbolic expression is concretized.
      */
     this->concretizeRegister(reg);
+  }
+
+
+  void Context::setConcreteState(triton::arch::Architecture& other) {
+    if (this->getArchitecture() != other.getArchitecture()) {
+      throw triton::exceptions::Engines("Context::setConcreteState(): Not the same architecture.");
+    }
+
+    switch (this->getArchitecture()) {
+      case triton::arch::ARCH_X86_64:
+        *static_cast<triton::arch::x86::x8664Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::x86::x8664Cpu*>(other.getCpuInstance());
+        break;
+      case triton::arch::ARCH_X86:
+        *static_cast<triton::arch::x86::x86Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::x86::x86Cpu*>(other.getCpuInstance());
+        break;
+      case triton::arch::ARCH_ARM32:
+        *static_cast<triton::arch::arm::arm32::Arm32Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::arm::arm32::Arm32Cpu*>(other.getCpuInstance());
+        break;
+      case triton::arch::ARCH_AARCH64:
+        *static_cast<triton::arch::arm::aarch64::AArch64Cpu*>(this->getCpuInstance()) = *static_cast<triton::arch::arm::aarch64::AArch64Cpu*>(other.getCpuInstance());
+        break;
+      default:
+        throw triton::exceptions::Engines("Context::setConcreteState(): Invalid architecture.");
+    }
+
+    this->concretizeAllMemory();
+    this->concretizeAllRegister();
   }
 
 

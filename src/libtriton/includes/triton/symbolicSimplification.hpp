@@ -8,6 +8,7 @@
 #ifndef TRITON_SYMBOLICSIMPLIFICATION_H
 #define TRITON_SYMBOLICSIMPLIFICATION_H
 
+#include <triton/architecture.hpp>
 #include <triton/ast.hpp>
 #include <triton/basicBlock.hpp>
 #include <triton/callbacks.hpp>
@@ -42,6 +43,9 @@ namespace triton {
       /*! \brief The symbolic simplification class */
       class SymbolicSimplification {
         private:
+          //! Architecture context
+          triton::arch::Architecture* architecture;
+
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
 
@@ -53,7 +57,7 @@ namespace triton {
 
         public:
           //! Constructor.
-          TRITON_EXPORT SymbolicSimplification(triton::callbacks::Callbacks* callbacks=nullptr);
+          TRITON_EXPORT SymbolicSimplification(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks=nullptr);
 
           //! Constructor.
           TRITON_EXPORT SymbolicSimplification(const SymbolicSimplification& other);

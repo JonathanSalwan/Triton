@@ -233,6 +233,9 @@ namespace triton {
          */
         TRITON_EXPORT void setConcreteRegisterValue(const triton::arch::Register& reg, const triton::uint512& value, bool execCallbacks=true);
 
+        //! [**architecture api**] - Defines a concrete state.
+        TRITON_EXPORT void setConcreteState(triton::arch::Architecture& other);
+
         //! Returns true if memory cells have a defined concrete value
         TRITON_EXPORT bool isConcreteMemoryValueDefined(const triton::arch::MemoryAccess& mem) const;
 

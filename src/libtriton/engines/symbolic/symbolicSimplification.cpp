@@ -162,7 +162,8 @@ namespace triton {
     namespace symbolic {
 
 
-      SymbolicSimplification::SymbolicSimplification(triton::callbacks::Callbacks* callbacks) {
+      SymbolicSimplification::SymbolicSimplification(triton::arch::Architecture* architecture, triton::callbacks::Callbacks* callbacks) {
+        this->architecture = architecture;
         this->callbacks = callbacks;
       }
 
@@ -173,6 +174,7 @@ namespace triton {
 
 
       void SymbolicSimplification::copy(const SymbolicSimplification& other) {
+        this->architecture = other.architecture;
         this->callbacks = other.callbacks;
       }
 
@@ -230,7 +232,10 @@ namespace triton {
           return {};
 
         /* Define a temporary Context */
-        triton::Context tmpctx(in.getInstructions()[0].getArchitecture());
+        triton::Context tmpctx(this->architecture->getArchitecture());
+
+        /* Synch the concrete state */
+        tmpctx.setConcreteState(*this->architecture);
 
         /* Execute the block */
         tmpctx.processing(in);
