@@ -14,12 +14,13 @@ jobs:
           - ubuntu-20.04
           - windows-2022
         include:
-          - os: windows-2022
-            platform: windows
-            vcpkg-triplet: x64-windows-static-release-md
-            cmake-preset: windows-x64
-            capstone-library: capstone.lib
-            python-executable: python
+          # FIXME
+          #- os: windows-2022
+          #  platform: windows
+          #  vcpkg-triplet: x64-windows-static-release-md
+          #  cmake-preset: windows-x64
+          #  capstone-library: capstone.lib
+          #  python-executable: python
           - os: ubuntu-20.04
             platform: linux
             vcpkg-triplet: x64-linux-release
