@@ -217,12 +217,12 @@ namespace triton {
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block, bool padding, bool keepmem) const {
-        return this->deadStoreElimination(block, padding, keepmem);
+      triton::arch::BasicBlock SymbolicSimplification::simplify(const triton::arch::BasicBlock& block, bool padding) const {
+        return this->deadStoreElimination(block, padding);
       }
 
 
-      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block, bool padding, bool keepmem) const {
+      triton::arch::BasicBlock SymbolicSimplification::deadStoreElimination(const triton::arch::BasicBlock& block, bool padding) const {
         std::unordered_map<triton::usize, SharedSymbolicExpression> lifetime;
         std::map<triton::uint64, triton::arch::Instruction> instructions;
         triton::arch::BasicBlock out;
@@ -248,19 +248,35 @@ namespace triton {
         }
 
         /* Get all symbolic memory cells that were written */
-        if (keepmem == true) {
-          for (auto& i : in.getInstructions()) {
-            for (auto& se : i.symbolicExpressions) {
-              if (se->isMemory()) {
-                lifetime[se->getId()] = se;
-              }
-            }
+        for (auto& mem : tmpctx.getSymbolicMemory()) {
+          for (auto& item : tmpctx.sliceExpressions(mem.second)) {
+            lifetime[item.first] = item.second;
           }
         }
-        else {
-          for (auto& mem : tmpctx.getSymbolicMemory()) {
-            for (auto& item : tmpctx.sliceExpressions(mem.second)) {
-              lifetime[item.first] = item.second;
+
+        /* Keep instructions that build effective addresses (see #1174) */
+        for (auto& inst : in.getInstructions()) {
+          std::set<std::pair<triton::arch::MemoryAccess, triton::ast::SharedAbstractNode>> access;
+          if (inst.isMemoryWrite()) {
+            access = inst.getStoreAccess();
+          }
+          if (inst.isMemoryRead()) {
+            access.insert(inst.getLoadAccess().begin(), inst.getLoadAccess().end());
+          }
+          for (const auto& x : access) {
+            auto refs = triton::ast::search(x.second, triton::ast::REFERENCE_NODE);
+            for (const auto& ref : refs) {
+              auto expr = reinterpret_cast<triton::ast::ReferenceNode*>(ref.get())->getSymbolicExpression();
+              auto eid = expr->getId();
+              lifetime[eid] = expr;
+            }
+            if (x.first.getLeaAst()) {
+              auto refs = triton::ast::search(x.first.getLeaAst(), triton::ast::REFERENCE_NODE);
+              for (const auto& ref : refs) {
+                auto expr = reinterpret_cast<triton::ast::ReferenceNode*>(ref.get())->getSymbolicExpression();
+                auto eid = expr->getId();
+                lifetime[eid] = expr;
+              }
             }
           }
         }
