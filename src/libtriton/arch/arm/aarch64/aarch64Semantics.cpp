@@ -3586,6 +3586,13 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Set condition flag */
+          if (this->astCtxt->extract(0, 0, this->astCtxt->bvlshr(op1, op2))->evaluate() != 0)
+            inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
 
@@ -3615,6 +3622,13 @@ namespace triton {
 
           /* Spread taint */
           expr->isTainted = this->taintEngine->setTaint(dst, this->taintEngine->isTainted(src1) | this->taintEngine->isTainted(src2));
+
+          /* Set condition flag */
+          if (this->astCtxt->extract(0, 0, this->astCtxt->bvlshr(op1, op2))->evaluate() == 0)
+            inst.setConditionTaken(true);
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
 
