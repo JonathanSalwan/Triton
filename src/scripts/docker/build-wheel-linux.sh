@@ -31,6 +31,7 @@ cd ..
 # Download and build Bitwuzla.
 git clone https://github.com/bitwuzla/bitwuzla.git
 cd bitwuzla
+git checkout 9c79f32cafef01cfd88330c54e9a6d5ec3606888    # NOTE Newer commits use C++ features not supported by the default version of g++.
 ./contrib/setup-cadical.sh
 ./contrib/setup-btor2tools.sh
 ./contrib/setup-symfpu.sh
