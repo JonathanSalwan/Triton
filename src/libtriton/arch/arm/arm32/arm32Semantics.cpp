@@ -90,6 +90,7 @@ SUB                           | Substract
 SUBW                          | Substract
 SXTB                          | Signed Extend Byte
 SXTH                          | Sign Extend Halfword
+TBB                           | Table Branch Byte
 TEQ                           | Test Equivalence
 TST                           | Test
 UBFX                          | Unsigned Bitfield Extract
@@ -200,6 +201,7 @@ namespace triton {
             case ID_INS_SUBW:      this->sub_s(inst);           break;
             case ID_INS_SXTB:      this->sxtb_s(inst);          break;
             case ID_INS_SXTH:      this->sxth_s(inst);          break;
+            case ID_INS_TBB:       this->tbb_s(inst);           break;
             case ID_INS_TEQ:       this->teq_s(inst);           break;
             case ID_INS_TST:       this->tst_s(inst);           break;
             case ID_INS_UBFX:      this->ubfx_s(inst);          break;
@@ -4539,6 +4541,44 @@ namespace triton {
 
           /* Update the symbolic control flow */
           this->controlFlow_s(inst);
+        }
+
+
+        void Arm32Semantics::tbb_s(triton::arch::Instruction& inst) {
+          auto  dst = triton::arch::OperandWrapper(this->architecture->getRegister(ID_REG_ARM32_PC));
+          auto& src = inst.operands[0];
+          auto  bvSize = dst.getBitSize();
+
+          /* Create symbolic operands */
+          auto pcNode = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
+          auto opNode = this->getArm32SourceOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node1 = this->astCtxt->bvadd(
+                        pcNode,
+                        this->astCtxt->bvmul(
+                          this->astCtxt->bv(2, bvSize),
+                          this->astCtxt->zx(bvSize - src.getMemory().getBitSize(), opNode)
+                        )
+                      );
+          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
+
+          /* NOTE This a THUMB only instruction, this is not really necessary. */
+          auto cond = this->getCodeConditionAst(inst);
+
+          /* Create symbolic expression */
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "TBB operation - Program Counter");
+
+          /* Spread taint */
+          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+
+          /* Update condition flag */
+          if (cond->evaluate() == true) {
+            inst.setConditionTaken(true);
+          }
+
+          /* Create the path constraint */
+          this->symbolicEngine->pushPathConstraint(inst, expr);
         }
 
 
