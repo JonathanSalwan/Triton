@@ -9,6 +9,7 @@ RUN DEBIAN_FRONTEND="noninteractive" \
     apt-get install -y  --no-install-suggests --no-install-recommends \
         build-essential \
         ca-certificates \
+        clang-11 \
         cmake \
         git-core \
         less \
