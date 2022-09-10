@@ -286,7 +286,7 @@ namespace triton {
           auto assembly = se.second->getDisassembly();
           if (assembly.empty())
             continue;
-          triton::uint64 addr = std::stoi(assembly, nullptr, 16);
+          triton::uint64 addr = std::stoull(assembly, nullptr, 16);
           for (auto& inst : in.getInstructions()) {
             if (inst.getAddress() == addr) {
               instructions[addr] = inst;
