@@ -38,6 +38,7 @@ set(LIBTRITON_SOURCE_FILES
     arch/x86/x86Specifications.cpp
     ast/ast.cpp
     ast/astContext.cpp
+    ast/representations/astPcodeRepresentation.cpp
     ast/representations/astPythonRepresentation.cpp
     ast/representations/astRepresentation.cpp
     ast/representations/astSmtRepresentation.cpp
@@ -79,6 +80,7 @@ set(LIBTRITON_HEADER_FILES
     includes/triton/ast.hpp
     includes/triton/astContext.hpp
     includes/triton/astEnums.hpp
+    includes/triton/astPcodeRepresentation.hpp
     includes/triton/astPythonRepresentation.hpp
     includes/triton/astRepresentation.hpp
     includes/triton/astRepresentationInterface.hpp

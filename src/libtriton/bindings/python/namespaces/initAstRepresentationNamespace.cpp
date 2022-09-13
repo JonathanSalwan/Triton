@@ -34,6 +34,9 @@ The AST_REPRESENTATION namespace contains all kinds of AST representations.
 - **AST_REPRESENTATION.SMT**<br>
 Enabled, AST expressions will be represented in the SMT2-Lib syntax. This is the default mode.
 
+- **AST_REPRESENTATION.PCODE**<br>
+Enabled, AST expressions will be represented in a pseudo code syntax.
+
 - **AST_REPRESENTATION.PYTHON**<br>
 Enabled, AST expressions will be represented in the Python syntax.
 
@@ -48,6 +51,7 @@ namespace triton {
 
       void initAstRepresentationNamespace(PyObject* astRepresentationDict) {
         xPyDict_SetItemString(astRepresentationDict, "SMT",    PyLong_FromUint32(triton::ast::representations::SMT_REPRESENTATION));
+        xPyDict_SetItemString(astRepresentationDict, "PCODE", PyLong_FromUint32(triton::ast::representations::PCODE_REPRESENTATION));
         xPyDict_SetItemString(astRepresentationDict, "PYTHON", PyLong_FromUint32(triton::ast::representations::PYTHON_REPRESENTATION));
       }
 

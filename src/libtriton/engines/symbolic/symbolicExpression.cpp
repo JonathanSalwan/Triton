@@ -91,6 +91,20 @@ namespace triton {
         else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
           return "ref_" + std::to_string(this->id);
 
+        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PCODE_REPRESENTATION) {
+          if (this->isMemory()) {
+            auto mem = this->getOriginMemory();
+            return "@[" + std::to_string(mem.getAddress()) + ":" + std::to_string(mem.getBitSize()) + "]";
+          }
+          else if (this->isRegister()) {
+            auto reg = this->getOriginRegister();
+            return reg.getName() + "_" + std::to_string(this->id);
+          }
+          else {
+            return "tmp_" + std::to_string(this->id);
+          }
+        }
+
         else
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedId(): Invalid AST representation mode.");
       }
@@ -103,14 +117,17 @@ namespace triton {
         if (this->getComment().empty())
           return "";
 
-        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION)
-          return "; " + this->getComment();
+        switch (ast->getContext()->getRepresentationMode()) {
+          case triton::ast::representations::SMT_REPRESENTATION:
+          case triton::ast::representations::PCODE_REPRESENTATION:
+            return "; " + this->getComment();
 
-        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION)
-          return "# " + this->getComment();
+          case triton::ast::representations::PYTHON_REPRESENTATION:
+            return "# " + this->getComment();
 
-        else
-          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedComment(): Invalid AST representation mode.");
+          default:
+            throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedComment(): Invalid AST representation mode.");
+        };
       }
 
 
@@ -120,16 +137,19 @@ namespace triton {
         if (this->ast == nullptr)
           throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): No AST defined.");
 
-        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::SMT_REPRESENTATION) {
-          stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
-        }
+        switch (ast->getContext()->getRepresentationMode()) {
+          case triton::ast::representations::SMT_REPRESENTATION:
+            stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
+            break;
 
-        else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PYTHON_REPRESENTATION) {
-          stream << this->getFormattedId() << " = " << this->getAst();
-        }
+          case triton::ast::representations::PCODE_REPRESENTATION:
+          case triton::ast::representations::PYTHON_REPRESENTATION:
+            stream << this->getFormattedId() << " = " << this->getAst();
+            break;
 
-        else
-          throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): Invalid AST representation mode.");
+          default:
+            throw triton::exceptions::SymbolicExpression("SymbolicExpression::getFormattedExpression(): Invalid AST representation mode.");
+        }
 
         if (!this->getComment().empty()) {
           stream << " " << this->getFormattedComment();

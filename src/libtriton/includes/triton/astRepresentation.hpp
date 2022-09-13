@@ -13,9 +13,7 @@
 
 #include <triton/ast.hpp>
 #include <triton/astEnums.hpp>
-#include <triton/astPythonRepresentation.hpp>
 #include <triton/astRepresentationInterface.hpp>
-#include <triton/astSmtRepresentation.hpp>
 #include <triton/dllexport.hpp>
 
 

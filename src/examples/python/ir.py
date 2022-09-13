@@ -35,7 +35,7 @@
 ##
 
 from __future__ import print_function
-from triton     import TritonContext, ARCH, Instruction, REG, MemoryAccess
+from triton     import *
 
 import sys
 
@@ -54,8 +54,9 @@ code = [
 
 if __name__ == '__main__':
 
-    Triton = TritonContext()
-    Triton.setArchitecture(ARCH.X86_64)
+    ctx = TritonContext()
+    ctx.setArchitecture(ARCH.X86_64)
+    ctx.setAstRepresentationMode(AST_REPRESENTATION.PCODE)
 
     for (addr, opcode) in code:
         # Build an instruction
@@ -68,7 +69,7 @@ if __name__ == '__main__':
         inst.setAddress(addr)
 
         # Process everything
-        Triton.processing(inst)
+        ctx.processing(inst)
 
         # Display instruction
         print(inst)

@@ -5,7 +5,7 @@
 **  This program is under the terms of the Apache License 2.0.
 */
 
-#include <triton/astSmtRepresentation.hpp>
+#include <triton/astPcodeRepresentation.hpp>
 #include <triton/exceptions.hpp>
 #include <triton/symbolicExpression.hpp>
 #include <triton/symbolicVariable.hpp>
@@ -16,12 +16,12 @@ namespace triton {
   namespace ast {
     namespace representations {
 
-      AstSmtRepresentation::AstSmtRepresentation() {
+      AstPcodeRepresentation::AstPcodeRepresentation() {
       }
 
 
       /* Representation dispatcher from an abstract node */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::AbstractNode* node) {
         switch (node->getType()) {
           case ARRAY_NODE:                return this->print(stream, reinterpret_cast<triton::ast::ArrayNode*>(node)); break;
           case ASSERT_NODE:               return this->print(stream, reinterpret_cast<triton::ast::AssertNode*>(node)); break;
@@ -79,245 +79,245 @@ namespace triton {
           case VARIABLE_NODE:             return this->print(stream, reinterpret_cast<triton::ast::VariableNode*>(node)); break;
           case ZX_NODE:                   return this->print(stream, reinterpret_cast<triton::ast::ZxNode*>(node)); break;
           default:
-            throw triton::exceptions::AstRepresentation("AstSmtRepresentation::print(AbstractNode): Invalid kind node.");
+            throw triton::exceptions::AstRepresentation("AstPcodeRepresentation::print(AbstractNode): Invalid kind node.");
         }
         return stream;
       }
 
 
       /* array representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ArrayNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ArrayNode* node) {
         stream << "Memory";
         return stream;
       }
 
 
       /* assert representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
-        stream << "(assert " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::AssertNode* node) {
+        stream << "assert(" << node->getChildren()[0] << ")";
         return stream;
       }
 
 
       /* bswap representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BswapNode* node) {
-        stream << "(bswap" << node->getBitvectorSize() << " " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BswapNode* node) {
+        stream << "bswap(" << node->getChildren()[0] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
 
       /* bvadd representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvaddNode* node) {
-        stream << "(bvadd " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvaddNode* node) {
+        stream << "(" << node->getChildren()[0] << " + " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvand representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvandNode* node) {
-        stream << "(bvand " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvandNode* node) {
+        stream << "(" << node->getChildren()[0] << " & " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvashr representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvashrNode* node) {
-        stream << "(bvashr " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvashrNode* node) {
+        stream << "(" << node->getChildren()[0] << " >> " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvlshr representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvlshrNode* node) {
-        stream << "(bvlshr " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvlshrNode* node) {
+        stream << "(" << node->getChildren()[0] << " >> " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvmul representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvmulNode* node) {
-        stream << "(bvmul " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvmulNode* node) {
+        stream << "(" << node->getChildren()[0] << " * " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvnand representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvnandNode* node) {
-        stream << "(bvnand " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvnandNode* node) {
+        stream << "~(" << node->getChildren()[0] << " & " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvneg representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvnegNode* node) {
-        stream << "(bvneg " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvnegNode* node) {
+        stream << "-(" << node->getChildren()[0] << ")";
         return stream;
       }
 
 
       /* bvnor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvnorNode* node) {
-        stream << "(bvnor " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvnorNode* node) {
+        stream << "~(" << node->getChildren()[0] << " | " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvnot representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvnotNode* node) {
-        stream << "(bvnot " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvnotNode* node) {
+        stream << "~(" << node->getChildren()[0] << ")";
         return stream;
       }
 
 
       /* bvor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvorNode* node) {
-        stream << "(bvor " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvorNode* node) {
+        stream << "(" << node->getChildren()[0] << " | " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvrol representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
-        stream << "((_ rotate_left " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvrolNode* node) {
+        stream << "rol(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
 
       /* bvror representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
-        stream << "((_ rotate_right " << node->getChildren()[1] << ") " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvrorNode* node) {
+        stream << "ror(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getBitvectorSize() << ")";
         return stream;
       }
 
 
       /* bvsdiv representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsdivNode* node) {
-        stream << "(bvsdiv " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsdivNode* node) {
+        stream << "(" << node->getChildren()[0] << " / " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsge representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsgeNode* node) {
-        stream << "(bvsge " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsgeNode* node) {
+        stream << "(" << node->getChildren()[0] << " >= " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsgt representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsgtNode* node) {
-        stream << "(bvsgt " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsgtNode* node) {
+        stream << "(" << node->getChildren()[0] << " > " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvshl representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvshlNode* node) {
-        stream << "(bvshl " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvshlNode* node) {
+        stream << "(" << node->getChildren()[0] << " << " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsle representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsleNode* node) {
-        stream << "(bvsle " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsleNode* node) {
+        stream << "(" << node->getChildren()[0] << " <= " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvslt representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsltNode* node) {
-        stream << "(bvslt " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsltNode* node) {
+        stream << "(" << node->getChildren()[0] << " < " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsmod representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsmodNode* node) {
-        stream << "(bvsmod " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsmodNode* node) {
+        stream << "(" << node->getChildren()[0] << " % " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsrem representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsremNode* node) {
-         stream << "(bvsrem " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsremNode* node) {
+        stream << "(" << node->getChildren()[0] << " % " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvsub representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvsubNode* node) {
-        stream << "(bvsub " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvsubNode* node) {
+        stream << "(" << node->getChildren()[0] << " - " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvudiv representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvudivNode* node) {
-        stream << "(bvudiv " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvudivNode* node) {
+        stream << "(" << node->getChildren()[0] << " / " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvuge representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvugeNode* node) {
-        stream << "(bvuge " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvugeNode* node) {
+        stream << "(" << node->getChildren()[0] << " >= " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvugt representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvugtNode* node) {
-        stream << "(bvugt " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvugtNode* node) {
+        stream << "(" << node->getChildren()[0] << " > " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvule representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvuleNode* node) {
-        stream << "(bvule " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvuleNode* node) {
+        stream << "(" << node->getChildren()[0] << " <= " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvult representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvultNode* node) {
-        stream << "(bvult " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvultNode* node) {
+        stream << "(" << node->getChildren()[0] << " < " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvurem representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvuremNode* node) {
-        stream << "(bvurem " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvuremNode* node) {
+        stream << "(" << node->getChildren()[0] << " % " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvxnor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvxnorNode* node) {
-        stream << "(bvxnor " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvxnorNode* node) {
+        stream << "~(" << node->getChildren()[0] << " ^ " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bvxor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvxorNode* node) {
-        stream << "(bvxor " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvxorNode* node) {
+        stream << "(" << node->getChildren()[0] << " ^ " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* bv representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::BvNode* node) {
-        stream << "(_ bv" << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::BvNode* node) {
+        stream << node->getChildren()[0];
         return stream;
       }
 
 
       /* compound representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::CompoundNode* node) {
         std::vector<triton::ast::SharedAbstractNode> children = node->getChildren();
         triton::usize size = children.size();
 
@@ -330,16 +330,20 @@ namespace triton {
 
 
       /* concat representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ConcatNode* node) {
         std::vector<triton::ast::SharedAbstractNode> children = node->getChildren();
         triton::usize size = children.size();
 
         if (size < 2)
-          throw triton::exceptions::AstRepresentation("AstSmtRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
+          throw triton::exceptions::AstRepresentation("AstPcodeRepresentation::print(ConcatNode): Exprs must contain at least two expressions.");
 
-        stream << "(concat";
-        for (triton::usize index = 0; index < size; index++)
-          stream << " " << children[index];
+        stream << "concat(";
+        for (triton::usize index = 0; index < size; index++) {
+          stream << children[index];
+          if (index+1 < size) {
+            stream << ", ";
+          }
+        }
         stream << ")";
 
         return stream;
@@ -347,95 +351,93 @@ namespace triton {
 
 
       /* declare representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::DeclareNode* node) {
         if (node->getChildren()[0]->getType() == VARIABLE_NODE) {
           const triton::engines::symbolic::SharedSymbolicVariable& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[0].get())->getSymbolicVariable();
           if (var->getAlias().empty())
-            stream << "(declare-fun " << var->getName() << " () (_ BitVec " << var->getSize() << "))";
+            stream << var->getName() << " = " << "input()";
           else
-            stream << "(declare-fun " << var->getAlias() << " () (_ BitVec " << var->getSize() << "))";
+            stream << var->getAlias() << " = " << "input()";
         }
 
         else if (node->getChildren()[0]->getType() == ARRAY_NODE) {
-          const auto& array = node->getChildren()[0];
-          const auto& size  = array->getChildren()[0];
-          stream << "(define-fun " << node->getChildren()[0] << " () (Array (_ BitVec " << size << ") (_ BitVec 8)) ";
-          stream << "((as const (Array (_ BitVec " << size << ") (_ BitVec 8))) (_ bv0 8)))";
+          stream << node->getChildren()[0] << " = memory()";
         }
 
-        else
-          throw triton::exceptions::AstRepresentation("AstSmtRepresentation::print(DeclareNode): Invalid sort.");
+        else {
+          throw triton::exceptions::AstRepresentation("AstPcodeRepresentation::print(DeclareNode): Invalid sort.");
+        }
 
         return stream;
       }
 
 
       /* distinct representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::DistinctNode* node) {
-        stream << "(distinct " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::DistinctNode* node) {
+        stream << "(" << node->getChildren()[0] << " != " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* equal representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::EqualNode* node) {
-        stream << "(= " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::EqualNode* node) {
+        stream << "(" << node->getChildren()[0] << " == " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* extract representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
-        stream << "((_ extract " << node->getChildren()[0] << " " << node->getChildren()[1] << ") " << node->getChildren()[2] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
+        stream << "extract(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getChildren()[2] << ")";
         return stream;
       }
 
 
       /* forall representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ForallNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ForallNode* node) {
         triton::usize size = node->getChildren().size() - 1;
 
-        stream << "(forall (";
+        stream << "forall([";
         for (triton::uint32 i = 0; i != size; i++) {
           const auto& var = reinterpret_cast<triton::ast::VariableNode*>(node->getChildren()[i].get())->getSymbolicVariable();
-          if (var->getAlias().empty())  stream << "(" << var->getName()  << " (_ BitVec " << var->getSize() << "))";
-          else                          stream << "(" << var->getAlias() << " (_ BitVec " << var->getSize() << "))";
-          if (i + 1 != size)            stream << " ";
+          if (var->getAlias().empty())  stream << var->getName();
+          else                          stream << var->getAlias();
+          if (i + 1 != size)            stream << ", ";
         }
-        stream << ") " << node->getChildren()[size] << ")";
+        stream << "], " << node->getChildren()[size] << ")";
 
         return stream;
       }
 
 
       /* iff representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::IffNode* node) {
-        stream << "(iff " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::IffNode* node) {
+        stream << "(" << node->getChildren()[0] << " and " << node->getChildren()[1] << ") or (not " << node->getChildren()[0] << " and not " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* integer representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::IntegerNode* node) {
-        stream << node->getInteger();
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::IntegerNode* node) {
+        stream << std::hex << "0x" << node->getInteger() << std::dec;
         return stream;
       }
 
 
       /* ite representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::IteNode* node) {
-        stream << "(ite " << node->getChildren()[0] << " " << node->getChildren()[1] << " " << node->getChildren()[2] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::IteNode* node) {
+        stream << "(" << node->getChildren()[1] << " if " << node->getChildren()[0] << " else " << node->getChildren()[2] << ")";
         return stream;
       }
 
 
       /* land representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LandNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::LandNode* node) {
         triton::usize size = node->getChildren().size();
 
-        stream << "(and";
-        for (triton::usize index = 0; index < size; index++)
-          stream << " " << node->getChildren()[index];
+        stream << "(" << node->getChildren()[0];
+        for (triton::usize index = 1; index < size; index++)
+          stream << " and " << node->getChildren()[index];
         stream << ")";
 
         return stream;
@@ -443,82 +445,86 @@ namespace triton {
 
 
       /* let representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LetNode* node) {
-        stream << "(let ((" << node->getChildren()[0] << " " << node->getChildren()[1] << ")) " << node->getChildren()[2] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::LetNode* node) {
+        stream << node->getChildren()[2];
         return stream;
       }
 
 
       /* lnot representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LnotNode* node) {
-        stream << "(not " << node->getChildren()[0] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::LnotNode* node) {
+        stream << "not " << node->getChildren()[0];
         return stream;
       }
 
 
       /* lor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LorNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::LorNode* node) {
         triton::usize size = node->getChildren().size();
 
-        stream << "(or";
-        for (triton::usize index = 0; index < size; index++)
-          stream << " " << node->getChildren()[index];
+        stream << "(" << node->getChildren()[0];
+        for (triton::usize index = 1; index < size; index++)
+          stream << " or " << node->getChildren()[index];
         stream << ")";
 
         return stream;
       }
-
 
       /* lxor representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::LxorNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::LxorNode* node) {
         triton::usize size = node->getChildren().size();
 
-        stream << "(xor";
-        for (triton::usize index = 0; index < size; index++)
-          stream << " " << node->getChildren()[index];
-        stream << ")";
+        stream << "(bool(" << node->getChildren()[0];
+        for (triton::usize index = 1; index < size; index++)
+          stream << ") != bool(" << node->getChildren()[index];
+        stream << "))";
 
         return stream;
       }
 
-
       /* reference representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
         stream << node->getSymbolicExpression()->getFormattedId();
         return stream;
       }
 
 
       /* select representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::SelectNode* node) {
-        stream << "(select " << node->getChildren()[0] << " " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::SelectNode* node) {
+        stream << "select(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
         return stream;
       }
 
 
       /* store representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::StoreNode* node) {
-        stream << "(store " << node->getChildren()[0] << " " << node->getChildren()[1] << " " << node->getChildren()[2] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::StoreNode* node) {
+        stream << "store(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getChildren()[2] << ")";
         return stream;
       }
 
 
       /* string representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::StringNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::StringNode* node) {
         stream << node->getString();
         return stream;
       }
 
 
       /* sx representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::SxNode* node) {
-        stream << "((_ sign_extend " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::SxNode* node) {
+        triton::uint32 extend = triton::ast::getInteger<triton::uint32>(node->getChildren()[0]);
+
+        if (extend)
+          stream << "sx(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ")";
+        else
+          stream << node->getChildren()[1];
+
         return stream;
       }
 
 
       /* variable representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::VariableNode* node) {
         if (node->getSymbolicVariable()->getAlias().empty())
           stream << node->getSymbolicVariable()->getName();
         else
@@ -528,8 +534,8 @@ namespace triton {
 
 
       /* zx representation */
-      std::ostream& AstSmtRepresentation::print(std::ostream& stream, triton::ast::ZxNode* node) {
-        stream << "((_ zero_extend " << node->getChildren()[0] << ") " << node->getChildren()[1] << ")";
+      std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ZxNode* node) {
+        stream << node->getChildren()[1];
         return stream;
       }
 

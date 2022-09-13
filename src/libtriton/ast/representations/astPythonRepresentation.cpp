@@ -484,7 +484,7 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstPythonRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << "ref_" << node->getSymbolicExpression()->getId();
+        stream << node->getSymbolicExpression()->getFormattedId();
         return stream;
       }
 

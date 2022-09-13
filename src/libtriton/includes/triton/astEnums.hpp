@@ -98,7 +98,8 @@ namespace triton {
       enum mode_e {
         SMT_REPRESENTATION = 0,     /*!< SMT representation */
         PYTHON_REPRESENTATION = 1,  /*!< Python representation */
-        LAST_REPRESENTATION = 2,    /*!< Must be the last item */
+        PCODE_REPRESENTATION = 2,   /*!< Pseudo Code representation */
+        LAST_REPRESENTATION = 3,    /*!< Must be the last item */
       };
 
     /*! @} End of representations namespace */
