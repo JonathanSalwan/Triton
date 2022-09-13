@@ -1957,6 +1957,7 @@ namespace triton {
             case ID_INS_LDRH:
             case ID_INS_LDRSH:
             case ID_INS_STRH:
+            case ID_INS_TBH:
               return 2;
             default:
               return 0;
