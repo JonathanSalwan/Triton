@@ -569,9 +569,9 @@ namespace triton {
 
         /* Record the aligned symbolic variable for a symbolic optimization */
         if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
-          const SharedSymbolicExpression& se = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "aligned Byte reference");
-          se->setOriginMemory(mem);
-          this->addAlignedMemory(memAddr, symVarSize, se);
+          const SharedSymbolicExpression& aligned = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "Aligned Byte reference");
+          aligned->setOriginMemory(mem);
+          this->addAlignedMemory(memAddr, symVarSize, aligned);
         }
 
         /*  Split expression in bytes */
@@ -922,6 +922,7 @@ namespace triton {
         /* Record the aligned memory for a symbolic optimization */
         if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned Byte reference - " + comment);
+          aligned->setOriginMemory(mem);
           this->addAlignedMemory(address, writeSize, aligned);
         }
 
