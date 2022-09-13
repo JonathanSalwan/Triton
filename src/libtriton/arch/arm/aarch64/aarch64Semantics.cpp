@@ -3141,8 +3141,11 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[0];
           triton::arch::OperandWrapper& dst = inst.operands[1];
 
-          /* Create the semantics of the STORE */
-          auto node = this->symbolicEngine->getOperandAst(inst, src);
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(7, 0, op);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRB operation - STORE access");
@@ -3159,8 +3162,11 @@ namespace triton {
           triton::arch::OperandWrapper& src = inst.operands[0];
           triton::arch::OperandWrapper& dst = inst.operands[1];
 
-          /* Create the semantics of the STORE */
-          auto node = this->symbolicEngine->getOperandAst(inst, src);
+          /* Create symbolic operands */
+          auto op = this->symbolicEngine->getOperandAst(inst, src);
+
+          /* Create the semantics */
+          auto node = this->astCtxt->extract(15, 0, op);
 
           /* Create symbolic expression */
           auto expr = this->symbolicEngine->createSymbolicExpression(inst, node, dst, "STLRH operation - STORE access");
