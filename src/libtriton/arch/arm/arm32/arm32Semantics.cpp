@@ -4565,7 +4565,7 @@ namespace triton {
                       );
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
-          /* NOTE This a THUMB only instruction, this is not really necessary. */
+          /* NOTE This a THUMB only instruction, the condition is always true. */
           auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
@@ -4589,6 +4589,7 @@ namespace triton {
           auto& src = inst.operands[0];
           auto  bvSize = dst.getBitSize();
 
+          /* Create symbolic operands */
           auto pcNode = this->astCtxt->bv(inst.getNextAddress(), dst.getBitSize());
           auto opNode = this->getArm32SourceOperandAst(inst, src);
 
@@ -4602,11 +4603,11 @@ namespace triton {
                       );
           auto node2 = this->buildConditionalSemantics(inst, dst, node1);
 
-          /* NOTE This a THUMB only instruction, this is not really necessary. */
+          /* NOTE This a THUMB only instruction, the condition is always true. */
           auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "TBB operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "TBH operation - Program Counter");
 
           /* Spread taint */
           this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
