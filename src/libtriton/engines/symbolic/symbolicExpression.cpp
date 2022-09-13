@@ -94,7 +94,9 @@ namespace triton {
         else if (ast->getContext()->getRepresentationMode() == triton::ast::representations::PCODE_REPRESENTATION) {
           if (this->isMemory()) {
             auto mem = this->getOriginMemory();
-            return "@[" + std::to_string(mem.getAddress()) + ":" + std::to_string(mem.getBitSize()) + "]";
+            std::ostringstream ss;
+            ss << "@[0x" << std::hex << mem.getAddress() << ":" << std::dec << mem.getBitSize() << "]";
+            return ss.str();
           }
           else if (this->isRegister()) {
             auto reg = this->getOriginRegister();

@@ -388,7 +388,11 @@ namespace triton {
 
       /* extract representation */
       std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ExtractNode* node) {
-        stream << "extract(" << node->getChildren()[0] << ", " << node->getChildren()[1] << ", " << node->getChildren()[2] << ")";
+        triton::uint32 high = triton::ast::getInteger<triton::uint32>(node->getChildren()[0]);
+        triton::uint32 low = triton::ast::getInteger<triton::uint32>(node->getChildren()[1]);
+
+        stream << std::dec << "extract(" << high << ", " << low << ", " << node->getChildren()[2] << ")";
+
         return stream;
       }
 

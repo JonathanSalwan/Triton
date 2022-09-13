@@ -705,7 +705,7 @@ class TestAstSimplification5(unittest.TestCase):
 
     def test_issue_1002_2(self):
         # See #1002
-        inst = Instruction(b"\x48\x29\x0a")
+        inst = Instruction(b"\x48\x29\x0a") # sub qword ptr [rdx], rcx
         self.ctx.processing(inst)
         self.assertEqual("\n".join(str(e) for e in inst.getSymbolicExpressions()),
             ("(define-fun ref!0 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
@@ -716,7 +716,7 @@ class TestAstSimplification5(unittest.TestCase):
              "(define-fun ref!5 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
              "(define-fun ref!6 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
              "(define-fun ref!7 () (_ BitVec 8) (_ bv0 8)) ; Byte reference - SUB operation\n"
-             "(define-fun ref!8 () (_ BitVec 64) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8))) ; Temporary concatenation reference - SUB operation\n"
+             "(define-fun ref!8 () (_ BitVec 64) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8))) ; Original memory access - SUB operation\n"
              "(define-fun ref!9 () (_ BitVec 1) (_ bv0 1)) ; Adjust flag\n"
              "(define-fun ref!10 () (_ BitVec 1) ((_ extract 63 63) (concat (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8) (_ bv0 8)))) ; Carry flag\n"
              "(define-fun ref!11 () (_ BitVec 1) ((_ extract 63 63) (_ bv0 64))) ; Overflow flag\n"
