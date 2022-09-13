@@ -2,7 +2,6 @@
 ## -*- coding: utf-8 -*-
 
 from __future__          import print_function
-from inspect import Traceback
 from triton              import *
 from unicorn             import *
 from unicorn.arm_const   import *
@@ -13,21 +12,23 @@ import struct
 import sys
 
 ADDR  = 0x100000
-ADDR2 = 0x300000
 STACK = 0x500000
 HEAP  = 0x600000
 SIZE  = 10 * 1024 * 1024
 
-TARGET = 0x500000
+BRANCH_TABLE_ADDR = 0x300000
 
-CODE2 = [
-    (b"\x00\xf0\x20\xe3", "nop"),   # ARM
+BRANCH_TABLE = [
+    (b"\x0a\x0b\x0c\x0d", "branch table"),
+    (b"\x0e\x0f\x10\x11", "branch table"),
 ]
 
 CODE  = [
-    # TBH--------------------------------------------------------------------- #
-    (b"\xd0\xe8\x11\xf0", "tbh [r0, r1]")
-    # (b"\xd0\xe8\x01\xf0", "tbb [r0, r1]")
+    # TBH -------------------------------------------------------------------- #
+    (b"\xd0\xe8\x11\xf0", "tbh [r0, r1, lsl #1]"),
+
+    (b"\xdf\xe8\x12\xf0", "tbh [pc, r2, lsl #1]"),
+    (b"\x01\x02\x03\x04", "branch table"),
 ]
 
 
@@ -40,14 +41,14 @@ def emu_with_unicorn(opcode, istate):
 
     # Write machine code to be emulated to memory.
     index = 0
-    for op, _ in CODE:
+    for op, disassembly in CODE:
         mu.mem_write(ADDR+index, op)
         index += len(op)
 
-    # Valid memory region to land when testing branches.
+    # Write branch table to memory.
     index = 0
-    for op, _ in CODE2:
-        mu.mem_write(ADDR2+index, op)
+    for op, _ in BRANCH_TABLE:
+        mu.mem_write(BRANCH_TABLE_ADDR+index, op)
         index += len(op)
 
     # Retrieve APSR register value.
@@ -108,6 +109,18 @@ def emu_with_triton(opcode, istate):
     ctx = TritonContext()
     ctx.setArchitecture(ARCH.ARM32)
 
+    # Write machine code to be emulated to memory.
+    index = 0
+    for op, _ in CODE:
+        ctx.setConcreteMemoryAreaValue(ADDR+index, op)
+        index += len(op)
+
+    # Write branch table to memory.
+    index = 0
+    for data, _ in BRANCH_TABLE:
+        ctx.setConcreteMemoryAreaValue(BRANCH_TABLE_ADDR+index, data)
+        index += len(data)
+
     inst = Instruction(opcode)
     inst.setAddress(istate['pc'])
 
@@ -136,12 +149,11 @@ def emu_with_triton(opcode, istate):
 
     ctx.processing(inst)
 
-    # DEBUG
-    print()
-    print(inst)
-    for x in inst.getSymbolicExpressions():
-       print(x)
-    print()
+    # print()
+    # print(inst)
+    # for x in inst.getSymbolicExpressions():
+    #    print(x)
+    # print()
 
     ostate = {
         "stack": bytearray(ctx.getConcreteMemoryAreaValue(STACK, 0x100)),
@@ -196,12 +208,11 @@ if __name__ == '__main__':
 
     # Initial state.
     state = {
-        # "stack": bytearray([x for i in range(256) for x in (255 - i, 0)]),
-        "stack": bytearray([x for i in range(256) for x in (i, 0)]),
+        "stack": bytearray([255 - i for i in range(256)]),
         "heap":  heap,
-        "r0":    TARGET, # NOTE: Enable Thumb mode by setting lsb of the register.
-        "r1":    0x0,
-        "r2":    random.randint(0x0, 0xffffffff),
+        "r0":    BRANCH_TABLE_ADDR, # NOTE: Enable Thumb mode by setting lsb of the register.
+        "r1":    0x2,
+        "r2":    0x1,
         "r3":    random.randint(0x0, 0xffffffff),
         "r4":    random.randint(0x0, 0xffffffff),
         "r5":    HEAP + 5 * 0x4,
@@ -221,13 +232,13 @@ if __name__ == '__main__':
         "v":     random.randint(0x0, 0x1),
     }
 
-    # Set TARGET value to test LDR instructions.
-    # state["heap"][5*0x4:5*0x4*3] = struct.pack("<I", 0x300000)
-
     # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
     pc = ADDR
     for opcode, disassembly in CODE:
+        if disassembly == "branch table":
+            continue
+
         try:
             state['pc'] = pc
             uc_state = emu_with_unicorn(opcode, state)
