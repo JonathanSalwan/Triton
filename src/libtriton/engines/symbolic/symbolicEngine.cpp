@@ -924,8 +924,8 @@ namespace triton {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned optimization - " + comment);
           aligned->setOriginMemory(mem);
           this->addAlignedMemory(address, writeSize, aligned);
-          /* Increment the current id to not link the aligned expression to the instruction */
-          id++;
+          /* Refresh the current id to not link the aligned expression to the instruction */
+          id = this->uniqueSymExprId;
         }
 
         /*
