@@ -1952,10 +1952,12 @@ namespace triton {
             case ID_INS_LDRB:
             case ID_INS_LDRSB:
             case ID_INS_STRB:
+            case ID_INS_TBB:
               return 1;
             case ID_INS_LDRH:
             case ID_INS_LDRSH:
             case ID_INS_STRH:
+            case ID_INS_TBH:
               return 2;
             default:
               return 0;

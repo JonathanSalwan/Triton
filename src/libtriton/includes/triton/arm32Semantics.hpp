@@ -457,6 +457,12 @@ namespace triton {
             //! The TST semantics.
             void tst_s(triton::arch::Instruction& inst);
 
+            //! The TBB semantics.
+            void tbb_s(triton::arch::Instruction& inst);
+
+            //! The TBH semantics.
+            void tbh_s(triton::arch::Instruction& inst);
+
             //! The TEQ semantics.
             void teq_s(triton::arch::Instruction& inst);
 
