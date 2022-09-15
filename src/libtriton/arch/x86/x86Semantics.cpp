@@ -4020,18 +4020,17 @@ namespace triton {
 
 
       void x86Semantics::call_s(triton::arch::Instruction& inst) {
-        auto stack = this->architecture->getStackPointer();
-
-        /* Create the semantics - side effect */
-        auto  stackValue = alignSubStack_s(inst, stack.getSize());
-        auto  pc         = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
-        auto  sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
         auto& src        = inst.operands[0];
 
         /* Create symbolic operands */
         auto op1 = this->symbolicEngine->getOperandAst(inst, src);
 
         /* Create the semantics - side effect */
+        auto stack      = this->architecture->getStackPointer();
+        auto stackValue = alignSubStack_s(inst, stack.getSize());
+        auto pc         = triton::arch::OperandWrapper(this->architecture->getProgramCounter());
+        auto sp         = triton::arch::OperandWrapper(triton::arch::MemoryAccess(stackValue, stack.getSize()));
+
         auto node1 = this->astCtxt->bv(inst.getNextAddress(), pc.getBitSize());
 
         /* Create the semantics */
