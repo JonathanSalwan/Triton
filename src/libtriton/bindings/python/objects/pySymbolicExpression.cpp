@@ -52,7 +52,7 @@ This object is used to represent a symbolic expression.
 (define-fun ref!0 () (_ BitVec 64) (bvxor (_ bv12345 64) (_ bv67890 64))) ; XOR operation
 (define-fun ref!1 () (_ BitVec 1) (_ bv0 1)) ; Clears carry flag
 (define-fun ref!2 () (_ BitVec 1) (_ bv0 1)) ; Clears overflow flag
-(define-fun ref!3 () (_ BitVec 1) (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv0 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv1 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv2 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv3 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv4 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv5 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv6 8)))) ((_ extract 0 0) (bvlshr ((_ extract 7 0) ref!0) (_ bv7 8))))) ; Parity flag
+(define-fun ref!3 () (_ BitVec 1) (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (bvxor (_ bv1 1) ((_ extract 0 0) ref!0)) ((_ extract 1 1) ref!0)) ((_ extract 2 2) ref!0)) ((_ extract 3 3) ref!0)) ((_ extract 4 4) ref!0)) ((_ extract 5 5) ref!0)) ((_ extract 6 6) ref!0)) ((_ extract 7 7) ref!0))) ; Parity flag
 (define-fun ref!4 () (_ BitVec 1) ((_ extract 63 63) ref!0)) ; Sign flag
 (define-fun ref!5 () (_ BitVec 1) (ite (= ref!0 (_ bv0 64)) (_ bv1 1) (_ bv0 1))) ; Zero flag
 (define-fun ref!6 () (_ BitVec 64) (_ bv4194307 64)) ; Program Counter
