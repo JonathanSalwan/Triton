@@ -2507,15 +2507,7 @@ namespace triton {
          */
         auto node = this->astCtxt->bv(1, 1);
         for (triton::uint32 counter = 0; counter <= triton::bitsize::byte-1; counter++) {
-          node = this->astCtxt->bvxor(
-                   node,
-                   this->astCtxt->extract(0, 0,
-                     this->astCtxt->bvlshr(
-                       this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
-                       this->astCtxt->bv(counter, triton::bitsize::byte)
-                     )
-                  )
-                );
+          node = this->astCtxt->bvxor(node, this->astCtxt->extract(counter, counter, this->astCtxt->reference(parent)));
         }
 
         /* Create the symbolic expression */
@@ -2543,15 +2535,7 @@ namespace triton {
          */
         auto node1 = this->astCtxt->bv(1, 1);
         for (triton::uint32 counter = 0; counter <= triton::bitsize::byte-1; counter++) {
-          node1 = this->astCtxt->bvxor(
-                   node1,
-                   this->astCtxt->extract(0, 0,
-                     this->astCtxt->bvlshr(
-                       this->astCtxt->extract(high, low, this->astCtxt->reference(parent)),
-                       this->astCtxt->bv(counter, triton::bitsize::byte)
-                     )
-                  )
-                );
+          node1 = this->astCtxt->bvxor(node1, this->astCtxt->extract(counter, counter, this->astCtxt->reference(parent)));
         }
 
         auto node2 = this->astCtxt->ite(
