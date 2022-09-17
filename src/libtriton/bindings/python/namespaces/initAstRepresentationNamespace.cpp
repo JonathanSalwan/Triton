@@ -54,7 +54,7 @@ Enabled, AST expressions will be represented in the Python syntax.
 (define-fun ref!8 () (_ BitVec 64) (_ bv3 64)) ; Program Counter
 ~~~~~~~~~~~~~
 
-\section AST_REPRESENTATION_py_example_pcode Example: Example of PCODE representation
+\section AST_REPRESENTATION_py_example_pcode Example of PCODE representation
 <hr>
 
 ~~~~~~~~~~~~~{.py}
@@ -74,7 +74,7 @@ zf_7 = (0x1 if (rax_2 == 0x0) else 0x0) ; Zero flag
 rip_8 = 0x3 ; Program Counter
 ~~~~~~~~~~~~~
 
-\section AST_REPRESENTATION_py_example_python Example: Example of PYTHON representation
+\section AST_REPRESENTATION_py_example_python Example of PYTHON representation
 <hr>
 
 ~~~~~~~~~~~~~{.py}
