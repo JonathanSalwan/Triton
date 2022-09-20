@@ -416,7 +416,11 @@ namespace triton {
                      * instruction syntax" of the reference manual.
                      */
                     auto offset = this->thumb ? 4 : 8;
-                    auto address = (inst.getAddress() + offset) & 0xfffffffc;
+                    auto address = (inst.getAddress() + offset);
+                    /* Align address except when it is a TBB or TBH instruction. */
+                    if (!(inst.getType() == ID_INS_TBB || inst.getType() == ID_INS_TBH)) {
+                      address = address & 0xfffffffc;
+                    }
                     mem.setPcRelative(address);
                   }
 
