@@ -27,8 +27,8 @@ CODE  = [
     # TBH -------------------------------------------------------------------- #
     (b"\xd0\xe8\x11\xf0", "tbh [r0, r1, lsl #1]"),
 
-    (b"\xdf\xe8\x12\xf0", "tbh [pc, r2, lsl #1]"),
-    (b"\x01\x02\x03\x04", "branch table"),
+    (b"\xdf\xe8\x13\xf0", "tbh [pc, r3, lsl #1]"),
+    (b"\x27\x00\x2d\x00\x33\x00\x39\x00\x3f\x00\x45\x00\x4b\x00\x51\x00\x57\x00\x5d\x00\x63\x00\x6d\x00", "branch table"),
 ]
 
 
@@ -37,7 +37,7 @@ def emu_with_unicorn(opcode, istate):
     mu = Uc(UC_ARCH_ARM, UC_MODE_ARM)
 
     # Map memory for this emulation.
-    mu.mem_map(ADDR, SIZE)
+    mu.mem_map(ADDR & ~0xfff, SIZE)
 
     # Write machine code to be emulated to memory.
     index = 0
@@ -213,7 +213,7 @@ if __name__ == '__main__':
         "r0":    BRANCH_TABLE_ADDR, # NOTE: Enable Thumb mode by setting lsb of the register.
         "r1":    0x2,
         "r2":    0x1,
-        "r3":    random.randint(0x0, 0xffffffff),
+        "r3":    random.randint(0x0, 0x18),
         "r4":    random.randint(0x0, 0xffffffff),
         "r5":    HEAP + 5 * 0x4,
         "r6":    HEAP + 5 * 0x4 - 0x4,
@@ -225,7 +225,7 @@ if __name__ == '__main__':
         "r12":   random.randint(0x0, 0xffffffff),
         "sp":    STACK,
         "r14":   random.randint(0x0, 0xffffffff),
-        "pc":    ADDR,
+        "pc":    None,
         "n":     random.randint(0x0, 0x1),
         "z":     random.randint(0x0, 0x1),
         "c":     random.randint(0x0, 0x1),
@@ -234,27 +234,29 @@ if __name__ == '__main__':
 
     # NOTE: This tests each instruction separately. Therefore, it keeps track of
     # PC and resets the initial state after testing each instruction.
-    pc = ADDR
-    for opcode, disassembly in CODE:
-        if disassembly == "branch table":
-            continue
+    for pc in [0x10000, 0x646c6]:
+        ADDR = pc
 
-        try:
-            state['pc'] = pc
-            uc_state = emu_with_unicorn(opcode, state)
-            tt_state = emu_with_triton(opcode, state)
-            pc += len(opcode)
-        except Exception as e:
-            print('[KO] %s' %(disassembly))
-            print('\t%s' %(e))
-            sys.exit(-1)
+        for opcode, disassembly in CODE:
+            if disassembly == "branch table":
+                continue
 
-        if uc_state != tt_state:
-            print('[KO] %s' %(disassembly))
-            diff_state(uc_state, tt_state)
-            print_state(state, uc_state, tt_state)
-            sys.exit(-1)
+            try:
+                state['pc'] = pc
+                uc_state = emu_with_unicorn(opcode, state)
+                tt_state = emu_with_triton(opcode, state)
+                pc += len(opcode)
+            except Exception as e:
+                print('[KO] %s' %(disassembly))
+                print('\t%s' %(e))
+                sys.exit(-1)
 
-        print('[OK] %s' %(disassembly))
+            if uc_state != tt_state:
+                print('[KO] %s' %(disassembly))
+                diff_state(uc_state, tt_state)
+                print_state(state, uc_state, tt_state)
+                sys.exit(-1)
+
+            print('[OK] %s' %(disassembly))
 
     sys.exit(0)
