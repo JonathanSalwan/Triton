@@ -159,3 +159,12 @@ class TestStubsi386(unittest.TestCase):
         self.emulate(0x66600000 + STUBS.I386.SYSTEMV.LIBC.symbols["strncasecmp"])
         eax = self.ctx.getConcreteRegisterValue(self.ctx.registers.eax)
         self.assertNotEqual(eax, 0)
+
+    def test_strtoull(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"0x1122334455667788")
+        self.push_stack(0x1000) # arg1
+        self.emulate(0x66600000 + STUBS.I386.SYSTEMV.LIBC.symbols["strtoull"])
+        eax = self.ctx.getConcreteRegisterValue(self.ctx.registers.eax)
+        edx = self.ctx.getConcreteRegisterValue(self.ctx.registers.edx)
+        self.assertEqual(eax, 0x55667788)
+        self.assertEqual(edx, 0x11223344)
