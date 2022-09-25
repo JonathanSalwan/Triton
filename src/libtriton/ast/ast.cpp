@@ -3063,12 +3063,13 @@ namespace triton {
       this->level      = 1;
       this->symbolized = false;
 
-      switch(this->children[0]->getType()) {
+      auto node = triton::ast::dereference(this->children[0]);
+      switch(node->getType()) {
         case ARRAY_NODE:
-          this->eval = reinterpret_cast<ArrayNode*>(this->children[0].get())->select(this->children[1]);
+          this->eval = reinterpret_cast<ArrayNode*>(node.get())->select(this->children[1]);
           break;
         case STORE_NODE:
-          this->eval = reinterpret_cast<StoreNode*>(this->children[0].get())->select(this->children[1]);
+          this->eval = reinterpret_cast<StoreNode*>(node.get())->select(this->children[1]);
           break;
         default:
           throw triton::exceptions::Ast("SelectNode::init(): Invalid sort");
@@ -3140,14 +3141,15 @@ namespace triton {
       this->symbolized = false;
 
       /* Spread the memory array from previous level */
-      switch(this->children[0]->getType()) {
+      auto node = triton::ast::dereference(this->children[0]);
+      switch(node->getType()) {
         case ARRAY_NODE:
-          this->indexSize = reinterpret_cast<ArrayNode*>(this->children[0].get())->getIndexSize();
-          this->memory    = reinterpret_cast<ArrayNode*>(this->children[0].get())->getMemory();
+          this->indexSize = reinterpret_cast<ArrayNode*>(node.get())->getIndexSize();
+          this->memory    = reinterpret_cast<ArrayNode*>(node.get())->getMemory();
           break;
         case STORE_NODE:
-          this->indexSize = reinterpret_cast<StoreNode*>(this->children[0].get())->getIndexSize();
-          this->memory    = reinterpret_cast<StoreNode*>(this->children[0].get())->getMemory();
+          this->indexSize = reinterpret_cast<StoreNode*>(node.get())->getIndexSize();
+          this->memory    = reinterpret_cast<StoreNode*>(node.get())->getMemory();
           break;
         default:
           throw triton::exceptions::Ast("StoreNode::init(): Invalid sort");
@@ -3740,9 +3742,10 @@ namespace triton {
 
 
     triton::uint32 getIndexSize(const SharedAbstractNode& node) {
-      switch(node->getType()) {
-        case ARRAY_NODE: return reinterpret_cast<ArrayNode*>(node.get())->getIndexSize();
-        case STORE_NODE: return reinterpret_cast<StoreNode*>(node.get())->getIndexSize();
+      auto nref = triton::ast::dereference(node);
+      switch(nref->getType()) {
+        case ARRAY_NODE: return reinterpret_cast<ArrayNode*>(nref.get())->getIndexSize();
+        case STORE_NODE: return reinterpret_cast<StoreNode*>(nref.get())->getIndexSize();
         default:
           throw triton::exceptions::Ast("triton::ast::getIndexSize(): The given node is not an array.");
       }

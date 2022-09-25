@@ -106,6 +106,9 @@ namespace triton {
           //! Symbolic register state.
           std::vector<SharedSymbolicExpression> symbolicReg;
 
+          //! The symbolic memory array.
+          SharedSymbolicExpression memoryArray;
+
         private:
           //! Reference to the context managing ast nodes.
           triton::ast::SharedAstContext astCtxt;
@@ -124,6 +127,9 @@ namespace triton {
 
           //! Returns an unique symbolic variable id.
           triton::usize getUniqueSymVarId(void);
+
+          //! Returns the memory array expression or initializes it if not defined.
+          SharedSymbolicExpression getMemoryArray(void);
 
           //! Gets an aligned entry.
           const SharedSymbolicExpression& getAlignedMemory(triton::uint64 address, triton::uint32 size);

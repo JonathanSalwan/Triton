@@ -43,6 +43,9 @@ Enabled, Triton will concretize every register tagged as undefined (see #750).
 - **MODE.CONSTANT_FOLDING**<br>
 Enabled, Triton will perform a constant folding optimization of sub ASTs which do not contain symbolic variables.
 
+- **MODE.MEMORY_ARRAY**<br>
+Enabled, Triton will use memory symbolic array.
+
 - **MODE.ONLY_ON_SYMBOLIZED**<br>
 Enabled, Triton will perform symbolic execution only on symbolized expressions.
 
@@ -55,8 +58,15 @@ Enabled, Triton will track path constraints only if they are symbolized. This mo
 - **MODE.SYMBOLIZE_INDEX_ROTATION**<br>
 Enabled, Triton will symbolize the index of rotation for `bvror` and `bvrol` nodes. This mode increases the complexity of solving.
 
+- **MODE.SYMBOLIZE_LOAD**<br>
+Enabled, Triton will symbolize memory load if memory array is enabled.
+
+- **MODE.SYMBOLIZE_STORE**<br>
+Enabled, Triton will symbolize memory store if memory array is enabled.
+
 - **MODE.TAINT_THROUGH_POINTERS**<br>
 Enabled, the taint is spread if an index pointer is already tainted (see #725).
+
 */
 
 
@@ -70,10 +80,13 @@ namespace triton {
         xPyDict_SetItemString(modeDict, "AST_OPTIMIZATIONS",              PyLong_FromUint32(triton::modes::AST_OPTIMIZATIONS));
         xPyDict_SetItemString(modeDict, "CONCRETIZE_UNDEFINED_REGISTERS", PyLong_FromUint32(triton::modes::CONCRETIZE_UNDEFINED_REGISTERS));
         xPyDict_SetItemString(modeDict, "CONSTANT_FOLDING",               PyLong_FromUint32(triton::modes::CONSTANT_FOLDING));
+        xPyDict_SetItemString(modeDict, "MEMORY_ARRAY",                   PyLong_FromUint32(triton::modes::MEMORY_ARRAY));
         xPyDict_SetItemString(modeDict, "ONLY_ON_SYMBOLIZED",             PyLong_FromUint32(triton::modes::ONLY_ON_SYMBOLIZED));
         xPyDict_SetItemString(modeDict, "ONLY_ON_TAINTED",                PyLong_FromUint32(triton::modes::ONLY_ON_TAINTED));
         xPyDict_SetItemString(modeDict, "PC_TRACKING_SYMBOLIC",           PyLong_FromUint32(triton::modes::PC_TRACKING_SYMBOLIC));
         xPyDict_SetItemString(modeDict, "SYMBOLIZE_INDEX_ROTATION",       PyLong_FromUint32(triton::modes::SYMBOLIZE_INDEX_ROTATION));
+        xPyDict_SetItemString(modeDict, "SYMBOLIZE_LOAD",                 PyLong_FromUint32(triton::modes::SYMBOLIZE_LOAD));
+        xPyDict_SetItemString(modeDict, "SYMBOLIZE_STORE",                PyLong_FromUint32(triton::modes::SYMBOLIZE_STORE));
         xPyDict_SetItemString(modeDict, "TAINT_THROUGH_POINTERS",         PyLong_FromUint32(triton::modes::TAINT_THROUGH_POINTERS));
       }
 

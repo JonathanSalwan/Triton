@@ -38,6 +38,7 @@ namespace triton {
         this->numberOfRegisters = this->architecture->numberOfRegisters();
         this->uniqueSymExprId   = 0;
         this->uniqueSymVarId    = 0;
+        this->memoryArray       = nullptr;
 
         this->symbolicReg.resize(this->numberOfRegisters);
       }
@@ -52,6 +53,7 @@ namespace triton {
         this->alignedMemoryReference = other.alignedMemoryReference;
         this->architecture           = other.architecture;
         this->callbacks              = other.callbacks;
+        this->memoryArray            = other.memoryArray;
         this->memoryReference        = other.memoryReference;
         this->numberOfRegisters      = other.numberOfRegisters;
         this->symbolicExpressions    = other.symbolicExpressions;
@@ -359,6 +361,15 @@ namespace triton {
        * Mainly used when a new symbolic variable is created */
       triton::usize SymbolicEngine::getUniqueSymVarId(void) {
         return this->uniqueSymVarId++;
+      }
+
+
+      /* Returns or init the symbolic memory array */
+      SharedSymbolicExpression SymbolicEngine::getMemoryArray(void) {
+        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->memoryArray == nullptr) {
+          this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(64), MEMORY_EXPRESSION, "Memory");
+        }
+        return this->memoryArray;
       }
 
 
@@ -827,12 +838,17 @@ namespace triton {
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
+        if (!this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
           return this->getAlignedMemory(address, size)->getAst();
         }
 
         /* If the memory access is 1 byte long, just return the appropriate 8-bit vector */
         if (size == 1) {
+          /* Symbolic Array */
+          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+            return this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), mem.getLeaAst());
+          }
+          /* Symbolic Bitvector */
           const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address);
           if (symMem) return this->astCtxt->reference(symMem);
           else        return this->astCtxt->bv(concreteValue[size - 1], bitsize::byte);
@@ -841,9 +857,17 @@ namespace triton {
         /* If the memory access is more than 1 byte long, concatenate each memory cell */
         opVec.reserve(size);
         while (size) {
-          const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
-          if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
-          else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], bitsize::byte));
+          /* Symbolic Array */
+          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+            auto lea = this->astCtxt->bvadd(mem.getLeaAst(), this->astCtxt->bv(size - 1, 64));
+            opVec.push_back(this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), lea));
+          }
+          /* Symbolic Bitvector */
+          else {
+            const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
+            if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
+            else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], bitsize::byte));
+          }
           size--;
         }
         return this->astCtxt->concat(opVec);
@@ -920,7 +944,7 @@ namespace triton {
         triton::usize id                    = this->uniqueSymExprId;
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Aligned optimization - " + comment);
           aligned->setOriginMemory(mem);
           this->addAlignedMemory(address, writeSize, aligned);
@@ -938,14 +962,25 @@ namespace triton {
           triton::uint32 low  = ((writeSize * bitsize::byte) - bitsize::byte);
           /* Extract each byte of the memory */
           tmp = this->astCtxt->extract(high, low, node);
-          /* Assign each byte to a new symbolic expression */
-          se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
-          /* Set the origin of the symbolic expression */
-          se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-          /* ret is the for the final expression */
-          ret.push_back(tmp);
-          /* Assign memory with little endian */
-          this->addMemoryReference((address + writeSize) - 1, se);
+
+          /* Symbolic array */
+          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+            auto lea = this->astCtxt->bvadd(mem.getLeaAst(), this->astCtxt->bv(writeSize - 1, 64));
+            auto n = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), lea, tmp);
+            this->memoryArray = this->newSymbolicExpression(n, MEMORY_EXPRESSION, "Memory - " + comment);
+          }
+          /* Symbolic bitvector */
+          else {
+            /* Assign each byte to a new symbolic expression */
+            se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
+            /* Set the origin of the symbolic expression */
+            se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
+            /* ret is the for the final expression */
+            ret.push_back(tmp);
+            /* Assign memory */
+            this->addMemoryReference((address + writeSize) - 1, se);
+          }
+
           /* continue */
           writeSize--;
         }
