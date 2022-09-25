@@ -367,7 +367,7 @@ namespace triton {
       /* Returns or init the symbolic memory array */
       SharedSymbolicExpression SymbolicEngine::getMemoryArray(void) {
         if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->memoryArray == nullptr) {
-          this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(64), MEMORY_EXPRESSION, "Memory");
+          this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(64), VOLATILE_EXPRESSION);
         }
         return this->memoryArray;
       }
@@ -968,6 +968,7 @@ namespace triton {
             auto lea = this->astCtxt->bvadd(mem.getLeaAst(), this->astCtxt->bv(writeSize - 1, 64));
             auto n = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), lea, tmp);
             this->memoryArray = this->newSymbolicExpression(n, MEMORY_EXPRESSION, "Memory - " + comment);
+            this->memoryArray->setOriginMemory(triton::arch::MemoryAccess((address + writeSize) - 1, triton::size::byte));
           }
           /* Symbolic bitvector */
           else {

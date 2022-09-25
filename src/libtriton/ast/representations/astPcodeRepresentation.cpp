@@ -488,7 +488,12 @@ namespace triton {
 
       /* reference representation */
       std::ostream& AstPcodeRepresentation::print(std::ostream& stream, triton::ast::ReferenceNode* node) {
-        stream << node->getSymbolicExpression()->getFormattedId();
+        if (node->isArray()) {
+          stream << "Memory";
+        }
+        else {
+          stream << node->getSymbolicExpression()->getFormattedId();
+        }
         return stream;
       }
 
