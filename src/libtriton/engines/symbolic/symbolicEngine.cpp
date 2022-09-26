@@ -826,50 +826,55 @@ namespace triton {
       triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::MemoryAccess& mem) {
         std::vector<triton::ast::SharedAbstractNode> opVec;
 
-        triton::ast::SharedAbstractNode tmp       = nullptr;
-        triton::uint64 address                    = mem.getAddress();
-        triton::uint32 size                       = mem.getSize();
-        triton::uint8 concreteValue[triton::size::dqqword] = {0};
-        triton::uint512 value                     = this->architecture->getConcreteMemoryValue(mem);
+        triton::ast::SharedAbstractNode tmp = nullptr;
+        triton::uint64 address              = mem.getAddress();
+        triton::uint32 size                 = mem.getSize();
+        triton::uint8 raw[64]               = {0};
+        triton::uint512 value               = this->architecture->getConcreteMemoryValue(mem);
 
-        triton::utils::fromUintToBuffer(value, concreteValue);
+        /* Convert the integer value to a raw buffer */
+        triton::utils::fromUintToBuffer(value, raw);
 
         /*
          * Symbolic optimization
          * If the memory access is aligned, don't split the memory.
          */
-        if (!this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && this->isAlignedMemory(address, size)) {
+        if (!this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) &&
+             this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) &&
+             this->isAlignedMemory(address, size)) {
           return this->getAlignedMemory(address, size)->getAst();
         }
 
-        /* If the memory access is 1 byte long, just return the appropriate 8-bit vector */
-        if (size == 1) {
-          /* Symbolic Array */
-          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
-            return this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), mem.getLeaAst());
-          }
-          /* Symbolic Bitvector */
-          const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address);
-          if (symMem) return this->astCtxt->reference(symMem);
-          else        return this->astCtxt->bv(concreteValue[size - 1], bitsize::byte);
-        }
-
-        /* If the memory access is more than 1 byte long, concatenate each memory cell */
         opVec.reserve(size);
         while (size) {
           /* Symbolic Array */
           if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
-            auto lea = this->astCtxt->bvadd(mem.getLeaAst(), this->astCtxt->bv(size - 1, 64));
-            opVec.push_back(this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), lea));
+            auto gpr_size = this->architecture->gprBitSize();
+            auto memor_ea = mem.getLeaAst() != nullptr ? mem.getLeaAst() : this->astCtxt->bv(address, gpr_size);
+            auto final_ea = this->astCtxt->bvadd(memor_ea, this->astCtxt->bv(size - 1, gpr_size));
+
+            /* Symbolic mode: Should we concretize memory indexing? */
+            if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_LOAD) == false) {
+              final_ea = this->astCtxt->bv(final_ea->evaluate(), gpr_size);
+            }
+
+            opVec.push_back(this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), final_ea));
           }
           /* Symbolic Bitvector */
           else {
             const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
             if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
-            else        opVec.push_back(this->astCtxt->bv(concreteValue[size - 1], bitsize::byte));
+            else        opVec.push_back(this->astCtxt->bv(raw[size - 1], bitsize::byte));
           }
           size--;
         }
+
+        /* If size is 1, return the memory cell */
+        if (opVec.size() == 1) {
+          return opVec.back();
+        }
+
+        /* Otherwise concat them all */
         return this->astCtxt->concat(opVec);
       }
 
