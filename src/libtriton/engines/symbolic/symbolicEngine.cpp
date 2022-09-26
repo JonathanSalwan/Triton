@@ -824,7 +824,7 @@ namespace triton {
 
       /* Returns the AST corresponding to the memory */
       triton::ast::SharedAbstractNode SymbolicEngine::getMemoryAst(const triton::arch::MemoryAccess& mem) {
-        std::vector<triton::ast::SharedAbstractNode> opVec;
+        std::vector<triton::ast::SharedAbstractNode> cells;
 
         triton::ast::SharedAbstractNode tmp = nullptr;
         triton::uint64 address              = mem.getAddress();
@@ -845,7 +845,7 @@ namespace triton {
           return this->getAlignedMemory(address, size)->getAst();
         }
 
-        opVec.reserve(size);
+        cells.reserve(size);
         while (size) {
           /* Symbolic Array */
           if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
@@ -858,24 +858,24 @@ namespace triton {
               final_ea = this->astCtxt->bv(final_ea->evaluate(), gpr_size);
             }
 
-            opVec.push_back(this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), final_ea));
+            cells.push_back(this->astCtxt->select(this->astCtxt->reference(this->getMemoryArray()), final_ea));
           }
           /* Symbolic Bitvector */
           else {
             const SharedSymbolicExpression& symMem = this->getSymbolicMemory(address + size - 1);
-            if (symMem) opVec.push_back(this->astCtxt->reference(symMem));
-            else        opVec.push_back(this->astCtxt->bv(raw[size - 1], bitsize::byte));
+            if (symMem) cells.push_back(this->astCtxt->reference(symMem));
+            else        cells.push_back(this->astCtxt->bv(raw[size - 1], bitsize::byte));
           }
           size--;
         }
 
         /* If size is 1, return the memory cell */
-        if (opVec.size() == 1) {
-          return opVec.back();
+        if (cells.size() == 1) {
+          return cells.back();
         }
 
         /* Otherwise concat them all */
-        return this->astCtxt->concat(opVec);
+        return this->astCtxt->concat(cells);
       }
 
 
@@ -941,7 +941,6 @@ namespace triton {
 
       /* Returns the new symbolic memory expression */
       const SharedSymbolicExpression& SymbolicEngine::createSymbolicMemoryExpression(triton::arch::Instruction& inst, const triton::ast::SharedAbstractNode& node, const triton::arch::MemoryAccess& mem, const std::string& comment) {
-        std::vector<triton::ast::SharedAbstractNode> ret;
         triton::ast::SharedAbstractNode tmp = nullptr;
         SharedSymbolicExpression se         = nullptr;
         triton::uint64 address              = mem.getAddress();
@@ -961,29 +960,32 @@ namespace triton {
          * As the x86's memory can be accessed without alignment, each byte of the
          * memory must be assigned to an unique reference.
          */
-        ret.reserve(mem.getSize());
         while (writeSize) {
           triton::uint32 high = ((writeSize * bitsize::byte) - 1);
           triton::uint32 low  = ((writeSize * bitsize::byte) - bitsize::byte);
+
           /* Extract each byte of the memory */
           tmp = this->astCtxt->extract(high, low, node);
 
           /* Symbolic array */
           if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
-            auto lea = this->astCtxt->bvadd(mem.getLeaAst(), this->astCtxt->bv(writeSize - 1, 64));
-            auto n = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), lea, tmp);
-            this->memoryArray = this->newSymbolicExpression(n, MEMORY_EXPRESSION, "Memory - " + comment);
+            auto gpr_size = this->architecture->gprBitSize();
+            auto memor_ea = mem.getLeaAst() != nullptr ? mem.getLeaAst() : this->astCtxt->bv(address, gpr_size);
+            auto final_ea = this->astCtxt->bvadd(memor_ea, this->astCtxt->bv(writeSize - 1, gpr_size));
+
+            /* Symbolic mode: Should we concretize memory indexing? */
+            if (this->modes->isModeEnabled(triton::modes::SYMBOLIZE_STORE) == false) {
+              final_ea = this->astCtxt->bv(final_ea->evaluate(), gpr_size);
+            }
+
+            auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), final_ea, tmp);
+            this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference - " + comment);
             this->memoryArray->setOriginMemory(triton::arch::MemoryAccess((address + writeSize) - 1, triton::size::byte));
           }
           /* Symbolic bitvector */
           else {
-            /* Assign each byte to a new symbolic expression */
             se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
-            /* Set the origin of the symbolic expression */
             se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-            /* ret is the for the final expression */
-            ret.push_back(tmp);
-            /* Assign memory */
             this->addMemoryReference((address + writeSize) - 1, se);
           }
 
@@ -997,16 +999,10 @@ namespace triton {
         /* Set explicit write of the memory access */
         inst.setStoreAccess(mem, node);
 
-        /* If there is only one reference, we return the symbolic expression */
-        if (ret.size() == 1) {
-          /* Synchronize the concrete state */
-          this->architecture->setConcreteMemoryValue(mem, tmp->evaluate());
-          return this->addSymbolicExpressions(inst, id);
-        }
-
         /* Synchronize the concrete state */
         this->architecture->setConcreteMemoryValue(mem, node->evaluate());
 
+        /* Keep a symbolic expression that represents the original store assignment */
         se = this->newSymbolicExpression(node, MEMORY_EXPRESSION, "Original memory access - " + comment);
         se->setOriginMemory(mem);
 

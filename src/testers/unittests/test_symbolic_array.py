@@ -13,6 +13,8 @@ class TestSymbolicArray(unittest.TestCase):
     def setUp(self):
         self.ctx = TritonContext(ARCH.X86_64)
         self.ctx.setMode(MODE.MEMORY_ARRAY, True)
+        self.ctx.setMode(MODE.SYMBOLIZE_LOAD, True)
+        self.ctx.setMode(MODE.SYMBOLIZE_STORE, True)
 
     def test_1(self):
         code = [
