@@ -367,7 +367,8 @@ namespace triton {
       /* Returns or init the symbolic memory array */
       SharedSymbolicExpression SymbolicEngine::getMemoryArray(void) {
         if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY) && this->memoryArray == nullptr) {
-          this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(64), VOLATILE_EXPRESSION);
+          triton::uint32 gpr_size = this->architecture->gprBitSize();
+          this->memoryArray = this->newSymbolicExpression(this->astCtxt->array(gpr_size), VOLATILE_EXPRESSION);
         }
         return this->memoryArray;
       }
