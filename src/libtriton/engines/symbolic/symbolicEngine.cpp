@@ -121,7 +121,6 @@ namespace triton {
        * before symbolic processing.
        */
       void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem) {
-        // TODO: Mode array
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -137,17 +136,32 @@ namespace triton {
        * before symbolic processing.
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
-        // TODO: Mode array
-        this->memoryReference.erase(addr);
-        this->removeAlignedMemory(addr, triton::size::byte);
+        /* Symbolic array */
+        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          auto cv = this->architecture->getConcreteMemoryValue(addr);
+          auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), addr, this->astCtxt->bv(cv, triton::bitsize::byte));
+          this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Concretization");
+          this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(addr, triton::size::byte));
+        }
+        /* Symbolic bitvector */
+        else {
+          this->memoryReference.erase(addr);
+          this->removeAlignedMemory(addr, triton::size::byte);
+        }
       }
 
 
       /* Same as concretizeMemory but with all address memory */
       void SymbolicEngine::concretizeAllMemory(void) {
-        // TODO: Mode array
-        this->memoryReference.clear();
-        this->alignedMemoryReference.clear();
+        /* Symbolic array */
+        if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+          this->memoryArray = nullptr;
+        }
+        /* Symbolic bitvector */
+        else {
+          this->memoryReference.clear();
+          this->alignedMemoryReference.clear();
+        }
       }
 
 

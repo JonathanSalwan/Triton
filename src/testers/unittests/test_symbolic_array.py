@@ -35,3 +35,84 @@ class TestSymbolicArray(unittest.TestCase):
         zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
         m = self.ctx.getModel(zf == 1)
         self.assertEqual(m[0].getValue(), 0xaedd)
+
+    def test_2(self):
+        code = [
+            (1, b"\x48\xc7\xc0\x00\x10\x00\x00"), # mov rax, 0x1000
+            (2, b"\x48\xc7\xc3\x32\x00\x00\x00"), # mov rbx, 0x32
+            (3, b"\xc7\x04\x18\xad\xde\x00\x00"), # mov dword ptr [rax + rbx], 0xdead
+            (4, b"\x48\x8b\x0e"), # mov rcx, [rsi]
+            (5, b"\x48\x81\xf9\xad\xde\x00\x00"), # cmp rcx, 0xdead
+        ]
+
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi, 's_rsi')
+
+        for _, op in code:
+            i = Instruction(op)
+            self.ctx.processing(i)
+
+        zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
+        m = self.ctx.getModel(zf == 1)
+        self.assertEqual(m[0].getValue(), 0x1032)
+
+    def test_3(self):
+        code = [
+            (1, b"\x48\xc7\xc0\x00\x10\x00\x00"), # mov rax, 0x1000
+            (2, b"\x48\xc7\xc3\x32\x00\x00\x00"), # mov rbx, 0x32
+            (3, b"\x89\x34\x18"), # mov dword ptr [rax + rbx], esi
+            (4, b"\x8b\x0c\x18"), # mov ecx, dword ptr [rax + rbx]
+            (5, b"\x48\x81\xf9\xad\xde\x00\x00"), # cmp rcx, 0xdead
+        ]
+
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi, 's_rsi')
+
+        for i, op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
+        m = self.ctx.getModel(zf == 1)
+        self.assertEqual(m[0].getValue(), 0xdead)
+
+    def test_4(self):
+        code = [
+            (1, b"\x48\xc7\xc0\x00\x10\x00\x00"), # mov rax, 0x1000
+            (2, b"\x48\xc7\xc3\x32\x00\x00\x00"), # mov rbx, 0x32
+            (3, b"\x89\x34\x18"), # mov dword ptr [rax + rbx], esi
+            (4, b"\x8b\x0c\x18"), # mov ecx, dword ptr [rax + rbx]
+            (5, b"\x48\x81\xf9\xad\xde\x00\x00"), # cmp rcx, 0xdead
+        ]
+
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi, 's_rsi')
+
+        for i, op in code:
+            if i == 4:
+                self.ctx.concretizeMemory(0x1032)
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
+        m = self.ctx.isSat(zf == 1)
+        self.assertEqual(m, False)
+
+    def test_5(self):
+        code = [
+            (1, b"\x48\xc7\xc0\x00\x10\x00\x00"), # mov rax, 0x1000
+            (2, b"\x48\xc7\xc3\x32\x00\x00\x00"), # mov rbx, 0x32
+            (3, b"\x89\x34\x18"), # mov dword ptr [rax + rbx], esi
+            (4, b"\x8b\x0c\x18"), # mov ecx, dword ptr [rax + rbx]
+            (5, b"\x48\x81\xf9\xad\xde\x00\x00"), # cmp rcx, 0xdead
+        ]
+
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0xdeae)
+        self.ctx.symbolizeRegister(self.ctx.registers.rsi, 's_rsi')
+
+        for i, op in code:
+            if i == 4:
+                self.ctx.concretizeMemory(0x1033)
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
+        m = self.ctx.isSat(zf == 1)
+        self.assertEqual(m, True)
