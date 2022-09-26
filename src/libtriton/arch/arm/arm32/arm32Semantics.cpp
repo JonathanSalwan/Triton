@@ -4563,21 +4563,15 @@ namespace triton {
                           this->astCtxt->zx(bvSize - src.getMemory().getBitSize(), opNode)
                         )
                       );
-          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
-
-          /* NOTE This a THUMB only instruction, the condition is always true. */
-          auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "TBB operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "TBB operation - Program Counter");
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update condition flag */
-          if (cond->evaluate() == true) {
-            inst.setConditionTaken(true);
-          }
+          /* Set condition flag */
+          inst.setConditionTaken(true);
 
           /* Create the path constraint */
           this->symbolicEngine->pushPathConstraint(inst, expr);
@@ -4601,21 +4595,15 @@ namespace triton {
                           this->astCtxt->zx(bvSize - src.getMemory().getBitSize(), opNode)
                         )
                       );
-          auto node2 = this->buildConditionalSemantics(inst, dst, node1);
-
-          /* NOTE This a THUMB only instruction, the condition is always true. */
-          auto cond = this->getCodeConditionAst(inst);
 
           /* Create symbolic expression */
-          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node2, dst, "TBH operation - Program Counter");
+          auto expr = this->symbolicEngine->createSymbolicExpression(inst, node1, dst, "TBH operation - Program Counter");
 
           /* Spread taint */
-          this->spreadTaint(inst, cond, expr, dst, this->taintEngine->isTainted(src));
+          expr->isTainted = this->taintEngine->taintAssignment(dst, src);
 
-          /* Update condition flag */
-          if (cond->evaluate() == true) {
-            inst.setConditionTaken(true);
-          }
+          /* Set condition flag */
+          inst.setConditionTaken(true);
 
           /* Create the path constraint */
           this->symbolicEngine->pushPathConstraint(inst, expr);
