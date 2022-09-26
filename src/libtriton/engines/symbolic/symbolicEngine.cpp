@@ -68,6 +68,7 @@ namespace triton {
         /* See #828: Release ownership before calling container destructor */
         this->memoryReference.clear();
         this->symbolicReg.clear();
+        this->memoryArray = nullptr;
       }
 
 
@@ -120,6 +121,7 @@ namespace triton {
        * before symbolic processing.
        */
       void SymbolicEngine::concretizeMemory(const triton::arch::MemoryAccess& mem) {
+        // TODO: Mode array
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -135,6 +137,7 @@ namespace triton {
        * before symbolic processing.
        */
       void SymbolicEngine::concretizeMemory(triton::uint64 addr) {
+        // TODO: Mode array
         this->memoryReference.erase(addr);
         this->removeAlignedMemory(addr, triton::size::byte);
       }
@@ -142,6 +145,7 @@ namespace triton {
 
       /* Same as concretizeMemory but with all address memory */
       void SymbolicEngine::concretizeAllMemory(void) {
+        // TODO: Mode array
         this->memoryReference.clear();
         this->alignedMemoryReference.clear();
       }
@@ -209,6 +213,7 @@ namespace triton {
 
       /* Returns the reference memory if it's referenced otherwise returns nullptr */
       SharedSymbolicExpression SymbolicEngine::getSymbolicMemory(triton::uint64 addr) const {
+        // TODO: Mode array
         auto it = this->memoryReference.find(addr);
         if (it != this->memoryReference.end()) {
           return it->second;
@@ -317,6 +322,7 @@ namespace triton {
 
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
+        // TODO: Mode array
         triton::arch::MemoryAccess mem(address, triton::size::byte);
         return static_cast<triton::uint8>(this->getSymbolicMemoryValue(mem));
       }
@@ -324,6 +330,7 @@ namespace triton {
 
       /* Returns the symbolic memory value */
       triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryAccess& mem) {
+        // TODO: Mode array
         const triton::ast::SharedAbstractNode& node = this->getMemoryAst(mem);
         return node->evaluate();
       }
@@ -331,6 +338,7 @@ namespace triton {
 
       /* Returns the symbolic values of a memory area */
       std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) {
+        // TODO: Mode array
         std::vector<triton::uint8> area;
 
         area.reserve(size);
@@ -412,6 +420,7 @@ namespace triton {
 
       /* Removes the symbolic expression corresponding to the id */
       void SymbolicEngine::removeSymbolicExpression(const SharedSymbolicExpression& expr) {
+        // TODO: Mode array
         if (this->symbolicExpressions.find(expr->getId()) != this->symbolicExpressions.end()) {
           /* Concretize memory */
           if (expr->getType() == MEMORY_EXPRESSION) {
@@ -530,6 +539,7 @@ namespace triton {
 
       /* Returns the map of symbolic memory defined */
       const std::unordered_map<triton::uint64, SharedSymbolicExpression>& SymbolicEngine::getSymbolicMemory(void) const {
+        // TODO: Mode array
         return this->memoryReference;
       }
 
@@ -566,6 +576,7 @@ namespace triton {
 
       /* The memory size is used to define the symbolic variable's size. */
       SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias) {
+        // TODO: Mode array
         triton::uint64 memAddr    = mem.getAddress();
         triton::uint32 symVarSize = mem.getSize();
         triton::uint512 cv        = this->architecture->getConcreteMemoryValue(mem);
@@ -1132,6 +1143,7 @@ namespace triton {
 
       /* Assigns a symbolic expression to a memory */
       void SymbolicEngine::assignSymbolicExpressionToMemory(const SharedSymbolicExpression& se, const triton::arch::MemoryAccess& mem) {
+        // TODO: Mode array
         const triton::ast::SharedAbstractNode& node = se->getAst();
         triton::uint64 address                      = mem.getAddress();
         triton::uint32 writeSize                    = mem.getSize();
@@ -1184,6 +1196,7 @@ namespace triton {
 
       /* Returns true if memory cell expressions contain symbolic variables. */
       bool SymbolicEngine::isMemorySymbolized(const triton::arch::MemoryAccess& mem) const {
+        // TODO: Mode array
         triton::uint64 addr = mem.getAddress();
         triton::uint32 size = mem.getSize();
 
@@ -1193,6 +1206,7 @@ namespace triton {
 
       /* Returns true if memory cell expressions contain symbolic variables. */
       bool SymbolicEngine::isMemorySymbolized(triton::uint64 addr, triton::uint32 size) const {
+        // TODO: Mode array
         for (triton::uint32 i = 0; i < size; i++) {
           const SharedSymbolicExpression& expr = this->getSymbolicMemory(addr + i);
           if (expr && expr->isSymbolized()) {
