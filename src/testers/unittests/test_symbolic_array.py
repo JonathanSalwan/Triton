@@ -133,3 +133,18 @@ class TestSymbolicArray(unittest.TestCase):
         zf = self.ctx.getRegisterAst(self.ctx.registers.zf)
         m = self.ctx.getModel(zf == 1)
         self.assertEqual(m[0].getValue(), 0x1005)
+
+    def test_7(self):
+        code = [
+            b"\x8b\x3e", # mov edi, dword ptr [rsi]
+        ]
+
+        self.ctx.setConcreteRegisterValue(self.ctx.registers.rsi, 0x1005)
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"\x99\x88\x77\x66\x55\x44\x33\x22\x11\x00\xaa\xbb\xcc")
+
+        for op in code:
+            inst = Instruction(op)
+            self.ctx.processing(inst)
+
+        edi = self.ctx.getRegisterAst(self.ctx.registers.edi)
+        self.assertEqual(edi.evaluate(), 0x11223344)
