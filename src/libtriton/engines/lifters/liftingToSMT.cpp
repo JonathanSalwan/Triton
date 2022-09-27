@@ -136,12 +136,6 @@ namespace triton {
         /* Print required functions */
         this->requiredFunctions(stream);
 
-        /* Declare arrays if exist */
-        for (const auto& array : triton::ast::search(expr->getAst(), triton::ast::ARRAY_NODE)) {
-          auto n = this->astCtxt->declare(array);
-          stream << n << std::endl;
-        }
-
         /* Print symbolic variables */
         for (const auto& var : symVars) {
           auto n = this->astCtxt->declare(this->astCtxt->variable(var.second));

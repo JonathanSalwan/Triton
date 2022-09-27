@@ -133,6 +133,27 @@ namespace triton {
       }
 
 
+      std::string SymbolicExpression::getBitvectorDefine(void) const {
+        std::ostringstream stream;
+        stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
+        return stream.str();
+      }
+
+
+      std::string SymbolicExpression::getArrayDefine(void) const {
+        std::ostringstream stream;
+
+        if (this->getAst()->getType() == triton::ast::ARRAY_NODE) {
+          stream << "(declare-fun " << this->getFormattedId() << " () (Array (_ BitVec " << std::dec << triton::ast::getIndexSize(this->getAst()) << ") (_ BitVec 8)))";
+        }
+        else {
+          stream << "(define-fun " << this->getFormattedId() << " () (Array (_ BitVec " << std::dec << triton::ast::getIndexSize(this->getAst()) << ") (_ BitVec 8)) " << this->getAst() << ")";
+        }
+
+        return stream.str();
+      }
+
+
       std::string SymbolicExpression::getFormattedExpression(void) const {
         std::ostringstream stream;
 
@@ -141,9 +162,8 @@ namespace triton {
 
         switch (ast->getContext()->getRepresentationMode()) {
           case triton::ast::representations::SMT_REPRESENTATION:
-            stream << "(define-fun " << this->getFormattedId() << " () (_ BitVec " << std::dec << this->getAst()->getBitvectorSize() << ") " << this->getAst() << ")";
+            stream << (this->getAst()->isArray() ? this->getArrayDefine() : this->getBitvectorDefine());
             break;
-
           case triton::ast::representations::PCODE_REPRESENTATION:
           case triton::ast::representations::PYTHON_REPRESENTATION:
             stream << this->getFormattedId() << " = " << this->getAst();

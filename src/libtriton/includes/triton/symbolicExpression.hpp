@@ -68,6 +68,13 @@ namespace triton {
           //! The origin register if `type` is equal to `triton::engines::symbolic::REG`, `REG_INVALID` otherwise.
           triton::arch::Register originRegister;
 
+        private:
+          //! Returns the syntax of a bitvector define
+          TRITON_EXPORT std::string getBitvectorDefine(void) const;
+
+          //! Returns the syntax of an array define
+          TRITON_EXPORT std::string getArrayDefine(void) const;
+
         public:
           //! True if the symbolic expression is tainted.
           bool isTainted;
