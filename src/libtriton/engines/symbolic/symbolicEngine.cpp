@@ -590,7 +590,6 @@ namespace triton {
 
       /* The memory size is used to define the symbolic variable's size. */
       SharedSymbolicVariable SymbolicEngine::symbolizeMemory(const triton::arch::MemoryAccess& mem, const std::string& symVarAlias) {
-        // TODO: Mode array
         triton::uint64 memAddr    = mem.getAddress();
         triton::uint32 symVarSize = mem.getSize();
         triton::uint512 cv        = this->architecture->getConcreteMemoryValue(mem);
@@ -605,7 +604,7 @@ namespace triton {
         this->setConcreteVariableValue(symVar, cv);
 
         /* Record the aligned symbolic variable for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
           const SharedSymbolicExpression& aligned = this->newSymbolicExpression(symVarNode, MEMORY_EXPRESSION, "Aligned optimization");
           aligned->setOriginMemory(mem);
           this->addAlignedMemory(memAddr, symVarSize, aligned);
@@ -620,11 +619,19 @@ namespace triton {
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, symVarNode);
 
           /* Create a new symbolic expression containing the symbolic variable */
-          const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
-          se->setOriginMemory(triton::arch::MemoryAccess(memAddr+index, triton::size::byte));
-
-          /* Assign the symbolic expression to the memory cell */
-          this->addMemoryReference(memAddr+index, se);
+          /* Symbolic array */
+          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+            auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), memAddr + index, tmp);
+            this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
+            this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(memAddr + index, triton::size::byte));
+          }
+          /* Symbolic bitvector */
+          else {
+            const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
+            se->setOriginMemory(triton::arch::MemoryAccess(memAddr + index, triton::size::byte));
+            /* Assign the symbolic expression to the memory cell */
+            this->addMemoryReference(memAddr + index, se);
+          }
         }
 
         return symVar;
@@ -1168,7 +1175,7 @@ namespace triton {
         }
 
         /* Record the aligned memory for a symbolic optimization */
-        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY)) {
+        if (this->modes->isModeEnabled(triton::modes::ALIGNED_MEMORY) && !this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
           this->addAlignedMemory(address, writeSize, se);
         }
 
