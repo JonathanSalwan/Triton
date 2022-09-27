@@ -71,46 +71,26 @@ namespace triton {
           //! Symbolic variables id.
           triton::usize uniqueSymVarId;
 
-          /*! \brief The map of symbolic variables
-           *
-           * \details
-           * **item1**: variable id<br>
-           * **item2**: symbolic variable
-           */
+          //! The map of symbolic variables <id : SymbolicVariable>
           mutable std::unordered_map<triton::usize, WeakSymbolicVariable> symbolicVariables;
 
-          /*! \brief The map of symbolic expressions
-           *
-           * \details
-           * **item1**: symbolic reference id<br>
-           * **item2**: symbolic expression
-           */
+          //! The map of symbolic expressions <id : SymbolicExpression>
           mutable std::unordered_map<triton::usize, WeakSymbolicExpression> symbolicExpressions;
 
-          /*! \brief map of <address:size> -> symbolic expression.
-           *
-           * \details
-           * **item1**: <addr:size><br>
-           * **item2**: shared symbolic expression
-           */
-          std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedMemoryReference;
+          //! The map of aligned symbolic expressions (used for symbolic optimizations) <<addr : size> : SharedSymbolicExpression>
+          std::map<std::pair<triton::uint64, triton::uint32>, SharedSymbolicExpression> alignedBitvectorMemory;
 
-          /*! \brief map of address -> symbolic expression
-           *
-           * \details
-           * **item1**: memory address<br>
-           * **item2**: shared symbolic expression
-           */
-          std::unordered_map<triton::uint64, SharedSymbolicExpression> memoryReference;
-
-          //! Symbolic register state.
+          //! The list of all symbolic registers.
           std::vector<SharedSymbolicExpression> symbolicReg;
 
-          //! The symbolic memory array.
+          //! A bitvector memory model represented by a map of <address:SymbolicExpression>
+          std::unordered_map<triton::uint64, SharedSymbolicExpression> memoryBitvector;
+
+          //! An array memory model.
           SharedSymbolicExpression memoryArray;
 
         private:
-          //! Reference to the context managing ast nodes.
+          //! AST API
           triton::ast::SharedAstContext astCtxt;
 
           //! Architecture API
@@ -119,7 +99,7 @@ namespace triton {
           //! Callbacks API
           triton::callbacks::Callbacks* callbacks;
 
-          //! Modes API.
+          //! Modes API
           triton::modes::SharedModes modes;
 
           //! Returns an unique symbolic expression id.
@@ -143,8 +123,8 @@ namespace triton {
           //! Removes an aligned entry.
           void removeAlignedMemory(triton::uint64 address, triton::uint32 size);
 
-          //! Adds a symbolic memory reference.
-          inline void addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr);
+          //! Adds a symbolic expression to the bitvector memory model.
+          inline void addBitvectorMemory(triton::uint64 mem, const SharedSymbolicExpression& expr);
 
           //! Returns the AST corresponding to the extend operation. Mainly used for AArch64 operands.
           triton::ast::SharedAbstractNode getExtendAst(const triton::arch::arm::ArmOperandProperties& extend, const triton::ast::SharedAbstractNode& node);
@@ -285,19 +265,19 @@ namespace triton {
           //! Converts a symbolic register expression to a symbolic variable.
           TRITON_EXPORT SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias="");
 
-          //! Concretizes all symbolic memory references.
+          //! Concretizes all the symbolic memory.
           TRITON_EXPORT void concretizeAllMemory(void);
 
-          //! Concretizes all symbolic register references.
+          //! Concretizes all symbolic registers.
           TRITON_EXPORT void concretizeAllRegister(void);
 
-          //! Concretizes a specific symbolic memory reference.
+          //! Concretizes specific symbolic memory cells.
           TRITON_EXPORT void concretizeMemory(const triton::arch::MemoryAccess& mem);
 
-          //! Concretizes a specific symbolic memory reference.
+          //! Concretizes a specific symbolic memory cell.
           TRITON_EXPORT void concretizeMemory(triton::uint64 addr);
 
-          //! Concretizes a specific symbolic register reference.
+          //! Concretizes a specific symbolic register.
           TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
 
           //! Returns true if the symbolic expression ID exists.
@@ -312,7 +292,7 @@ namespace triton {
           //! Returns true if the register expression contains a symbolic variable.
           TRITON_EXPORT bool isRegisterSymbolized(const triton::arch::Register& reg) const;
 
-          //! Initializes the memory access AST (LOAD and STORE).
+          //! Initializes the effective address of a memory access.
           TRITON_EXPORT void initLeaAst(triton::arch::MemoryAccess& mem, bool force=true);
 
           //! Gets the concrete value of a symbolic variable.

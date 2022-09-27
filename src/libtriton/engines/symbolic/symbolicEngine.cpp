@@ -50,11 +50,11 @@ namespace triton {
           astCtxt(other.astCtxt),
           modes(other.modes) {
 
-        this->alignedMemoryReference = other.alignedMemoryReference;
+        this->alignedBitvectorMemory = other.alignedBitvectorMemory;
         this->architecture           = other.architecture;
         this->callbacks              = other.callbacks;
         this->memoryArray            = other.memoryArray;
-        this->memoryReference        = other.memoryReference;
+        this->memoryBitvector        = other.memoryBitvector;
         this->numberOfRegisters      = other.numberOfRegisters;
         this->symbolicExpressions    = other.symbolicExpressions;
         this->symbolicReg            = other.symbolicReg;
@@ -66,7 +66,7 @@ namespace triton {
 
       SymbolicEngine::~SymbolicEngine() {
         /* See #828: Release ownership before calling container destructor */
-        this->memoryReference.clear();
+        this->memoryBitvector.clear();
         this->symbolicReg.clear();
         this->memoryArray = nullptr;
       }
@@ -76,11 +76,11 @@ namespace triton {
         triton::engines::symbolic::SymbolicSimplification::operator=(other);
         triton::engines::symbolic::PathManager::operator=(other);
 
-        this->alignedMemoryReference = other.alignedMemoryReference;
+        this->alignedBitvectorMemory = other.alignedBitvectorMemory;
         this->architecture           = other.architecture;
         this->astCtxt                = other.astCtxt;
         this->callbacks              = other.callbacks;
-        this->memoryReference        = other.memoryReference;
+        this->memoryBitvector        = other.memoryBitvector;
         this->modes                  = other.modes;
         this->numberOfRegisters      = other.numberOfRegisters;
         this->symbolicExpressions    = other.symbolicExpressions;
@@ -145,7 +145,7 @@ namespace triton {
         }
         /* Symbolic bitvector */
         else {
-          this->memoryReference.erase(addr);
+          this->memoryBitvector.erase(addr);
           this->removeAlignedMemory(addr, triton::size::byte);
         }
       }
@@ -159,21 +159,21 @@ namespace triton {
         }
         /* Symbolic bitvector */
         else {
-          this->memoryReference.clear();
-          this->alignedMemoryReference.clear();
+          this->memoryBitvector.clear();
+          this->alignedBitvectorMemory.clear();
         }
       }
 
 
       /* Gets an aligned entry. */
       const SharedSymbolicExpression& SymbolicEngine::getAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        return this->alignedMemoryReference[std::make_pair(address, size)];
+        return this->alignedBitvectorMemory[std::make_pair(address, size)];
       }
 
 
       /* Checks if the aligned memory is recored. */
       bool SymbolicEngine::isAlignedMemory(triton::uint64 address, triton::uint32 size) {
-        if (this->alignedMemoryReference.find(std::make_pair(address, size)) != this->alignedMemoryReference.end()) {
+        if (this->alignedBitvectorMemory.find(std::make_pair(address, size)) != this->alignedBitvectorMemory.end()) {
           return true;
         }
         return false;
@@ -184,7 +184,7 @@ namespace triton {
       void SymbolicEngine::addAlignedMemory(triton::uint64 address, triton::uint32 size, const SharedSymbolicExpression& expr) {
         this->removeAlignedMemory(address, size);
         if (!(this->modes->isModeEnabled(triton::modes::ONLY_ON_SYMBOLIZED) && expr->getAst()->isSymbolized() == false)) {
-          this->alignedMemoryReference[std::make_pair(address, size)] = expr;
+          this->alignedBitvectorMemory[std::make_pair(address, size)] = expr;
         }
       }
 
@@ -192,35 +192,35 @@ namespace triton {
       /* Removes an aligned memory */
       void SymbolicEngine::removeAlignedMemory(triton::uint64 address, triton::uint32 size) {
         /*
-         * Avoid accessing the alignedMemoryReference array when empty. This usually happens when
+         * Avoid accessing the alignedBitvectorMemory array when empty. This usually happens when
          * you initialize the symbolic engine and concretize whole sections of an executable using
          * setConcreteMemoryValue. No symbolic memory has been created yet but this function will
          * still try to rougly erase (size * 7) elements.
          */
-        if (this->alignedMemoryReference.empty())
+        if (this->alignedBitvectorMemory.empty())
           return;
 
         /* Remove overloaded positive ranges */
         for (triton::uint32 index = 0; index < size; index++) {
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::byte));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::word));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dword));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qword));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::fword));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqword));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::qqword));
-          this->alignedMemoryReference.erase(std::make_pair(address+index, triton::size::dqqword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::byte));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::word));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::dword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::qword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::fword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::dqword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::qqword));
+          this->alignedBitvectorMemory.erase(std::make_pair(address+index, triton::size::dqqword));
         }
 
         /* Remove overloaded negative ranges */
         for (triton::uint32 index = 1; index < triton::size::dqqword; index++) {
-          if (index < triton::size::word)    this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::word));
-          if (index < triton::size::dword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dword));
-          if (index < triton::size::qword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qword));
-          if (index < triton::size::fword)   this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::fword));
-          if (index < triton::size::dqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqword));
-          if (index < triton::size::qqword)  this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::qqword));
-          if (index < triton::size::dqqword) this->alignedMemoryReference.erase(std::make_pair(address-index, triton::size::dqqword));
+          if (index < triton::size::word)    this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::word));
+          if (index < triton::size::dword)   this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::dword));
+          if (index < triton::size::qword)   this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::qword));
+          if (index < triton::size::fword)   this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::fword));
+          if (index < triton::size::dqword)  this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::dqword));
+          if (index < triton::size::qqword)  this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::qqword));
+          if (index < triton::size::dqqword) this->alignedBitvectorMemory.erase(std::make_pair(address-index, triton::size::dqqword));
         }
       }
 
@@ -228,8 +228,8 @@ namespace triton {
       /* Returns the reference memory if it's referenced otherwise returns nullptr */
       SharedSymbolicExpression SymbolicEngine::getSymbolicMemory(triton::uint64 addr) const {
         // TODO: Mode array (should we really want to return a sharedexpr?)
-        auto it = this->memoryReference.find(addr);
-        if (it != this->memoryReference.end()) {
+        auto it = this->memoryBitvector.find(addr);
+        if (it != this->memoryBitvector.end()) {
           return it->second;
         }
         return nullptr;
@@ -554,7 +554,7 @@ namespace triton {
       /* Returns the map of symbolic memory defined */
       const std::unordered_map<triton::uint64, SharedSymbolicExpression>& SymbolicEngine::getSymbolicMemory(void) const {
         // TODO: Mode array
-        return this->memoryReference;
+        return this->memoryBitvector;
       }
 
 
@@ -629,8 +629,7 @@ namespace triton {
           else {
             const SharedSymbolicExpression& se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
             se->setOriginMemory(triton::arch::MemoryAccess(memAddr + index, triton::size::byte));
-            /* Assign the symbolic expression to the memory cell */
-            this->addMemoryReference(memAddr + index, se);
+            this->addBitvectorMemory(memAddr + index, se);
           }
         }
 
@@ -1019,7 +1018,7 @@ namespace triton {
           else {
             se = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference - " + comment);
             se->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-            this->addMemoryReference((address + writeSize) - 1, se);
+            this->addBitvectorMemory((address + writeSize) - 1, se);
           }
 
           /* continue */
@@ -1129,9 +1128,9 @@ namespace triton {
       }
 
 
-      /* Adds and assign a new memory reference */
-      inline void SymbolicEngine::addMemoryReference(triton::uint64 mem, const SharedSymbolicExpression& expr) {
-        this->memoryReference[mem] = expr;
+      /* Adds a symbolic expression to the bitvector memory model */
+      inline void SymbolicEngine::addBitvectorMemory(triton::uint64 mem, const SharedSymbolicExpression& expr) {
+        this->memoryBitvector[mem] = expr;
       }
 
 
@@ -1193,7 +1192,7 @@ namespace triton {
           /* Set the origin of the symbolic expression */
           byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
           /* Assign memory with little endian */
-          this->addMemoryReference((address + writeSize) - 1, byteRef);
+          this->addBitvectorMemory((address + writeSize) - 1, byteRef);
           /* continue */
           writeSize--;
         }
