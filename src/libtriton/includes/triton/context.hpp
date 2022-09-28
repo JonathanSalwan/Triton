@@ -492,19 +492,19 @@ namespace triton {
         //! [**symbolic api**] - Converts a symbolic register expression to a symbolic variable.
         TRITON_EXPORT triton::engines::symbolic::SharedSymbolicVariable symbolizeRegister(const triton::arch::Register& reg, const std::string& symVarAlias="");
 
-        //! [**symbolic api**] - Concretizes all symbolic memory references.
+        //! [**symbolic api**] - Concretizes all symbolic memory cells.
         TRITON_EXPORT void concretizeAllMemory(void);
 
-        //! [**symbolic api**] - Concretizes all symbolic register references.
+        //! [**symbolic api**] - Concretizes all symbolic register.
         TRITON_EXPORT void concretizeAllRegister(void);
 
-        //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
+        //! [**symbolic api**] - Concretizes symbolic memory cells.
         TRITON_EXPORT void concretizeMemory(const triton::arch::MemoryAccess& mem);
 
-        //! [**symbolic api**] - Concretizes a specific symbolic memory reference.
+        //! [**symbolic api**] - Concretizes a symbolic memory cell.
         TRITON_EXPORT void concretizeMemory(triton::uint64 addr);
 
-        //! [**symbolic api**] - Concretizes a specific symbolic register reference.
+        //! [**symbolic api**] - Concretizes a symbolic register.
         TRITON_EXPORT void concretizeRegister(const triton::arch::Register& reg);
 
         //! [**symbolic api**] - Slices all expressions from a given one.
