@@ -336,7 +336,6 @@ namespace triton {
 
       /* Returns the symbolic address value */
       triton::uint8 SymbolicEngine::getSymbolicMemoryValue(triton::uint64 address) {
-        // TODO: Mode array
         triton::arch::MemoryAccess mem(address, triton::size::byte);
         return static_cast<triton::uint8>(this->getSymbolicMemoryValue(mem));
       }
@@ -344,7 +343,6 @@ namespace triton {
 
       /* Returns the symbolic memory value */
       triton::uint512 SymbolicEngine::getSymbolicMemoryValue(const triton::arch::MemoryAccess& mem) {
-        // TODO: Mode array
         const triton::ast::SharedAbstractNode& node = this->getMemoryAst(mem);
         return node->evaluate();
       }
@@ -352,7 +350,6 @@ namespace triton {
 
       /* Returns the symbolic values of a memory area */
       std::vector<triton::uint8> SymbolicEngine::getSymbolicMemoryAreaValue(triton::uint64 baseAddr, triton::usize size) {
-        // TODO: Mode array
         std::vector<triton::uint8> area;
 
         area.reserve(size);
@@ -1185,15 +1182,23 @@ namespace triton {
         while (writeSize) {
           triton::uint32 high = ((writeSize * bitsize::byte) - 1);
           triton::uint32 low  = ((writeSize * bitsize::byte) - bitsize::byte);
+
           /* Extract each byte of the memory */
           const triton::ast::SharedAbstractNode& tmp = this->astCtxt->extract(high, low, node);
-          /* For each byte create a new symbolic expression */
-          const SharedSymbolicExpression& byteRef = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
-          /* Set the origin of the symbolic expression */
-          byteRef->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
-          /* Assign memory with little endian */
-          this->addBitvectorMemory((address + writeSize) - 1, byteRef);
-          /* continue */
+
+          /* Symbolic array */
+          if (this->modes->isModeEnabled(triton::modes::MEMORY_ARRAY)) {
+            auto cell = this->astCtxt->store(this->astCtxt->reference(this->getMemoryArray()), ((address + writeSize) - 1), tmp);
+            this->memoryArray = this->newSymbolicExpression(cell, MEMORY_EXPRESSION, "Byte reference");
+            this->memoryArray->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
+          }
+          /* Symbolic bitvector */
+          else {
+            const SharedSymbolicExpression& cell = this->newSymbolicExpression(tmp, MEMORY_EXPRESSION, "Byte reference");
+            cell->setOriginMemory(triton::arch::MemoryAccess(((address + writeSize) - 1), triton::size::byte));
+            this->addBitvectorMemory((address + writeSize) - 1, cell);
+          }
+
           writeSize--;
         }
 

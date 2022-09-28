@@ -148,3 +148,12 @@ class TestSymbolicArray(unittest.TestCase):
 
         edi = self.ctx.getRegisterAst(self.ctx.registers.edi)
         self.assertEqual(edi.evaluate(), 0x11223344)
+
+    def test_8(self):
+        self.ctx.setConcreteMemoryAreaValue(0x1000, b"\x99\x88\x77\x66\x55\x44\x33\x22\x11\x00\xaa\xbb\xcc")
+
+        value = self.ctx.getSymbolicMemoryValue(0x1000)
+        self.assertEqual(value, 0x99)
+
+        value = self.ctx.getSymbolicMemoryValue(MemoryAccess(0x1000, 4))
+        self.assertEqual(value, 0x66778899)
